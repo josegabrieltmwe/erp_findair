@@ -21,7 +21,29 @@ final class RouteManifest
     public static function fromFile(string $path): self
     {
         $parsed = Yaml::parseFile($path);
-        $items = is_array($parsed) && is_array($parsed['routes'] ?? null) ? $parsed['routes'] : [];
+        $own = is_array($parsed) && is_array($parsed['routes'] ?? null) ? $parsed['routes'] : [];
+        // `include`: ficheros hermanos con más rutas (p. ej. las generadas desde la SPA).
+        $included = [];
+        foreach (is_array($parsed) && is_array($parsed['include'] ?? null) ? $parsed['include'] : [] as $file) {
+            if (!is_string($file) || preg_match('/^[A-Za-z0-9_.-]+\.ya?ml$/', $file) !== 1) {
+                throw new \InvalidArgumentException('include inválido en el manifiesto.');
+            }
+            $extra = Yaml::parseFile(dirname($path) . '/' . $file);
+            $included = array_merge($included, is_array($extra) && is_array($extra['routes'] ?? null) ? $extra['routes'] : []);
+        }
+        // Las rutas escritas a mano en el fichero principal ganan a las incluidas (generadas).
+        $manual = [];
+        foreach ($own as $item) {
+            if (is_array($item)) {
+                $manual[strtoupper((string) ($item['method'] ?? '')) . ' ' . (string) ($item['path'] ?? '')] = true;
+            }
+        }
+        $included = array_values(array_filter(
+            $included,
+            static fn (mixed $item): bool => !is_array($item)
+                || !isset($manual[strtoupper((string) ($item['method'] ?? '')) . ' ' . (string) ($item['path'] ?? '')]),
+        ));
+        $items = array_merge($included, $own);
 
         return self::fromArray($items);
     }
@@ -99,6 +121,7 @@ final class RouteManifest
             throw new \InvalidArgumentException("response inválido en '{$i['id']}'.");
         }
 
+        $forwardAll = ($upstream['forward_query'] ?? null) === '*';
         $method = strtoupper((string) $i['method']);
         $path = (string) $i['path'];
         $pathParams = [];
@@ -124,7 +147,8 @@ final class RouteManifest
             path: $path,
             action: $upstream['action'],
             upstreamMethod: strtoupper((string) ($upstream['method'] ?? $method)),
-            forwardQuery: array_values(array_map('strval', (array) ($upstream['forward_query'] ?? []))),
+            forwardQuery: $forwardAll ? [] : array_values(array_map('strval', (array) ($upstream['forward_query'] ?? []))),
+            forwardAllQuery: $forwardAll,
             staticQuery: is_array($upstream['query'] ?? null) ? $upstream['query'] : [],
             pathParams: $resolved,
             response: $response,

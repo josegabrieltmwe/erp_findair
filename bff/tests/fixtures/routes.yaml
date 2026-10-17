@@ -24,3 +24,5 @@ routes:
     upstream:
       action: download_file
     response: binary
+include:
+  - routes.extra.yaml

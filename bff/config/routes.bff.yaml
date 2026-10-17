@@ -12,6 +12,10 @@
 #   legacy_envelope  true si el controlador responde 200 con {"success": false}
 #   limits           body (p. ej. 64k, 20m) y timeout en segundos
 #   csrf             por defecto true para métodos que cambian estado
+# Rutas de la SPA (módulos cargo y shipment), generadas con bin/gen-spa-manifest.php.
+include:
+  - routes.spa.yaml
+
 routes:
   - id: me.profile
     method: GET
@@ -27,3 +31,13 @@ routes:
     upstream:
       action: api_currency_day
       forward_query: [currency, date]
+
+  # Latido de presencia. El aviso al cerrar pestaña no puede llevar X-CSRF-Token, así que se
+  # confía en OriginMiddleware (Origin / Sec-Fetch-Site), que sigue activo para métodos no seguros.
+  - id: presence.heartbeat
+    method: POST
+    path: /web_presence_heartbeat
+    csrf: false
+    upstream:
+      action: web_presence_heartbeat
+    limits: { body: 4k, timeout: 5 }

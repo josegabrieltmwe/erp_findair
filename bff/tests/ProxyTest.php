@@ -223,4 +223,27 @@ final class ProxyTest extends AppTestCase
         self::assertIsArray($stored);
         self::assertSame('refresh-1', $this->vault->open((string) $stored['tokens'])?->refreshToken);
     }
+
+    public function testWildcardQueryForwardsEverythingExceptAction(): void
+    {
+        $this->boot([$this->upstreamOk()]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/api_spa_list?page=2&filtro[]=a&action=drop_database', $sid));
+
+        self::assertSame(200, $response->getStatusCode());
+        parse_str((string) $this->history[0]['request']->getUri()->getQuery(), $q);
+        self::assertSame('api_spa_list', $q['action']);
+        self::assertSame('2', $q['page']);
+        self::assertSame(['a'], $q['filtro']);
+    }
+
+    public function testManualRouteOverridesIncludedOne(): void
+    {
+        $this->boot([$this->upstreamOk()]);
+        $sid = $this->loginSession();
+        $this->send($this->request('POST', '/bff/v1/things', $sid, $this->unsafeHeaders(), '{}'));
+
+        parse_str((string) $this->history[0]['request']->getUri()->getQuery(), $q);
+        self::assertSame('api_thing_create', $q['action']);
+    }
 }

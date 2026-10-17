@@ -49,3 +49,20 @@ composer cs       # PHP-CS-Fixer (PSR-12)
 - Dockerfile, configuración de nginx y pipeline de CI.
 
 Decisiones de diseño: ver el artifact «Arquitectura ERP Findair».
+
+## Rutas de la SPA (`routes.spa.yaml`)
+
+`config/routes.spa.yaml` está **generado**: no se edita a mano. Contiene las rutas de tmwe_json que
+usa el código de `../web` para los módulos migrados, con el mismo nombre que ve la SPA
+(`/bff/v1/<ruta>` ⇒ `?action=<ruta>`), de modo que los servicios del frontend no cambian.
+
+```bash
+bin/regen-spa-manifest.sh        # añade aquí cada módulo o paquete nuevo que se migre
+```
+
+- Solo se exponen rutas de los tiers `api` y `web` (aceptan Bearer). Las de tier `ajax`/`html`
+  (solo sesión) se listan al regenerar como «NO expuestas»: necesitan un hermano `web`/`api` en el backend.
+- Una ruta escrita a mano en `routes.bff.yaml` con el mismo método y ruta **sustituye** a la generada.
+- El método se deduce del código (`method: "POST"`). Para constantes de ruta se toman los métodos que usa
+  ese fichero; revisar el diff tras regenerar.
+- `forward_query: '*'` reenvía toda la query salvo `action`, que nunca puede venir del cliente.

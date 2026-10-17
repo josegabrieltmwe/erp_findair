@@ -11,6 +11,7 @@ final class Route
 {
     /**
      * @param list<string> $forwardQuery parámetros de query que se reenvían tal cual
+     * @param bool $forwardAllQuery reenvía toda la query salvo `action` (rutas compatibles con la SPA)
      * @param array<string, scalar> $staticQuery parámetros fijos hacia el backend
      * @param array<string, string> $pathParams segmento de la ruta => nombre del parámetro upstream
      */
@@ -21,6 +22,7 @@ final class Route
         public readonly string $action,
         public readonly string $upstreamMethod,
         public readonly array $forwardQuery,
+        public readonly bool $forwardAllQuery,
         public readonly array $staticQuery,
         public readonly array $pathParams,
         public readonly string $response,

@@ -133,6 +133,13 @@ final class ProxyController
     {
         $query = $route->staticQuery;
         $incoming = $request->getQueryParams();
+        if ($route->forwardAllQuery) {
+            foreach ($incoming as $key => $value) {
+                if ($key !== 'action' && (is_string($value) || is_array($value))) {
+                    $query[(string) $key] = $value;
+                }
+            }
+        }
         foreach ($route->forwardQuery as $key) {
             if (isset($incoming[$key]) && (is_string($incoming[$key]) || is_array($incoming[$key]))) {
                 $query[$key] = $incoming[$key];

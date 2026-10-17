@@ -1,0 +1,12 @@
+routes:
+  - id: spa.list
+    method: GET
+    path: /api_spa_list
+    upstream:
+      action: api_spa_list
+      forward_query: '*'
+  - id: spa.generated.heartbeat
+    method: POST
+    path: /things
+    upstream:
+      action: generated_version
