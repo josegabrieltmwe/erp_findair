@@ -14,8 +14,10 @@ use Findair\Bff\Http\Middleware\RequestIdMiddleware;
 use Findair\Bff\Http\Middleware\SecurityHeadersMiddleware;
 use Findair\Bff\Http\Middleware\SessionMiddleware;
 use Findair\Bff\Http\ProblemErrorHandler;
+use Findair\Bff\Proxy\CurlUpstreamStreamer;
 use Findair\Bff\Proxy\ProxyController;
 use Findair\Bff\Proxy\RouteManifest;
+use Findair\Bff\Proxy\UpstreamStreamer;
 use Findair\Bff\Proxy\UpstreamUrl;
 use Findair\Bff\Session\RedisSessionStore;
 use Findair\Bff\Session\SessionStore;
@@ -55,6 +57,7 @@ final class AppFactory
 
                 return new Logger('bff', [$handler], [new Redactor()]);
             },
+            UpstreamStreamer::class => static fn (): UpstreamStreamer => new CurlUpstreamStreamer(),
             TokenVault::class => static fn (): TokenVault => new TokenVault($settings->appKey),
             UpstreamUrl::class => static fn (): UpstreamUrl => new UpstreamUrl($settings->upstreamBaseUrl, $settings->upstreamPublicUrl),
             RouteManifest::class => static fn (): RouteManifest => RouteManifest::fromFile($settings->manifestPath),

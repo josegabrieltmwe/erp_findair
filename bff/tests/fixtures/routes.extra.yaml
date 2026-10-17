@@ -22,3 +22,9 @@ routes:
     method: DELETE
     path: /api_thing_cancel
     upstream: { action: api_thing_cancel }
+  - id: spa.stream
+    method: GET
+    path: /api_spa_stream
+    response: stream
+    upstream: { action: api_spa_stream, forward_query: '*' }
+    limits: { timeout: 120 }

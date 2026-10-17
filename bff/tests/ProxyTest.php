@@ -277,4 +277,28 @@ final class ProxyTest extends AppTestCase
         self::assertSame(200, $read->getStatusCode());
         self::assertCount(1, $this->history);
     }
+
+    public function testStreamRouteIsMarkedForUnbufferedEmission(): void
+    {
+        $this->boot([new UpstreamResponse(200, ['Content-Type' => 'text/event-stream', 'Content-Length' => '99'], "data: 1\n\n")]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/api_spa_stream', $sid));
+
+        self::assertSame('1', $response->getHeaderLine(\Findair\Bff\Http\StreamingEmitter::MARKER));
+        self::assertSame('no', $response->getHeaderLine('X-Accel-Buffering'));
+        self::assertSame('no-cache, no-transform', $response->getHeaderLine('Cache-Control'));
+        self::assertFalse($response->hasHeader('Content-Length'), 'un stream no declara longitud');
+        self::assertSame('text/event-stream', $response->getHeaderLine('Content-Type'));
+        self::assertEquals(0, $this->history[0]['options']['timeout'] ?? null);
+        self::assertSame(120.0, (float) ($this->history[0]['options']['read_timeout'] ?? 0));
+    }
+
+    public function testNonStreamResponseHasNoMarker(): void
+    {
+        $this->boot([$this->upstreamOk()]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/api_spa_list', $sid));
+
+        self::assertFalse($response->hasHeader(\Findair\Bff\Http\StreamingEmitter::MARKER));
+    }
 }

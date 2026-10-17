@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Findair\Bff\AppFactory;
+use Findair\Bff\Http\StreamingEmitter;
 use Findair\Bff\Settings;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -21,4 +22,6 @@ if ($settings->appKey === '' || $settings->oauthClientId === '' || $settings->up
     exit;
 }
 
-AppFactory::create($settings)->run();
+$app = AppFactory::create($settings);
+$request = Slim\Factory\ServerRequestCreatorFactory::create()->createServerRequestFromGlobals();
+(new StreamingEmitter())->emit($app->handle($request));

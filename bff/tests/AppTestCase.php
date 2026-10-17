@@ -34,7 +34,7 @@ abstract class AppTestCase extends TestCase
     protected TokenVault $vault;
     protected MockHandler $upstream;
 
-    /** @var list<array{request: \Psr\Http\Message\RequestInterface, response: ?ResponseInterface}> */
+    /** @var list<array{request: \Psr\Http\Message\RequestInterface, response: ?ResponseInterface, options: array<string, mixed>}> */
     protected array $history = [];
 
     /** @var App<\Psr\Container\ContainerInterface|null> */
@@ -63,9 +63,11 @@ abstract class AppTestCase extends TestCase
         $stack = HandlerStack::create($this->upstream);
         $stack->push(Middleware::history($this->history));
 
+        $client = new Client(['handler' => $stack]);
         $this->app = AppFactory::create($this->settings, [
             SessionStore::class => $this->store,
-            ClientInterface::class => new Client(['handler' => $stack]),
+            ClientInterface::class => $client,
+            \Findair\Bff\Proxy\UpstreamStreamer::class => new GuzzleStreamer($client),
             LoggerInterface::class => new NullLogger(),
         ]);
     }

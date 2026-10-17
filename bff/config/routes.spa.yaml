@@ -2816,9 +2816,9 @@ routes:
     upstream:
       action: api_cargo_shipment_flight_search
       forward_query: '*'
+    response: stream
     limits:
-      body: 1m
-      timeout: 30
+      timeout: 120
   -
     id: get.api_cargo_shipment_flight_search
     method: GET
@@ -2826,6 +2826,9 @@ routes:
     upstream:
       action: api_cargo_shipment_flight_search
       forward_query: '*'
+    response: stream
+    limits:
+      timeout: 120
   -
     id: get.api_cargo_shipments
     method: GET
@@ -7270,6 +7273,9 @@ routes:
     upstream:
       action: web_chat_realtime_stream
       forward_query: '*'
+    response: stream
+    limits:
+      timeout: 120
   -
     id: post.web_chat_typing
     method: POST

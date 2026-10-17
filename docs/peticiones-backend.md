@@ -3,6 +3,26 @@
 Lo que el BFF y la SPA nuevos necesitan de `tmwe_json` y hoy no existe o no es accesible con
 Bearer. Cada punto indica qué se observó, el impacto y la propuesta mínima.
 
+## 0. Bug: el grant `refresh_token` nunca encuentra el token (bloqueante a las 24 h)
+
+`Refresh_Token_Controller::get_refresh_token()` busca el token con
+`get_valid_refresh_by_token_and_client_id($param, $this->client['id'])`, es decir, con el **id numérico**
+de `oauth_client` (p. ej. 527). Pero `oauth_token.client_id` guarda el **`client_id` hexadecimal**
+(`create_access_granted_token($client['client_id'], …)` en `Authorization_Controller`). Resultado:
+`POST ?action=token` con `grant_type=refresh_token` responde siempre `401` con cuerpo vacío.
+
+Comprobado en `tmwe_db_dev` con el cliente 527: la condición del controlador (`client_id = 527`)
+devuelve 0 refresh tokens válidos; con el hexadecimal, 22.
+
+Arreglo propuesto: buscar con `$this->client['client_id']` (y revisar que `create_access_granted_token`
+reciba el mismo valor), más una prueba de integración del flujo completo
+authorization_code → refresh → uso del nuevo access token → reutilización del refresh anterior
+rechazada (la detección de reutilización también compara `(int) client_id` con el id numérico y hoy
+nunca se dispara).
+
+Efecto actual en el BFF: al caducar el access token (24 h) el refresco falla, el BFF cierra la sesión
+y la SPA vuelve al login. No hay pérdida de datos, pero la sesión no puede durar más de 24 h.
+
 ## 1. Rutas de tier `ajax` sin equivalente con Bearer (23)
 
 Los controladores de `controller/ajax/` solo aceptan sesión. El BFF no puede llamarlos (su cliente

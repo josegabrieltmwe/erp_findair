@@ -32,6 +32,7 @@ final class ProxyController
         private readonly CsrfGuard $csrf,
         private readonly LoggerInterface $logger,
         private readonly Settings $settings,
+        private readonly UpstreamStreamer $streamer,
     ) {
     }
 
@@ -137,15 +138,19 @@ final class ProxyController
             $headers['Content-Type'] = $request->getHeaderLine('Content-Type');
         }
 
-        return $this->http->send(
-            new UpstreamRequest($route->upstreamMethod, $url, array_filter($headers, static fn (string $v): bool => $v !== ''), $body !== '' ? $body : null),
-            [
-                'stream' => $route->isBinaryOrStream(),
-                'timeout' => $route->timeout,
-                'http_errors' => false,
-                'allow_redirects' => false,
-            ],
-        );
+        $upstreamRequest = new UpstreamRequest($route->upstreamMethod, $url, array_filter($headers, static fn (string $v): bool => $v !== ''), $body !== '' ? $body : null);
+
+        if ($route->response === 'stream') {
+            // Streams (SSE): sin límite total; el timeout del manifiesto es el silencio tolerado.
+            return $this->streamer->open($upstreamRequest, $route->timeout, $this->settings->upstreamConnectTimeout);
+        }
+
+        return $this->http->send($upstreamRequest, [
+            'stream' => $route->isBinaryOrStream(),
+            'timeout' => $route->timeout,
+            'http_errors' => false,
+            'allow_redirects' => false,
+        ]);
     }
 
     /**

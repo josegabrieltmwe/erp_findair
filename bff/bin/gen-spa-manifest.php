@@ -32,6 +32,7 @@ if ($root === '' || $modules === [] || !is_dir($root . '/config/routes')) {
 
 // response_on => [tier, controlador]
 $backend = [];
+$streams = []; // rutas SSE: se declaran con response: stream
 foreach (glob($root . '/config/routes/*.yml') ?: [] as $file) {
     $yaml = Yaml::parseFile($file);
     foreach (is_array($yaml) ? $yaml : [] as $items) {
@@ -39,6 +40,10 @@ foreach (glob($root . '/config/routes/*.yml') ?: [] as $file) {
             if (is_array($item) && isset($item['response_on'], $item['controller'])) {
                 $parts = explode('\\', (string) $item['controller']);
                 $backend[(string) $item['response_on']] = $parts[2] ?? '?';
+                if (preg_match('/\bSSE\b|event-stream/i', (string) ($item['description'] ?? '')) === 1
+                    && !str_contains((string) $item['response_on'], 'token')) {
+                    $streams[(string) $item['response_on']] = true;
+                }
             }
         }
     }
@@ -107,7 +112,10 @@ foreach ($methods as $name => $verbs) {
             'path' => '/' . $name,
             'upstream' => ['action' => $name, 'forward_query' => '*'],
         ];
-        if ($verb !== 'GET') {
+        if (isset($streams[$name])) {
+            $route['response'] = 'stream';
+            $route['limits'] = ['timeout' => 120]; // silencio máximo tolerado entre eventos
+        } elseif ($verb !== 'GET') {
             $route['limits'] = ['body' => $writesFiles ? '20m' : '1m', 'timeout' => $writesFiles ? 120 : 30];
         }
         $routes[] = $route;

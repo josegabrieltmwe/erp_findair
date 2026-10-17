@@ -44,7 +44,6 @@ composer cs       # PHP-CS-Fixer (PSR-12)
 
 - Límite de peticiones por sesión e IP (`symfony/rate-limiter`).
 - Generar `routes.bff.yaml` y el cliente TypeScript desde `docs/api/open_api` de tmwe_json, y validar peticiones con `league/openapi-psr7-validator`.
-- Streams SSE: el manifiesto ya admite `response: stream`, falta el location del servidor web sin buffering y su prueba.
 - Confirmar con el backend cómo toma los cuerpos JSON (`get_parameter`) y si confía en `X-Forwarded-For` (hoy todos los usuarios llegan con la IP del BFF).
 - Dockerfile, configuración de nginx y pipeline de CI.
 
@@ -66,3 +65,17 @@ bin/regen-spa-manifest.sh        # añade aquí cada módulo o paquete nuevo que
 - El método se deduce del código (`method: "POST"`). Para constantes de ruta se toman los métodos que usa
   ese fichero; revisar el diff tras regenerar.
 - `forward_query: '*'` reenvía toda la query salvo `action`, que nunca puede venir del cliente.
+
+## Streams (SSE), descargas y subidas
+
+- **SSE** (`response: stream`): se abren con cURL (`CurlUpstreamStreamer`) y se emiten con
+  `StreamingEmitter` (flush trozo a trozo). El flujo `http://` de PHP/Guzzle retiene los fragmentos
+  pequeños, y Apache/PHP acumulan hasta `output_buffering` (4096): ambos romperían los latidos.
+  El `timeout` del manifiesto es el silencio tolerado, no la duración. El generador marca como stream
+  las rutas cuya descripción en tmwe_json dice «SSE» (salvo las `*token*`).
+- Cada SSE abierto ocupa un worker de Apache mientras dure; dimensionar `MaxRequestWorkers` o servir
+  `/bff/v1` de streams con otro proceso si hay muchos usuarios.
+- **Descargas** (`response: binary`) y respuestas JSON grandes: probadas con 20 MB; cabeceras de descarga
+  conservadas y memoria acotada.
+- **Subidas** multipart: el cuerpo llega intacto (comprobado con 5 MB); el límite por ruta
+  (`limits.body`) devuelve 413.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Findair\Bff\Proxy;
 
+use Findair\Bff\Http\StreamingEmitter;
 use Findair\Bff\Support\ProblemDetails;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -41,6 +42,14 @@ final class ResponseAdapter
             if ($upstream->hasHeader($name)) {
                 $response = $response->withHeader($name, $upstream->getHeader($name));
             }
+        }
+        if ($route->response === 'stream') {
+            // Sin búfer ni transformaciones intermedias; StreamingEmitter retira el marcador.
+            $response = $response
+                ->withoutHeader('Content-Length')
+                ->withHeader('Cache-Control', 'no-cache, no-transform')
+                ->withHeader('X-Accel-Buffering', 'no')
+                ->withHeader(StreamingEmitter::MARKER, '1');
         }
 
         return $response;

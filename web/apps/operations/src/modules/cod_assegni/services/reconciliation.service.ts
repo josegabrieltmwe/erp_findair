@@ -73,7 +73,7 @@ export function buildListUrl(
   page: number,
   perPage: number,
 ): string {
-  return `${BASE}&${qs({
+  return `${BASE}?${qs({
     list,
     page: Math.max(1, page),
     per_page: Math.min(Math.max(1, perPage), MAX_PER_PAGE),
@@ -84,7 +84,7 @@ export function buildListUrl(
 }
 
 export function buildSummaryUrl(dateFrom?: string, dateTo?: string): string {
-  return `${BASE}&${qs({ summary: 1, date_from: dateFrom, date_to: dateTo })}`;
+  return `${BASE}?${qs({ summary: 1, date_from: dateFrom, date_to: dateTo })}`;
 }
 
 export function buildReconcileBody(
