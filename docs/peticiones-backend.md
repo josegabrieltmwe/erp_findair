@@ -1,5 +1,10 @@
 # Peticiones al backend (tmwe_json)
 
+> **Estado 2026-10-18.** Este documento es el detalle técnico y su historia. La lista vigente y ordenada
+> está en `prompt-agente-tmwe-json.md`; el plan, en `plan-migracion.md`. Ya resuelto en el backend:
+> `redirect_uris` + PKCE (§4), cliente 527 `internal` y scopes de personal ampliados (§3). Siguen abiertos:
+> §0 (refresh), §1 (rutas `ajax`), §2 (contexto) y los módulos sin scope.
+
 Lo que el BFF y la SPA nuevos necesitan de `tmwe_json` y hoy no existe o no es accesible con
 Bearer. Cada punto indica qué se observó, el impacto y la propuesta mínima.
 
