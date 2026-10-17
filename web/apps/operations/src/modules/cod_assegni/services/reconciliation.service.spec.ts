@@ -18,7 +18,7 @@ describe("buildListUrl", () => {
       500,
     );
     expect(u).toBe(
-      "/app.php?action=api_cod_reconciliation&list=pending&page=1&per_page=100&date_from=2026-01-01",
+      "/api_cod_reconciliation?list=pending&page=1&per_page=100&date_from=2026-01-01",
     );
   });
   it("to_report incluye el transportista", () => {

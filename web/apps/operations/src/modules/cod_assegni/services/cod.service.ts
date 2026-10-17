@@ -30,7 +30,7 @@ import type {
 export async function fetchCarriers(): Promise<Carrier[]> {
   const response = await http<
     ApiEnvelope<{ carriers: Carrier[]; count: number }>
-  >("/app.php?action=api_selectable_carriers");
+  >("/api_selectable_carriers");
   return response.data?.carriers ?? [];
 }
 
@@ -53,7 +53,7 @@ export async function createSession(
   payload: CreateSessionPayload,
 ): Promise<CreatedSession> {
   const response = await http<ApiEnvelope<CreatedSession>>(
-    "/app.php?action=api_cod_capture_session",
+    "/api_cod_capture_session",
     { method: "POST", body: payload },
   );
 
@@ -66,7 +66,7 @@ export async function createSession(
 
 export async function fetchSession(id: number): Promise<CaptureSession | null> {
   const response = await http<ApiEnvelope<CaptureSession>>(
-    `/app.php?action=api_cod_capture_session&id=${id}`,
+    `/api_cod_capture_session?id=${id}`,
   );
   return response.success ? (response.data ?? null) : null;
 }
@@ -86,7 +86,7 @@ export async function fetchSession(id: number): Promise<CaptureSession | null> {
  */
 export async function deleteSession(idSession: number): Promise<void> {
   const response = await http<ApiEnvelope<{ deleted: number }>>(
-    "/app.php?action=api_cod_capture_session",
+    "/api_cod_capture_session",
     { method: "POST", body: { id: idSession, op: "delete" } },
   );
   if (!response.success) {
@@ -116,7 +116,7 @@ export async function fetchSessionsByCarrier(
 ): Promise<CaptureSession[]> {
   const response = await http<
     ApiEnvelope<{ sessions: CaptureSession[]; count: number }>
-  >(`/app.php?action=api_cod_capture_session&id_fornitore=${idFornitore}`);
+  >(`/api_cod_capture_session?id_fornitore=${idFornitore}`);
   return response.data?.sessions ?? [];
 }
 
@@ -131,7 +131,7 @@ export async function fetchSessionsByCarrier(
 /** Clients that take COD, for the export picker. */
 export async function fetchCodClients(): Promise<Carrier[]> {
   const response = await http<ApiEnvelope<{ clients: Carrier[] }>>(
-    "/app.php?action=api_cod_distinta_export&op=clients",
+    "/api_cod_distinta_export?op=clients",
   );
   return response.data?.clients ?? [];
 }
@@ -197,7 +197,7 @@ export async function downloadDistinta(params: {
 /** The batch with its shipment analysis attached. */
 export async function fetchReview(idSession: number): Promise<ReviewBatch> {
   const response = await http<ApiEnvelope<ReviewBatch>>(
-    `/app.php?action=api_cod_capture_review&id=${idSession}`,
+    `/api_cod_capture_review?id=${idSession}`,
   );
 
   if (!response.success || !response.data) {
@@ -272,7 +272,7 @@ export async function confirmBulk(
 ): Promise<{ confirmed: number[]; skipped: number[]; count: number }> {
   const response = await http<
     ApiEnvelope<{ confirmed: number[]; skipped: number[]; count: number }>
-  >("/app.php?action=api_cod_capture_review", {
+  >("/api_cod_capture_review", {
     method: "POST",
     body: { id: idSession, op: "confirm_bulk", check_ids: checkIds },
   });
@@ -290,7 +290,7 @@ export async function confirmCheck(
   checkId: number,
 ): Promise<void> {
   const response = await http<ApiEnvelope<{ confirmed: number }>>(
-    "/app.php?action=api_cod_capture_review",
+    "/api_cod_capture_review",
     {
       method: "POST",
       body: { id: idSession, op: "confirm", check_id: checkId },
@@ -310,7 +310,7 @@ export async function assignCheck(
   note?: string,
 ): Promise<ReviewBatch> {
   const response = await http<ApiEnvelope<ReviewBatch>>(
-    "/app.php?action=api_cod_capture_review",
+    "/api_cod_capture_review",
     {
       method: "POST",
       body: {
@@ -347,7 +347,7 @@ export async function rematchBatch(
   idFornitore?: number,
 ): Promise<ReviewBatch & { updated: number }> {
   const response = await http<ApiEnvelope<ReviewBatch & { updated: number }>>(
-    "/app.php?action=api_cod_capture_review",
+    "/api_cod_capture_review",
     {
       method: "POST",
       body: {
@@ -374,7 +374,7 @@ export async function rematchBatch(
  */
 export async function approveBatch(idSession: number): Promise<ApplyReport> {
   const response = await http<ApiEnvelope<ApplyReport>>(
-    "/app.php?action=api_cod_capture_review",
+    "/api_cod_capture_review",
     { method: "POST", body: { id: idSession, op: "approve" } },
   );
 

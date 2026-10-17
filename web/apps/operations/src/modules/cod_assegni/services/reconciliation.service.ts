@@ -56,7 +56,7 @@ export interface CodExportFile {
   size: number;
 }
 
-const BASE = "/app.php?action=api_cod_reconciliation";
+const BASE = "/api_cod_reconciliation";
 
 function qs(params: Record<string, string | number | null | undefined>) {
   const q = new URLSearchParams();
@@ -176,7 +176,7 @@ export async function exportCod(
   format: "xlsx" | "csv",
 ): Promise<CodExportFile> {
   const res = await http<ApiEnvelope<CodExportFile>>(
-    "/app.php?action=api_cod_export",
+    "/api_cod_export",
     {
       method: "POST",
       body: { date_from: dateFrom, date_to: dateTo, format },

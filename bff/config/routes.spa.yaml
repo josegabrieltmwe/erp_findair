@@ -2,6 +2,23 @@
 # Módulos: apps/operations/src, packages/platform
 routes:
   -
+    id: get.admin_scheduler_api
+    method: GET
+    path: /admin_scheduler_api
+    upstream:
+      action: admin_scheduler_api
+      forward_query: '*'
+  -
+    id: post.admin_scheduler_api
+    method: POST
+    path: /admin_scheduler_api
+    upstream:
+      action: admin_scheduler_api
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.admin_tracking_api
     method: GET
     path: /admin_tracking_api
@@ -45,6 +62,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.ajax_shipment_addresses
+    method: GET
+    path: /ajax_shipment_addresses
+    upstream:
+      action: ajax_shipment_addresses
+      forward_query: '*'
   -
     id: get.ajax_shipment_crud
     method: GET
@@ -90,6 +114,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.ajax_shipment_from_cargo
+    method: GET
+    path: /ajax_shipment_from_cargo
+    upstream:
+      action: ajax_shipment_from_cargo
+      forward_query: '*'
+  -
     id: get.ajax_shipment_metadata
     method: GET
     path: /ajax_shipment_metadata
@@ -116,6 +147,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.ajax_shipment_packages
+    method: GET
+    path: /ajax_shipment_packages
+    upstream:
+      action: ajax_shipment_packages
+      forward_query: '*'
   -
     id: post.ajax_shipment_packages
     method: POST
@@ -150,6 +188,16 @@ routes:
     upstream:
       action: ajax_validate_before_ldv
       forward_query: '*'
+  -
+    id: post.ajax_validate_before_ldv
+    method: POST
+    path: /ajax_validate_before_ldv
+    upstream:
+      action: ajax_validate_before_ldv
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_admin_ai_credentials
     method: GET
@@ -1102,6 +1150,43 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_admin_webcargo_key
+    method: GET
+    path: /api_admin_webcargo_key
+    upstream:
+      action: api_admin_webcargo_key
+      forward_query: '*'
+  -
+    id: post.api_admin_webcargo_key
+    method: POST
+    path: /api_admin_webcargo_key
+    upstream:
+      action: api_admin_webcargo_key
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_admin_webcargo_key
+    method: PUT
+    path: /api_admin_webcargo_key
+    upstream:
+      action: api_admin_webcargo_key
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_admin_webcargo_key
+    method: DELETE
+    path: /api_admin_webcargo_key
+    upstream:
+      action: api_admin_webcargo_key
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_airport_search
     method: GET
     path: /api_airport_search
@@ -1115,6 +1200,36 @@ routes:
     upstream:
       action: api_anagrafica_addresses
       forward_query: '*'
+  -
+    id: post.api_anagrafica_addresses
+    method: POST
+    path: /api_anagrafica_addresses
+    upstream:
+      action: api_anagrafica_addresses
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_anagrafica_addresses
+    method: PUT
+    path: /api_anagrafica_addresses
+    upstream:
+      action: api_anagrafica_addresses
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_anagrafica_addresses
+    method: DELETE
+    path: /api_anagrafica_addresses
+    upstream:
+      action: api_anagrafica_addresses
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_anagrafica_banks
     method: GET
@@ -1280,6 +1395,36 @@ routes:
     upstream:
       action: api_anagrafica_crud
       forward_query: '*'
+  -
+    id: patch.api_anagrafica_crud
+    method: PATCH
+    path: /api_anagrafica_crud
+    upstream:
+      action: api_anagrafica_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: post.api_anagrafica_crud
+    method: POST
+    path: /api_anagrafica_crud
+    upstream:
+      action: api_anagrafica_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_anagrafica_crud
+    method: DELETE
+    path: /api_anagrafica_crud
+    upstream:
+      action: api_anagrafica_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_anagrafica_findair_access
     method: GET
@@ -1456,8 +1601,62 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_anagrafica_set_default_address
+    method: GET
+    path: /api_anagrafica_set_default_address
+    upstream:
+      action: api_anagrafica_set_default_address
+      forward_query: '*'
+  -
+    id: post.api_anagrafica_set_default_address
+    method: POST
+    path: /api_anagrafica_set_default_address
+    upstream:
+      action: api_anagrafica_set_default_address
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_anagrafica_set_default_address
+    method: DELETE
+    path: /api_anagrafica_set_default_address
+    upstream:
+      action: api_anagrafica_set_default_address
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: put.api_anagrafica_set_default_bank
     method: PUT
+    path: /api_anagrafica_set_default_bank
+    upstream:
+      action: api_anagrafica_set_default_bank
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_anagrafica_set_default_bank
+    method: GET
+    path: /api_anagrafica_set_default_bank
+    upstream:
+      action: api_anagrafica_set_default_bank
+      forward_query: '*'
+  -
+    id: post.api_anagrafica_set_default_bank
+    method: POST
+    path: /api_anagrafica_set_default_bank
+    upstream:
+      action: api_anagrafica_set_default_bank
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_anagrafica_set_default_bank
+    method: DELETE
     path: /api_anagrafica_set_default_bank
     upstream:
       action: api_anagrafica_set_default_bank
@@ -1618,6 +1817,16 @@ routes:
       action: api_awb_documents
       forward_query: '*'
   -
+    id: post.api_awb_documents
+    method: POST
+    path: /api_awb_documents
+    upstream:
+      action: api_awb_documents
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_awb_email
     method: POST
     path: /api_awb_email
@@ -1627,6 +1836,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_awb_email
+    method: GET
+    path: /api_awb_email
+    upstream:
+      action: api_awb_email
+      forward_query: '*'
   -
     id: get.api_b2b_config
     method: GET
@@ -1654,6 +1870,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_balance_sheet_export
+    method: GET
+    path: /api_balance_sheet_export
+    upstream:
+      action: api_balance_sheet_export
+      forward_query: '*'
   -
     id: get.api_bancali_mpl
     method: GET
@@ -1952,6 +2175,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_awb_vettori_set
+    method: GET
+    path: /api_cargo_awb_vettori_set
+    upstream:
+      action: api_cargo_awb_vettori_set
+      forward_query: '*'
+  -
     id: get.api_cargo_booking
     method: GET
     path: /api_cargo_booking
@@ -1978,6 +2208,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_cargo_cancel
+    method: GET
+    path: /api_cargo_cancel
+    upstream:
+      action: api_cargo_cancel
+      forward_query: '*'
   -
     id: get.api_cargo_carriers
     method: GET
@@ -2061,8 +2298,45 @@ routes:
       action: api_cargo_handler_addresses
       forward_query: '*'
   -
+    id: patch.api_cargo_handler_addresses
+    method: PATCH
+    path: /api_cargo_handler_addresses
+    upstream:
+      action: api_cargo_handler_addresses
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: post.api_cargo_handler_addresses
+    method: POST
+    path: /api_cargo_handler_addresses
+    upstream:
+      action: api_cargo_handler_addresses
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_cargo_handler_assign
     method: POST
+    path: /api_cargo_handler_assign
+    upstream:
+      action: api_cargo_handler_assign
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cargo_handler_assign
+    method: GET
+    path: /api_cargo_handler_assign
+    upstream:
+      action: api_cargo_handler_assign
+      forward_query: '*'
+  -
+    id: patch.api_cargo_handler_assign
+    method: PATCH
     path: /api_cargo_handler_assign
     upstream:
       action: api_cargo_handler_assign
@@ -2094,6 +2368,26 @@ routes:
     upstream:
       action: api_cargo_handlers_web
       forward_query: '*'
+  -
+    id: patch.api_cargo_handlers_web
+    method: PATCH
+    path: /api_cargo_handlers_web
+    upstream:
+      action: api_cargo_handlers_web
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: post.api_cargo_handlers_web
+    method: POST
+    path: /api_cargo_handlers_web
+    upstream:
+      action: api_cargo_handlers_web
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_cargo_hawb
     method: GET
@@ -2159,6 +2453,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_klm_booking_cancel
+    method: GET
+    path: /api_cargo_klm_booking_cancel
+    upstream:
+      action: api_cargo_klm_booking_cancel
+      forward_query: '*'
+  -
     id: get.api_cargo_klm_booking_detail
     method: GET
     path: /api_cargo_klm_booking_detail
@@ -2199,6 +2500,16 @@ routes:
     upstream:
       action: api_cargo_klm_rate_detail
       forward_query: '*'
+  -
+    id: post.api_cargo_klm_rate_detail
+    method: POST
+    path: /api_cargo_klm_rate_detail
+    upstream:
+      action: api_cargo_klm_rate_detail
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_cargo_kpis
     method: GET
@@ -2275,6 +2586,16 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: patch.api_cargo_mawb_confirmation
+    method: PATCH
+    path: /api_cargo_mawb_confirmation
+    upstream:
+      action: api_cargo_mawb_confirmation
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_cargo_mawb_share_recipients
     method: GET
     path: /api_cargo_mawb_share_recipients
@@ -2326,6 +2647,26 @@ routes:
       action: api_cargo_owner_options
       forward_query: '*'
   -
+    id: patch.api_cargo_owner_options
+    method: PATCH
+    path: /api_cargo_owner_options
+    upstream:
+      action: api_cargo_owner_options
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: post.api_cargo_owner_options
+    method: POST
+    path: /api_cargo_owner_options
+    upstream:
+      action: api_cargo_owner_options
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_cargo_partners
     method: GET
     path: /api_cargo_partners
@@ -2360,6 +2701,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_pricing_recalc
+    method: GET
+    path: /api_cargo_pricing_recalc
+    upstream:
+      action: api_cargo_pricing_recalc
+      forward_query: '*'
+  -
     id: get.api_cargo_profit
     method: GET
     path: /api_cargo_profit
@@ -2387,6 +2735,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_rate_clear
+    method: GET
+    path: /api_cargo_rate_clear
+    upstream:
+      action: api_cargo_rate_clear
+      forward_query: '*'
+  -
     id: post.api_cargo_rate_select
     method: POST
     path: /api_cargo_rate_select
@@ -2396,6 +2751,20 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_cargo_rate_select
+    method: GET
+    path: /api_cargo_rate_select
+    upstream:
+      action: api_cargo_rate_select
+      forward_query: '*'
+  -
+    id: get.api_cargo_rate_sources
+    method: GET
+    path: /api_cargo_rate_sources
+    upstream:
+      action: api_cargo_rate_sources
+      forward_query: '*'
   -
     id: get.api_cargo_relations
     method: GET
@@ -2451,6 +2820,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_shipment_flight_search
+    method: GET
+    path: /api_cargo_shipment_flight_search
+    upstream:
+      action: api_cargo_shipment_flight_search
+      forward_query: '*'
+  -
     id: get.api_cargo_shipments
     method: GET
     path: /api_cargo_shipments
@@ -2458,8 +2834,45 @@ routes:
       action: api_cargo_shipments
       forward_query: '*'
   -
+    id: patch.api_cargo_shipments
+    method: PATCH
+    path: /api_cargo_shipments
+    upstream:
+      action: api_cargo_shipments
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: post.api_cargo_shipments
+    method: POST
+    path: /api_cargo_shipments
+    upstream:
+      action: api_cargo_shipments
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_cargo_tact_update
     method: POST
+    path: /api_cargo_tact_update
+    upstream:
+      action: api_cargo_tact_update
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cargo_tact_update
+    method: GET
+    path: /api_cargo_tact_update
+    upstream:
+      action: api_cargo_tact_update
+      forward_query: '*'
+  -
+    id: patch.api_cargo_tact_update
+    method: PATCH
     path: /api_cargo_tact_update
     upstream:
       action: api_cargo_tact_update
@@ -2519,6 +2932,16 @@ routes:
       action: api_cargo_validate_ldv
       forward_query: '*'
   -
+    id: post.api_cargo_validate_ldv
+    method: POST
+    path: /api_cargo_validate_ldv
+    upstream:
+      action: api_cargo_validate_ldv
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_cargo_vettori_list
     method: GET
     path: /api_cargo_vettori_list
@@ -2563,6 +2986,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cargo_webcargo_booking_cancel
+    method: GET
+    path: /api_cargo_webcargo_booking_cancel
+    upstream:
+      action: api_cargo_webcargo_booking_cancel
+      forward_query: '*'
+  -
     id: get.api_cargo_webcargo_booking_detail
     method: GET
     path: /api_cargo_webcargo_booking_detail
@@ -2604,6 +3034,16 @@ routes:
       action: api_cargo_webcargo_booking_status
       forward_query: '*'
   -
+    id: post.api_cargo_webcargo_booking_status
+    method: POST
+    path: /api_cargo_webcargo_booking_status
+    upstream:
+      action: api_cargo_webcargo_booking_status
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_cargo_webcargo_evidence_ticket
     method: GET
     path: /api_cargo_webcargo_evidence_ticket
@@ -2618,6 +3058,16 @@ routes:
       action: api_cargo_webcargo_rate_detail
       forward_query: '*'
   -
+    id: post.api_cargo_webcargo_rate_detail
+    method: POST
+    path: /api_cargo_webcargo_rate_detail
+    upstream:
+      action: api_cargo_webcargo_rate_detail
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_carrier_reconciliation
     method: POST
     path: /api_carrier_reconciliation
@@ -2627,6 +3077,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_carrier_reconciliation
+    method: GET
+    path: /api_carrier_reconciliation
+    upstream:
+      action: api_carrier_reconciliation
+      forward_query: '*'
   -
     id: get.api_client_causals
     method: GET
@@ -2665,6 +3122,91 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_cod_capture_review
+    method: GET
+    path: /api_cod_capture_review
+    upstream:
+      action: api_cod_capture_review
+      forward_query: '*'
+  -
+    id: post.api_cod_capture_review
+    method: POST
+    path: /api_cod_capture_review
+    upstream:
+      action: api_cod_capture_review
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cod_capture_session
+    method: GET
+    path: /api_cod_capture_session
+    upstream:
+      action: api_cod_capture_session
+      forward_query: '*'
+  -
+    id: post.api_cod_capture_session
+    method: POST
+    path: /api_cod_capture_session
+    upstream:
+      action: api_cod_capture_session
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cod_distinta_export
+    method: GET
+    path: /api_cod_distinta_export
+    upstream:
+      action: api_cod_distinta_export
+      forward_query: '*'
+  -
+    id: post.api_cod_distinta_export
+    method: POST
+    path: /api_cod_distinta_export
+    upstream:
+      action: api_cod_distinta_export
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cod_export
+    method: GET
+    path: /api_cod_export
+    upstream:
+      action: api_cod_export
+      forward_query: '*'
+  -
+    id: post.api_cod_export
+    method: POST
+    path: /api_cod_export
+    upstream:
+      action: api_cod_export
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_cod_reconciliation
+    method: GET
+    path: /api_cod_reconciliation
+    upstream:
+      action: api_cod_reconciliation
+      forward_query: '*'
+  -
+    id: post.api_cod_reconciliation
+    method: POST
+    path: /api_cod_reconciliation
+    upstream:
+      action: api_cod_reconciliation
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: put.api_communication_conversations
     method: PUT
     path: /api_communication_conversations
@@ -2675,8 +3217,42 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_communication_conversations
+    method: GET
+    path: /api_communication_conversations
+    upstream:
+      action: api_communication_conversations
+      forward_query: '*'
+  -
+    id: post.api_communication_conversations
+    method: POST
+    path: /api_communication_conversations
+    upstream:
+      action: api_communication_conversations
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: put.api_communication_messages
     method: PUT
+    path: /api_communication_messages
+    upstream:
+      action: api_communication_messages
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_communication_messages
+    method: GET
+    path: /api_communication_messages
+    upstream:
+      action: api_communication_messages
+      forward_query: '*'
+  -
+    id: post.api_communication_messages
+    method: POST
     path: /api_communication_messages
     upstream:
       action: api_communication_messages
@@ -2719,6 +3295,13 @@ routes:
       action: api_contact_types_web
       forward_query: '*'
   -
+    id: get.api_copilot_elevenlabs_credential
+    method: GET
+    path: /api_copilot_elevenlabs_credential
+    upstream:
+      action: api_copilot_elevenlabs_credential
+      forward_query: '*'
+  -
     id: get.api_courier_kpis
     method: GET
     path: /api_courier_kpis
@@ -2736,6 +3319,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_courier_label_email
+    method: GET
+    path: /api_courier_label_email
+    upstream:
+      action: api_courier_label_email
+      forward_query: '*'
+  -
     id: get.api_courier_label_share_recipients
     method: GET
     path: /api_courier_label_share_recipients
@@ -2743,12 +3333,32 @@ routes:
       action: api_courier_label_share_recipients
       forward_query: '*'
   -
+    id: post.api_courier_label_share_recipients
+    method: POST
+    path: /api_courier_label_share_recipients
+    upstream:
+      action: api_courier_label_share_recipients
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_courier_shipments
     method: GET
     path: /api_courier_shipments
     upstream:
       action: api_courier_shipments
       forward_query: '*'
+  -
+    id: post.api_courier_shipments
+    method: POST
+    path: /api_courier_shipments
+    upstream:
+      action: api_courier_shipments
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: post.api_credit_notes
     method: POST
@@ -2759,6 +3369,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_credit_notes
+    method: GET
+    path: /api_credit_notes
+    upstream:
+      action: api_credit_notes
+      forward_query: '*'
   -
     id: get.api_crm_crud
     method: GET
@@ -2777,8 +3394,55 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: post.api_crm_crud
+    method: POST
+    path: /api_crm_crud
+    upstream:
+      action: api_crm_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_crm_crud
+    method: PUT
+    path: /api_crm_crud
+    upstream:
+      action: api_crm_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: delete.api_crm_events
     method: DELETE
+    path: /api_crm_events
+    upstream:
+      action: api_crm_events
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_crm_events
+    method: GET
+    path: /api_crm_events
+    upstream:
+      action: api_crm_events
+      forward_query: '*'
+  -
+    id: post.api_crm_events
+    method: POST
+    path: /api_crm_events
+    upstream:
+      action: api_crm_events
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_crm_events
+    method: PUT
     path: /api_crm_events
     upstream:
       action: api_crm_events
@@ -2973,6 +3637,16 @@ routes:
       action: api_docsstory_crud
       forward_query: '*'
   -
+    id: post.api_docsstory_crud
+    method: POST
+    path: /api_docsstory_crud
+    upstream:
+      action: api_docsstory_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_docsstory_resend
     method: POST
     path: /api_docsstory_resend
@@ -2982,6 +3656,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_docsstory_resend
+    method: GET
+    path: /api_docsstory_resend
+    upstream:
+      action: api_docsstory_resend
+      forward_query: '*'
   -
     id: get.api_driver_delivery
     method: GET
@@ -3002,6 +3683,16 @@ routes:
   -
     id: delete.api_driver_delivery
     method: DELETE
+    path: /api_driver_delivery
+    upstream:
+      action: api_driver_delivery
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_driver_delivery
+    method: PUT
     path: /api_driver_delivery
     upstream:
       action: api_driver_delivery
@@ -3037,6 +3728,16 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: put.api_driver_manifest
+    method: PUT
+    path: /api_driver_manifest
+    upstream:
+      action: api_driver_manifest
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_driver_pod
     method: GET
     path: /api_driver_pod
@@ -3064,6 +3765,16 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: put.api_driver_pod
+    method: PUT
+    path: /api_driver_pod
+    upstream:
+      action: api_driver_pod
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_driver_routes
     method: GET
     path: /api_driver_routes
@@ -3083,6 +3794,16 @@ routes:
   -
     id: delete.api_driver_routes
     method: DELETE
+    path: /api_driver_routes
+    upstream:
+      action: api_driver_routes
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_driver_routes
+    method: PUT
     path: /api_driver_routes
     upstream:
       action: api_driver_routes
@@ -3208,6 +3929,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_express_service_select
+    method: GET
+    path: /api_express_service_select
+    upstream:
+      action: api_express_service_select
+      forward_query: '*'
   -
     id: get.api_fisc_config
     method: GET
@@ -3354,6 +4082,33 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_giacenze_operations
+    method: GET
+    path: /api_giacenze_operations
+    upstream:
+      action: api_giacenze_operations
+      forward_query: '*'
+  -
+    id: put.api_giacenze_operations
+    method: PUT
+    path: /api_giacenze_operations
+    upstream:
+      action: api_giacenze_operations
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_giacenze_operations
+    method: DELETE
+    path: /api_giacenze_operations
+    upstream:
+      action: api_giacenze_operations
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_home_box_indicators
     method: GET
     path: /api_home_box_indicators
@@ -3422,8 +4177,45 @@ routes:
       action: api_intra_eu_recap_export
       forward_query: '*'
   -
+    id: post.api_intra_eu_recap_export
+    method: POST
+    path: /api_intra_eu_recap_export
+    upstream:
+      action: api_intra_eu_recap_export
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: delete.api_inventory_crud
     method: DELETE
+    path: /api_inventory_crud
+    upstream:
+      action: api_inventory_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_inventory_crud
+    method: GET
+    path: /api_inventory_crud
+    upstream:
+      action: api_inventory_crud
+      forward_query: '*'
+  -
+    id: post.api_inventory_crud
+    method: POST
+    path: /api_inventory_crud
+    upstream:
+      action: api_inventory_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_inventory_crud
+    method: PUT
     path: /api_inventory_crud
     upstream:
       action: api_inventory_crud
@@ -3642,6 +4434,16 @@ routes:
       action: api_invoice_pdf
       forward_query: '*'
   -
+    id: post.api_invoice_pdf
+    method: POST
+    path: /api_invoice_pdf
+    upstream:
+      action: api_invoice_pdf
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_invoice_recalculate
     method: POST
     path: /api_invoice_recalculate
@@ -3652,12 +4454,29 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_invoice_recalculate
+    method: GET
+    path: /api_invoice_recalculate
+    upstream:
+      action: api_invoice_recalculate
+      forward_query: '*'
+  -
     id: get.api_invoice_sdi_status
     method: GET
     path: /api_invoice_sdi_status
     upstream:
       action: api_invoice_sdi_status
       forward_query: '*'
+  -
+    id: post.api_invoice_sdi_status
+    method: POST
+    path: /api_invoice_sdi_status
+    upstream:
+      action: api_invoice_sdi_status
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_invoice_shipments
     method: GET
@@ -4504,6 +5323,16 @@ routes:
       action: api_master_currencies
       forward_query: '*'
   -
+    id: put.api_master_currencies
+    method: PUT
+    path: /api_master_currencies
+    upstream:
+      action: api_master_currencies
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_master_erp_texts
     method: GET
     path: /api_master_erp_texts
@@ -4585,12 +5414,72 @@ routes:
       action: api_master_studi_settore
       forward_query: '*'
   -
+    id: post.api_master_studi_settore
+    method: POST
+    path: /api_master_studi_settore
+    upstream:
+      action: api_master_studi_settore
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_master_studi_settore
+    method: PUT
+    path: /api_master_studi_settore
+    upstream:
+      action: api_master_studi_settore
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_master_studi_settore
+    method: DELETE
+    path: /api_master_studi_settore
+    upstream:
+      action: api_master_studi_settore
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_master_supplements
     method: GET
     path: /api_master_supplements
     upstream:
       action: api_master_supplements
       forward_query: '*'
+  -
+    id: post.api_master_supplements
+    method: POST
+    path: /api_master_supplements
+    upstream:
+      action: api_master_supplements
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_master_supplements
+    method: PUT
+    path: /api_master_supplements
+    upstream:
+      action: api_master_supplements
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_master_supplements
+    method: DELETE
+    path: /api_master_supplements
+    upstream:
+      action: api_master_supplements
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_master_templates
     method: GET
@@ -4777,6 +5666,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_modelli_email_preview
+    method: GET
+    path: /api_modelli_email_preview
+    upstream:
+      action: api_modelli_email_preview
+      forward_query: '*'
+  -
     id: get.api_modelli_preview_web
     method: GET
     path: /api_modelli_preview_web
@@ -4823,6 +5719,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.api_notification_trigger
+    method: GET
+    path: /api_notification_trigger
+    upstream:
+      action: api_notification_trigger
+      forward_query: '*'
   -
     id: get.api_notifications
     method: GET
@@ -5273,6 +6176,16 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: put.api_proforma_crud
+    method: PUT
+    path: /api_proforma_crud
+    upstream:
+      action: api_proforma_crud
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_proforma_duplicate
     method: GET
     path: /api_proforma_duplicate
@@ -5385,6 +6298,16 @@ routes:
       action: api_selectable_carriers
       forward_query: '*'
   -
+    id: post.api_selectable_carriers
+    method: POST
+    path: /api_selectable_carriers
+    upstream:
+      action: api_selectable_carriers
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_selectable_partners
     method: GET
     path: /api_selectable_partners
@@ -5435,6 +6358,16 @@ routes:
     upstream:
       action: api_shipment_audit
       forward_query: '*'
+  -
+    id: post.api_shipment_audit
+    method: POST
+    path: /api_shipment_audit
+    upstream:
+      action: api_shipment_audit
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_shipment_cod_captures
     method: GET
@@ -5501,12 +6434,32 @@ routes:
       action: api_shipment_fornitori
       forward_query: '*'
   -
+    id: post.api_shipment_fornitori
+    method: POST
+    path: /api_shipment_fornitori
+    upstream:
+      action: api_shipment_fornitori
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_shipment_owner_options
     method: GET
     path: /api_shipment_owner_options
     upstream:
       action: api_shipment_owner_options
       forward_query: '*'
+  -
+    id: post.api_shipment_owner_options
+    method: POST
+    path: /api_shipment_owner_options
+    upstream:
+      action: api_shipment_owner_options
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_shipment_partners
     method: GET
@@ -5539,6 +6492,16 @@ routes:
       action: api_shipment_relations
       forward_query: '*'
   -
+    id: post.api_shipment_relations
+    method: POST
+    path: /api_shipment_relations
+    upstream:
+      action: api_shipment_relations
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_shipment_subcontracting
     method: GET
     path: /api_shipment_subcontracting
@@ -5563,6 +6526,16 @@ routes:
       action: api_shipment_tracking
       forward_query: '*'
   -
+    id: post.api_shipment_tracking
+    method: POST
+    path: /api_shipment_tracking
+    upstream:
+      action: api_shipment_tracking
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_shipment_wifi_scale
     method: GET
     path: /api_shipment_wifi_scale
@@ -5582,6 +6555,23 @@ routes:
   -
     id: put.api_supplier_invoices
     method: PUT
+    path: /api_supplier_invoices
+    upstream:
+      action: api_supplier_invoices
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.api_supplier_invoices
+    method: GET
+    path: /api_supplier_invoices
+    upstream:
+      action: api_supplier_invoices
+      forward_query: '*'
+  -
+    id: post.api_supplier_invoices
+    method: POST
     path: /api_supplier_invoices
     upstream:
       action: api_supplier_invoices
@@ -5623,6 +6613,26 @@ routes:
     upstream:
       action: api_supplier_services
       forward_query: '*'
+  -
+    id: post.api_supplier_services
+    method: POST
+    path: /api_supplier_services
+    upstream:
+      action: api_supplier_services
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_supplier_services
+    method: PUT
+    path: /api_supplier_services
+    upstream:
+      action: api_supplier_services
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.api_supplier_tracking_descr
     method: GET
@@ -5843,11 +6853,28 @@ routes:
       action: cancel_pickup
       forward_query: '*'
   -
+    id: post.cancel_pickup
+    method: POST
+    path: /cancel_pickup
+    upstream:
+      action: cancel_pickup
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.cap_city_prov
     method: GET
     path: /cap_city_prov
     upstream:
       action: cap_city_prov
+      forward_query: '*'
+  -
+    id: get.copilot_chat
+    method: GET
+    path: /copilot_chat
+    upstream:
+      action: copilot_chat
       forward_query: '*'
   -
     id: post.copilot_tts
@@ -5867,6 +6894,16 @@ routes:
       action: ext_my_shipments
       forward_query: '*'
   -
+    id: post.ext_my_shipments
+    method: POST
+    path: /ext_my_shipments
+    upstream:
+      action: ext_my_shipments
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.full_shipment_label_generator
     method: POST
     path: /full_shipment_label_generator
@@ -5876,6 +6913,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.full_shipment_label_generator
+    method: GET
+    path: /full_shipment_label_generator
+    upstream:
+      action: full_shipment_label_generator
+      forward_query: '*'
   -
     id: get.get_my_profile
     method: GET
@@ -5891,6 +6935,16 @@ routes:
       action: partner_switch
       forward_query: '*'
   -
+    id: post.partner_switch
+    method: POST
+    path: /partner_switch
+    upstream:
+      action: partner_switch
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.reserve_pickup
     method: POST
     path: /reserve_pickup
@@ -5900,6 +6954,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.reserve_pickup
+    method: GET
+    path: /reserve_pickup
+    upstream:
+      action: reserve_pickup
+      forward_query: '*'
   -
     id: post.reset_shipment_awb
     method: POST
@@ -5911,6 +6972,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.reset_shipment_awb
+    method: GET
+    path: /reset_shipment_awb
+    upstream:
+      action: reset_shipment_awb
+      forward_query: '*'
+  -
     id: post.rubrica_add
     method: POST
     path: /rubrica_add
@@ -5920,6 +6988,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.rubrica_add
+    method: GET
+    path: /rubrica_add
+    upstream:
+      action: rubrica_add
+      forward_query: '*'
   -
     id: post.rubrica_search
     method: POST
@@ -5931,6 +7006,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.rubrica_search
+    method: GET
+    path: /rubrica_search
+    upstream:
+      action: rubrica_search
+      forward_query: '*'
+  -
     id: post.rubrica_set_preferred
     method: POST
     path: /rubrica_set_preferred
@@ -5941,6 +7023,13 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.rubrica_set_preferred
+    method: GET
+    path: /rubrica_set_preferred
+    upstream:
+      action: rubrica_set_preferred
+      forward_query: '*'
+  -
     id: post.shipment_package_field
     method: POST
     path: /shipment_package_field
@@ -5950,6 +7039,13 @@ routes:
     limits:
       body: 1m
       timeout: 30
+  -
+    id: get.shipment_package_field
+    method: GET
+    path: /shipment_package_field
+    upstream:
+      action: shipment_package_field
+      forward_query: '*'
   -
     id: get.shipment_timing
     method: GET
@@ -6083,8 +7179,42 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.unified_express_service_list_by_shipment
+    method: GET
+    path: /unified_express_service_list_by_shipment
+    upstream:
+      action: unified_express_service_list_by_shipment
+      forward_query: '*'
+  -
+    id: delete.unified_express_service_list_by_shipment
+    method: DELETE
+    path: /unified_express_service_list_by_shipment
+    upstream:
+      action: unified_express_service_list_by_shipment
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.unified_rate_fornitore
     method: POST
+    path: /unified_rate_fornitore
+    upstream:
+      action: unified_rate_fornitore
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: get.unified_rate_fornitore
+    method: GET
+    path: /unified_rate_fornitore
+    upstream:
+      action: unified_rate_fornitore
+      forward_query: '*'
+  -
+    id: delete.unified_rate_fornitore
+    method: DELETE
     path: /unified_rate_fornitore
     upstream:
       action: unified_rate_fornitore
@@ -6151,12 +7281,49 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.web_chat_typing
+    method: GET
+    path: /web_chat_typing
+    upstream:
+      action: web_chat_typing
+      forward_query: '*'
+  -
+    id: put.web_chat_typing
+    method: PUT
+    path: /web_chat_typing
+    upstream:
+      action: web_chat_typing
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.web_chat_unread_counter
     method: GET
     path: /web_chat_unread_counter
     upstream:
       action: web_chat_unread_counter
       forward_query: '*'
+  -
+    id: post.web_chat_unread_counter
+    method: POST
+    path: /web_chat_unread_counter
+    upstream:
+      action: web_chat_unread_counter
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.web_chat_unread_counter
+    method: PUT
+    path: /web_chat_unread_counter
+    upstream:
+      action: web_chat_unread_counter
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
   -
     id: get.web_presence_heartbeat
     method: GET

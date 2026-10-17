@@ -121,7 +121,7 @@ export const shipmentExportService = {
    */
   download(jobId: number): void {
     const base = window.__TMWE_SHIPMENT__?.basePath ?? "/bff/v1";
-    const url = `${base}/app.php?action=api_shipment_export_download_web&job_id=${encodeURIComponent(String(jobId))}`;
+    const url = `${base}/api_shipment_export_download_web?job_id=${encodeURIComponent(String(jobId))}`;
 
     const a = document.createElement("a");
     a.href = url;

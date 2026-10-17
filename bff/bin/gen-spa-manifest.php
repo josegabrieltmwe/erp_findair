@@ -74,12 +74,12 @@ foreach ($modules as $module) {
 
         // Constantes de ruta (`const BASE = "/api_x"`): solo cuentan si coinciden con una ruta real
         // del backend. El método no se ve en la constante: se toman los que usa ese fichero.
-        $literals = preg_match_all('#[`"\']/([a-z][a-z0-9]*(?:_[a-z0-9]+)+)(?=[?`"\'/\s])#', $code, $lit);
+        $literals = preg_match_all('#[`"\']/?([a-z][a-z0-9]*(?:_[a-z0-9]+)+)(?=[?`"\'/\s])#', $code, $lit);
         if ($literals > 0) {
             $fileVerbs = preg_match_all('/method:\s*["\']([A-Za-z]+)["\']/', $code, $mv) > 0
                 ? array_map('strtoupper', $mv[1]) : [];
             foreach (array_unique($lit[1]) as $name) {
-                if (isset($backend[$name]) && !isset($methods[$name])) {
+                if (isset($backend[$name])) {
                     foreach (array_unique(array_merge(['GET'], $fileVerbs)) as $verb) {
                         $methods[$name][$verb] = true;
                     }
