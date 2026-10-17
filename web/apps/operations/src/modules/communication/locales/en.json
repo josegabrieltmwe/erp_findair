@@ -1,0 +1,34 @@
+{
+  "communication": {
+    "list": {
+      "title": "Tickets",
+      "subject": "Subject",
+      "contact": "Contact",
+      "opened_at": "Opened",
+      "status": "Status",
+      "search": "Search",
+      "new_ticket": "New ticket",
+      "unread_total": "{n} unread"
+    },
+    "status": {
+      "open": "Open",
+      "closed": "Closed",
+      "all": "All"
+    },
+    "new_ticket": {
+      "title": "New ticket",
+      "subject": "Subject",
+      "body": "Message",
+      "submit": "Open ticket",
+      "error": "Could not open the ticket"
+    },
+    "thread": {
+      "close": "Close ticket",
+      "close_confirm": "Close this ticket?",
+      "placeholder": "Type a reply…",
+      "empty": "No messages yet",
+      "send_error": "Could not send the message",
+      "untitled": "Ticket #{id}"
+    }
+  }
+}

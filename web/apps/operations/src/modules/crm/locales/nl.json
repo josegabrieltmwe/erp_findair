@@ -1,0 +1,123 @@
+{
+  "crm": {
+    "stato": {
+      "all": "Alle",
+      "A": "Open",
+      "C": "Gesloten",
+      "L": "Lange wachttijd"
+    },
+    "list": {
+      "title": "CRM-dossiers",
+      "oggetto": "Onderwerp",
+      "cliente": "Klant",
+      "stato": "Status",
+      "data_open": "Opening",
+      "data_next": "Volgende datum",
+      "descriz": "Omschrijving",
+      "contatto": "Contact",
+      "tipo": "Type",
+      "data_open_da": "Open vanaf",
+      "data_open_al": "Open tot",
+      "search": "Onderwerp zoeken",
+      "delete_confirm": "Dossier #{id} verwijderen?"
+    },
+    "shortcut": {
+      "open": "Open dossiers",
+      "todo": "Open To-Do-dossiers",
+      "alert": "Nieuwe dossiers (240 u)"
+    },
+    "detail": {
+      "title": "Dossier",
+      "header": "Dossiergegevens",
+      "open_shipment": "Zending openen",
+      "sec_client": "Klant en contactpersoon",
+      "sec_classify": "Classificatie",
+      "sec_followup": "Follow-up",
+      "sec_notes": "Notities",
+      "id_spedizione_readonly": "Overgenomen van de zending (alleen-lezen)"
+    },
+    "lookup": {
+      "type_to_search": "Typ om te zoeken…",
+      "no_contacts": "Geen contacten"
+    },
+    "field": {
+      "cliente": "Klant",
+      "contatto": "Contact",
+      "oggetto": "Onderwerp",
+      "id_spedizione": "Zendingnr.",
+      "tipo": "Type",
+      "nome": "Naam",
+      "email": "E-mail",
+      "tel": "Telefoon",
+      "rif_cliente": "Klantref.",
+      "data_next": "Volgende follow-up",
+      "descriz": "Omschrijving",
+      "note_interne": "Interne notities"
+    },
+    "eventi": {
+      "title": "Gebeurtenissen / voortgang",
+      "stato": "Status",
+      "descriz": "Omschrijving voortgang",
+      "add": "Toevoegen",
+      "empty": "Geen gebeurtenissen",
+      "data": "Datum en tijd",
+      "view": "Details bekijken",
+      "detail_title": "Details voortgang #{id}"
+    },
+    "messaggi": {
+      "title": "Verzonden berichten",
+      "dest": "Geadresseerde",
+      "file": "Bijl.",
+      "way": "Via",
+      "data": "Datum",
+      "esito": "Uitkomst",
+      "empty": "Geen berichten verzonden"
+    },
+    "context": {
+      "shipment_title": "CRM · Zending #{id}",
+      "cargo_title": "CRM · Cargo #{id}",
+      "unavailable_shipment": "CRM is niet beschikbaar voor deze zending",
+      "unavailable_cargo": "CRM is niet beschikbaar voor deze cargozending",
+      "case_fallback": "Dossier #{id}",
+      "case_selector": "CRM-dossier",
+      "open_full": "Volledig dossier openen",
+      "case_option": "{subject} · {status} · #{id}",
+      "created": "Dossier aangemaakt",
+      "existing_opened": "Bestaand dossier geopend",
+      "create_error": "Dossier kon niet worden aangemaakt",
+      "created_partial": "Dossier aangemaakt. Een deel van de activiteit kon niet worden geladen.",
+      "created_open_error": "Het dossier is aangemaakt, maar kon niet worden geopend. Je kunt het opnieuw proberen in het paneel.",
+      "existing_partial": "Het bestaande dossier is geopend. Een deel van de activiteit kon niet worden geladen.",
+      "existing_open_error": "Het dossier bestaat al, maar kon niet worden geopend. Je kunt het opnieuw proberen in het paneel.",
+      "partial_error": "De beschikbare gegevens worden getoond, maar het dossier kon niet worden vernieuwd.",
+      "load_error_title": "Dossier kon niet worden geladen",
+      "load_error_body": "De gegevens van dossier #{id} konden niet worden opgehaald. De zending blijft open en je kunt het opnieuw proberen.",
+      "empty_title": "Geen dossier om weer te geven",
+      "empty_body": "Selecteer een CRM-dossier of sluit dit paneel om door te gaan.",
+      "events_error": "Gebeurtenissen konden niet worden geladen. De rest van het dossier blijft beschikbaar.",
+      "messages_error": "Berichten konden niet worden geladen. De rest van het dossier blijft beschikbaar."
+    },
+    "indicator": {
+      "open_cases": "Open dossiers",
+      "overdue_followups": "Achterstallige opvolgingen"
+    },
+    "send": {
+      "button": "Bericht versturen",
+      "title": "Bericht naar de klant sturen",
+      "metodo": "Kanaal",
+      "dest": "Geadresseerde",
+      "dest_hint": "Indien leeg wordt het e-mailadres van het dossier gebruikt",
+      "subject": "Onderwerp",
+      "subject_hint": "Indien leeg wordt de waarde uit het sjabloon gebruikt",
+      "text": "Vrije tekst",
+      "use_base": "Basissjabloon gebruiken",
+      "result": "Bericht geregistreerd (uitkomst: {esito})",
+      "error": "Kan het bericht niet versturen",
+      "files": "Bijlagen",
+      "files_hint": "Maximaal {max} bestanden",
+      "use_base_hint": "Plaatst uw tekst in de klantsjabloon",
+      "files_cta": "Sleep bestanden hierheen of klik",
+      "files_full": "Maximum van {max} bestanden bereikt"
+    }
+  }
+}

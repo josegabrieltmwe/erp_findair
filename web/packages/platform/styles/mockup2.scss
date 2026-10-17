@@ -1,0 +1,1373 @@
+// =============================================================================
+// mockup2.scss — layout V2 COMPARTIDO (topbar, sidebar, cards, dsh-*, sdv-*...).
+// Fuente ÚNICA para cargo/shipment/invoicing. Las apps lo cargan con
+//   @use '@shared/styles/mockup2.scss' with ($stage-pad-bottom: ..., ...);
+// o simplemente `@use '@shared/styles/mockup2.scss';` para los defaults (cargo).
+// Las 3 diferencias históricas de shipment se exponen como variables.
+// Todas las reglas viven bajo `.shipment-v2` (namespace que aplica AppShell).
+// =============================================================================
+
+// --- Parámetros por app (defaults = cargo/invoicing) -------------------------
+$stage-pad-bottom: 90px !default;  // shipment: 56px
+$col-gap: 12px !default;           // shipment: 8px
+// -----------------------------------------------------------------------------
+
+/*
+ * Mockup 2 — fidelity-first styles
+ *
+ * Implementation moves the visual responsibility OUT of Vuetify
+ * defaults (which would inject component-wide rounding, padding,
+ * variant tints…) and into raw CSS classes that match the mockup
+ * pixel-for-pixel. All values come from the original
+ * shipment-1001049949-chiaro.html stylesheet — we only swap the
+ * mockup's CSS variables for the matching Vuetify theme tokens
+ * (--v-theme-surface / --v-theme-surface-variant / etc.).
+ *
+ * Scoping: every rule lives under `.shipment-v2` so the v1 page
+ * stays untouched.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.shipment-v2 {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgb(var(--v-theme-on-background));
+}
+
+/* ===== layout containers ============================================ */
+.shipment-v2 .wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.shipment-v2 .stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 20px $stage-pad-bottom;
+}
+
+/* ===== card pattern (matches .card / .card.alt / .cardh) ============ */
+.shipment-v2 .card-tmwe {
+  background: rgb(var(--v-theme-surface));
+  border-radius: 14px;
+  padding: 0 14px 13px;
+  overflow: hidden;
+  border: 0;
+  box-shadow: none;
+}
+.shipment-v2 .card-tmwe--alt {
+  background: rgb(var(--v-theme-surface-bright));
+}
+
+/* Light themes only: thin border + small drop shadow gives a subtle
+ * 3D lift to every card container. Dark themes keep the flat look so
+ * the cards stay readable against the deep background. */
+.v-theme--tmweShipment .shipment-v2 .card-tmwe,
+.v-theme--shipmentV2Light .shipment-v2 .card-tmwe {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+}
+
+/* The card-content area sits below the header band — no extra top
+ * padding because the band's bottom-margin (12px) already covers it. */
+.shipment-v2 .card-tmwe-body {
+  padding: 0;
+}
+
+/* ===== topbar ======================================================= */
+.shipment-v2 .topbar {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 20px 9px;
+  border-bottom: 0;
+}
+.shipment-v2 .topbar-iconbtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: rgb(var(--v-theme-surface));
+  display: grid;
+  place-items: center;
+  color: rgb(var(--v-theme-on-surface-variant));
+  transition: color .12s, background .12s;
+  flex-shrink: 0;
+  position: relative;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .topbar-iconbtn:hover {
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .topbar-iconbtn .topbar-iconbtn-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(var(--v-theme-success));
+  box-shadow: 0 0 0 2px rgb(var(--v-theme-background));
+}
+.shipment-v2 .topbar-shipnum {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.12;
+}
+.shipment-v2 .topbar-hmeta {
+  font-size: 11.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-weight: 600;
+  opacity: .75;
+}
+.shipment-v2 .topbar-sep {
+  width: 1px;
+  align-self: stretch;
+  background: rgb(var(--v-theme-surface-light));
+  margin: 3px 1px;
+}
+.shipment-v2 .hclient {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 9px;
+  border-radius: 11px;
+  transition: background .12s;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .hclient:hover {
+  background: rgb(var(--v-theme-surface));
+}
+.shipment-v2 .hclient-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgb(var(--v-theme-surface));
+  display: grid;
+  place-items: center;
+  color: rgb(var(--v-theme-primary));
+  flex-shrink: 0;
+}
+.shipment-v2 .hclient:hover .hclient-icon {
+  background: rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .hclient-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+}
+.shipment-v2 .hclient-sub {
+  font-size: 11.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-weight: 500;
+  line-height: 1.2;
+}
+.shipment-v2 .hclient-edit {
+  width: 14px;
+  height: 14px;
+  margin-left: 3px;
+  opacity: .5;
+  transition: opacity .12s, color .12s;
+}
+.shipment-v2 .hclient:hover .hclient-edit {
+  opacity: 1;
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .ldvbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 11px 13px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  transition: filter .12s;
+  letter-spacing: .03em;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .ldvbtn.hvb {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+.shipment-v2 .ldvbtn.hvb:hover { filter: brightness(1.12); }
+.shipment-v2 .ldvbtn.awb {
+  background: linear-gradient(170deg, #6b4a26, #4f3318);
+  color: #f5b400;
+}
+.shipment-v2 .ldvbtn.awb:hover { filter: brightness(1.14); }
+
+/* ===== tabs ========================================================= */
+.shipment-v2 .tabbar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 20px 0;
+  align-items: center;
+}
+.shipment-v2 .tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(var(--v-theme-on-surface-variant));
+  border-radius: 11px;
+  transition: color .12s, background .12s;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.shipment-v2 .tab:hover { color: rgb(var(--v-theme-on-surface)); }
+.shipment-v2 .tab.active {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-primary));
+}
+
+/* mini status — pill on the right of the tabs */
+.shipment-v2 .ministatus {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 13px;
+  background: rgb(var(--v-theme-surface));
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background .12s;
+  border: 0;
+}
+.shipment-v2 .ministatus:hover {
+  background: rgba(var(--v-theme-primary), .12);
+}
+.shipment-v2 .ministatus > .v-icon {
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .mbar {
+  display: flex;
+  gap: 3px;
+}
+.shipment-v2 .mbar i {
+  width: 17px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgb(var(--v-theme-surface-light));
+  display: block;
+}
+.shipment-v2 .mbar i.done { background: rgb(var(--v-theme-success)); }
+.shipment-v2 .mbar i.now { background: rgb(var(--v-theme-primary)); }
+.shipment-v2 .ministatus-text {
+  font-size: 12px;
+  font-weight: 700;
+}
+.shipment-v2 .ministatus-date {
+  font-size: 11px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .65;
+  font-weight: 500;
+}
+
+/* ===== splitter ===================================================== */
+.shipment-v2 .cols {
+  display: grid;
+  grid-template-columns: calc(var(--p, 50) * 1% - 8px) 16px calc((100 - var(--p, 50)) * 1% - 8px);
+}
+.shipment-v2 .col {
+  display: flex;
+  flex-direction: column;
+  gap: $col-gap;
+}
+.shipment-v2 .splitter {
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.shipment-v2 .splitter::before {
+  content: '';
+  width: 4px;
+  height: 40px;
+  border-radius: 3px;
+  background: rgb(var(--v-theme-surface-light));
+  transition: background .12s, height .12s;
+}
+.shipment-v2 .splitter:hover::before {
+  background: rgb(var(--v-theme-primary));
+  height: 64px;
+}
+
+/* ===== KPI stat tile (matches .stat) ================================ */
+.shipment-v2 .stat-tile {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 11px;
+  border-radius: 11px;
+  background: rgb(var(--v-theme-surface-variant));
+  transition: background .12s;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  min-width: 0;
+}
+.shipment-v2 .card-tmwe--alt .stat-tile {
+  background: rgb(var(--v-theme-surface));
+}
+.shipment-v2 .stat-tile:hover {
+  background: rgba(var(--v-theme-primary), .12);
+}
+.shipment-v2 .stat-tile .stat-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shipment-v2 .stat-tile .stat-row .v-icon {
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .stat-tile .stat-cap {
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .7;
+}
+.shipment-v2 .stat-tile .stat-val {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.shipment-v2 .stat-tile .stat-val small {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .8;
+}
+.shipment-v2 .stat-tile .stat-val.success { color: rgb(var(--v-theme-success)); }
+.shipment-v2 .stat-tile .stat-val.warning { color: rgb(var(--v-theme-warning)); }
+.shipment-v2 .stat-tile .stat-val.error { color: rgb(var(--v-theme-error)); }
+.shipment-v2 .stat-tile .stat-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .75;
+}
+
+.shipment-v2 .stats {
+  display: flex;
+  gap: 8px;
+}
+
+/* ===== address row (.arow) ========================================== */
+.shipment-v2 .arow {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 9px;
+  border-radius: 11px;
+  width: 100%;
+  text-align: left;
+  transition: background .12s;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .arow:hover {
+  background: rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .arow > .v-icon {
+  color: rgb(var(--v-theme-primary));
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.shipment-v2 .arow-cap {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .65;
+}
+.shipment-v2 .arow-main {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.shipment-v2 .arow-sub {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(var(--v-theme-on-surface-variant));
+}
+.shipment-v2 .arow-sub2 {
+  font-size: 11.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .75;
+  font-weight: 500;
+}
+
+/* ===== info row (.inforow) ========================================== */
+.shipment-v2 .inforow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px;
+  border-radius: 11px;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  text-align: left;
+}
+.shipment-v2 .inforow--clickable {
+  cursor: pointer;
+  transition: background .12s;
+}
+.shipment-v2 .inforow--clickable:hover {
+  background: rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .inforow > .v-icon {
+  color: rgb(var(--v-theme-primary));
+  flex-shrink: 0;
+}
+.shipment-v2 .inforow-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.shipment-v2 .inforow-sub {
+  font-size: 10.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .7;
+  font-weight: 500;
+}
+.shipment-v2 .inforow-val {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+/* Sin línea separadora entre filas InfoRow dentro de las cards: el detalle de
+   cargo ya la anulaba card por card (:deep(.inforow + .inforow){border-top:0});
+   se retira aquí de forma global para que shipment quede igual de limpio, sin
+   bordes internos. Ninguna card añade explícitamente el separador. */
+.shipment-v2 .inforow + .inforow {
+  border-top: 0;
+}
+
+/* ===== service flow (cliente -> vettore) ============================ */
+.shipment-v2 .srvflow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.shipment-v2 .srvcell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: filter .12s;
+  text-align: left;
+  border: 0;
+}
+.shipment-v2 .srvcell:hover { filter: brightness(.97); }
+.shipment-v2 .srvcell.cli {
+  background: rgba(var(--v-theme-primary), .12);
+}
+.shipment-v2 .srvcell.vet {
+  background: rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .srvtag {
+  align-self: flex-start;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.shipment-v2 .srvtag.cli {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+.shipment-v2 .srvtag.vet {
+  background: #4f3318;
+  color: #f5b400;
+}
+.shipment-v2 .svrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+}
+.shipment-v2 .sval {
+  font-size: 14px;
+  font-weight: 800;
+}
+.shipment-v2 .scap {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .75;
+}
+.shipment-v2 .srvarrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .5;
+}
+
+/* ===== AWB chip row inside service card ============================= */
+.shipment-v2 .srvawb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: rgb(var(--v-theme-surface-variant));
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background .12s;
+  border: 0;
+  width: 100%;
+  text-align: left;
+}
+.shipment-v2 .srvawb:hover { background: rgba(var(--v-theme-primary), .12); }
+.shipment-v2 .srvawb > .v-icon {
+  color: rgb(var(--v-theme-primary));
+  flex-shrink: 0;
+}
+.shipment-v2 .awbchip {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(var(--v-theme-primary), .12);
+  font-size: 11px;
+  font-weight: 800;
+  color: rgb(var(--v-theme-primary));
+}
+
+/* ===== courier logo embeds ========================================== */
+.shipment-v2 .courier-logo {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 26px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  letter-spacing: .04em;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow:
+    inset 0 -3px 6px rgba(0, 0, 0, .3),
+    0 1px 2px rgba(0, 0, 0, .2);
+}
+.shipment-v2 .courier-logo.ups { background: linear-gradient(170deg, #6b4a26, #4f3318); color: #f5b400; }
+.shipment-v2 .courier-logo.fedex { background: #4d148c; color: #ff6600; }
+.shipment-v2 .courier-logo.dhl { background: #ffcc00; color: #d40511; }
+.shipment-v2 .courier-logo.tnt { background: #ff6600; color: #ffffff; }
+.shipment-v2 .courier-logo.default {
+  background: rgb(var(--v-theme-surface-variant));
+  color: rgb(var(--v-theme-on-surface));
+}
+
+/* ===== verifiche collapsible card (.card.collap) ==================== */
+.shipment-v2 .card-collap {
+  background: rgb(var(--v-theme-surface));
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+.shipment-v2 .card-collap details { margin: 0; }
+.shipment-v2 .card-collap details summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  padding: 9px 14px;
+  background: rgb(var(--v-theme-surface-variant));
+  border-radius: 14px;
+}
+.shipment-v2 .card-collap details[open] summary {
+  border-radius: 14px 14px 0 0;
+}
+.shipment-v2 .card-collap details summary::-webkit-details-marker { display: none; }
+.shipment-v2 .card-collap details summary > .v-icon {
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .card-collap details summary .cardh-title-collap {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: rgb(var(--v-theme-on-surface-variant));
+  margin: 0;
+}
+.shipment-v2 .card-collap details summary .chev {
+  margin-left: auto;
+  width: 14px;
+  height: 14px;
+  transition: transform .2s;
+  opacity: .55;
+}
+.shipment-v2 .card-collap details[open] summary .chev { transform: rotate(90deg); }
+.shipment-v2 .vmini {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+.shipment-v2 .card-collap details[open] .vmini { display: none; }
+.shipment-v2 .vdot {
+  width: 25px;
+  height: 25px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--v-theme-surface));
+}
+.shipment-v2 .vdot .v-icon {
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .4;
+}
+.shipment-v2 .vdot.on { background: rgba(var(--v-theme-success), .16); }
+.shipment-v2 .vdot.on .v-icon { color: rgb(var(--v-theme-success)); opacity: 1; }
+.shipment-v2 .vbody { padding: 5px 14px 12px; }
+
+/* ===== expandable details + linerow (costi accordion) =============== */
+.shipment-v2 .details-inline { margin-top: 6px; }
+.shipment-v2 .details-inline summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 9px;
+  border-radius: 10px;
+  color: rgb(var(--v-theme-on-surface-variant));
+}
+.shipment-v2 .details-inline summary:hover { background: rgb(var(--v-theme-surface-variant)); }
+.shipment-v2 .details-inline summary::-webkit-details-marker { display: none; }
+.shipment-v2 .details-inline summary .v-icon { color: rgb(var(--v-theme-primary)); }
+.shipment-v2 .details-inline summary .chev {
+  margin-left: auto;
+  width: 14px;
+  height: 14px;
+  transition: transform .2s;
+}
+.shipment-v2 .details-inline[open] summary .chev { transform: rotate(90deg); }
+.shipment-v2 .linerow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 9px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.shipment-v2 .linerow b { font-weight: 700; }
+.shipment-v2 .linerow + .linerow {
+  border-top: 1px solid rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .linerow.tot,
+.shipment-v2 .linerow.tot b { font-weight: 800; }
+.shipment-v2 .clab {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .65;
+  padding: 7px 9px 1px;
+}
+
+/* ===== record navigator pill ======================================== */
+.shipment-v2 .recnav {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgb(var(--v-theme-surface));
+  padding: 6px;
+  border-radius: 999px;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, .34);
+}
+.shipment-v2 .recnav .rbtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgb(var(--v-theme-surface-variant));
+  display: grid;
+  place-items: center;
+  color: rgb(var(--v-theme-primary));
+  transition: background .12s, color .12s;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .recnav .rbtn:hover {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+.shipment-v2 .recnav .rbtn:disabled {
+  opacity: .35;
+  cursor: default;
+  background: rgb(var(--v-theme-surface-variant));
+  color: rgb(var(--v-theme-on-surface-variant));
+}
+.shipment-v2 .recnav .rlbl {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface-variant));
+  padding: 0 14px;
+  white-space: nowrap;
+}
+.shipment-v2 .recnav .rlbl b {
+  color: rgb(var(--v-theme-primary));
+  font-weight: 800;
+}
+
+/* ===== lifecycle horizontal flow ==================================== */
+.shipment-v2 .flow {
+  display: flex;
+  align-items: flex-start;
+  margin: 2px 0;
+}
+.shipment-v2 .fstep {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+.shipment-v2 .fstep .nd {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--v-theme-surface-variant));
+  z-index: 1;
+}
+.shipment-v2 .fstep .nd .v-icon { color: rgb(var(--v-theme-on-surface-variant)); opacity: .5; }
+.shipment-v2 .fstep.done .nd { background: rgba(var(--v-theme-success), .18); }
+.shipment-v2 .fstep.done .nd .v-icon { color: rgb(var(--v-theme-success)); opacity: 1; }
+.shipment-v2 .fstep.now .nd { background: rgba(var(--v-theme-primary), .18); }
+.shipment-v2 .fstep.now .nd .v-icon { color: rgb(var(--v-theme-primary)); opacity: 1; }
+.shipment-v2 .fstep .fl { font-size: 11px; font-weight: 600; text-align: center; }
+.shipment-v2 .fstep .fd {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .65;
+}
+.shipment-v2 .fstep::before,
+.shipment-v2 .fstep::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  height: 2px;
+  background: rgb(var(--v-theme-surface-light));
+}
+.shipment-v2 .fstep::before { left: 0; right: 50%; }
+.shipment-v2 .fstep::after { left: 50%; right: 0; }
+.shipment-v2 .fstep:first-child::before,
+.shipment-v2 .fstep:last-child::after { display: none; }
+.shipment-v2 .fstep.done::before,
+.shipment-v2 .fstep.done::after,
+.shipment-v2 .fstep.now::before { background: rgb(var(--v-theme-success)); }
+
+/* ===== doc handle (right edge pull tab) ============================ */
+.shipment-v2 .doc-handle {
+  position: fixed;
+  right: 0;
+  top: 46%;
+  z-index: 1990;
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  padding: 13px 7px;
+  border-radius: 11px 0 0 11px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  box-shadow: -3px 0 18px -10px rgba(0, 0, 0, .5);
+  border: 0;
+}
+.shipment-v2 .doc-handle-lbl {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+/* ===== sidebar (left) ============================================== */
+.shipment-v2 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: rgb(var(--v-theme-surface-bright));
+  color: rgb(var(--v-theme-on-surface));
+  z-index: 2010;
+  transform: translateX(-100%);
+  transition: transform .22s ease;
+  overflow-y: auto;
+  border-right: 1px solid rgb(var(--v-theme-surface-light));
+  box-shadow: 4px 0 32px -14px rgba(0, 0, 0, .55);
+  display: flex;
+  flex-direction: column;
+}
+.shipment-v2 .sidebar.is-open { transform: none; }
+.shipment-v2 .sb-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 16px 3px;
+}
+.shipment-v2 .sb-top > .v-icon { color: rgb(var(--v-theme-primary)); }
+.shipment-v2 .sb-top h3 {
+  font-size: 12.5px;
+  font-weight: 800;
+  margin: 0;
+  flex: 1;
+}
+.shipment-v2 .sb-sub {
+  padding: 0 16px 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .7;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.shipment-v2 .sb-rec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  transition: background .12s;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+}
+.shipment-v2 .sb-rec:hover { background: rgb(var(--v-theme-surface-variant)); }
+.shipment-v2 .sb-rec.cur { background: rgba(var(--v-theme-primary), .12); }
+.shipment-v2 .sb-rec .rn { font-size: 13px; font-weight: 700; }
+.shipment-v2 .sb-rec.cur .rn { color: rgb(var(--v-theme-primary)); }
+.shipment-v2 .sb-rec .rc {
+  font-size: 10.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-weight: 500;
+}
+.shipment-v2 .sb-rec .rs {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(var(--v-theme-surface-light));
+  flex-shrink: 0;
+}
+.shipment-v2 .sb-rec .rs.on { background: rgb(var(--v-theme-success)); }
+.shipment-v2 .sb-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 11.5px;
+  color: rgb(var(--v-theme-on-surface-variant));
+}
+
+/* ===== shared backdrop ============================================== */
+.shipment-v2 .backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 9, 14, .42);
+  z-index: 2000;
+  border: 0;
+  cursor: pointer;
+}
+
+/* ===== chat drawer (right) ========================================= */
+.shipment-v2 .chatdrawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 336px;
+  max-width: 90vw;
+  background: rgb(var(--v-theme-surface-bright));
+  color: rgb(var(--v-theme-on-surface));
+  z-index: 2010;
+  transform: translateX(100%);
+  transition: transform .22s ease;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgb(var(--v-theme-surface-light));
+  box-shadow: -4px 0 32px -14px rgba(0, 0, 0, .55);
+}
+.shipment-v2 .chatdrawer.is-open { transform: none; }
+.shipment-v2 .chat-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 16px;
+  border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .chat-h > .v-icon { color: rgb(var(--v-theme-primary)); }
+.shipment-v2 .chat-h h3 {
+  font-size: 14px;
+  flex: 1;
+  font-weight: 800;
+  margin: 0;
+}
+.shipment-v2 .mclose {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: rgb(var(--v-theme-on-surface-variant));
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .mclose:hover { background: rgb(var(--v-theme-surface-variant)); }
+.shipment-v2 .chat-msgs {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.shipment-v2 .cmsg {
+  max-width: 86%;
+  padding: 9px 12px;
+  border-radius: 13px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.shipment-v2 .cmsg .cfrom {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .8;
+  margin-bottom: 2px;
+}
+.shipment-v2 .cmsg .ctime {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .8;
+  margin-top: 3px;
+}
+.shipment-v2 .cmsg.them {
+  background: rgb(var(--v-theme-surface-variant));
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.shipment-v2 .cmsg.me {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.shipment-v2 .cmsg.me .cfrom,
+.shipment-v2 .cmsg.me .ctime {
+  color: rgba(255, 255, 255, .78);
+}
+.shipment-v2 .chat-empty {
+  margin: auto;
+  text-align: center;
+  font-size: 12px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  opacity: .7;
+}
+.shipment-v2 .chat-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-style: italic;
+  opacity: .85;
+}
+.shipment-v2 .chat-typing-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+.shipment-v2 .chat-typing-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--v-theme-on-surface));
+  opacity: .45;
+  animation: chat-typing-bounce 1.2s infinite ease-in-out;
+}
+.shipment-v2 .chat-typing-dots i:nth-child(2) { animation-delay: .15s; }
+.shipment-v2 .chat-typing-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes chat-typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: .45; }
+  40%           { transform: translateY(-3px); opacity: 1; }
+}
+.shipment-v2 .chat-typing-lbl {
+  color: rgb(var(--v-theme-on-surface));
+  opacity: .75;
+}
+.shipment-v2 .chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 11px;
+  border-top: 1px solid rgb(var(--v-theme-surface-variant));
+}
+.shipment-v2 .chat-input input {
+  flex: 1;
+  background: rgb(var(--v-theme-surface-variant));
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 13px;
+  color: rgb(var(--v-theme-on-surface));
+  border: 0;
+  outline: 0;
+  font-family: inherit;
+}
+.shipment-v2 .chat-send {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 0;
+  cursor: pointer;
+}
+.shipment-v2 .chat-send:disabled { opacity: .5; cursor: default; }
+
+/* ===== docs drawer (right) ========================================= */
+.shipment-v2 .docdrawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* Ancho ampliado (antes 330px): a 330 el toggle ext/int del FilesBox no cabía
+     junto al título+badge y los "tabs" se recortaban. 440px los muestra
+     completos; max-width 92vw evita que ocupe toda la pantalla en móvil. */
+  width: 440px;
+  max-width: 92vw;
+  background: rgb(var(--v-theme-surface-bright));
+  color: rgb(var(--v-theme-on-surface));
+  z-index: 2010;
+  transform: translateX(100%);
+  transition: transform .22s ease;
+  overflow-y: auto;
+  padding: 16px;
+  border-left: 1px solid rgb(var(--v-theme-surface-light));
+  box-shadow: -4px 0 32px -14px rgba(0, 0, 0, .55);
+}
+.shipment-v2 .docdrawer.is-open { transform: none; }
+.shipment-v2 .dd-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.shipment-v2 .dd-h > .v-icon { color: rgb(var(--v-theme-primary)); }
+.shipment-v2 .dd-h h3 {
+  font-size: 14px;
+  flex: 1;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* ===== responsive collapse ========================================== */
+@media (max-width: 840px) {
+  .shipment-v2 .cols {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .shipment-v2 .splitter { display: none; }
+  .shipment-v2 .tabbar,
+  .shipment-v2 .topbar { padding-left: 12px; padding-right: 12px; }
+  .shipment-v2 .stage { padding: 10px 12px 32px; }
+  .shipment-v2 .topbar-shipnum { font-size: 20px; }
+}
+
+/* ============================================================
+   .cardh — header band primitive, exposed globally so non-V2
+   detail components (listings, filter strips, generic lists)
+   can reuse the same look without having to import CardHeader.vue.
+   Mirrors the rules in components/shell/CardHeader.vue but lives
+   here so they apply across all SPAs that load mockup2.scss.
+============================================================ */
+.shipment-v2 .card-tmwe > .cardh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -14px 12px;
+  padding: 9px 14px;
+  background: rgb(var(--v-theme-surface-variant));
+  border-radius: 14px 14px 0 0;
+}
+.shipment-v2 .card-tmwe.sdv-card > .cardh,
+.shipment-v2 .card-tmwe.filters-card > .cardh {
+  /* These cards have padding:0 on the wrapper so the header band
+     hugs the card edges directly — no negative margin needed. */
+  margin: 0 0 0;
+}
+.shipment-v2 .cardh-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: rgb(var(--v-theme-on-surface-variant));
+  margin: 0;
+  line-height: 1.3;
+}
+.shipment-v2 .cardh-spacer { flex: 1; }
+.shipment-v2 .cardh-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  transition: background .12s, color .12s;
+}
+.shipment-v2 .cardh-edit:hover {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-primary));
+}
+
+/* ============================================================
+   Filter card — the single horizontal row of inputs under the
+   `.cardh` band. Spacing and density tuned to match the
+   information density of the detail page's cards.
+============================================================ */
+.shipment-v2 .filters-card {
+  padding: 0;
+}
+.shipment-v2 .filters-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 13px;
+}
+.shipment-v2 .filters-input { flex: 0 0 auto; }
+.shipment-v2 .filters-input--grow { flex: 1 1 280px; max-width: 520px; }
+
+.shipment-v2 .filters-card-more {
+  /* override generic .cardh-edit width — this button has a label */
+  padding: 0 10px;
+}
+.shipment-v2 .filters-card-more-label {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.shipment-v2 .filters-card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.shipment-v2 .empty-card {
+  padding: 32px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   .wrap--full — opt-in full-width modifier. The default `.wrap`
+   caps content at 1180px (detail layout — fits a focused form),
+   but listing pages benefit from using the entire viewport so
+   wide tables don't horizontal-scroll prematurely.
+
+   Padding mirrors the `.stage` rhythm (gutter via the stage's
+   own padding-inline) so the cards keep breathing room from the
+   viewport edges without an outer wrapper.
+============================================================ */
+.shipment-v2 .wrap.wrap--full {
+  max-width: none;
+  margin: 0;
+}
+/*
+ * Minimal side gutters — the listing wants every pixel for the data
+ * table. A 6px inset keeps the card shadows from clipping against the
+ * viewport edge but otherwise reads as "edge-to-edge". On mobile we
+ * tighten further so the table doesn't horizontal-scroll prematurely.
+ */
+.shipment-v2 .wrap.wrap--full .stage {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+@media (max-width: 720px) {
+  .shipment-v2 .wrap.wrap--full .stage {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
+/* ============================================================
+   Dashboard layout — additions used by DashboardShell.vue
+   (frontend/shared/listing/DashboardShell.vue). These rules live
+   here so the topbar/sidebar primitives are global and the SFCs
+   stay focused on layout. They piggyback on existing tokens.
+============================================================ */
+
+/* Brand button at the start of the topbar — non-interactive
+   visual anchor for the page icon + title. Sized like the regular
+   icon button but without the hover affordance. */
+.shipment-v2 .dsh-brand-btn {
+  background: rgba(var(--v-theme-primary), .12);
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .dsh-brand-btn:hover {
+  background: rgba(var(--v-theme-primary), .18);
+}
+
+/* Sidebar action — secondary button used inside the dashboard
+   sidebar (e.g. "Advanced filters"). Block-level with a soft
+   surface fill so it doesn't compete with the KPI tiles above. */
+.shipment-v2 .sidebar-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 11px;
+  background: rgb(var(--v-theme-surface-variant));
+  color: rgb(var(--v-theme-on-surface));
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  text-align: left;
+  position: relative;
+}
+.shipment-v2 .sidebar-action:hover {
+  background: rgba(var(--v-theme-primary), .12);
+  color: rgb(var(--v-theme-primary));
+}
+.shipment-v2 .sidebar-action-label { flex: 1; }
+.shipment-v2 .sidebar-action--rail {
+  justify-content: center;
+  padding: 10px 6px;
+}
+.shipment-v2 .sidebar-action--rail .filters-card-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* Inline filter strip — used inside the dashboard main column. No
+   `.cardh` band needed because the page already has the topbar
+   above; the filters become a single dense row. */
+.shipment-v2 .filters-card-body--inline {
+  padding: 10px 12px;
+}
+
+/* ============================================================
+   View-mode toggle — segmented control used by ViewModeToggle.vue
+   (frontend/shared/listing/ViewModeToggle.vue). Lives globally so
+   it can be placed anywhere in the page chrome (e.g. dashboard
+   topbar). Matches the compact pill rhythm of the detail page.
+============================================================ */
+.shipment-v2 .sdv-mode-toggle {
+  display: inline-flex;
+  border-radius: 8px;
+  background: rgb(var(--v-theme-surface));
+  padding: 2px;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  gap: 2px;
+}
+.shipment-v2 .sdv-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: rgb(var(--v-theme-on-surface-variant));
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.shipment-v2 .sdv-mode-btn:hover {
+  color: rgb(var(--v-theme-on-surface));
+}
+.shipment-v2 .sdv-mode-btn.is-active {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+
+/* Filter toolbar — naked horizontal row of inputs (no card chrome).
+   Sits between the dashboard topbar and the data table. Reduces
+   vertical stacking so the listing has more real estate. */
+.shipment-v2 .filters-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 4px 2px;
+}
+
+/* When `.stage` lives inside the DetailShell main, the shell already
+   handles outer padding — disable the legacy stage padding to avoid
+   doubling the gutter. */
+.shipment-v2 .dsh-main--detail .stage {
+  padding: 0;
+  /* Centrar el detalle y capar a 1440 en pantallas anchas (antes solo shipment;
+     inocuo para cargo: solo aplica dentro de .dsh-main--detail). */
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+}

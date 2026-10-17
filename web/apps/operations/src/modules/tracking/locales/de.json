@@ -1,0 +1,34 @@
+{
+  "tracking": {
+    "tracking": {
+      "title": "Tracking-Verwaltung",
+      "subtitle": "Tracking-Aktualisierungen starten",
+      "launch": "Tracking starten",
+      "launch_all": "ALLE starten",
+      "launch_selected": "Ausgewählte starten",
+      "track": "Verfolgen",
+      "search": "AWB / ID suchen",
+      "filter_courier": "Kurier",
+      "empty": "Keine Sendungen, die auf Tracking warten",
+      "col_id": "ID",
+      "col_awb": "AWB",
+      "col_courier": "Kurier",
+      "col_client": "Kunde",
+      "col_courier_date": "Kurierdatum",
+      "col_status": "Status",
+      "col_delivery": "Zustellung",
+      "batch_title": "Massen-Tracking starten",
+      "batch_pick_couriers": "Zu verfolgende Kuriere wählen (oder keine für alle).",
+      "batch_couriers_label": "Kuriere",
+      "batch_selected_hint": "Es werden nur die ausgewählten Kuriere verfolgt.",
+      "batch_all_hint": "Alle wartenden Sendungen werden verfolgt.",
+      "batch_starting": "In Warteschlange…",
+      "batch_progress": "{done} von {total} verarbeitet",
+      "batch_errors": "{n} mit Fehlern",
+      "batch_finished": "Abgeschlossen: {done} verarbeitet, {errors} Fehler.",
+      "batch_failed": "Der Tracking-Job ist fehlgeschlagen.",
+      "email_summary": "E-Mails heute: {sent} gesendet · {queued} in Warteschlange · {failed} fehlgeschlagen (von {total})",
+      "single_no_update": "Sendung {id} hat keine Aktualisierung vom Kurier erhalten."
+    }
+  }
+}

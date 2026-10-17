@@ -1,0 +1,29 @@
+{
+  "bulk": {
+    "bulk": {
+      "title": "Bulkimport",
+      "mode": "Type",
+      "express": "Expreszendingen",
+      "cargo": "Cargozendingen",
+      "step1": "Gegevens plakken",
+      "step2": "Voorbeeld",
+      "step3": "Resultaat",
+      "pasteLabel": "Plak CSV (eerste rij = kopteksten)",
+      "pasteHint": "Kolommen: {cols}",
+      "delimiter": "Scheidingsteken",
+      "validate": "Valideren",
+      "maxRows": "Maximaal {n} rijen per import.",
+      "summary": "{valid} geldig · {invalid} ongeldig · {total} totaal",
+      "noValid": "Geen geldige rijen om te importeren.",
+      "errorsTitle": "Validatiefouten",
+      "rowCol": "Rij",
+      "messageCol": "Bericht",
+      "previewTitle": "Voorbeeld geldige rijen",
+      "import": "{n} rijen importeren",
+      "importing": "Importeren…",
+      "imported": "{n} zendingen geïmporteerd.",
+      "importErrors": "{n} rijen mislukt.",
+      "startOver": "Meer importeren"
+    }
+  }
+}

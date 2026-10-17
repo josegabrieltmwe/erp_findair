@@ -1,0 +1,5486 @@
+{
+  "Cargo": {
+    "nl": "Cargo",
+    "de": "Cargo"
+  },
+  "Caricamento…": {
+    "nl": "Laden…",
+    "de": "Wird geladen…"
+  },
+  "Annulla": {
+    "nl": "Annuleren",
+    "de": "Abbrechen"
+  },
+  "Espandi barra laterale": {
+    "nl": "Zijbalk uitklappen",
+    "de": "Seitenleiste ausklappen"
+  },
+  "Nascondi barra laterale": {
+    "nl": "Zijbalk verbergen",
+    "de": "Seitenleiste ausblenden"
+  },
+  "Corriere": {
+    "nl": "Koerier",
+    "de": "Kurier"
+  },
+  "Cliente": {
+    "nl": "Klant",
+    "de": "Kunde"
+  },
+  "Spedizioni express": {
+    "nl": "Expreszendingen",
+    "de": "Expresssendungen"
+  },
+  "Spedizione": {
+    "nl": "Zending",
+    "de": "Sendung"
+  },
+  "Crea": {
+    "nl": "Aanmaken",
+    "de": "Erstellen"
+  },
+  "Conferma": {
+    "nl": "Bevestigen",
+    "de": "Bestätigen"
+  },
+  "Chiudi": {
+    "nl": "Sluiten",
+    "de": "Schließen"
+  },
+  "Azioni": {
+    "nl": "Acties",
+    "de": "Aktionen"
+  },
+  "Troppe richieste. Attendi un momento.": {
+    "nl": "Te veel verzoeken. Wacht even.",
+    "de": "Zu viele Anfragen. Bitte einen Moment warten."
+  },
+  "Errore del server. Riprova.": {
+    "nl": "Serverfout. Probeer het opnieuw.",
+    "de": "Serverfehler. Bitte erneut versuchen."
+  },
+  "Importazione massiva": {
+    "nl": "Bulkimport",
+    "de": "Massenimport"
+  },
+  "Fine elenco": {
+    "nl": "Einde van de lijst",
+    "de": "Ende der Liste"
+  },
+  "{count} selezionata | {count} selezionate": {
+    "nl": "{count} geselecteerd | {count} geselecteerd",
+    "de": "{count} ausgewählt | {count} ausgewählt"
+  },
+  "Deseleziona": {
+    "nl": "Selectie opheffen",
+    "de": "Auswahl aufheben"
+  },
+  "Modalità vista": {
+    "nl": "Weergavemodus",
+    "de": "Ansichtsmodus"
+  },
+  "Vista paginata": {
+    "nl": "Paginaweergave",
+    "de": "Seitenansicht"
+  },
+  "Scorrimento infinito": {
+    "nl": "Oneindig scrollen",
+    "de": "Unendliches Scrollen"
+  },
+  "Pagine": {
+    "nl": "Pagina's",
+    "de": "Seiten"
+  },
+  "Scorri": {
+    "nl": "Scrollen",
+    "de": "Scrollen"
+  },
+  "Filtri": {
+    "nl": "Filters",
+    "de": "Filter"
+  },
+  "Pulisci tutto": {
+    "nl": "Alles wissen",
+    "de": "Alles zurücksetzen"
+  },
+  "Mostra barra laterale": {
+    "nl": "Zijbalk tonen",
+    "de": "Seitenleiste anzeigen"
+  },
+  "{count} spedizione | {count} spedizioni": {
+    "nl": "{count} zending | {count} zendingen",
+    "de": "{count} Sendung | {count} Sendungen"
+  },
+  "{loaded} di {total} caricate": {
+    "nl": "{loaded} van {total} geladen",
+    "de": "{loaded} von {total} geladen"
+  },
+  "Caricamento {section}…": {
+    "nl": "{section} laden…",
+    "de": "{section} wird geladen…"
+  },
+  "Caricamento sezione": {
+    "nl": "Sectie laden",
+    "de": "Abschnitt wird geladen"
+  },
+  "Home": {
+    "nl": "Home",
+    "de": "Home"
+  },
+  "Spedizioni": {
+    "nl": "Zendingen",
+    "de": "Sendungen"
+  },
+  "Admin": {
+    "nl": "Admin",
+    "de": "Admin"
+  },
+  "Sezioni home": {
+    "nl": "Home-secties",
+    "de": "Home-Bereiche"
+  },
+  "Express in entrata": {
+    "nl": "Inkomende express",
+    "de": "Eingehende Express"
+  },
+  "Spedizioni express in entrata": {
+    "nl": "Inkomende expreszendingen",
+    "de": "Eingehende Expresssendungen"
+  },
+  "Express in transito": {
+    "nl": "Express onderweg",
+    "de": "Express unterwegs"
+  },
+  "Spedizioni express in transito": {
+    "nl": "Expreszendingen onderweg",
+    "de": "Expresssendungen unterwegs"
+  },
+  "Cargo — quoting e in viaggio": {
+    "nl": "Cargo — offertes en onderweg",
+    "de": "Cargo — Angebote und unterwegs"
+  },
+  "Clienti": {
+    "nl": "Klanten",
+    "de": "Kunden"
+  },
+  "Giacenze": {
+    "nl": "Opslag",
+    "de": "Lagerung"
+  },
+  "Cambia lingua": {
+    "nl": "Taal wijzigen",
+    "de": "Sprache ändern"
+  },
+  "Strumenti": {
+    "nl": "Hulpmiddelen",
+    "de": "Werkzeuge"
+  },
+  "Fatturazione": {
+    "nl": "Facturatie",
+    "de": "Fakturierung"
+  },
+  "Contrassegni COD": {
+    "nl": "Rembours (COD)",
+    "de": "Nachnahme (COD)"
+  },
+  "Importa lista": {
+    "nl": "Lijst importeren",
+    "de": "Liste importieren"
+  },
+  "Importa lista v2": {
+    "nl": "Lijst importeren v2",
+    "de": "Liste importieren v2"
+  },
+  "Listini di vendita": {
+    "nl": "Verkooptarieven",
+    "de": "Verkaufspreislisten"
+  },
+  "Invia messaggio": {
+    "nl": "Bericht versturen",
+    "de": "Nachricht senden"
+  },
+  "Portale API": {
+    "nl": "API-portaal",
+    "de": "API-Portal"
+  },
+  "TMWE — Home": {
+    "nl": "TMWE — Home",
+    "de": "TMWE — Home"
+  },
+  "Percorso di navigazione": {
+    "nl": "Navigatiepad",
+    "de": "Navigationspfad"
+  },
+  "Tema chiaro": {
+    "nl": "Licht thema",
+    "de": "Helles Design"
+  },
+  "Tema scuro": {
+    "nl": "Donker thema",
+    "de": "Dunkles Design"
+  },
+  "Messaggi non letti": {
+    "nl": "Ongelezen berichten",
+    "de": "Ungelesene Nachrichten"
+  },
+  "Nessun messaggio non letto.": {
+    "nl": "Geen ongelezen berichten.",
+    "de": "Keine ungelesenen Nachrichten."
+  },
+  "Messaggi (nessun non letto)": {
+    "nl": "Berichten (geen ongelezen)",
+    "de": "Nachrichten (keine ungelesenen)"
+  },
+  "Messaggi non letti: {count}": {
+    "nl": "Ongelezen berichten: {count}",
+    "de": "Ungelesene Nachrichten: {count}"
+  },
+  "Cerca cargo, spedizione, AWB, cliente…": {
+    "nl": "Zoek cargo, zending, AWB, klant…",
+    "de": "Cargo, Sendung, AWB, Kunde suchen…"
+  },
+  "Cerco…": {
+    "nl": "Zoeken…",
+    "de": "Suche läuft…"
+  },
+  "Digita almeno 2 caratteri.": {
+    "nl": "Voer minstens 2 tekens in.",
+    "de": "Mindestens 2 Zeichen eingeben."
+  },
+  "Nessun risultato per \"{query}\".": {
+    "nl": "Geen resultaten voor \"{query}\".",
+    "de": "Keine Ergebnisse für \"{query}\"."
+  },
+  "Anagrafica": {
+    "nl": "Stamgegevens",
+    "de": "Stammdaten"
+  },
+  "Documenti": {
+    "nl": "Documenten",
+    "de": "Dokumente"
+  },
+  "Esterni": {
+    "nl": "Extern",
+    "de": "Extern"
+  },
+  "Interni": {
+    "nl": "Intern",
+    "de": "Intern"
+  },
+  "I documenti interni sono visibili solo all'operatore (mai a cliente o partner).": {
+    "nl": "Interne documenten zijn alleen zichtbaar voor de operator (nooit voor klant of partner).",
+    "de": "Interne Dokumente sind nur für den Bearbeiter sichtbar (nie für Kunde oder Partner)."
+  },
+  "Trascina i file o clicca per caricare": {
+    "nl": "Sleep bestanden hierheen of klik om te uploaden",
+    "de": "Dateien hierher ziehen oder zum Hochladen klicken"
+  },
+  "PDF, immagini, Office — max 5 MB.": {
+    "nl": "PDF, afbeeldingen, Office — max. 5 MB.",
+    "de": "PDF, Bilder, Office — max. 5 MB."
+  },
+  "Visibile al cliente": {
+    "nl": "Zichtbaar voor de klant",
+    "de": "Für den Kunden sichtbar"
+  },
+  "Visibile al partner": {
+    "nl": "Zichtbaar voor de partner",
+    "de": "Für den Partner sichtbar"
+  },
+  "Visibile all'agenzia doganale": {
+    "nl": "Zichtbaar voor de douaneagent",
+    "de": "Für die Zollagentur sichtbar"
+  },
+  "Visibile al vettore": {
+    "nl": "Zichtbaar voor de vervoerder",
+    "de": "Für den Frachtführer sichtbar"
+  },
+  "File": {
+    "nl": "Bestand",
+    "de": "Datei"
+  },
+  "Dimensione": {
+    "nl": "Grootte",
+    "de": "Größe"
+  },
+  "Visibilità": {
+    "nl": "Zichtbaarheid",
+    "de": "Sichtbarkeit"
+  },
+  "Caricato": {
+    "nl": "Geüpload",
+    "de": "Hochgeladen"
+  },
+  "Nessun documento interno": {
+    "nl": "Geen interne documenten",
+    "de": "Keine internen Dokumente"
+  },
+  "Nessun documento allegato": {
+    "nl": "Geen documenten bijgevoegd",
+    "de": "Keine Dokumente angehängt"
+  },
+  "Carica AWB, packing list, fatture o qualsiasi altro documento.": {
+    "nl": "Upload AWB, paklijst, facturen of andere documenten.",
+    "de": "AWB, Packliste, Rechnungen oder sonstige Dokumente hochladen."
+  },
+  "Eliminare questo file?": {
+    "nl": "Dit bestand verwijderen?",
+    "de": "Diese Datei löschen?"
+  },
+  "Torna alla lista": {
+    "nl": "Terug naar de lijst",
+    "de": "Zurück zur Liste"
+  },
+  "Torna alla lista (Esc)": {
+    "nl": "Terug naar de lijst (Esc)",
+    "de": "Zurück zur Liste (Esc)"
+  },
+  "Record": {
+    "nl": "Records",
+    "de": "Datensätze"
+  },
+  "Filtro attuale": {
+    "nl": "Huidig filter",
+    "de": "Aktueller Filter"
+  },
+  "Nessun record nel filtro attuale.": {
+    "nl": "Geen records voor het huidige filter.",
+    "de": "Keine Datensätze für den aktuellen Filter."
+  },
+  "Mostra barra laterale (rail)": {
+    "nl": "Zijbalk tonen (smal)",
+    "de": "Seitenleiste anzeigen (schmal)"
+  },
+  "Statistiche tratta": {
+    "nl": "Trajectstatistieken",
+    "de": "Streckenstatistik"
+  },
+  "Nessuna consegna storica per questa tratta.": {
+    "nl": "Geen historische afleveringen voor dit traject.",
+    "de": "Keine historischen Zustellungen für diese Strecke."
+  },
+  "Servizio": {
+    "nl": "Service",
+    "de": "Service"
+  },
+  "Consegne": {
+    "nl": "Afleveringen",
+    "de": "Zustellungen"
+  },
+  "In tempo": {
+    "nl": "Op tijd",
+    "de": "Pünktlich"
+  },
+  "Giorni medi": {
+    "nl": "Gemiddelde dagen",
+    "de": "Durchschnittliche Tage"
+  },
+  "Nuova {entity}": {
+    "nl": "Nieuwe {entity}",
+    "de": "Neue {entity}"
+  },
+  "Crea nuova {entity}": {
+    "nl": "Nieuwe {entity} aanmaken",
+    "de": "Neue {entity} erstellen"
+  },
+  "Seleziona il cliente per creare la bozza. I restanti dati si completano nella schermata di dettaglio.": {
+    "nl": "Selecteer de klant om het concept aan te maken. De overige gegevens vult u in op het detailscherm.",
+    "de": "Wählen Sie den Kunden, um den Entwurf zu erstellen. Die übrigen Daten werden im Detailbildschirm ergänzt."
+  },
+  "Cerca per ragione sociale…": {
+    "nl": "Zoeken op bedrijfsnaam…",
+    "de": "Nach Firmenname suchen…"
+  },
+  "Seleziona un cliente": {
+    "nl": "Selecteer een klant",
+    "de": "Kunden auswählen"
+  },
+  "Completa i campi obbligatori": {
+    "nl": "Vul de verplichte velden in",
+    "de": "Pflichtfelder ausfüllen"
+  },
+  "Account": {
+    "nl": "Account",
+    "de": "Konto"
+  },
+  "Profilo": {
+    "nl": "Profiel",
+    "de": "Profil"
+  },
+  "Cambia partner": {
+    "nl": "Partner wijzigen",
+    "de": "Partner wechseln"
+  },
+  "Nuova spedizione": {
+    "nl": "Nieuwe zending",
+    "de": "Neue Sendung"
+  },
+  "Tipo di spedizione": {
+    "nl": "Type zending",
+    "de": "Sendungsart"
+  },
+  "Salva": {
+    "nl": "Opslaan",
+    "de": "Speichern"
+  },
+  "Aggiorna": {
+    "nl": "Vernieuwen",
+    "de": "Aktualisieren"
+  },
+  "Nessun record": {
+    "nl": "Geen records",
+    "de": "Keine Datensätze"
+  },
+  "Cerca": {
+    "nl": "Zoeken",
+    "de": "Suchen"
+  },
+  "Non hai i permessi per questa azione.": {
+    "nl": "U heeft geen rechten voor deze actie.",
+    "de": "Sie haben keine Berechtigung für diese Aktion."
+  },
+  "Copilot": {
+    "nl": "Copilot",
+    "de": "Copilot"
+  },
+  "Non hai il permesso per questa azione.": {
+    "nl": "U heeft geen rechten voor deze actie.",
+    "de": "Sie haben keine Berechtigung für diese Aktion."
+  },
+  "Gestione tracking": {
+    "nl": "Trackingbeheer",
+    "de": "Tracking-Verwaltung"
+  },
+  "Avvia aggiornamenti di tracking": {
+    "nl": "Trackingupdates starten",
+    "de": "Tracking-Aktualisierungen starten"
+  },
+  "Avvia tracking": {
+    "nl": "Tracking starten",
+    "de": "Tracking starten"
+  },
+  "Avvia TUTTI": {
+    "nl": "ALLE starten",
+    "de": "ALLE starten"
+  },
+  "Avvia selezionati": {
+    "nl": "Geselecteerde starten",
+    "de": "Ausgewählte starten"
+  },
+  "Traccia": {
+    "nl": "Volgen",
+    "de": "Verfolgen"
+  },
+  "Cerca AWB / ID": {
+    "nl": "Zoek AWB / ID",
+    "de": "AWB / ID suchen"
+  },
+  "Nessuna spedizione in attesa di tracking": {
+    "nl": "Geen zendingen die op tracking wachten",
+    "de": "Keine Sendungen, die auf Tracking warten"
+  },
+  "Data corriere": {
+    "nl": "Koeriersdatum",
+    "de": "Kurierdatum"
+  },
+  "Stato": {
+    "nl": "Status",
+    "de": "Status"
+  },
+  "Consegna": {
+    "nl": "Aflevering",
+    "de": "Zustellung"
+  },
+  "Avvia tracking in blocco": {
+    "nl": "Bulktracking starten",
+    "de": "Massen-Tracking starten"
+  },
+  "Scegli i corrieri da tracciare (o nessuno per tutti).": {
+    "nl": "Kies de te volgen koeriers (of geen voor alle).",
+    "de": "Zu verfolgende Kuriere wählen (oder keine für alle)."
+  },
+  "Corrieri": {
+    "nl": "Koeriers",
+    "de": "Kuriere"
+  },
+  "Verranno tracciati solo i corrieri selezionati.": {
+    "nl": "Alleen de geselecteerde koeriers worden gevolgd.",
+    "de": "Es werden nur die ausgewählten Kuriere verfolgt."
+  },
+  "Verranno tracciate tutte le spedizioni in attesa.": {
+    "nl": "Alle wachtende zendingen worden gevolgd.",
+    "de": "Alle wartenden Sendungen werden verfolgt."
+  },
+  "In coda…": {
+    "nl": "In wachtrij…",
+    "de": "In Warteschlange…"
+  },
+  "Elaborate {done} di {total}": {
+    "nl": "{done} van {total} verwerkt",
+    "de": "{done} von {total} verarbeitet"
+  },
+  "{n} con errori": {
+    "nl": "{n} met fouten",
+    "de": "{n} mit Fehlern"
+  },
+  "Completato: {done} elaborate, {errors} errori.": {
+    "nl": "Voltooid: {done} verwerkt, {errors} fouten.",
+    "de": "Abgeschlossen: {done} verarbeitet, {errors} Fehler."
+  },
+  "Il job di tracking è fallito.": {
+    "nl": "De trackingtaak is mislukt.",
+    "de": "Der Tracking-Job ist fehlgeschlagen."
+  },
+  "Email oggi: {sent} inviate · {queued} in coda · {failed} fallite (di {total})": {
+    "nl": "E-mails vandaag: {sent} verstuurd · {queued} in wachtrij · {failed} mislukt (van {total})",
+    "de": "E-Mails heute: {sent} gesendet · {queued} in Warteschlange · {failed} fehlgeschlagen (von {total})"
+  },
+  "La spedizione {id} non ha ricevuto aggiornamenti dal corriere.": {
+    "nl": "Zending {id} heeft geen update van de koerier ontvangen.",
+    "de": "Sendung {id} hat keine Aktualisierung vom Kurier erhalten."
+  },
+  "Indietro": {
+    "nl": "Terug",
+    "de": "Zurück"
+  },
+  "Avanti": {
+    "nl": "Volgende",
+    "de": "Weiter"
+  },
+  "Tipo": {
+    "nl": "Type",
+    "de": "Typ"
+  },
+  "Spedizioni cargo": {
+    "nl": "Cargozendingen",
+    "de": "Cargosendungen"
+  },
+  "Incolla i dati": {
+    "nl": "Gegevens plakken",
+    "de": "Daten einfügen"
+  },
+  "Anteprima": {
+    "nl": "Voorbeeld",
+    "de": "Vorschau"
+  },
+  "Risultato": {
+    "nl": "Resultaat",
+    "de": "Ergebnis"
+  },
+  "Incolla CSV (prima riga = intestazioni)": {
+    "nl": "Plak CSV (eerste rij = kopteksten)",
+    "de": "CSV einfügen (erste Zeile = Kopfzeilen)"
+  },
+  "Colonne: {cols}": {
+    "nl": "Kolommen: {cols}",
+    "de": "Spalten: {cols}"
+  },
+  "Delimitatore": {
+    "nl": "Scheidingsteken",
+    "de": "Trennzeichen"
+  },
+  "Valida": {
+    "nl": "Valideren",
+    "de": "Validieren"
+  },
+  "Massimo {n} righe per importazione.": {
+    "nl": "Maximaal {n} rijen per import.",
+    "de": "Maximal {n} Zeilen pro Import."
+  },
+  "{valid} valide · {invalid} non valide · {total} totali": {
+    "nl": "{valid} geldig · {invalid} ongeldig · {total} totaal",
+    "de": "{valid} gültig · {invalid} ungültig · {total} gesamt"
+  },
+  "Nessuna riga valida da importare.": {
+    "nl": "Geen geldige rijen om te importeren.",
+    "de": "Keine gültigen Zeilen zum Importieren."
+  },
+  "Errori di validazione": {
+    "nl": "Validatiefouten",
+    "de": "Validierungsfehler"
+  },
+  "Riga": {
+    "nl": "Rij",
+    "de": "Zeile"
+  },
+  "Messaggio": {
+    "nl": "Bericht",
+    "de": "Nachricht"
+  },
+  "Anteprima righe valide": {
+    "nl": "Voorbeeld geldige rijen",
+    "de": "Vorschau gültiger Zeilen"
+  },
+  "Importa {n} righe": {
+    "nl": "{n} rijen importeren",
+    "de": "{n} Zeilen importieren"
+  },
+  "Importazione…": {
+    "nl": "Importeren…",
+    "de": "Import läuft…"
+  },
+  "{n} spedizioni importate.": {
+    "nl": "{n} zendingen geïmporteerd.",
+    "de": "{n} Sendungen importiert."
+  },
+  "{n} righe non riuscite.": {
+    "nl": "{n} rijen mislukt.",
+    "de": "{n} Zeilen fehlgeschlagen."
+  },
+  "Importa altre": {
+    "nl": "Meer importeren",
+    "de": "Weitere importieren"
+  },
+  "Chiedi delle tue spedizioni, tracking e contatti": {
+    "nl": "Vraag naar uw zendingen, tracking en contacten",
+    "de": "Fragen Sie nach Ihren Sendungen, Tracking und Kontakten"
+  },
+  "Chiedi qualcosa… es. «Elenca le spedizioni entrate oggi»": {
+    "nl": "Stel een vraag… bijv. «Toon de vandaag binnengekomen zendingen»",
+    "de": "Stellen Sie eine Frage… z. B. «Zeige die heute eingegangenen Sendungen»"
+  },
+  "Invia": {
+    "nl": "Versturen",
+    "de": "Senden"
+  },
+  "Sto pensando…": {
+    "nl": "Aan het nadenken…",
+    "de": "Denke nach…"
+  },
+  "Come posso aiutarti?": {
+    "nl": "Hoe kan ik u helpen?",
+    "de": "Wie kann ich Ihnen helfen?"
+  },
+  "Chiedi in linguaggio naturale. Prova uno dei suggerimenti.": {
+    "nl": "Stel uw vraag in natuurlijke taal. Probeer een van de suggesties.",
+    "de": "Fragen Sie in natürlicher Sprache. Probieren Sie einen der Vorschläge."
+  },
+  "Tu": {
+    "nl": "U",
+    "de": "Sie"
+  },
+  "Qualcosa è andato storto. Riprova.": {
+    "nl": "Er is iets misgegaan. Probeer het opnieuw.",
+    "de": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+  },
+  "Consultato: {tools}": {
+    "nl": "Geraadpleegd: {tools}",
+    "de": "Abgefragt: {tools}"
+  },
+  "Nuova conversazione": {
+    "nl": "Nieuw gesprek",
+    "de": "Neue Unterhaltung"
+  },
+  "Elenca le spedizioni entrate oggi": {
+    "nl": "Toon de vandaag binnengekomen zendingen",
+    "de": "Zeige die heute eingegangenen Sendungen"
+  },
+  "Mostra le mie spedizioni courier di questa settimana": {
+    "nl": "Toon mijn koerierzendingen van deze week",
+    "de": "Zeige meine Kuriersendungen dieser Woche"
+  },
+  "Traccia la spedizione 5022310": {
+    "nl": "Volg zending 5022310",
+    "de": "Verfolge Sendung 5022310"
+  },
+  "Cerca contatti a Milano nella rubrica": {
+    "nl": "Zoek contacten in Milaan in het adresboek",
+    "de": "Suche Kontakte in Mailand im Adressbuch"
+  },
+  "Copilot AI": {
+    "nl": "Copilot AI",
+    "de": "Copilot AI"
+  },
+  "Elimina": {
+    "nl": "Verwijderen",
+    "de": "Löschen"
+  },
+  "Modifica": {
+    "nl": "Bewerken",
+    "de": "Bearbeiten"
+  },
+  "Sì": {
+    "nl": "Ja",
+    "de": "Ja"
+  },
+  "No": {
+    "nl": "Nee",
+    "de": "Nein"
+  },
+  "Aggiungi": {
+    "nl": "Toevoegen",
+    "de": "Hinzufügen"
+  },
+  "Fatture proforma": {
+    "nl": "Proformafacturen",
+    "de": "Proformarechnungen"
+  },
+  "Nuova proforma": {
+    "nl": "Nieuwe proforma",
+    "de": "Neue Proforma"
+  },
+  "Modifica proforma": {
+    "nl": "Proforma bewerken",
+    "de": "Proforma bearbeiten"
+  },
+  "ID spedizione": {
+    "nl": "Zending-ID",
+    "de": "Sendungs-ID"
+  },
+  "Paese di origine": {
+    "nl": "Land van oorsprong",
+    "de": "Ursprungsland"
+  },
+  "Motivo": {
+    "nl": "Reden",
+    "de": "Grund"
+  },
+  "Valuta": {
+    "nl": "Valuta",
+    "de": "Währung"
+  },
+  "Data": {
+    "nl": "Datum",
+    "de": "Datum"
+  },
+  "Rif. cliente": {
+    "nl": "Klantref.",
+    "de": "Kundenref."
+  },
+  "Data da": {
+    "nl": "Datum vanaf",
+    "de": "Datum von"
+  },
+  "Data a": {
+    "nl": "Datum tot",
+    "de": "Datum bis"
+  },
+  "Applica": {
+    "nl": "Toepassen",
+    "de": "Anwenden"
+  },
+  "Pulisci": {
+    "nl": "Wissen",
+    "de": "Zurücksetzen"
+  },
+  "Righe": {
+    "nl": "Rijen",
+    "de": "Zeilen"
+  },
+  "{count} riga | {count} righe": {
+    "nl": "{count} rij | {count} rijen",
+    "de": "{count} Zeile | {count} Zeilen"
+  },
+  "Duplica": {
+    "nl": "Dupliceren",
+    "de": "Duplizieren"
+  },
+  "Duplica proforma": {
+    "nl": "Proforma dupliceren",
+    "de": "Proforma duplizieren"
+  },
+  "ID spedizione destinazione": {
+    "nl": "Doel-zending-ID",
+    "de": "Ziel-Sendungs-ID"
+  },
+  "Copia la testata e tutte le righe in un'altra spedizione.": {
+    "nl": "Kopieert de kop en alle rijen naar een andere zending.",
+    "de": "Kopiert den Kopf und alle Zeilen in eine andere Sendung."
+  },
+  "Descrizione": {
+    "nl": "Omschrijving",
+    "de": "Beschreibung"
+  },
+  "Voce doganale": {
+    "nl": "Douanetariefpost",
+    "de": "Zolltarifnummer"
+  },
+  "Qtà": {
+    "nl": "Aantal",
+    "de": "Menge"
+  },
+  "Unità": {
+    "nl": "Eenheid",
+    "de": "Einheit"
+  },
+  "Peso netto": {
+    "nl": "Nettogewicht",
+    "de": "Nettogewicht"
+  },
+  "Peso lordo": {
+    "nl": "Brutogewicht",
+    "de": "Bruttogewicht"
+  },
+  "Unità peso": {
+    "nl": "Gewichtseenheid",
+    "de": "Gewichtseinheit"
+  },
+  "Valore": {
+    "nl": "Waarde",
+    "de": "Wert"
+  },
+  "Aggiungi riga": {
+    "nl": "Rij toevoegen",
+    "de": "Zeile hinzufügen"
+  },
+  "Proforma creata": {
+    "nl": "Proforma aangemaakt",
+    "de": "Proforma erstellt"
+  },
+  "Proforma aggiornata": {
+    "nl": "Proforma bijgewerkt",
+    "de": "Proforma aktualisiert"
+  },
+  "Proforma eliminata": {
+    "nl": "Proforma verwijderd",
+    "de": "Proforma gelöscht"
+  },
+  "Proforma duplicata": {
+    "nl": "Proforma gedupliceerd",
+    "de": "Proforma dupliziert"
+  },
+  "Eliminare questa proforma e tutte le sue righe? Operazione non reversibile.": {
+    "nl": "Deze proforma en alle bijbehorende rijen verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "de": "Diese Proforma und alle zugehörigen Zeilen löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+  },
+  "L'ID spedizione è obbligatorio": {
+    "nl": "Het zending-ID is verplicht",
+    "de": "Die Sendungs-ID ist erforderlich"
+  },
+  "L'ID spedizione destinazione è obbligatorio": {
+    "nl": "Het doel-zending-ID is verplicht",
+    "de": "Die Ziel-Sendungs-ID ist erforderlich"
+  },
+  "Aggiungi almeno una riga": {
+    "nl": "Voeg minstens één rij toe",
+    "de": "Mindestens eine Zeile hinzufügen"
+  },
+  "Filtra per questa spedizione": {
+    "nl": "Filteren op deze zending",
+    "de": "Nach dieser Sendung filtern"
+  },
+  "Filtra per questo paese di origine": {
+    "nl": "Filteren op dit land van oorsprong",
+    "de": "Nach diesem Ursprungsland filtern"
+  },
+  "Proforma": {
+    "nl": "Proforma",
+    "de": "Proforma"
+  },
+  "Destinatario": {
+    "nl": "Geadresseerde",
+    "de": "Empfänger"
+  },
+  "Oggetto": {
+    "nl": "Onderwerp",
+    "de": "Betreff"
+  },
+  "Prese": {
+    "nl": "Ophalingen",
+    "de": "Abholungen"
+  },
+  "Fissa": {
+    "nl": "Vast",
+    "de": "Fest"
+  },
+  "Autista": {
+    "nl": "Chauffeur",
+    "de": "Fahrer"
+  },
+  "Apertura": {
+    "nl": "Opening",
+    "de": "Eröffnung"
+  },
+  "Giorni max": {
+    "nl": "Max. dagen",
+    "de": "Max. Tage"
+  },
+  "Aperta": {
+    "nl": "Open",
+    "de": "Offen"
+  },
+  "Chiusa": {
+    "nl": "Gesloten",
+    "de": "Geschlossen"
+  },
+  "Esito": {
+    "nl": "Uitkomst",
+    "de": "Ergebnis"
+  },
+  "Contatto": {
+    "nl": "Contact",
+    "de": "Kontakt"
+  },
+  "Giri autisti": {
+    "nl": "Chauffeursroutes",
+    "de": "Fahrertouren"
+  },
+  "Non assegnate": {
+    "nl": "Niet toegewezen",
+    "de": "Nicht zugewiesen"
+  },
+  "Presa fissa": {
+    "nl": "Vaste ophaling",
+    "de": "Feste Abholung"
+  },
+  "Affidata": {
+    "nl": "Toegewezen",
+    "de": "Übergeben"
+  },
+  "Nuova presa": {
+    "nl": "Nieuwe ophaling",
+    "de": "Neue Abholung"
+  },
+  "Triangolazione": {
+    "nl": "Driehoeksvervoer",
+    "de": "Dreiecksverkehr"
+  },
+  "In sede": {
+    "nl": "Op vestiging",
+    "de": "Am Standort"
+  },
+  "Colli": {
+    "nl": "Colli",
+    "de": "Kolli"
+  },
+  "ID Autista": {
+    "nl": "Chauffeur-ID",
+    "de": "Fahrer-ID"
+  },
+  "Note": {
+    "nl": "Notities",
+    "de": "Notizen"
+  },
+  "Assegna": {
+    "nl": "Toewijzen",
+    "de": "Zuweisen"
+  },
+  "Inventario delle spedizioni in giacenza": {
+    "nl": "Inventaris van zendingen in opslag",
+    "de": "Bestand der eingelagerten Sendungen"
+  },
+  "Nuova giacenza": {
+    "nl": "Nieuwe opslag",
+    "de": "Neue Lagerung"
+  },
+  "Modifica giacenza": {
+    "nl": "Opslag bewerken",
+    "de": "Lagerung bearbeiten"
+  },
+  "Tracking": {
+    "nl": "Tracking",
+    "de": "Tracking"
+  },
+  "Cerca (note/descrizione)": {
+    "nl": "Zoeken (notities/omschrijving)",
+    "de": "Suchen (Notizen/Beschreibung)"
+  },
+  "ID cliente": {
+    "nl": "Klant-ID",
+    "de": "Kunden-ID"
+  },
+  "Operazione": {
+    "nl": "Handeling",
+    "de": "Vorgang"
+  },
+  "Nota": {
+    "nl": "Notitie",
+    "de": "Notiz"
+  },
+  "Chiusura": {
+    "nl": "Afsluiting",
+    "de": "Abschluss"
+  },
+  "Giorni di giacenza": {
+    "nl": "Opslagdagen",
+    "de": "Lagertage"
+  },
+  "Addebito riconsegna": {
+    "nl": "Kosten heraflevering",
+    "de": "Gebühr für erneute Zustellung"
+  },
+  "Importo bloccato: la spedizione e' gia' stata post fatturata.": {
+    "nl": "Bedrag geblokkeerd: de zending is al nagefactureerd.",
+    "de": "Betrag gesperrt: Die Sendung wurde bereits nachfakturiert."
+  },
+  "Contatto fornitore": {
+    "nl": "Contact leverancier",
+    "de": "Kontakt Lieferant"
+  },
+  "Contatto cliente": {
+    "nl": "Contact klant",
+    "de": "Kontakt Kunde"
+  },
+  "Contatto destinatario": {
+    "nl": "Contact geadresseerde",
+    "de": "Kontakt Empfänger"
+  },
+  "Risposta cliente": {
+    "nl": "Antwoord klant",
+    "de": "Antwort des Kunden"
+  },
+  "Solo aperte": {
+    "nl": "Alleen open",
+    "de": "Nur offene"
+  },
+  "Apertura da": {
+    "nl": "Opening vanaf",
+    "de": "Eröffnung von"
+  },
+  "Apertura a": {
+    "nl": "Opening tot",
+    "de": "Eröffnung bis"
+  },
+  "Chiudi giacenza": {
+    "nl": "Opslag sluiten",
+    "de": "Lagerung schließen"
+  },
+  "Chiusura automatica scadute": {
+    "nl": "Automatisch sluiten van verlopen items",
+    "de": "Automatischer Abschluss abgelaufener Einträge"
+  },
+  "Chiude tutte le giacenze aperte da più del numero di giorni indicato.": {
+    "nl": "Sluit alle opslagposten die langer open staan dan het opgegeven aantal dagen.",
+    "de": "Schließt alle Lagerungen, die länger als die angegebene Anzahl Tage offen sind."
+  },
+  "Annotata": {
+    "nl": "Genoteerd",
+    "de": "Vermerkt"
+  },
+  "Riconsegna": {
+    "nl": "Heraflevering",
+    "de": "Erneute Zustellung"
+  },
+  "Esitata": {
+    "nl": "Afgehandeld",
+    "de": "Erledigt"
+  },
+  "Anzianità": {
+    "nl": "Ouderdom",
+    "de": "Alter"
+  },
+  "Totale aperte": {
+    "nl": "Totaal open",
+    "de": "Gesamt offen"
+  },
+  "Fascia": {
+    "nl": "Klasse",
+    "de": "Bereich"
+  },
+  "Giacenza creata": {
+    "nl": "Opslag aangemaakt",
+    "de": "Lagerung erstellt"
+  },
+  "Giacenza aggiornata": {
+    "nl": "Opslag bijgewerkt",
+    "de": "Lagerung aktualisiert"
+  },
+  "Giacenza eliminata": {
+    "nl": "Opslag verwijderd",
+    "de": "Lagerung gelöscht"
+  },
+  "Giacenza chiusa": {
+    "nl": "Opslag gesloten",
+    "de": "Lagerung geschlossen"
+  },
+  "{count} giacenza chiusa | {count} giacenze chiuse": {
+    "nl": "{count} opslag gesloten | {count} opslagposten gesloten",
+    "de": "{count} Lagerung geschlossen | {count} Lagerungen geschlossen"
+  },
+  "Eliminare questa giacenza? L'operazione non è reversibile.": {
+    "nl": "Deze opslag verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "de": "Diese Lagerung löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+  },
+  "Chiudere questa giacenza?": {
+    "nl": "Deze opslag sluiten?",
+    "de": "Diese Lagerung schließen?"
+  },
+  "Giacenza #{id} non trovata": {
+    "nl": "Opslag #{id} niet gevonden",
+    "de": "Lagerung #{id} nicht gefunden"
+  },
+  "L'operazione è obbligatoria": {
+    "nl": "De handeling is verplicht",
+    "de": "Der Vorgang ist erforderlich"
+  },
+  "Filtra per questa operazione": {
+    "nl": "Filteren op deze handeling",
+    "de": "Nach diesem Vorgang filtern"
+  },
+  "Indirizzi di consegna": {
+    "nl": "Afleveradressen",
+    "de": "Lieferadressen"
+  },
+  "Consegna attuale": {
+    "nl": "Huidige aflevering",
+    "de": "Aktuelle Zustellung"
+  },
+  "Consegna originale": {
+    "nl": "Oorspronkelijke aflevering",
+    "de": "Ursprüngliche Zustellung"
+  },
+  "Sola lettura": {
+    "nl": "Alleen lezen",
+    "de": "Schreibgeschützt"
+  },
+  "Nessun indirizzo": {
+    "nl": "Geen adres",
+    "de": "Keine Adresse"
+  },
+  "Modifica consegna": {
+    "nl": "Aflevering bewerken",
+    "de": "Zustellung bearbeiten"
+  },
+  "Messaggi": {
+    "nl": "Berichten",
+    "de": "Nachrichten"
+  },
+  "Al cliente": {
+    "nl": "Aan de klant",
+    "de": "An den Kunden"
+  },
+  "Al corriere": {
+    "nl": "Aan de koerier",
+    "de": "An den Kurier"
+  },
+  "Destinatario obbligatorio": {
+    "nl": "Geadresseerde verplicht",
+    "de": "Empfänger erforderlich"
+  },
+  "Testo aggiuntivo": {
+    "nl": "Aanvullende tekst",
+    "de": "Zusätzlicher Text"
+  },
+  "Nessun messaggio": {
+    "nl": "Geen berichten",
+    "de": "Keine Nachrichten"
+  },
+  "Ha risposto": {
+    "nl": "Heeft geantwoord",
+    "de": "Hat geantwortet"
+  },
+  "In attesa": {
+    "nl": "In afwachting",
+    "de": "Ausstehend"
+  },
+  "Copia prezzo di carico": {
+    "nl": "Inkoopprijs kopiëren",
+    "de": "Einkaufspreis kopieren"
+  },
+  "Tutti": {
+    "nl": "Alle",
+    "de": "Alle"
+  },
+  "Lunga attesa": {
+    "nl": "Lange wachttijd",
+    "de": "Lange Wartezeit"
+  },
+  "Pratiche CRM": {
+    "nl": "CRM-dossiers",
+    "de": "CRM-Vorgänge"
+  },
+  "Data next": {
+    "nl": "Volgende datum",
+    "de": "Nächstes Datum"
+  },
+  "Aperte dal": {
+    "nl": "Open vanaf",
+    "de": "Offen ab"
+  },
+  "Aperte al": {
+    "nl": "Open tot",
+    "de": "Offen bis"
+  },
+  "Cerca oggetto": {
+    "nl": "Onderwerp zoeken",
+    "de": "Betreff suchen"
+  },
+  "Eliminare la pratica #{id}?": {
+    "nl": "Dossier #{id} verwijderen?",
+    "de": "Vorgang #{id} löschen?"
+  },
+  "Pratiche aperte": {
+    "nl": "Open dossiers",
+    "de": "Offene Vorgänge"
+  },
+  "Pratiche To Do aperte": {
+    "nl": "Open To-Do-dossiers",
+    "de": "Offene To-do-Vorgänge"
+  },
+  "Pratiche nuove (240 h)": {
+    "nl": "Nieuwe dossiers (240 u)",
+    "de": "Neue Vorgänge (240 Std.)"
+  },
+  "Pratica": {
+    "nl": "Dossier",
+    "de": "Vorgang"
+  },
+  "Dati della pratica": {
+    "nl": "Dossiergegevens",
+    "de": "Vorgangsdaten"
+  },
+  "Digita per cercare…": {
+    "nl": "Typ om te zoeken…",
+    "de": "Zum Suchen tippen…"
+  },
+  "Nessun contatto": {
+    "nl": "Geen contacten",
+    "de": "Keine Kontakte"
+  },
+  "N. spedizione": {
+    "nl": "Zendingnr.",
+    "de": "Sendungsnr."
+  },
+  "Nome": {
+    "nl": "Naam",
+    "de": "Name"
+  },
+  "Email": {
+    "nl": "E-mail",
+    "de": "E-Mail"
+  },
+  "Telefono": {
+    "nl": "Telefoon",
+    "de": "Telefon"
+  },
+  "Prossimo follow-up": {
+    "nl": "Volgende follow-up",
+    "de": "Nächstes Follow-up"
+  },
+  "Note interne": {
+    "nl": "Interne notities",
+    "de": "Interne Notizen"
+  },
+  "Eventi / avanzamenti": {
+    "nl": "Gebeurtenissen / voortgang",
+    "de": "Ereignisse / Fortschritt"
+  },
+  "Descrizione avanzamento": {
+    "nl": "Omschrijving voortgang",
+    "de": "Beschreibung des Fortschritts"
+  },
+  "Nessun evento": {
+    "nl": "Geen gebeurtenissen",
+    "de": "Keine Ereignisse"
+  },
+  "Messaggi inviati": {
+    "nl": "Verzonden berichten",
+    "de": "Gesendete Nachrichten"
+  },
+  "All.": {
+    "nl": "Bijl.",
+    "de": "Anl."
+  },
+  "Via": {
+    "nl": "Via",
+    "de": "Über"
+  },
+  "Nessun messaggio inviato": {
+    "nl": "Geen berichten verzonden",
+    "de": "Keine Nachrichten gesendet"
+  },
+  "Invia messaggio al cliente": {
+    "nl": "Bericht naar de klant sturen",
+    "de": "Nachricht an den Kunden senden"
+  },
+  "Canale": {
+    "nl": "Kanaal",
+    "de": "Kanal"
+  },
+  "Se vuoto, si usa l'email della pratica": {
+    "nl": "Indien leeg wordt het e-mailadres van het dossier gebruikt",
+    "de": "Wenn leer, wird die E-Mail-Adresse des Vorgangs verwendet"
+  },
+  "Se vuoto, si prende dal modello": {
+    "nl": "Indien leeg wordt de waarde uit het sjabloon gebruikt",
+    "de": "Wenn leer, wird der Wert aus der Vorlage übernommen"
+  },
+  "Testo libero": {
+    "nl": "Vrije tekst",
+    "de": "Freitext"
+  },
+  "Usa modello base": {
+    "nl": "Basissjabloon gebruiken",
+    "de": "Basisvorlage verwenden"
+  },
+  "Messaggio registrato (esito: {esito})": {
+    "nl": "Bericht geregistreerd (uitkomst: {esito})",
+    "de": "Nachricht erfasst (Ergebnis: {esito})"
+  },
+  "Impossibile inviare il messaggio": {
+    "nl": "Kan het bericht niet versturen",
+    "de": "Nachricht konnte nicht gesendet werden"
+  },
+  "Gestione Prese": {
+    "nl": "Ophaalbeheer",
+    "de": "Abholverwaltung"
+  },
+  "Operativo": {
+    "nl": "Operationeel",
+    "de": "Operativ"
+  },
+  "Calendario": {
+    "nl": "Agenda",
+    "de": "Kalender"
+  },
+  "Zone CAP": {
+    "nl": "Postcodegebieden",
+    "de": "PLZ-Gebiete"
+  },
+  "Consegne (POD)": {
+    "nl": "Afleveringen (POD)",
+    "de": "Zustellungen (POD)"
+  },
+  "Pannello operativo": {
+    "nl": "Operationeel paneel",
+    "de": "Operatives Dashboard"
+  },
+  "Totale": {
+    "nl": "Totaal",
+    "de": "Gesamt"
+  },
+  "Assegnate": {
+    "nl": "Toegewezen",
+    "de": "Zugewiesen"
+  },
+  "Fisse": {
+    "nl": "Vast",
+    "de": "Fest"
+  },
+  "Completate": {
+    "nl": "Voltooid",
+    "de": "Abgeschlossen"
+  },
+  "Aperte": {
+    "nl": "Open",
+    "de": "Offen"
+  },
+  "Nuove oggi": {
+    "nl": "Nieuw vandaag",
+    "de": "Neu heute"
+  },
+  "In ritardo": {
+    "nl": "Te laat",
+    "de": "Verspätet"
+  },
+  "Attesa cliente": {
+    "nl": "Wacht op klant",
+    "de": "Warten auf Kunden"
+  },
+  "In sospeso": {
+    "nl": "In behandeling",
+    "de": "Schwebend"
+  },
+  "Calendario prese": {
+    "nl": "Ophaalagenda",
+    "de": "Abholkalender"
+  },
+  "Ora": {
+    "nl": "Tijd",
+    "de": "Uhrzeit"
+  },
+  "Nessuna presa in questa data.": {
+    "nl": "Geen ophalingen op deze datum.",
+    "de": "Keine Abholungen an diesem Datum."
+  },
+  "Presa": {
+    "nl": "Ophaling",
+    "de": "Abholung"
+  },
+  "Da": {
+    "nl": "Van",
+    "de": "Von"
+  },
+  "Filtra": {
+    "nl": "Filteren",
+    "de": "Filtern"
+  },
+  "Tutte": {
+    "nl": "Alle",
+    "de": "Alle"
+  },
+  "Elimina presa": {
+    "nl": "Ophaling verwijderen",
+    "de": "Abholung löschen"
+  },
+  "Eliminare la presa #{id}?": {
+    "nl": "Ophaling #{id} verwijderen?",
+    "de": "Abholung #{id} löschen?"
+  },
+  "Data/ora": {
+    "nl": "Datum/tijd",
+    "de": "Datum/Uhrzeit"
+  },
+  "Sede": {
+    "nl": "Vestiging",
+    "de": "Sitz"
+  },
+  "Luogo": {
+    "nl": "Locatie",
+    "de": "Ort"
+  },
+  "Peso": {
+    "nl": "Gewicht",
+    "de": "Gewicht"
+  },
+  "Modifica presa": {
+    "nl": "Ophaling bewerken",
+    "de": "Abholung bearbeiten"
+  },
+  "ID Sede": {
+    "nl": "Vestiging-ID",
+    "de": "Standort-ID"
+  },
+  "0 = non assegnato": {
+    "nl": "0 = niet toegewezen",
+    "de": "0 = nicht zugewiesen"
+  },
+  "Data e ora": {
+    "nl": "Datum en tijd",
+    "de": "Datum und Uhrzeit"
+  },
+  "Formato: AAAA-MM-GG HH:MM": {
+    "nl": "Formaat: JJJJ-MM-DD UU:MM",
+    "de": "Format: JJJJ-MM-TT HH:MM"
+  },
+  "Luogo di ritiro": {
+    "nl": "Ophaallocatie",
+    "de": "Abholort"
+  },
+  "Peso (kg)": {
+    "nl": "Gewicht (kg)",
+    "de": "Gewicht (kg)"
+  },
+  "Assegna presa #{id}": {
+    "nl": "Ophaling #{id} toewijzen",
+    "de": "Abholung #{id} zuweisen"
+  },
+  "Rimuovi assegnazione": {
+    "nl": "Toewijzing verwijderen",
+    "de": "Zuweisung entfernen"
+  },
+  "Seleziona un autista per vedere il giro.": {
+    "nl": "Selecteer een chauffeur om de route te zien.",
+    "de": "Wählen Sie einen Fahrer, um die Tour zu sehen."
+  },
+  "{n} fermate": {
+    "nl": "{n} stops",
+    "de": "{n} Stopps"
+  },
+  "Borderò": {
+    "nl": "Vrachtbrief",
+    "de": "Bordero"
+  },
+  "colli": {
+    "nl": "colli",
+    "de": "Kolli"
+  },
+  "Fermate totali": {
+    "nl": "Totaal stops",
+    "de": "Stopps gesamt"
+  },
+  "Colli totali": {
+    "nl": "Totaal colli",
+    "de": "Kolli gesamt"
+  },
+  "Peso totale": {
+    "nl": "Totaalgewicht",
+    "de": "Gesamtgewicht"
+  },
+  "Zone CAP → autista": {
+    "nl": "Postcodegebieden → chauffeur",
+    "de": "PLZ-Gebiete → Fahrer"
+  },
+  "Provincia": {
+    "nl": "Provincie",
+    "de": "Provinz"
+  },
+  "contatto": {
+    "nl": "contact",
+    "de": "Kontakt"
+  },
+  "Seleziona una provincia.": {
+    "nl": "Selecteer een provincie.",
+    "de": "Wählen Sie eine Provinz."
+  },
+  "Nessuna zona assegnata.": {
+    "nl": "Geen gebied toegewezen.",
+    "de": "Kein Gebiet zugewiesen."
+  },
+  "Rimuovi zona": {
+    "nl": "Gebied verwijderen",
+    "de": "Gebiet entfernen"
+  },
+  "Rimuovere l'assegnazione del CAP {cap}?": {
+    "nl": "De toewijzing van postcode {cap} verwijderen?",
+    "de": "Die Zuweisung der PLZ {cap} entfernen?"
+  },
+  "Caricamento fallito": {
+    "nl": "Laden mislukt",
+    "de": "Laden fehlgeschlagen"
+  },
+  "Operazione fallita": {
+    "nl": "Handeling mislukt",
+    "de": "Vorgang fehlgeschlagen"
+  },
+  "Registrazione consegna (POD)": {
+    "nl": "Afleveringsregistratie (POD)",
+    "de": "Zustellerfassung (POD)"
+  },
+  "LDV / AWB": {
+    "nl": "Vrachtbrief / AWB",
+    "de": "Frachtbrief / AWB"
+  },
+  "Numero della spedizione o AWB del corriere": {
+    "nl": "Zendingnummer of AWB van de koerier",
+    "de": "Sendungsnummer oder AWB des Kuriers"
+  },
+  "Consegnato": {
+    "nl": "Afgeleverd",
+    "de": "Zugestellt"
+  },
+  "Mancata": {
+    "nl": "Mislukt",
+    "de": "Fehlgeschlagen"
+  },
+  "Firma": {
+    "nl": "Handtekening",
+    "de": "Unterschrift"
+  },
+  "Nome di chi ritira": {
+    "nl": "Naam van de ontvanger",
+    "de": "Name des Abholers"
+  },
+  "Rileva posizione": {
+    "nl": "Locatie bepalen",
+    "de": "Standort ermitteln"
+  },
+  "Registra consegna": {
+    "nl": "Aflevering registreren",
+    "de": "Zustellung erfassen"
+  },
+  "Consegna registrata.": {
+    "nl": "Aflevering geregistreerd.",
+    "de": "Zustellung erfasst."
+  },
+  "Geolocalizzazione non disponibile.": {
+    "nl": "Geolocatie niet beschikbaar.",
+    "de": "Standortbestimmung nicht verfügbar."
+  },
+  "Impossibile rilevare la posizione.": {
+    "nl": "Kan de locatie niet bepalen.",
+    "de": "Standort konnte nicht ermittelt werden."
+  },
+  "Importo": {
+    "nl": "Bedrag",
+    "de": "Betrag"
+  },
+  "Acquisizione e riconciliazione assegni": {
+    "nl": "Vastlegging en afstemming van cheques",
+    "de": "Erfassung und Abstimmung von Schecks"
+  },
+  "Nuova acquisizione assegni": {
+    "nl": "Nieuwe chequevastlegging",
+    "de": "Neue Scheckerfassung"
+  },
+  "Solo corrieri selezionabili": {
+    "nl": "Alleen selecteerbare koeriers",
+    "de": "Nur auswählbare Kuriere"
+  },
+  "N. busta": {
+    "nl": "Envelopnr.",
+    "de": "Umschlagnr."
+  },
+  "Data busta": {
+    "nl": "Datum envelop",
+    "de": "Datum Umschlag"
+  },
+  "Genera QR": {
+    "nl": "QR genereren",
+    "de": "QR erzeugen"
+  },
+  "Generazione…": {
+    "nl": "Genereren…",
+    "de": "Wird erzeugt…"
+  },
+  "Inquadra col telefono": {
+    "nl": "Scan met de telefoon",
+    "de": "Mit dem Telefon scannen"
+  },
+  "Scade il {date}": {
+    "nl": "Verloopt op {date}",
+    "de": "Läuft am {date} ab"
+  },
+  "Non condividerlo: permette di caricare documenti di questa busta.": {
+    "nl": "Deel deze niet: hiermee kunnen documenten van deze envelop worden geüpload.",
+    "de": "Nicht weitergeben: Damit können Dokumente dieses Umschlags hochgeladen werden."
+  },
+  "Copia link": {
+    "nl": "Link kopiëren",
+    "de": "Link kopieren"
+  },
+  "Link copiato": {
+    "nl": "Link gekopieerd",
+    "de": "Link kopiert"
+  },
+  "Chiudi busta": {
+    "nl": "Envelop sluiten",
+    "de": "Umschlag schließen"
+  },
+  "Chiudere la busta?": {
+    "nl": "De envelop sluiten?",
+    "de": "Den Umschlag schließen?"
+  },
+  "Il QR smetterà di funzionare. È l'unico modo per invalidare un codice già stampato.": {
+    "nl": "De QR-code werkt dan niet meer. Dit is de enige manier om een al afgedrukte code ongeldig te maken.",
+    "de": "Der QR-Code funktioniert dann nicht mehr. Dies ist die einzige Möglichkeit, einen bereits gedruckten Code ungültig zu machen."
+  },
+  "Busta creata, ma il generatore di QR non ha risposto. Usa il link o riprova.": {
+    "nl": "Envelop aangemaakt, maar de QR-generator reageerde niet. Gebruik de link of probeer het opnieuw.",
+    "de": "Umschlag erstellt, aber der QR-Generator hat nicht geantwortet. Verwenden Sie den Link oder versuchen Sie es erneut."
+  },
+  "Apri in una scheda": {
+    "nl": "In een tabblad openen",
+    "de": "In einem Tab öffnen"
+  },
+  "Buste": {
+    "nl": "Enveloppen",
+    "de": "Umschläge"
+  },
+  "Busta": {
+    "nl": "Envelop",
+    "de": "Umschlag"
+  },
+  "Creata": {
+    "nl": "Aangemaakt",
+    "de": "Erstellt"
+  },
+  "Attiva": {
+    "nl": "Actief",
+    "de": "Aktiv"
+  },
+  "Scaduta": {
+    "nl": "Verlopen",
+    "de": "Abgelaufen"
+  },
+  "Nessuna busta per questo corriere.": {
+    "nl": "Geen enveloppen voor deze koerier.",
+    "de": "Keine Umschläge für diesen Kurier."
+  },
+  "Scegli un corriere per vedere le sue buste.": {
+    "nl": "Kies een koerier om de enveloppen te zien.",
+    "de": "Wählen Sie einen Kurier, um dessen Umschläge zu sehen."
+  },
+  "Scegli un corriere.": {
+    "nl": "Kies een koerier.",
+    "de": "Wählen Sie einen Kurier."
+  },
+  "Impossibile caricare i dati.": {
+    "nl": "Kan de gegevens niet laden.",
+    "de": "Daten konnten nicht geladen werden."
+  },
+  "Impossibile completare l'azione.": {
+    "nl": "Kan de actie niet voltooien.",
+    "de": "Die Aktion konnte nicht abgeschlossen werden."
+  },
+  "N. assegno": {
+    "nl": "Chequenr.",
+    "de": "Schecknr."
+  },
+  "Revisione": {
+    "nl": "Controle",
+    "de": "Prüfung"
+  },
+  "Rivedi": {
+    "nl": "Controleren",
+    "de": "Prüfen"
+  },
+  "Totale acquisito": {
+    "nl": "Totaal vastgelegd",
+    "de": "Erfasste Summe"
+  },
+  "{n} assegni": {
+    "nl": "{n} cheques",
+    "de": "{n} Schecks"
+  },
+  "Richiedono una decisione": {
+    "nl": "Vereisen een beslissing",
+    "de": "Erfordern eine Entscheidung"
+  },
+  "Nulla da decidere": {
+    "nl": "Niets te beslissen",
+    "de": "Nichts zu entscheiden"
+  },
+  "Tutti gli assegni di questa busta sono risolti o abbinati direttamente.": {
+    "nl": "Alle cheques van deze envelop zijn afgehandeld of rechtstreeks gekoppeld.",
+    "de": "Alle Schecks dieses Umschlags sind erledigt oder direkt zugeordnet."
+  },
+  "Già risolti ({n})": {
+    "nl": "Al afgehandeld ({n})",
+    "de": "Bereits erledigt ({n})"
+  },
+  "Documento": {
+    "nl": "Document",
+    "de": "Beleg"
+  },
+  "Scegli spedizione": {
+    "nl": "Kies zending",
+    "de": "Sendung wählen"
+  },
+  "Confermare la spedizione?": {
+    "nl": "De zending bevestigen?",
+    "de": "Die Sendung bestätigen?"
+  },
+  "L'assegno {cheque} verrà associato alla spedizione {shipment}. Resta registrato come decisione manuale, in modo permanente.": {
+    "nl": "Cheque {cheque} wordt gekoppeld aan zending {shipment}. Dit wordt permanent vastgelegd als handmatige beslissing.",
+    "de": "Scheck {cheque} wird der Sendung {shipment} zugeordnet. Dies wird dauerhaft als manuelle Entscheidung erfasst."
+  },
+  "Torna alle buste": {
+    "nl": "Terug naar de enveloppen",
+    "de": "Zurück zu den Umschlägen"
+  },
+  "Seleziona tutti ({n})": {
+    "nl": "Alles selecteren ({n})",
+    "de": "Alle auswählen ({n})"
+  },
+  "Conferma {n} selezionati": {
+    "nl": "{n} geselecteerde bevestigen",
+    "de": "{n} ausgewählte bestätigen"
+  },
+  "{n} assegni confermati.": {
+    "nl": "{n} cheques bevestigd.",
+    "de": "{n} Schecks bestätigt."
+  },
+  "Consiglia": {
+    "nl": "Aanbevolen",
+    "de": "Empfohlen"
+  },
+  "Solo non assegnati ({n})": {
+    "nl": "Alleen niet-toegewezen ({n})",
+    "de": "Nur nicht zugewiesene ({n})"
+  },
+  "Niente da assegnare": {
+    "nl": "Niets toe te wijzen",
+    "de": "Nichts zuzuweisen"
+  },
+  "Tutti gli assegni hanno già una spedizione. Togli il filtro per vedere il resto.": {
+    "nl": "Alle cheques hebben al een zending. Verwijder het filter om de rest te zien.",
+    "de": "Alle Schecks haben bereits eine Sendung. Entfernen Sie den Filter, um den Rest zu sehen."
+  },
+  "Abbinato": {
+    "nl": "Gekoppeld",
+    "de": "Zugeordnet"
+  },
+  "Viaggio di ritorno": {
+    "nl": "Retourrit",
+    "de": "Rückfahrt"
+  },
+  "Reso in contanti": {
+    "nl": "Contant geretourneerd",
+    "de": "Bar zurückgegeben"
+  },
+  "Ambiguo": {
+    "nl": "Dubbelzinnig",
+    "de": "Mehrdeutig"
+  },
+  "Nessuna spedizione": {
+    "nl": "Geen zending",
+    "de": "Keine Sendung"
+  },
+  "Manuale": {
+    "nl": "Handmatig",
+    "de": "Manuell"
+  },
+  "Rifiutato": {
+    "nl": "Afgewezen",
+    "de": "Abgelehnt"
+  },
+  "Documento AS: il denaro è tornato in contanti e non c'è alcun AWB da abbinare. Scegli la spedizione a mano.": {
+    "nl": "AS-document: het geld is contant teruggekomen en er is geen AWB om te koppelen. Kies de zending handmatig.",
+    "de": "AS-Beleg: Das Geld kam bar zurück und es gibt keine AWB zum Zuordnen. Wählen Sie die Sendung manuell."
+  },
+  "Trovato tramite il viaggio di ritorno del corriere (documento = AWB+1). È una deduzione: confermala prima che valga.": {
+    "nl": "Gevonden via de retourrit van de koerier (document = AWB+1). Dit is een afleiding: bevestig deze voordat zij geldt.",
+    "de": "Über die Rückfahrt des Kuriers gefunden (Beleg = AWB+1). Dies ist eine Ableitung: Bestätigen Sie sie, bevor sie gilt."
+  },
+  "Più spedizioni hanno quell'AWB. L'AWB del corriere non è univoco: scegli quale.": {
+    "nl": "Meerdere zendingen hebben die AWB. De AWB van de koerier is niet uniek: kies welke.",
+    "de": "Mehrere Sendungen haben diese AWB. Die AWB des Kuriers ist nicht eindeutig: Wählen Sie aus."
+  },
+  "Nessun AWB di questo corriere corrisponde. Controlla il documento nell'acquisizione o scegli la spedizione a mano.": {
+    "nl": "Geen enkele AWB van deze koerier komt overeen. Controleer het document bij de vastlegging of kies de zending handmatig.",
+    "de": "Keine AWB dieses Kuriers stimmt überein. Prüfen Sie den Beleg in der Erfassung oder wählen Sie die Sendung manuell."
+  },
+  "Scegli la spedizione": {
+    "nl": "Kies de zending",
+    "de": "Wählen Sie die Sendung"
+  },
+  "Una sola spedizione corrisponde. Confermala comunque tu.": {
+    "nl": "Slechts één zending komt overeen. Bevestig deze toch zelf.",
+    "de": "Nur eine Sendung stimmt überein. Bestätigen Sie sie dennoch selbst."
+  },
+  "{n} spedizioni possibili (stesso importo, date vicine).": {
+    "nl": "{n} mogelijke zendingen (zelfde bedrag, nabije data).",
+    "de": "{n} mögliche Sendungen (gleicher Betrag, nahe Daten)."
+  },
+  "Nessuna candidata": {
+    "nl": "Geen kandidaten",
+    "de": "Keine Kandidaten"
+  },
+  "Nessuna spedizione di questo corriere ha quell'importo nella finestra di date.": {
+    "nl": "Geen enkele zending van deze koerier heeft dat bedrag binnen het datumbereik.",
+    "de": "Keine Sendung dieses Kuriers weist diesen Betrag im Datumsfenster auf."
+  },
+  "Contrassegno": {
+    "nl": "Rembours",
+    "de": "Nachnahme"
+  },
+  "…oppure cerca la spedizione": {
+    "nl": "…of zoek de zending",
+    "de": "…oder suchen Sie die Sendung"
+  },
+  "Cerca per AWB, LDV o ID spedizione": {
+    "nl": "Zoek op AWB, vrachtbrief of zending-ID",
+    "de": "Nach AWB, Frachtbrief oder Sendungs-ID suchen"
+  },
+  "Scegli una spedizione o scrivi il suo ID.": {
+    "nl": "Kies een zending of voer het ID ervan in.",
+    "de": "Wählen Sie eine Sendung oder geben Sie deren ID ein."
+  },
+  "Scelta da un operatore dell'ERP tra le candidate (importo + date).": {
+    "nl": "Door een ERP-medewerker gekozen uit de kandidaten (bedrag + data).",
+    "de": "Von einem ERP-Bearbeiter aus den Kandidaten ausgewählt (Betrag + Daten)."
+  },
+  "ID spedizione inserito a mano da un operatore dell'ERP.": {
+    "nl": "Zending-ID handmatig ingevoerd door een ERP-medewerker.",
+    "de": "Sendungs-ID manuell von einem ERP-Bearbeiter eingegeben."
+  },
+  "Scrivi almeno 3 caratteri per cercare": {
+    "nl": "Voer minstens 3 tekens in om te zoeken",
+    "de": "Mindestens 3 Zeichen zum Suchen eingeben"
+  },
+  "Ricerca spedizioni…": {
+    "nl": "Zendingen zoeken…",
+    "de": "Sendungssuche…"
+  },
+  "Nessun candidato per importo e data. Usa la ricerca per AWB, LDV o ID.": {
+    "nl": "Geen kandidaten op bedrag en datum. Gebruik de zoekfunctie op AWB, vrachtbrief of ID.",
+    "de": "Keine Kandidaten nach Betrag und Datum. Nutzen Sie die Suche nach AWB, Frachtbrief oder ID."
+  },
+  "Cerca un'altra spedizione": {
+    "nl": "Een andere zending zoeken",
+    "de": "Eine andere Sendung suchen"
+  },
+  "Ricalcola abbinamento": {
+    "nl": "Koppeling herberekenen",
+    "de": "Zuordnung neu berechnen"
+  },
+  "Ricalcolare l'abbinamento?": {
+    "nl": "De koppeling herberekenen?",
+    "de": "Die Zuordnung neu berechnen?"
+  },
+  "Ricerca di nuovo la spedizione di ogni assegno. Ciò che ha già deciso una persona non viene toccato.": {
+    "nl": "Zoekt opnieuw de zending van elke cheque. Wat een persoon al heeft beslist, blijft ongewijzigd.",
+    "de": "Sucht erneut die Sendung jedes Schecks. Was eine Person bereits entschieden hat, bleibt unberührt."
+  },
+  "Abbinamento ricalcolato: {n} assegni aggiornati.": {
+    "nl": "Koppeling herberekend: {n} cheques bijgewerkt.",
+    "de": "Zuordnung neu berechnet: {n} Schecks aktualisiert."
+  },
+  "Approva": {
+    "nl": "Goedkeuren",
+    "de": "Genehmigen"
+  },
+  "Approvare la busta?": {
+    "nl": "De envelop goedkeuren?",
+    "de": "Den Umschlag genehmigen?"
+  },
+  "Gli assegni risolti passano al registro delle loro spedizioni. Quelli che richiedono ancora una decisione restano qui. Se gli assegni non quadrano con il contrassegno fatturato, viene segnalato: l'importo fatturato non si modifica.": {
+    "nl": "De afgehandelde cheques gaan naar het register van hun zendingen. Cheques die nog een beslissing vereisen, blijven hier. Als de cheques niet overeenkomen met het gefactureerde rembours, wordt dit gemeld: het gefactureerde bedrag wordt niet gewijzigd.",
+    "de": "Die erledigten Schecks gehen in das Register ihrer Sendungen über. Schecks, die noch eine Entscheidung erfordern, bleiben hier. Stimmen die Schecks nicht mit der fakturierten Nachnahme überein, wird dies gemeldet: Der fakturierte Betrag wird nicht geändert."
+  },
+  "{n} assegni approvati su {s} spedizioni.": {
+    "nl": "{n} cheques goedgekeurd op {s} zendingen.",
+    "de": "{n} Schecks für {s} Sendungen genehmigt."
+  },
+  "{n} restano in attesa di decisione": {
+    "nl": "{n} wachten nog op een beslissing",
+    "de": "{n} warten noch auf eine Entscheidung"
+  },
+  "Spedizione {shipment}: fatturato {expected}, assegni {got}. L'importo fatturato NON è stato toccato — verificare con il corriere.": {
+    "nl": "Zending {shipment}: gefactureerd {expected}, cheques {got}. Het gefactureerde bedrag is NIET gewijzigd — verifieer dit met de koerier.",
+    "de": "Sendung {shipment}: fakturiert {expected}, Schecks {got}. Der fakturierte Betrag wurde NICHT geändert — mit dem Kurier prüfen."
+  },
+  "Buste che richiedono il tuo intervento, di tutti i corrieri.": {
+    "nl": "Enveloppen die uw tussenkomst vereisen, van alle koeriers.",
+    "de": "Umschläge aller Kuriere, die Ihr Eingreifen erfordern."
+  },
+  "Mostra anche le risolte": {
+    "nl": "Ook de afgehandelde tonen",
+    "de": "Auch die erledigten anzeigen"
+  },
+  "Nulla in sospeso": {
+    "nl": "Niets in behandeling",
+    "de": "Nichts ausstehend"
+  },
+  "Nessuna busta in attesa di una decisione o di un'approvazione.": {
+    "nl": "Geen enveloppen die op een beslissing of goedkeuring wachten.",
+    "de": "Keine Umschläge, die auf eine Entscheidung oder Genehmigung warten."
+  },
+  "Decidere": {
+    "nl": "Beslissen",
+    "de": "Entscheiden"
+  },
+  "Approvare": {
+    "nl": "Goedkeuren",
+    "de": "Genehmigen"
+  },
+  "Lettura": {
+    "nl": "Uitlezen",
+    "de": "Auslesen"
+  },
+  "Errore di lettura": {
+    "nl": "Leesfout",
+    "de": "Lesefehler"
+  },
+  "Richiede decisione": {
+    "nl": "Vereist een beslissing",
+    "de": "Erfordert eine Entscheidung"
+  },
+  "In lettura": {
+    "nl": "Wordt uitgelezen",
+    "de": "Wird ausgelesen"
+  },
+  "Pronto": {
+    "nl": "Gereed",
+    "de": "Bereit"
+  },
+  "Eliminare la busta?": {
+    "nl": "De envelop verwijderen?",
+    "de": "Den Umschlag löschen?"
+  },
+  "La busta #{id} (busta {bill}) e tutti i suoi assegni verranno nascosti. Gli assegni già approvati su una spedizione NON vengono annullati. Reversibile da un amministratore.": {
+    "nl": "Envelop #{id} (envelop {bill}) en alle bijbehorende cheques worden verborgen. Cheques die al voor een zending zijn goedgekeurd, worden NIET geannuleerd. Kan door een beheerder ongedaan worden gemaakt.",
+    "de": "Umschlag #{id} (Umschlag {bill}) und alle zugehörigen Schecks werden ausgeblendet. Bereits für eine Sendung genehmigte Schecks werden NICHT storniert. Von einem Administrator umkehrbar."
+  },
+  "Esporta": {
+    "nl": "Exporteren",
+    "de": "Exportieren"
+  },
+  "Esporta distinta COD": {
+    "nl": "COD-manifest exporteren",
+    "de": "COD-Manifest exportieren"
+  },
+  "Genera un CSV degli assegni COD di un cliente in un intervallo di date, una riga per assegno.": {
+    "nl": "Genereert een CSV van de COD-cheques van een klant binnen een datumbereik, één rij per cheque.",
+    "de": "Erzeugt eine CSV der COD-Schecks eines Kunden in einem Datumsbereich, eine Zeile pro Scheck."
+  },
+  "N. busta (opzionale)": {
+    "nl": "Envelopnr. (optioneel)",
+    "de": "Umschlagnr. (optional)"
+  },
+  "Filtra per una busta specifica.": {
+    "nl": "Filteren op een specifieke envelop.",
+    "de": "Nach einem bestimmten Umschlag filtern."
+  },
+  "Una riga per assegno: se una spedizione ha più assegni, comparirà più volte.": {
+    "nl": "Eén rij per cheque: heeft een zending meerdere cheques, dan verschijnt zij meerdere keren.",
+    "de": "Eine Zeile pro Scheck: Hat eine Sendung mehrere Schecks, erscheint sie mehrfach."
+  },
+  "Genera CSV": {
+    "nl": "CSV genereren",
+    "de": "CSV erzeugen"
+  },
+  "CSV generato e scaricato.": {
+    "nl": "CSV gegenereerd en gedownload.",
+    "de": "CSV erzeugt und heruntergeladen."
+  },
+  "Scegli un cliente.": {
+    "nl": "Kies een klant.",
+    "de": "Wählen Sie einen Kunden."
+  },
+  "«Da» è posteriore ad «A».": {
+    "nl": "«Van» ligt na «Tot».",
+    "de": "«Von» liegt nach «Bis»."
+  },
+  "assegni": {
+    "nl": "cheques",
+    "de": "Schecks"
+  },
+  "importo totale": {
+    "nl": "totaalbedrag",
+    "de": "Gesamtbetrag"
+  },
+  "divergenze": {
+    "nl": "afwijkingen",
+    "de": "Abweichungen"
+  },
+  "La colonna {cols} sarà vuota nelle {n} righe: SIFARMA non invia ancora questo dato nei metadati della spedizione.": {
+    "nl": "De kolom {cols} blijft leeg in de {n} rijen: SIFARMA levert dit gegeven nog niet in de metadata van de zending.",
+    "de": "Die Spalte {cols} bleibt in den {n} Zeilen leer: SIFARMA liefert diese Angabe noch nicht in den Metadaten der Sendung."
+  },
+  "Vedi formato dei metadati.": {
+    "nl": "Zie het formaat van de metadata.",
+    "de": "Siehe Format der Metadaten."
+  },
+  "Nessun assegno da esportare per questo cliente e intervallo.": {
+    "nl": "Geen cheques te exporteren voor deze klant en dit bereik.",
+    "de": "Keine Schecks zum Exportieren für diesen Kunden und Zeitraum."
+  },
+  "Assegno": {
+    "nl": "Cheque",
+    "de": "Scheck"
+  },
+  "DDT mandante": {
+    "nl": "Vrachtbrief opdrachtgever",
+    "de": "Lieferschein Auftraggeber"
+  },
+  "DDT DIFARCO": {
+    "nl": "Vrachtbrief DIFARCO",
+    "de": "Lieferschein DIFARCO"
+  },
+  "Riferimento": {
+    "nl": "Referentie",
+    "de": "Referenz"
+  },
+  "Cli. fatt.": {
+    "nl": "Fact.klant",
+    "de": "Rech.-Kunde"
+  },
+  "Errore": {
+    "nl": "Fout",
+    "de": "Fehler"
+  },
+  "Riprova": {
+    "nl": "Opnieuw proberen",
+    "de": "Erneut versuchen"
+  },
+  "Indirizzo": {
+    "nl": "Adres",
+    "de": "Adresse"
+  },
+  "Logout": {
+    "nl": "Afmelden",
+    "de": "Abmelden"
+  },
+  "Nessun dato": {
+    "nl": "Geen gegevens",
+    "de": "Keine Daten"
+  },
+  "Attivo": {
+    "nl": "Actief",
+    "de": "Aktiv"
+  },
+  "Inattivo": {
+    "nl": "Inactief",
+    "de": "Inaktiv"
+  },
+  "di": {
+    "nl": "van",
+    "de": "von"
+  },
+  "Pagina": {
+    "nl": "Pagina",
+    "de": "Seite"
+  },
+  "per pagina": {
+    "nl": "per pagina",
+    "de": "pro Seite"
+  },
+  "Reset": {
+    "nl": "Reset",
+    "de": "Zurücksetzen"
+  },
+  "{n} risultati": {
+    "nl": "{n} resultaten",
+    "de": "{n} Ergebnisse"
+  },
+  "(limite raggiunto, potrebbero esserci altri)": {
+    "nl": "(limiet bereikt, er kunnen er meer zijn)",
+    "de": "(Limit erreicht, es könnten weitere vorhanden sein)"
+  },
+  "Questa sezione è in migrazione verso il nuovo pannello. Tornerà disponibile a breve.": {
+    "nl": "Deze sectie wordt gemigreerd naar het nieuwe paneel. Zij is binnenkort weer beschikbaar.",
+    "de": "Dieser Bereich wird in das neue Panel migriert. Er ist in Kürze wieder verfügbar."
+  },
+  "Vedi stato della migrazione": {
+    "nl": "Migratiestatus bekijken",
+    "de": "Migrationsstatus ansehen"
+  },
+  "Sezione non disponibile": {
+    "nl": "Sectie niet beschikbaar",
+    "de": "Bereich nicht verfügbar"
+  },
+  "prossimamente": {
+    "nl": "binnenkort",
+    "de": "demnächst"
+  },
+  "Copia": {
+    "nl": "Kopiëren",
+    "de": "Kopieren"
+  },
+  "Copiato negli appunti": {
+    "nl": "Gekopieerd naar het klembord",
+    "de": "In die Zwischenablage kopiert"
+  },
+  "Impossibile copiare": {
+    "nl": "Kopiëren niet mogelijk",
+    "de": "Kopieren nicht möglich"
+  },
+  "Non hai permessi per accedere a questa sezione.": {
+    "nl": "U heeft geen rechten om deze sectie te openen.",
+    "de": "Sie haben keine Berechtigung für diesen Bereich."
+  },
+  "Non hai accesso a nessuna sezione di amministrazione.": {
+    "nl": "U heeft geen toegang tot enige beheersectie.",
+    "de": "Sie haben zu keinem Verwaltungsbereich Zugriff."
+  },
+  "Obbligatorio": {
+    "nl": "Verplicht",
+    "de": "Erforderlich"
+  },
+  "Salvato": {
+    "nl": "Opgeslagen",
+    "de": "Gespeichert"
+  },
+  "Apri": {
+    "nl": "Openen",
+    "de": "Öffnen"
+  },
+  "Scarica": {
+    "nl": "Downloaden",
+    "de": "Herunterladen"
+  },
+  "Visualizza": {
+    "nl": "Weergeven",
+    "de": "Anzeigen"
+  },
+  "Operazioni": {
+    "nl": "Handelingen",
+    "de": "Vorgänge"
+  },
+  "Errore di rete": {
+    "nl": "Netwerkfout",
+    "de": "Netzwerkfehler"
+  },
+  "Sessione scaduta. Reindirizzamento al login…": {
+    "nl": "Sessie verlopen. Doorverwijzen naar de aanmeldpagina…",
+    "de": "Sitzung abgelaufen. Weiterleitung zur Anmeldung…"
+  },
+  "Errore di validazione": {
+    "nl": "Validatiefout",
+    "de": "Validierungsfehler"
+  },
+  "Operativa": {
+    "nl": "Operationeel",
+    "de": "Operativ"
+  },
+  "Gestione": {
+    "nl": "Beheer",
+    "de": "Verwaltung"
+  },
+  "Amministrazione": {
+    "nl": "Administratie",
+    "de": "Administration"
+  },
+  "Home (SwiftPack)": {
+    "nl": "Home (SwiftPack)",
+    "de": "Home (SwiftPack)"
+  },
+  "Ritiri": {
+    "nl": "Ophalingen",
+    "de": "Abholungen"
+  },
+  "COD / Assegni": {
+    "nl": "COD / Cheques",
+    "de": "COD / Schecks"
+  },
+  "Importazione": {
+    "nl": "Import",
+    "de": "Import"
+  },
+  "Listini": {
+    "nl": "Tarieven",
+    "de": "Preislisten"
+  },
+  "Modelli email": {
+    "nl": "E-mailsjablonen",
+    "de": "E-Mail-Vorlagen"
+  },
+  "Destinatari": {
+    "nl": "Geadresseerden",
+    "de": "Empfänger"
+  },
+  "Cc": {
+    "nl": "Cc",
+    "de": "Cc"
+  },
+  "Contatti o email in copia (opzionale).": {
+    "nl": "Contacten of e-mailadressen in kopie (optioneel).",
+    "de": "Kontakte oder E-Mail-Adressen in Kopie (optional)."
+  },
+  "Scegli destinatario…": {
+    "nl": "Kies geadresseerde…",
+    "de": "Empfänger wählen…"
+  },
+  "Nessun destinatario": {
+    "nl": "Geen geadresseerden",
+    "de": "Keine Empfänger"
+  },
+  "Aggiungi email manuale…": {
+    "nl": "Handmatig e-mailadres toevoegen…",
+    "de": "E-Mail-Adresse manuell hinzufügen…"
+  },
+  "Seleziona destinatari o aggiungi email.": {
+    "nl": "Selecteer geadresseerden of voeg e-mailadressen toe.",
+    "de": "Empfänger auswählen oder E-Mail-Adressen hinzufügen."
+  },
+  "Lingua": {
+    "nl": "Taal",
+    "de": "Sprache"
+  },
+  "Nota (opzionale)": {
+    "nl": "Notitie (optioneel)",
+    "de": "Notiz (optional)"
+  },
+  "Aggiungi un messaggio…": {
+    "nl": "Voeg een bericht toe…",
+    "de": "Nachricht hinzufügen…"
+  },
+  "Allegati": {
+    "nl": "Bijlagen",
+    "de": "Anhänge"
+  },
+  "Seleziona documenti": {
+    "nl": "Documenten selecteren",
+    "de": "Dokumente auswählen"
+  },
+  "Corpo dell'email": {
+    "nl": "Berichttekst",
+    "de": "E-Mail-Text"
+  },
+  "Oggetto:": {
+    "nl": "Onderwerp:",
+    "de": "Betreff:"
+  },
+  "Ripristina": {
+    "nl": "Herstellen",
+    "de": "Wiederherstellen"
+  },
+  "{count} destinatario | {count} destinatari": {
+    "nl": "{count} geadresseerde | {count} geadresseerden",
+    "de": "{count} Empfänger | {count} Empfänger"
+  },
+  "Richiesta inviata a {count} destinatario/i.": {
+    "nl": "Verzoek verzonden naar {count} geadresseerde(n).",
+    "de": "Anfrage an {count} Empfänger gesendet."
+  },
+  "Impossibile inviare la richiesta.": {
+    "nl": "Kan het verzoek niet versturen.",
+    "de": "Die Anfrage konnte nicht gesendet werden."
+  },
+  "Fattura": {
+    "nl": "Factuur",
+    "de": "Rechnung"
+  },
+  "Fatture": {
+    "nl": "Facturen",
+    "de": "Rechnungen"
+  },
+  "Elenco fatture": {
+    "nl": "Factuurlijst",
+    "de": "Rechnungsliste"
+  },
+  "Nuova fattura": {
+    "nl": "Nieuwe factuur",
+    "de": "Neue Rechnung"
+  },
+  "Dettaglio fattura": {
+    "nl": "Factuurdetail",
+    "de": "Rechnungsdetail"
+  },
+  "Fattura non trovata": {
+    "nl": "Factuur niet gevonden",
+    "de": "Rechnung nicht gefunden"
+  },
+  "Numero": {
+    "nl": "Nummer",
+    "de": "Nummer"
+  },
+  "Paese": {
+    "nl": "Land",
+    "de": "Land"
+  },
+  "Imponibile": {
+    "nl": "Belastbaar bedrag",
+    "de": "Bemessungsgrundlage"
+  },
+  "Stato SDI": {
+    "nl": "SDI-status",
+    "de": "SDI-Status"
+  },
+  "Bloccata (trasmessa)": {
+    "nl": "Geblokkeerd (verzonden)",
+    "de": "Gesperrt (übermittelt)"
+  },
+  "Pagamenti": {
+    "nl": "Betalingen",
+    "de": "Zahlungen"
+  },
+  "Cronologia": {
+    "nl": "Geschiedenis",
+    "de": "Verlauf"
+  },
+  "Date": {
+    "nl": "Data",
+    "de": "Daten"
+  },
+  "Base": {
+    "nl": "Basis",
+    "de": "Basis"
+  },
+  "Nessuna spedizione fatturabile nel periodo": {
+    "nl": "Geen factureerbare zendingen in de periode",
+    "de": "Keine abrechenbaren Sendungen im Zeitraum"
+  },
+  "Mese precedente": {
+    "nl": "Vorige maand",
+    "de": "Vormonat"
+  },
+  "Mese corrente": {
+    "nl": "Huidige maand",
+    "de": "Aktueller Monat"
+  },
+  "% IVA": {
+    "nl": "% btw",
+    "de": "% MwSt."
+  },
+  "Cod.IVA": {
+    "nl": "Btw-code",
+    "de": "MwSt.-Code"
+  },
+  "Città": {
+    "nl": "Plaats",
+    "de": "Stadt"
+  },
+  "Costo": {
+    "nl": "Kosten",
+    "de": "Kosten"
+  },
+  "Genera lotto": {
+    "nl": "Batch genereren",
+    "de": "Stapel erzeugen"
+  },
+  "Fattura manuale": {
+    "nl": "Handmatige factuur",
+    "de": "Manuelle Rechnung"
+  },
+  "Netto": {
+    "nl": "Netto",
+    "de": "Netto"
+  },
+  "IVA %": {
+    "nl": "Btw %",
+    "de": "MwSt. %"
+  },
+  "Importo IVA": {
+    "nl": "Btw-bedrag",
+    "de": "MwSt.-Betrag"
+  },
+  "Cod. IVA": {
+    "nl": "Btw-code",
+    "de": "MwSt.-Code"
+  },
+  "Fattura manuale creata": {
+    "nl": "Handmatige factuur aangemaakt",
+    "de": "Manuelle Rechnung erstellt"
+  },
+  "Fattura passiva": {
+    "nl": "Inkoopfactuur",
+    "de": "Eingangsrechnung"
+  },
+  "Fornitore": {
+    "nl": "Leverancier",
+    "de": "Lieferant"
+  },
+  "Numero fornitore": {
+    "nl": "Leveranciersnummer",
+    "de": "Lieferantennummer"
+  },
+  "Numero esterno della fattura del fornitore": {
+    "nl": "Extern nummer van de leveranciersfactuur",
+    "de": "Externe Nummer der Lieferantenrechnung"
+  },
+  "Distribuzione costo": {
+    "nl": "Kostenverdeling",
+    "de": "Kostenverteilung"
+  },
+  "Anno": {
+    "nl": "Jaar",
+    "de": "Jahr"
+  },
+  "Piano dei conti": {
+    "nl": "Rekeningschema",
+    "de": "Kontenplan"
+  },
+  "Aggiungi quota": {
+    "nl": "Aandeel toevoegen",
+    "de": "Anteil hinzufügen"
+  },
+  "Totale quote": {
+    "nl": "Totaal aandelen",
+    "de": "Summe der Anteile"
+  },
+  "non corrisponde al netto": {
+    "nl": "komt niet overeen met het nettobedrag",
+    "de": "stimmt nicht mit dem Nettobetrag überein"
+  },
+  "Fattura passiva creata": {
+    "nl": "Inkoopfactuur aangemaakt",
+    "de": "Eingangsrechnung erstellt"
+  },
+  "Questa fattura è stata rifiutata dallo SDI. Emettere una nota di credito (TD04) per stornarla e riassegnare le spedizioni?": {
+    "nl": "Deze factuur is door SDI afgewezen. Een creditnota (TD04) uitgeven om haar te storneren en de zendingen opnieuw toe te wijzen?",
+    "de": "Diese Rechnung wurde vom SDI abgelehnt. Eine Gutschrift (TD04) ausstellen, um sie zu stornieren und die Sendungen neu zuzuordnen?"
+  },
+  "Fattura rimediata con nota di credito": {
+    "nl": "Factuur gecorrigeerd met een creditnota",
+    "de": "Rechnung mit Gutschrift korrigiert"
+  },
+  "Fattura per selezione": {
+    "nl": "Factuur op selectie",
+    "de": "Rechnung nach Auswahl"
+  },
+  "Scegli un cliente per vedere le spedizioni fatturabili": {
+    "nl": "Kies een klant om de factureerbare zendingen te zien",
+    "de": "Wählen Sie einen Kunden, um die abrechenbaren Sendungen zu sehen"
+  },
+  "Genera fattura": {
+    "nl": "Factuur genereren",
+    "de": "Rechnung erzeugen"
+  },
+  "Rif.": {
+    "nl": "Ref.",
+    "de": "Ref."
+  },
+  "Consenti i popup per visualizzare la fattura": {
+    "nl": "Sta pop-ups toe om de factuur te bekijken",
+    "de": "Pop-ups zulassen, um die Rechnung anzuzeigen"
+  },
+  "Documento con avvisi": {
+    "nl": "Document met waarschuwingen",
+    "de": "Dokument mit Hinweisen"
+  },
+  "La nota di credito (TD04) è collegata alla fattura originale e ne copia le righe.": {
+    "nl": "De creditnota (TD04) is gekoppeld aan de oorspronkelijke factuur en neemt de regels ervan over.",
+    "de": "Die Gutschrift (TD04) ist mit der ursprünglichen Rechnung verknüpft und übernimmt deren Positionen."
+  },
+  "Nota di credito creata": {
+    "nl": "Creditnota aangemaakt",
+    "de": "Gutschrift erstellt"
+  },
+  "Restituzione": {
+    "nl": "Retour",
+    "de": "Rückgabe"
+  },
+  "Bonifica": {
+    "nl": "Correctie",
+    "de": "Bereinigung"
+  },
+  "Sconto": {
+    "nl": "Korting",
+    "de": "Rabatt"
+  },
+  "Altro": {
+    "nl": "Overig",
+    "de": "Sonstiges"
+  },
+  "Fuel": {
+    "nl": "Fuel",
+    "de": "Fuel"
+  },
+  "Sovrapprezzo carburante": {
+    "nl": "Brandstoftoeslag",
+    "de": "Treibstoffzuschlag"
+  },
+  "Filtra per questo cliente": {
+    "nl": "Filteren op deze klant",
+    "de": "Nach diesem Kunden filtern"
+  },
+  "Filtra per questo stato SDI": {
+    "nl": "Filteren op deze SDI-status",
+    "de": "Nach diesem SDI-Status filtern"
+  },
+  "Filtra per questo numero": {
+    "nl": "Filteren op dit nummer",
+    "de": "Nach dieser Nummer filtern"
+  },
+  "Scarica PDF": {
+    "nl": "PDF downloaden",
+    "de": "PDF herunterladen"
+  },
+  "Scarica e-fattura": {
+    "nl": "E-factuur downloaden",
+    "de": "E-Rechnung herunterladen"
+  },
+  "Trasmetti": {
+    "nl": "Verzenden",
+    "de": "Übermitteln"
+  },
+  "Nota di credito": {
+    "nl": "Creditnota",
+    "de": "Gutschrift"
+  },
+  "Ricalcola": {
+    "nl": "Herberekenen",
+    "de": "Neu berechnen"
+  },
+  "Genera fatture": {
+    "nl": "Facturen genereren",
+    "de": "Rechnungen erzeugen"
+  },
+  "Rimedia (rifiutata)": {
+    "nl": "Corrigeren (afgewezen)",
+    "de": "Korrigieren (abgelehnt)"
+  },
+  "Creata (non inviata)": {
+    "nl": "Aangemaakt (niet verzonden)",
+    "de": "Erstellt (nicht gesendet)"
+  },
+  "Trasmessa allo SDI": {
+    "nl": "Naar SDI verzonden",
+    "de": "An SDI übermittelt"
+  },
+  "Consegnata/Accettata": {
+    "nl": "Afgeleverd/Geaccepteerd",
+    "de": "Zugestellt/Angenommen"
+  },
+  "Rifiutata (KO)": {
+    "nl": "Afgewezen (KO)",
+    "de": "Abgelehnt (KO)"
+  },
+  "Filtri avanzati": {
+    "nl": "Geavanceerde filters",
+    "de": "Erweiterte Filter"
+  },
+  "Apri filtri avanzati": {
+    "nl": "Geavanceerde filters openen",
+    "de": "Erweiterte Filter öffnen"
+  },
+  "Filtri avanzati ({count})": {
+    "nl": "Geavanceerde filters ({count})",
+    "de": "Erweiterte Filter ({count})"
+  },
+  "Pulisci filtri": {
+    "nl": "Filters wissen",
+    "de": "Filter zurücksetzen"
+  },
+  "Numerazione fatture": {
+    "nl": "Factuurnummering",
+    "de": "Rechnungsnummerierung"
+  },
+  "Nuova serie": {
+    "nl": "Nieuwe reeks",
+    "de": "Neue Serie"
+  },
+  "Ogni serie numera le fatture in modo indipendente. L'operatore sceglie quale usare alla creazione.": {
+    "nl": "Elke reeks nummert de facturen onafhankelijk. De medewerker kiest bij het aanmaken welke wordt gebruikt.",
+    "de": "Jede Serie nummeriert die Rechnungen unabhängig. Der Bearbeiter wählt bei der Erstellung, welche verwendet wird."
+  },
+  "Nessuna serie configurata. Le fatture usano la numerazione sequenziale precedente.": {
+    "nl": "Geen reeks geconfigureerd. De facturen gebruiken de vorige doorlopende nummering.",
+    "de": "Keine Serie konfiguriert. Die Rechnungen verwenden die bisherige fortlaufende Nummerierung."
+  },
+  "Non hai i permessi per modificare la configurazione della numerazione.": {
+    "nl": "U heeft geen rechten om de nummeringsconfiguratie te wijzigen.",
+    "de": "Sie haben keine Berechtigung, die Nummerierungskonfiguration zu ändern."
+  },
+  "Predefinita": {
+    "nl": "Standaard",
+    "de": "Standard"
+  },
+  "Prossimo numero": {
+    "nl": "Volgend nummer",
+    "de": "Nächste Nummer"
+  },
+  "Indicativo — fissato al salvataggio": {
+    "nl": "Indicatief — vastgelegd bij opslaan",
+    "de": "Richtwert — beim Speichern festgelegt"
+  },
+  "Fatture emesse": {
+    "nl": "Uitgegeven facturen",
+    "de": "Ausgestellte Rechnungen"
+  },
+  "Fatture fornitore": {
+    "nl": "Leveranciersfacturen",
+    "de": "Lieferantenrechnungen"
+  },
+  "Annuale": {
+    "nl": "Jaarlijks",
+    "de": "Jährlich"
+  },
+  "Mensile": {
+    "nl": "Maandelijks",
+    "de": "Monatlich"
+  },
+  "Mai": {
+    "nl": "Nooit",
+    "de": "Nie"
+  },
+  "Codice": {
+    "nl": "Code",
+    "de": "Code"
+  },
+  "Identificatore stabile, non modificabile in seguito": {
+    "nl": "Vaste identificatie, later niet meer te wijzigen",
+    "de": "Stabile Kennung, später nicht mehr änderbar"
+  },
+  "Tipo documento": {
+    "nl": "Documenttype",
+    "de": "Belegart"
+  },
+  "Formato": {
+    "nl": "Formaat",
+    "de": "Format"
+  },
+  "Cifre": {
+    "nl": "Cijfers",
+    "de": "Stellen"
+  },
+  "Inizio da": {
+    "nl": "Beginnen bij",
+    "de": "Beginn bei"
+  },
+  "Azzeramento": {
+    "nl": "Nulstelling",
+    "de": "Rücksetzung"
+  },
+  "Quando il contatore riparte": {
+    "nl": "Wanneer de teller opnieuw begint",
+    "de": "Wann der Zähler neu beginnt"
+  },
+  "Preseleziona per le nuove fatture": {
+    "nl": "Voorselecteren voor nieuwe facturen",
+    "de": "Für neue Rechnungen vorauswählen"
+  },
+  "Una sola serie per tipo di documento": {
+    "nl": "Slechts één reeks per documenttype",
+    "de": "Nur eine Serie pro Belegart"
+  },
+  "Serie di numerazione": {
+    "nl": "Nummeringsreeks",
+    "de": "Nummernserie"
+  },
+  "contatore": {
+    "nl": "teller",
+    "de": "Zähler"
+  },
+  "anno": {
+    "nl": "jaar",
+    "de": "Jahr"
+  },
+  "anno 2 cifre": {
+    "nl": "jaar 2 cijfers",
+    "de": "Jahr 2-stellig"
+  },
+  "mese": {
+    "nl": "maand",
+    "de": "Monat"
+  },
+  "tipo": {
+    "nl": "type",
+    "de": "Typ"
+  },
+  "Nuova serie di numerazione": {
+    "nl": "Nieuwe nummeringsreeks",
+    "de": "Neue Nummernserie"
+  },
+  "Modifica serie di numerazione": {
+    "nl": "Nummeringsreeks bewerken",
+    "de": "Nummernserie bearbeiten"
+  },
+  "Formato del numero": {
+    "nl": "Nummerformaat",
+    "de": "Nummernformat"
+  },
+  "(numero semplice, come prima)": {
+    "nl": "(eenvoudig nummer, zoals voorheen)",
+    "de": "(einfache Nummer, wie bisher)"
+  },
+  "Cambiare il formato a metà periodo fa sì che le fatture dello stesso anno appaiano diverse. Verifica che sia voluto.": {
+    "nl": "Het formaat halverwege de periode wijzigen zorgt ervoor dat facturen van hetzelfde jaar er anders uitzien. Controleer of dit de bedoeling is.",
+    "de": "Eine Formatänderung mitten im Zeitraum führt dazu, dass Rechnungen desselben Jahres unterschiedlich aussehen. Prüfen Sie, ob das gewollt ist."
+  },
+  "In questo periodo sono già state emesse fatture con un'altra serie: {series}. Mescolare serie nello stesso periodo fiscale può essere letto come numerazione non progressiva.": {
+    "nl": "In deze periode zijn al facturen met een andere reeks uitgegeven: {series}. Reeksen binnen hetzelfde fiscale tijdvak mengen kan worden opgevat als niet-doorlopende nummering.",
+    "de": "In diesem Zeitraum wurden bereits Rechnungen mit einer anderen Serie ausgestellt: {series}. Das Mischen von Serien im selben Steuerzeitraum kann als nicht fortlaufende Nummerierung ausgelegt werden."
+  },
+  "Contatori per periodo": {
+    "nl": "Tellers per periode",
+    "de": "Zähler pro Zeitraum"
+  },
+  "Nessun numero ancora emesso.": {
+    "nl": "Nog geen nummer uitgegeven.",
+    "de": "Noch keine Nummer ausgestellt."
+  },
+  "Periodo": {
+    "nl": "Periode",
+    "de": "Zeitraum"
+  },
+  "Ultimo emesso": {
+    "nl": "Laatst uitgegeven",
+    "de": "Zuletzt ausgestellt"
+  },
+  "Prossimo": {
+    "nl": "Volgende",
+    "de": "Nächste"
+  },
+  "Emessi": {
+    "nl": "Uitgegeven",
+    "de": "Ausgestellt"
+  },
+  "Rilevati salti in una serie": {
+    "nl": "Gaten in een reeks gedetecteerd",
+    "de": "Lücken in einer Serie festgestellt"
+  },
+  "{emitidos} emessi su {esperados} attesi": {
+    "nl": "{emitidos} uitgegeven van {esperados} verwacht",
+    "de": "{emitidos} ausgestellt von {esperados} erwartet"
+  },
+  "Elimina serie": {
+    "nl": "Reeks verwijderen",
+    "de": "Serie löschen"
+  },
+  "Eliminare la serie \"{label}\"?": {
+    "nl": "De reeks \"{label}\" verwijderen?",
+    "de": "Die Serie \"{label}\" löschen?"
+  },
+  "Se ha fatture emesse verrà solo disattivata: i numeri restano verificabili.": {
+    "nl": "Als er facturen zijn uitgegeven, wordt zij alleen gedeactiveerd: de nummers blijven controleerbaar.",
+    "de": "Wenn Rechnungen ausgestellt wurden, wird sie nur deaktiviert: Die Nummern bleiben nachprüfbar."
+  },
+  "Caricamento...": {
+    "nl": "Laden...",
+    "de": "Wird geladen..."
+  },
+  "Cargo, courier express e operazioni quotidiane": {
+    "nl": "Cargo, expreskoerier en dagelijkse handelingen",
+    "de": "Cargo, Expresskurier und tägliche Vorgänge"
+  },
+  "Nuovo cargo": {
+    "nl": "Nieuwe cargo",
+    "de": "Neue Cargo"
+  },
+  "Crea spedizione aerea": {
+    "nl": "Luchtvrachtzending aanmaken",
+    "de": "Luftfrachtsendung erstellen"
+  },
+  "Crea spedizione corriere": {
+    "nl": "Koerierzending aanmaken",
+    "de": "Kuriersendung erstellen"
+  },
+  "Import": {
+    "nl": "Import",
+    "de": "Import"
+  },
+  "Importazione massiva spedizioni": {
+    "nl": "Bulkimport van zendingen",
+    "de": "Massenimport von Sendungen"
+  },
+  "Importazione massiva (v2)": {
+    "nl": "Bulkimport (v2)",
+    "de": "Massenimport (v2)"
+  },
+  "Prezzi cliente (partner)": {
+    "nl": "Klantprijzen (partner)",
+    "de": "Kundenpreise (Partner)"
+  },
+  "Comunicazione a TMWE / clienti": {
+    "nl": "Communicatie naar TMWE / klanten",
+    "de": "Kommunikation an TMWE / Kunden"
+  },
+  "API portal": {
+    "nl": "API-portaal",
+    "de": "API-Portal"
+  },
+  "OAuth clients per partner B2B": {
+    "nl": "OAuth-clients voor B2B-partners",
+    "de": "OAuth-Clients für B2B-Partner"
+  },
+  "Emetti e gestisci fatture": {
+    "nl": "Facturen uitgeven en beheren",
+    "de": "Rechnungen ausstellen und verwalten"
+  },
+  "Gestire anagrafiche e utenti": {
+    "nl": "Stamgegevens en gebruikers beheren",
+    "de": "Stammdaten und Benutzer verwalten"
+  },
+  "Ultimi cargo": {
+    "nl": "Laatste cargo",
+    "de": "Letzte Cargo"
+  },
+  "Nessun cargo recente": {
+    "nl": "Geen recente cargo",
+    "de": "Keine aktuelle Cargo"
+  },
+  "Ultime spedizioni express": {
+    "nl": "Laatste expreszendingen",
+    "de": "Letzte Expresssendungen"
+  },
+  "Nessuna spedizione recente": {
+    "nl": "Geen recente zendingen",
+    "de": "Keine aktuellen Sendungen"
+  },
+  "{count} preventivi cargo rifiutati.": {
+    "nl": "{count} afgewezen cargo-offertes.",
+    "de": "{count} abgelehnte Cargo-Angebote."
+  },
+  "Apri cargo list": {
+    "nl": "Cargolijst openen",
+    "de": "Cargoliste öffnen"
+  },
+  "{count} cargo con AWB ma senza data di volo.": {
+    "nl": "{count} cargo met AWB maar zonder vluchtdatum.",
+    "de": "{count} Cargo mit AWB, aber ohne Flugdatum."
+  },
+  "Vedi cargo": {
+    "nl": "Cargo bekijken",
+    "de": "Cargo ansehen"
+  },
+  "{count} prese interne da gestire.": {
+    "nl": "{count} interne ophalingen te behandelen.",
+    "de": "{count} interne Abholungen zu bearbeiten."
+  },
+  "Apri spedizioni": {
+    "nl": "Zendingen openen",
+    "de": "Sendungen öffnen"
+  },
+  "Caricamento dati in corso… ({received}/{expected})": {
+    "nl": "Gegevens worden geladen… ({received}/{expected})",
+    "de": "Daten werden geladen… ({received}/{expected})"
+  },
+  "Altre azioni": {
+    "nl": "Overige acties",
+    "de": "Weitere Aktionen"
+  },
+  "Prese da gestire": {
+    "nl": "Te behandelen ophalingen",
+    "de": "Zu bearbeitende Abholungen"
+  },
+  "Da assegnare al corriere": {
+    "nl": "Toe te wijzen aan de koerier",
+    "de": "Dem Kurier zuzuweisen"
+  },
+  "Da organizzare": {
+    "nl": "Te organiseren",
+    "de": "Zu organisieren"
+  },
+  "Prese fornitore stato N": {
+    "nl": "Leveranciersophalingen status N",
+    "de": "Lieferantenabholungen Status N"
+  },
+  "Con problemi": {
+    "nl": "Met problemen",
+    "de": "Mit Problemen"
+  },
+  "Prese fornitore stato F": {
+    "nl": "Leveranciersophalingen status F",
+    "de": "Lieferantenabholungen Status F"
+  },
+  "In attesa conferma": {
+    "nl": "Wacht op bevestiging",
+    "de": "Warten auf Bestätigung"
+  },
+  "Prese pick-up stato W": {
+    "nl": "Pick-up-ophalingen status W",
+    "de": "Pick-up-Abholungen Status W"
+  },
+  "AWB da inviare": {
+    "nl": "Te versturen AWB",
+    "de": "Zu sendende AWB"
+  },
+  "AWB pronto, mittente da informare": {
+    "nl": "AWB gereed, afzender moet worden geïnformeerd",
+    "de": "AWB bereit, Absender zu informieren"
+  },
+  "Indirizzo errato": {
+    "nl": "Onjuist adres",
+    "de": "Falsche Adresse"
+  },
+  "Non controllate con note": {
+    "nl": "Niet gecontroleerd, met notities",
+    "de": "Nicht geprüft, mit Notizen"
+  },
+  "Da controllare": {
+    "nl": "Te controleren",
+    "de": "Zu prüfen"
+  },
+  "Controllate, non partite": {
+    "nl": "Gecontroleerd, niet vertrokken",
+    "de": "Geprüft, nicht abgegangen"
+  },
+  "Spedizioni di oggi": {
+    "nl": "Zendingen van vandaag",
+    "de": "Sendungen von heute"
+  },
+  "Offerte": {
+    "nl": "Offertes",
+    "de": "Angebote"
+  },
+  "Partner, non partite": {
+    "nl": "Partner, niet vertrokken",
+    "de": "Partner, nicht abgegangen"
+  },
+  "Senza tracking": {
+    "nl": "Zonder tracking",
+    "de": "Ohne Tracking"
+  },
+  "Partite ma stato 1/16": {
+    "nl": "Vertrokken maar status 1/16",
+    "de": "Abgegangen, aber Status 1/16"
+  },
+  "Problemi di ritiro": {
+    "nl": "Ophaalproblemen",
+    "de": "Abholprobleme"
+  },
+  "Stato tracking 26": {
+    "nl": "Trackingstatus 26",
+    "de": "Tracking-Status 26"
+  },
+  "Oltre la data prevista": {
+    "nl": "Voorbij de verwachte datum",
+    "de": "Über das erwartete Datum hinaus"
+  },
+  "In transit": {
+    "nl": "Onderweg",
+    "de": "Unterwegs"
+  },
+  "Partner in transit": {
+    "nl": "Partner onderweg",
+    "de": "Partner unterwegs"
+  },
+  "Servizi prioritari in transit": {
+    "nl": "Prioriteitsservices onderweg",
+    "de": "Prioritätsservices unterwegs"
+  },
+  "Tracking problemi senza giacenza": {
+    "nl": "Trackingproblemen zonder opslag",
+    "de": "Tracking-Probleme ohne Lagerung"
+  },
+  "Cod cliente non nostri, non partite": {
+    "nl": "Klantcodes niet van ons, niet vertrokken",
+    "de": "Fremde Kundencodes, nicht abgegangen"
+  },
+  "Cod cliente non nostri, in transit": {
+    "nl": "Klantcodes niet van ons, onderweg",
+    "de": "Fremde Kundencodes, unterwegs"
+  },
+  "Da quotare": {
+    "nl": "Te offreren",
+    "de": "Zu kalkulieren"
+  },
+  "In quotazione": {
+    "nl": "In offerte",
+    "de": "In Kalkulation"
+  },
+  "Accettate, da organizzare": {
+    "nl": "Geaccepteerd, te organiseren",
+    "de": "Angenommen, zu organisieren"
+  },
+  "Rifiutate": {
+    "nl": "Afgewezen",
+    "de": "Abgelehnt"
+  },
+  "Pronte, non in volo": {
+    "nl": "Gereed, niet in de vlucht",
+    "de": "Bereit, nicht im Flug"
+  },
+  "In volo": {
+    "nl": "In de vlucht",
+    "de": "Im Flug"
+  },
+  "Presa locale in viaggio": {
+    "nl": "Lokale ophaling onderweg",
+    "de": "Lokale Abholung unterwegs"
+  },
+  "Consegna locale in viaggio": {
+    "nl": "Lokale aflevering onderweg",
+    "de": "Lokale Zustellung unterwegs"
+  },
+  "Quality": {
+    "nl": "Quality",
+    "de": "Quality"
+  },
+  "Workflow": {
+    "nl": "Workflow",
+    "de": "Workflow"
+  },
+  "Quoting": {
+    "nl": "Quoting",
+    "de": "Quoting"
+  },
+  "In viaggio": {
+    "nl": "Onderweg",
+    "de": "Unterwegs"
+  },
+  "Spedizioni express — operazioni in entrata": {
+    "nl": "Expreszendingen — inkomende handelingen",
+    "de": "Expresssendungen — eingehende Vorgänge"
+  },
+  "Apri lista spedizioni": {
+    "nl": "Zendingenlijst openen",
+    "de": "Sendungsliste öffnen"
+  },
+  "Spedizioni express — in transito": {
+    "nl": "Expreszendingen — onderweg",
+    "de": "Expresssendungen — unterwegs"
+  },
+  "Apri lista in transito": {
+    "nl": "Lijst onderweg openen",
+    "de": "Liste unterwegs öffnen"
+  },
+  "Cargo — quoting + in viaggio": {
+    "nl": "Cargo — offertes + onderweg",
+    "de": "Cargo — Angebote + unterwegs"
+  },
+  "Apri lista cargo": {
+    "nl": "Cargolijst openen",
+    "de": "Cargoliste öffnen"
+  },
+  "Usa questa proposta": {
+    "nl": "Dit voorstel gebruiken",
+    "de": "Diesen Vorschlag verwenden"
+  },
+  "Scarta": {
+    "nl": "Verwerpen",
+    "de": "Verwerfen"
+  },
+  "Redigi": {
+    "nl": "Opstellen",
+    "de": "Verfassen"
+  },
+  "Spiega": {
+    "nl": "Uitleggen",
+    "de": "Erklären"
+  },
+  "Correggi": {
+    "nl": "Corrigeren",
+    "de": "Korrigieren"
+  },
+  "L assistente propone un testo; decidi tu se usarlo. Non salva mai nulla da solo.": {
+    "nl": "De assistent stelt een tekst voor; u beslist of u die gebruikt. Hij slaat nooit zelf iets op.",
+    "de": "Der Assistent schlägt einen Text vor; Sie entscheiden, ob Sie ihn verwenden. Er speichert nie von selbst etwas."
+  },
+  "Cosa deve scrivere": {
+    "nl": "Wat er geschreven moet worden",
+    "de": "Was geschrieben werden soll"
+  },
+  "Ad esempio: avviso di consegna, tono formale.": {
+    "nl": "Bijvoorbeeld: afleveringsbericht, formele toon.",
+    "de": "Zum Beispiel: Zustellbenachrichtigung, förmlicher Ton."
+  },
+  "La proposta usa segnaposto inesistenti. Controllala prima di usarla.": {
+    "nl": "Het voorstel gebruikt niet-bestaande tijdelijke aanduidingen. Controleer het voordat u het gebruikt.",
+    "de": "Der Vorschlag verwendet nicht vorhandene Platzhalter. Prüfen Sie ihn vor der Verwendung."
+  },
+  "Proposta": {
+    "nl": "Voorstel",
+    "de": "Vorschlag"
+  },
+  "In lingua": {
+    "nl": "In taal",
+    "de": "In Sprache"
+  },
+  "Traduci": {
+    "nl": "Vertalen",
+    "de": "Übersetzen"
+  },
+  "I modelli base sono di TMWE: puoi vederli e duplicarli, ma non modificarli.": {
+    "nl": "De basissjablonen zijn van TMWE: u kunt ze bekijken en dupliceren, maar niet wijzigen.",
+    "de": "Die Basisvorlagen gehören TMWE: Sie können sie ansehen und duplizieren, aber nicht ändern."
+  },
+  "Fax": {
+    "nl": "Fax",
+    "de": "Fax"
+  },
+  "Posta": {
+    "nl": "Post",
+    "de": "Post"
+  },
+  "Canali": {
+    "nl": "Kanalen",
+    "de": "Kanäle"
+  },
+  "I segnaposto come !#DEST#! vengono sostituiti con i dati reali all invio. Copiali cosi come sono, senza tradurli.": {
+    "nl": "Tijdelijke aanduidingen zoals !#DEST#! worden bij verzending vervangen door de echte gegevens. Kopieer ze precies zoals ze zijn, zonder ze te vertalen.",
+    "de": "Platzhalter wie !#DEST#! werden beim Versand durch die echten Daten ersetzt. Kopieren Sie sie genau so, ohne sie zu übersetzen."
+  },
+  "Eliminare il modello {tipo} ({lingua})? Le email di quel tipo useranno il modello base.": {
+    "nl": "Sjabloon {tipo} ({lingua}) verwijderen? E-mails van dat type gebruiken dan de basissjabloon.",
+    "de": "Vorlage {tipo} ({lingua}) löschen? E-Mails dieses Typs verwenden dann die Basisvorlage."
+  },
+  "Elimina modello": {
+    "nl": "Sjabloon verwijderen",
+    "de": "Vorlage löschen"
+  },
+  "Modello eliminato": {
+    "nl": "Sjabloon verwijderd",
+    "de": "Vorlage gelöscht"
+  },
+  "Per riconoscerlo nell elenco.": {
+    "nl": "Om het in de lijst te herkennen.",
+    "de": "Zur Erkennung in der Liste."
+  },
+  "Modello {tipo}": {
+    "nl": "Sjabloon {tipo}",
+    "de": "Vorlage {tipo}"
+  },
+  "Nessun modello": {
+    "nl": "Geen sjablonen",
+    "de": "Keine Vorlagen"
+  },
+  "Motore": {
+    "nl": "Engine",
+    "de": "Engine"
+  },
+  "Classico": {
+    "nl": "Klassiek",
+    "de": "Klassisch"
+  },
+  "Avanzato": {
+    "nl": "Geavanceerd",
+    "de": "Erweitert"
+  },
+  "Appartiene a": {
+    "nl": "Behoort tot",
+    "de": "Gehört zu"
+  },
+  "Questi sono i dati che puoi inserire in questo modello. Premi Inserisci per aggiungerli.": {
+    "nl": "Dit zijn de gegevens die u in dit sjabloon kunt opnemen. Druk op Invoegen om ze toe te voegen.",
+    "de": "Dies sind die Daten, die Sie in diese Vorlage einfügen können. Drücken Sie Einfügen, um sie hinzuzufügen."
+  },
+  "Contenuto del messaggio": {
+    "nl": "Berichtinhoud",
+    "de": "Nachrichteninhalt"
+  },
+  "Inserisci": {
+    "nl": "Invoegen",
+    "de": "Einfügen"
+  },
+  "Mittente": {
+    "nl": "Afzender",
+    "de": "Absender"
+  },
+  "Se vuoto si usa il mittente del partner.": {
+    "nl": "Indien leeg wordt de afzender van de partner gebruikt.",
+    "de": "Wenn leer, wird der Absender des Partners verwendet."
+  },
+  "Nuovo modello": {
+    "nl": "Nieuw sjabloon",
+    "de": "Neue Vorlage"
+  },
+  "Oggetto della email. Ammette segnaposto.": {
+    "nl": "Onderwerp van de e-mail. Tijdelijke aanduidingen toegestaan.",
+    "de": "Betreff der E-Mail. Platzhalter sind zulässig."
+  },
+  "Base (TMWE)": {
+    "nl": "Basis (TMWE)",
+    "de": "Basis (TMWE)"
+  },
+  "Un modello non cambia proprietario.": {
+    "nl": "Een sjabloon verandert niet van eigenaar.",
+    "de": "Eine Vorlage wechselt nicht den Eigentümer."
+  },
+  "Crea per il partner": {
+    "nl": "Aanmaken voor de partner",
+    "de": "Für den Partner erstellen"
+  },
+  "Lascia vuoto per creare un modello base, usato dai partner che non hanno il proprio.": {
+    "nl": "Laat leeg om een basissjabloon aan te maken, gebruikt door partners die geen eigen sjabloon hebben.",
+    "de": "Leer lassen, um eine Basisvorlage zu erstellen, die von Partnern ohne eigene Vorlage verwendet wird."
+  },
+  "Mostrato con dati di esempio.": {
+    "nl": "Weergegeven met voorbeeldgegevens.",
+    "de": "Mit Beispieldaten dargestellt."
+  },
+  "Aggiorna anteprima": {
+    "nl": "Voorbeeld vernieuwen",
+    "de": "Vorschau aktualisieren"
+  },
+  "Equivale a {token}": {
+    "nl": "Komt overeen met {token}",
+    "de": "Entspricht {token}"
+  },
+  "Modello salvato": {
+    "nl": "Sjabloon opgeslagen",
+    "de": "Vorlage gespeichert"
+  },
+  "Contenuto": {
+    "nl": "Inhoud",
+    "de": "Inhalt"
+  },
+  "Controlli": {
+    "nl": "Controles",
+    "de": "Prüfungen"
+  },
+  "Dati del modello": {
+    "nl": "Sjabloongegevens",
+    "de": "Vorlagendaten"
+  },
+  "Avviso": {
+    "nl": "Melding",
+    "de": "Hinweis"
+  },
+  "Testi delle email che il sistema invia a clienti e vettori.": {
+    "nl": "Teksten van de e-mails die het systeem naar klanten en vervoerders stuurt.",
+    "de": "Texte der E-Mails, die das System an Kunden und Frachtführer sendet."
+  },
+  "Assistente": {
+    "nl": "Assistent",
+    "de": "Assistent"
+  },
+  "Segnaposto": {
+    "nl": "Tijdelijke aanduidingen",
+    "de": "Platzhalter"
+  },
+  "Editor": {
+    "nl": "Editor",
+    "de": "Editor"
+  },
+  "Identifica il tipo di avviso. Non modificabile in seguito.": {
+    "nl": "Bepaalt het type melding. Later niet meer te wijzigen.",
+    "de": "Bestimmt die Art der Benachrichtigung. Später nicht mehr änderbar."
+  },
+  "Cosa mostra": {
+    "nl": "Wat het toont",
+    "de": "Was es zeigt"
+  },
+  "{n} modelli": {
+    "nl": "{n} sjablonen",
+    "de": "{n} Vorlagen"
+  },
+  "Vedi": {
+    "nl": "Bekijken",
+    "de": "Ansehen"
+  },
+  "Rimuovi formattazione": {
+    "nl": "Opmaak verwijderen",
+    "de": "Formatierung entfernen"
+  },
+  "Scrivi il testo formattato come in un elaboratore di testi. Usa il pulsante Segnaposto per inserire i dati compilati all invio.": {
+    "nl": "Schrijf de opgemaakte tekst zoals in een tekstverwerker. Gebruik de knop Tijdelijke aanduidingen om gegevens in te voegen die bij verzending worden ingevuld.",
+    "de": "Schreiben Sie den formatierten Text wie in einer Textverarbeitung. Nutzen Sie die Schaltfläche Platzhalter, um Daten einzufügen, die beim Versand ausgefüllt werden."
+  },
+  "Inserisci link": {
+    "nl": "Link invoegen",
+    "de": "Link einfügen"
+  },
+  "Cerca…": {
+    "nl": "Zoeken…",
+    "de": "Suchen…"
+  },
+  "Il formato deve contenere {'{'}n{'}'} (il contatore)": {
+    "nl": "Het formaat moet {'{'}n{'}'} bevatten (de teller)",
+    "de": "Das Format muss {'{'}n{'}'} enthalten (den Zähler)"
+  },
+  "Gestione clienti, partner e fornitori": {
+    "nl": "Beheer van klanten, partners en leveranciers",
+    "de": "Verwaltung von Kunden, Partnern und Lieferanten"
+  },
+  "Nuova anagrafica": {
+    "nl": "Nieuwe stamgegevens",
+    "de": "Neue Stammdaten"
+  },
+  "Cerca per ragione sociale, P.IVA o nome breve…": {
+    "nl": "Zoeken op bedrijfsnaam, btw-nummer of korte naam…",
+    "de": "Nach Firmenname, USt-IdNr. oder Kurzname suchen…"
+  },
+  "Bloccato": {
+    "nl": "Geblokkeerd",
+    "de": "Gesperrt"
+  },
+  "Ragione sociale": {
+    "nl": "Bedrijfsnaam",
+    "de": "Firmenname"
+  },
+  "P.IVA / CF": {
+    "nl": "Btw-nr. / Fiscaal nr.",
+    "de": "USt-IdNr. / Steuernr."
+  },
+  "Bloc.": {
+    "nl": "Gebl.",
+    "de": "Ges."
+  },
+  "Nessuna anagrafica": {
+    "nl": "Geen stamgegevens",
+    "de": "Keine Stammdaten"
+  },
+  "Modifica i filtri o crea una nuova.": {
+    "nl": "Pas de filters aan of maak een nieuwe aan.",
+    "de": "Ändern Sie die Filter oder legen Sie neue an."
+  },
+  "Anagrafica creata": {
+    "nl": "Stamgegevens aangemaakt",
+    "de": "Stammdaten erstellt"
+  },
+  "Modifiche salvate": {
+    "nl": "Wijzigingen opgeslagen",
+    "de": "Änderungen gespeichert"
+  },
+  "Anagrafica eliminata": {
+    "nl": "Stamgegevens verwijderd",
+    "de": "Stammdaten gelöscht"
+  },
+  "Elimina anagrafica": {
+    "nl": "Stamgegevens verwijderen",
+    "de": "Stammdaten löschen"
+  },
+  "Questa azione marca come eliminata l'anagrafica {name}. Continuare?": {
+    "nl": "Deze actie markeert de stamgegevens {name} als verwijderd. Doorgaan?",
+    "de": "Diese Aktion markiert die Stammdaten {name} als gelöscht. Fortfahren?"
+  },
+  "Impossibile eliminare: spedizioni attive associate.": {
+    "nl": "Verwijderen niet mogelijk: er zijn actieve zendingen gekoppeld.",
+    "de": "Löschen nicht möglich: Es sind aktive Sendungen zugeordnet."
+  },
+  "Dati base": {
+    "nl": "Basisgegevens",
+    "de": "Basisdaten"
+  },
+  "Sedi": {
+    "nl": "Vestigingen",
+    "de": "Standorte"
+  },
+  "Contatti": {
+    "nl": "Contacten",
+    "de": "Kontakte"
+  },
+  "Banche": {
+    "nl": "Banken",
+    "de": "Banken"
+  },
+  "Lettere intenti": {
+    "nl": "Intentieverklaringen",
+    "de": "Absichtserklärungen"
+  },
+  "Info aggiuntive": {
+    "nl": "Aanvullende info",
+    "de": "Zusatzinfos"
+  },
+  "Assicurazione cargo": {
+    "nl": "Cargoverzekering",
+    "de": "Cargoversicherung"
+  },
+  "Listini assegnati": {
+    "nl": "Toegewezen tarieven",
+    "de": "Zugewiesene Preislisten"
+  },
+  "Causali IVA": {
+    "nl": "Btw-redenen",
+    "de": "MwSt.-Gründe"
+  },
+  "Margini cargo": {
+    "nl": "Cargomarges",
+    "de": "Cargomargen"
+  },
+  "Nome breve": {
+    "nl": "Korte naam",
+    "de": "Kurzname"
+  },
+  "Tipo record": {
+    "nl": "Recordtype",
+    "de": "Datensatztyp"
+  },
+  "Codice fiscale": {
+    "nl": "Fiscaal nummer",
+    "de": "Steuernummer"
+  },
+  "Esente IVA": {
+    "nl": "Btw-vrijgesteld",
+    "de": "MwSt.-befreit"
+  },
+  "Forma legale": {
+    "nl": "Rechtsvorm",
+    "de": "Rechtsform"
+  },
+  "Settore": {
+    "nl": "Sector",
+    "de": "Branche"
+  },
+  "Descrizione settore": {
+    "nl": "Omschrijving sector",
+    "de": "Beschreibung der Branche"
+  },
+  "Scelta fornitore": {
+    "nl": "Leverancierskeuze",
+    "de": "Lieferantenauswahl"
+  },
+  "% Margine corriere": {
+    "nl": "% Koeriersmarge",
+    "de": "% Kuriermarge"
+  },
+  "Partner titolare": {
+    "nl": "Houdende partner",
+    "de": "Inhabender Partner"
+  },
+  "Agente": {
+    "nl": "Agent",
+    "de": "Agent"
+  },
+  "Metodo pagamento": {
+    "nl": "Betaalmethode",
+    "de": "Zahlungsmethode"
+  },
+  "Scadenza pagamento": {
+    "nl": "Betaaltermijn",
+    "de": "Zahlungsziel"
+  },
+  "Tipo pagamento": {
+    "nl": "Betalingstype",
+    "de": "Zahlungsart"
+  },
+  "Diritto fisso": {
+    "nl": "Vast recht",
+    "de": "Feste Gebühr"
+  },
+  "Lingua fattura": {
+    "nl": "Factuurtaal",
+    "de": "Rechnungssprache"
+  },
+  "Sistema unità": {
+    "nl": "Eenhedenstelsel",
+    "de": "Einheitensystem"
+  },
+  "Assicurazione minima": {
+    "nl": "Minimale verzekering",
+    "de": "Mindestversicherung"
+  },
+  "Ruolo": {
+    "nl": "Rol",
+    "de": "Rolle"
+  },
+  "Aliquota IVA": {
+    "nl": "Btw-tarief",
+    "de": "MwSt.-Satz"
+  },
+  "Predefinito": {
+    "nl": "Standaard",
+    "de": "Standard"
+  },
+  "Inizio": {
+    "nl": "Begin",
+    "de": "Beginn"
+  },
+  "Fine": {
+    "nl": "Einde",
+    "de": "Ende"
+  },
+  "Codice Destinatario (IT)": {
+    "nl": "Ontvangercode (IT)",
+    "de": "Empfängercode (IT)"
+  },
+  "Banca": {
+    "nl": "Bank",
+    "de": "Bank"
+  },
+  "Modificabile solo da TMWE": {
+    "nl": "Alleen door TMWE te wijzigen",
+    "de": "Nur durch TMWE änderbar"
+  },
+  "Scadenza listino": {
+    "nl": "Vervaldatum tarief",
+    "de": "Ablauf der Preisliste"
+  },
+  "URL sito": {
+    "nl": "Website-URL",
+    "de": "Website-URL"
+  },
+  "Origine sito pubblico": {
+    "nl": "Herkomst openbare site",
+    "de": "Herkunft öffentliche Website"
+  },
+  "Verifica VIES": {
+    "nl": "VIES-controle",
+    "de": "VIES-Prüfung"
+  },
+  "Verifica…": {
+    "nl": "Controleren…",
+    "de": "Prüfung läuft…"
+  },
+  "Verificato": {
+    "nl": "Geverifieerd",
+    "de": "Verifiziert"
+  },
+  "Non verificato": {
+    "nl": "Niet geverifieerd",
+    "de": "Nicht verifiziert"
+  },
+  "Non applicabile": {
+    "nl": "Niet van toepassing",
+    "de": "Nicht zutreffend"
+  },
+  "Informazioni aggiuntive": {
+    "nl": "Aanvullende informatie",
+    "de": "Zusätzliche Informationen"
+  },
+  "Codice agente IATA": {
+    "nl": "IATA-agentcode",
+    "de": "IATA-Agentcode"
+  },
+  "Emesso in": {
+    "nl": "Uitgegeven in",
+    "de": "Ausgestellt in"
+  },
+  "Firma ragione sociale": {
+    "nl": "Handtekening bedrijfsnaam",
+    "de": "Unterschrift Firmenname"
+  },
+  "Firma agente": {
+    "nl": "Handtekening agent",
+    "de": "Unterschrift Agent"
+  },
+  "Footer B2B": {
+    "nl": "B2B-voettekst",
+    "de": "B2B-Fußzeile"
+  },
+  "Testo quotazione vettori": {
+    "nl": "Offertetekst vervoerders",
+    "de": "Angebotstext Frachtführer"
+  },
+  "Aereo": {
+    "nl": "Lucht",
+    "de": "Luft"
+  },
+  "Marittimo": {
+    "nl": "Zee",
+    "de": "See"
+  },
+  "Scaglione": {
+    "nl": "Schijf",
+    "de": "Staffel"
+  },
+  "% Profit": {
+    "nl": "% Winst",
+    "de": "% Gewinn"
+  },
+  "Assicurazione min. (€)": {
+    "nl": "Min. verzekering (€)",
+    "de": "Mindestversicherung (€)"
+  },
+  "Assicurazione %": {
+    "nl": "Verzekering %",
+    "de": "Versicherung %"
+  },
+  "Preset": {
+    "nl": "Voorinstelling",
+    "de": "Voreinstellung"
+  },
+  "Applica preset": {
+    "nl": "Voorinstelling toepassen",
+    "de": "Voreinstellung anwenden"
+  },
+  "Converti in Kg": {
+    "nl": "Naar kg omrekenen",
+    "de": "In kg umrechnen"
+  },
+  "Converti in Lb": {
+    "nl": "Naar lb omrekenen",
+    "de": "In lb umrechnen"
+  },
+  "Convertiti {n} record": {
+    "nl": "{n} records omgerekend",
+    "de": "{n} Datensätze umgerechnet"
+  },
+  "Preset applicato": {
+    "nl": "Voorinstelling toegepast",
+    "de": "Voreinstellung angewendet"
+  },
+  "Scaglioni di peso e % di margine per modalità (Aereo / Mare / Corriere), assicurazione e preset.": {
+    "nl": "Gewichtsschijven en margepercentage per modaliteit (lucht / zee / koerier), verzekering en voorinstellingen.",
+    "de": "Gewichtsstaffeln und Margenprozentsatz je Verkehrsträger (Luft / See / Kurier), Versicherung und Voreinstellungen."
+  },
+  "Crea scaglioni": {
+    "nl": "Schijven aanmaken",
+    "de": "Staffeln erstellen"
+  },
+  "Scaglioni creati": {
+    "nl": "Schijven aangemaakt",
+    "de": "Staffeln erstellt"
+  },
+  "Assicurazione": {
+    "nl": "Verzekering",
+    "de": "Versicherung"
+  },
+  "Applica i 10 scaglioni e i valori assicurativi del preset, sovrascrivendo quelli attuali.": {
+    "nl": "Past de 10 schijven en de verzekeringswaarden van de voorinstelling toe en overschrijft de huidige.",
+    "de": "Wendet die 10 Staffeln und die Versicherungswerte der Voreinstellung an und überschreibt die aktuellen."
+  },
+  "Listino": {
+    "nl": "Tarief",
+    "de": "Preisliste"
+  },
+  "Assegnazione massiva": {
+    "nl": "Bulktoewijzing",
+    "de": "Massenzuweisung"
+  },
+  "Forza (sovrascrive blocchi)": {
+    "nl": "Forceren (overschrijft blokkeringen)",
+    "de": "Erzwingen (überschreibt Sperren)"
+  },
+  "Tipo di listino": {
+    "nl": "Tarieftype",
+    "de": "Preislistentyp"
+  },
+  "Aggiornati {updated}, saltati {skipped}": {
+    "nl": "{updated} bijgewerkt, {skipped} overgeslagen",
+    "de": "{updated} aktualisiert, {skipped} übersprungen"
+  },
+  "Configurazione": {
+    "nl": "Configuratie",
+    "de": "Konfiguration"
+  },
+  "Fisso %": {
+    "nl": "Vast %",
+    "de": "Fest %"
+  },
+  "Forza API": {
+    "nl": "API forceren",
+    "de": "API erzwingen"
+  },
+  "Listino base": {
+    "nl": "Basistarief",
+    "de": "Basispreisliste"
+  },
+  "Tipo serv.": {
+    "nl": "Servicetype",
+    "de": "Serviceart"
+  },
+  "Import.": {
+    "nl": "Bedrag",
+    "de": "Betrag"
+  },
+  "{n} selezionati": {
+    "nl": "{n} geselecteerd",
+    "de": "{n} ausgewählt"
+  },
+  "Blocca": {
+    "nl": "Blokkeren",
+    "de": "Sperren"
+  },
+  "Sblocca": {
+    "nl": "Deblokkeren",
+    "de": "Entsperren"
+  },
+  "{ok} OK, {failed} falliti": {
+    "nl": "{ok} OK, {failed} mislukt",
+    "de": "{ok} OK, {failed} fehlgeschlagen"
+  },
+  "Livello": {
+    "nl": "Niveau",
+    "de": "Stufe"
+  },
+  "Priorità": {
+    "nl": "Prioriteit",
+    "de": "Priorität"
+  },
+  "Speciale": {
+    "nl": "Speciaal",
+    "de": "Speziell"
+  },
+  "Prioritario": {
+    "nl": "Prioritair",
+    "de": "Vorrangig"
+  },
+  "Normale": {
+    "nl": "Normaal",
+    "de": "Normal"
+  },
+  "Origine-Tipo": {
+    "nl": "Herkomst-type",
+    "de": "Herkunft-Typ"
+  },
+  "Fuel serv.": {
+    "nl": "Fuel service",
+    "de": "Fuel Service"
+  },
+  "Blocca tutti": {
+    "nl": "Alles blokkeren",
+    "de": "Alle sperren"
+  },
+  "Sblocca tutti": {
+    "nl": "Alles deblokkeren",
+    "de": "Alle entsperren"
+  },
+  "Vedi listino": {
+    "nl": "Tarief bekijken",
+    "de": "Preisliste ansehen"
+  },
+  "Variante": {
+    "nl": "Variant",
+    "de": "Variante"
+  },
+  "Nessun prezzo per questo listino": {
+    "nl": "Geen prijzen voor dit tarief",
+    "de": "Keine Preise für diese Preisliste"
+  },
+  "Listini assegnati al cliente per servizio: tipo, coefficiente, fuel e blocco.": {
+    "nl": "Aan de klant toegewezen tarieven per service: type, coëfficiënt, fuel en blokkering.",
+    "de": "Dem Kunden je Service zugewiesene Preislisten: Typ, Koeffizient, Fuel und Sperre."
+  },
+  "Nessun listino assegnato": {
+    "nl": "Geen tarief toegewezen",
+    "de": "Keine Preisliste zugewiesen"
+  },
+  "Questo cliente non ha servizi con listino configurato, oppure i filtri non restituiscono risultati.": {
+    "nl": "Deze klant heeft geen services met een geconfigureerd tarief, of de filters leveren geen resultaten op.",
+    "de": "Dieser Kunde hat keine Services mit konfigurierter Preisliste, oder die Filter liefern keine Ergebnisse."
+  },
+  "Modifica listino del servizio": {
+    "nl": "Tarief van de service bewerken",
+    "de": "Preisliste des Service bearbeiten"
+  },
+  "Blocca servizio": {
+    "nl": "Service blokkeren",
+    "de": "Service sperren"
+  },
+  "Sblocca servizio": {
+    "nl": "Service deblokkeren",
+    "de": "Service entsperren"
+  },
+  "Seleziona una o più righe con le caselle per applicare azioni in blocco (cambia tipo, blocca/sblocca).": {
+    "nl": "Selecteer een of meer rijen met de vakjes om bulkacties toe te passen (type wijzigen, blokkeren/deblokkeren).",
+    "de": "Wählen Sie eine oder mehrere Zeilen über die Kästchen, um Massenaktionen anzuwenden (Typ ändern, sperren/entsperren)."
+  },
+  "Imposta tipo a": {
+    "nl": "Type instellen op",
+    "de": "Typ setzen auf"
+  },
+  "Blocco": {
+    "nl": "Blokkering",
+    "de": "Sperre"
+  },
+  "Applica profilo base": {
+    "nl": "Basisprofiel toepassen",
+    "de": "Basisprofil anwenden"
+  },
+  "Applica profilo base tariffe": {
+    "nl": "Basisprofiel voor tarieven toepassen",
+    "de": "Basisprofil für Tarife anwenden"
+  },
+  "Assegna a TUTTI i servizi il listino base del profilo scelto. Poi puoi rifinire i singoli servizi.": {
+    "nl": "Wijst ALLE services het basistarief van het gekozen profiel toe. Daarna kunt u de afzonderlijke services verfijnen.",
+    "de": "Weist ALLEN Services die Basispreisliste des gewählten Profils zu. Danach können Sie einzelne Services feinabstimmen."
+  },
+  "Applica a tutti i servizi": {
+    "nl": "Op alle services toepassen",
+    "de": "Auf alle Services anwenden"
+  },
+  "Listini base standard per i clienti.": {
+    "nl": "Standaard basistarieven voor klanten.",
+    "de": "Standard-Basispreislisten für Kunden."
+  },
+  "Listini base per i partner.": {
+    "nl": "Basistarieven voor partners.",
+    "de": "Basispreislisten für Partner."
+  },
+  "Listini promozionali base.": {
+    "nl": "Promotionele basistarieven.",
+    "de": "Aktions-Basispreislisten."
+  },
+  "Listini di mercato base.": {
+    "nl": "Basismarkttarieven.",
+    "de": "Markt-Basispreislisten."
+  },
+  "Se attivo, sovrascrive anche i servizi bloccati o già personalizzati.": {
+    "nl": "Indien actief worden ook geblokkeerde of reeds aangepaste services overschreven.",
+    "de": "Wenn aktiv, werden auch gesperrte oder bereits angepasste Services überschrieben."
+  },
+  "Tariffa del listino": {
+    "nl": "Tarief van de prijslijst",
+    "de": "Satz der Preisliste"
+  },
+  "Prezzo al kg in base al peso della spedizione e alla zona di destinazione.": {
+    "nl": "Prijs per kg op basis van het gewicht van de zending en de bestemmingszone.",
+    "de": "Preis pro kg nach Gewicht der Sendung und Zielzone."
+  },
+  "Zona": {
+    "nl": "Zone",
+    "de": "Zone"
+  },
+  "Righe: peso della spedizione (kg)": {
+    "nl": "Rijen: gewicht van de zending (kg)",
+    "de": "Zeilen: Gewicht der Sendung (kg)"
+  },
+  "Colonne: zona di destinazione": {
+    "nl": "Kolommen: bestemmingszone",
+    "de": "Spalten: Zielzone"
+  },
+  "Celle: prezzo al kg (€)": {
+    "nl": "Cellen: prijs per kg (€)",
+    "de": "Zellen: Preis pro kg (€)"
+  },
+  "Divisa": {
+    "nl": "Valuta",
+    "de": "Währung"
+  },
+  "Maggiorazione": {
+    "nl": "Toeslag",
+    "de": "Aufschlag"
+  },
+  "Prezzo peso extra": {
+    "nl": "Prijs extra gewicht",
+    "de": "Preis für Mehrgewicht"
+  },
+  "Prezzo per unità extra": {
+    "nl": "Prijs per extra eenheid",
+    "de": "Preis je zusätzlicher Einheit"
+  },
+  "Supplementi attivi": {
+    "nl": "Actieve toeslagen",
+    "de": "Aktive Zuschläge"
+  },
+  "Supplemento": {
+    "nl": "Toeslag",
+    "de": "Zuschlag"
+  },
+  "collo": {
+    "nl": "collo",
+    "de": "Kollo"
+  },
+  "gg": {
+    "nl": "dgn",
+    "de": "Tg."
+  },
+  "Prezzo per questo cliente": {
+    "nl": "Prijs voor deze klant",
+    "de": "Preis für diesen Kunden"
+  },
+  "Calcola": {
+    "nl": "Berekenen",
+    "de": "Berechnen"
+  },
+  "Totale cliente": {
+    "nl": "Totaal klant",
+    "de": "Gesamt Kunde"
+  },
+  "Include il fuel del cliente ({fuel}%). Supplementi di spedizione esclusi.": {
+    "nl": "Inclusief de fuel van de klant ({fuel}%). Zendingstoeslagen niet inbegrepen.",
+    "de": "Einschließlich Fuel des Kunden ({fuel}%). Sendungszuschläge nicht enthalten."
+  },
+  "Nessun prezzo per questo peso/zona nel listino del cliente.": {
+    "nl": "Geen prijs voor dit gewicht/deze zone in het tarief van de klant.",
+    "de": "Kein Preis für dieses Gewicht/diese Zone in der Preisliste des Kunden."
+  },
+  "Tariffa": {
+    "nl": "Tarief",
+    "de": "Satz"
+  },
+  "Calcolatore": {
+    "nl": "Rekenmodule",
+    "de": "Rechner"
+  },
+  "Supplementi": {
+    "nl": "Toeslagen",
+    "de": "Zuschläge"
+  },
+  "Solo con costo": {
+    "nl": "Alleen met kosten",
+    "de": "Nur mit Kosten"
+  },
+  "Nessun supplemento corrisponde": {
+    "nl": "Geen toeslag komt overeen",
+    "de": "Kein Zuschlag stimmt überein"
+  },
+  "Inserisci un peso e premi Calcola per vedere il prezzo del cliente per zona.": {
+    "nl": "Voer een gewicht in en druk op Berekenen om de klantprijs per zone te zien.",
+    "de": "Geben Sie ein Gewicht ein und drücken Sie Berechnen, um den Kundenpreis je Zone zu sehen."
+  },
+  "Tipo bancale": {
+    "nl": "Pallettype",
+    "de": "Palettentyp"
+  },
+  "Quantità": {
+    "nl": "Aantal",
+    "de": "Menge"
+  },
+  "Nessuna tariffa per questa zona": {
+    "nl": "Geen tarief voor deze zone",
+    "de": "Kein Satz für diese Zone"
+  },
+  "Includi supplementi automatici": {
+    "nl": "Automatische toeslagen meenemen",
+    "de": "Automatische Zuschläge einbeziehen"
+  },
+  "Esclude i supplementi per destinazione (contrassegno, assicurazione, paese, provincia…): esistono solo quotando una spedizione reale.": {
+    "nl": "Sluit bestemmingsgebonden toeslagen uit (rembours, verzekering, land, provincie…): deze bestaan alleen bij het offreren van een echte zending.",
+    "de": "Schließt zielabhängige Zuschläge aus (Nachnahme, Versicherung, Land, Provinz…): Diese entstehen nur bei der Kalkulation einer echten Sendung."
+  },
+  "Righe: tipo di bancale": {
+    "nl": "Rijen: pallettype",
+    "de": "Zeilen: Palettentyp"
+  },
+  "Celle: prezzo per bancale (€)": {
+    "nl": "Cellen: prijs per pallet (€)",
+    "de": "Zellen: Preis je Palette (€)"
+  },
+  "Colonne: distanza (km)": {
+    "nl": "Kolommen: afstand (km)",
+    "de": "Spalten: Entfernung (km)"
+  },
+  "Sotto-valori in cella: min/base/2º collo quando previsti.": {
+    "nl": "Subwaarden in de cel: min/basis/2e collo indien van toepassing.",
+    "de": "Unterwerte in der Zelle: Min/Basis/2. Kollo, sofern vorgesehen."
+  },
+  "Il prezzo viene moltiplicato per il peso ogni {kg} kg.": {
+    "nl": "De prijs wordt vermenigvuldigd met het gewicht per {kg} kg.",
+    "de": "Der Preis wird je {kg} kg mit dem Gewicht multipliziert."
+  },
+  "Unico": {
+    "nl": "Enkelvoudig",
+    "de": "Einzeln"
+  },
+  "Versioni": {
+    "nl": "Versies",
+    "de": "Versionen"
+  },
+  "In corso": {
+    "nl": "Lopend",
+    "de": "Laufend"
+  },
+  "Futura": {
+    "nl": "Toekomstig",
+    "de": "Zukünftig"
+  },
+  "Mostra scadute ({n})": {
+    "nl": "Verlopen tonen ({n})",
+    "de": "Abgelaufene anzeigen ({n})"
+  },
+  "Da kg": {
+    "nl": "Van kg",
+    "de": "Ab kg"
+  },
+  "A kg": {
+    "nl": "Tot kg",
+    "de": "Bis kg"
+  },
+  "Fisso": {
+    "nl": "Vast",
+    "de": "Fest"
+  },
+  "Variabile": {
+    "nl": "Variabel",
+    "de": "Variabel"
+  },
+  "cad": {
+    "nl": "p/st",
+    "de": "St."
+  },
+  "Prezzo applicato per ogni unità extra oltre l’ultimo scaglione di peso.": {
+    "nl": "Prijs die geldt voor elke extra eenheid boven de laatste gewichtsschijf.",
+    "de": "Preis für jede zusätzliche Einheit über der letzten Gewichtsstaffel."
+  },
+  "PDF privacy": {
+    "nl": "PDF privacy",
+    "de": "PDF Datenschutz"
+  },
+  "PDF condizioni": {
+    "nl": "PDF voorwaarden",
+    "de": "PDF Bedingungen"
+  },
+  "PDF fuel surcharge": {
+    "nl": "PDF brandstoftoeslag",
+    "de": "PDF Treibstoffzuschlag"
+  },
+  "Carica file": {
+    "nl": "Bestand uploaden",
+    "de": "Datei hochladen"
+  },
+  "File caricato": {
+    "nl": "Bestand geüpload",
+    "de": "Datei hochgeladen"
+  },
+  "Contatto creato · credenziali mostrate una sola volta": {
+    "nl": "Contact aangemaakt · inloggegevens worden slechts eenmaal getoond",
+    "de": "Kontakt erstellt · Zugangsdaten werden nur einmal angezeigt"
+  },
+  "Reimposta password": {
+    "nl": "Wachtwoord opnieuw instellen",
+    "de": "Passwort zurücksetzen"
+  },
+  "Reimpostare la password di {name}?": {
+    "nl": "Het wachtwoord van {name} opnieuw instellen?",
+    "de": "Das Passwort von {name} zurücksetzen?"
+  },
+  "Password rigenerata · mostrata una sola volta": {
+    "nl": "Wachtwoord opnieuw gegenereerd · slechts eenmaal getoond",
+    "de": "Passwort neu erzeugt · nur einmal angezeigt"
+  },
+  "Invia profilo via email": {
+    "nl": "Profiel per e-mail versturen",
+    "de": "Profil per E-Mail senden"
+  },
+  "Profilo inviato via email": {
+    "nl": "Profiel per e-mail verstuurd",
+    "de": "Profil per E-Mail gesendet"
+  },
+  "Accesso da applicazione": {
+    "nl": "Toegang via applicatie",
+    "de": "Zugriff über Anwendung"
+  },
+  "Login ERP (app)": {
+    "nl": "ERP-login (app)",
+    "de": "ERP-Login (App)"
+  },
+  "Login B2B (app)": {
+    "nl": "B2B-login (app)",
+    "de": "B2B-Login (App)"
+  },
+  "Ruoli di sistema": {
+    "nl": "Systeemrollen",
+    "de": "Systemrollen"
+  },
+  "Ruoli assegnati": {
+    "nl": "Toegewezen rollen",
+    "de": "Zugewiesene Rollen"
+  },
+  "Notifiche": {
+    "nl": "Meldingen",
+    "de": "Benachrichtigungen"
+  },
+  "Anagrafica non trovata": {
+    "nl": "Stamgegevens niet gevonden",
+    "de": "Stammdaten nicht gefunden"
+  },
+  "ISO 2 caratteri": {
+    "nl": "ISO 2 tekens",
+    "de": "ISO 2 Zeichen"
+  },
+  "CV — Cliente da verificare": {
+    "nl": "CV — Te verifiëren klant",
+    "de": "CV — Zu prüfender Kunde"
+  },
+  "C — Cliente": {
+    "nl": "C — Klant",
+    "de": "C — Kunde"
+  },
+  "F — Fornitore": {
+    "nl": "F — Leverancier",
+    "de": "F — Lieferant"
+  },
+  "F — Fornitore generico": {
+    "nl": "F — Algemene leverancier",
+    "de": "F — Allgemeiner Lieferant"
+  },
+  "T — Corriere": {
+    "nl": "T — Koerier",
+    "de": "T — Kurier"
+  },
+  "TP — Corriere clone partner": {
+    "nl": "TP — Koerier kloon partner",
+    "de": "TP — Kurier Klon Partner"
+  },
+  "A — Archivio": {
+    "nl": "A — Archief",
+    "de": "A — Archiv"
+  },
+  "Anticipato": {
+    "nl": "Vooruitbetaald",
+    "de": "Vorauszahlung"
+  },
+  "Riba/Bonifico": {
+    "nl": "Incasso/Overboeking",
+    "de": "Lastschrift/Überweisung"
+  },
+  "Saldo a fattura": {
+    "nl": "Betaling op factuur",
+    "de": "Zahlung per Rechnung"
+  },
+  "Lettera intenti": {
+    "nl": "Intentieverklaring",
+    "de": "Absichtserklärung"
+  },
+  "Dati di fatturazione": {
+    "nl": "Factuurgegevens",
+    "de": "Rechnungsdaten"
+  },
+  "Condizioni commerciali": {
+    "nl": "Handelsvoorwaarden",
+    "de": "Geschäftsbedingungen"
+  },
+  "Solo prenotazione (BSI)": {
+    "nl": "Alleen boeking (BSI)",
+    "de": "Nur Buchung (BSI)"
+  },
+  "Solo etichetta (ESI)": {
+    "nl": "Alleen label (ESI)",
+    "de": "Nur Etikett (ESI)"
+  },
+  "Prenotazione + etichetta (BES)": {
+    "nl": "Boeking + label (BES)",
+    "de": "Buchung + Etikett (BES)"
+  },
+  "Notifiche e fatturazione": {
+    "nl": "Meldingen en facturatie",
+    "de": "Benachrichtigungen und Fakturierung"
+  },
+  "Invia fattura per posta": {
+    "nl": "Factuur per post versturen",
+    "de": "Rechnung per Post senden"
+  },
+  "Invia fattura via fax": {
+    "nl": "Factuur per fax versturen",
+    "de": "Rechnung per Fax senden"
+  },
+  "Invia solleciti": {
+    "nl": "Herinneringen versturen",
+    "de": "Mahnungen senden"
+  },
+  "PEC fatture": {
+    "nl": "PEC facturen",
+    "de": "PEC Rechnungen"
+  },
+  "PEC solleciti": {
+    "nl": "PEC herinneringen",
+    "de": "PEC Mahnungen"
+  },
+  "Avvisi via mail": {
+    "nl": "Meldingen per e-mail",
+    "de": "Benachrichtigungen per E-Mail"
+  },
+  "Avvisi via fax": {
+    "nl": "Meldingen per fax",
+    "de": "Benachrichtigungen per Fax"
+  },
+  "Avviso consegna via mail": {
+    "nl": "Afleveringsbericht per e-mail",
+    "de": "Zustellbenachrichtigung per E-Mail"
+  },
+  "Auto-blocco 14 giorni": {
+    "nl": "Automatische blokkering na 14 dagen",
+    "de": "Automatische Sperre nach 14 Tagen"
+  },
+  "UPS completo": {
+    "nl": "UPS volledig",
+    "de": "UPS vollständig"
+  },
+  "Ritiro corriere": {
+    "nl": "Ophaling door koerier",
+    "de": "Abholung durch Kurier"
+  },
+  "Blocchi per corriere": {
+    "nl": "Blokkeringen per koerier",
+    "de": "Sperren je Kurier"
+  },
+  "Blocca tutti i corrieri": {
+    "nl": "Alle koeriers blokkeren",
+    "de": "Alle Kuriere sperren"
+  },
+  "Nome mittente": {
+    "nl": "Naam afzender",
+    "de": "Name des Absenders"
+  },
+  "Aeroporto DHL": {
+    "nl": "DHL-luchthaven",
+    "de": "DHL-Flughafen"
+  },
+  "Aeroporto cargo": {
+    "nl": "Cargoluchthaven",
+    "de": "Cargo-Flughafen"
+  },
+  "Logistica (ritiro / consegna)": {
+    "nl": "Logistiek (ophalen / afleveren)",
+    "de": "Logistik (Abholung / Zustellung)"
+  },
+  "Ora ritiro": {
+    "nl": "Ophaaltijd",
+    "de": "Abholzeit"
+  },
+  "Limite ritiro": {
+    "nl": "Uiterste ophaaltijd",
+    "de": "Abhol-Deadline"
+  },
+  "Ora consegna": {
+    "nl": "Afleveringstijd",
+    "de": "Zustellzeit"
+  },
+  "Ritiro fisso": {
+    "nl": "Vaste ophaling",
+    "de": "Feste Abholung"
+  },
+  "Unisci ritiro/consegna": {
+    "nl": "Ophalen/afleveren combineren",
+    "de": "Abholung/Zustellung zusammenlegen"
+  },
+  "Logistica": {
+    "nl": "Logistiek",
+    "de": "Logistik"
+  },
+  "LDV corriere solo ritiro": {
+    "nl": "Koeriersvrachtbrief alleen ophalen",
+    "de": "Kurier-Frachtbrief nur Abholung"
+  },
+  "Porto marittimo": {
+    "nl": "Zeehaven",
+    "de": "Seehafen"
+  },
+  "Autista ritiro": {
+    "nl": "Chauffeur ophaling",
+    "de": "Fahrer Abholung"
+  },
+  "Autista consegna": {
+    "nl": "Chauffeur aflevering",
+    "de": "Fahrer Zustellung"
+  },
+  "Dati della sede": {
+    "nl": "Vestigingsgegevens",
+    "de": "Standortdaten"
+  },
+  "Terminal cargo": {
+    "nl": "Cargoterminal",
+    "de": "Cargo-Terminal"
+  },
+  "Sigla": {
+    "nl": "Afkorting",
+    "de": "Kürzel"
+  },
+  "Telefono 2": {
+    "nl": "Telefoon 2",
+    "de": "Telefon 2"
+  },
+  "Cellulare": {
+    "nl": "Mobiel",
+    "de": "Mobiltelefon"
+  },
+  "Sede assegnata": {
+    "nl": "Toegewezen vestiging",
+    "de": "Zugewiesener Standort"
+  },
+  "Tipo contatto": {
+    "nl": "Contacttype",
+    "de": "Kontaktart"
+  },
+  "Lingua web": {
+    "nl": "Webtaal",
+    "de": "Web-Sprache"
+  },
+  "Lingua traduzione": {
+    "nl": "Vertaaltaal",
+    "de": "Übersetzungssprache"
+  },
+  "Lingua telefono": {
+    "nl": "Telefoontaal",
+    "de": "Telefonsprache"
+  },
+  "Agenzia": {
+    "nl": "Agentschap",
+    "de": "Agentur"
+  },
+  "Causale IVA": {
+    "nl": "Btw-reden",
+    "de": "MwSt.-Grund"
+  },
+  "Causale IVA (testo)": {
+    "nl": "Btw-reden (tekst)",
+    "de": "MwSt.-Grund (Text)"
+  },
+  "Seleziona": {
+    "nl": "Selecteren",
+    "de": "Auswählen"
+  },
+  "come da lettera d'intenti n. -n- del -d-": {
+    "nl": "conform intentieverklaring nr. -n- van -d-",
+    "de": "gemäß Absichtserklärung Nr. -n- vom -d-"
+  },
+  "Imposta come sede di fatturazione": {
+    "nl": "Instellen als factuurvestiging",
+    "de": "Als Rechnungsstandort festlegen"
+  },
+  "Imposta come banca predefinita": {
+    "nl": "Instellen als standaardbank",
+    "de": "Als Standardbank festlegen"
+  },
+  "Inserisci i dati principali per creare il record. Potrai aggiungere sedi, contatti, banche, listini e il resto una volta creato.": {
+    "nl": "Voer de hoofdgegevens in om het record aan te maken. Vestigingen, contacten, banken, tarieven en de rest kunt u daarna toevoegen.",
+    "de": "Geben Sie die Hauptdaten ein, um den Datensatz zu erstellen. Standorte, Kontakte, Banken, Preislisten und alles Weitere können Sie danach hinzufügen."
+  },
+  "Crea e continua": {
+    "nl": "Aanmaken en doorgaan",
+    "de": "Erstellen und fortfahren"
+  },
+  "Nessun risultato": {
+    "nl": "Geen resultaten",
+    "de": "Keine Ergebnisse"
+  },
+  "Nessuna anagrafica corrisponde ai filtri attuali. Modificali o azzerali.": {
+    "nl": "Geen stamgegevens komen overeen met de huidige filters. Pas ze aan of wis ze.",
+    "de": "Keine Stammdaten entsprechen den aktuellen Filtern. Ändern oder löschen Sie sie."
+  },
+  "Filtra per questo ID": {
+    "nl": "Filteren op dit ID",
+    "de": "Nach dieser ID filtern"
+  },
+  "Filtra per questo nome": {
+    "nl": "Filteren op deze naam",
+    "de": "Nach diesem Namen filtern"
+  },
+  "Filtra per questo tipo": {
+    "nl": "Filteren op dit type",
+    "de": "Nach diesem Typ filtern"
+  },
+  "Filtra per questo stato VIES": {
+    "nl": "Filteren op deze VIES-status",
+    "de": "Nach diesem VIES-Status filtern"
+  },
+  "Filtra per stato di blocco": {
+    "nl": "Filteren op blokkeringsstatus",
+    "de": "Nach Sperrstatus filtern"
+  },
+  "Cod. cliente obbligatorio": {
+    "nl": "Klantcode verplicht",
+    "de": "Kundencode erforderlich"
+  },
+  "Cod. cliente registrato": {
+    "nl": "Klantcode geregistreerd",
+    "de": "Kundencode registriert"
+  },
+  "C — Solo cliente": {
+    "nl": "C — Alleen klant",
+    "de": "C — Nur Kunde"
+  },
+  "R — Registro": {
+    "nl": "R — Register",
+    "de": "R — Register"
+  },
+  "Margini cargo aereo": {
+    "nl": "Marges luchtvracht",
+    "de": "Margen Luftfracht"
+  },
+  "Prezzo per scaglione (parità SetCrgMrg)": {
+    "nl": "Prijs per schijf (pariteit SetCrgMrg)",
+    "de": "Preis je Staffel (Parität SetCrgMrg)"
+  },
+  "Scaglione {n}": {
+    "nl": "Schijf {n}",
+    "de": "Staffel {n}"
+  },
+  "Token APP": {
+    "nl": "APP-token",
+    "de": "APP-Token"
+  },
+  "Rigenera token APP": {
+    "nl": "APP-token opnieuw genereren",
+    "de": "APP-Token neu erzeugen"
+  },
+  "Token rigenerato. Il dispositivo dovrà essere ri-associato.": {
+    "nl": "Token opnieuw gegenereerd. Het apparaat moet opnieuw worden gekoppeld.",
+    "de": "Token neu erzeugt. Das Gerät muss erneut verknüpft werden."
+  },
+  "Rigenerare il token APP di {name}? Il dispositivo attuale verrà scollegato.": {
+    "nl": "Het APP-token van {name} opnieuw genereren? Het huidige apparaat wordt losgekoppeld.",
+    "de": "Das APP-Token von {name} neu erzeugen? Das aktuelle Gerät wird getrennt."
+  },
+  "Accedi al B2B come": {
+    "nl": "Aanmelden bij B2B als",
+    "de": "Beim B2B anmelden als"
+  },
+  "Aprire il portale B2B come {name}? Si aprirà in una nuova scheda.": {
+    "nl": "Het B2B-portaal openen als {name}? Het wordt in een nieuw tabblad geopend.",
+    "de": "Das B2B-Portal als {name} öffnen? Es wird in einem neuen Tab geöffnet."
+  },
+  "Accesso findair abilitato": {
+    "nl": "Findair-toegang ingeschakeld",
+    "de": "Findair-Zugang aktiviert"
+  },
+  "Accesso findair disabilitato": {
+    "nl": "Findair-toegang uitgeschakeld",
+    "de": "Findair-Zugang deaktiviert"
+  },
+  "Livello findair aggiornato": {
+    "nl": "Findair-niveau bijgewerkt",
+    "de": "Findair-Stufe aktualisiert"
+  },
+  "Completo": {
+    "nl": "Volledig",
+    "de": "Vollständig"
+  },
+  "Portale completo tranne etichetta corriere reale": {
+    "nl": "Volledig portaal behalve echt koerierslabel",
+    "de": "Vollständiges Portal außer echtem Kurieretikett"
+  },
+  "Include etichetta corriere reale (DHL/UPS/FedEx/TNT)": {
+    "nl": "Inclusief echt koerierslabel (DHL/UPS/FedEx/TNT)",
+    "de": "Inklusive echtem Kurieretikett (DHL/UPS/FedEx/TNT)"
+  },
+  "Cerca (nome, email, login…)": {
+    "nl": "Zoeken (naam, e-mail, login…)",
+    "de": "Suchen (Name, E-Mail, Login…)"
+  },
+  "Tipo di contatto": {
+    "nl": "Contacttype",
+    "de": "Kontaktart"
+  },
+  "Con accesso findair": {
+    "nl": "Met findair-toegang",
+    "de": "Mit Findair-Zugang"
+  },
+  "Senza accesso findair": {
+    "nl": "Zonder findair-toegang",
+    "de": "Ohne Findair-Zugang"
+  },
+  "{n} di {total}": {
+    "nl": "{n} van {total}",
+    "de": "{n} von {total}"
+  },
+  "AWB agent iata code — Usato nelle MAWB e HAWB cargo": {
+    "nl": "AWB agent IATA-code — Gebruikt in MAWB en HAWB cargo",
+    "de": "AWB Agent IATA-Code — Verwendet in MAWB und HAWB Cargo"
+  },
+  "Alert via fax — Invia gli alert dei problemi con le singole spedizioni, al fax della sede.": {
+    "nl": "Meldingen per fax — Verstuurt meldingen over problemen met afzonderlijke zendingen naar de fax van de vestiging.",
+    "de": "Benachrichtigungen per Fax — Sendet Meldungen zu Problemen einzelner Sendungen an das Fax des Standorts."
+  },
+  "Alert via eMail — Invia gli alert dei problemi con le singole spedizioni, al mail della sede.": {
+    "nl": "Meldingen per e-mail — Verstuurt meldingen over problemen met afzonderlijke zendingen naar het e-mailadres van de vestiging.",
+    "de": "Benachrichtigungen per E-Mail — Sendet Meldungen zu Problemen einzelner Sendungen an die E-Mail-Adresse des Standorts."
+  },
+  "Aliquota IVA da applicare — Aliquota IVA da applicare in fattura citando la lettera d'intenti": {
+    "nl": "Toe te passen btw-tarief — Btw-tarief dat op de factuur wordt toegepast onder vermelding van de intentieverklaring",
+    "de": "Anzuwendender MwSt.-Satz — MwSt.-Satz, der auf der Rechnung unter Angabe der Absichtserklärung angewendet wird"
+  },
+  "Minimo assicurato — Importo sotto il quale non viene chiesta l'assicurazione al corriere usato e viene coperta da TMWE o dal partner": {
+    "nl": "Minimaal verzekerd bedrag — Bedrag waaronder geen verzekering bij de gebruikte koerier wordt aangevraagd en dat door TMWE of de partner wordt gedekt",
+    "de": "Mindestversicherungssumme — Betrag, unterhalb dessen beim eingesetzten Kurier keine Versicherung angefragt wird und der von TMWE oder dem Partner gedeckt wird"
+  },
+  "AWB at place — Usato nelle MAWB e HAWB cargo": {
+    "nl": "AWB at place — Gebruikt in MAWB en HAWB cargo",
+    "de": "AWB at place — Verwendet in MAWB und HAWB Cargo"
+  },
+  "Autoblocco insolventi — Blocca automaticamente dopo 14gg dalla scedenza delle fatture. Essendo i solleciti dopo 7gg verranno bloccati al secondo": {
+    "nl": "Automatische blokkering wanbetalers — Blokkeert automatisch 14 dagen na de vervaldatum van de facturen. Omdat herinneringen na 7 dagen worden verstuurd, volgt de blokkering bij de tweede herinnering",
+    "de": "Automatische Sperre säumiger Kunden — Sperrt automatisch 14 Tage nach Fälligkeit der Rechnungen. Da Mahnungen nach 7 Tagen erfolgen, wird bei der zweiten Mahnung gesperrt"
+  },
+  "B2B rif. interno obblig — Rende il campo rif. interno obbligatorio nel B2B spedizioni Express": {
+    "nl": "B2B interne ref. verplicht — Maakt het veld interne referentie verplicht in B2B voor expreszendingen",
+    "de": "B2B interne Ref. Pflicht — Macht das Feld interne Referenz im B2B für Expresssendungen zum Pflichtfeld"
+  },
+  "B2B rif. interno regexp: — Eventuale formula di tipo expressione regolare per il controllo del formato del campo. Va messa l'espressione regolare e (separato da UMAN ) il formato \"umano\" da mostrare nell'avviso Esempio: [0-9]{2}-[0-9]{5}-[0-9]{3}UMAN XX-XXXXX-XXX": {
+    "nl": "B2B interne ref. regexp: — Eventuele reguliere expressie om het formaat van het veld te controleren. Voer de reguliere expressie in en (gescheiden door UMAN ) het \"menselijke\" formaat dat in de melding wordt getoond. Voorbeeld: [0-9]{2}-[0-9]{5}-[0-9]{3}UMAN XX-XXXXX-XXX",
+    "de": "B2B interne Ref. Regexp: — Optionaler regulärer Ausdruck zur Prüfung des Feldformats. Geben Sie den regulären Ausdruck an und (getrennt durch UMAN ) das \"menschliche\" Format, das im Hinweis angezeigt wird. Beispiel: [0-9]{2}-[0-9]{5}-[0-9]{3}UMAN XX-XXXXX-XXX"
+  },
+  "Testo del footer del pannello B2B dei clienti — Usato nel footer del pannello B2B dei clienti": {
+    "nl": "Tekst van de voettekst van het B2B-paneel van klanten — Gebruikt in de voettekst van het B2B-paneel van klanten",
+    "de": "Text der Fußzeile des B2B-Panels der Kunden — Wird in der Fußzeile des B2B-Panels der Kunden verwendet"
+  },
+  "Blocca BRT — Il cliente non vuole usare il corriere BRT": {
+    "nl": "BRT blokkeren — De klant wil de koerier BRT niet gebruiken",
+    "de": "BRT sperren — Der Kunde möchte den Kurier BRT nicht nutzen"
+  },
+  "Blocca DHL — Il cliente non vuole usare il corriere DHL": {
+    "nl": "DHL blokkeren — De klant wil de koerier DHL niet gebruiken",
+    "de": "DHL sperren — Der Kunde möchte den Kurier DHL nicht nutzen"
+  },
+  "Blocca PalletWays — Il cliente non vuole usare il corriere PalletWays": {
+    "nl": "PalletWays blokkeren — De klant wil de koerier PalletWays niet gebruiken",
+    "de": "PalletWays sperren — Der Kunde möchte den Kurier PalletWays nicht nutzen"
+  },
+  "Blocca FedEx — Il cliente non vuole usare il corriere FedEx": {
+    "nl": "FedEx blokkeren — De klant wil de koerier FedEx niet gebruiken",
+    "de": "FedEx sperren — Der Kunde möchte den Kurier FedEx nicht nutzen"
+  },
+  "Blocca UPS — Il cliente non vuole usare il corriere UPS": {
+    "nl": "UPS blokkeren — De klant wil de koerier UPS niet gebruiken",
+    "de": "UPS sperren — Der Kunde möchte den Kurier UPS nicht nutzen"
+  },
+  "Blocca TNT — Il cliente non vuole usare il corriere TNT": {
+    "nl": "TNT blokkeren — De klant wil de koerier TNT niet gebruiken",
+    "de": "TNT sperren — Der Kunde möchte den Kurier TNT nicht nutzen"
+  },
+  "Blocca se corriere — Se è un corriere i relativi servizi non verranno utilizzati da nessuna parte nell'ERP. Utile in caso di problemi bloccanti con le relative API": {
+    "nl": "Blokkeren indien koerier — Als het een koerier is, worden de bijbehorende services nergens in het ERP gebruikt. Handig bij blokkerende problemen met de betreffende API's",
+    "de": "Sperren, wenn Kurier — Handelt es sich um einen Kurier, werden dessen Services nirgends im ERP verwendet. Nützlich bei blockierenden Problemen mit den zugehörigen APIs"
+  },
+  "Cliente bloccato — Inibisce la possibilità di inserire nuove spedizioni al cliente, lasciandolo comunque loggare per vedere il pregresso.": {
+    "nl": "Klant geblokkeerd — Verhindert dat de klant nieuwe zendingen invoert, maar laat hem wel inloggen om de historie te bekijken.",
+    "de": "Kunde gesperrt — Verhindert die Erfassung neuer Sendungen durch den Kunden, erlaubt ihm aber weiterhin die Anmeldung zur Einsicht in die Historie."
+  },
+  "Cargo Airport — Aeroporto di presa/consegna dei voli cargo": {
+    "nl": "Cargo Airport — Luchthaven van ophaling/aflevering van cargovluchten",
+    "de": "Cargo Airport — Flughafen für Abholung/Zustellung der Cargoflüge"
+  },
+  "Causale IVA altra — Causale IVA da usare in fattura in alternativa a quella predefinita": {
+    "nl": "Andere btw-reden — Btw-reden die op de factuur wordt gebruikt in plaats van de standaardreden",
+    "de": "Anderer MwSt.-Grund — MwSt.-Grund, der auf der Rechnung anstelle des Standardgrunds verwendet wird"
+  },
+  "Cellulare — Cellulare del contatto al quale verranno inviati gli eventuali SMS dal SW": {
+    "nl": "Mobiel — Mobiel nummer van het contact waarnaar de software eventuele sms'jes verstuurt",
+    "de": "Mobiltelefon — Mobilnummer des Kontakts, an die die Software eventuelle SMS sendet"
+  },
+  "C.F. — Codice fiscale, solo se diverso dalla partita IVA. Se privato mettere il CF nell'altro campo": {
+    "nl": "Fiscaal nr. — Fiscaal nummer, alleen als het afwijkt van het btw-nummer. Bij particulieren het fiscaal nummer in het andere veld invullen",
+    "de": "Steuernr. — Steuernummer, nur wenn sie von der USt-IdNr. abweicht. Bei Privatpersonen die Steuernummer in das andere Feld eintragen"
+  },
+  "Codice destinatario — Codice per la fatturazione elettronica verso i clienti Italiani": {
+    "nl": "Ontvangercode — Code voor elektronische facturatie aan Italiaanse klanten",
+    "de": "Empfängercode — Code für die elektronische Rechnungsstellung an italienische Kunden"
+  },
+  "Ora di cons — Ora di consegna predefinita": {
+    "nl": "Afleveringstijd — Standaard afleveringstijd",
+    "de": "Zustellzeit — Standard-Zustellzeit"
+  },
+  "Consegnati via mail — Manda un messaggio di avviso al mail della sede quando le spedizioni vengono consegnate.": {
+    "nl": "Afgeleverd per e-mail — Stuurt een melding naar het e-mailadres van de vestiging wanneer de zendingen zijn afgeleverd.",
+    "de": "Zugestellt per E-Mail — Sendet eine Benachrichtigung an die E-Mail-Adresse des Standorts, sobald die Sendungen zugestellt wurden."
+  },
+  "Settore operativo altro — Altro settore operativo non elencato o precisazioni su quello indicato": {
+    "nl": "Andere bedrijfssector — Andere, niet vermelde bedrijfssector of toelichting op de opgegeven sector",
+    "de": "Andere Branche — Andere, nicht aufgeführte Branche oder Präzisierung der angegebenen Branche"
+  },
+  "Diritto fisso di fatturazione — Importo addebitato per la gestione contabile e l'emissione e la spedizione della fattura.": {
+    "nl": "Vaste factureringskosten — Bedrag dat in rekening wordt gebracht voor de boekhoudkundige verwerking en het opstellen en verzenden van de factuur.",
+    "de": "Feste Fakturierungsgebühr — Betrag, der für die buchhalterische Bearbeitung sowie die Ausstellung und den Versand der Rechnung berechnet wird."
+  },
+  "Usa fastlink — Se selezionato verrà mostrato il fast link del cliente per inserimenti rapidi di prese e spedizioni.": {
+    "nl": "Fastlink gebruiken — Indien geselecteerd wordt de fastlink van de klant getoond voor het snel invoeren van ophalingen en zendingen.",
+    "de": "Fastlink verwenden — Wenn ausgewählt, wird der Fastlink des Kunden für die schnelle Erfassung von Abholungen und Sendungen angezeigt."
+  },
+  "Lingua fatture — Lingua di visione delle fatture (vale solo per i PDF gli XML saranno sempre e solo in italiano/lingua base)": {
+    "nl": "Factuurtaal — Taal waarin de facturen worden weergegeven (geldt alleen voor de pdf's; de XML's zijn altijd uitsluitend in het Italiaans/de basistaal)",
+    "de": "Rechnungssprache — Sprache für die Anzeige der Rechnungen (gilt nur für die PDFs; die XML-Dateien sind stets ausschließlich auf Italienisch/in der Basissprache)"
+  },
+  "Spedire fattura via fax — Il cliente ha richiesto la spedizione della fattura via fax": {
+    "nl": "Factuur per fax versturen — De klant heeft verzocht de factuur per fax te versturen",
+    "de": "Rechnung per Fax senden — Der Kunde hat den Versand der Rechnung per Fax angefordert"
+  },
+  "Spedire fattura via posta — Il cliente ha richiesto la spedizione della fattura cartacea": {
+    "nl": "Factuur per post versturen — De klant heeft verzocht de papieren factuur te versturen",
+    "de": "Rechnung per Post senden — Der Kunde hat den Versand der Papierrechnung angefordert"
+  },
+  "Emissione fattura automatica — Emettere le fatture in automatico o in modo manuale, nel caso di procedura e/o descrizioni non standard.": {
+    "nl": "Automatische factuuruitgifte — Facturen automatisch of handmatig uitgeven, bij niet-standaard procedures en/of omschrijvingen.",
+    "de": "Automatische Rechnungsstellung — Rechnungen automatisch oder manuell ausstellen, bei nicht standardmäßigen Abläufen und/oder Beschreibungen."
+  },
+  "Autista per presa — Autista che effettua la presa in questa sede. Se non selezionato ed il CAP non è coperto in autisti_zone, le prese verranno fatte con corriere.": {
+    "nl": "Chauffeur voor ophaling — Chauffeur die de ophaling bij deze vestiging uitvoert. Indien niet geselecteerd en de postcode niet in autisti_zone is opgenomen, worden de ophalingen door een koerier gedaan.",
+    "de": "Fahrer für Abholung — Fahrer, der die Abholung an diesem Standort durchführt. Ist keiner ausgewählt und die PLZ nicht in autisti_zone erfasst, erfolgen die Abholungen per Kurier."
+  },
+  "Autista per consegna — Autista che effettua la consegna in questa sede. Se non selezionato si userà quello impostato per il CAP di destinazione": {
+    "nl": "Chauffeur voor aflevering — Chauffeur die de aflevering bij deze vestiging uitvoert. Indien niet geselecteerd wordt de chauffeur gebruikt die voor de bestemmingspostcode is ingesteld",
+    "de": "Fahrer für Zustellung — Fahrer, der die Zustellung an diesem Standort durchführt. Ist keiner ausgewählt, wird der für die Ziel-PLZ eingestellte Fahrer verwendet"
+  },
+  "Causale IVA — Causale IVA da indicare in fattura, in particolare in caso di lettere d'intenti per esonero o riduzioni dell'aliquota": {
+    "nl": "Btw-reden — Btw-reden die op de factuur moet worden vermeld, met name bij intentieverklaringen voor vrijstelling of tariefverlaging",
+    "de": "MwSt.-Grund — Auf der Rechnung anzugebender MwSt.-Grund, insbesondere bei Absichtserklärungen zur Befreiung oder Satzermäßigung"
+  },
+  "Categoria — Categoria del ruolo svolto in azienda dal contatto": {
+    "nl": "Categorie — Categorie van de functie die het contact binnen het bedrijf vervult",
+    "de": "Kategorie — Kategorie der Funktion, die der Kontakt im Unternehmen ausübt"
+  },
+  "Settore operativo del cliente — Utile per statistiche, offerte mirate e sopratutto per gli studi di settore fiscali": {
+    "nl": "Bedrijfssector van de klant — Nuttig voor statistieken, gerichte aanbiedingen en vooral voor fiscale sectoronderzoeken",
+    "de": "Branche des Kunden — Nützlich für Statistiken, gezielte Angebote und vor allem für steuerliche Branchenuntersuchungen"
+  },
+  "AWB Issuing_carrier — Usato nelle MAWB e HAWB cargo": {
+    "nl": "AWB Issuing_carrier — Gebruikt in MAWB en HAWB cargo",
+    "de": "AWB Issuing_carrier — Verwendet in MAWB und HAWB Cargo"
+  },
+  "Nome breve sede — Nome che verrà visualizzato nella tendina di scelta della sede dei contatti.": {
+    "nl": "Korte naam vestiging — Naam die wordt weergegeven in de keuzelijst voor de vestiging van de contacten.",
+    "de": "Kurzname Standort — Name, der im Auswahlmenü für den Standort der Kontakte angezeigt wird."
+  },
+  "LDV corriere triang. — Stampa presa fornitore in triangolazione non coperta dai nostri autisti": {
+    "nl": "Koeriersvrachtbrief driehoek — Drukt de leveranciersophaling in driehoeksvervoer af die niet door onze chauffeurs wordt gedekt",
+    "de": "Kurier-Frachtbrief Dreieck — Druckt die Lieferantenabholung im Dreiecksverkehr, die nicht von unseren Fahrern abgedeckt wird"
+  },
+  "Pratica legale — Indica se il clienta ha in corso una pratica legale e/o se ne ha avute in passato": {
+    "nl": "Juridisch dossier — Geeft aan of de klant een lopend juridisch dossier heeft en/of er in het verleden had",
+    "de": "Rechtsfall — Gibt an, ob der Kunde einen laufenden Rechtsfall hat und/oder in der Vergangenheit hatte"
+  },
+  "Lingua da usare al telefono — Lingua da utilizzare negli eventuali contatti telefonici con il contatto": {
+    "nl": "Telefoontaal — Taal die bij eventuele telefonische contacten met het contact moet worden gebruikt",
+    "de": "Telefonsprache — Sprache, die bei eventuellen telefonischen Kontakten mit dem Kontakt zu verwenden ist"
+  },
+  "Accesso traduttore autorizzato — Per questa sola lingua da b2b.tmwe.it/testi.php": {
+    "nl": "Toegang geautoriseerde vertaler — Uitsluitend voor deze taal via b2b.tmwe.it/testi.php",
+    "de": "Zugang autorisierter Übersetzer — Nur für diese Sprache über b2b.tmwe.it/testi.php"
+  },
+  "Lingua da usare per il sito B2B — Visualizza il sito in questa lingua": {
+    "nl": "Taal voor de B2B-site — Toont de site in deze taal",
+    "de": "Sprache für die B2B-Website — Zeigt die Website in dieser Sprache an"
+  },
+  "Logistica — Sede di logistica da usare per il caricamento di spedizioni multiple da file Excel, visibile solo in quella tendina dal cliente e non modificabile da loro": {
+    "nl": "Logistiek — Logistieke vestiging voor het uploaden van meerdere zendingen uit een Excel-bestand, alleen zichtbaar in die keuzelijst voor de klant en door hem niet te wijzigen",
+    "de": "Logistik — Logistikstandort für das Hochladen mehrerer Sendungen aus einer Excel-Datei, nur in diesem Auswahlmenü für den Kunden sichtbar und von ihm nicht änderbar"
+  },
+  "Unità di misura — Unità di misura con cui vengono inseriti pesi e misure. Metriche o imperiali I dati verranno convertiti automaticamente dal sw in base ai dati inseriri nelle spedizioni.": {
+    "nl": "Meeteenheid — Meeteenheid waarin gewichten en afmetingen worden ingevoerd. Metrisch of imperiaal. De software rekent de gegevens automatisch om op basis van wat bij de zendingen is ingevoerd.",
+    "de": "Maßeinheit — Maßeinheit, in der Gewichte und Maße erfasst werden. Metrisch oder imperial. Die Software rechnet die Daten anhand der bei den Sendungen erfassten Angaben automatisch um."
+  },
+  "Nick name corrieri Nome breve usato negli elenchi dei servizi offerti dei fornitori": {
+    "nl": "Bijnaam koeriers — Korte naam die wordt gebruikt in de lijsten met aangeboden services van de leveranciers",
+    "de": "Spitzname Kuriere — Kurzname, der in den Listen der angebotenen Services der Lieferanten verwendet wird"
+  },
+  "Nome from — Nome mostrato prima del telefono nelle etichette come mittente": {
+    "nl": "Naam from — Naam die op de labels vóór het telefoonnummer als afzender wordt getoond",
+    "de": "Name from — Name, der auf den Etiketten vor der Telefonnummer als Absender angezeigt wird"
+  },
+  "Note — inserire quì eventuali note sulla società": {
+    "nl": "Notities — voer hier eventuele notities over het bedrijf in",
+    "de": "Notizen — Tragen Sie hier eventuelle Anmerkungen zum Unternehmen ein"
+  },
+  "Invia fattura via PEC — Selezionare per spedire copia della fattura anche a mezzo mail PEC": {
+    "nl": "Factuur per PEC versturen — Selecteer dit om ook een kopie van de factuur per PEC-e-mail te versturen",
+    "de": "Rechnung per PEC senden — Auswählen, um eine Kopie der Rechnung auch per PEC-E-Mail zu senden"
+  },
+  "Spedire solleciti via PEC — Selezionare per spedire i solleciti di pagamento anche a mezzo mail PEC": {
+    "nl": "Herinneringen per PEC versturen — Selecteer dit om betalingsherinneringen ook per PEC-e-mail te versturen",
+    "de": "Mahnungen per PEC senden — Auswählen, um Zahlungserinnerungen auch per PEC-E-Mail zu senden"
+  },
+  "Partita IVA / C.F. — Partita IVA o Codice fiscale se diverse indicare il CF nel campo apposito.": {
+    "nl": "Btw-nummer / Fiscaal nr. — Btw-nummer of fiscaal nummer; indien verschillend, vul het fiscaal nummer in het daarvoor bestemde veld in.",
+    "de": "USt-IdNr. / Steuernr. — USt-IdNr. oder Steuernummer; falls abweichend, tragen Sie die Steuernummer in das dafür vorgesehene Feld ein."
+  },
+  "Presa fissa — Effettuare una presa fissa in questa sede": {
+    "nl": "Vaste ophaling — Een vaste ophaling bij deze vestiging uitvoeren",
+    "de": "Feste Abholung — Eine feste Abholung an diesem Standort durchführen"
+  },
+  "Ora limite — Orario limite per richiedere una presa nello stesso giorno": {
+    "nl": "Uiterste tijd — Uiterste tijd om een ophaling op dezelfde dag aan te vragen",
+    "de": "Uhrzeitgrenze — Späteste Uhrzeit, um eine Abholung am selben Tag anzufordern"
+  },
+  "Ora di presa — Ora nella quale effettuare la presa": {
+    "nl": "Ophaaltijd — Tijdstip waarop de ophaling plaatsvindt",
+    "de": "Abholzeit — Uhrzeit, zu der die Abholung erfolgt"
+  },
+  "Ragione sociale — Indicare il nome della società o ditta.": {
+    "nl": "Bedrijfsnaam — Vul de naam van het bedrijf of de onderneming in.",
+    "de": "Firmenname — Geben Sie den Namen der Gesellschaft oder Firma an."
+  },
+  "Ruolo — Ruolo che il contatto svolge in azienda": {
+    "nl": "Rol — Rol die het contact binnen het bedrijf vervult",
+    "de": "Rolle — Rolle, die der Kontakt im Unternehmen ausübt"
+  },
+  "Scadenza listino — Data di scadenza del listino per alert di rinnovo commerciale": {
+    "nl": "Vervaldatum tarief — Vervaldatum van het tarief voor meldingen over commerciële verlenging",
+    "de": "Ablauf der Preisliste — Ablaufdatum der Preisliste für Hinweise zur kommerziellen Verlängerung"
+  },
+  "Scelta corriere % — Percentuale di ricarico applicata per a scelta corriere. Applicata sulla differenza fra costo minimo e costo del corriere scelto": {
+    "nl": "Koerierskeuze % — Opslagpercentage dat bij de koerierskeuze wordt toegepast. Wordt berekend over het verschil tussen de laagste kosten en de kosten van de gekozen koerier",
+    "de": "Kurierauswahl % — Aufschlagsprozentsatz, der bei der Kurierauswahl angewendet wird. Wird auf die Differenz zwischen den niedrigsten Kosten und den Kosten des gewählten Kuriers berechnet"
+  },
+  "Scelta fornitore — Valido solo per i corrieri, mostra o meno nell'omonima tendina lato B2B ed ERP.": {
+    "nl": "Leverancierskeuze — Geldt alleen voor koeriers; bepaalt of deze al dan niet in het gelijknamige keuzemenu aan B2B- en ERP-zijde verschijnt.",
+    "de": "Lieferantenauswahl — Gilt nur für Kuriere; legt fest, ob sie im gleichnamigen Auswahlmenü auf B2B- und ERP-Seite erscheinen."
+  },
+  "AWB signature agent — Usato nelle MAWB e HAWB cargo": {
+    "nl": "AWB signature agent — Gebruikt in MAWB en HAWB cargo",
+    "de": "AWB signature agent — Verwendet in MAWB und HAWB Cargo"
+  },
+  "AWB signature — Usato nelle MAWB e HAWB cargo": {
+    "nl": "AWB signature — Gebruikt in MAWB en HAWB cargo",
+    "de": "AWB signature — Verwendet in MAWB und HAWB Cargo"
+  },
+  "Invia solleciti — Inviare i solleciti automatici all'anagrafica": {
+    "nl": "Herinneringen versturen — Automatische herinneringen naar de stamgegevens versturen",
+    "de": "Mahnungen senden — Automatische Mahnungen an die Stammdaten senden"
+  },
+  "Testo base richiesta quotazione ai vettori": {
+    "nl": "Basistekst offerteaanvraag aan vervoerders",
+    "de": "Basistext der Angebotsanfrage an Frachtführer"
+  },
+  "Tipo anagrafica — Tipologia dell'anagrafica: Cliente, Fornitore generico, Trasportatore (fornitore di spedizioni) o Interno per altre anagrafiche come la propria.": {
+    "nl": "Type stamgegevens — Soort stamgegevens: Klant, Algemene leverancier, Vervoerder (leverancier van zendingen) of Intern voor overige stamgegevens zoals de eigen.",
+    "de": "Stammdatentyp — Art der Stammdaten: Kunde, Allgemeiner Lieferant, Transporteur (Sendungslieferant) oder Intern für sonstige Stammdaten wie die eigenen."
+  },
+  "Tipo di pagamento — Metodo di addebito/fatturazione al cliente, Anticipato, a Riepilogo mensile o a scalare da un prepagato.": {
+    "nl": "Betalingstype — Wijze van belasting/facturering aan de klant: vooruitbetaling, maandelijkse verzamelfactuur of afboeking van een vooruitbetaald saldo.",
+    "de": "Zahlungsart — Art der Belastung/Fakturierung des Kunden: Vorauszahlung, monatliche Sammelrechnung oder Abbuchung von einem Vorauszahlungsguthaben."
+  },
+  "Contatto commerciale — L'anagrafica è un contatto commerciale non ancora un cliente reale": {
+    "nl": "Commercieel contact — De stamgegevens betreffen een commercieel contact, nog geen echte klant",
+    "de": "Vertriebskontakt — Die Stammdaten betreffen einen Vertriebskontakt, noch keinen tatsächlichen Kunden"
+  },
+  "Presa/consegna unica — Effettua un solo giro giornaliero unendo le consegne con le prese. Altrimenti le unifica solo se presa effettuata in mattinata.": {
+    "nl": "Gecombineerde ophaling/aflevering — Voert één rit per dag uit waarbij afleveringen en ophalingen worden gecombineerd. Anders worden ze alleen samengevoegd als de ophaling in de ochtend plaatsvindt.",
+    "de": "Kombinierte Abholung/Zustellung — Führt nur eine Tour pro Tag durch und verbindet Zustellungen mit Abholungen. Andernfalls werden sie nur zusammengelegt, wenn die Abholung am Vormittag erfolgt."
+  },
+  "Ignora blocco CAP UPS — Ignora il controllo sui CAP per non usare UPS ove usi SDA per consegnare": {
+    "nl": "UPS-postcodeblokkering negeren — Negeert de postcodecontrole om UPS niet te gebruiken waar SDA voor de aflevering wordt ingezet",
+    "de": "UPS-PLZ-Sperre ignorieren — Ignoriert die PLZ-Prüfung, um UPS dort nicht zu verwenden, wo SDA zustellt"
+  },
+  "URL tracking — URL diretto al tracking della spedizione. Verrà aggiunto solo l'AWB della spedizione": {
+    "nl": "Tracking-URL — Directe URL naar de tracking van de zending. Alleen de AWB van de zending wordt eraan toegevoegd",
+    "de": "Tracking-URL — Direkte URL zur Sendungsverfolgung. Es wird lediglich die AWB der Sendung angehängt"
+  },
+  "Valuta usata — Valuta in cui mostrare i prezzi dei nuovi servizi.": {
+    "nl": "Gebruikte valuta — Valuta waarin de prijzen van de nieuwe services worden getoond.",
+    "de": "Verwendete Währung — Währung, in der die Preise der neuen Services angezeigt werden."
+  },
+  "Apri scheda": {
+    "nl": "Fiche openen",
+    "de": "Datenblatt öffnen"
+  },
+  "Apri fatturazione": {
+    "nl": "Facturatie openen",
+    "de": "Fakturierung öffnen"
+  },
+  "Apri listini": {
+    "nl": "Tarieven openen",
+    "de": "Preislisten öffnen"
+  },
+  "Elimina cliente": {
+    "nl": "Klant verwijderen",
+    "de": "Kunden löschen"
+  },
+  "Copia ID": {
+    "nl": "ID kopiëren",
+    "de": "ID kopieren"
+  },
+  "Copia l ID cliente negli appunti": {
+    "nl": "Klant-ID naar het klembord kopiëren",
+    "de": "Kunden-ID in die Zwischenablage kopieren"
+  },
+  "ID {id} copiato": {
+    "nl": "ID {id} gekopieerd",
+    "de": "ID {id} kopiert"
+  },
+  "Nuovo cliente": {
+    "nl": "Nieuwe klant",
+    "de": "Neuer Kunde"
+  },
+  "Crea una nuova anagrafica": {
+    "nl": "Nieuwe stamgegevens aanmaken",
+    "de": "Neue Stammdaten erstellen"
+  },
+  "Clona cliente": {
+    "nl": "Klant klonen",
+    "de": "Kunden klonen"
+  },
+  "Conti dell’emittente; scegli quello indicato nella fattura di questo cliente.": {
+    "nl": "Rekeningen van de uitgever; kies de rekening die op de factuur van deze klant staat.",
+    "de": "Konten des Ausstellers; wählen Sie das auf der Rechnung dieses Kunden angegebene Konto."
+  },
+  "Scegli la causale IVA predefinita di questo cliente.": {
+    "nl": "Kies de standaard btw-reden van deze klant.",
+    "de": "Wählen Sie den Standard-MwSt.-Grund dieses Kunden."
+  },
+  "Imposta come predefinita": {
+    "nl": "Als standaard instellen",
+    "de": "Als Standard festlegen"
+  },
+  "Cliente «{name}» creato correttamente": {
+    "nl": "Klant «{name}» succesvol aangemaakt",
+    "de": "Kunde «{name}» erfolgreich erstellt"
+  },
+  "Clona anagrafica": {
+    "nl": "Stamgegevens klonen",
+    "de": "Stammdaten klonen"
+  },
+  "Verrà creato un nuovo cliente a partire da «{name}», con i suoi utenti, la configurazione e i listini.": {
+    "nl": "Er wordt een nieuwe klant aangemaakt op basis van «{name}», met bijbehorende gebruikers, configuratie en tarieven.",
+    "de": "Es wird ein neuer Kunde auf Basis von «{name}» angelegt, mit dessen Benutzern, Konfiguration und Preislisten."
+  },
+  "Ragione sociale del nuovo cliente": {
+    "nl": "Bedrijfsnaam van de nieuwe klant",
+    "de": "Firmenname des neuen Kunden"
+  },
+  "Indica la ragione sociale del nuovo cliente": {
+    "nl": "Geef de bedrijfsnaam van de nieuwe klant op",
+    "de": "Geben Sie den Firmennamen des neuen Kunden an"
+  },
+  "Maschera le email (evita invii reali)": {
+    "nl": "E-mailadressen maskeren (voorkomt echte verzending)",
+    "de": "E-Mail-Adressen maskieren (verhindert echten Versand)"
+  },
+  "I dati fiscali (P.IVA / CF) vengono rigenerati e le password sostituite con una di prova. I listini non vengono duplicati: il clone usa gli stessi.": {
+    "nl": "De fiscale gegevens (btw-nr. / fiscaal nr.) worden opnieuw gegenereerd en de wachtwoorden vervangen door een testwachtwoord. De tarieven worden niet gedupliceerd: de kloon gebruikt dezelfde.",
+    "de": "Die Steuerdaten (USt-IdNr. / Steuernr.) werden neu erzeugt und die Passwörter durch ein Testpasswort ersetzt. Die Preislisten werden nicht dupliziert: Der Klon verwendet dieselben."
+  },
+  "Simula": {
+    "nl": "Simuleren",
+    "de": "Simulieren"
+  },
+  "Clona": {
+    "nl": "Klonen",
+    "de": "Klonen"
+  },
+  "Simulazione — non è stato scritto nulla": {
+    "nl": "Simulatie — er is niets weggeschreven",
+    "de": "Simulation — es wurde nichts geschrieben"
+  },
+  "Clonazione completata": {
+    "nl": "Klonen voltooid",
+    "de": "Klonen abgeschlossen"
+  },
+  "Righe totali": {
+    "nl": "Totaal rijen",
+    "de": "Zeilen gesamt"
+  },
+  "Utenti creati": {
+    "nl": "Aangemaakte gebruikers",
+    "de": "Erstellte Benutzer"
+  },
+  "Cliente clonato con ID {id}": {
+    "nl": "Klant gekloond met ID {id}",
+    "de": "Kunde mit ID {id} geklont"
+  },
+  "Identificazione": {
+    "nl": "Identificatie",
+    "de": "Identifikation"
+  },
+  "Localizzazione": {
+    "nl": "Locatie",
+    "de": "Lokalisierung"
+  },
+  "Pagamenti e fatturazione": {
+    "nl": "Betalingen en facturatie",
+    "de": "Zahlungen und Fakturierung"
+  },
+  "Documenti e invii": {
+    "nl": "Documenten en verzendingen",
+    "de": "Dokumente und Versand"
+  },
+  "Multisede": {
+    "nl": "Meerdere vestigingen",
+    "de": "Mehrere Standorte"
+  },
+  "Fatturazione automatica": {
+    "nl": "Automatische facturatie",
+    "de": "Automatische Fakturierung"
+  },
+  "Credito residuo": {
+    "nl": "Resterend saldo",
+    "de": "Restguthaben"
+  },
+  "Banca predefinita": {
+    "nl": "Standaardbank",
+    "de": "Standardbank"
+  },
+  "Codice destinatario": {
+    "nl": "Ontvangercode",
+    "de": "Empfängercode"
+  },
+  "Fatture per posta": {
+    "nl": "Facturen per post",
+    "de": "Rechnungen per Post"
+  },
+  "Differito": {
+    "nl": "Uitgesteld",
+    "de": "Aufgeschoben"
+  },
+  "IVA ordinaria": {
+    "nl": "Normale btw",
+    "de": "Reguläre MwSt."
+  },
+  "Esente da lettera d'intenti (IT)": {
+    "nl": "Vrijgesteld op grond van intentieverklaring (IT)",
+    "de": "Befreit aufgrund Absichtserklärung (IT)"
+  },
+  "Esente Extra-UE (art. 9)": {
+    "nl": "Vrijgesteld buiten de EU (art. 9)",
+    "de": "Befreit Nicht-EU (Art. 9)"
+  },
+  "Esente UE (art. 7)": {
+    "nl": "Vrijgesteld EU (art. 7)",
+    "de": "Befreit EU (Art. 7)"
+  },
+  "Esente ambasciate": {
+    "nl": "Vrijgesteld ambassades",
+    "de": "Befreit Botschaften"
+  },
+  "Con credito disponibile": {
+    "nl": "Met beschikbaar saldo",
+    "de": "Mit verfügbarem Guthaben"
+  },
+  "Senza credito": {
+    "nl": "Zonder saldo",
+    "de": "Ohne Guthaben"
+  },
+  "Non impostata": {
+    "nl": "Niet ingesteld",
+    "de": "Nicht festgelegt"
+  },
+  "Diversa da EUR": {
+    "nl": "Anders dan EUR",
+    "de": "Abweichend von EUR"
+  },
+  "Sistema metrico": {
+    "nl": "Metrisch stelsel",
+    "de": "Metrisches System"
+  },
+  "Sistema imperiale": {
+    "nl": "Imperiaal stelsel",
+    "de": "Imperiales System"
+  },
+  "Con PEC": {
+    "nl": "Met PEC",
+    "de": "Mit PEC"
+  },
+  "Senza PEC": {
+    "nl": "Zonder PEC",
+    "de": "Ohne PEC"
+  },
+  "Fatture via PEC: sì": {
+    "nl": "Facturen per PEC: ja",
+    "de": "Rechnungen per PEC: ja"
+  },
+  "Fatture via PEC: no": {
+    "nl": "Facturen per PEC: nee",
+    "de": "Rechnungen per PEC: nein"
+  },
+  "Solleciti via PEC: sì": {
+    "nl": "Herinneringen per PEC: ja",
+    "de": "Mahnungen per PEC: ja"
+  },
+  "Solleciti via PEC: no": {
+    "nl": "Herinneringen per PEC: nee",
+    "de": "Mahnungen per PEC: nein"
+  },
+  "Con codice destinatario (solo IT)": {
+    "nl": "Met ontvangercode (alleen IT)",
+    "de": "Mit Empfängercode (nur IT)"
+  },
+  "Senza codice destinatario (solo IT)": {
+    "nl": "Zonder ontvangercode (alleen IT)",
+    "de": "Ohne Empfängercode (nur IT)"
+  },
+  "Importo 1A": {
+    "nl": "Bedrag 1A",
+    "de": "Betrag 1A"
+  },
+  "Ultimo servizio": {
+    "nl": "Laatste service",
+    "de": "Letzter Service"
+  },
+  "Ricarica": {
+    "nl": "Opwaarderen",
+    "de": "Aufladen"
+  },
+  "Utenti": {
+    "nl": "Gebruikers",
+    "de": "Benutzer"
+  },
+  "Ruoli interni": {
+    "nl": "Interne rollen",
+    "de": "Interne Rollen"
+  },
+  "Permessi per modulo": {
+    "nl": "Rechten per module",
+    "de": "Berechtigungen je Modul"
+  },
+  "Client API": {
+    "nl": "API-clients",
+    "de": "API-Clients"
+  },
+  "Ruoli API": {
+    "nl": "API-rollen",
+    "de": "API-Rollen"
+  },
+  "Credenziali": {
+    "nl": "Inloggegevens",
+    "de": "Zugangsdaten"
+  },
+  "SMTP per partner": {
+    "nl": "SMTP per partner",
+    "de": "SMTP je Partner"
+  },
+  "Indicatori": {
+    "nl": "Indicatoren",
+    "de": "Kennzahlen"
+  },
+  "Validazione": {
+    "nl": "Validatie",
+    "de": "Validierung"
+  },
+  "Delega WebCargo": {
+    "nl": "WebCargo-delegatie",
+    "de": "WebCargo-Delegation"
+  },
+  "Credenziali KLM": {
+    "nl": "KLM-inloggegevens",
+    "de": "KLM-Zugangsdaten"
+  },
+  "Servizi corriere": {
+    "nl": "Koeriersservices",
+    "de": "Kurierservices"
+  },
+  "Zone geografiche": {
+    "nl": "Geografische zones",
+    "de": "Geografische Zonen"
+  },
+  "Onboarding clienti": {
+    "nl": "Klantonboarding",
+    "de": "Kunden-Onboarding"
+  },
+  "Log applicazione": {
+    "nl": "Applicatielogboek",
+    "de": "Anwendungsprotokoll"
+  },
+  "Log tracking email": {
+    "nl": "Logboek tracking-e-mails",
+    "de": "Protokoll Tracking-E-Mails"
+  },
+  "Explain autorizzazione": {
+    "nl": "Autorisatie verklaren",
+    "de": "Autorisierung erklären"
+  },
+  "Audit permessi": {
+    "nl": "Rechtenaudit",
+    "de": "Berechtigungsaudit"
+  },
+  "MFA (autenticazione 2FA)": {
+    "nl": "MFA (2FA-authenticatie)",
+    "de": "MFA (2FA-Authentifizierung)"
+  },
+  "Seleziona un valore": {
+    "nl": "Selecteer een waarde",
+    "de": "Wählen Sie einen Wert"
+  },
+  "Utente": {
+    "nl": "Gebruiker",
+    "de": "Benutzer"
+  },
+  "Ruolo interno": {
+    "nl": "Interne rol",
+    "de": "Interne Rolle"
+  },
+  "Ruolo OAuth": {
+    "nl": "OAuth-rol",
+    "de": "OAuth-Rolle"
+  },
+  "Client OAuth": {
+    "nl": "OAuth-client",
+    "de": "OAuth-Client"
+  },
+  "Seleziona prima un partner": {
+    "nl": "Selecteer eerst een partner",
+    "de": "Wählen Sie zuerst einen Partner"
+  },
+  "Gestione utenti admin (contatti)": {
+    "nl": "Beheer van admingebruikers (contacten)",
+    "de": "Verwaltung der Admin-Benutzer (Kontakte)"
+  },
+  "Nuovo utente": {
+    "nl": "Nieuwe gebruiker",
+    "de": "Neuer Benutzer"
+  },
+  "Nome, email, login o partner": {
+    "nl": "Naam, e-mail, login of partner",
+    "de": "Name, E-Mail, Login oder Partner"
+  },
+  "Filtra per partner": {
+    "nl": "Filteren op partner",
+    "de": "Nach Partner filtern"
+  },
+  "Attivi": {
+    "nl": "Actief",
+    "de": "Aktiv"
+  },
+  "Nessun utente": {
+    "nl": "Geen gebruikers",
+    "de": "Keine Benutzer"
+  },
+  "Nessun utente corrisponde ai filtri attuali.": {
+    "nl": "Geen gebruikers komen overeen met de huidige filters.",
+    "de": "Keine Benutzer entsprechen den aktuellen Filtern."
+  },
+  "Ruoli": {
+    "nl": "Rollen",
+    "de": "Rollen"
+  },
+  "Crea utente": {
+    "nl": "Gebruiker aanmaken",
+    "de": "Benutzer erstellen"
+  },
+  "Modifica utente": {
+    "nl": "Gebruiker bewerken",
+    "de": "Benutzer bearbeiten"
+  },
+  "Ruoli iniziali": {
+    "nl": "Initiële rollen",
+    "de": "Anfangsrollen"
+  },
+  "Ruolo legacy (campo libero)": {
+    "nl": "Legacy-rol (vrij veld)",
+    "de": "Legacy-Rolle (freies Feld)"
+  },
+  "Campo storico ruolo. Per RBAC moderno usa il pannello ruoli.": {
+    "nl": "Historisch rolveld. Gebruik voor modern RBAC het rollenpaneel.",
+    "de": "Historisches Rollenfeld. Für modernes RBAC das Rollen-Panel verwenden."
+  },
+  "Utente solo API (senza login web)": {
+    "nl": "Alleen-API-gebruiker (zonder weblogin)",
+    "de": "Nur-API-Benutzer (ohne Web-Login)"
+  },
+  "L'utente si autentica solo via OAuth2 client credentials. Utile per integrazioni B2B.": {
+    "nl": "De gebruiker authenticeert zich uitsluitend via OAuth2 client credentials. Handig voor B2B-integraties.",
+    "de": "Der Benutzer authentifiziert sich ausschließlich über OAuth2 Client Credentials. Nützlich für B2B-Integrationen."
+  },
+  "Queste credenziali si mostrano solo una volta. Salvale adesso.": {
+    "nl": "Deze inloggegevens worden slechts eenmaal getoond. Sla ze nu op.",
+    "de": "Diese Zugangsdaten werden nur einmal angezeigt. Speichern Sie sie jetzt."
+  },
+  "Utente creato correttamente.": {
+    "nl": "Gebruiker succesvol aangemaakt.",
+    "de": "Benutzer erfolgreich erstellt."
+  },
+  "Utente creato": {
+    "nl": "Gebruiker aangemaakt",
+    "de": "Benutzer erstellt"
+  },
+  "Utente aggiornato": {
+    "nl": "Gebruiker bijgewerkt",
+    "de": "Benutzer aktualisiert"
+  },
+  "Utente disattivato": {
+    "nl": "Gebruiker gedeactiveerd",
+    "de": "Benutzer deaktiviert"
+  },
+  "Stai per generare una nuova password per {name}. Quella attuale non funzionerà più.": {
+    "nl": "U staat op het punt een nieuw wachtwoord voor {name} te genereren. Het huidige wachtwoord werkt daarna niet meer.",
+    "de": "Sie sind dabei, ein neues Passwort für {name} zu erzeugen. Das aktuelle Passwort funktioniert danach nicht mehr."
+  },
+  "L'utente perderà l'accesso finché non riceverà la nuova password.": {
+    "nl": "De gebruiker verliest de toegang totdat hij het nieuwe wachtwoord ontvangt.",
+    "de": "Der Benutzer verliert den Zugang, bis er das neue Passwort erhält."
+  },
+  "Nuova password generata": {
+    "nl": "Nieuw wachtwoord gegenereerd",
+    "de": "Neues Passwort erzeugt"
+  },
+  "Disattivare l'utente?": {
+    "nl": "De gebruiker deactiveren?",
+    "de": "Den Benutzer deaktivieren?"
+  },
+  "L'utente {name} verrà disattivato. Non viene eliminato in modo permanente, puoi riattivarlo manualmente.": {
+    "nl": "Gebruiker {name} wordt gedeactiveerd. Hij wordt niet permanent verwijderd; u kunt hem handmatig heractiveren.",
+    "de": "Benutzer {name} wird deaktiviert. Er wird nicht dauerhaft gelöscht; Sie können ihn manuell wieder aktivieren."
+  },
+  "Disattiva": {
+    "nl": "Deactiveren",
+    "de": "Deaktivieren"
+  },
+  "Utente non trovato": {
+    "nl": "Gebruiker niet gevonden",
+    "de": "Benutzer nicht gefunden"
+  },
+  "Apri dettaglio": {
+    "nl": "Detail openen",
+    "de": "Detail öffnen"
+  },
+  "Informazioni utente": {
+    "nl": "Gebruikersinformatie",
+    "de": "Benutzerinformationen"
+  },
+  "Questo utente non ha client OAuth. Creane uno dalla sezione OAuth Clients per abilitare l'accesso API.": {
+    "nl": "Deze gebruiker heeft geen OAuth-client. Maak er een aan in de sectie OAuth Clients om API-toegang mogelijk te maken.",
+    "de": "Dieser Benutzer hat keinen OAuth-Client. Legen Sie einen im Bereich OAuth Clients an, um den API-Zugriff zu ermöglichen."
+  },
+  "Senza ruolo": {
+    "nl": "Zonder rol",
+    "de": "Ohne Rolle"
+  },
+  "{n} scopes extra": {
+    "nl": "{n} extra scopes",
+    "de": "{n} zusätzliche Scopes"
+  },
+  "ultimo uso": {
+    "nl": "laatst gebruikt",
+    "de": "zuletzt verwendet"
+  },
+  "Accesso legacy": {
+    "nl": "Legacy-toegang",
+    "de": "Legacy-Zugang"
+  },
+  "Accesso ERP": {
+    "nl": "ERP-toegang",
+    "de": "ERP-Zugang"
+  },
+  "#19 Operazioni": {
+    "nl": "#19 Handelingen",
+    "de": "#19 Vorgänge"
+  },
+  "#20 Finanze": {
+    "nl": "#20 Financiën",
+    "de": "#20 Finanzen"
+  },
+  "Solo API": {
+    "nl": "Alleen API",
+    "de": "Nur API"
+  },
+  "Assegnazione ruoli": {
+    "nl": "Roltoewijzing",
+    "de": "Rollenzuweisung"
+  },
+  "Override permessi": {
+    "nl": "Rechten overschrijven",
+    "de": "Berechtigungen überschreiben"
+  },
+  "Nessun override. I permessi derivano esclusivamente dai ruoli assegnati.": {
+    "nl": "Geen overschrijvingen. De rechten komen uitsluitend voort uit de toegewezen rollen.",
+    "de": "Keine Überschreibungen. Die Berechtigungen ergeben sich ausschließlich aus den zugewiesenen Rollen."
+  },
+  "Modulo": {
+    "nl": "Module",
+    "de": "Modul"
+  },
+  "Effetto": {
+    "nl": "Effect",
+    "de": "Wirkung"
+  },
+  "Concedi": {
+    "nl": "Toekennen",
+    "de": "Gewähren"
+  },
+  "Nega": {
+    "nl": "Weigeren",
+    "de": "Verweigern"
+  },
+  "Permessi effettivi": {
+    "nl": "Effectieve rechten",
+    "de": "Effektive Berechtigungen"
+  },
+  "Ruoli e permessi salvati": {
+    "nl": "Rollen en rechten opgeslagen",
+    "de": "Rollen und Berechtigungen gespeichert"
+  },
+  "Restrizioni per endpoint": {
+    "nl": "Beperkingen per endpoint",
+    "de": "Einschränkungen je Endpunkt"
+  },
+  "Senza righe, l'utente ha accesso normale in base ai flag Auth e ai ruoli. Una riga «deny» blocca quello specifico endpoint. Una riga «allow» attiva la modalità whitelist stretta: l'utente potrà accedere solo agli endpoint elencati con «allow», a prescindere dai flag Auth.": {
+    "nl": "Zonder regels heeft de gebruiker normale toegang op basis van de Auth-vlaggen en de rollen. Een «deny»-regel blokkeert dat specifieke endpoint. Een «allow»-regel activeert de strikte whitelist-modus: de gebruiker heeft dan uitsluitend toegang tot de met «allow» vermelde endpoints, ongeacht de Auth-vlaggen.",
+    "de": "Ohne Einträge hat der Benutzer normalen Zugriff gemäß den Auth-Flags und den Rollen. Ein «deny»-Eintrag sperrt genau diesen Endpunkt. Ein «allow»-Eintrag aktiviert den strikten Whitelist-Modus: Der Benutzer kann dann unabhängig von den Auth-Flags nur auf die mit «allow» aufgeführten Endpunkte zugreifen."
+  },
+  "Senza restrizioni": {
+    "nl": "Zonder beperkingen",
+    "de": "Ohne Einschränkungen"
+  },
+  "Whitelist stretta": {
+    "nl": "Strikte whitelist",
+    "de": "Strikte Whitelist"
+  },
+  "Nessuna restrizione per endpoint.": {
+    "nl": "Geen beperkingen per endpoint.",
+    "de": "Keine Einschränkungen je Endpunkt."
+  },
+  "es. api_invoices": {
+    "nl": "bijv. api_invoices",
+    "de": "z. B. api_invoices"
+  },
+  "Il nome dell'endpoint è obbligatorio": {
+    "nl": "De naam van het endpoint is verplicht",
+    "de": "Der Name des Endpunkts ist erforderlich"
+  },
+  "Permetti": {
+    "nl": "Toestaan",
+    "de": "Zulassen"
+  },
+  "Restrizione salvata": {
+    "nl": "Beperking opgeslagen",
+    "de": "Einschränkung gespeichert"
+  },
+  "Restrizione rimossa": {
+    "nl": "Beperking verwijderd",
+    "de": "Einschränkung entfernt"
+  },
+  "Modalità whitelist attiva ma nessun endpoint permesso. L'utente non potrebbe accedere a nessun endpoint.": {
+    "nl": "Whitelist-modus actief maar geen enkel endpoint toegestaan. De gebruiker zou geen enkel endpoint kunnen benaderen.",
+    "de": "Whitelist-Modus aktiv, aber kein Endpunkt zugelassen. Der Benutzer könnte auf keinen Endpunkt zugreifen."
+  },
+  "Rimuovi tutte": {
+    "nl": "Alles verwijderen",
+    "de": "Alle entfernen"
+  },
+  "Questo rimuoverà tutte le restrizioni per endpoint. L'utente tornerà ad avere accesso completo in base ai flag Auth e ruoli. Continuare?": {
+    "nl": "Hiermee worden alle beperkingen per endpoint verwijderd. De gebruiker krijgt weer volledige toegang op basis van de Auth-vlaggen en rollen. Doorgaan?",
+    "de": "Dadurch werden alle Einschränkungen je Endpunkt entfernt. Der Benutzer erhält wieder vollen Zugriff gemäß den Auth-Flags und Rollen. Fortfahren?"
+  },
+  "Restrizioni rimosse": {
+    "nl": "Beperkingen verwijderd",
+    "de": "Einschränkungen entfernt"
+  },
+  "Vedi storico": {
+    "nl": "Geschiedenis bekijken",
+    "de": "Verlauf ansehen"
+  },
+  "Salva capabilities": {
+    "nl": "Capabilities opslaan",
+    "de": "Capabilities speichern"
+  },
+  "Nessuna modifica pendente": {
+    "nl": "Geen openstaande wijzigingen",
+    "de": "Keine ausstehenden Änderungen"
+  },
+  "Capabilities aggiornate": {
+    "nl": "Capabilities bijgewerkt",
+    "de": "Capabilities aktualisiert"
+  },
+  "Impossibile salvare le capabilities": {
+    "nl": "Kan de capabilities niet opslaan",
+    "de": "Capabilities konnten nicht gespeichert werden"
+  },
+  "Permessi funzionali dell'utente. Ogni checkbox concede i permessi elencati nel tooltip.": {
+    "nl": "Functionele rechten van de gebruiker. Elk selectievakje kent de in de tooltip vermelde rechten toe.",
+    "de": "Funktionale Berechtigungen des Benutzers. Jedes Kontrollkästchen gewährt die im Tooltip aufgeführten Berechtigungen."
+  },
+  "Filtri di visibilità dati": {
+    "nl": "Filters voor gegevenszichtbaarheid",
+    "de": "Filter für die Datensichtbarkeit"
+  },
+  "Limitano quali dati può vedere l'utente (non cosa può fare).": {
+    "nl": "Bepalen welke gegevens de gebruiker kan zien (niet wat hij kan doen).",
+    "de": "Bestimmen, welche Daten der Benutzer sehen kann (nicht, was er tun darf)."
+  },
+  "Vedi dettagli del flag {flag}": {
+    "nl": "Details van vlag {flag} bekijken",
+    "de": "Details des Flags {flag} ansehen"
+  },
+  "Concede questi permessi:": {
+    "nl": "Kent deze rechten toe:",
+    "de": "Gewährt diese Berechtigungen:"
+  },
+  "Bypassa": {
+    "nl": "Omzeilt",
+    "de": "Umgeht"
+  },
+  "Bypassato da": {
+    "nl": "Omzeild door",
+    "de": "Umgangen von"
+  },
+  "neutralizzato": {
+    "nl": "geneutraliseerd",
+    "de": "neutralisiert"
+  },
+  "auth_18 (Billing Admin) già include lettura fatture. auth_20 è ridondante.": {
+    "nl": "auth_18 (Billing Admin) omvat al het lezen van facturen. auth_20 is overbodig.",
+    "de": "auth_18 (Billing Admin) umfasst bereits das Lesen von Rechnungen. auth_20 ist überflüssig."
+  },
+  "auth_18 (Billing Admin) bypassa i filtri attivi. L'utente vedrà TUTTI i dati del partner.": {
+    "nl": "auth_18 (Billing Admin) omzeilt de actieve filters. De gebruiker ziet ALLE gegevens van de partner.",
+    "de": "auth_18 (Billing Admin) umgeht die aktiven Filter. Der Benutzer sieht ALLE Daten des Partners."
+  },
+  "Modifiche non salvate": {
+    "nl": "Niet-opgeslagen wijzigingen",
+    "de": "Nicht gespeicherte Änderungen"
+  },
+  "Seleziona un utente o client": {
+    "nl": "Selecteer een gebruiker of client",
+    "de": "Wählen Sie einen Benutzer oder Client"
+  },
+  "Nessuno scope effettivo": {
+    "nl": "Geen effectieve scopes",
+    "de": "Keine effektiven Scopes"
+  },
+  "Scope": {
+    "nl": "Scope",
+    "de": "Scope"
+  },
+  "Apportati da flag": {
+    "nl": "Afkomstig van vlaggen",
+    "de": "Durch Flags eingebracht"
+  },
+  "{n} scope": {
+    "nl": "{n} scopes",
+    "de": "{n} Scopes"
+  },
+  "Accesso consentito": {
+    "nl": "Toegang toegestaan",
+    "de": "Zugriff gewährt"
+  },
+  "Accesso negato": {
+    "nl": "Toegang geweigerd",
+    "de": "Zugriff verweigert"
+  },
+  "Concedi ruolo": {
+    "nl": "Rol toekennen",
+    "de": "Rolle gewähren"
+  },
+  "Revoca ruolo": {
+    "nl": "Rol intrekken",
+    "de": "Rolle entziehen"
+  },
+  "Concedi ruolo a {n} utenti": {
+    "nl": "Rol toekennen aan {n} gebruikers",
+    "de": "Rolle {n} Benutzern gewähren"
+  },
+  "Revoca ruolo a {n} utenti": {
+    "nl": "Rol intrekken bij {n} gebruikers",
+    "de": "Rolle {n} Benutzern entziehen"
+  },
+  "Gli utenti selezionati riceveranno il ruolo indicato. Se già l'avevano, non cambia nulla.": {
+    "nl": "De geselecteerde gebruikers krijgen de aangegeven rol. Hadden zij die al, dan verandert er niets.",
+    "de": "Die ausgewählten Benutzer erhalten die angegebene Rolle. Hatten sie diese bereits, ändert sich nichts."
+  },
+  "Il ruolo indicato verrà rimosso dagli utenti selezionati. Manterranno gli altri ruoli che avevano.": {
+    "nl": "De aangegeven rol wordt bij de geselecteerde gebruikers verwijderd. Hun overige rollen blijven behouden.",
+    "de": "Die angegebene Rolle wird den ausgewählten Benutzern entzogen. Ihre übrigen Rollen bleiben erhalten."
+  },
+  "Revoca": {
+    "nl": "Intrekken",
+    "de": "Entziehen"
+  },
+  "{processed} utenti processati, {skipped} saltati": {
+    "nl": "{processed} gebruikers verwerkt, {skipped} overgeslagen",
+    "de": "{processed} Benutzer verarbeitet, {skipped} übersprungen"
+  },
+  "Ruolo concesso a {n} utenti": {
+    "nl": "Rol toegekend aan {n} gebruikers",
+    "de": "Rolle {n} Benutzern gewährt"
+  },
+  "Ruolo revocato a {n} utenti": {
+    "nl": "Rol ingetrokken bij {n} gebruikers",
+    "de": "Rolle {n} Benutzern entzogen"
+  },
+  "Non hai permessi per questa azione": {
+    "nl": "U heeft geen rechten voor deze actie",
+    "de": "Sie haben keine Berechtigung für diese Aktion"
+  },
+  "Errore del server. Riprova più tardi.": {
+    "nl": "Serverfout. Probeer het later opnieuw.",
+    "de": "Serverfehler. Bitte später erneut versuchen."
+  },
+  "Nessuno scaglione definito per {type}.": {
+    "nl": "Geen schijf gedefinieerd voor {type}.",
+    "de": "Keine Staffel für {type} definiert."
+  },
+  "ID Spedizione": {
+    "nl": "Zending-ID",
+    "de": "Sendungs-ID"
+  },
+  "ID Sped.": {
+    "nl": "Zend.-ID",
+    "de": "Send.-ID"
+  },
+  "V · valuta": {
+    "nl": "V · valuta",
+    "de": "V · Währung"
+  },
+  "Valuta (ISO)": {
+    "nl": "Valuta (ISO)",
+    "de": "Währung (ISO)"
+  },
+  "Legenda:": {
+    "nl": "Legenda:",
+    "de": "Legende:"
+  },
+  "Incasso": {
+    "nl": "Inning",
+    "de": "Inkasso"
+  },
+  "Valuta:": {
+    "nl": "Valuta:",
+    "de": "Währung:"
+  },
+  "Fase": {
+    "nl": "Fase",
+    "de": "Phase"
+  },
+  "Collo": {
+    "nl": "Collo",
+    "de": "Kollo"
+  },
+  "Partner": {
+    "nl": "Partner",
+    "de": "Partner"
+  }
+}

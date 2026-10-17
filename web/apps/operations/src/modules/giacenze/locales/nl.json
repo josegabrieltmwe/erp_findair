@@ -1,0 +1,98 @@
+{
+  "giacenze": {
+    "giacenze": {
+      "title": "Opslag",
+      "subtitle": "Inventaris van zendingen in opslag",
+      "new": "Nieuwe opslag",
+      "edit": "Opslag bewerken",
+      "shipment": "Zending",
+      "client": "Klant",
+      "tracking": "Tracking",
+      "searchText": "Zoeken (notities)",
+      "clientId": "Klant-ID",
+      "shipmentId": "Zending-ID",
+      "description": "Omschrijving",
+      "operation": "Handeling",
+      "note": "Notitie",
+      "dataOpen": "Opening",
+      "dataClose": "Afsluiting",
+      "days": "Opslagdagen",
+      "redeliveryCharge": "Kosten herafl.",
+      "chargeLockedHint": "Bedrag geblokkeerd: de zending is al nagefactureerd.",
+      "contactSupplier": "Contact leverancier",
+      "contactClient": "Contact klant",
+      "contactRecipient": "Contact geadresseerde",
+      "clientReply": "Antwoord klant",
+      "status": "Status",
+      "openOnly": "Alleen open",
+      "fromDate": "Opening vanaf",
+      "toDate": "Opening tot",
+      "filters": "Filters",
+      "applyFilters": "Toepassen",
+      "clearFilters": "Wissen",
+      "closeHold": "Opslag sluiten",
+      "autoClose": "Automatisch sluiten van verlopen items",
+      "autoCloseDays": "Max. dagen",
+      "autoCloseHint": "Sluit alle opslagposten die langer open staan dan het opgegeven aantal dagen.",
+      "operations": {
+        "A": "Open",
+        "C": "Gesloten",
+        "N": "Genoteerd",
+        "R": "Heraflevering",
+        "E": "Afgehandeld"
+      },
+      "aging": {
+        "title": "Ouderdom",
+        "total": "Totaal open",
+        "avgDays": "Gemiddelde dagen",
+        "maxDays": "Max. dagen",
+        "band": "Klasse"
+      },
+      "messages": {
+        "created": "Opslag aangemaakt",
+        "updated": "Opslag bijgewerkt",
+        "deleted": "Opslag verwijderd",
+        "closed": "Opslag gesloten",
+        "autoClosed": "{count} opslag gesloten | {count} opslagposten gesloten",
+        "deleteConfirm": "Deze opslag verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+        "closeConfirm": "Deze opslag sluiten?",
+        "notFound": "Opslag #{id} niet gevonden"
+      },
+      "validation": {
+        "shipmentRequired": "Het zending-ID is verplicht",
+        "operationRequired": "De handeling is verplicht"
+      },
+      "filterClick": {
+        "byShipment": "Filteren op deze zending",
+        "byOperation": "Filteren op deze handeling"
+      },
+      "addr": {
+        "title": "Afleveradressen",
+        "delivery": "Huidige aflevering",
+        "deliveryOriginal": "Oorspronkelijke aflevering",
+        "readonly": "Alleen lezen",
+        "none": "Geen adres",
+        "loading": "Laden…",
+        "editDelivery": "Aflevering bewerken"
+      },
+      "msg": {
+        "title": "Berichten",
+        "toClient": "Aan de klant",
+        "toSupplier": "Aan de koerier",
+        "send": "Versturen",
+        "recipient": "Geadresseerde",
+        "recipientRequired": "Geadresseerde verplicht",
+        "extraText": "Aanvullende tekst",
+        "noMessages": "Geen berichten",
+        "date": "Datum",
+        "type": "Type",
+        "status": "Uitkomst",
+        "client": "Klant",
+        "supplier": "Koerier"
+      },
+      "replied": "Heeft geantwoord",
+      "awaitingReply": "In afwachting",
+      "copyPrice": "Inkoopprijs kopiëren"
+    }
+  }
+}

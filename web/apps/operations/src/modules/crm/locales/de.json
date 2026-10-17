@@ -1,0 +1,123 @@
+{
+  "crm": {
+    "stato": {
+      "all": "Alle",
+      "A": "Offen",
+      "C": "Geschlossen",
+      "L": "Lange Wartezeit"
+    },
+    "list": {
+      "title": "CRM-Vorgänge",
+      "oggetto": "Betreff",
+      "cliente": "Kunde",
+      "stato": "Status",
+      "data_open": "Eröffnung",
+      "data_next": "Nächstes Datum",
+      "descriz": "Beschreibung",
+      "contatto": "Kontakt",
+      "tipo": "Typ",
+      "data_open_da": "Offen ab",
+      "data_open_al": "Offen bis",
+      "search": "Betreff suchen",
+      "delete_confirm": "Vorgang #{id} löschen?"
+    },
+    "shortcut": {
+      "open": "Offene Vorgänge",
+      "todo": "Offene To-do-Vorgänge",
+      "alert": "Neue Vorgänge (240 Std.)"
+    },
+    "detail": {
+      "title": "Vorgang",
+      "header": "Vorgangsdaten",
+      "open_shipment": "Sendung öffnen",
+      "sec_client": "Kunde und Kontakt",
+      "sec_classify": "Klassifizierung",
+      "sec_followup": "Follow-up",
+      "sec_notes": "Notizen",
+      "id_spedizione_readonly": "Von der Sendung übernommen (schreibgeschützt)"
+    },
+    "lookup": {
+      "type_to_search": "Zum Suchen tippen…",
+      "no_contacts": "Keine Kontakte"
+    },
+    "field": {
+      "cliente": "Kunde",
+      "contatto": "Kontakt",
+      "oggetto": "Betreff",
+      "id_spedizione": "Sendungsnr.",
+      "tipo": "Typ",
+      "nome": "Name",
+      "email": "E-Mail",
+      "tel": "Telefon",
+      "rif_cliente": "Kundenref.",
+      "data_next": "Nächstes Follow-up",
+      "descriz": "Beschreibung",
+      "note_interne": "Interne Notizen"
+    },
+    "eventi": {
+      "title": "Ereignisse / Fortschritt",
+      "stato": "Status",
+      "descriz": "Beschreibung des Fortschritts",
+      "add": "Hinzufügen",
+      "empty": "Keine Ereignisse",
+      "data": "Datum und Uhrzeit",
+      "view": "Details anzeigen",
+      "detail_title": "Details zum Fortschritt #{id}"
+    },
+    "messaggi": {
+      "title": "Gesendete Nachrichten",
+      "dest": "Empfänger",
+      "file": "Anl.",
+      "way": "Über",
+      "data": "Datum",
+      "esito": "Ergebnis",
+      "empty": "Keine Nachrichten gesendet"
+    },
+    "context": {
+      "shipment_title": "CRM · Sendung #{id}",
+      "cargo_title": "CRM · Luftfracht #{id}",
+      "unavailable_shipment": "CRM ist für diese Sendung nicht verfügbar",
+      "unavailable_cargo": "CRM ist für diese Luftfrachtsendung nicht verfügbar",
+      "case_fallback": "Vorgang #{id}",
+      "case_selector": "CRM-Vorgang",
+      "open_full": "Vollständigen Vorgang öffnen",
+      "case_option": "{subject} · {status} · #{id}",
+      "created": "Vorgang erstellt",
+      "existing_opened": "Bestehender Vorgang geöffnet",
+      "create_error": "Vorgang konnte nicht erstellt werden",
+      "created_partial": "Vorgang erstellt. Ein Teil der Aktivitäten konnte nicht geladen werden.",
+      "created_open_error": "Der Vorgang wurde erstellt, konnte aber nicht geöffnet werden. Sie können es im Bereich erneut versuchen.",
+      "existing_partial": "Der bestehende Vorgang ist geöffnet. Ein Teil der Aktivitäten konnte nicht geladen werden.",
+      "existing_open_error": "Der Vorgang besteht bereits, konnte aber nicht geöffnet werden. Sie können es im Bereich erneut versuchen.",
+      "partial_error": "Die verfügbaren Daten werden angezeigt, der Vorgang konnte jedoch nicht aktualisiert werden.",
+      "load_error_title": "Vorgang konnte nicht geladen werden",
+      "load_error_body": "Die Daten für Vorgang #{id} konnten nicht abgerufen werden. Die Sendung bleibt geöffnet und Sie können es erneut versuchen.",
+      "empty_title": "Kein Vorgang zum Anzeigen",
+      "empty_body": "Wählen Sie einen CRM-Vorgang aus oder schließen Sie diesen Bereich, um fortzufahren.",
+      "events_error": "Die Ereignisse konnten nicht geladen werden. Der übrige Vorgang bleibt verfügbar.",
+      "messages_error": "Die Nachrichten konnten nicht geladen werden. Der übrige Vorgang bleibt verfügbar."
+    },
+    "indicator": {
+      "open_cases": "Offene Vorgänge",
+      "overdue_followups": "Überfällige Wiedervorlagen"
+    },
+    "send": {
+      "button": "Nachricht senden",
+      "title": "Nachricht an den Kunden senden",
+      "metodo": "Kanal",
+      "dest": "Empfänger",
+      "dest_hint": "Wenn leer, wird die E-Mail-Adresse des Vorgangs verwendet",
+      "subject": "Betreff",
+      "subject_hint": "Wenn leer, wird der Wert aus der Vorlage übernommen",
+      "text": "Freitext",
+      "use_base": "Basisvorlage verwenden",
+      "result": "Nachricht erfasst (Ergebnis: {esito})",
+      "error": "Nachricht konnte nicht gesendet werden",
+      "files": "Anhänge",
+      "files_hint": "Bis zu {max} Dateien",
+      "use_base_hint": "Bettet Ihren Text in die Kundenvorlage ein",
+      "files_cta": "Dateien hierher ziehen oder klicken",
+      "files_full": "Maximal {max} Dateien erreicht"
+    }
+  }
+}

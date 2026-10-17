@@ -1,0 +1,287 @@
+{
+    "home": {
+        "home": {
+            "topbar": {
+                "title": "TMWE — Home",
+                "subtitle": "Cargo, express courier and daily operations"
+            },
+            "cta": {
+                "new_cargo": "New cargo",
+                "new_cargo_sub": "Create air shipment",
+                "new_shipment": "New shipment",
+                "new_shipment_sub": "Create courier shipment"
+            },
+            "menu": {
+                "group_import": "Import",
+                "group_tools": "Tools",
+                "import_list": "Import list",
+                "import_list_sub": "Bulk shipment import",
+                "import_list_v2": "Import list v2",
+                "import_list_v2_sub": "Bulk import (v2)",
+                "price_lists": "Sales price lists",
+                "price_lists_sub": "Client (partner) prices",
+                "send_message": "Send message",
+                "send_message_sub": "Message to TMWE / clients",
+                "api_portal": "API portal",
+                "api_portal_sub": "OAuth clients for B2B partners",
+                "invoicing": "Invoicing",
+                "invoicing_sub": "Issue and manage invoices",
+                "clients": "Clients",
+                "clients_sub": "Manage anagrafiche and users"
+            },
+            "recent": {
+                "cargo_title": "Latest cargo",
+                "cargo_empty": "No recent cargo",
+                "shipment_title": "Latest express shipments",
+                "shipment_empty": "No recent shipments"
+            },
+            "alerts": {
+                "qtko": "{count} cargo quotes rejected.",
+                "qtko_cta": "Open cargo list",
+                "nofly": "{count} cargo with AWB but no flight date.",
+                "nofly_cta": "View cargo",
+                "preseint": "{count} internal pickups to handle.",
+                "preseint_cta": "Open shipments"
+            },
+            "progress": {
+                "loading": "Loading data… ({received}/{expected})"
+            },
+            "actions": {
+                "refresh": "Refresh",
+                "more": "More actions",
+                "open": "Open"
+            }
+        },
+        "kpi": {
+            "tile": {
+                "preseint": {
+                    "label": "Pickups to handle",
+                    "desc": "To assign to carrier"
+                },
+                "presefornN": {
+                    "label": "To organise",
+                    "desc": "Supplier pickups status N"
+                },
+                "presefornF": {
+                    "label": "With issues",
+                    "desc": "Supplier pickups status F"
+                },
+                "presefornW": {
+                    "label": "Awaiting confirmation",
+                    "desc": "Pickups status W"
+                },
+                "presefornS": {
+                    "label": "AWB to send",
+                    "desc": "AWB ready, sender to notify"
+                },
+                "badaddr": {
+                    "label": "Wrong address"
+                },
+                "dactrnote": {
+                    "label": "Unchecked with notes"
+                },
+                "dacontr": {
+                    "label": "To check"
+                },
+                "contrnopart": {
+                    "label": "Checked, not departed"
+                },
+                "spedoggi": {
+                    "label": "Today's shipments"
+                },
+                "offert": {
+                    "label": "Offers"
+                },
+                "deipartn": {
+                    "label": "Partner, not departed"
+                },
+                "presefornQ": {
+                    "label": "Without tracking",
+                    "desc": "Departed but status 1/16"
+                },
+                "presefornX": {
+                    "label": "Pickup problems",
+                    "desc": "Tracking status 26"
+                },
+                "indelay": {
+                    "label": "Delayed",
+                    "desc": "Past the expected date"
+                },
+                "intransit": {
+                    "label": "In transit"
+                },
+                "deipartn2": {
+                    "label": "Partner in transit"
+                },
+                "intransit2": {
+                    "label": "Priority services in transit"
+                },
+                "nogiacprobl": {
+                    "label": "Tracking issues without storage"
+                },
+                "codcliprnt": {
+                    "label": "Non-own client codes, not departed"
+                },
+                "codcliprnt2": {
+                    "label": "Non-own client codes, in transit"
+                },
+                "toqt": {
+                    "label": "To quote"
+                },
+                "inqt": {
+                    "label": "Quoting"
+                },
+                "clwt": {
+                    "label": "Awaiting client"
+                },
+                "toorg": {
+                    "label": "Accepted, to organise"
+                },
+                "qtko": {
+                    "label": "Rejected"
+                },
+                "nofly": {
+                    "label": "Ready, not in flight"
+                },
+                "vgvol": {
+                    "label": "In flight"
+                },
+                "vgloc": {
+                    "label": "Local pickup en route"
+                },
+                "vgrem": {
+                    "label": "Local delivery en route"
+                }
+            },
+            "group": {
+                "morning_priorities": "Morning priorities",
+                "ricezione_controllo": "Reception and checks",
+                "pickup": "Pickups",
+                "pronte_partenze": "Ready and departures",
+                "partner": "Partners",
+                "prese": "Pickups",
+                "quality": "Quality",
+                "workflow": "Workflow",
+                "tracking": "Tracking",
+                "in_transit": "In transit",
+                "quoting": "Quoting",
+                "in_viaggio": "En route"
+            },
+            "section": {
+                "morning": {
+                    "title": "Morning priorities",
+                    "list": "Open morning priorities",
+                    "flow": "check → fix → unblock → ship"
+                },
+                "operations_in": {
+                    "title": "Operations IN",
+                    "list": "Open inbound operations",
+                    "flow": "receiving → checks → pickup → ready to ship"
+                },
+                "operations_out": {
+                    "title": "Operations OUT",
+                    "list": "Open outbound operations",
+                    "flow": "departure → tracking → transit → delivery"
+                },
+                "assistance": {
+                    "title": "Assistance",
+                    "list": "Open assistance",
+                    "flow": "cases → storage → communications"
+                },
+                "administration": {
+                    "title": "Administration",
+                    "list": "Open administration",
+                    "flow": "invoice → collect → chase → block"
+                },
+                "warehouse": {
+                    "title": "Warehouse",
+                    "list": "Open warehouse",
+                    "flow": "weighing → manifest → close-out"
+                },
+                "commercial": {
+                    "title": "Commercial",
+                    "list": "Open commercial",
+                    "flow": "lead → offers → clients"
+                },
+                "courier_in": {
+                    "title": "Express shipments — inbound operations",
+                    "list": "Open shipments list"
+                },
+                "courier_out": {
+                    "title": "Express shipments — in transit",
+                    "list": "Open in-transit list"
+                },
+                "cargo": {
+                    "title": "Cargo — quoting + en route",
+                    "list": "Open cargo list"
+                }
+            }
+        },
+        "section_meta": {
+            "groups": "{n} category | {n} categories",
+            "tiles": "{n} indicator | {n} indicators"
+        },
+        "cockpit": {
+            "pending_section": "Indicators are being prepared; unavailable values are not displayed as zero.",
+            "morning": "Morning priorities",
+            "all_groups": "All",
+            "urgent": "Urgent",
+            "road": "Route check",
+            "delayed": "Delayed",
+            "to_check": "To check"
+        },
+        "recent": {
+            "see_all": "See all"
+        },
+        "landing": {
+            "title": "What do you need to do?",
+            "subtitle": "Quick access to your daily work",
+            "activities_button": "Today's activities",
+            "activities_hint": "Pending items, delays and tasks. Calculated when opened.",
+            "activities_title": "Today's activities",
+            "back": "Back to home",
+            "refresh": "Refresh",
+            "new_actions": "Create",
+            "updated_at": "Updated at {time}"
+        }
+    },
+    "kpi": {
+        "section": {
+            "morning": {
+                "title": "Morning priorities",
+                "list": "Open morning priorities",
+                "flow": "check → fix → unblock → ship"
+            },
+            "operations_in": {
+                "title": "Operations IN",
+                "list": "Open inbound operations",
+                "flow": "receiving → checks → pickup → ready to ship"
+            },
+            "operations_out": {
+                "title": "Operations OUT",
+                "list": "Open outbound operations",
+                "flow": "departure → tracking → transit → delivery"
+            },
+            "assistance": {
+                "title": "Assistance",
+                "list": "Open assistance",
+                "flow": "cases → storage → communications"
+            },
+            "administration": {
+                "title": "Administration",
+                "list": "Open administration",
+                "flow": "invoice → collect → chase → block"
+            },
+            "warehouse": {
+                "title": "Warehouse",
+                "list": "Open warehouse",
+                "flow": "weighing → manifest → close-out"
+            },
+            "commercial": {
+                "title": "Commercial",
+                "list": "Open commercial",
+                "flow": "lead → offers → clients"
+            }
+        }
+    }
+}

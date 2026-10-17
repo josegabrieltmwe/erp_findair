@@ -1,0 +1,54 @@
+{
+  "proforma": {
+    "proforma": {
+      "title": "Fatture proforma",
+      "new": "Nuova proforma",
+      "edit": "Modifica proforma",
+      "shipment": "Spedizione",
+      "shipmentId": "ID spedizione",
+      "origin": "Paese di origine",
+      "reason": "Motivo",
+      "currency": "Valuta",
+      "date": "Data",
+      "ref": "Rif. cliente",
+      "awb": "AWB",
+      "fromDate": "Data da",
+      "toDate": "Data a",
+      "applyFilters": "Applica",
+      "clearFilters": "Pulisci",
+      "items": "Righe",
+      "itemsCount": "{count} riga | {count} righe",
+      "duplicate": "Duplica",
+      "duplicateTitle": "Duplica proforma",
+      "duplicateTarget": "ID spedizione destinazione",
+      "duplicateHint": "Copia la testata e tutte le righe in un'altra spedizione.",
+      "item": {
+        "description": "Descrizione",
+        "customsCode": "Voce doganale",
+        "qty": "Qtà",
+        "qtyUnit": "Unità",
+        "netWeight": "Peso netto",
+        "grossWeight": "Peso lordo",
+        "weightUnit": "Unità peso",
+        "value": "Valore",
+        "addLine": "Aggiungi riga"
+      },
+      "messages": {
+        "created": "Proforma creata",
+        "updated": "Proforma aggiornata",
+        "deleted": "Proforma eliminata",
+        "duplicated": "Proforma duplicata",
+        "deleteConfirm": "Eliminare questa proforma e tutte le sue righe? Operazione non reversibile."
+      },
+      "validation": {
+        "shipmentRequired": "L'ID spedizione è obbligatorio",
+        "targetRequired": "L'ID spedizione destinazione è obbligatorio",
+        "noLines": "Aggiungi almeno una riga"
+      },
+      "filterClick": {
+        "byShipment": "Filtra per questa spedizione",
+        "byOrigin": "Filtra per questo paese di origine"
+      }
+    }
+  }
+}

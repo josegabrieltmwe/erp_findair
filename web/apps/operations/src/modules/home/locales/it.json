@@ -1,0 +1,287 @@
+{
+    "home": {
+        "home": {
+            "topbar": {
+                "title": "TMWE — Home",
+                "subtitle": "Cargo, courier express e operazioni quotidiane"
+            },
+            "cta": {
+                "new_cargo": "Nuovo cargo",
+                "new_cargo_sub": "Crea spedizione aerea",
+                "new_shipment": "Nuova spedizione",
+                "new_shipment_sub": "Crea spedizione corriere"
+            },
+            "menu": {
+                "group_import": "Import",
+                "group_tools": "Strumenti",
+                "import_list": "Importa lista",
+                "import_list_sub": "Importazione massiva spedizioni",
+                "import_list_v2": "Importa lista v2",
+                "import_list_v2_sub": "Importazione massiva (v2)",
+                "price_lists": "Listini di vendita",
+                "price_lists_sub": "Prezzi cliente (partner)",
+                "send_message": "Invia messaggio",
+                "send_message_sub": "Comunicazione a TMWE / clienti",
+                "api_portal": "API portal",
+                "api_portal_sub": "OAuth clients per partner B2B",
+                "invoicing": "Fatturazione",
+                "invoicing_sub": "Emetti e gestisci fatture",
+                "clients": "Clienti",
+                "clients_sub": "Gestire anagrafiche e utenti"
+            },
+            "recent": {
+                "cargo_title": "Ultimi cargo",
+                "cargo_empty": "Nessun cargo recente",
+                "shipment_title": "Ultime spedizioni express",
+                "shipment_empty": "Nessuna spedizione recente"
+            },
+            "alerts": {
+                "qtko": "{count} preventivi cargo rifiutati.",
+                "qtko_cta": "Apri cargo list",
+                "nofly": "{count} cargo con AWB ma senza data di volo.",
+                "nofly_cta": "Vedi cargo",
+                "preseint": "{count} prese interne da gestire.",
+                "preseint_cta": "Apri spedizioni"
+            },
+            "progress": {
+                "loading": "Caricamento dati in corso… ({received}/{expected})"
+            },
+            "actions": {
+                "refresh": "Aggiorna",
+                "more": "Altre azioni",
+                "open": "Apri"
+            }
+        },
+        "kpi": {
+            "tile": {
+                "preseint": {
+                    "label": "Prese da gestire",
+                    "desc": "Da assegnare al corriere"
+                },
+                "presefornN": {
+                    "label": "Da organizzare",
+                    "desc": "Prese fornitore stato N"
+                },
+                "presefornF": {
+                    "label": "Con problemi",
+                    "desc": "Prese fornitore stato F"
+                },
+                "presefornW": {
+                    "label": "In attesa conferma",
+                    "desc": "Prese pick-up stato W"
+                },
+                "presefornS": {
+                    "label": "AWB da inviare",
+                    "desc": "AWB pronto, mittente da informare"
+                },
+                "badaddr": {
+                    "label": "Indirizzo errato"
+                },
+                "dactrnote": {
+                    "label": "Non controllate con note"
+                },
+                "dacontr": {
+                    "label": "Da controllare"
+                },
+                "contrnopart": {
+                    "label": "Controllate, non partite"
+                },
+                "spedoggi": {
+                    "label": "Spedizioni di oggi"
+                },
+                "offert": {
+                    "label": "Offerte"
+                },
+                "deipartn": {
+                    "label": "Partner, non partite"
+                },
+                "presefornQ": {
+                    "label": "Senza tracking",
+                    "desc": "Partite ma stato 1/16"
+                },
+                "presefornX": {
+                    "label": "Problemi di ritiro",
+                    "desc": "Stato tracking 26"
+                },
+                "indelay": {
+                    "label": "In ritardo",
+                    "desc": "Oltre la data prevista"
+                },
+                "intransit": {
+                    "label": "In transit"
+                },
+                "deipartn2": {
+                    "label": "Partner in transit"
+                },
+                "intransit2": {
+                    "label": "Servizi prioritari in transit"
+                },
+                "nogiacprobl": {
+                    "label": "Tracking problemi senza giacenza"
+                },
+                "codcliprnt": {
+                    "label": "Cod cliente non nostri, non partite"
+                },
+                "codcliprnt2": {
+                    "label": "Cod cliente non nostri, in transit"
+                },
+                "toqt": {
+                    "label": "Da quotare"
+                },
+                "inqt": {
+                    "label": "In quotazione"
+                },
+                "clwt": {
+                    "label": "Attesa cliente"
+                },
+                "toorg": {
+                    "label": "Accettate, da organizzare"
+                },
+                "qtko": {
+                    "label": "Rifiutate"
+                },
+                "nofly": {
+                    "label": "Pronte, non in volo"
+                },
+                "vgvol": {
+                    "label": "In volo"
+                },
+                "vgloc": {
+                    "label": "Presa locale in viaggio"
+                },
+                "vgrem": {
+                    "label": "Consegna locale in viaggio"
+                }
+            },
+            "group": {
+                "morning_priorities": "Priorità del mattino",
+                "ricezione_controllo": "Ricezione e controllo",
+                "pickup": "Pickup",
+                "pronte_partenze": "Pronte e partenze",
+                "partner": "Partner",
+                "prese": "Prese",
+                "quality": "Quality",
+                "workflow": "Workflow",
+                "tracking": "Tracking",
+                "in_transit": "In transit",
+                "quoting": "Quoting",
+                "in_viaggio": "In viaggio"
+            },
+            "section": {
+                "morning": {
+                    "title": "Priorità del mattino",
+                    "list": "Apri priorità del mattino",
+                    "flow": "controllare → correggere → sbloccare → partire"
+                },
+                "operations_in": {
+                    "title": "Operativo IN",
+                    "list": "Apri operazioni in entrata",
+                    "flow": "ricezione → controllo → presa → pronta a partire"
+                },
+                "operations_out": {
+                    "title": "Operativo OUT",
+                    "list": "Apri operazioni in uscita",
+                    "flow": "partenza → tracking → transito → consegna"
+                },
+                "assistance": {
+                    "title": "Assistenza",
+                    "list": "Apri assistenza",
+                    "flow": "pratiche → giacenze → comunicazioni"
+                },
+                "administration": {
+                    "title": "Amministrazione",
+                    "list": "Apri amministrazione",
+                    "flow": "fatturare → incassare → sollecitare → bloccare"
+                },
+                "warehouse": {
+                    "title": "Magazzino",
+                    "list": "Apri magazzino",
+                    "flow": "pesata → manifest → chiusura"
+                },
+                "commercial": {
+                    "title": "Commerciale",
+                    "list": "Apri commerciale",
+                    "flow": "lead → offerte → clienti"
+                },
+                "courier_in": {
+                    "title": "Spedizioni express — operazioni in entrata",
+                    "list": "Apri lista spedizioni"
+                },
+                "courier_out": {
+                    "title": "Spedizioni express — in transito",
+                    "list": "Apri lista in transito"
+                },
+                "cargo": {
+                    "title": "Cargo — quoting + in viaggio",
+                    "list": "Apri lista cargo"
+                }
+            }
+        },
+        "section_meta": {
+            "groups": "{n} categoria | {n} categorie",
+            "tiles": "{n} indicatore | {n} indicatori"
+        },
+        "cockpit": {
+            "pending_section": "Indicatori in preparazione: i valori non disponibili non vengono mostrati come zero.",
+            "morning": "Il mattino",
+            "all_groups": "Tutte",
+            "urgent": "Urgenti",
+            "road": "Controllo strada",
+            "delayed": "In ritardo",
+            "to_check": "Da controllare"
+        },
+        "recent": {
+            "see_all": "Vedi tutti"
+        },
+        "landing": {
+            "title": "Cosa devi fare?",
+            "subtitle": "Accessi rapidi al tuo lavoro quotidiano",
+            "activities_button": "Attività del giorno",
+            "activities_hint": "Pendenze, ritardi e attività. Calcolati all'apertura.",
+            "activities_title": "Attività del giorno",
+            "back": "Torna alla home",
+            "refresh": "Aggiorna",
+            "new_actions": "Crea",
+            "updated_at": "Aggiornato alle {time}"
+        }
+    },
+    "kpi": {
+        "section": {
+            "morning": {
+                "title": "Priorità del mattino",
+                "list": "Apri priorità del mattino",
+                "flow": "controllare → correggere → sbloccare → partire"
+            },
+            "operations_in": {
+                "title": "Operativo IN",
+                "list": "Apri operazioni in entrata",
+                "flow": "ricezione → controllo → presa → pronta a partire"
+            },
+            "operations_out": {
+                "title": "Operativo OUT",
+                "list": "Apri operazioni in uscita",
+                "flow": "partenza → tracking → transito → consegna"
+            },
+            "assistance": {
+                "title": "Assistenza",
+                "list": "Apri assistenza",
+                "flow": "pratiche → giacenze → comunicazioni"
+            },
+            "administration": {
+                "title": "Amministrazione",
+                "list": "Apri amministrazione",
+                "flow": "fatturare → incassare → sollecitare → bloccare"
+            },
+            "warehouse": {
+                "title": "Magazzino",
+                "list": "Apri magazzino",
+                "flow": "pesata → manifest → chiusura"
+            },
+            "commercial": {
+                "title": "Commerciale",
+                "list": "Apri commerciale",
+                "flow": "lead → offerte → clienti"
+            }
+        }
+    }
+}

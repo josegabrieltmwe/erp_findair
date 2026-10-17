@@ -1,0 +1,19 @@
+// Vuetify SASS variable overrides go here.
+// Keep minimal — most theming lives in plugins/vuetify.ts.
+//
+// IMPORTANT: $body-font-family must be a SASS list (comma-separated, no
+// outer quotes), NOT a single quoted string. If wrapped in quotes the
+// whole thing is emitted as one quoted CSS font-family ("-apple-system,
+// BlinkMacSystemFont, ..."), which the browser treats as a single font
+// name that does not exist — and silently falls back to Times/serif.
+@use 'vuetify/settings' with (
+  $body-font-family: (
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif,
+  )
+);

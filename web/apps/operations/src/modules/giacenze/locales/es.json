@@ -1,0 +1,98 @@
+{
+  "giacenze": {
+    "giacenze": {
+      "title": "Retenciones (Giacenze)",
+      "subtitle": "Inventario de envíos retenidos",
+      "new": "Nueva retención",
+      "edit": "Editar retención",
+      "shipment": "Envío",
+      "client": "Cliente",
+      "tracking": "Tracking",
+      "searchText": "Buscar (notas/descripcion)",
+      "clientId": "ID cliente",
+      "shipmentId": "ID de envío",
+      "description": "Descripción",
+      "operation": "Operación",
+      "note": "Nota",
+      "dataOpen": "Apertura",
+      "dataClose": "Cierre",
+      "days": "Días retenido",
+      "redeliveryCharge": "Cargo por reentrega",
+      "chargeLockedHint": "Importe bloqueado: la expedicion ya fue post-facturada.",
+      "contactSupplier": "Contacto proveedor",
+      "contactClient": "Contacto cliente",
+      "contactRecipient": "Contacto destinatario",
+      "clientReply": "Respuesta cliente",
+      "status": "Estado",
+      "openOnly": "Solo abiertas",
+      "fromDate": "Apertura desde",
+      "toDate": "Apertura hasta",
+      "filters": "Filtros",
+      "applyFilters": "Aplicar",
+      "clearFilters": "Limpiar",
+      "closeHold": "Cerrar retención",
+      "autoClose": "Cierre automático vencidas",
+      "autoCloseDays": "Días máx.",
+      "autoCloseHint": "Cierra todas las retenciones abiertas por más del número de días indicado.",
+      "operations": {
+        "A": "Abierta",
+        "C": "Cerrada",
+        "N": "Anotada",
+        "R": "Reentrega",
+        "E": "Liquidada"
+      },
+      "aging": {
+        "title": "Antigüedad",
+        "total": "Total abiertas",
+        "avgDays": "Días prom.",
+        "maxDays": "Días máx.",
+        "band": "Banda"
+      },
+      "messages": {
+        "created": "Retención creada",
+        "updated": "Retención actualizada",
+        "deleted": "Retención eliminada",
+        "closed": "Retención cerrada",
+        "autoClosed": "{count} retención cerrada | {count} retenciones cerradas",
+        "deleteConfirm": "¿Eliminar esta retención? No se puede deshacer.",
+        "closeConfirm": "¿Cerrar esta retención?",
+        "notFound": "No se encontró la retención #{id}"
+      },
+      "validation": {
+        "shipmentRequired": "El ID de envío es obligatorio",
+        "operationRequired": "La operación es obligatoria"
+      },
+      "filterClick": {
+        "byShipment": "Filtrar por esta expedición",
+        "byOperation": "Filtrar por esta operación"
+      },
+      "addr": {
+        "title": "Direcciones de entrega",
+        "delivery": "Entrega actual",
+        "deliveryOriginal": "Entrega original",
+        "readonly": "Solo lectura",
+        "none": "Sin direccion",
+        "loading": "Cargando…",
+        "editDelivery": "Editar entrega"
+      },
+      "msg": {
+        "title": "Mensajes",
+        "toClient": "Al cliente",
+        "toSupplier": "Al transportista",
+        "send": "Enviar",
+        "recipient": "Destinatario",
+        "recipientRequired": "Destinatario obligatorio",
+        "extraText": "Texto adicional",
+        "noMessages": "Sin mensajes",
+        "date": "Fecha",
+        "type": "Tipo",
+        "status": "Resultado",
+        "client": "Cliente",
+        "supplier": "Transportista"
+      },
+      "replied": "Respondio",
+      "awaitingReply": "En espera",
+      "copyPrice": "Copiar precio de carga"
+    }
+  }
+}

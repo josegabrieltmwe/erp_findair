@@ -1,0 +1,231 @@
+// Design tokens for admin_config V2.
+// Use these instead of hardcoded values in styles. Everything is a CSS var
+// so the dark theme can override only what changes.
+
+:root {
+  // ───────────────────────────────────────────────────────────────────
+  // Typography — system stack, fixed scale
+  // ───────────────────────────────────────────────────────────────────
+  --cm-font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  --cm-font-family-mono:
+    'JetBrains Mono',
+    'SF Mono',
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+
+  --cm-fs-xs: 11px;
+  --cm-fs-sm: 12px;
+  --cm-fs-base: 13px;
+  --cm-fs-md: 14px;
+  --cm-fs-lg: 16px;
+  --cm-fs-xl: 18px;
+  --cm-fs-2xl: 22px;
+  --cm-fs-3xl: 28px;
+
+  --cm-lh-tight: 1.2;
+  --cm-lh-base: 1.45;
+  --cm-lh-loose: 1.65;
+
+  --cm-fw-regular: 400;
+  --cm-fw-medium: 500;
+  --cm-fw-semibold: 600;
+
+  // ───────────────────────────────────────────────────────────────────
+  // Spacing scale
+  // ───────────────────────────────────────────────────────────────────
+  --cm-space-xs: 4px;
+  --cm-space-sm: 8px;
+  --cm-space-md: 12px;
+  --cm-space-lg: 16px;
+  --cm-space-xl: 24px;
+  --cm-space-2xl: 32px;
+  --cm-space-3xl: 48px;
+
+  // ───────────────────────────────────────────────────────────────────
+  // Borders & radii
+  // ───────────────────────────────────────────────────────────────────
+  --cm-border-color: #e2e4e8;
+  --cm-border-color-light: #ebedf0;
+  --cm-border-color-strong: #c8cbd1;
+  --cm-radius-sm: 4px;
+  --cm-radius-md: 6px;
+  --cm-radius-lg: 8px;
+  --cm-radius-pill: 999px;
+
+  --cm-shadow-sm: 0 1px 2px rgba(15, 18, 22, 0.04);
+  --cm-shadow-md: 0 2px 6px rgba(15, 18, 22, 0.06);
+  --cm-shadow-lg: 0 4px 12px rgba(15, 18, 22, 0.08);
+
+  // ───────────────────────────────────────────────────────────────────
+  // Text emphasis
+  // ───────────────────────────────────────────────────────────────────
+  --cm-text-primary: #1a1d23;
+  --cm-text-secondary: #4a4f57;
+  --cm-text-muted: #6c727b;
+  --cm-text-subtle: #9aa0a8;
+  --cm-text-disabled: #c1c5cc;
+  --cm-text-inverse: #ffffff;
+
+  // ───────────────────────────────────────────────────────────────────
+  // Surface variations
+  // ───────────────────────────────────────────────────────────────────
+  --cm-bg-page: #f7f8fa;
+  --cm-bg-surface: #ffffff;
+  --cm-bg-subtle: #f7f8fa;
+  --cm-bg-elevated: #ffffff;
+  --cm-bg-hover: rgba(15, 18, 22, 0.035);
+  --cm-bg-active: rgba(15, 18, 22, 0.06);
+  --cm-bg-selected: rgba(21, 101, 192, 0.08);
+  --cm-bg-thead: #f4f5f7;
+
+  // ───────────────────────────────────────────────────────────────────
+  // Navigation rail — overlay al hover
+  //
+  // El rail conserva la superficie del tema (probamos una banda oscura y
+  // el contraste con los bloques del acordeón era malo). Solo quedan los
+  // tokens que gobiernan la EXPANSIÓN en overlay.
+  // ───────────────────────────────────────────────────────────────────
+  --cm-nav-rail-w: 56px;
+  --cm-nav-open-w: 240px;
+  --cm-nav-veil: rgba(8, 18, 35, 0.42);
+  --cm-nav-shadow: 8px 0 44px rgba(8, 18, 35, 0.45);
+
+  // ───────────────────────────────────────────────────────────────────
+  // Semantic palette — tonal pairs (text + bg) so chips/badges are uniform
+  // ───────────────────────────────────────────────────────────────────
+  --cm-tone-neutral-bg: #eef0f3;
+  --cm-tone-neutral-text: #3a3f48;
+
+  --cm-tone-accent-bg: #e6efff;
+  --cm-tone-accent-text: #1648b4;
+
+  --cm-tone-success-bg: #e0f3e6;
+  --cm-tone-success-text: #1a6e3a;
+
+  --cm-tone-warning-bg: #fdf1d8;
+  --cm-tone-warning-text: #7a4f00;
+
+  --cm-tone-danger-bg: #fbe6e4;
+  --cm-tone-danger-text: #a8231c;
+
+  --cm-tone-info-bg: #e0eef5;
+  --cm-tone-info-text: #15517a;
+
+  --cm-tone-mono-bg: #1a1d23;
+  --cm-tone-mono-text: #ffffff;
+
+  // Single-value semantic colors (for borders, icons, etc.)
+  --cm-accent: #1648b4;
+  --cm-success: #1a6e3a;
+  --cm-warning: #7a4f00;
+  --cm-danger: #a8231c;
+  --cm-info: #15517a;
+
+  // ───────────────────────────────────────────────────────────────────
+  // Layout
+  // ───────────────────────────────────────────────────────────────────
+  --cm-sidebar-width: 240px;
+  --cm-sidebar-width-collapsed: 56px;
+  --cm-content-max-width: 1280px;
+  --cm-content-padding: var(--cm-space-xl);
+  --cm-app-bar-height: 48px;
+}
+
+// Dark theme overrides
+//
+// Se listan TODOS los temas oscuros de la app, no solo `tmweAdminDark`: este
+// fichero se copió de admin_config, pero operations arranca con
+// `tmweShipment` y su variante oscura es `tmweShipmentDark` (más
+// `shipmentV2Dark`). Sin estos selectores el rail conservaría la paleta clara
+// al cambiar a oscuro.
+.v-theme--tmweAdminDark,
+.v-theme--tmweShipmentDark,
+.v-theme--shipmentV2Dark {
+  --cm-border-color: #2c3036;
+  --cm-border-color-light: #23272d;
+  --cm-border-color-strong: #3a3f48;
+
+  --cm-text-primary: #f1f2f4;
+  --cm-text-secondary: #c8cbd1;
+  --cm-text-muted: #9aa0a8;
+  --cm-text-subtle: #6c727b;
+
+  --cm-bg-page: #121418;
+  --cm-bg-surface: #1c1f24;
+  --cm-bg-subtle: #181a1f;
+  --cm-bg-elevated: #232730;
+  --cm-bg-hover: rgba(255, 255, 255, 0.04);
+  --cm-bg-active: rgba(255, 255, 255, 0.08);
+  --cm-bg-thead: #20242a;
+
+
+  --cm-tone-neutral-bg: #2c3036;
+  --cm-tone-neutral-text: #d1d4d9;
+  --cm-tone-accent-bg: #1c2c52;
+  --cm-tone-accent-text: #94b1ec;
+  --cm-tone-success-bg: #1d3a26;
+  --cm-tone-success-text: #87d29e;
+  --cm-tone-warning-bg: #3d2e0e;
+  --cm-tone-warning-text: #e1bb6c;
+  --cm-tone-danger-bg: #3d1816;
+  --cm-tone-danger-text: #e88a83;
+  --cm-tone-info-bg: #163041;
+  --cm-tone-info-text: #84b9d8;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// Utility classes used across features (kept in tokens.scss because they
+// are unscoped helpers that apply globally).
+// ───────────────────────────────────────────────────────────────────────
+.cm-section-title {
+  font-size: var(--cm-fs-xl);
+  font-weight: var(--cm-fw-semibold);
+  color: var(--cm-text-primary);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.cm-section-subtitle {
+  font-size: var(--cm-fs-sm);
+  color: var(--cm-text-muted);
+  margin-top: 2px;
+}
+
+.cm-group-label {
+  font-size: var(--cm-fs-xs);
+  font-weight: var(--cm-fw-semibold);
+  color: var(--cm-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.cm-text-muted {
+  color: var(--cm-text-muted);
+}
+.cm-text-secondary {
+  color: var(--cm-text-secondary);
+}
+
+// Cifras en tablas: dígitos de ancho fijo para que las columnas de importes
+// queden alineadas verticalmente (sin esto, "1" y "8" ocupan distinto y los
+// decimales bailan de fila a fila).
+.cm-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.cm-empty-state {
+  text-align: center;
+  padding: var(--cm-space-2xl);
+  color: var(--cm-text-muted);
+  font-size: var(--cm-fs-base);
+}

@@ -1,0 +1,34 @@
+{
+  "tracking": {
+    "tracking": {
+      "title": "Tracking management",
+      "subtitle": "Launch tracking updates",
+      "launch": "Launch tracking",
+      "launch_all": "Launch ALL",
+      "launch_selected": "Launch selected",
+      "track": "Track",
+      "search": "Search AWB / ID",
+      "filter_courier": "Courier",
+      "empty": "No shipments pending tracking",
+      "col_id": "ID",
+      "col_awb": "AWB",
+      "col_courier": "Courier",
+      "col_client": "Client",
+      "col_courier_date": "Courier date",
+      "col_status": "Status",
+      "col_delivery": "Delivery",
+      "batch_title": "Launch batch tracking",
+      "batch_pick_couriers": "Pick couriers to track (or none for all).",
+      "batch_couriers_label": "Couriers",
+      "batch_selected_hint": "Only the selected couriers will be tracked.",
+      "batch_all_hint": "All pending shipments will be tracked.",
+      "batch_starting": "Queuing…",
+      "batch_progress": "Processed {done} of {total}",
+      "batch_errors": "{n} with errors",
+      "batch_finished": "Completed: {done} processed, {errors} errors.",
+      "batch_failed": "The tracking job failed.",
+      "email_summary": "Emails today: {sent} sent · {queued} queued · {failed} failed (of {total})",
+      "single_no_update": "Shipment {id} received no update from the courier."
+    }
+  }
+}

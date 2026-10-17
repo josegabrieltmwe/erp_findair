@@ -1,0 +1,35 @@
+{
+  "copilot": {
+    "app": {
+      "title": "Copilot",
+      "subtitle": "Fragen Sie nach Ihren Sendungen, Tracking und Kontakten"
+    },
+    "chat": {
+      "placeholder": "Stellen Sie eine Frage… z. B. «Zeige die heute eingegangenen Sendungen»",
+      "send": "Senden",
+      "thinking": "Denke nach…",
+      "empty_title": "Wie kann ich Ihnen helfen?",
+      "empty_hint": "Fragen Sie in natürlicher Sprache. Probieren Sie einen der Vorschläge.",
+      "you": "Sie",
+      "assistant": "Copilot",
+      "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "tools_used": "Abgefragt: {tools}",
+      "clear": "Neue Unterhaltung"
+    },
+    "voice_agent": {
+      "idle": "Sprachassistent",
+      "requesting_permission": "Mikrofon wird angefordert…",
+      "connecting": "Verbindung wird hergestellt…",
+      "speaking": "Spricht…",
+      "listening": "Hört zu…",
+      "error": "Sprachassistent erneut versuchen",
+      "unsupported": "Ihr Browser unterstützt keine Sprachgespräche."
+    },
+    "suggestions": {
+      "today": "Zeige die heute eingegangenen Sendungen",
+      "week": "Zeige meine Kuriersendungen dieser Woche",
+      "track": "Verfolge Sendung 5022310",
+      "contact": "Suche Kontakte in Mailand im Adressbuch"
+    }
+  }
+}

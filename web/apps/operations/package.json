@@ -1,0 +1,52 @@
+{
+  "name": "@tmwe/operations",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TMWE ERP operations SPA — Vue 3 + Vuetify 3 + Vite + TS. SPA operativa unificada: cada dominio (tracking, y en el futuro cargo/shipment/pickup/…) se monta como módulo lazy bajo un router y un shell comunes. PoC Fase 4 del plan de consolidación frontend.",
+  "scripts": {
+    "dev": "vite",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 vue-tsc --noEmit && vite build",
+    "build:fast": "vite build",
+    "build:nocheck": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.ts,.js --fix",
+    "format": "prettier --write \"src/**/*.{vue,ts,js,scss,css,json}\"",
+    "test": "vitest run",
+    "typecheck": "NODE_OPTIONS=--max-old-space-size=4096 vue-tsc --noEmit",
+    "lint:i18n": "eslint \"src/**/*.{vue,ts}\""
+  },
+  "dependencies": {
+    "@elevenlabs/client": "1.25.0",
+    "@mdi/font": "^7.4.47",
+    "@mdi/js": "^7.4.47",
+    "@tmwe/shared-frontend": "workspace:*",
+    "@vueuse/core": "^11.3.0",
+    "ofetch": "^1.4.1",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13",
+    "vue-i18n": "^10.0.5",
+    "vue-router": "^4.5.0",
+    "vuetify": "^3.7.6"
+  },
+  "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "^6.0.3",
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/eslint-config-prettier": "^10.1.0",
+    "@vue/eslint-config-typescript": "^14.1.4",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.4.2",
+    "sass-embedded": "^1.83.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.3",
+    "vite-plugin-vuetify": "^2.0.4",
+    "vitest": "^3.2.7",
+    "vue-tsc": "^2.1.10"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

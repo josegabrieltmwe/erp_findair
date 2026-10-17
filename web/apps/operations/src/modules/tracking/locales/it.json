@@ -1,0 +1,34 @@
+{
+  "tracking": {
+    "tracking": {
+      "title": "Gestione tracking",
+      "subtitle": "Avvia aggiornamenti di tracking",
+      "launch": "Avvia tracking",
+      "launch_all": "Avvia TUTTI",
+      "launch_selected": "Avvia selezionati",
+      "track": "Traccia",
+      "search": "Cerca AWB / ID",
+      "filter_courier": "Corriere",
+      "empty": "Nessuna spedizione in attesa di tracking",
+      "col_id": "ID",
+      "col_awb": "AWB",
+      "col_courier": "Corriere",
+      "col_client": "Cliente",
+      "col_courier_date": "Data corriere",
+      "col_status": "Stato",
+      "col_delivery": "Consegna",
+      "batch_title": "Avvia tracking in blocco",
+      "batch_pick_couriers": "Scegli i corrieri da tracciare (o nessuno per tutti).",
+      "batch_couriers_label": "Corrieri",
+      "batch_selected_hint": "Verranno tracciati solo i corrieri selezionati.",
+      "batch_all_hint": "Verranno tracciate tutte le spedizioni in attesa.",
+      "batch_starting": "In coda…",
+      "batch_progress": "Elaborate {done} di {total}",
+      "batch_errors": "{n} con errori",
+      "batch_finished": "Completato: {done} elaborate, {errors} errori.",
+      "batch_failed": "Il job di tracking è fallito.",
+      "email_summary": "Email oggi: {sent} inviate · {queued} in coda · {failed} fallite (di {total})",
+      "single_no_update": "La spedizione {id} non ha ricevuto aggiornamenti dal corriere."
+    }
+  }
+}

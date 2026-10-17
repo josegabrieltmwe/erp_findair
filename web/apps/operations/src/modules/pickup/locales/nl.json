@@ -1,0 +1,130 @@
+{
+  "pickup": {
+    "app": {
+      "title": "Ophaalbeheer"
+    },
+    "nav": {
+      "operations": "Operationeel",
+      "calendar": "Agenda",
+      "list": "Ophalingen",
+      "routes": "Chauffeursroutes",
+      "zones": "Postcodegebieden",
+      "pod": "Afleveringen (POD)"
+    },
+    "operations": {
+      "title": "Operationeel paneel",
+      "pickups": "Ophalingen",
+      "giacenze": "Opslag",
+      "deliveries": "Afleveringen",
+      "total": "Totaal",
+      "assigned": "Toegewezen",
+      "unassigned": "Niet toegewezen",
+      "fixed": "Vast",
+      "completed": "Voltooid",
+      "open": "Open",
+      "new_today": "Nieuw vandaag",
+      "overdue": "Te laat",
+      "awaiting": "Wacht op klant",
+      "pending": "In behandeling"
+    },
+    "calendar": {
+      "title": "Ophaalagenda",
+      "time": "Tijd",
+      "unassigned": "Niet toegewezen",
+      "fixed": "Vast",
+      "empty": "Geen ophalingen op deze datum.",
+      "leg_normal": "Ophaling",
+      "leg_fixed": "Vaste ophaling",
+      "leg_done": "Toegewezen"
+    },
+    "list": {
+      "title": "Ophalingen",
+      "new": "Nieuwe ophaling",
+      "from": "Van",
+      "to": "To",
+      "filter": "Filteren",
+      "any": "Alle",
+      "yes": "Ja",
+      "no": "Nee",
+      "fixed": "Vast",
+      "triangulation": "Driehoeksvervoer",
+      "at_sede": "Op vestiging",
+      "delete_title": "Ophaling verwijderen",
+      "delete_msg": "Ophaling #{id} verwijderen?",
+      "col": {
+        "id": "ID",
+        "data": "Datum/tijd",
+        "sede": "Vestiging",
+        "autista": "Chauffeur",
+        "address": "Locatie",
+        "colli": "Colli",
+        "peso": "Gewicht",
+        "fixed": "Vast",
+        "affidata": "Toegewezen"
+      }
+    },
+    "edit": {
+      "new_title": "Nieuwe ophaling",
+      "edit_title": "Ophaling bewerken",
+      "sede": "Vestiging-ID",
+      "autista": "Chauffeur-ID",
+      "autista_hint": "0 = niet toegewezen",
+      "datetime": "Datum en tijd",
+      "datetime_hint": "Formaat: JJJJ-MM-DD UU:MM",
+      "address": "Ophaallocatie",
+      "at_sede": "Op vestiging",
+      "triangulation": "Driehoeksvervoer",
+      "colli": "Colli",
+      "peso": "Gewicht (kg)",
+      "fixed": "Vaste ophaling",
+      "note": "Notities",
+      "cancel": "Annuleren",
+      "save": "Opslaan"
+    },
+    "assign": {
+      "title": "Ophaling #{id} toewijzen",
+      "driver": "Chauffeur",
+      "assign": "Toewijzen",
+      "unassign": "Toewijzing verwijderen"
+    },
+    "routes": {
+      "title": "Chauffeursroutes",
+      "driver": "Chauffeur",
+      "pick_driver": "Selecteer een chauffeur om de route te zien.",
+      "stops": "{n} stops",
+      "manifest": "Vrachtbrief",
+      "colli": "colli",
+      "total_stops": "Totaal stops",
+      "total_colli": "Totaal colli",
+      "total_peso": "Totaalgewicht"
+    },
+    "zones": {
+      "title": "Postcodegebieden → chauffeur",
+      "provincia": "Provincie",
+      "cap": "CAP",
+      "autista": "Chauffeur-ID",
+      "autista_hint": "contact",
+      "add": "Toewijzen",
+      "pick_provincia": "Selecteer een provincie.",
+      "empty": "Geen gebied toegewezen.",
+      "delete_title": "Gebied verwijderen",
+      "delete_msg": "De toewijzing van postcode {cap} verwijderen?"
+    },
+    "pod": {
+      "title": "Afleveringsregistratie (POD)",
+      "ldv": "Vrachtbrief / AWB",
+      "ldv_hint": "Zendingnummer of AWB van de koerier",
+      "search": "Zoeken",
+      "delivered": "Afgeleverd",
+      "failed": "Mislukt",
+      "firma": "Handtekening",
+      "firma_hint": "Naam van de ontvanger",
+      "note": "Notities",
+      "geo": "Locatie bepalen",
+      "register": "Aflevering registreren",
+      "done": "Aflevering geregistreerd.",
+      "no_geo": "Geolocatie niet beschikbaar.",
+      "geo_failed": "Kan de locatie niet bepalen."
+    }
+  }
+}

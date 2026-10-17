@@ -1,0 +1,287 @@
+{
+    "home": {
+        "home": {
+            "topbar": {
+                "title": "TMWE — Home",
+                "subtitle": "Cargo, expreskoerier en dagelijkse handelingen"
+            },
+            "cta": {
+                "new_cargo": "Nieuwe cargo",
+                "new_cargo_sub": "Luchtvrachtzending aanmaken",
+                "new_shipment": "Nieuwe zending",
+                "new_shipment_sub": "Koerierzending aanmaken"
+            },
+            "menu": {
+                "group_import": "Import",
+                "group_tools": "Hulpmiddelen",
+                "import_list": "Lijst importeren",
+                "import_list_sub": "Bulkimport van zendingen",
+                "import_list_v2": "Lijst importeren v2",
+                "import_list_v2_sub": "Bulkimport (v2)",
+                "price_lists": "Verkooptarieven",
+                "price_lists_sub": "Klantprijzen (partner)",
+                "send_message": "Bericht versturen",
+                "send_message_sub": "Communicatie naar TMWE / klanten",
+                "api_portal": "API-portaal",
+                "api_portal_sub": "OAuth-clients voor B2B-partners",
+                "invoicing": "Facturatie",
+                "invoicing_sub": "Facturen uitgeven en beheren",
+                "clients": "Klanten",
+                "clients_sub": "Stamgegevens en gebruikers beheren"
+            },
+            "recent": {
+                "cargo_title": "Laatste cargo",
+                "cargo_empty": "Geen recente cargo",
+                "shipment_title": "Laatste expreszendingen",
+                "shipment_empty": "Geen recente zendingen"
+            },
+            "alerts": {
+                "qtko": "{count} afgewezen cargo-offertes.",
+                "qtko_cta": "Cargolijst openen",
+                "nofly": "{count} cargo met AWB maar zonder vluchtdatum.",
+                "nofly_cta": "Cargo bekijken",
+                "preseint": "{count} interne ophalingen te behandelen.",
+                "preseint_cta": "Zendingen openen"
+            },
+            "progress": {
+                "loading": "Gegevens worden geladen… ({received}/{expected})"
+            },
+            "actions": {
+                "refresh": "Vernieuwen",
+                "more": "Overige acties",
+                "open": "Openen"
+            }
+        },
+        "kpi": {
+            "tile": {
+                "preseint": {
+                    "label": "Te behandelen ophalingen",
+                    "desc": "Toe te wijzen aan de koerier"
+                },
+                "presefornN": {
+                    "label": "Te organiseren",
+                    "desc": "Leveranciersophalingen status N"
+                },
+                "presefornF": {
+                    "label": "Met problemen",
+                    "desc": "Leveranciersophalingen status F"
+                },
+                "presefornW": {
+                    "label": "Wacht op bevestiging",
+                    "desc": "Pick-up-ophalingen status W"
+                },
+                "presefornS": {
+                    "label": "Te versturen AWB",
+                    "desc": "AWB gereed, afzender moet worden geïnformeerd"
+                },
+                "badaddr": {
+                    "label": "Onjuist adres"
+                },
+                "dactrnote": {
+                    "label": "Niet gecontroleerd, met notities"
+                },
+                "dacontr": {
+                    "label": "Te controleren"
+                },
+                "contrnopart": {
+                    "label": "Gecontroleerd, niet vertrokken"
+                },
+                "spedoggi": {
+                    "label": "Zendingen van vandaag"
+                },
+                "offert": {
+                    "label": "Offertes"
+                },
+                "deipartn": {
+                    "label": "Partner, niet vertrokken"
+                },
+                "presefornQ": {
+                    "label": "Zonder tracking",
+                    "desc": "Vertrokken maar status 1/16"
+                },
+                "presefornX": {
+                    "label": "Ophaalproblemen",
+                    "desc": "Trackingstatus 26"
+                },
+                "indelay": {
+                    "label": "Te laat",
+                    "desc": "Voorbij de verwachte datum"
+                },
+                "intransit": {
+                    "label": "Onderweg"
+                },
+                "deipartn2": {
+                    "label": "Partner onderweg"
+                },
+                "intransit2": {
+                    "label": "Prioriteitsservices onderweg"
+                },
+                "nogiacprobl": {
+                    "label": "Trackingproblemen zonder opslag"
+                },
+                "codcliprnt": {
+                    "label": "Klantcodes niet van ons, niet vertrokken"
+                },
+                "codcliprnt2": {
+                    "label": "Klantcodes niet van ons, onderweg"
+                },
+                "toqt": {
+                    "label": "Te offreren"
+                },
+                "inqt": {
+                    "label": "In offerte"
+                },
+                "clwt": {
+                    "label": "Wacht op klant"
+                },
+                "toorg": {
+                    "label": "Geaccepteerd, te organiseren"
+                },
+                "qtko": {
+                    "label": "Afgewezen"
+                },
+                "nofly": {
+                    "label": "Gereed, niet in de vlucht"
+                },
+                "vgvol": {
+                    "label": "In de vlucht"
+                },
+                "vgloc": {
+                    "label": "Lokale ophaling onderweg"
+                },
+                "vgrem": {
+                    "label": "Lokale aflevering onderweg"
+                }
+            },
+            "group": {
+                "morning_priorities": "Ochtendprioriteiten",
+                "ricezione_controllo": "Ontvangst en controle",
+                "pickup": "Ophalingen",
+                "pronte_partenze": "Gereed en vertrek",
+                "partner": "Partners",
+                "prese": "Ophalingen",
+                "quality": "Quality",
+                "workflow": "Workflow",
+                "tracking": "Tracking",
+                "in_transit": "Onderweg",
+                "quoting": "Quoting",
+                "in_viaggio": "Onderweg"
+            },
+            "section": {
+                "morning": {
+                    "title": "Ochtendprioriteiten",
+                    "list": "Ochtendprioriteiten openen",
+                    "flow": "controleren → corrigeren → vrijgeven → verzenden"
+                },
+                "operations_in": {
+                    "title": "Inkomend",
+                    "list": "Inkomende operaties openen",
+                    "flow": "ontvangst → controle → ophaling → klaar voor verzending"
+                },
+                "operations_out": {
+                    "title": "Uitgaand",
+                    "list": "Uitgaande operaties openen",
+                    "flow": "vertrek → tracking → transit → aflevering"
+                },
+                "assistance": {
+                    "title": "Ondersteuning",
+                    "list": "Ondersteuning openen",
+                    "flow": "dossiers → opslag → communicatie"
+                },
+                "administration": {
+                    "title": "Administratie",
+                    "list": "Administratie openen",
+                    "flow": "factureren → innen → aanmanen → blokkeren"
+                },
+                "warehouse": {
+                    "title": "Magazijn",
+                    "list": "Magazijn openen",
+                    "flow": "weging → manifest → afsluiting"
+                },
+                "commercial": {
+                    "title": "Commercieel",
+                    "list": "Commercieel openen",
+                    "flow": "lead → offertes → klanten"
+                },
+                "courier_in": {
+                    "title": "Expreszendingen — inkomende handelingen",
+                    "list": "Zendingenlijst openen"
+                },
+                "courier_out": {
+                    "title": "Expreszendingen — onderweg",
+                    "list": "Lijst onderweg openen"
+                },
+                "cargo": {
+                    "title": "Cargo — offertes + onderweg",
+                    "list": "Cargolijst openen"
+                }
+            }
+        },
+        "section_meta": {
+            "groups": "{n} categorie | {n} categorieën",
+            "tiles": "{n} indicator | {n} indicatoren"
+        },
+        "cockpit": {
+            "pending_section": "Indicatoren worden voorbereid; niet-beschikbare waarden worden niet als nul getoond.",
+            "morning": "Ochtendprioriteiten",
+            "all_groups": "Alle",
+            "urgent": "Dringend",
+            "road": "Routecontrole",
+            "delayed": "Vertraagd",
+            "to_check": "Te controleren"
+        },
+        "recent": {
+            "see_all": "Alles bekijken"
+        },
+        "landing": {
+            "title": "Wat wilt u doen?",
+            "subtitle": "Snelle toegang tot uw dagelijkse werk",
+            "activities_button": "Activiteiten van vandaag",
+            "activities_hint": "Openstaande punten, vertragingen en taken. Berekend bij het openen.",
+            "activities_title": "Activiteiten van vandaag",
+            "back": "Terug naar start",
+            "refresh": "Vernieuwen",
+            "new_actions": "Aanmaken",
+            "updated_at": "Bijgewerkt om {time}"
+        }
+    },
+    "kpi": {
+        "section": {
+            "morning": {
+                "title": "Ochtendprioriteiten",
+                "list": "Ochtendprioriteiten openen",
+                "flow": "controleren → corrigeren → vrijgeven → verzenden"
+            },
+            "operations_in": {
+                "title": "Inkomend",
+                "list": "Inkomende operaties openen",
+                "flow": "ontvangst → controle → ophaling → klaar voor verzending"
+            },
+            "operations_out": {
+                "title": "Uitgaand",
+                "list": "Uitgaande operaties openen",
+                "flow": "vertrek → tracking → transit → aflevering"
+            },
+            "assistance": {
+                "title": "Ondersteuning",
+                "list": "Ondersteuning openen",
+                "flow": "dossiers → opslag → communicatie"
+            },
+            "administration": {
+                "title": "Administratie",
+                "list": "Administratie openen",
+                "flow": "factureren → innen → aanmanen → blokkeren"
+            },
+            "warehouse": {
+                "title": "Magazijn",
+                "list": "Magazijn openen",
+                "flow": "weging → manifest → afsluiting"
+            },
+            "commercial": {
+                "title": "Commercieel",
+                "list": "Commercieel openen",
+                "flow": "lead → offertes → klanten"
+            }
+        }
+    }
+}

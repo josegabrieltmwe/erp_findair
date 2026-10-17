@@ -1,0 +1,130 @@
+{
+  "pickup": {
+    "app": {
+      "title": "Pickup Manager"
+    },
+    "nav": {
+      "operations": "Operations",
+      "calendar": "Calendar",
+      "list": "Pickups",
+      "routes": "Driver routes",
+      "zones": "CAP zones",
+      "pod": "Deliveries (POD)"
+    },
+    "operations": {
+      "title": "Operations panel",
+      "pickups": "Pickups",
+      "giacenze": "Storage",
+      "deliveries": "Deliveries",
+      "total": "Total",
+      "assigned": "Assigned",
+      "unassigned": "Unassigned",
+      "fixed": "Fixed",
+      "completed": "Completed",
+      "open": "Open",
+      "new_today": "New today",
+      "overdue": "Overdue",
+      "awaiting": "Awaiting client",
+      "pending": "Pending"
+    },
+    "calendar": {
+      "title": "Pickup calendar",
+      "time": "Time",
+      "unassigned": "Unassigned",
+      "fixed": "Fixed",
+      "empty": "No pickups on this date.",
+      "leg_normal": "Pickup",
+      "leg_fixed": "Fixed pickup",
+      "leg_done": "Handed over"
+    },
+    "list": {
+      "title": "Pickups",
+      "new": "New pickup",
+      "from": "From",
+      "to": "To",
+      "filter": "Filter",
+      "any": "All",
+      "yes": "Yes",
+      "no": "No",
+      "fixed": "Fixed",
+      "triangulation": "Triangulation",
+      "at_sede": "At branch",
+      "delete_title": "Delete pickup",
+      "delete_msg": "Delete pickup #{id}?",
+      "col": {
+        "id": "ID",
+        "data": "Date/time",
+        "sede": "Branch",
+        "autista": "Driver",
+        "address": "Place",
+        "colli": "Parcels",
+        "peso": "Weight",
+        "fixed": "Fixed",
+        "affidata": "Handed"
+      }
+    },
+    "edit": {
+      "new_title": "New pickup",
+      "edit_title": "Edit pickup",
+      "sede": "Branch ID",
+      "autista": "Driver ID",
+      "autista_hint": "0 = unassigned",
+      "datetime": "Date and time",
+      "datetime_hint": "Format: YYYY-MM-DD HH:MM",
+      "address": "Pickup place",
+      "at_sede": "At branch",
+      "triangulation": "Triangulation",
+      "colli": "Parcels",
+      "peso": "Weight (kg)",
+      "fixed": "Fixed pickup",
+      "note": "Notes",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "assign": {
+      "title": "Assign pickup #{id}",
+      "driver": "Driver",
+      "assign": "Assign",
+      "unassign": "Unassign"
+    },
+    "routes": {
+      "title": "Driver routes",
+      "driver": "Driver",
+      "pick_driver": "Select a driver to see the route.",
+      "stops": "{n} stops",
+      "manifest": "Manifest",
+      "colli": "parcels",
+      "total_stops": "Total stops",
+      "total_colli": "Total parcels",
+      "total_peso": "Total weight"
+    },
+    "zones": {
+      "title": "CAP zones → driver",
+      "provincia": "Province",
+      "cap": "CAP",
+      "autista": "Driver ID",
+      "autista_hint": "contact",
+      "add": "Assign",
+      "pick_provincia": "Select a province.",
+      "empty": "No zones assigned.",
+      "delete_title": "Remove zone",
+      "delete_msg": "Remove CAP {cap} assignment?"
+    },
+    "pod": {
+      "title": "Delivery registration (POD)",
+      "ldv": "LDV / AWB",
+      "ldv_hint": "Shipment number or carrier AWB",
+      "search": "Search",
+      "delivered": "Delivered",
+      "failed": "Failed",
+      "firma": "Signature",
+      "firma_hint": "Recipient name",
+      "note": "Notes",
+      "geo": "Capture location",
+      "register": "Register delivery",
+      "done": "Delivery registered.",
+      "no_geo": "Geolocation unavailable.",
+      "geo_failed": "Could not capture location."
+    }
+  }
+}

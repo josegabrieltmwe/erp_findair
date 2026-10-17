@@ -1,0 +1,29 @@
+{
+  "bulk": {
+    "bulk": {
+      "title": "Importazione massiva",
+      "mode": "Tipo",
+      "express": "Spedizioni express",
+      "cargo": "Spedizioni cargo",
+      "step1": "Incolla i dati",
+      "step2": "Anteprima",
+      "step3": "Risultato",
+      "pasteLabel": "Incolla CSV (prima riga = intestazioni)",
+      "pasteHint": "Colonne: {cols}",
+      "delimiter": "Delimitatore",
+      "validate": "Valida",
+      "maxRows": "Massimo {n} righe per importazione.",
+      "summary": "{valid} valide · {invalid} non valide · {total} totali",
+      "noValid": "Nessuna riga valida da importare.",
+      "errorsTitle": "Errori di validazione",
+      "rowCol": "Riga",
+      "messageCol": "Messaggio",
+      "previewTitle": "Anteprima righe valide",
+      "import": "Importa {n} righe",
+      "importing": "Importazione…",
+      "imported": "{n} spedizioni importate.",
+      "importErrors": "{n} righe non riuscite.",
+      "startOver": "Importa altre"
+    }
+  }
+}

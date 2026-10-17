@@ -1,0 +1,123 @@
+{
+  "crm": {
+    "stato": {
+      "all": "Tutti",
+      "A": "Aperta",
+      "C": "Chiusa",
+      "L": "Lunga attesa"
+    },
+    "list": {
+      "title": "Pratiche CRM",
+      "oggetto": "Oggetto",
+      "cliente": "Cliente",
+      "stato": "Stato",
+      "data_open": "Apertura",
+      "data_next": "Data next",
+      "descriz": "Descrizione",
+      "contatto": "Contatto",
+      "tipo": "Tipo",
+      "data_open_da": "Aperte dal",
+      "data_open_al": "Aperte al",
+      "search": "Cerca oggetto",
+      "delete_confirm": "Eliminare la pratica #{id}?"
+    },
+    "shortcut": {
+      "open": "Pratiche aperte",
+      "todo": "Pratiche To Do aperte",
+      "alert": "Pratiche nuove (240 h)"
+    },
+    "detail": {
+      "title": "Pratica",
+      "header": "Dati della pratica",
+      "open_shipment": "Apri spedizione",
+      "sec_client": "Cliente e contatto",
+      "sec_classify": "Classificazione",
+      "sec_followup": "Follow-up",
+      "sec_notes": "Note",
+      "id_spedizione_readonly": "Ereditato dalla spedizione (non modificabile)"
+    },
+    "lookup": {
+      "type_to_search": "Digita per cercare…",
+      "no_contacts": "Nessun contatto"
+    },
+    "field": {
+      "cliente": "Cliente",
+      "contatto": "Contatto",
+      "oggetto": "Oggetto",
+      "id_spedizione": "N. spedizione",
+      "tipo": "Tipo",
+      "nome": "Nome",
+      "email": "Email",
+      "tel": "Telefono",
+      "rif_cliente": "Rif. cliente",
+      "data_next": "Prossimo follow-up",
+      "descriz": "Descrizione",
+      "note_interne": "Note interne"
+    },
+    "eventi": {
+      "title": "Eventi / avanzamenti",
+      "stato": "Stato",
+      "descriz": "Descrizione avanzamento",
+      "data": "Data e ora",
+      "view": "Vedi dettaglio",
+      "detail_title": "Dettaglio avanzamento #{id}",
+      "add": "Aggiungi",
+      "empty": "Nessun evento"
+    },
+    "messaggi": {
+      "title": "Messaggi inviati",
+      "dest": "Destinatario",
+      "file": "All.",
+      "way": "Via",
+      "data": "Data",
+      "esito": "Esito",
+      "empty": "Nessun messaggio inviato"
+    },
+    "context": {
+      "shipment_title": "CRM · Spedizione #{id}",
+      "cargo_title": "CRM · Cargo #{id}",
+      "unavailable_shipment": "CRM non disponibile per questa spedizione",
+      "unavailable_cargo": "CRM non disponibile per questa spedizione cargo",
+      "case_fallback": "Pratica #{id}",
+      "case_selector": "Pratica CRM",
+      "open_full": "Apri scheda completa",
+      "case_option": "{subject} · {status} · #{id}",
+      "created": "Pratica creata",
+      "existing_opened": "Pratica esistente aperta",
+      "create_error": "Impossibile creare la pratica",
+      "created_partial": "Pratica creata. Non è stato possibile caricare parte dell'attività.",
+      "created_open_error": "La pratica è stata creata, ma non è stato possibile aprirla. Puoi riprovare dal pannello.",
+      "existing_partial": "La pratica esistente è aperta. Non è stato possibile caricare parte dell'attività.",
+      "existing_open_error": "La pratica esiste già, ma non è stato possibile aprirla. Puoi riprovare dal pannello.",
+      "partial_error": "Sono mostrati i dati disponibili, ma non è stato possibile aggiornare la pratica.",
+      "load_error_title": "Impossibile caricare la pratica",
+      "load_error_body": "Non è stato possibile ottenere i dati della pratica #{id}. La spedizione resta aperta e puoi riprovare.",
+      "empty_title": "Nessuna pratica da mostrare",
+      "empty_body": "Seleziona una pratica CRM oppure chiudi questo pannello per continuare.",
+      "events_error": "Impossibile caricare gli eventi. Il resto della pratica rimane disponibile.",
+      "messages_error": "Impossibile caricare i messaggi. Il resto della pratica rimane disponibile."
+    },
+    "indicator": {
+      "open_cases": "Pratiche aperte",
+      "overdue_followups": "Follow-up scaduti"
+    },
+    "send": {
+      "button": "Invia messaggio",
+      "title": "Invia messaggio al cliente",
+      "metodo": "Canale",
+      "dest": "Destinatario",
+      "dest_hint": "Se vuoto, si usa l'email della pratica",
+      "subject": "Oggetto",
+      "subject_hint": "Se vuoto, si prende dal modello",
+      "text": "Testo libero",
+      "use_base": "Usa modello base",
+      "result": "Messaggio registrato (esito: {esito})",
+      "error": "Impossibile inviare il messaggio",
+      "files": "Allegati",
+      "files_hint": "Fino a {max} file",
+      "use_base_hint": "Racchiude il testo nel modello del cliente",
+      "files_cta": "Trascina i file o fai clic",
+      "files_full": "Raggiunto il massimo di {max} file"
+    }
+  }
+}

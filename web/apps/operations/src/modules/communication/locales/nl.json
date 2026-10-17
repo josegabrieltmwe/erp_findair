@@ -1,0 +1,34 @@
+{
+  "communication": {
+    "list": {
+      "title": "Tickets",
+      "subject": "Onderwerp",
+      "contact": "Contact",
+      "opened_at": "Geopend",
+      "status": "Status",
+      "search": "Zoeken",
+      "new_ticket": "Nieuw ticket",
+      "unread_total": "{n} ongelezen"
+    },
+    "status": {
+      "open": "Open",
+      "closed": "Gesloten",
+      "all": "Alle"
+    },
+    "new_ticket": {
+      "title": "Nieuw ticket",
+      "subject": "Onderwerp",
+      "body": "Bericht",
+      "submit": "Ticket openen",
+      "error": "Kon het ticket niet openen"
+    },
+    "thread": {
+      "close": "Ticket sluiten",
+      "close_confirm": "Dit ticket sluiten?",
+      "placeholder": "Schrijf een antwoord…",
+      "empty": "Nog geen berichten",
+      "send_error": "Kon het bericht niet verzenden",
+      "untitled": "Ticket #{id}"
+    }
+  }
+}

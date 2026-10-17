@@ -1,0 +1,11 @@
+{
+  "name": "@tmwe/scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CI/maintenance scripts for the TMWE frontend monorepo — anti-drift check, etc.",
+  "scripts": {
+    "check:drift": "tsx check_drift.ts",
+    "check:i18n": "tsx check_i18n.ts"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@tmwe/platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Platform shell components (PlatformTopBar, Sidebar, UserMenu, Search), listing/detail/dashboard scaffolds — shared across cargo_express / shipment_express / home / operations. Imported via @shared/* alias to preserve existing import paths.",
+  "dependencies": {
+    "@tmwe/shared-frontend": "workspace:*"
+  },
+  "peerDependencies": {
+    "@mdi/js": "^7.4.47",
+    "@vueuse/core": "^11.0.0",
+    "country-flag-icons": "^1.6.0",
+    "ofetch": "^1.0.0",
+    "pinia": "^2.0.0",
+    "vue": "^3.0.0",
+    "vue-i18n": "^10.0.0",
+    "vue-router": "^4.0.0",
+    "vuetify": "^3.0.0"
+  }
+}

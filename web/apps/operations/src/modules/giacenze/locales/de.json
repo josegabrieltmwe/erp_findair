@@ -1,0 +1,98 @@
+{
+  "giacenze": {
+    "giacenze": {
+      "title": "Lagerung",
+      "subtitle": "Bestand der eingelagerten Sendungen",
+      "new": "Neue Lagerung",
+      "edit": "Lagerung bearbeiten",
+      "shipment": "Sendung",
+      "client": "Kunde",
+      "tracking": "Tracking",
+      "searchText": "Suche (Notizen/Beschr.)",
+      "clientId": "Kunden-ID",
+      "shipmentId": "Sendungs-ID",
+      "description": "Beschreibung",
+      "operation": "Vorgang",
+      "note": "Notiz",
+      "dataOpen": "Eröffnung",
+      "dataClose": "Abschluss",
+      "days": "Lagertage",
+      "redeliveryCharge": "Gebühr Neuzustellung",
+      "chargeLockedHint": "Betrag gesperrt: Die Sendung wurde bereits nachfakturiert.",
+      "contactSupplier": "Kontakt Lieferant",
+      "contactClient": "Kontakt Kunde",
+      "contactRecipient": "Kontakt Empfänger",
+      "clientReply": "Antwort des Kunden",
+      "status": "Status",
+      "openOnly": "Nur offene",
+      "fromDate": "Eröffnung von",
+      "toDate": "Eröffnung bis",
+      "filters": "Filter",
+      "applyFilters": "Anwenden",
+      "clearFilters": "Zurücksetzen",
+      "closeHold": "Lagerung schließen",
+      "autoClose": "Automatischer Abschluss abgelaufener Einträge",
+      "autoCloseDays": "Max. Tage",
+      "autoCloseHint": "Schließt alle Lagerungen, die länger als die angegebene Anzahl Tage offen sind.",
+      "operations": {
+        "A": "Offen",
+        "C": "Geschlossen",
+        "N": "Vermerkt",
+        "R": "Erneute Zustellung",
+        "E": "Erledigt"
+      },
+      "aging": {
+        "title": "Alter",
+        "total": "Gesamt offen",
+        "avgDays": "Durchschnittliche Tage",
+        "maxDays": "Max. Tage",
+        "band": "Bereich"
+      },
+      "messages": {
+        "created": "Lagerung erstellt",
+        "updated": "Lagerung aktualisiert",
+        "deleted": "Lagerung gelöscht",
+        "closed": "Lagerung geschlossen",
+        "autoClosed": "{count} Lagerung geschlossen | {count} Lagerungen geschlossen",
+        "deleteConfirm": "Diese Lagerung löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.",
+        "closeConfirm": "Diese Lagerung schließen?",
+        "notFound": "Lagerung #{id} nicht gefunden"
+      },
+      "validation": {
+        "shipmentRequired": "Die Sendungs-ID ist erforderlich",
+        "operationRequired": "Der Vorgang ist erforderlich"
+      },
+      "filterClick": {
+        "byShipment": "Nach dieser Sendung filtern",
+        "byOperation": "Nach diesem Vorgang filtern"
+      },
+      "addr": {
+        "title": "Lieferadressen",
+        "delivery": "Aktuelle Zustellung",
+        "deliveryOriginal": "Ursprüngliche Zustellung",
+        "readonly": "Schreibgeschützt",
+        "none": "Keine Adresse",
+        "loading": "Wird geladen…",
+        "editDelivery": "Zustellung bearbeiten"
+      },
+      "msg": {
+        "title": "Nachrichten",
+        "toClient": "An den Kunden",
+        "toSupplier": "An den Kurier",
+        "send": "Senden",
+        "recipient": "Empfänger",
+        "recipientRequired": "Empfänger erforderlich",
+        "extraText": "Zusätzlicher Text",
+        "noMessages": "Keine Nachrichten",
+        "date": "Datum",
+        "type": "Typ",
+        "status": "Ergebnis",
+        "client": "Kunde",
+        "supplier": "Kurier"
+      },
+      "replied": "Hat geantwortet",
+      "awaitingReply": "Ausstehend",
+      "copyPrice": "Einkaufspreis kopieren"
+    }
+  }
+}

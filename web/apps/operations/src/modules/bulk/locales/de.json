@@ -1,0 +1,29 @@
+{
+  "bulk": {
+    "bulk": {
+      "title": "Massenimport",
+      "mode": "Typ",
+      "express": "Expresssendungen",
+      "cargo": "Cargosendungen",
+      "step1": "Daten einfügen",
+      "step2": "Vorschau",
+      "step3": "Ergebnis",
+      "pasteLabel": "CSV einfügen (erste Zeile = Kopfzeilen)",
+      "pasteHint": "Spalten: {cols}",
+      "delimiter": "Trennzeichen",
+      "validate": "Validieren",
+      "maxRows": "Maximal {n} Zeilen pro Import.",
+      "summary": "{valid} gültig · {invalid} ungültig · {total} gesamt",
+      "noValid": "Keine gültigen Zeilen zum Importieren.",
+      "errorsTitle": "Validierungsfehler",
+      "rowCol": "Zeile",
+      "messageCol": "Nachricht",
+      "previewTitle": "Vorschau gültiger Zeilen",
+      "import": "{n} Zeilen importieren",
+      "importing": "Import läuft…",
+      "imported": "{n} Sendungen importiert.",
+      "importErrors": "{n} Zeilen fehlgeschlagen.",
+      "startOver": "Weitere importieren"
+    }
+  }
+}

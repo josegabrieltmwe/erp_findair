@@ -1,0 +1,35 @@
+{
+  "copilot": {
+    "app": {
+      "title": "Copilot",
+      "subtitle": "Vraag naar uw zendingen, tracking en contacten"
+    },
+    "chat": {
+      "placeholder": "Stel een vraag… bijv. «Toon de vandaag binnengekomen zendingen»",
+      "send": "Versturen",
+      "thinking": "Aan het nadenken…",
+      "empty_title": "Hoe kan ik u helpen?",
+      "empty_hint": "Stel uw vraag in natuurlijke taal. Probeer een van de suggesties.",
+      "you": "U",
+      "assistant": "Copilot",
+      "error": "Er is iets misgegaan. Probeer het opnieuw.",
+      "tools_used": "Geraadpleegd: {tools}",
+      "clear": "Nieuw gesprek"
+    },
+    "voice_agent": {
+      "idle": "Spraakassistent",
+      "requesting_permission": "Microfoon aanvragen…",
+      "connecting": "Verbinden…",
+      "speaking": "Spreekt…",
+      "listening": "Luistert…",
+      "error": "Spraakassistent opnieuw proberen",
+      "unsupported": "Uw browser ondersteunt geen spraakgesprekken."
+    },
+    "suggestions": {
+      "today": "Toon de vandaag binnengekomen zendingen",
+      "week": "Toon mijn koerierzendingen van deze week",
+      "track": "Volg zending 5022310",
+      "contact": "Zoek contacten in Milaan in het adresboek"
+    }
+  }
+}

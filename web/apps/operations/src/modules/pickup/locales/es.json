@@ -1,0 +1,130 @@
+{
+  "pickup": {
+    "app": {
+      "title": "Gestión de Recogidas"
+    },
+    "nav": {
+      "operations": "Operativo",
+      "calendar": "Calendario",
+      "list": "Recogidas",
+      "routes": "Giros",
+      "zones": "Zonas CP",
+      "pod": "Entregas (POD)"
+    },
+    "operations": {
+      "title": "Panel operativo",
+      "pickups": "Recogidas",
+      "giacenze": "Almacenaje",
+      "deliveries": "Entregas",
+      "total": "Total",
+      "assigned": "Asignadas",
+      "unassigned": "Sin asignar",
+      "fixed": "Fijas",
+      "completed": "Completadas",
+      "open": "Abiertas",
+      "new_today": "Nuevas hoy",
+      "overdue": "Vencidas",
+      "awaiting": "Espera cliente",
+      "pending": "Pendientes"
+    },
+    "calendar": {
+      "title": "Calendario de recogidas",
+      "time": "Hora",
+      "unassigned": "Sin asignar",
+      "fixed": "Fija",
+      "empty": "No hay recogidas en esta fecha.",
+      "leg_normal": "Recogida",
+      "leg_fixed": "Recogida fija",
+      "leg_done": "Entregada"
+    },
+    "list": {
+      "title": "Recogidas",
+      "new": "Nueva recogida",
+      "from": "Desde",
+      "to": "Hasta",
+      "filter": "Filtrar",
+      "any": "Todas",
+      "yes": "Sí",
+      "no": "No",
+      "fixed": "Fija",
+      "triangulation": "Triangulación",
+      "at_sede": "En sede",
+      "delete_title": "Eliminar recogida",
+      "delete_msg": "¿Eliminar la recogida #{id}?",
+      "col": {
+        "id": "ID",
+        "data": "Fecha/hora",
+        "sede": "Sede",
+        "autista": "Chófer",
+        "address": "Lugar",
+        "colli": "Bultos",
+        "peso": "Peso",
+        "fixed": "Fija",
+        "affidata": "Entregada"
+      }
+    },
+    "edit": {
+      "new_title": "Nueva recogida",
+      "edit_title": "Editar recogida",
+      "sede": "ID Sede",
+      "autista": "ID Chófer",
+      "autista_hint": "0 = sin asignar",
+      "datetime": "Fecha y hora",
+      "datetime_hint": "Formato: AAAA-MM-DD HH:MM",
+      "address": "Lugar de recogida",
+      "at_sede": "En sede",
+      "triangulation": "Triangulación",
+      "colli": "Bultos",
+      "peso": "Peso (kg)",
+      "fixed": "Recogida fija",
+      "note": "Notas",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+    "assign": {
+      "title": "Asignar recogida #{id}",
+      "driver": "Chófer",
+      "assign": "Asignar",
+      "unassign": "Quitar asignación"
+    },
+    "routes": {
+      "title": "Giros de chófer",
+      "driver": "Chófer",
+      "pick_driver": "Selecciona un chófer para ver el giro.",
+      "stops": "{n} paradas",
+      "manifest": "Manifiesto",
+      "colli": "bultos",
+      "total_stops": "Paradas totales",
+      "total_colli": "Bultos totales",
+      "total_peso": "Peso total"
+    },
+    "zones": {
+      "title": "Zonas CP → chófer",
+      "provincia": "Provincia",
+      "cap": "CP",
+      "autista": "ID Chófer",
+      "autista_hint": "contacto",
+      "add": "Asignar",
+      "pick_provincia": "Selecciona una provincia.",
+      "empty": "Ninguna zona asignada.",
+      "delete_title": "Quitar zona",
+      "delete_msg": "¿Quitar la asignación del CP {cap}?"
+    },
+    "pod": {
+      "title": "Registro de entrega (POD)",
+      "ldv": "LDV / AWB",
+      "ldv_hint": "Número de la expedición o AWB del courier",
+      "search": "Buscar",
+      "delivered": "Entregado",
+      "failed": "Fallida",
+      "firma": "Firma",
+      "firma_hint": "Nombre de quien recibe",
+      "note": "Notas",
+      "geo": "Capturar ubicación",
+      "register": "Registrar entrega",
+      "done": "Entrega registrada.",
+      "no_geo": "Geolocalización no disponible.",
+      "geo_failed": "No se pudo capturar la ubicación."
+    }
+  }
+}

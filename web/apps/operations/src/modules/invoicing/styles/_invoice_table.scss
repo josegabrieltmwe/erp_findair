@@ -1,0 +1,63 @@
+// Estilo de tabla unificado para los listados/diálogos de facturación.
+// Replica el estándar visual de packages/platform/listing/ShipmentDataView.vue
+// (header con gradiente + mayúsculas, zebra striping en filas pares, hover con
+// lift + acento primario) para que las tablas de facturación armonicen con los
+// listados de cargo/shipment del resto del ERP.
+//
+// Uso: aplicar la clase `inv-table` al v-data-table / v-table y, en un bloque
+//      `<style scoped lang="scss">`, hacer `@use '@/styles/invoice_table';`
+//      seguido de `.inv-table { @include inv-table; }`.
+//
+// Tokens (NO hardcodear): --v-theme-*, --v-border-color/opacity.
+
+@mixin inv-table {
+  // ── Header: gradiente surface→surface-variant, mayúsculas, sticky-friendly ──
+  :deep(thead th) {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--v-theme-surface)) 0%,
+      rgba(var(--v-theme-surface-variant), 0.55) 100%
+    ) !important;
+    color: rgb(var(--v-theme-on-surface-variant)) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)) !important;
+    box-shadow: 0 3px 6px -2px rgba(15, 23, 42, 0.14);
+  }
+
+  // ── Filas: transición para el lift en hover ──
+  :deep(tbody tr) {
+    position: relative;
+    transition: background-color 0.12s ease, box-shadow 0.14s ease, transform 0.14s ease;
+  }
+
+  // ── Zebra striping: pares con tinte (4.5% claro / 6.5% oscuro vía
+  //    --sdv-zebra), impares en superficie base. Mismo valor y técnica que
+  //    ShipmentDataView para paridad exacta entre tablas. ──
+  :deep(tbody tr:nth-child(even)) {
+    background: rgba(var(--v-theme-on-surface), var(--sdv-zebra, 0.045)) !important;
+  }
+  :deep(tbody tr:nth-child(odd)) {
+    background: rgb(var(--v-theme-surface)) !important;
+  }
+
+  // ── Hover gana sobre el zebra: tinte primario + lift 3D + sombra suave +
+  //    acento izquierdo (mismo lenguaje exacto que ShipmentDataView). ──
+  :deep(tbody tr:hover) {
+    background: rgba(var(--v-theme-primary), 0.08) !important;
+    transform: translateY(-1px);
+    box-shadow:
+      0 2px 6px -1px rgba(15, 23, 42, 0.16),
+      inset 3px 0 0 0 rgb(var(--v-theme-primary));
+    z-index: 1;
+  }
+
+  // ── Celdas: borde inferior tenue, padding cómodo (paridad ShipmentDataView) ──
+  :deep(tbody td) {
+    border-bottom: 1px solid rgba(var(--v-border-color), calc(var(--v-border-opacity) * 0.6)) !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+}

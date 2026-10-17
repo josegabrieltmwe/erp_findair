@@ -1,0 +1,29 @@
+{
+  "bulk": {
+    "bulk": {
+      "title": "Importación masiva",
+      "mode": "Tipo",
+      "express": "Envíos express",
+      "cargo": "Envíos cargo",
+      "step1": "Pega los datos",
+      "step2": "Vista previa",
+      "step3": "Resultado",
+      "pasteLabel": "Pega CSV (primera fila = cabeceras)",
+      "pasteHint": "Columnas: {cols}",
+      "delimiter": "Delimitador",
+      "validate": "Validar",
+      "maxRows": "Máximo {n} filas por importación.",
+      "summary": "{valid} válidas · {invalid} inválidas · {total} totales",
+      "noValid": "No hay filas válidas para importar.",
+      "errorsTitle": "Errores de validación",
+      "rowCol": "Fila",
+      "messageCol": "Mensaje",
+      "previewTitle": "Vista previa de filas válidas",
+      "import": "Importar {n} filas",
+      "importing": "Importando…",
+      "imported": "{n} envíos importados.",
+      "importErrors": "{n} filas fallaron.",
+      "startOver": "Importar más"
+    }
+  }
+}

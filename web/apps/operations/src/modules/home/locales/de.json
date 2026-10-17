@@ -1,0 +1,287 @@
+{
+    "home": {
+        "home": {
+            "topbar": {
+                "title": "TMWE — Home",
+                "subtitle": "Cargo, Expresskurier und tägliche Vorgänge"
+            },
+            "cta": {
+                "new_cargo": "Neue Cargo",
+                "new_cargo_sub": "Luftfrachtsendung erstellen",
+                "new_shipment": "Neue Sendung",
+                "new_shipment_sub": "Kuriersendung erstellen"
+            },
+            "menu": {
+                "group_import": "Import",
+                "group_tools": "Werkzeuge",
+                "import_list": "Liste importieren",
+                "import_list_sub": "Massenimport von Sendungen",
+                "import_list_v2": "Liste importieren v2",
+                "import_list_v2_sub": "Massenimport (v2)",
+                "price_lists": "Verkaufspreislisten",
+                "price_lists_sub": "Kundenpreise (Partner)",
+                "send_message": "Nachricht senden",
+                "send_message_sub": "Kommunikation an TMWE / Kunden",
+                "api_portal": "API-Portal",
+                "api_portal_sub": "OAuth-Clients für B2B-Partner",
+                "invoicing": "Fakturierung",
+                "invoicing_sub": "Rechnungen ausstellen und verwalten",
+                "clients": "Kunden",
+                "clients_sub": "Stammdaten und Benutzer verwalten"
+            },
+            "recent": {
+                "cargo_title": "Letzte Cargo",
+                "cargo_empty": "Keine aktuelle Cargo",
+                "shipment_title": "Letzte Expresssendungen",
+                "shipment_empty": "Keine aktuellen Sendungen"
+            },
+            "alerts": {
+                "qtko": "{count} abgelehnte Cargo-Angebote.",
+                "qtko_cta": "Cargoliste öffnen",
+                "nofly": "{count} Cargo mit AWB, aber ohne Flugdatum.",
+                "nofly_cta": "Cargo ansehen",
+                "preseint": "{count} interne Abholungen zu bearbeiten.",
+                "preseint_cta": "Sendungen öffnen"
+            },
+            "progress": {
+                "loading": "Daten werden geladen… ({received}/{expected})"
+            },
+            "actions": {
+                "refresh": "Aktualisieren",
+                "more": "Weitere Aktionen",
+                "open": "Öffnen"
+            }
+        },
+        "kpi": {
+            "tile": {
+                "preseint": {
+                    "label": "Zu bearbeitende Abholungen",
+                    "desc": "Dem Kurier zuzuweisen"
+                },
+                "presefornN": {
+                    "label": "Zu organisieren",
+                    "desc": "Lieferantenabholungen Status N"
+                },
+                "presefornF": {
+                    "label": "Mit Problemen",
+                    "desc": "Lieferantenabholungen Status F"
+                },
+                "presefornW": {
+                    "label": "Warten auf Bestätigung",
+                    "desc": "Pick-up-Abholungen Status W"
+                },
+                "presefornS": {
+                    "label": "Zu sendende AWB",
+                    "desc": "AWB bereit, Absender zu informieren"
+                },
+                "badaddr": {
+                    "label": "Falsche Adresse"
+                },
+                "dactrnote": {
+                    "label": "Nicht geprüft, mit Notizen"
+                },
+                "dacontr": {
+                    "label": "Zu prüfen"
+                },
+                "contrnopart": {
+                    "label": "Geprüft, nicht abgegangen"
+                },
+                "spedoggi": {
+                    "label": "Sendungen von heute"
+                },
+                "offert": {
+                    "label": "Angebote"
+                },
+                "deipartn": {
+                    "label": "Partner, nicht abgegangen"
+                },
+                "presefornQ": {
+                    "label": "Ohne Tracking",
+                    "desc": "Abgegangen, aber Status 1/16"
+                },
+                "presefornX": {
+                    "label": "Abholprobleme",
+                    "desc": "Tracking-Status 26"
+                },
+                "indelay": {
+                    "label": "Verspätet",
+                    "desc": "Über das erwartete Datum hinaus"
+                },
+                "intransit": {
+                    "label": "Unterwegs"
+                },
+                "deipartn2": {
+                    "label": "Partner unterwegs"
+                },
+                "intransit2": {
+                    "label": "Prioritätsservices unterwegs"
+                },
+                "nogiacprobl": {
+                    "label": "Tracking-Probleme ohne Lagerung"
+                },
+                "codcliprnt": {
+                    "label": "Fremde Kundencodes, nicht abgegangen"
+                },
+                "codcliprnt2": {
+                    "label": "Fremde Kundencodes, unterwegs"
+                },
+                "toqt": {
+                    "label": "Zu kalkulieren"
+                },
+                "inqt": {
+                    "label": "In Kalkulation"
+                },
+                "clwt": {
+                    "label": "Warten auf Kunden"
+                },
+                "toorg": {
+                    "label": "Angenommen, zu organisieren"
+                },
+                "qtko": {
+                    "label": "Abgelehnt"
+                },
+                "nofly": {
+                    "label": "Bereit, nicht im Flug"
+                },
+                "vgvol": {
+                    "label": "Im Flug"
+                },
+                "vgloc": {
+                    "label": "Lokale Abholung unterwegs"
+                },
+                "vgrem": {
+                    "label": "Lokale Zustellung unterwegs"
+                }
+            },
+            "group": {
+                "morning_priorities": "Morgenprioritäten",
+                "ricezione_controllo": "Eingang und Kontrolle",
+                "pickup": "Abholungen",
+                "pronte_partenze": "Bereit und Abfahrten",
+                "partner": "Partner",
+                "prese": "Abholungen",
+                "quality": "Quality",
+                "workflow": "Workflow",
+                "tracking": "Tracking",
+                "in_transit": "Unterwegs",
+                "quoting": "Quoting",
+                "in_viaggio": "Unterwegs"
+            },
+            "section": {
+                "morning": {
+                    "title": "Morgenprioritäten",
+                    "list": "Morgenprioritäten öffnen",
+                    "flow": "prüfen → korrigieren → freigeben → versenden"
+                },
+                "operations_in": {
+                    "title": "Eingang",
+                    "list": "Eingangsvorgänge öffnen",
+                    "flow": "Annahme → Kontrolle → Abholung → versandbereit"
+                },
+                "operations_out": {
+                    "title": "Ausgang",
+                    "list": "Ausgangsvorgänge öffnen",
+                    "flow": "Abfahrt → Tracking → Transit → Zustellung"
+                },
+                "assistance": {
+                    "title": "Unterstützung",
+                    "list": "Unterstützung öffnen",
+                    "flow": "Vorgänge → Lagerbestände → Kommunikation"
+                },
+                "administration": {
+                    "title": "Verwaltung",
+                    "list": "Verwaltung öffnen",
+                    "flow": "fakturieren → einziehen → mahnen → sperren"
+                },
+                "warehouse": {
+                    "title": "Lager",
+                    "list": "Lager öffnen",
+                    "flow": "Verwiegung → Manifest → Abschluss"
+                },
+                "commercial": {
+                    "title": "Vertrieb",
+                    "list": "Vertrieb öffnen",
+                    "flow": "Lead → Angebote → Kunden"
+                },
+                "courier_in": {
+                    "title": "Expresssendungen — eingehende Vorgänge",
+                    "list": "Sendungsliste öffnen"
+                },
+                "courier_out": {
+                    "title": "Expresssendungen — unterwegs",
+                    "list": "Liste unterwegs öffnen"
+                },
+                "cargo": {
+                    "title": "Cargo — Angebote + unterwegs",
+                    "list": "Cargoliste öffnen"
+                }
+            }
+        },
+        "section_meta": {
+            "groups": "{n} Kategorie | {n} Kategorien",
+            "tiles": "{n} Indikator | {n} Indikatoren"
+        },
+        "cockpit": {
+            "pending_section": "Die Indikatoren werden vorbereitet; nicht verfügbare Werte werden nicht als null angezeigt.",
+            "morning": "Morgenprioritäten",
+            "all_groups": "Alle",
+            "urgent": "Dringend",
+            "road": "Routenkontrolle",
+            "delayed": "Verspätet",
+            "to_check": "Zu kontrollieren"
+        },
+        "recent": {
+            "see_all": "Alle anzeigen"
+        },
+        "landing": {
+            "title": "Was möchten Sie tun?",
+            "subtitle": "Schnellzugriff auf Ihre tägliche Arbeit",
+            "activities_button": "Tagesaktivitäten",
+            "activities_hint": "Offene Punkte, Verzögerungen und Aufgaben. Werden beim Öffnen berechnet.",
+            "activities_title": "Tagesaktivitäten",
+            "back": "Zurück zur Startseite",
+            "refresh": "Aktualisieren",
+            "new_actions": "Erstellen",
+            "updated_at": "Aktualisiert um {time}"
+        }
+    },
+    "kpi": {
+        "section": {
+            "morning": {
+                "title": "Morgenprioritäten",
+                "list": "Morgenprioritäten öffnen",
+                "flow": "prüfen → korrigieren → freigeben → versenden"
+            },
+            "operations_in": {
+                "title": "Eingang",
+                "list": "Eingangsvorgänge öffnen",
+                "flow": "Annahme → Kontrolle → Abholung → versandbereit"
+            },
+            "operations_out": {
+                "title": "Ausgang",
+                "list": "Ausgangsvorgänge öffnen",
+                "flow": "Abfahrt → Tracking → Transit → Zustellung"
+            },
+            "assistance": {
+                "title": "Unterstützung",
+                "list": "Unterstützung öffnen",
+                "flow": "Vorgänge → Lagerbestände → Kommunikation"
+            },
+            "administration": {
+                "title": "Verwaltung",
+                "list": "Verwaltung öffnen",
+                "flow": "fakturieren → einziehen → mahnen → sperren"
+            },
+            "warehouse": {
+                "title": "Lager",
+                "list": "Lager öffnen",
+                "flow": "Verwiegung → Manifest → Abschluss"
+            },
+            "commercial": {
+                "title": "Vertrieb",
+                "list": "Vertrieb öffnen",
+                "flow": "Lead → Angebote → Kunden"
+            }
+        }
+    }
+}

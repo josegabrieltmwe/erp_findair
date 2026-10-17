@@ -1,0 +1,276 @@
+// Global page-level utilities.
+// IMPORTANT: rules here are NOT scoped so they apply across all features.
+// Keep specificity low — page-level overrides should still win.
+
+// ───────────────────────────────────────────────────────────────────────
+// Base body: font + page background
+// ───────────────────────────────────────────────────────────────────────
+html, body {
+  font-family: var(--cm-font-family);
+  font-size: var(--cm-fs-base);
+  line-height: var(--cm-lh-base);
+  color: var(--cm-text-primary);
+  background: var(--cm-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// Vuetify VTable — uniform across the app
+// ───────────────────────────────────────────────────────────────────────
+.v-table {
+  background: var(--cm-bg-surface) !important;
+  font-size: var(--cm-fs-base);
+  color: var(--cm-text-primary);
+}
+
+.v-table thead {
+  background: var(--cm-bg-thead);
+}
+
+.v-table thead th {
+  font-size: var(--cm-fs-xs) !important;
+  font-weight: var(--cm-fw-semibold) !important;
+  color: var(--cm-text-muted) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  height: 36px !important;
+  border-bottom: 1px solid var(--cm-border-color) !important;
+  white-space: nowrap;
+}
+
+.v-table tbody td {
+  font-size: var(--cm-fs-base) !important;
+  color: var(--cm-text-primary);
+  border-bottom: 1px solid var(--cm-border-color-light) !important;
+  vertical-align: middle;
+}
+
+.v-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+.v-table tbody tr:hover {
+  background: var(--cm-bg-hover) !important;
+}
+
+// Action button row in tables — keep them tight, no icon padding fight
+.v-table td .v-btn {
+  margin: 0 var(--cm-space-xs);
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// Vuetify VCard — outlined variant uniform border + rounded corners
+// ───────────────────────────────────────────────────────────────────────
+.v-card.v-card--variant-outlined {
+  border-color: var(--cm-border-color) !important;
+  background: var(--cm-bg-surface) !important;
+  border-radius: var(--cm-radius-lg);
+}
+
+// VCardTitle in lists — use as section sub-header
+.v-card-title {
+  font-size: var(--cm-fs-md) !important;
+  font-weight: var(--cm-fw-semibold) !important;
+  color: var(--cm-text-primary);
+  letter-spacing: -0.005em;
+  padding: var(--cm-space-md) var(--cm-space-lg) !important;
+  border-bottom: 1px solid var(--cm-border-color-light);
+}
+
+.v-card-text {
+  font-size: var(--cm-fs-base) !important;
+  color: var(--cm-text-secondary);
+  padding: var(--cm-space-lg) !important;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// VChip — semantic via custom tone classes (independent of Vuetify theme)
+// ───────────────────────────────────────────────────────────────────────
+.v-chip {
+  font-size: var(--cm-fs-sm) !important;
+  font-weight: var(--cm-fw-medium) !important;
+  letter-spacing: 0.01em;
+  border-radius: var(--cm-radius-md) !important;
+}
+
+.v-chip.v-chip--size-x-small {
+  font-size: var(--cm-fs-xs) !important;
+  height: 20px !important;
+}
+
+.v-chip.v-chip--size-small {
+  height: 24px !important;
+}
+
+// Tone-based chips (use class="cm-tone-*" on the v-chip itself)
+.v-chip.cm-tone-neutral {
+  background: var(--cm-tone-neutral-bg) !important;
+  color: var(--cm-tone-neutral-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-accent {
+  background: var(--cm-tone-accent-bg) !important;
+  color: var(--cm-tone-accent-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-success {
+  background: var(--cm-tone-success-bg) !important;
+  color: var(--cm-tone-success-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-warning {
+  background: var(--cm-tone-warning-bg) !important;
+  color: var(--cm-tone-warning-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-danger {
+  background: var(--cm-tone-danger-bg) !important;
+  color: var(--cm-tone-danger-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-info {
+  background: var(--cm-tone-info-bg) !important;
+  color: var(--cm-tone-info-text) !important;
+  border-color: transparent !important;
+}
+.v-chip.cm-tone-mono {
+  background: var(--cm-tone-mono-bg) !important;
+  color: var(--cm-tone-mono-text) !important;
+  border-color: transparent !important;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// VBtn — text variant in tables stays subtle
+// ───────────────────────────────────────────────────────────────────────
+.v-table .v-btn--variant-text {
+  font-size: var(--cm-fs-sm) !important;
+  font-weight: var(--cm-fw-medium) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// Page utility layout helpers
+// ───────────────────────────────────────────────────────────────────────
+.cm-page {
+  max-width: var(--cm-content-max-width);
+  margin: 0 auto;
+  padding: var(--cm-space-lg) var(--cm-space-xl);
+}
+
+.cm-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--cm-space-md);
+}
+
+.cm-actions {
+  display: flex;
+  gap: var(--cm-space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--cm-space-md);
+}
+
+.cm-actions-row {
+  display: flex;
+  align-items: center;
+  gap: var(--cm-space-sm);
+  flex-wrap: wrap;
+}
+
+.cm-actions-right {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cm-space-md);
+}
+
+.cm-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.cm-grid--3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.cm-stats {
+  display: flex;
+  gap: var(--cm-space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--cm-space-md);
+}
+
+// Selected/clickable rows in non-Vuetify tables
+.cm-row-clickable {
+  cursor: pointer;
+}
+.cm-row-clickable:hover {
+  background: var(--cm-bg-hover);
+}
+.cm-row-selected {
+  background: var(--cm-bg-selected);
+}
+.cm-row-detail {
+  background: var(--cm-bg-subtle);
+}
+.cm-row-detail pre {
+  margin: 0;
+  padding: var(--cm-space-md);
+  background: var(--cm-bg-subtle);
+  font-family: var(--cm-font-family-mono);
+  font-size: var(--cm-fs-sm);
+  line-height: var(--cm-lh-base);
+  color: var(--cm-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 420px;
+  overflow: auto;
+  border-radius: var(--cm-radius-sm);
+}
+
+// Mono text helper — used for IDs, slugs, code-ish values
+.text-mono,
+.cm-mono {
+  font-family: var(--cm-font-family-mono);
+  font-size: var(--cm-fs-sm);
+  letter-spacing: -0.01em;
+  color: var(--cm-text-primary);
+}
+
+// Caption-style hint text under a primary cell
+.cm-cell-hint {
+  font-size: var(--cm-fs-xs);
+  color: var(--cm-text-muted);
+  margin-top: 2px;
+}
+
+// ─── Zebra striping para tablas de detalle (filas pares con fondo tenue) ───
+// Aplicar `class="cm-table-zebra"` a una v-data-table/v-table para igualar el
+// aspecto de todas las tablas del detalle de anagrafica.
+// OJO: aquí NO se usa `:deep()`. Este archivo es CSS GLOBAL (sin `scoped`), y
+// `:deep()` solo lo transforma Vue dentro de un `<style scoped>` de un SFC. En
+// un .scss global llega LITERAL al navegador, que descarta el selector por
+// inválido: el zebra y el hover NUNCA se aplicaron en ninguna tabla que use
+// esta clase. Sin `:deep()` funcionan, que es lo que se buscaba desde el principio.
+.cm-table-zebra tbody tr:nth-child(even) > td {
+  background: rgba(var(--v-theme-on-surface), 0.04);
+}
+.cm-table-zebra tbody tr:hover > td {
+  background: rgba(var(--v-theme-primary), 0.08) !important;
+}
+
+// ─── Subt\xc3\xadtulo de formulario (separador de grupos dentro de un tab) ───
+// Reemplaza los <h4 class="mb-2"> y .cm-subhead locales por un estilo \xc3\xbanico.
+.cm-form-subheading {
+  font-size: var(--cm-fs-sm);
+  font-weight: var(--cm-fw-semibold, 600);
+  color: var(--cm-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: var(--cm-space-lg) 0 var(--cm-space-md);
+}

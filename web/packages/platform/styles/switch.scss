@@ -1,0 +1,100 @@
+// Compact, iOS-like styling for every Vuetify <v-switch> across all SPAs.
+//
+// Why this exists: the default Material 3 switch is tall (density comfortable),
+// its track is faint, and it depends on a thumb icon that renders empty when
+// the iconset can't resolve the internal `svg:` alias. This override makes the
+// switch small, always-visible (solid track in both states), and icon-free, so
+// it reads cleanly regardless of iconset. Pair with the shared `hybridMdi`
+// iconset (packages/platform/vuetify/hybrid_icons.ts) for full correctness.
+//
+// Imported once per app (main.ts) so a single file governs the look everywhere.
+// Uses theme CSS variables (--v-theme-*) so light/dark and per-app palettes
+// are respected automatically.
+
+.v-switch {
+  // Kill the extra vertical space the default control reserves.
+  .v-selection-control {
+    min-height: 0;
+  }
+
+  // --- Track: a solid, always-visible pill (37 x 22). ---
+  .v-switch__track {
+    height: 22px;
+    width: 37px;
+    border-radius: 11px;
+    opacity: 1;
+    // OFF state: a neutral grey derived from the theme so it stays visible on
+    // any surface (the faint default track was the "can't see it" complaint).
+    background-color: rgba(var(--v-theme-on-surface), 0.26);
+    transition: background-color 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // --- Thumb: clean white circle, no icon. ---
+  .v-switch__thumb {
+    height: 18px;
+    width: 18px;
+    background-color: #ffffff;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.28),
+      0 1px 3px rgba(0, 0, 0, 0.14);
+    // Hide the internal thumb icon entirely — the on/off state is conveyed by
+    // the track colour + thumb position, iOS-style.
+    .v-icon,
+    .v-switch__loader {
+      display: none;
+    }
+  }
+
+  // Center the thumb travel within the taller-than-default control box and
+  // give it a snappy slide.
+  .v-selection-control__input {
+    width: 37px;
+    height: 22px;
+    transition: none;
+    // Vuetify's own translateX() on this element is sized for the default
+    // (wider) track. Our track is a custom 37px, so we neutralise Vuetify's
+    // offset here and drive the slide entirely from .v-switch__thumb below —
+    // otherwise the two transforms stack and the thumb overshoots the track.
+    // NOTE: no RTL locale is wired up in the frontend today, but if one ever
+    // is, Vuetify mirrors this offset under .v-locale--is-rtl — this
+    // !important will block that too, so a mirrored rule (translateX(-17px))
+    // will be needed alongside the one below.
+    transform: none !important;
+    > .v-switch__thumb {
+      transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  // --- ON state: fill the track with the control's colour. ---
+  .v-selection-control--dirty {
+    .v-switch__track {
+      background-color: rgb(var(--v-theme-primary));
+    }
+    // Slide the thumb to the right edge of our 37px track (37 track - 18
+    // thumb - 2px inset on each side = 17px of travel).
+    .v-switch__thumb {
+      transform: translateX(17px);
+    }
+  }
+
+  // Honour an explicit color= (error/success/warning/secondary/info) on the ON
+  // track. Vuetify puts the colour on the control as `text-<color>`.
+  @each $c in (error, success, warning, secondary, info) {
+    .v-selection-control--dirty.text-#{$c} .v-switch__track {
+      background-color: rgb(var(--v-theme-#{$c}));
+    }
+  }
+
+  // Label sits tight to the control.
+  .v-label {
+    padding-inline-start: 8px;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+
+  // Disabled: dim but still legible.
+  .v-selection-control--disabled {
+    .v-switch__track { opacity: 0.4; }
+    .v-switch__thumb { opacity: 0.7; }
+  }
+}

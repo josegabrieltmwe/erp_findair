@@ -1,0 +1,34 @@
+{
+  "tracking": {
+    "tracking": {
+      "title": "Gestión de tracking",
+      "subtitle": "Lanzar actualizaciones de tracking",
+      "launch": "Lanzar tracking",
+      "launch_all": "Lanzar TODO",
+      "launch_selected": "Lanzar seleccionados",
+      "track": "Trackear",
+      "search": "Buscar AWB / ID",
+      "filter_courier": "Courier",
+      "empty": "No hay expediciones pendientes de tracking",
+      "col_id": "ID",
+      "col_awb": "AWB",
+      "col_courier": "Courier",
+      "col_client": "Cliente",
+      "col_courier_date": "Fecha courier",
+      "col_status": "Estado",
+      "col_delivery": "Entrega",
+      "batch_title": "Lanzar tracking en lote",
+      "batch_pick_couriers": "Elige los couriers a trackear (o ninguno para todos).",
+      "batch_couriers_label": "Couriers",
+      "batch_selected_hint": "Se trackearán solo los couriers seleccionados.",
+      "batch_all_hint": "Se trackearán todas las expediciones pendientes.",
+      "batch_starting": "Encolando…",
+      "batch_progress": "Procesadas {done} de {total}",
+      "batch_errors": "{n} con error",
+      "batch_finished": "Completado: {done} procesadas, {errors} errores.",
+      "batch_failed": "El trabajo de tracking falló.",
+      "email_summary": "Emails hoy: {sent} enviados · {queued} en cola · {failed} fallidos (de {total})",
+      "single_no_update": "La expedición {id} no recibió actualización del courier."
+    }
+  }
+}

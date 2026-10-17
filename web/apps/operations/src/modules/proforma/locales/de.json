@@ -1,0 +1,54 @@
+{
+  "proforma": {
+    "proforma": {
+      "title": "Proformarechnungen",
+      "new": "Neue Proforma",
+      "edit": "Proforma bearbeiten",
+      "shipment": "Sendung",
+      "shipmentId": "Sendungs-ID",
+      "origin": "Ursprungsland",
+      "reason": "Grund",
+      "currency": "Währung",
+      "date": "Datum",
+      "ref": "Kundenref.",
+      "awb": "AWB",
+      "fromDate": "Datum von",
+      "toDate": "Datum bis",
+      "applyFilters": "Anwenden",
+      "clearFilters": "Zurücksetzen",
+      "items": "Zeilen",
+      "itemsCount": "{count} Zeile | {count} Zeilen",
+      "duplicate": "Duplizieren",
+      "duplicateTitle": "Proforma duplizieren",
+      "duplicateTarget": "Ziel-Sendungs-ID",
+      "duplicateHint": "Kopiert den Kopf und alle Zeilen in eine andere Sendung.",
+      "item": {
+        "description": "Beschreibung",
+        "customsCode": "Zolltarifnummer",
+        "qty": "Menge",
+        "qtyUnit": "Einheit",
+        "netWeight": "Nettogewicht",
+        "grossWeight": "Bruttogewicht",
+        "weightUnit": "Gewichtseinheit",
+        "value": "Wert",
+        "addLine": "Zeile hinzufügen"
+      },
+      "messages": {
+        "created": "Proforma erstellt",
+        "updated": "Proforma aktualisiert",
+        "deleted": "Proforma gelöscht",
+        "duplicated": "Proforma dupliziert",
+        "deleteConfirm": "Diese Proforma und alle zugehörigen Zeilen löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+      },
+      "validation": {
+        "shipmentRequired": "Die Sendungs-ID ist erforderlich",
+        "targetRequired": "Die Ziel-Sendungs-ID ist erforderlich",
+        "noLines": "Mindestens eine Zeile hinzufügen"
+      },
+      "filterClick": {
+        "byShipment": "Nach dieser Sendung filtern",
+        "byOrigin": "Nach diesem Ursprungsland filtern"
+      }
+    }
+  }
+}

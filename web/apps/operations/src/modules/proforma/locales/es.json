@@ -1,0 +1,54 @@
+{
+  "proforma": {
+    "proforma": {
+      "title": "Facturas proforma",
+      "new": "Nueva proforma",
+      "edit": "Editar proforma",
+      "shipment": "Envío",
+      "shipmentId": "ID de envío",
+      "origin": "País de origen",
+      "reason": "Motivo",
+      "currency": "Moneda",
+      "date": "Fecha",
+      "ref": "Ref. cliente",
+      "awb": "AWB",
+      "fromDate": "Fecha desde",
+      "toDate": "Fecha hasta",
+      "applyFilters": "Aplicar",
+      "clearFilters": "Limpiar",
+      "items": "Líneas",
+      "itemsCount": "{count} línea | {count} líneas",
+      "duplicate": "Duplicar",
+      "duplicateTitle": "Duplicar proforma",
+      "duplicateTarget": "ID de envío destino",
+      "duplicateHint": "Copia la cabecera y todas las líneas a otro envío.",
+      "item": {
+        "description": "Descripción",
+        "customsCode": "Código aduanero",
+        "qty": "Cant.",
+        "qtyUnit": "Unidad",
+        "netWeight": "Peso neto",
+        "grossWeight": "Peso bruto",
+        "weightUnit": "Unidad peso",
+        "value": "Valor",
+        "addLine": "Añadir línea"
+      },
+      "messages": {
+        "created": "Proforma creada",
+        "updated": "Proforma actualizada",
+        "deleted": "Proforma eliminada",
+        "duplicated": "Proforma duplicada",
+        "deleteConfirm": "¿Eliminar esta proforma y todas sus líneas? No se puede deshacer."
+      },
+      "validation": {
+        "shipmentRequired": "El ID de envío es obligatorio",
+        "targetRequired": "El ID de envío destino es obligatorio",
+        "noLines": "Añade al menos una línea"
+      },
+      "filterClick": {
+        "byShipment": "Filtrar por esta expedición",
+        "byOrigin": "Filtrar por este país de origen"
+      }
+    }
+  }
+}

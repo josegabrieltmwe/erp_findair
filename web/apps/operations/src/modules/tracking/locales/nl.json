@@ -1,0 +1,34 @@
+{
+  "tracking": {
+    "tracking": {
+      "title": "Trackingbeheer",
+      "subtitle": "Trackingupdates starten",
+      "launch": "Tracking starten",
+      "launch_all": "ALLE starten",
+      "launch_selected": "Geselecteerde starten",
+      "track": "Volgen",
+      "search": "Zoek AWB / ID",
+      "filter_courier": "Koerier",
+      "empty": "Geen zendingen die op tracking wachten",
+      "col_id": "ID",
+      "col_awb": "AWB",
+      "col_courier": "Koerier",
+      "col_client": "Klant",
+      "col_courier_date": "Koeriersdatum",
+      "col_status": "Status",
+      "col_delivery": "Aflevering",
+      "batch_title": "Bulktracking starten",
+      "batch_pick_couriers": "Kies de te volgen koeriers (of geen voor alle).",
+      "batch_couriers_label": "Koeriers",
+      "batch_selected_hint": "Alleen de geselecteerde koeriers worden gevolgd.",
+      "batch_all_hint": "Alle wachtende zendingen worden gevolgd.",
+      "batch_starting": "In wachtrij…",
+      "batch_progress": "{done} van {total} verwerkt",
+      "batch_errors": "{n} met fouten",
+      "batch_finished": "Voltooid: {done} verwerkt, {errors} fouten.",
+      "batch_failed": "De trackingtaak is mislukt.",
+      "email_summary": "E-mails vandaag: {sent} verstuurd · {queued} in wachtrij · {failed} mislukt (van {total})",
+      "single_no_update": "Zending {id} heeft geen update van de koerier ontvangen."
+    }
+  }
+}

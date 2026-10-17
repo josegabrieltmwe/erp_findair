@@ -1,0 +1,110 @@
+.tmwe-cockpit {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.tmwe-cockpit__tabs {
+  position: sticky;
+  z-index: 4;
+  top: 0;
+  padding: 8px 12px;
+  background: rgb(var(--v-theme-surface-variant));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
+.tmwe-cockpit__flow {
+  padding: 2px 12px 8px;
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-size: 12px;
+}
+
+.tmwe-cockpit__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+.tmwe-cockpit__rail-wrap {
+  position: sticky;
+  top: 64px;
+  flex: 0 0 190px;
+  min-width: 0;
+}
+
+.tmwe-cockpit__rail {
+  width: 100%;
+}
+
+.tmwe-cockpit__rail .v-tab {
+  justify-content: flex-start;
+  min-height: 38px;
+  padding-inline: 12px;
+  text-align: left;
+  text-transform: none;
+}
+
+/* Los grupos se APILAN a lo ancho, uno debajo de otro, y cada uno usa todo el
+   espacio a la derecha del rail — como en el prototipo.
+
+   Antes esto era una rejilla `repeat(auto-fit, minmax(280px, 1fr))`, de modo que
+   los grupos se repartian en columnas de 280px y DENTRO cada grupo tenia su
+   propia rejilla de cestas: dos rejillas anidadas. El resultado era que con un
+   solo grupo visible las cestas se apelotonaban en una columna estrecha y
+   sobraba espacio a la derecha. */
+.tmwe-cockpit__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.tmwe-cockpit__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 12px;
+}
+
+/* Drawers de detalle del listado. NO se fija z-index a mano: el drawer vive
+   dentro del `v-app`, asi que Vuetify le asigna su propia capa y ordena el
+   apilado con el resto de overlays (dialogos, menus). Un z-index propio se
+   saltaba ese orden y dejaba los sub-modales por debajo del drawer. */
+
+.tmwe-cockpit .stat-val,
+.tmwe-cockpit .home-section__total {
+  font-family: var(--v-num-font);
+  font-variant-numeric: tabular-nums;
+}
+
+.tmwe-cockpit__filtered-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-inline-end: 4px;
+  vertical-align: middle;
+  background: rgb(var(--v-theme-ok-ink));
+  border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+  /* El ancho de los drawers de detalle ya lo resuelve `drawerWidth` en cada
+     overlay (pantalla completa por debajo de 900px). No se fuerza aqui: un
+     `!important` sobre width peleaba con el valor que Vuetify escribe inline. */
+  .tmwe-cockpit__body {
+    flex-direction: column;
+  }
+
+  .tmwe-cockpit__rail-wrap {
+    position: static;
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .tmwe-cockpit__content {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+}

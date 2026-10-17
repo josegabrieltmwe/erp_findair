@@ -1,0 +1,54 @@
+{
+  "proforma": {
+    "proforma": {
+      "title": "Proforma invoices",
+      "new": "New proforma",
+      "edit": "Edit proforma",
+      "shipment": "Shipment",
+      "shipmentId": "Shipment ID",
+      "origin": "Country of origin",
+      "reason": "Reason",
+      "currency": "Currency",
+      "date": "Date",
+      "ref": "Client ref.",
+      "awb": "AWB",
+      "fromDate": "Date from",
+      "toDate": "Date to",
+      "applyFilters": "Apply",
+      "clearFilters": "Clear",
+      "items": "Line items",
+      "itemsCount": "{count} line | {count} lines",
+      "duplicate": "Duplicate",
+      "duplicateTitle": "Duplicate proforma",
+      "duplicateTarget": "Target shipment ID",
+      "duplicateHint": "Copies the header and all line items to another shipment.",
+      "item": {
+        "description": "Description",
+        "customsCode": "Customs code",
+        "qty": "Qty",
+        "qtyUnit": "Unit",
+        "netWeight": "Net weight",
+        "grossWeight": "Gross weight",
+        "weightUnit": "W. unit",
+        "value": "Value",
+        "addLine": "Add line"
+      },
+      "messages": {
+        "created": "Proforma created",
+        "updated": "Proforma updated",
+        "deleted": "Proforma deleted",
+        "duplicated": "Proforma duplicated",
+        "deleteConfirm": "Delete this proforma and all its lines? This cannot be undone."
+      },
+      "validation": {
+        "shipmentRequired": "Shipment ID is required",
+        "targetRequired": "Target shipment ID is required",
+        "noLines": "Add at least one line item"
+      },
+      "filterClick": {
+        "byShipment": "Filter by this shipment",
+        "byOrigin": "Filter by this origin country"
+      }
+    }
+  }
+}

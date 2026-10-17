@@ -1,0 +1,35 @@
+{
+  "copilot": {
+    "app": {
+      "title": "Copilot",
+      "subtitle": "Pregunta por tus expediciones, tracking y contactos"
+    },
+    "chat": {
+      "placeholder": "Pregunta algo… ej. «Lístame las expediciones que entraron hoy»",
+      "send": "Enviar",
+      "thinking": "Pensando…",
+      "empty_title": "¿En qué puedo ayudarte?",
+      "empty_hint": "Pregunta en lenguaje natural. Prueba una de las sugerencias.",
+      "you": "Tú",
+      "assistant": "Copilot",
+      "error": "Algo salió mal. Inténtalo de nuevo.",
+      "tools_used": "Consultado: {tools}",
+      "clear": "Nueva conversación"
+    },
+    "voice_agent": {
+      "idle": "Asistente de voz",
+      "requesting_permission": "Pidiendo micrófono…",
+      "connecting": "Conectando…",
+      "speaking": "Hablando…",
+      "listening": "Escuchando…",
+      "error": "Reintentar asistente de voz",
+      "unsupported": "Tu navegador no soporta conversaciones de voz."
+    },
+    "suggestions": {
+      "today": "Lístame las expediciones que entraron hoy",
+      "week": "Muéstrame mis expediciones courier de esta semana",
+      "track": "Rastrea la expedición 5022310",
+      "contact": "Busca contactos en Milano en mi rubrica"
+    }
+  }
+}

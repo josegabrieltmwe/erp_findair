@@ -1,0 +1,35 @@
+{
+  "copilot": {
+    "app": {
+      "title": "Copilot",
+      "subtitle": "Ask about your shipments, tracking and contacts"
+    },
+    "chat": {
+      "placeholder": "Ask something… e.g. \"List the shipments that came in today\"",
+      "send": "Send",
+      "thinking": "Thinking…",
+      "empty_title": "How can I help?",
+      "empty_hint": "Ask in natural language. Try one of the suggestions below.",
+      "you": "You",
+      "assistant": "Copilot",
+      "error": "Something went wrong. Please try again.",
+      "tools_used": "Looked up: {tools}",
+      "clear": "New conversation"
+    },
+    "voice_agent": {
+      "idle": "Voice assistant",
+      "requesting_permission": "Requesting microphone…",
+      "connecting": "Connecting…",
+      "speaking": "Speaking…",
+      "listening": "Listening…",
+      "error": "Retry voice assistant",
+      "unsupported": "Your browser does not support voice conversations."
+    },
+    "suggestions": {
+      "today": "List the shipments that came in today",
+      "week": "Show my courier shipments this week",
+      "track": "Track shipment 5022310",
+      "contact": "Find contacts in Milano in my address book"
+    }
+  }
+}

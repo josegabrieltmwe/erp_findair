@@ -1,0 +1,35 @@
+{
+  "copilot": {
+    "app": {
+      "title": "Copilot",
+      "subtitle": "Chiedi delle tue spedizioni, tracking e contatti"
+    },
+    "chat": {
+      "placeholder": "Chiedi qualcosa… es. «Elenca le spedizioni entrate oggi»",
+      "send": "Invia",
+      "thinking": "Sto pensando…",
+      "empty_title": "Come posso aiutarti?",
+      "empty_hint": "Chiedi in linguaggio naturale. Prova uno dei suggerimenti.",
+      "you": "Tu",
+      "assistant": "Copilot",
+      "error": "Qualcosa è andato storto. Riprova.",
+      "tools_used": "Consultato: {tools}",
+      "clear": "Nuova conversazione"
+    },
+    "voice_agent": {
+      "idle": "Assistente vocale",
+      "requesting_permission": "Richiesta microfono…",
+      "connecting": "Connessione…",
+      "speaking": "Sta parlando…",
+      "listening": "In ascolto…",
+      "error": "Riprova assistente vocale",
+      "unsupported": "Il tuo browser non supporta le conversazioni vocali."
+    },
+    "suggestions": {
+      "today": "Elenca le spedizioni entrate oggi",
+      "week": "Mostra le mie spedizioni courier di questa settimana",
+      "track": "Traccia la spedizione 5022310",
+      "contact": "Cerca contatti a Milano nella rubrica"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "communication": {
+    "list": {
+      "title": "Tickets",
+      "subject": "Asunto",
+      "contact": "Contacto",
+      "opened_at": "Apertura",
+      "status": "Estado",
+      "search": "Buscar",
+      "new_ticket": "Nuevo ticket",
+      "unread_total": "{n} sin leer"
+    },
+    "status": {
+      "open": "Abierto",
+      "closed": "Cerrado",
+      "all": "Todos"
+    },
+    "new_ticket": {
+      "title": "Nuevo ticket",
+      "subject": "Asunto",
+      "body": "Mensaje",
+      "submit": "Abrir ticket",
+      "error": "No se pudo abrir el ticket"
+    },
+    "thread": {
+      "close": "Cerrar ticket",
+      "close_confirm": "¿Cerrar este ticket?",
+      "placeholder": "Escribe una respuesta…",
+      "empty": "Todavía no hay mensajes",
+      "send_error": "No se pudo enviar el mensaje",
+      "untitled": "Ticket #{id}"
+    }
+  }
+}

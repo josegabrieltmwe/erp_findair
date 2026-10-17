@@ -1,0 +1,54 @@
+{
+  "proforma": {
+    "proforma": {
+      "title": "Proformafacturen",
+      "new": "Nieuwe proforma",
+      "edit": "Proforma bewerken",
+      "shipment": "Zending",
+      "shipmentId": "Zending-ID",
+      "origin": "Land van oorsprong",
+      "reason": "Reden",
+      "currency": "Valuta",
+      "date": "Datum",
+      "ref": "Klantref.",
+      "awb": "AWB",
+      "fromDate": "Datum vanaf",
+      "toDate": "Datum tot",
+      "applyFilters": "Toepassen",
+      "clearFilters": "Wissen",
+      "items": "Rijen",
+      "itemsCount": "{count} rij | {count} rijen",
+      "duplicate": "Dupliceren",
+      "duplicateTitle": "Proforma dupliceren",
+      "duplicateTarget": "Doel-zending-ID",
+      "duplicateHint": "Kopieert de kop en alle rijen naar een andere zending.",
+      "item": {
+        "description": "Omschrijving",
+        "customsCode": "Douanetariefpost",
+        "qty": "Aantal",
+        "qtyUnit": "Eenheid",
+        "netWeight": "Nettogewicht",
+        "grossWeight": "Brutogewicht",
+        "weightUnit": "Gewichtseenheid",
+        "value": "Waarde",
+        "addLine": "Rij toevoegen"
+      },
+      "messages": {
+        "created": "Proforma aangemaakt",
+        "updated": "Proforma bijgewerkt",
+        "deleted": "Proforma verwijderd",
+        "duplicated": "Proforma gedupliceerd",
+        "deleteConfirm": "Deze proforma en alle bijbehorende rijen verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+      },
+      "validation": {
+        "shipmentRequired": "Het zending-ID is verplicht",
+        "targetRequired": "Het doel-zending-ID is verplicht",
+        "noLines": "Voeg minstens één rij toe"
+      },
+      "filterClick": {
+        "byShipment": "Filteren op deze zending",
+        "byOrigin": "Filteren op dit land van oorsprong"
+      }
+    }
+  }
+}

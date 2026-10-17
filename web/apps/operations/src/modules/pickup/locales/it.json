@@ -1,0 +1,130 @@
+{
+  "pickup": {
+    "app": {
+      "title": "Gestione Prese"
+    },
+    "nav": {
+      "operations": "Operativo",
+      "calendar": "Calendario",
+      "list": "Prese",
+      "routes": "Giri autisti",
+      "zones": "Zone CAP",
+      "pod": "Consegne (POD)"
+    },
+    "operations": {
+      "title": "Pannello operativo",
+      "pickups": "Prese",
+      "giacenze": "Giacenze",
+      "deliveries": "Consegne",
+      "total": "Totale",
+      "assigned": "Assegnate",
+      "unassigned": "Non assegnate",
+      "fixed": "Fisse",
+      "completed": "Completate",
+      "open": "Aperte",
+      "new_today": "Nuove oggi",
+      "overdue": "In ritardo",
+      "awaiting": "Attesa cliente",
+      "pending": "In sospeso"
+    },
+    "calendar": {
+      "title": "Calendario prese",
+      "time": "Ora",
+      "unassigned": "Non assegnate",
+      "fixed": "Fissa",
+      "empty": "Nessuna presa in questa data.",
+      "leg_normal": "Presa",
+      "leg_fixed": "Presa fissa",
+      "leg_done": "Affidata"
+    },
+    "list": {
+      "title": "Prese",
+      "new": "Nuova presa",
+      "from": "Da",
+      "to": "A",
+      "filter": "Filtra",
+      "any": "Tutte",
+      "yes": "Sì",
+      "no": "No",
+      "fixed": "Fissa",
+      "triangulation": "Triangolazione",
+      "at_sede": "In sede",
+      "delete_title": "Elimina presa",
+      "delete_msg": "Eliminare la presa #{id}?",
+      "col": {
+        "id": "ID",
+        "data": "Data/ora",
+        "sede": "Sede",
+        "autista": "Autista",
+        "address": "Luogo",
+        "colli": "Colli",
+        "peso": "Peso",
+        "fixed": "Fissa",
+        "affidata": "Affidata"
+      }
+    },
+    "edit": {
+      "new_title": "Nuova presa",
+      "edit_title": "Modifica presa",
+      "sede": "ID Sede",
+      "autista": "ID Autista",
+      "autista_hint": "0 = non assegnato",
+      "datetime": "Data e ora",
+      "datetime_hint": "Formato: AAAA-MM-GG HH:MM",
+      "address": "Luogo di ritiro",
+      "at_sede": "In sede",
+      "triangulation": "Triangolazione",
+      "colli": "Colli",
+      "peso": "Peso (kg)",
+      "fixed": "Presa fissa",
+      "note": "Note",
+      "cancel": "Annulla",
+      "save": "Salva"
+    },
+    "assign": {
+      "title": "Assegna presa #{id}",
+      "driver": "Autista",
+      "assign": "Assegna",
+      "unassign": "Rimuovi assegnazione"
+    },
+    "routes": {
+      "title": "Giri autisti",
+      "driver": "Autista",
+      "pick_driver": "Seleziona un autista per vedere il giro.",
+      "stops": "{n} fermate",
+      "manifest": "Borderò",
+      "colli": "colli",
+      "total_stops": "Fermate totali",
+      "total_colli": "Colli totali",
+      "total_peso": "Peso totale"
+    },
+    "zones": {
+      "title": "Zone CAP → autista",
+      "provincia": "Provincia",
+      "cap": "CAP",
+      "autista": "ID Autista",
+      "autista_hint": "contatto",
+      "add": "Assegna",
+      "pick_provincia": "Seleziona una provincia.",
+      "empty": "Nessuna zona assegnata.",
+      "delete_title": "Rimuovi zona",
+      "delete_msg": "Rimuovere l'assegnazione del CAP {cap}?"
+    },
+    "pod": {
+      "title": "Registrazione consegna (POD)",
+      "ldv": "LDV / AWB",
+      "ldv_hint": "Numero della spedizione o AWB del corriere",
+      "search": "Cerca",
+      "delivered": "Consegnato",
+      "failed": "Mancata",
+      "firma": "Firma",
+      "firma_hint": "Nome di chi ritira",
+      "note": "Note",
+      "geo": "Rileva posizione",
+      "register": "Registra consegna",
+      "done": "Consegna registrata.",
+      "no_geo": "Geolocalizzazione non disponibile.",
+      "geo_failed": "Impossibile rilevare la posizione."
+    }
+  }
+}

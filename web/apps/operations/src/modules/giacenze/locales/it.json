@@ -1,0 +1,98 @@
+{
+  "giacenze": {
+    "giacenze": {
+      "title": "Giacenze",
+      "subtitle": "Inventario delle spedizioni in giacenza",
+      "new": "Nuova giacenza",
+      "edit": "Modifica giacenza",
+      "shipment": "Spedizione",
+      "client": "Cliente",
+      "tracking": "Tracking",
+      "searchText": "Cerca (note/descrizione)",
+      "clientId": "ID cliente",
+      "shipmentId": "ID spedizione",
+      "description": "Descrizione",
+      "operation": "Operazione",
+      "note": "Nota",
+      "dataOpen": "Apertura",
+      "dataClose": "Chiusura",
+      "days": "Giorni di giacenza",
+      "redeliveryCharge": "Addebito riconsegna",
+      "chargeLockedHint": "Importo bloccato: la spedizione e' gia' stata post fatturata.",
+      "contactSupplier": "Contatto fornitore",
+      "contactClient": "Contatto cliente",
+      "contactRecipient": "Contatto destinatario",
+      "clientReply": "Risposta cliente",
+      "status": "Stato",
+      "openOnly": "Solo aperte",
+      "fromDate": "Apertura da",
+      "toDate": "Apertura a",
+      "filters": "Filtri",
+      "applyFilters": "Applica",
+      "clearFilters": "Pulisci",
+      "closeHold": "Chiudi giacenza",
+      "autoClose": "Chiusura automatica scadute",
+      "autoCloseDays": "Giorni max",
+      "autoCloseHint": "Chiude tutte le giacenze aperte da più del numero di giorni indicato.",
+      "operations": {
+        "A": "Aperta",
+        "C": "Chiusa",
+        "N": "Annotata",
+        "R": "Riconsegna",
+        "E": "Esitata"
+      },
+      "aging": {
+        "title": "Anzianità",
+        "total": "Totale aperte",
+        "avgDays": "Giorni medi",
+        "maxDays": "Giorni max",
+        "band": "Fascia"
+      },
+      "messages": {
+        "created": "Giacenza creata",
+        "updated": "Giacenza aggiornata",
+        "deleted": "Giacenza eliminata",
+        "closed": "Giacenza chiusa",
+        "autoClosed": "{count} giacenza chiusa | {count} giacenze chiuse",
+        "deleteConfirm": "Eliminare questa giacenza? L'operazione non è reversibile.",
+        "closeConfirm": "Chiudere questa giacenza?",
+        "notFound": "Giacenza #{id} non trovata"
+      },
+      "validation": {
+        "shipmentRequired": "L'ID spedizione è obbligatorio",
+        "operationRequired": "L'operazione è obbligatoria"
+      },
+      "filterClick": {
+        "byShipment": "Filtra per questa spedizione",
+        "byOperation": "Filtra per questa operazione"
+      },
+      "addr": {
+        "title": "Indirizzi di consegna",
+        "delivery": "Consegna attuale",
+        "deliveryOriginal": "Consegna originale",
+        "readonly": "Sola lettura",
+        "none": "Nessun indirizzo",
+        "loading": "Caricamento…",
+        "editDelivery": "Modifica consegna"
+      },
+      "msg": {
+        "title": "Messaggi",
+        "toClient": "Al cliente",
+        "toSupplier": "Al corriere",
+        "send": "Invia",
+        "recipient": "Destinatario",
+        "recipientRequired": "Destinatario obbligatorio",
+        "extraText": "Testo aggiuntivo",
+        "noMessages": "Nessun messaggio",
+        "date": "Data",
+        "type": "Tipo",
+        "status": "Esito",
+        "client": "Cliente",
+        "supplier": "Corriere"
+      },
+      "replied": "Ha risposto",
+      "awaitingReply": "In attesa",
+      "copyPrice": "Copia prezzo di carico"
+    }
+  }
+}

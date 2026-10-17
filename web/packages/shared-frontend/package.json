@@ -1,0 +1,22 @@
+{
+  "name": "@tmwe/shared-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared frontend code across cargo_express / shipment_express / home — http client, base entity store, router utils, composables, mockup2 styles",
+  "exports": {
+    "./http": "./src/http/index.ts",
+    "./http/ApiError": "./src/http/ApiError.ts",
+    "./composables/*": "./src/composables/*.ts",
+    "./store/*": "./src/store/*.ts",
+    "./router/*": "./src/router/*.ts",
+    "./styles/*": "./src/styles/*"
+  },
+  "peerDependencies": {
+    "@vueuse/core": "^11.0.0",
+    "ofetch": "^1.0.0",
+    "pinia": "^2.0.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
+  }
+}

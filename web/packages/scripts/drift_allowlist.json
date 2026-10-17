@@ -1,0 +1,71 @@
+{
+  "composables/useChatRealtime.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 to be migrated to @tmwe/shared-frontend in next iteration"
+  },
+  "composables/useFieldBinding.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 to be migrated to @tmwe/shared-frontend in next iteration"
+  },
+  "composables/useRecordNavigator.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 to be migrated to @tmwe/shared-frontend in next iteration"
+  },
+  "composables/useEventBus.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 to be migrated to @tmwe/shared-frontend in next iteration"
+  },
+  "composables/useFieldHelp.ts": {
+    "reason": "Legitimate per-app wrapper \u2014 thin adapter over @tmwe/shared-frontend that injects this app's store; the divergence IS the per-entity injection. Not a fork."
+  },
+  "composables/useMoneyFieldBinding.ts": {
+    "reason": "Legitimate per-app wrapper over @tmwe/shared-frontend (injects app store). Not a fork."
+  },
+  "composables/usePricingRecalc.ts": {
+    "reason": "Real fork (does NOT wrap shared-frontend) \u2014 cargo vs express recalc endpoints. Touches pricing logic; needs cargo E2E before unifying."
+  },
+  "composables/useTargetCurrency.ts": {
+    "reason": "Legitimate per-app wrapper over @tmwe/shared-frontend (injects app store + currency service). Not a fork."
+  },
+  "services/currency.service.ts": {
+    "reason": "Migrated to @shared/services/currency.service \u2014 stubs pending in-app (Phase 1)"
+  },
+  "services/pickup_id.service.ts": {
+    "reason": "Near-identical \u2014 entity-specific pickup endpoints, shared base + wrappers (Phase 1 parametrization)"
+  },
+  "services/route_stats.service.ts": {
+    "reason": "Near-identical \u2014 entity-specific route-stats endpoints, shared base + wrappers (Phase 1 parametrization)"
+  },
+  "stores/files.store.ts": {
+    "reason": "Near-identical \u2014 entity-typed file store; parametrize scope + share (Phase 1 parametrization)"
+  },
+  "components/shell/AddressSummary.vue": {
+    "reason": "Near-identical shell component \u2014 parametrize + move to platform/shell (Phase 1 parametrization)"
+  },
+  "components/shell/AppShell.vue": {
+    "reason": "Near-identical shell layout \u2014 parametrize slots + move to platform/shell (Phase 1 parametrization)"
+  },
+  "components/shell/KpiMetric.vue": {
+    "reason": "Near-identical shell component \u2014 parametrize + move to platform/shell (Phase 1 parametrization)"
+  },
+  "components/shell/RecordNavigator.vue": {
+    "reason": "Near-identical \u2014 pairs with useRecordNavigator; parametrize + move to platform/shell (Phase 1 parametrization)"
+  },
+  "components/shell/Splitter.vue": {
+    "reason": "Depends on @/stores/ui.store (not shared) + queries an app-specific '.shipment-v2 .cols' selector; unify together with ui.store"
+  },
+  "services/files.service.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 entity-specific endpoints (cargo vs shipment), candidate for shared base + per-entity wrappers"
+  },
+  "services/http.ts": {
+    "reason": "Per-app wrapper \u2014 basePath reads __TMWE_CARGO__/__TMWE_SHIPMENT__; client logic in @tmwe/shared-frontend/http (TR-2 done)"
+  },
+  "services/partners.service.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 entity-specific endpoints, candidate for shared base + per-entity wrappers"
+  },
+  "services/terminal.service.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 entity-specific endpoints, candidate for shared base + per-entity wrappers"
+  },
+  "stores/ui.store.ts": {
+    "reason": "Pre-TR-1 baseline \u2014 UI state is mostly identical between SPAs, candidate for shared store"
+  },
+  "components/shell/ThemeToggle.vue": {
+    "reason": "Identical impl, but depends on @/stores/ui.store which is not yet shared \u2014 migrate together once ui.store moves to platform"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "bulk": {
+    "bulk": {
+      "title": "Bulk import",
+      "mode": "Type",
+      "express": "Express shipments",
+      "cargo": "Cargo shipments",
+      "step1": "Paste data",
+      "step2": "Preview",
+      "step3": "Result",
+      "pasteLabel": "Paste CSV (first row = headers)",
+      "pasteHint": "Columns: {cols}",
+      "delimiter": "Delimiter",
+      "validate": "Validate",
+      "maxRows": "Max {n} rows per import.",
+      "summary": "{valid} valid · {invalid} invalid · {total} total",
+      "noValid": "No valid rows to import.",
+      "errorsTitle": "Validation errors",
+      "rowCol": "Row",
+      "messageCol": "Message",
+      "previewTitle": "Preview of valid rows",
+      "import": "Import {n} rows",
+      "importing": "Importing…",
+      "imported": "{n} shipments imported.",
+      "importErrors": "{n} rows failed.",
+      "startOver": "Import more"
+    }
+  }
+}

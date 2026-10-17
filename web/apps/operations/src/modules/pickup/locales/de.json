@@ -1,0 +1,130 @@
+{
+  "pickup": {
+    "app": {
+      "title": "Abholverwaltung"
+    },
+    "nav": {
+      "operations": "Operativ",
+      "calendar": "Kalender",
+      "list": "Abholungen",
+      "routes": "Fahrertouren",
+      "zones": "PLZ-Gebiete",
+      "pod": "Zustellungen (POD)"
+    },
+    "operations": {
+      "title": "Operatives Dashboard",
+      "pickups": "Abholungen",
+      "giacenze": "Lagerung",
+      "deliveries": "Zustellungen",
+      "total": "Gesamt",
+      "assigned": "Zugewiesen",
+      "unassigned": "Nicht zugewiesen",
+      "fixed": "Fest",
+      "completed": "Abgeschlossen",
+      "open": "Offen",
+      "new_today": "Neu heute",
+      "overdue": "Verspätet",
+      "awaiting": "Warten auf Kunden",
+      "pending": "Schwebend"
+    },
+    "calendar": {
+      "title": "Abholkalender",
+      "time": "Uhrzeit",
+      "unassigned": "Nicht zugewiesen",
+      "fixed": "Fest",
+      "empty": "Keine Abholungen an diesem Datum.",
+      "leg_normal": "Abholung",
+      "leg_fixed": "Feste Abholung",
+      "leg_done": "Übergeben"
+    },
+    "list": {
+      "title": "Abholungen",
+      "new": "Neue Abholung",
+      "from": "Von",
+      "to": "To",
+      "filter": "Filtern",
+      "any": "Alle",
+      "yes": "Ja",
+      "no": "Nein",
+      "fixed": "Fest",
+      "triangulation": "Dreiecksverkehr",
+      "at_sede": "Am Standort",
+      "delete_title": "Abholung löschen",
+      "delete_msg": "Abholung #{id} löschen?",
+      "col": {
+        "id": "ID",
+        "data": "Datum/Uhrzeit",
+        "sede": "Sitz",
+        "autista": "Fahrer",
+        "address": "Ort",
+        "colli": "Kolli",
+        "peso": "Gewicht",
+        "fixed": "Fest",
+        "affidata": "Übergeben"
+      }
+    },
+    "edit": {
+      "new_title": "Neue Abholung",
+      "edit_title": "Abholung bearbeiten",
+      "sede": "Standort-ID",
+      "autista": "Fahrer-ID",
+      "autista_hint": "0 = nicht zugewiesen",
+      "datetime": "Datum und Uhrzeit",
+      "datetime_hint": "Format: JJJJ-MM-TT HH:MM",
+      "address": "Abholort",
+      "at_sede": "Am Standort",
+      "triangulation": "Dreiecksverkehr",
+      "colli": "Kolli",
+      "peso": "Gewicht (kg)",
+      "fixed": "Feste Abholung",
+      "note": "Notizen",
+      "cancel": "Abbrechen",
+      "save": "Speichern"
+    },
+    "assign": {
+      "title": "Abholung #{id} zuweisen",
+      "driver": "Fahrer",
+      "assign": "Zuweisen",
+      "unassign": "Zuweisung entfernen"
+    },
+    "routes": {
+      "title": "Fahrertouren",
+      "driver": "Fahrer",
+      "pick_driver": "Wählen Sie einen Fahrer, um die Tour zu sehen.",
+      "stops": "{n} Stopps",
+      "manifest": "Bordero",
+      "colli": "Kolli",
+      "total_stops": "Stopps gesamt",
+      "total_colli": "Kolli gesamt",
+      "total_peso": "Gesamtgewicht"
+    },
+    "zones": {
+      "title": "PLZ-Gebiete → Fahrer",
+      "provincia": "Provinz",
+      "cap": "CAP",
+      "autista": "Fahrer-ID",
+      "autista_hint": "Kontakt",
+      "add": "Zuweisen",
+      "pick_provincia": "Wählen Sie eine Provinz.",
+      "empty": "Kein Gebiet zugewiesen.",
+      "delete_title": "Gebiet entfernen",
+      "delete_msg": "Die Zuweisung der PLZ {cap} entfernen?"
+    },
+    "pod": {
+      "title": "Zustellerfassung (POD)",
+      "ldv": "Frachtbrief / AWB",
+      "ldv_hint": "Sendungsnummer oder AWB des Kuriers",
+      "search": "Suchen",
+      "delivered": "Zugestellt",
+      "failed": "Fehlgeschlagen",
+      "firma": "Unterschrift",
+      "firma_hint": "Name des Abholers",
+      "note": "Notizen",
+      "geo": "Standort ermitteln",
+      "register": "Zustellung erfassen",
+      "done": "Zustellung erfasst.",
+      "no_geo": "Standortbestimmung nicht verfügbar.",
+      "geo_failed": "Standort konnte nicht ermittelt werden."
+    }
+  }
+}

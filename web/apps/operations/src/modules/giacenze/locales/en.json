@@ -1,0 +1,98 @@
+{
+  "giacenze": {
+    "giacenze": {
+      "title": "Holds (Giacenze)",
+      "subtitle": "Inventory of held shipments",
+      "new": "New hold",
+      "edit": "Edit hold",
+      "shipment": "Shipment",
+      "client": "Client",
+      "tracking": "Tracking",
+      "searchText": "Search (notes/description)",
+      "clientId": "Client ID",
+      "shipmentId": "Shipment ID",
+      "description": "Description",
+      "operation": "Operation",
+      "note": "Note",
+      "dataOpen": "Opened",
+      "dataClose": "Closed",
+      "days": "Days held",
+      "redeliveryCharge": "Redelivery charge",
+      "chargeLockedHint": "Amount locked: the shipment has already been post-invoiced.",
+      "contactSupplier": "Supplier contact",
+      "contactClient": "Client contact",
+      "contactRecipient": "Recipient contact",
+      "clientReply": "Client reply",
+      "status": "Status",
+      "openOnly": "Open only",
+      "fromDate": "Open from",
+      "toDate": "Open to",
+      "filters": "Filters",
+      "applyFilters": "Apply",
+      "clearFilters": "Clear",
+      "closeHold": "Close hold",
+      "autoClose": "Auto-close expired",
+      "autoCloseDays": "Max days",
+      "autoCloseHint": "Closes all holds open for more than the given number of days.",
+      "operations": {
+        "A": "Open",
+        "C": "Closed",
+        "N": "Noted",
+        "R": "Redelivery",
+        "E": "Settled"
+      },
+      "aging": {
+        "title": "Aging",
+        "total": "Total open",
+        "avgDays": "Avg. days",
+        "maxDays": "Max days",
+        "band": "Band"
+      },
+      "messages": {
+        "created": "Hold created",
+        "updated": "Hold updated",
+        "deleted": "Hold deleted",
+        "closed": "Hold closed",
+        "autoClosed": "{count} hold closed | {count} holds closed",
+        "deleteConfirm": "Delete this hold? This cannot be undone.",
+        "closeConfirm": "Close this hold?",
+        "notFound": "Hold #{id} not found"
+      },
+      "validation": {
+        "shipmentRequired": "Shipment ID is required",
+        "operationRequired": "Operation is required"
+      },
+      "filterClick": {
+        "byShipment": "Filter by this shipment",
+        "byOperation": "Filter by this operation"
+      },
+      "addr": {
+        "title": "Delivery addresses",
+        "delivery": "Current delivery",
+        "deliveryOriginal": "Original delivery",
+        "readonly": "Read-only",
+        "none": "No address",
+        "loading": "Loading…",
+        "editDelivery": "Edit delivery"
+      },
+      "msg": {
+        "title": "Messages",
+        "toClient": "To client",
+        "toSupplier": "To supplier",
+        "send": "Send",
+        "recipient": "Recipient",
+        "recipientRequired": "Recipient required",
+        "extraText": "Extra text",
+        "noMessages": "No messages",
+        "date": "Date",
+        "type": "Type",
+        "status": "Status",
+        "client": "Client",
+        "supplier": "Supplier"
+      },
+      "replied": "Replied",
+      "awaitingReply": "Awaiting",
+      "copyPrice": "Copy loading price"
+    }
+  }
+}

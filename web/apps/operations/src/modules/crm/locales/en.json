@@ -1,0 +1,123 @@
+{
+  "crm": {
+    "stato": {
+      "all": "All",
+      "A": "Open",
+      "C": "Closed",
+      "L": "Long wait"
+    },
+    "list": {
+      "title": "CRM cases",
+      "oggetto": "Subject",
+      "cliente": "Client",
+      "stato": "Status",
+      "data_open": "Opened",
+      "data_next": "Next action",
+      "descriz": "Description",
+      "contatto": "Contact",
+      "tipo": "Type",
+      "data_open_da": "Opened from",
+      "data_open_al": "Opened until",
+      "search": "Search subject",
+      "delete_confirm": "Delete case #{id}?"
+    },
+    "shortcut": {
+      "open": "Open cases",
+      "todo": "Open to-do cases",
+      "alert": "New cases (240 h)"
+    },
+    "detail": {
+      "title": "Case",
+      "header": "Case data",
+      "open_shipment": "Open shipment",
+      "sec_client": "Client & contact",
+      "sec_classify": "Classification",
+      "sec_followup": "Follow-up",
+      "sec_notes": "Notes",
+      "id_spedizione_readonly": "Inherited from the shipment (read-only)"
+    },
+    "lookup": {
+      "type_to_search": "Type to search…",
+      "no_contacts": "No contacts"
+    },
+    "field": {
+      "cliente": "Client",
+      "contatto": "Contact",
+      "oggetto": "Subject",
+      "id_spedizione": "Shipment #",
+      "tipo": "Type",
+      "nome": "Name",
+      "email": "Email",
+      "tel": "Phone",
+      "rif_cliente": "Client ref.",
+      "data_next": "Next follow-up",
+      "descriz": "Description",
+      "note_interne": "Internal notes"
+    },
+    "eventi": {
+      "title": "Events / steps",
+      "stato": "Status",
+      "descriz": "Step description",
+      "data": "Date and time",
+      "view": "View details",
+      "detail_title": "Step details #{id}",
+      "add": "Add",
+      "empty": "No events yet"
+    },
+    "messaggi": {
+      "title": "Sent messages",
+      "dest": "Recipient",
+      "file": "Att.",
+      "way": "Channel",
+      "data": "Date",
+      "esito": "Result",
+      "empty": "No messages sent"
+    },
+    "context": {
+      "shipment_title": "CRM · Shipment #{id}",
+      "cargo_title": "CRM · Cargo #{id}",
+      "unavailable_shipment": "CRM is not available for this shipment",
+      "unavailable_cargo": "CRM is not available for this cargo shipment",
+      "case_fallback": "Case #{id}",
+      "case_selector": "CRM case",
+      "open_full": "Open full case",
+      "case_option": "{subject} · {status} · #{id}",
+      "created": "Case created",
+      "existing_opened": "Existing case opened",
+      "create_error": "Could not create the case",
+      "created_partial": "Case created. Some activity could not be loaded.",
+      "created_open_error": "The case was created but could not be opened. You can retry from the panel.",
+      "existing_partial": "The existing case is open. Some activity could not be loaded.",
+      "existing_open_error": "The case already exists but could not be opened. You can retry from the panel.",
+      "partial_error": "Available data is shown, but the case could not be refreshed.",
+      "load_error_title": "Could not load the case",
+      "load_error_body": "We could not retrieve case #{id}. The shipment remains open and you can try again.",
+      "empty_title": "No case to display",
+      "empty_body": "Select a CRM case or close this panel to continue.",
+      "events_error": "Events could not be loaded. The rest of the case remains available.",
+      "messages_error": "Messages could not be loaded. The rest of the case remains available."
+    },
+    "indicator": {
+      "open_cases": "Open cases",
+      "overdue_followups": "Overdue follow-ups"
+    },
+    "send": {
+      "button": "Send message",
+      "title": "Send message to client",
+      "metodo": "Channel",
+      "dest": "Recipient",
+      "dest_hint": "If empty, the case email is used",
+      "subject": "Subject",
+      "subject_hint": "If empty, taken from the template",
+      "text": "Free text",
+      "use_base": "Use base template",
+      "result": "Message registered (status: {esito})",
+      "error": "Could not send the message",
+      "files": "Attachments",
+      "files_hint": "Up to {max} files",
+      "use_base_hint": "Wraps your text in the client template",
+      "files_cta": "Drag files or click",
+      "files_full": "Maximum of {max} files reached"
+    }
+  }
+}

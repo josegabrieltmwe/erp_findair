@@ -1,0 +1,36 @@
+{
+  "name": "tmwe-frontend-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "description": "TMWE ERP frontend monorepo — operations (SPA operativa unificada), cod_capture_public + shared packages",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build:all": "pnpm -r --filter='./apps/*' run build",
+    "build:nocheck:all": "pnpm -r --filter='./apps/*' run build:nocheck",
+    "build:fast:all": "pnpm -r --filter='./apps/*' run build:fast",
+    "dev:cod_capture_public": "pnpm --filter @tmwe/cod-capture-public dev",
+    "dev:operations": "pnpm --filter @tmwe/operations dev",
+    "dev:on": "touch .vite-dev && echo 'Modo dev HMR ACTIVADO — arranca la SPA con pnpm dev:<app>'",
+    "dev:off": "rm -f .vite-dev && echo 'Modo dev HMR DESACTIVADO — se sirve el bundle compilado'",
+    "dev:status": "test -f .vite-dev && echo 'HMR ACTIVADO (.vite-dev presente)' || echo 'HMR desactivado'",
+    "lint:all": "pnpm -r --filter='./apps/*' run lint",
+    "test:all": "pnpm -r --filter='./apps/*' run test",
+    "typecheck:all": "pnpm -r --filter='./apps/*' run typecheck",
+    "dev:ops": "pnpm --filter @tmwe/operations dev",
+    "build:operations": "pnpm --filter @tmwe/operations build",
+    "check:drift": "tsx packages/scripts/check_drift.ts",
+    "lint:openapi": "spectral lint --ruleset ../docs/openapi/cargo/.spectral.yaml --fail-severity=error ../docs/openapi/cargo/*.yaml",
+    "lint:openapi:shipment": "spectral lint --ruleset ../docs/openapi/shipment/.spectral.yaml --fail-severity=error ../docs/openapi/shipment/*.yaml",
+    "lint:openapi:all": "pnpm run lint:openapi && pnpm run lint:openapi:shipment",
+    "check:i18n": "tsx packages/scripts/check_i18n.ts",
+    "check:raw-text": "tsx packages/scripts/check_raw_text.ts"
+  },
+  "devDependencies": {
+    "@intlify/eslint-plugin-vue-i18n": "^4.5.1",
+    "@stoplight/spectral-cli": "^6.16.0",
+    "tsx": "^4.19.2"
+  }
+}
