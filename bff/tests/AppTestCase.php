@@ -53,6 +53,7 @@ abstract class AppTestCase extends TestCase
             'UPSTREAM_PUBLIC_URL' => 'http://public.test/app.php',
             'OAUTH_CLIENT_ID' => 'cid',
             'OAUTH_CLIENT_SECRET' => 'csecret',
+            'UPSTREAM_DENY_ACTIONS' => 'api_spa_book*, *_cancel',
         ], __DIR__ . '/fixtures/routes.yaml');
 
         $this->store = new ArraySessionStore();

@@ -26,6 +26,10 @@ final class Settings
         public readonly string $oauthRedirectUri,
         public readonly string $oauthScope,
         public readonly string $manifestPath,
+        /** Acción de tmwe_json que devuelve {user, capabilities}; vacía = se deducen del perfil. */
+        public readonly string $contextAction = '',
+        /** @var list<string> acciones (admite `*`) cuyas peticiones que cambian estado se bloquean con 403 */
+        public readonly array $denyActions = [],
     ) {
     }
 
@@ -61,6 +65,8 @@ final class Settings
             oauthClientSecret: $get('OAUTH_CLIENT_SECRET'),
             oauthRedirectUri: $get('OAUTH_REDIRECT_URI', $appUrl . '/bff/auth/callback'),
             oauthScope: $get('OAUTH_SCOPE'),
+            contextAction: $get('UPSTREAM_CONTEXT_ACTION'),
+            denyActions: array_values(array_filter(array_map('trim', explode(',', $get('UPSTREAM_DENY_ACTIONS'))), static fn (string $a): bool => $a !== '')),
             manifestPath: $manifestPath,
         );
     }

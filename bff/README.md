@@ -8,7 +8,7 @@ Backend For Frontend en Slim 4 (PHP 8.3+). Custodia los tokens OAuth2 y hace de 
 |---|---|
 | `GET /bff/auth/login` | Inicia Authorization Code + PKCE hacia el login de tmwe_json (`action=auth`) |
 | `GET /bff/auth/callback` | Canjea el código, rota el id de sesión y guarda los tokens cifrados |
-| `GET /bff/auth/session` | Estado de la sesión y token CSRF para la SPA |
+| `GET /bff/auth/session` | Estado de la sesión, token CSRF, `user` y `capabilities` (se calculan en el login) para la SPA |
 | `POST /bff/auth/logout` | Revoca tokens y destruye la sesión (exige `X-CSRF-Token`) |
 | `ANY /bff/v1/*` | Proxy con lista blanca (`config/routes.bff.yaml`) y Bearer del usuario |
 | `GET /bff/healthz`, `/bff/readyz` | Liveness y readiness (comprueba Redis) |

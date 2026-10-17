@@ -64,13 +64,36 @@ final class ResponseAdapter
             $headers['Retry-After'] = $upstream->getHeaderLine('Retry-After');
         }
 
+        // Los campos del backend (details, errors, error_code…) viajan como miembros de extensión
+        // (RFC 9457): la SPA los usa para pintar errores de validación por campo.
+        $extra = self::extensions($payload);
+
         return match ($status) {
             401 => ProblemDetails::response(401, 'session_expired', 'Sesión no válida', 'Vuelva a iniciar sesión.', $requestId),
-            403 => ProblemDetails::response(403, $code ?? 'forbidden', 'Acceso denegado', $detail, $requestId),
-            404 => ProblemDetails::response(404, $code ?? 'not_found', 'No encontrado', $detail, $requestId),
+            403 => ProblemDetails::response(403, $code ?? 'forbidden', 'Acceso denegado', $detail, $requestId, $extra),
+            404 => ProblemDetails::response(404, $code ?? 'not_found', 'No encontrado', $detail, $requestId, $extra),
             429 => ProblemDetails::response(429, 'rate_limited', 'Demasiadas solicitudes', $detail, $requestId, [], $headers),
-            default => ProblemDetails::response($status, $code ?? 'request_rejected', 'Solicitud rechazada', $detail, $requestId),
+            default => ProblemDetails::response($status, $code ?? 'request_rejected', 'Solicitud rechazada', $detail, $requestId, $extra),
         };
+    }
+
+    /**
+     * Miembros del cuerpo del backend que se conservan; los reservados del problema no se pisan.
+     *
+     * @param array<string, mixed> $payload
+     * @return array<string, mixed>
+     */
+    private static function extensions(array $payload): array
+    {
+        $reserved = ['type', 'title', 'status', 'detail', 'instance', 'code', 'request_id'];
+        $extra = [];
+        foreach ($payload as $key => $value) {
+            if (is_string($key) && !in_array($key, $reserved, true) && (is_scalar($value) || is_array($value) || $value === null)) {
+                $extra[$key] = $value;
+            }
+        }
+
+        return $extra;
     }
 
     /** Algunos controladores heredados responden 200 con {"success": false}. */

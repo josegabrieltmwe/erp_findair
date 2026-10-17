@@ -88,21 +88,31 @@ export async function bffLogout(): Promise<void> {
   }
 }
 
+export interface BffUser {
+  username?: string;
+  name?: string;
+  email?: string;
+  partner_id?: number;
+  is_admin?: boolean;
+  is_tmwe?: boolean;
+}
+
 export interface BffSession {
   authenticated: boolean;
   csrf_token?: string;
   access_expires_at?: number;
-}
-
-interface Profile {
-  language?: string | null;
-  idanagfrc?: number | string | null;
-  is_admin?: boolean;
+  /** Quién es el usuario; lo calcula el BFF al autenticar. */
+  user?: BffUser;
+  /** Qué puede ver la SPA (`tmwe`, `clients`, `my_org`…); lo calcula el BFF al autenticar. */
+  capabilities?: string[];
 }
 
 /**
  * Comprueba la sesión y deja el entorno listo para que arranque la SPA.
  * Devuelve false si se ha redirigido al login (no hay que montar la app).
+ *
+ * El usuario y las capacidades vienen en la propia respuesta de la sesión (el BFF las fija en
+ * el login): la SPA no las deduce ni pide el perfil aparte.
  */
 export async function bootstrapBff(): Promise<boolean> {
   installBffFetch();
@@ -115,18 +125,11 @@ export async function bootstrapBff(): Promise<boolean> {
   }
   setCsrfToken(session.csrf_token);
 
-  const profileRes = await fetch(`${BFF_BASE_PATH}/get_my_profile`, { headers: { Accept: 'application/json' } });
-  const profile = (profileRes.ok ? await profileRes.json() : {}) as Profile;
-
-  // El backend no expone aún las capacidades (authx_*) por API: se deduce de forma
-  // conservadora; mostrar de menos es seguro, cada página sigue autorizando por su cuenta.
-  const partnerId = Number(profile.idanagfrc ?? 0) || 0;
-  const isTmwe = partnerId === 1;
   const language = (() => {
     try {
-      return localStorage.getItem('tmwe.locale') ?? profile.language ?? null;
+      return localStorage.getItem('tmwe.locale');
     } catch {
-      return profile.language ?? null;
+      return null;
     }
   })();
 
@@ -136,9 +139,9 @@ export async function bootstrapBff(): Promise<boolean> {
     basePath: BFF_BASE_PATH,
     language,
     csrf: session.csrf_token,
-    isTmwe,
-    partnerId,
-    capabilities: isTmwe ? ['tmwe', 'clients'] : [],
+    isTmwe: session.user?.is_tmwe === true,
+    partnerId: session.user?.partner_id ?? 0,
+    capabilities: session.capabilities ?? [],
   };
   return true;
 }

@@ -55,7 +55,8 @@ foreach ($modules as $module) {
     }
     $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS));
     foreach ($files as $file) {
-        if (preg_match('/\.(ts|vue)$/', (string) $file) !== 1) {
+        if (preg_match('/\.(ts|vue)$/', (string) $file) !== 1
+            || preg_match('#/node_modules/|\.(spec|test)\.#', (string) $file) === 1) {
             continue;
         }
         $code = (string) file_get_contents((string) $file);

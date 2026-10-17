@@ -69,4 +69,23 @@ final class UnitTest extends TestCase
         self::assertSame('http://h/app.php?a=1&action=token', $urls->internal('token', ['a' => 1, 'action' => 'evil']));
         self::assertSame('http://p/app.php?action=auth', $urls->public('auth'));
     }
+
+    public function testProfileContextForNonTmweUserHasNoCapabilities(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromProfile(['username' => 'ana', 'idanagfrc' => 77, 'is_admin' => 'yes']);
+
+        self::assertSame([], $ctx['capabilities']);
+        self::assertSame(77, $ctx['user']['partner_id']);
+        self::assertFalse($ctx['user']['is_admin'], 'is_admin solo es verdadero si es booleano true');
+    }
+
+    public function testBackendContextCapabilitiesAreSanitized(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext([
+            'user' => ['idanagfrc' => 5],
+            'capabilities' => ['clients', 'my_org', 'clients', '<script>', 42, str_repeat('x', 80)],
+        ]);
+
+        self::assertSame(['clients', 'my_org'], $ctx['capabilities']);
+    }
 }

@@ -8,6 +8,7 @@ use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenSet;
 use Findair\Bff\Http\CsrfGuard;
 use Findair\Bff\Session\Session;
+use Findair\Bff\Settings;
 use Findair\Bff\Support\ProblemDetails;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -30,6 +31,7 @@ final class ProxyController
         private readonly ResponseAdapter $adapter,
         private readonly CsrfGuard $csrf,
         private readonly LoggerInterface $logger,
+        private readonly Settings $settings,
     ) {
     }
 
@@ -47,6 +49,12 @@ final class ProxyController
                 : ProblemDetails::response(404, 'route_not_found', 'Ruta no encontrada', null, $requestId);
         }
         $route = $match['route'];
+
+        if ($this->isDenied($request->getMethod(), $route->action)) {
+            $this->logger->warning('action_denied', ['route' => $route->id, 'action' => $route->action, 'request_id' => $requestId]);
+
+            return ProblemDetails::response(403, 'action_blocked', 'Acción bloqueada en este entorno', 'Bloqueada por UPSTREAM_DENY_ACTIONS.', $requestId);
+        }
 
         /** @var Session $session */
         $session = $request->getAttribute('session');
@@ -92,6 +100,21 @@ final class ProxyController
         ]);
 
         return $adapted;
+    }
+
+    /** Lista de bloqueo por entorno: solo afecta a métodos que cambian estado. */
+    private function isDenied(string $method, string $action): bool
+    {
+        if (in_array(strtoupper($method), ['GET', 'HEAD', 'OPTIONS'], true)) {
+            return false;
+        }
+        foreach ($this->settings->denyActions as $pattern) {
+            if (fnmatch($pattern, $action)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function send(Request $request, Route $route, string $url, TokenSet $tokens, string $body, string $requestId): ResponseInterface

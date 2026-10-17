@@ -246,4 +246,35 @@ final class ProxyTest extends AppTestCase
         parse_str((string) $this->history[0]['request']->getUri()->getQuery(), $q);
         self::assertSame('api_thing_create', $q['action']);
     }
+
+    public function testClientErrorKeepsBackendFieldsAsExtensions(): void
+    {
+        $this->boot([new UpstreamResponse(422, ['Content-Type' => 'application/json'], '{"success":false,"error":"package_id required","error_code":"VALIDATION_ERROR","details":{"fields":["package_id required"]},"code":"x","status":1}')]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/api_spa_list', $sid));
+        $body = $this->json($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('VALIDATION_ERROR', $body['code']);
+        self::assertSame('package_id required', $body['error']);
+        self::assertSame(['fields' => ['package_id required']], $body['details']);
+        self::assertSame(422, $body['status'], 'los miembros reservados no los pisa el backend');
+    }
+
+    public function testDeniedActionBlocksWritesButNotReads(): void
+    {
+        $this->boot([$this->upstreamOk()]);
+        $sid = $this->loginSession();
+
+        $blocked = $this->send($this->request('POST', '/bff/v1/api_spa_book', $sid, $this->unsafeHeaders(), '{}'));
+        self::assertSame(403, $blocked->getStatusCode());
+        self::assertSame('action_blocked', $this->json($blocked)['code']);
+        $byPattern = $this->send($this->request('DELETE', '/bff/v1/api_thing_cancel', $sid, $this->unsafeHeaders()));
+        self::assertSame('action_blocked', $this->json($byPattern)['code']);
+        self::assertCount(0, $this->history, 'una acción bloqueada no llega al backend');
+
+        $read = $this->send($this->request('GET', '/bff/v1/api_spa_book', $sid));
+        self::assertSame(200, $read->getStatusCode());
+        self::assertCount(1, $this->history);
+    }
 }

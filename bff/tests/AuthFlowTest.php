@@ -133,4 +133,40 @@ final class AuthFlowTest extends AppTestCase
         self::assertSame(403, $response->getStatusCode());
         self::assertNotNull($this->store->load($sid));
     }
+
+    public function testLoginStoresUserContextAndSessionInfoReturnsIt(): void
+    {
+        $this->boot([
+            $this->upstreamOk('{"access_token":"AT","refresh_token":"RT","expires_in":3600}'),
+            $this->upstreamOk('{"username":"jose","name":"Jose","email":"j@example.test","idanagfrc":1,"is_admin":true,"secret":"no"}'),
+        ]);
+        $login = $this->startLogin();
+        $callback = $this->send($this->request('GET', '/bff/auth/callback?code=abc&state=' . $login['state'], $login['sid']));
+        $sid = $this->cookieId($callback);
+
+        self::assertSame('Bearer AT', $this->history[1]['request']->getHeaderLine('Authorization'));
+        self::assertStringContainsString('action=get_my_profile', (string) $this->history[1]['request']->getUri());
+
+        $info = $this->json($this->send($this->request('GET', '/bff/auth/session', $sid)));
+        self::assertSame(['tmwe', 'clients'], $info['capabilities']);
+        self::assertSame(1, $info['user']['partner_id']);
+        self::assertTrue($info['user']['is_tmwe']);
+        self::assertArrayNotHasKey('secret', $info['user']);
+        self::assertArrayNotHasKey('access_token', $info);
+    }
+
+    public function testContextFailureDoesNotBlockLogin(): void
+    {
+        $this->boot([
+            $this->upstreamOk('{"access_token":"AT","refresh_token":"RT","expires_in":3600}'),
+            new UpstreamResponse(500, [], 'boom'),
+        ]);
+        $login = $this->startLogin();
+        $callback = $this->send($this->request('GET', '/bff/auth/callback?code=abc&state=' . $login['state'], $login['sid']));
+
+        self::assertSame(self::ORIGIN . '/shipments', $callback->getHeaderLine('Location'));
+        $info = $this->json($this->send($this->request('GET', '/bff/auth/session', $this->cookieId($callback))));
+        self::assertTrue($info['authenticated']);
+        self::assertSame([], $info['capabilities']);
+    }
 }

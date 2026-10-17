@@ -10,3 +10,15 @@ routes:
     path: /things
     upstream:
       action: generated_version
+  - id: spa.book.read
+    method: GET
+    path: /api_spa_book
+    upstream: { action: api_spa_book }
+  - id: spa.book.create
+    method: POST
+    path: /api_spa_book
+    upstream: { action: api_spa_book }
+  - id: spa.thing.cancel
+    method: DELETE
+    path: /api_thing_cancel
+    upstream: { action: api_thing_cancel }

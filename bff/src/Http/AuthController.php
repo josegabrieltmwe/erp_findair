@@ -8,6 +8,7 @@ use Findair\Bff\Auth\OAuthClient;
 use Findair\Bff\Auth\OAuthException;
 use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenVault;
+use Findair\Bff\Auth\UserContextProvider;
 use Findair\Bff\Session\Session;
 use Findair\Bff\Settings;
 use Findair\Bff\Support\ProblemDetails;
@@ -23,6 +24,7 @@ final class AuthController
         private readonly OAuthClient $oauth,
         private readonly TokenVault $vault,
         private readonly TokenRefresher $refresher,
+        private readonly UserContextProvider $context,
         private readonly CsrfGuard $csrf,
         private readonly Settings $settings,
         private readonly LoggerInterface $logger,
@@ -78,6 +80,7 @@ final class AuthController
         $session->set('created_at', time());
         $session->set('csrf', bin2hex(random_bytes(32)));
         $session->set('tokens', $this->vault->seal($tokens));
+        $session->set('context', $this->context->load($tokens->accessToken, (string) $request->getAttribute('request_id', '')));
 
         return $this->redirect($response, $this->settings->appUrl . (string) $pending['return_to']);
     }
@@ -90,6 +93,9 @@ final class AuthController
         $payload = ['authenticated' => $authenticated];
         if ($authenticated) {
             $payload['csrf_token'] = $session->csrfToken();
+            $context = $session->get('context');
+            $payload['user'] = is_array($context) && is_array($context['user'] ?? null) ? $context['user'] : new \stdClass();
+            $payload['capabilities'] = is_array($context) && is_array($context['capabilities'] ?? null) ? $context['capabilities'] : [];
             $tokens = $this->refresher->current($session);
             $payload['access_expires_at'] = $tokens?->expiresAt;
         }

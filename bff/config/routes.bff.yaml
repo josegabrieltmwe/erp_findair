@@ -41,3 +41,9 @@ routes:
     upstream:
       action: web_presence_heartbeat
     limits: { body: 4k, timeout: 5 }
+
+  - id: admin.my_permissions
+    method: GET
+    path: /api_admin_my_permissions
+    upstream:
+      action: api_admin_my_permissions
