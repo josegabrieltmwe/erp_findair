@@ -1,0 +1,26 @@
+routes:
+  - id: thing.show
+    method: GET
+    path: /things/{id}
+    upstream:
+      action: api_thing
+      params: { id: thing_id }
+      forward_query: [lang]
+  - id: thing.create
+    method: POST
+    path: /things
+    upstream:
+      action: api_thing_create
+    limits: { body: 1k }
+  - id: thing.legacy
+    method: GET
+    path: /legacy
+    upstream:
+      action: legacy_thing
+    legacy_envelope: true
+  - id: file.download
+    method: GET
+    path: /file
+    upstream:
+      action: download_file
+    response: binary

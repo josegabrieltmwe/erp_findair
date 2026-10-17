@@ -1,0 +1,29 @@
+# Lista blanca de lo que el navegador puede pedir. Lo que no está aquí devuelve 404.
+#
+# Campos por ruta:
+#   id               nombre estable (logs, métricas)
+#   method / path    ruta pública bajo /bff/v1. Admite {parametros}.
+#   upstream.action  nombre de la acción en tmwe_json (?action=...)
+#   upstream.method  método hacia el backend si difiere del público
+#   upstream.query   parámetros fijos
+#   upstream.params  {segmento: parametro_upstream} para los {parametros} de la ruta
+#   upstream.forward_query  parámetros de query que se reenvían tal cual
+#   response         json (por defecto) | binary | stream
+#   legacy_envelope  true si el controlador responde 200 con {"success": false}
+#   limits           body (p. ej. 64k, 20m) y timeout en segundos
+#   csrf             por defecto true para métodos que cambian estado
+routes:
+  - id: me.profile
+    method: GET
+    path: /me
+    upstream:
+      action: get_my_profile
+    legacy_envelope: true
+
+  # Ejemplos de nivel api con Bearer puro (rutas reales de config/routes del backend):
+  - id: currency.day
+    method: GET
+    path: /currencies/day
+    upstream:
+      action: api_currency_day
+      forward_query: [currency, date]
