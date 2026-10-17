@@ -184,6 +184,7 @@ final class ProxyTest extends AppTestCase
     {
         $this->boot([
             new UpstreamResponse(401, [], '{"error":"invalid_token"}'),
+            new UpstreamResponse(401, [], '{}'), // sondeo: el token ya no vale
             $this->upstreamOk('{"access_token":"access-2","refresh_token":"refresh-2","expires_in":3600}'),
             $this->upstreamOk('{"ok":1}'),
         ]);
@@ -191,14 +192,15 @@ final class ProxyTest extends AppTestCase
         $response = $this->send($this->request('GET', '/bff/v1/things/1', $sid));
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertCount(3, $this->history);
-        self::assertSame('Bearer access-2', $this->history[2]['request']->getHeaderLine('Authorization'));
+        self::assertCount(4, $this->history);
+        self::assertSame('Bearer access-2', $this->history[3]['request']->getHeaderLine('Authorization'));
     }
 
     public function testFailedRefreshDestroysSession(): void
     {
         $this->boot([
             new UpstreamResponse(401, [], '{}'),
+            new UpstreamResponse(401, [], '{}'), // sondeo: el token ya no vale
             new UpstreamResponse(400, [], '{"error":"invalid_grant"}'),
         ]);
         $sid = $this->loginSession();
@@ -300,5 +302,46 @@ final class ProxyTest extends AppTestCase
         $response = $this->send($this->request('GET', '/bff/v1/api_spa_list', $sid));
 
         self::assertFalse($response->hasHeader(\Findair\Bff\Http\StreamingEmitter::MARKER));
+    }
+
+    public function testRouteThatReturns401ForValidTokenDoesNotEndTheSession(): void
+    {
+        $this->boot([
+            new UpstreamResponse(401, [], ''),
+            $this->upstreamOk('{"username":"jose"}'), // sondeo: el token sigue siendo válido
+        ]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/things/1', $sid));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('upstream_unauthorized', $this->json($response)['code']);
+        self::assertNotNull($this->store->load($sid), 'la sesión sigue viva');
+        self::assertCount(2, $this->history, 'sin intento de refresco');
+    }
+
+    public function testStillUnauthorizedAfterRefreshIsReportedAsForbidden(): void
+    {
+        $this->boot([
+            new UpstreamResponse(401, [], ''),
+            new UpstreamResponse(401, [], ''), // sondeo: token muerto
+            $this->upstreamOk('{"access_token":"access-2","refresh_token":"refresh-2","expires_in":3600}'),
+            new UpstreamResponse(401, [], ''), // la ruta sigue rechazando con el token nuevo
+        ]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/things/1', $sid));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('upstream_unauthorized', $this->json($response)['code']);
+        self::assertNotNull($this->store->load($sid));
+    }
+
+    public function testExcludedIncludedRouteIsNotExposed(): void
+    {
+        $this->boot([$this->upstreamOk()]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/api_spa_excluded', $sid));
+
+        self::assertSame(404, $response->getStatusCode());
+        self::assertCount(0, $this->history);
     }
 }

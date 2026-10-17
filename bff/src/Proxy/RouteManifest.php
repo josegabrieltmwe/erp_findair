@@ -38,10 +38,23 @@ final class RouteManifest
                 $manual[strtoupper((string) ($item['method'] ?? '')) . ' ' . (string) ($item['path'] ?? '')] = true;
             }
         }
+        // `exclude`: «MÉTODO /ruta» de las rutas incluidas que el backend rechaza (p. ej. 405).
+        $excluded = [];
+        foreach (is_array($parsed) && is_array($parsed['exclude'] ?? null) ? $parsed['exclude'] : [] as $entry) {
+            if (is_string($entry)) {
+                $excluded[strtoupper(trim(preg_replace('/\s+/', ' ', $entry) ?? ''))] = true;
+            }
+        }
         $included = array_values(array_filter(
             $included,
-            static fn (mixed $item): bool => !is_array($item)
-                || !isset($manual[strtoupper((string) ($item['method'] ?? '')) . ' ' . (string) ($item['path'] ?? '')]),
+            static function (mixed $item) use ($manual, $excluded): bool {
+                if (!is_array($item)) {
+                    return true;
+                }
+                $key = strtoupper((string) ($item['method'] ?? '')) . ' ' . (string) ($item['path'] ?? '');
+
+                return !isset($manual[$key]) && !isset($excluded[strtoupper($key)]);
+            },
         ));
         $items = array_merge($included, $own);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Findair\Bff\Proxy;
 
+use Findair\Bff\Auth\TokenProbe;
 use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenSet;
 use Findair\Bff\Http\CsrfGuard;
@@ -33,6 +34,7 @@ final class ProxyController
         private readonly LoggerInterface $logger,
         private readonly Settings $settings,
         private readonly UpstreamStreamer $streamer,
+        private readonly TokenProbe $probe,
     ) {
     }
 
@@ -76,6 +78,10 @@ final class ProxyController
         try {
             $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId);
             if ($upstream->getStatusCode() === 401) {
+                // ¿Token muerto o ruta que rechaza al usuario? Solo en el primer caso se renueva o se cierra la sesión.
+                if (!$tokens->expiresWithin(60, time()) && $this->probe->accepts($tokens->accessToken, $requestId)) {
+                    return $this->routeDenied($route, $requestId);
+                }
                 $renewed = $this->refresher->ensureFresh($session, time(), true, $tokens->accessToken);
                 if ($renewed === null) {
                     $session->destroy();
@@ -83,6 +89,9 @@ final class ProxyController
                     return ProblemDetails::response(401, 'session_expired', 'Sesión no válida', 'Vuelva a iniciar sesión.', $requestId);
                 }
                 $upstream = $this->send($request, $route, $url, $renewed, $body, $requestId);
+                if ($upstream->getStatusCode() === 401) {
+                    return $this->routeDenied($route, $requestId);
+                }
             }
         } catch (ConnectException) {
             return ProblemDetails::response(504, 'upstream_unreachable', 'Servicio no disponible', null, $requestId);
@@ -101,6 +110,14 @@ final class ProxyController
         ]);
 
         return $adapted;
+    }
+
+    /** El backend rechaza esta operación con 401 aunque la sesión es válida: se informa como 403 y no se cierra la sesión. */
+    private function routeDenied(Route $route, string $requestId): ResponseInterface
+    {
+        $this->logger->warning('upstream_401_with_valid_token', ['route' => $route->id, 'request_id' => $requestId]);
+
+        return ProblemDetails::response(403, 'upstream_unauthorized', 'Acceso denegado', 'El servicio no autoriza esta operación.', $requestId);
     }
 
     /** Lista de bloqueo por entorno: solo afecta a métodos que cambian estado. */

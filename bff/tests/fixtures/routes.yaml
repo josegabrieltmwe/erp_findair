@@ -26,3 +26,5 @@ routes:
     response: binary
 include:
   - routes.extra.yaml
+exclude:
+  - GET /api_spa_excluded

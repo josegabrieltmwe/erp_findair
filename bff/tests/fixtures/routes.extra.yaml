@@ -28,3 +28,7 @@ routes:
     response: stream
     upstream: { action: api_spa_stream, forward_query: '*' }
     limits: { timeout: 120 }
+  - id: spa.excluded
+    method: GET
+    path: /api_spa_excluded
+    upstream: { action: api_spa_excluded }

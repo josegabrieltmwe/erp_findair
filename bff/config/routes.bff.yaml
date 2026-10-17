@@ -16,6 +16,30 @@
 include:
   - routes.spa.yaml
 
+# Métodos que tmwe_json rechaza con 405 (el generador deduce de más). Sondeo: bin/probe-routes.php.
+exclude:
+  - GET /api_admin_config_section_usage
+  - GET /api_admin_external_client
+  - GET /api_admin_module_permissions_bulk
+  - GET /api_admin_user_role_bulk
+  - GET /api_anagrafica_clone
+  - GET /api_anagrafica_set_default_address
+  - GET /api_anagrafica_set_default_bank
+  - GET /api_anagrafica_vies
+  - GET /api_brt_manifest
+  - GET /api_bulk_payment
+  - GET /api_cargo_awb_request
+  - GET /api_cargo_awb_vettori_set
+  - GET /api_cargo_mawb_agent
+  - GET /api_cargo_profit
+  - GET /api_cargo_tact_update
+  - GET /api_terminal_geocode
+  - GET /rubrica_add
+  - GET /unified_consolidation_quote
+  - GET /unified_express_service_list_by_shipment
+  - GET /unified_rate_fornitore
+  - GET /web_chat_typing
+
 routes:
   - id: me.profile
     method: GET
@@ -47,3 +71,12 @@ routes:
     path: /api_admin_my_permissions
     upstream:
       action: api_admin_my_permissions
+
+  # Responde en ~10 s (hasta 40 s bajo carga): el margen por defecto de 15 s da 504.
+  - id: home.box_indicators
+    method: GET
+    path: /api_home_box_indicators
+    upstream:
+      action: api_home_box_indicators
+      forward_query: '*'
+    limits: { timeout: 45 }
