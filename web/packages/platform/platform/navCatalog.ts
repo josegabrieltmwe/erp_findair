@@ -22,6 +22,8 @@ export interface NavEntryDef {
    * actual) hasta que pulsa «Ver más»; el personal TMWE ve siempre todo.
    */
   daily?: boolean;
+  /** Clave i18n (`platform.opsnav.<partnerKey>`) con el nombre en lenguaje llano para el usuario de un partner. */
+  partnerKey?: string;
 }
 
 export interface NavSectionDef {
@@ -34,7 +36,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "operativa",
     items: [
       { key: "home",     icon: "mdi-home-outline",           routeName: "home", daily: true },
-      { key: "cargo",    icon: "mdi-airplane",               routeName: "cargo-list", daily: true },
+      { key: "cargo",    icon: "mdi-airplane",               routeName: "cargo-list", daily: true, partnerKey: "cargo_partner" },
       { key: "shipment", icon: "mdi-truck-fast-outline",     routeName: "shipment-list", daily: true },
       { key: "tracking", icon: "mdi-radar",                  routeName: "tracking", daily: true },
     ],
@@ -42,7 +44,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
   {
     sectionKey: "gestion",
     items: [
-      { key: "giacenze", icon: "mdi-package-variant-closed",  routeName: "giacenze" },
+      { key: "giacenze", icon: "mdi-package-variant-closed",  routeName: "giacenze", daily: true, partnerKey: "giacenze_partner" },
       { key: "consolidata", icon: "mdi-layers-triple-outline", routeName: "consolidata", adminOnly: true },
       { key: "pickup",   icon: "mdi-truck-check-outline",     routeName: "pickup", daily: true },
       { key: "crm",      icon: "mdi-account-details-outline", routeName: "crm" },
@@ -54,7 +56,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
       // Poner routeName:"clients" hacia que el <RouterLink> resolviese un nombre
       // inexistente al RENDERIZAR el sidebar → "No match for clients", excepcion
       // en el arranque y pagina EN BLANCO en toda la SPA (no solo en este enlace).
-      { key: "clients",  icon: "mdi-account-multiple",        routeName: "anagrafiche" },
+      { key: "clients",  icon: "mdi-account-multiple",        routeName: "anagrafiche", daily: true, partnerKey: "clients_partner" },
       { key: "copilot",  icon: "mdi-robot-outline",           routeName: "copilot" },
     ],
   },

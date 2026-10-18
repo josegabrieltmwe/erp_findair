@@ -266,7 +266,10 @@
       "my_org_sites": "Meine Standorte",
       "my_org_email": "Meine E-Mail-Vorlagen",
       "show_more": "Mehr anzeigen",
-      "show_less": "Weniger anzeigen"
+      "show_less": "Weniger anzeigen",
+      "cargo_partner": "Luftfracht",
+      "giacenze_partner": "Festgehaltene Pakete",
+      "clients_partner": "Meine Kunden"
     },
     "email": {
       "recipients": "Empfänger",

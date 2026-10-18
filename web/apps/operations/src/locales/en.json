@@ -266,7 +266,10 @@
       "my_org_sites": "My sites",
       "my_org_email": "My email templates",
       "show_more": "Show more",
-      "show_less": "Show less"
+      "show_less": "Show less",
+      "cargo_partner": "Air freight",
+      "giacenze_partner": "Held parcels",
+      "clients_partner": "My customers"
     },
     "email": {
       "recipients": "Recipients",

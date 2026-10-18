@@ -126,6 +126,8 @@ interface NavEntry {
   href?: string;
   adminOnly?: boolean;
   partnerOnly?: boolean;
+  daily?: boolean;
+  partnerKey?: string;
 }
 
 interface NavSection {
@@ -140,7 +142,8 @@ const sections = computed<NavSection[]>(() =>
     label: t(`platform.opsnav.sections.${s.sectionKey}`),
     items: s.items.map((it) => ({
       ...it,
-      title: t(`platform.opsnav.${it.key}`),
+      // El partner ve nombres en lenguaje llano donde el catálogo los define (`partnerKey`).
+      title: t(`platform.opsnav.${!isAdmin.value && it.partnerKey ? it.partnerKey : it.key}`),
     })),
   })),
 );

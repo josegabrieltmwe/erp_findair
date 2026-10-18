@@ -12,7 +12,7 @@ const partner = visibleNavSections(NAV_SECTION_DEFS, false);
 describe("menú reducido del partner", () => {
   it("por defecto solo deja los accesos del trabajo diario", () => {
     const reduced = reduceNavSections(partner, false);
-    expect(keys(reduced)).toEqual(["home", "cargo", "shipment", "tracking", "pickup", "invoicing", "price_lists"]);
+    expect(keys(reduced)).toEqual(["home", "cargo", "shipment", "tracking", "giacenze", "pickup", "clients", "invoicing", "price_lists"]);
   });
 
   it("«Ver más» devuelve todos los accesos que el partner puede ver", () => {
@@ -29,6 +29,11 @@ describe("menú reducido del partner", () => {
     const reduced = reduceNavSections(partner, false);
     expect(reduced.every((s) => s.items.length > 0)).toBe(true);
     expect(reduced.map((s) => s.sectionKey)).not.toContain("mi_organizacion");
+  });
+
+  it("el partner ve nombres en lenguaje llano en cargo, retenciones y clientes", () => {
+    const named = partner.flatMap((x) => x.items).filter((i) => i.partnerKey).map((i) => i.key);
+    expect(named).toEqual(["cargo", "giacenze", "clients"]);
   });
 
   it("sabe si la vista reducida oculta algo", () => {

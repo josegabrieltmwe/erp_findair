@@ -266,7 +266,10 @@
       "my_org_sites": "Mijn vestigingen",
       "my_org_email": "Mijn e-mailsjablonen",
       "show_more": "Meer tonen",
-      "show_less": "Minder tonen"
+      "show_less": "Minder tonen",
+      "cargo_partner": "Luchtvracht",
+      "giacenze_partner": "Vastgehouden pakketten",
+      "clients_partner": "Mijn klanten"
     },
     "email": {
       "recipients": "Geadresseerden",

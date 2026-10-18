@@ -266,7 +266,10 @@
       "my_org_sites": "Mis sedes",
       "my_org_email": "Mis plantillas de correo",
       "show_more": "Ver más",
-      "show_less": "Ver menos"
+      "show_less": "Ver menos",
+      "cargo_partner": "Carga aérea",
+      "giacenze_partner": "Paquetes retenidos",
+      "clients_partner": "Mis clientes"
     },
     "email": {
       "recipients": "Destinatarios",
