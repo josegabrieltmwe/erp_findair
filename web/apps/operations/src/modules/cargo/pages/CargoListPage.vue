@@ -21,7 +21,7 @@
         <div class="hblock">
           <div class="topbar-shipnum">{{ t("listing.cargo.title") }}</div>
           <div class="topbar-hmeta">
-            {{ t("listing.total", { count: totalFormatted }) }}
+            {{ t("listing.total", { count: totalFormatted }) }}{{ pageInfo }}
           </div>
         </div>
       </template>
@@ -738,6 +738,13 @@ const SORT_KEY_MAP: Record<string, NonNullable<typeof state.value.sort>> = {
 };
 
 const totalFormatted = computed(() => total.value.toLocaleString("en-US"));
+
+/** «· Página X de Y» junto al total; solo en modo paginado (el infinito no tiene páginas). */
+const pageInfo = computed(() => {
+  if (viewMode.value !== "paginated" || total.value === 0) return "";
+  const pages = Math.max(1, Math.ceil(total.value / Math.max(1, state.value.per_page)));
+  return ` · ${t("common.page")} ${state.value.page} ${t("common.of")} ${pages.toLocaleString("en-US")}`;
+});
 
 /**
  * If we arrived via a home-tile deep-link (e.g. `?type=clwt`), look
