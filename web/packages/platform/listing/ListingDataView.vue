@@ -62,6 +62,7 @@
         :items-length="source.total"
         :loading="source.loading"
         :items-per-page-options="[10, 25, 50, 100]"
+        :page-text="pageText"
         :must-sort="true"
         density="comfortable"
         hover
@@ -305,6 +306,16 @@ function clearSelection(): void {
 const showReloadOverlay = computed<boolean>(
   () => props.source.loading && !pumping.value && props.source.rows.length > 0,
 );
+
+/**
+ * Texto del pie de la tabla paginada. Vuetify sustituye {0}-{1} de {2} (desde, hasta, total) y aquí se
+ * antepone «Página X de Y», que el pie por defecto no muestra.
+ */
+const pageText = computed<string>(() => {
+  const perPage = Math.max(1, props.source.perPage);
+  const pages = Math.max(1, Math.ceil(props.source.total / perPage));
+  return `${t('common.page')} ${props.source.page} ${t('common.of')} ${pages.toLocaleString('en-US')} · {0}-{1} ${t('common.of')} {2}`;
+});
 
 const summaryText = computed<string>(() => {
   const total = props.source.total.toLocaleString('en-US');
