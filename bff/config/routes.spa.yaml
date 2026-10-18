@@ -5001,13 +5001,6 @@ routes:
       body: 1m
       timeout: 30
   -
-    id: get.api_modelli_email_preview
-    method: GET
-    path: /api_modelli_email_preview
-    upstream:
-      action: api_modelli_email_preview
-      forward_query: '*'
-  -
     id: post.api_modelli_preview_web
     method: POST
     path: /api_modelli_preview_web

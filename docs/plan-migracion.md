@@ -9,11 +9,11 @@ Estado a 2026-10-18. Cifras de la última pasada de solo lectura (`bff/bin/probe
 |---|---|
 | BFF Slim 4 (login PKCE, sesión en Valkey, proxy con lista blanca, CSRF, SSE, descargas, subidas) | Hecho. 45 pruebas, PHPStan nivel 8 |
 | SPA `web/` sobre `/bff/v1` (111 pantallas navegan; typecheck y 243 pruebas OK) | Hecho |
-| Manifiesto generado desde el código de la SPA | 806 rutas; se regenera con `bin/regen-spa-manifest.sh` |
+| Manifiesto generado desde el código de la SPA | 741 rutas (2026-10-19; las 806 anteriores incluían rutas ya movidas); se regenera con `bin/regen-spa-manifest.sh` |
 | Cliente OAuth 527: `internal`, `redirect_uris`, PKCE obligatorio, scopes de personal | Hecho en el backend (`6ef5a87be`, `8a15fe416`) |
 | Autorización Bearer por política en los controllers `web` | Hecho en el backend (`a27ed1cf0`) |
 
-Resultado de la pasada: 97 rutas responden 200, 76 piden parámetros (400), 26 dan 403, 21 daban 405
+Resultado de la pasada (anterior a los cambios del backend del 2026-10-18; repetir con `probe-routes.php`): 97 rutas responden 200, 76 piden parámetros (400), 26 dan 403, 21 daban 405
 (ya excluidas del manifiesto), 2 dan 404, 1 da 502.
 
 ## 2. Modelo de permisos acordado (roles por aplicación)
@@ -40,7 +40,10 @@ El permiso efectivo de un token es **techo del rol del cliente ∩ rol del usuar
    `shipment_ops`, `anagrafiche_banks`, `b2b_config` y `invoices:write` (`api_invoice_recalculate`).
 3. Controllers que responden **401** a un token válido cuando falta permiso (`api_bancali_*`,
    `api_supplier_*`): deben responder 403.
-4. 24 rutas `ajax` solo-sesión sin hermano con Bearer.
+4. Rutas `ajax` solo-sesión sin hermano con Bearer: quedan 6 (`ajax_cargo_packages`, `ajax_get_label_courier_shipment`,
+   `ajax_send_ldv_to_mittente`, `ajax_shipment_list`, `ajax_tmwe_label`, `spedy_chat`), más 2 `html` y 6 sin ruta
+   (`admin_config`, `api_doc`, `cargo`, `crm_pratica`, `invoicing`, `shipment`: enlaces a páginas heredadas).
+   El backend movió a `api/` más de 100 controllers el 2026-10-18.
 5. Endpoint `get_ops_bootstrap` (usuario y capacidades).
 6. `methods:` en `config/routes/*.yml`.
 7. `api_cargo_margin_explain` (502) y las rutas con 404 (`rubrica_set_preferred`, `shipment_timing`).
