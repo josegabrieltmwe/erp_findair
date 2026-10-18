@@ -18,6 +18,9 @@ include:
 
 # Métodos que tmwe_json rechaza con 405 (el generador deduce de más). Sondeo: bin/probe-routes.php.
 exclude:
+  # partner_switch lo sustituye /bff/impersonation: el backend guarda el partner en $_SESSION
+  - GET /partner_switch
+  - POST /partner_switch
   - GET /api_admin_config_section_usage
   - GET /api_admin_external_client
   - GET /api_admin_module_permissions_bulk

@@ -8,6 +8,7 @@ use DI\ContainerBuilder;
 use Findair\Bff\Auth\TokenVault;
 use Findair\Bff\Http\AuthController;
 use Findair\Bff\Http\HealthController;
+use Findair\Bff\Http\ImpersonationController;
 use Findair\Bff\Http\Middleware\AuthMiddleware;
 use Findair\Bff\Http\Middleware\OriginMiddleware;
 use Findair\Bff\Http\Middleware\RequestIdMiddleware;
@@ -77,6 +78,9 @@ final class AppFactory
             $bff->get('/auth/callback', [AuthController::class, 'callback']);
             $bff->get('/auth/session', [AuthController::class, 'sessionInfo']);
             $bff->post('/auth/logout', [AuthController::class, 'logout']);
+
+            $bff->get('/impersonation', [ImpersonationController::class, 'show'])->add(AuthMiddleware::class);
+            $bff->post('/impersonation', [ImpersonationController::class, 'switch'])->add(AuthMiddleware::class);
 
             $bff->any('/v1/{path:.*}', ProxyController::class)->add(AuthMiddleware::class);
         });

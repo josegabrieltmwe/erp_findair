@@ -35,16 +35,27 @@ final class UserContextProvider
     /** @return array{user: array<string, mixed>, capabilities: list<string>} */
     public function load(string $accessToken, string $requestId = ''): array
     {
+        return $this->tryLoad($accessToken, $requestId) ?? ['user' => [], 'capabilities' => []];
+    }
+
+    /**
+     * Como load(), pero distingue el fallo (null). Con `$impersonate` el backend calcula el contexto
+     * del partner suplantado (cabecera X-Impersonate-Partner-Id); si lo rechaza, devuelve null.
+     *
+     * @return array{user: array<string, mixed>, capabilities: list<string>}|null
+     */
+    public function tryLoad(string $accessToken, string $requestId = '', ?int $impersonate = null): ?array
+    {
         try {
             if ($this->settings->contextAction !== '') {
-                return self::fromBackendContext($this->fetch($this->settings->contextAction, $accessToken, $requestId));
+                return self::fromBackendContext($this->fetch($this->settings->contextAction, $accessToken, $requestId, $impersonate));
             }
 
-            return self::fromProfile($this->fetch('get_my_profile', $accessToken, $requestId));
+            return self::fromProfile($this->fetch('get_my_profile', $accessToken, $requestId, $impersonate));
         } catch (\Throwable $e) {
             $this->logger->warning('user_context_failed', ['error' => $e::class, 'request_id' => $requestId]);
 
-            return ['user' => [], 'capabilities' => []];
+            return null;
         }
     }
 
@@ -89,10 +100,14 @@ final class UserContextProvider
     }
 
     /** @return array<string, mixed> */
-    private function fetch(string $action, string $accessToken, string $requestId): array
+    private function fetch(string $action, string $accessToken, string $requestId, ?int $impersonate = null): array
     {
+        $headers = ['Authorization' => 'Bearer ' . $accessToken, 'Accept' => 'application/json', 'X-Request-Id' => $requestId];
+        if ($impersonate !== null) {
+            $headers['X-Impersonate-Partner-Id'] = (string) $impersonate;
+        }
         $response = $this->http->request('GET', $this->urls->internal($action), [
-            'headers' => ['Authorization' => 'Bearer ' . $accessToken, 'Accept' => 'application/json', 'X-Request-Id' => $requestId],
+            'headers' => $headers,
             'http_errors' => false,
             'allow_redirects' => false,
             'timeout' => 5,

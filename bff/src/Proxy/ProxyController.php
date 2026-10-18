@@ -8,6 +8,7 @@ use Findair\Bff\Auth\TokenProbe;
 use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenSet;
 use Findair\Bff\Http\CsrfGuard;
+use Findair\Bff\Http\ImpersonationController;
 use Findair\Bff\Session\Session;
 use Findair\Bff\Settings;
 use Findair\Bff\Support\ProblemDetails;
@@ -73,13 +74,22 @@ final class ProxyController
             return ProblemDetails::response(413, 'payload_too_large', 'Cuerpo demasiado grande', null, $requestId);
         }
 
+        $impersonate = ImpersonationController::impersonatedPartner($session);
         $url = $this->urls->internal($route->action, $this->buildQuery($request, $route, $match['params']));
 
         try {
-            $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId);
+            $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId, $impersonate);
             if ($upstream->getStatusCode() === 401) {
                 // ¿Token muerto o ruta que rechaza al usuario? Solo en el primer caso se renueva o se cierra la sesión.
                 if (!$tokens->expiresWithin(60, time()) && $this->probe->accepts($tokens->accessToken, $requestId)) {
+                    if ($impersonate !== null) {
+                        // El token vale sin la cabecera: el backend rechaza la suplantación (scope revocado, partner dado de baja).
+                        $session->forget('impersonation');
+                        $this->logger->warning('impersonation_revoked', ['partner_id' => $impersonate, 'route' => $route->id, 'request_id' => $requestId]);
+
+                        return ProblemDetails::response(403, 'impersonation_revoked', 'Suplantación terminada', 'El backend ya no permite actuar como ese partner; se ha vuelto a su perfil.', $requestId);
+                    }
+
                     return $this->routeDenied($route, $requestId);
                 }
                 $renewed = $this->refresher->ensureFresh($session, time(), true, $tokens->accessToken);
@@ -88,7 +98,7 @@ final class ProxyController
 
                     return ProblemDetails::response(401, 'session_expired', 'Sesión no válida', 'Vuelva a iniciar sesión.', $requestId);
                 }
-                $upstream = $this->send($request, $route, $url, $renewed, $body, $requestId);
+                $upstream = $this->send($request, $route, $url, $renewed, $body, $requestId, $impersonate);
                 if ($upstream->getStatusCode() === 401) {
                     return $this->routeDenied($route, $requestId);
                 }
@@ -135,7 +145,7 @@ final class ProxyController
         return false;
     }
 
-    private function send(Request $request, Route $route, string $url, TokenSet $tokens, string $body, string $requestId): ResponseInterface
+    private function send(Request $request, Route $route, string $url, TokenSet $tokens, string $body, string $requestId, ?int $impersonate = null): ResponseInterface
     {
         $headers = [
             'Authorization' => 'Bearer ' . $tokens->accessToken,
@@ -143,6 +153,9 @@ final class ProxyController
             'X-Request-Id' => $requestId,
             'traceparent' => (string) $request->getAttribute('traceparent', ''),
         ];
+        if ($impersonate !== null) {
+            $headers['X-Impersonate-Partner-Id'] = (string) $impersonate;
+        }
         $lang = $request->getHeaderLine('X-Tmwe-Lang');
         if (preg_match('/^[a-z]{2}(-[A-Za-z]{2})?$/', $lang) === 1) {
             $headers['X-Tmwe-Lang'] = $lang;

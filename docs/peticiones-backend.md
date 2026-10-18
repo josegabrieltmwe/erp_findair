@@ -103,3 +103,20 @@ registrarlo como migración, no como cambio manual.
   BFF sin heurísticas.
 - Enlaces a páginas heredadas que la SPA aún abre en el backend viejo: `crm_pratica`,
   `admin_config`, `api_doc`, `get-tracking-list`.
+
+## 6. Suplantación de partner (personal TMWE) con `app_internal_erp`
+
+El BFF expone `/bff/impersonation` y envía `X-Impersonate-Partner-Id` (backend: `Security_Service::apply_oauth_impersonation`).
+Exige el scope `partner:impersonate`, que `app_internal_erp` **no** lleva (a propósito: lo comprueba
+`AppRolesParityTest`). Sin el scope, con la cabecera presente el backend rechaza la petición entera.
+
+Decisión: **un rol aparte**, no un grant por cliente. Petición:
+
+- Rol `app_internal_erp_staff` en `config/rbac_seed.yml` (migración con copia `bak_*` y rollback):
+  los scopes de `app_internal_erp` + `partner:impersonate`.
+- Añadirlo a `Scope_Service::INTERNAL_ONLY_ROLES`; ampliar `AppRolesParityTest` (mismos scopes que
+  `app_internal_erp` salvo `partner:impersonate`, y solo internal).
+- Como un cliente tiene un único rol, el cliente 527 de la SPA usaría este rol (la autorización real
+  sigue exigiendo `id_anagrafica == 1`, así que el resto de usuarios no se ven afectados).
+- Cuando falla la suplantación, devolver un código distinguible (403 `IMPERSONATION_DENIED`) en vez de
+  un 401 genérico; hoy el BFF lo deduce sondeando el token sin la cabecera.

@@ -96,6 +96,13 @@ final class AuthController
             $context = $session->get('context');
             $payload['user'] = is_array($context) && is_array($context['user'] ?? null) ? $context['user'] : new \stdClass();
             $payload['capabilities'] = is_array($context) && is_array($context['capabilities'] ?? null) ? $context['capabilities'] : [];
+            $active = ImpersonationController::active($session);
+            $payload['impersonation'] = $active['active_partner'];
+            $impersonation = $session->get('impersonation');
+            if ($active['active_partner'] !== null && is_array($impersonation) && is_array($impersonation['capabilities'] ?? null)) {
+                // La SPA ve las capacidades del partner suplantado, igual que el backend.
+                $payload['capabilities'] = array_values(array_filter($impersonation['capabilities'], 'is_string'));
+            }
             $tokens = $this->refresher->current($session);
             $payload['access_expires_at'] = $tokens?->expiresAt;
         }

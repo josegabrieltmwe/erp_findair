@@ -34,6 +34,9 @@ abstract class AppTestCase extends TestCase
     protected TokenVault $vault;
     protected MockHandler $upstream;
 
+    /** @var array<string, string> variables de entorno extra para boot() */
+    protected array $extraEnv = [];
+
     /** @var list<array{request: \Psr\Http\Message\RequestInterface, response: ?ResponseInterface, options: array<string, mixed>}> */
     protected array $history = [];
 
@@ -54,7 +57,7 @@ abstract class AppTestCase extends TestCase
             'OAUTH_CLIENT_ID' => 'cid',
             'OAUTH_CLIENT_SECRET' => 'csecret',
             'UPSTREAM_DENY_ACTIONS' => 'api_spa_book*, *_cancel',
-        ], __DIR__ . '/fixtures/routes.yaml');
+        ] + $this->extraEnv, __DIR__ . '/fixtures/routes.yaml');
 
         $this->store = new ArraySessionStore();
         $this->vault = new TokenVault($key);
@@ -73,7 +76,8 @@ abstract class AppTestCase extends TestCase
     }
 
     /** Crea una sesión autenticada en el almacén y devuelve su id. */
-    protected function loginSession(?TokenSet $tokens = null): string
+    /** @param array<string, mixed>|null $context contexto de usuario guardado al autenticar */
+    protected function loginSession(?TokenSet $tokens = null, ?array $context = null): string
     {
         $id = Session::generateId();
         $tokens ??= new TokenSet('access-1', 'refresh-1', time() + 3600, time() + 7200);
@@ -81,7 +85,7 @@ abstract class AppTestCase extends TestCase
             'created_at' => time(),
             'csrf' => 'csrf-token',
             'tokens' => $this->vault->seal($tokens),
-        ], 1800);
+        ] + ($context !== null ? ['context' => $context] : []), 1800);
 
         return $id;
     }

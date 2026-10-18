@@ -6,7 +6,7 @@
     real anagrafica == 1); for everyone else the list is empty and this
     component renders nothing.
 
-    On pick, POST partner_switch { idp } then hard-reload the page so every
+    On pick, POST /bff/impersonation { partner_id } then hard-reload the page so every
     server-side filter re-applies with the new effective anagrafica — same
     behaviour as the legacy Partner_switch() (window.location reload).
   -->
@@ -48,7 +48,8 @@ const partners = ref<Partner[]>([]);
 const activeId = ref<number>(1);
 const switching = ref(false);
 
-const ENDPOINT = '/bff/v1/partner_switch';
+// El BFF recuerda el partner activo y envía X-Impersonate-Partner-Id al backend (no hay $_SESSION con Bearer).
+const ENDPOINT = '/bff/impersonation';
 
 onMounted(async () => {
   try {
@@ -79,7 +80,7 @@ async function onPick(idp: number | null): Promise<void> {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ idp }),
+      body: JSON.stringify({ partner_id: idp }),
     });
     if (!r.ok) {
       switching.value = false;
