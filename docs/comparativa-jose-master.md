@@ -48,3 +48,41 @@ Mantener el BFF + Vue/Vuetify como plataforma y tomar de Jose_master el conocimi
 2. Su registro de paridad y pruebas de contrato como criterio de aceptación.
 3. Escáner de secretos y CAP locales.
 4. Decisión de producto pendiente (del responsable): qué línea de frontend es la oficial.
+
+## Vistas y menú del partner (copia local en /var/www/host/Jose_master, 2026-10-19)
+
+**Menú del partner en Jose_master** (`tmwe2/assets/tmwe.js`, `PARTNER_MENU`): ya existe, con etiquetas en lenguaje llano,
+y la guardia `vistaGuardia` devuelve al inicio cualquier página fuera de la lista.
+
+| Grupo | Accesos |
+|---|---|
+| (fijo) | Cockpit |
+| Cada día | Inicio, Spedizioni, Merci in aereo (cargo) |
+| Recogidas y paquetes | Ritiri, Pacchi fermi (retenciones) |
+| Clientes y dinero | I miei clienti, Fatture |
+| Agentes y COBRA | I miei agenti, Inviti, COBRA |
+
+El menú completo del personal (`NAV`) tiene además Quotazione aerea, Giro autista, Magazzino, Pagamenti, Commerciale,
+Servizi, Zone, Listini, Tabelle, Sistema, Telemetria… Los grupos son acordeón (máximo dos abiertos). No hay «Ver más».
+
+**Vista partner del personal:** `X-Act-As-Partner` + confirmación `X-Effective-Partner` (el gateway no muestra nada si falta);
+equivale a nuestro `X-Impersonate-Partner-Id` y exige los mismos requisitos (anagrafica real 1, partner ERP válido, auditoría).
+
+**Privacidad del partner, en el gateway** (`api/_lib/privacy_partner.js`, `ambito.js`): quita costes y márgenes de TMWE a
+cualquier profundidad y los precios de envíos que no son de clientes del partner; restringe los agentes al partner.
+En erp_findair esto no existe en el BFF: lo decide el backend con el token del usuario. Falta probar con un usuario partner real
+que ningún campo de coste (`costo*`, `billing_check`, `supplier_cost*`…) llegue por `/bff/v1`.
+
+### Vistas: equivalencias
+| Jose_master | erp_findair |
+|---|---|
+| index (Dashboard «Da fare oggi» + cestini) | `/home` (cockpit y accesos) |
+| spedizioni, cargo, prese, giacenze, crm, messaggi | `/shipment`, `/cargo`, `/pickup`, `/giacenze`, `/crm`, `/tickets` |
+| fatturazione, pagamenti | `/invoicing`, `/payments` |
+| clienti, listini, clienti_listini | `/clients`, `/price-lists` |
+| magazzino, giro | `/warehouse/*` (pesaje, docpack, reparto, entregas) |
+| settings, tabelle, servizi, zone, sistema | `/settings/*` (~60 pantallas) |
+| agente, agenti, robin, cobra, wca, rete, incontro | `/copilot` (resto sin equivalente) |
+| quotazione (cotización aérea) | **sin equivalente** como pantalla |
+| commerciale, modelli, telemetria, stato | **sin equivalente** (`/email-templates` cubre parte de modelli) |
+| — | `/consolidata`, `/proforma`, `/cod`, `/bulk`, `/tracking` (solo aquí) |
