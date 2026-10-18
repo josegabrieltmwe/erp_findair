@@ -16,7 +16,7 @@ de `oauth_client` (p. ej. 527). Pero `oauth_token.client_id` guarda el **`client
 (`create_access_granted_token($client['client_id'], …)` en `Authorization_Controller`). Resultado:
 `POST ?action=token` con `grant_type=refresh_token` responde siempre `401` con cuerpo vacío.
 
-Comprobado en `tmwe_db_dev` con el cliente 527: la condición del controlador (`client_id = 527`)
+Comprobado en `tmwe_development` con el cliente 527: la condición del controlador (`client_id = 527`)
 devuelve 0 refresh tokens válidos; con el hexadecimal, 22.
 
 Arreglo propuesto: buscar con `$this->client['client_id']` (y revisar que `create_access_granted_token`
@@ -76,7 +76,7 @@ una vez en el login y lo devuelve en `/bff/auth/session`.
 Con token OAuth el acceso lo deciden los scopes (rol del cliente ∩ rol del usuario), no los
 permisos `authx_*` de sesión. Usuarios que en la app clásica ven un módulo reciben 403 en el BFF
 si su rol no tiene el scope. Caso real: `tmwe_staff_portal` no traía `config:read` ni
-`contacts:read` (selectores de divisas y de clientes); se añadieron en `tmwe_db_dev`
+`contacts:read` (selectores de divisas y de clientes); se añadieron en `tmwe_development`
 (copia previa en `bak_20261017_oauth_roles_erp_findair`).
 
 Pendiente: revisar qué scopes necesita cada rol de personal para igualar la app clásica y

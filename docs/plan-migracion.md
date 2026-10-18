@@ -34,7 +34,7 @@ El permiso efectivo de un token es **techo del rol del cliente ∩ rol del usuar
 - Los **puentes estrechos** (p. ej. el del Copilot de ElevenLabs) mantienen su rol propio, no el interno.
 - El **bypass de administrador** lo da `client_type=internal` (no el rol): sin él, los `admin_only` dan 403.
 - Un rol no crea scopes: los módulos sin scope mapeado necesitan scopes nuevos o RBAC de módulo.
-- Hoy el cliente 527 usa el rol `erp_findair_dev`, creado a mano en `tmwe_db_dev` (no está en
+- Hoy el cliente 527 usa el rol `erp_findair_dev`, creado a mano en la BD local (no está en
   migraciones): hay que sustituirlo por `app_internal_erp` definido por migración.
 
 ## 3. Pendiente en el backend (ver `prompt-agente-tmwe-json.md`)

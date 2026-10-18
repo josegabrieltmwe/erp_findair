@@ -13,7 +13,7 @@ controllers `web` (`a27ed1cf0`) y el cliente 527 como `internal` con scopes de p
 Reglas de autorización vigentes (`AUTHZ_SCOPE_SOURCE=roles`): permiso efectivo = techo del rol del
 **cliente** ∩ rol del **usuario**; los clientes `external` no heredan el bypass de administrador TMWE.
 
-Entorno: https://erp-findair.php8 · BD `tmwe_db_dev` · cliente `oauth_client.id=527` · usuario de pruebas
+Entorno: https://erp-findair.php8 · BD `tmwe_development` · cliente `oauth_client.id=527` · usuario de pruebas
 `jose` (contatti.id 12763, rol `tmwe_staff_portal`, anagrafica 1).
 
 ## Reglas

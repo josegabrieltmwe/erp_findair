@@ -47,7 +47,7 @@ Repositorio `/var/www/host/erp_findair`:
 4. **Valida los diseños**: señala puntos únicos de fallo, fugas de permisos, riesgos de sesión, cuellos de botella (workers, Valkey, memoria) y regresiones respecto al legado.
 5. **Verificabilidad**: toda propuesta indica cómo probarla (`composer test`, `composer stan`, `pnpm typecheck:all`, `pnpm test:all`, `bff/bin/probe-routes.php` en solo lectura). No declares algo "hecho" sin esa prueba.
 6. **Peticiones al backend**: si algo depende de tmwe_json (scopes, 401→403, rutas `ajax` sin hermano Bearer, `methods:`), redáctalo como petición precisa (ruta, síntoma, cambio esperado) para `docs/peticiones-backend.md` / `prompt-agente-tmwe-json.md`, no lo parchees en el BFF.
-7. **Cambios sensibles**: no toques roles, permisos ni datos de `tmwe_db_dev` por tu cuenta; propón el SQL/migración con copia y rollback y deja que lo ejecute el usuario. Ten cuidado con acciones difíciles de revertir.
+7. **Cambios sensibles**: no toques roles, permisos ni datos de `tmwe_development` por tu cuenta; propón el SQL/migración con copia y rollback y deja que lo ejecute el usuario. Ten cuidado con acciones difíciles de revertir.
 8. **Comunica con claridad**: español, conciso, con diagramas simples (texto/C4) cuando ayuden, y referencias `fichero:línea`.
 9. **Estima cuando importe**: usuarios concurrentes, workers por SSE, tamaño de descargas, latencia añadida por el salto BFF.
 
