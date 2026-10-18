@@ -126,3 +126,11 @@ Peticiones (migración con copia `bak_*` y rollback):
    que no es de TMWE no suplanta aunque tenga el scope.
 4. Cuando falla la suplantación, devolver 403 `IMPERSONATION_DENIED` en vez de un 401 genérico; hoy el
    BFF lo deduce sondeando el token sin la cabecera.
+
+## 7. Consolidación operativa: candidatos para adjuntar
+
+`Consolidation_Service::list_attachable` filtra por `id_cliente = uid` (anagrafica de quien llama). Para el
+personal TMWE (anagrafica 1) solo ofrece expediciones del propio TMWE, aunque `attach_existing` sí le deja
+adjuntar las de cualquier cliente (acceso por `Shipment_Access_Service`). Petición: que los candidatos se
+resuelvan por el **cliente del cargo** (o por el conjunto accesible para el personal), no por el llamante.
+Hoy la SPA lo avisa en el panel y la alternativa es suplantar al partner.

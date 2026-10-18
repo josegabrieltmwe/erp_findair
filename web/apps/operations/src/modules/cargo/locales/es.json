@@ -1813,7 +1813,13 @@
       "col_weight": "Peso real",
       "col_chargeable": "Peso tasable",
       "col_pieces": "Bultos",
-      "open_express": "Abrir expedición express"
+      "open_express": "Abrir expedición express",
+      "attach_scope_hint": "Solo se ofrecen expediciones del usuario o partner activo. Para consolidar las de otro cliente, cambia de partner.",
+      "col_status": "Estado",
+      "incomplete": "Incompleta",
+      "incomplete_hint": "Faltan datos de remitente o consignatario: complétalos en la lista de HAWB.",
+      "complete": "Completa",
+      "open_hawb": "Abrir lista de HAWB"
     },
     "owner": {
       "owner": "Propietario",

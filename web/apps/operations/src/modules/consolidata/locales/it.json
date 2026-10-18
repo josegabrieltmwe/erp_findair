@@ -152,6 +152,8 @@
       "title": "Converti in operativo",
       "help": "Collega le spedizioni del progetto a un master cargo (MAWB) esistente. Quelle senza spedizione reale restano in sospeso. Ripetere l'operazione è sicuro.",
       "cargoId": "ID master cargo",
+      "cargoSearch": "Cerca cargo master (AWB o ID)",
+      "cargoNoData": "Nessun cargo",
       "complete": "Tutte le spedizioni collegate.",
       "incomplete": "{n} spedizione/i in sospeso.",
       "shipmentId": "ID spedizione",

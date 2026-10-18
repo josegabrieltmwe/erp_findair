@@ -152,6 +152,8 @@
       "title": "Convert to operation",
       "help": "Links the project shipments to an existing cargo master (MAWB). Shipments without a real shipment stay pending. Repeating the operation is safe.",
       "cargoId": "Cargo master ID",
+      "cargoSearch": "Search master cargo (AWB or ID)",
+      "cargoNoData": "No cargos",
       "complete": "All shipments linked.",
       "incomplete": "{n} shipment(s) still pending.",
       "shipmentId": "Shipment ID",

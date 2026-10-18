@@ -1813,7 +1813,13 @@
       "col_weight": "Real weight",
       "col_chargeable": "Chargeable weight",
       "col_pieces": "Pieces",
-      "open_express": "Open express shipment"
+      "open_express": "Open express shipment",
+      "attach_scope_hint": "Only shipments of the current user or active partner are offered. To consolidate another client's, switch partner.",
+      "col_status": "Status",
+      "incomplete": "Incomplete",
+      "incomplete_hint": "Shipper or consignee details are missing: complete them in the HAWB list.",
+      "complete": "Complete",
+      "open_hawb": "Open HAWB list"
     },
     "owner": {
       "owner": "Owner",

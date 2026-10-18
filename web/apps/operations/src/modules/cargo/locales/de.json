@@ -1813,7 +1813,13 @@
       "col_weight": "Realgewicht",
       "col_chargeable": "Frachtgewicht",
       "col_pieces": "Packstücke",
-      "open_express": "Express-Sendung öffnen"
+      "open_express": "Express-Sendung öffnen",
+      "attach_scope_hint": "Angeboten werden nur Sendungen des Benutzers oder des aktiven Partners. Für einen anderen Kunden den Partner wechseln.",
+      "col_status": "Status",
+      "incomplete": "Unvollständig",
+      "incomplete_hint": "Absender- oder Empfängerdaten fehlen: in der HAWB-Liste ergänzen.",
+      "complete": "Vollständig",
+      "open_hawb": "HAWB-Liste öffnen"
     },
     "owner": {
       "owner": "Eigentümer",

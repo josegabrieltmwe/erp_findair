@@ -10,11 +10,23 @@
       <v-card-text>
         <p class="text-body-2 mb-3">{{ t("consolidata.convert.help") }}</p>
         <ConsolidataApiError :error="error" />
-        <v-text-field
-          v-model.number="idCargo"
-          :label="t('consolidata.convert.cargoId')"
-          type="number"
+        <v-autocomplete
+          v-model="idCargo"
+          :items="cargoItems"
+          :loading="searching"
+          item-title="label"
+          item-value="id"
+          variant="outlined"
+          density="compact"
+          clearable
+          no-filter
+          :label="t('consolidata.convert.cargoSearch')"
+          :no-data-text="t('consolidata.convert.cargoNoData')"
+          :hint="t('consolidata.convert.cargoId')"
+          persistent-hint
+          prepend-inner-icon="mdi-magnify"
           :error-messages="error?.fields.id_cargo"
+          @update:search="onSearch"
         />
 
         <template v-if="result">
@@ -89,6 +101,7 @@
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
+import { cargoListService } from "@cargo/services/cargo.service";
 import type { ConsolidataError, ConversionResult } from "../types";
 
 const props = defineProps<{
@@ -105,10 +118,61 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const idCargo = ref<number | null>(null);
 
+interface CargoItem {
+  id: number;
+  label: string;
+}
+const cargoItems = ref<CargoItem[]>([]);
+const searching = ref(false);
+let timer: ReturnType<typeof setTimeout> | null = null;
+
+function toItem(row: {
+  id: number;
+  awb?: unknown;
+  cliente?: unknown;
+}): CargoItem {
+  const awb = typeof row.awb === "string" && row.awb ? ` · ${row.awb}` : "";
+  const cli =
+    typeof row.cliente === "string" && row.cliente ? ` · ${row.cliente}` : "";
+  return { id: Number(row.id), label: `#${row.id}${awb}${cli}` };
+}
+
+async function search(q: string): Promise<void> {
+  searching.value = true;
+  try {
+    const r = await cargoListService.fetch({
+      search: q,
+      per_page: 15,
+      page: 1,
+      type: "all",
+    });
+    const found = (r.data ?? []).map(toItem);
+    // El cargo ya elegido o enlazado debe seguir en la lista aunque la búsqueda lo excluya.
+    const keep = cargoItems.value.filter(
+      (i) => i.id === idCargo.value && !found.some((f) => f.id === i.id),
+    );
+    cargoItems.value = [...keep, ...found];
+  } catch {
+    // El cliente HTTP ya informa del error; la lista queda como estaba.
+  } finally {
+    searching.value = false;
+  }
+}
+
+function onSearch(q: string | null): void {
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(() => void search(q ?? ""), 250);
+}
+
 watch(
   () => props.modelValue,
   (open) => {
-    if (open) idCargo.value = props.linkedCargo ?? null;
+    if (!open) return;
+    idCargo.value = props.linkedCargo ?? null;
+    cargoItems.value = idCargo.value
+      ? [{ id: idCargo.value, label: `#${idCargo.value}` }]
+      : [];
+    void search("");
   },
 );
 </script>

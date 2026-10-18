@@ -152,6 +152,8 @@
       "title": "Convertir a operativo",
       "help": "Enlaza las expediciones del proyecto a un MAWB existente. Las que no tienen spedizione real quedan pendientes. Repetir la operación es seguro.",
       "cargoId": "ID del cargo master",
+      "cargoSearch": "Buscar cargo master (AWB o ID)",
+      "cargoNoData": "Sin cargos",
       "complete": "Todas las expediciones enlazadas.",
       "incomplete": "{n} expedición(es) pendiente(s).",
       "shipmentId": "ID spedizione",

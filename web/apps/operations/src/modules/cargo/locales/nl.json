@@ -1813,7 +1813,13 @@
       "col_weight": "Werkelijk gewicht",
       "col_chargeable": "Belastbaar gewicht",
       "col_pieces": "Colli",
-      "open_express": "Express-zending openen"
+      "open_express": "Express-zending openen",
+      "attach_scope_hint": "Alleen zendingen van de huidige gebruiker of actieve partner worden aangeboden. Wissel van partner voor een andere klant.",
+      "col_status": "Status",
+      "incomplete": "Onvolledig",
+      "incomplete_hint": "Gegevens van afzender of ontvanger ontbreken: vul ze aan in de HAWB-lijst.",
+      "complete": "Compleet",
+      "open_hawb": "HAWB-lijst openen"
     },
     "owner": {
       "owner": "Eigenaar",

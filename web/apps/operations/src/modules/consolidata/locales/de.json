@@ -152,6 +152,8 @@
       "title": "In Operativ umwandeln",
       "help": "Verknüpft die Projektsendungen mit einem bestehenden Cargo-Master (MAWB). Sendungen ohne echte Sendung bleiben offen. Wiederholen ist unbedenklich.",
       "cargoId": "Cargo-Master-ID",
+      "cargoSearch": "Master-Cargo suchen (AWB oder ID)",
+      "cargoNoData": "Keine Cargos",
       "complete": "Alle Sendungen verknüpft.",
       "incomplete": "{n} Sendung(en) noch offen.",
       "shipmentId": "Sendungs-ID",

@@ -1813,7 +1813,13 @@
       "col_weight": "Peso reale",
       "col_chargeable": "Peso tassabile",
       "col_pieces": "Colli",
-      "open_express": "Apri spedizione express"
+      "open_express": "Apri spedizione express",
+      "attach_scope_hint": "Sono proposte solo le spedizioni dell'utente o del partner attivo. Per consolidare quelle di un altro cliente, cambia partner.",
+      "col_status": "Stato",
+      "incomplete": "Incompleta",
+      "incomplete_hint": "Mancano i dati di mittente o destinatario: completali nell'elenco HAWB.",
+      "complete": "Completa",
+      "open_hawb": "Apri elenco HAWB"
     },
     "owner": {
       "owner": "Proprietario",

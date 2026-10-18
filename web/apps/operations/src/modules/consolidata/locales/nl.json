@@ -152,6 +152,8 @@
       "title": "Omzetten naar operationeel",
       "help": "Koppelt de zendingen van het project aan een bestaande cargo-master (MAWB). Zendingen zonder echte zending blijven in behandeling. Herhalen is veilig.",
       "cargoId": "Cargo-master-ID",
+      "cargoSearch": "Master-cargo zoeken (AWB of ID)",
+      "cargoNoData": "Geen cargo's",
       "complete": "Alle zendingen gekoppeld.",
       "incomplete": "{n} zending(en) nog in behandeling.",
       "shipmentId": "Zending-ID",
