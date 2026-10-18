@@ -264,7 +264,9 @@
       "email_templates": "E-Mail-Vorlagen",
       "my_org_users": "Meine Benutzer",
       "my_org_sites": "Meine Standorte",
-      "my_org_email": "Meine E-Mail-Vorlagen"
+      "my_org_email": "Meine E-Mail-Vorlagen",
+      "show_more": "Mehr anzeigen",
+      "show_less": "Weniger anzeigen"
     },
     "email": {
       "recipients": "Empfänger",

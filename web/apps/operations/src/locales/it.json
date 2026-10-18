@@ -264,7 +264,9 @@
       "email_templates": "Modelli email",
       "my_org_users": "I miei utenti",
       "my_org_sites": "Le mie sedi",
-      "my_org_email": "I miei modelli email"
+      "my_org_email": "I miei modelli email",
+      "show_more": "Mostra altro",
+      "show_less": "Mostra meno"
     },
     "email": {
       "recipients": "Destinatari",

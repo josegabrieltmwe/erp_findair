@@ -264,7 +264,9 @@
       "email_templates": "Email templates",
       "my_org_users": "My users",
       "my_org_sites": "My sites",
-      "my_org_email": "My email templates"
+      "my_org_email": "My email templates",
+      "show_more": "Show more",
+      "show_less": "Show less"
     },
     "email": {
       "recipients": "Recipients",

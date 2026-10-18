@@ -264,7 +264,9 @@
       "email_templates": "Plantillas de correo",
       "my_org_users": "Mis usuarios",
       "my_org_sites": "Mis sedes",
-      "my_org_email": "Mis plantillas de correo"
+      "my_org_email": "Mis plantillas de correo",
+      "show_more": "Ver más",
+      "show_less": "Ver menos"
     },
     "email": {
       "recipients": "Destinatarios",

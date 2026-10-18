@@ -76,14 +76,28 @@
         </template>
       </div>
     </div>
+
+    <!-- Solo en la vista de partner: el menú diario por defecto y «Ver más» para el resto. -->
+    <button
+      v-if="canToggleAll"
+      type="button"
+      class="ops-nav__more"
+      :aria-expanded="showAll"
+      :title="collapsed ? moreLabel : undefined"
+      data-testid="nav-toggle-all"
+      @click="toggleAll"
+    >
+      <v-icon :icon="showAll ? 'mdi-chevron-up' : 'mdi-dots-horizontal'" size="20" class="ops-nav__icon" />
+      <span v-if="!collapsed" class="ops-nav__text">{{ moreLabel }}</span>
+    </button>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { NAV_SECTION_DEFS, isNavEntryVisible } from "./navCatalog";
+import { NAV_SECTION_DEFS, hasHiddenNavEntries, isNavEntryVisible, reduceNavSections } from "./navCatalog";
 import { useNavRole } from "./useNavRole";
 
 const props = withDefaults(
@@ -139,11 +153,52 @@ function roleVisible(it: { adminOnly?: boolean; partnerOnly?: boolean }): boolea
 }
 
 // Secciones con sus items filtrados por rol; se ocultan las secciones vacías.
-const visibleSections = computed<NavSection[]>(() =>
+const roleSections = computed<NavSection[]>(() =>
   sections.value
     .map((s) => ({ label: s.label, items: s.items.filter(roleVisible) }))
     .filter((s) => s.items.length > 0),
 );
+
+// Vista de partner: solo el trabajo diario (más la pantalla actual) hasta pulsar «Ver más».
+// El personal TMWE ve siempre el menú completo. La preferencia se recuerda en el navegador.
+const SHOW_ALL_KEY = "tmwe:nav-show-all";
+function readShowAll(): boolean {
+  try {
+    return window.localStorage.getItem(SHOW_ALL_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+const showAll = ref<boolean>(readShowAll());
+
+function toggleAll(): void {
+  showAll.value = !showAll.value;
+  try {
+    window.localStorage.setItem(SHOW_ALL_KEY, showAll.value ? "1" : "0");
+  } catch {
+    // Sin almacenamiento (ventana privada): el cambio vale solo para esta carga.
+  }
+}
+
+/** Claves de los accesos que corresponden a la pantalla actual. */
+const activeKeys = computed<Set<string>>(
+  () =>
+    new Set(
+      roleSections.value.flatMap((s) => s.items).filter((it) => it.routeName && isActive(it.routeName)).map((it) => it.key),
+    ),
+);
+
+const reducedView = computed<boolean>(() => !isAdmin.value);
+
+const visibleSections = computed<NavSection[]>(() =>
+  reducedView.value ? reduceNavSections(roleSections.value, showAll.value, activeKeys.value) : roleSections.value,
+);
+
+const canToggleAll = computed<boolean>(
+  () => reducedView.value && (showAll.value || hasHiddenNavEntries(roleSections.value, activeKeys.value)),
+);
+
+const moreLabel = computed<string>(() => t(showAll.value ? "platform.opsnav.show_less" : "platform.opsnav.show_more"));
 
 function isActive(name: string): boolean {
   // Los accesos principales de cargo/shipment apuntan directamente al
@@ -355,6 +410,35 @@ onBeforeUnmount(() => {
 }
 .ops-nav__item--external:hover .ops-nav__ext-hint {
   opacity: 0.55;
+}
+
+/* «Ver más / Ver menos» del menú de partner. */
+.ops-nav__more {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgb(var(--v-theme-on-surface-variant));
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: start;
+}
+.ops-nav__more:hover {
+  background: rgba(var(--v-theme-on-surface), 0.06);
+}
+.ops-nav__more:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: -2px;
+}
+.ops-nav--rail .ops-nav__more {
+  justify-content: center;
+  gap: 0;
+  padding: 8px 0;
 }
 
 /* ── Modo rail (colapsado) ──────────────────────────────────────────── */

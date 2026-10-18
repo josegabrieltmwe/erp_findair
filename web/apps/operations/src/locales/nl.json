@@ -264,7 +264,9 @@
       "email_templates": "E-mailsjablonen",
       "my_org_users": "Mijn gebruikers",
       "my_org_sites": "Mijn vestigingen",
-      "my_org_email": "Mijn e-mailsjablonen"
+      "my_org_email": "Mijn e-mailsjablonen",
+      "show_more": "Meer tonen",
+      "show_less": "Minder tonen"
     },
     "email": {
       "recipients": "Geadresseerden",
