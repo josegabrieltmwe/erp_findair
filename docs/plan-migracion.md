@@ -13,8 +13,13 @@ Estado a 2026-10-18. Cifras de la última pasada de solo lectura (`bff/bin/probe
 | Cliente OAuth 527: `internal`, `redirect_uris`, PKCE obligatorio, scopes de personal | Hecho en el backend (`6ef5a87be`, `8a15fe416`) |
 | Autorización Bearer por política en los controllers `web` | Hecho en el backend (`a27ed1cf0`) |
 
-Resultado de la pasada (anterior a los cambios del backend del 2026-10-18; repetir con `probe-routes.php`): 97 rutas responden 200, 76 piden parámetros (400), 26 dan 403, 21 daban 405
-(ya excluidas del manifiesto), 2 dan 404, 1 da 502.
+Resultado de la pasada del 2026-10-19 (206 rutas GET sondeadas, usuario `jose`, tras los cambios del
+backend del 2026-10-18): 72 responden 200, 93 piden parámetros (400/422), 38 dan 403, 2 dan 404
+(`api_proforma_file`, `shipment_timing`). Ya no hay 405 ni 502.
+Los 38 403 son todos de permiso de módulo: `master_data` (22), `anagrafiche*` (8), `cargo_config` (5),
+`admin` (`api_b2b_config`), `shipment_ops` (`api_shipment_subcontracting`) y `api_partner_elevenlabs_agents`
+(`not_a_partner`, esperado para personal TMWE). Se resuelven con el rol `app_internal_erp` y el rol de
+usuario; no son fallos de código.
 
 ## 2. Modelo de permisos acordado (roles por aplicación)
 
