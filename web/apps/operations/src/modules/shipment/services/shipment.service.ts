@@ -48,30 +48,30 @@ export const shipmentService = {
   },
 
   cancel(id: number): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cancel_shipment", {
+    return http("/api_shipment_cancel", {
       method: "POST",
       body: { shipment_id: id },
     });
   },
 
   setArchiviata(id: number, value: "S" | "N"): Promise<SetFlagResult> {
-    return http<SetFlagResult>("/set_archiviata", {
+    return http<SetFlagResult>("/api_shipment_archive", {
       method: "POST",
-      body: { shipment_id: id, value },
+      body: { id: [id] }, // el backend solo marca (S); `value` no existe en el contrato
     });
   },
 
   setControllata(id: number, value: "S" | "N" | "O"): Promise<SetFlagResult> {
-    return http<SetFlagResult>("/set_controllata", {
+    return http<SetFlagResult>("/api_shipment_review", {
       method: "POST",
-      body: { shipment_id: id, value },
+      body: { id: [id] }, // el backend solo marca (S); `value` no existe en el contrato
     });
   },
 
   setPrivate(id: number, value: "S" | "N"): Promise<SetFlagResult> {
-    return http<SetFlagResult>("/set_private", {
+    return http<SetFlagResult>("/api_shipment_private", {
       method: "POST",
-      body: { shipment_id: id, value },
+      body: { id: [id] }, // el backend solo marca (S); `value` no existe en el contrato
     });
   },
 
@@ -133,14 +133,14 @@ export const shipmentService = {
    * controllers — DO NOT consolidate, they hit different endpoints.
    */
   bulkArchive(ids: number[]): Promise<SetFlagResult> {
-    return http<SetFlagResult>("/set_archiviata", {
+    return http<SetFlagResult>("/api_shipment_archive", {
       method: "POST",
       body: { id: ids },
     });
   },
 
   bulkControl(ids: number[]): Promise<SetFlagResult> {
-    return http<SetFlagResult>("/set_controllata", {
+    return http<SetFlagResult>("/api_shipment_review", {
       method: "POST",
       body: { id: ids },
     });

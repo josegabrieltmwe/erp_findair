@@ -47,7 +47,7 @@ export const currencyService = {
 
   /** GET ajax_partner_currency?id_client=N — target sigla of the client. */
   getTargetCurrency(idClient: number): Promise<PartnerCurrencyResult> {
-    return http<PartnerCurrencyResult>('/ajax_partner_currency', {
+    return http<PartnerCurrencyResult>('/api_partner_currency_compat', {
       query: { id_client: idClient },
     });
   },

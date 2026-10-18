@@ -45,10 +45,14 @@ export const cargoLabelsService = {
     cargo_id: number,
     opts: { output_format?: "image" | "pdf"; package_number?: number } = {},
   ): Promise<TmweLabelResponse> {
-    const query: Record<string, string | number> = { shipment_id: cargo_id };
-    if (opts.output_format) query.output_format = opts.output_format;
-    if (opts.package_number != null) query.package_number = opts.package_number;
-    return http<TmweLabelResponse>("/ajax_tmwe_label", { query });
+    // Con Bearer el contrato es POST con `options` anidado (no query plana).
+    const options: Record<string, string | number> = {};
+    if (opts.output_format) options.output_format = opts.output_format;
+    if (opts.package_number != null) options.package_number = opts.package_number;
+    return http<TmweLabelResponse>("/tmwe_label", {
+      method: "POST",
+      body: { shipment_id: cargo_id, options },
+    });
   },
 
   /**
@@ -60,6 +64,6 @@ export const cargoLabelsService = {
    * evitando cargar 17 base64 en memoria o disparar 17 descargas.
    */
   bundleUrl(cargo_id: number, bundle: "pdf" | "zip"): string {
-    return `${basePath()}/ajax_tmwe_label_bundle?shipment_id=${cargo_id}&bundle=${bundle}`;
+    return `${basePath()}/api_label_tmwe_bundle?shipment_id=${cargo_id}&bundle=${bundle}`;
   },
 };

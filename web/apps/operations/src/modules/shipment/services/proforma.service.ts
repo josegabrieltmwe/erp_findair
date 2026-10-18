@@ -100,7 +100,7 @@ export const proformaService = {
   generatePdf(
     shipment_id: number,
   ): Promise<{ success: boolean; file_id?: number; url?: string }> {
-    return http("/ajax_generate_proforma_file", {
+    return http("/api_proforma_file", {
       method: "POST",
       body: { shipment_id },
     });

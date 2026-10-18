@@ -31,6 +31,6 @@ export const routeStatsService = {
     cap?: string;
     city?: string;
   }): Promise<RouteStatsResponse> {
-    return http<RouteStatsResponse>("/ajax_route_stats", { query: params });
+    return http<RouteStatsResponse>("/api_route_stats_compat", { query: params });
   },
 };

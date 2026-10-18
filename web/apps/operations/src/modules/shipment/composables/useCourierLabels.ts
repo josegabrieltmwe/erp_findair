@@ -250,7 +250,7 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
       toasts.push("warning", t("shipment.awb.no_courier_labels"));
       return;
     }
-    const url = `${basePath()}/ajax_get_combined_label_pdf?shipment_id=${sid}`;
+    const url = `${basePath()}/api_label_combined_pdf?shipment_id=${sid}`;
     const a = document.createElement("a");
     a.href = url;
     a.download = `labels_${awb() || sid}.pdf`;

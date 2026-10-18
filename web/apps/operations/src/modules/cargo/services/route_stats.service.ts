@@ -30,7 +30,7 @@ export interface RouteStatsResponse {
 
 export const routeStatsService = {
   get(country: string, cap: string, city: string): Promise<RouteStatsResponse> {
-    return http<RouteStatsResponse>("/ajax_route_stats", {
+    return http<RouteStatsResponse>("/api_route_stats_compat", {
       query: { country, cap, city },
     });
   },

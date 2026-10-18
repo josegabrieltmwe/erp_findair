@@ -136,20 +136,20 @@ interface HandlerRow {
 
 // ────────────────────────────────────────────────────────────
 // Charge detail lines (spedizioni_cargo_dett)
-// Route: ajax_cargo_charge_details (session wrapper of api_cargo_charge_details)
+// Route: api_cargo_charge_details (PATCH update, DELETE delete, POST add/recalculate)
 // ────────────────────────────────────────────────────────────
 
 export const chargeDetailsService = {
   list(
     cargo_id: number,
   ): Promise<{ success: boolean; data?: CargoChargeDetail[]; error?: string }> {
-    return http("/ajax_cargo_charge_details", { query: { cargo_id } });
+    return http("/api_cargo_charge_details", { query: { cargo_id } });
   },
   add(
     cargo_id: number,
     row: Partial<CargoChargeDetail>,
   ): Promise<{ success: boolean; data?: { id: number }; error?: string }> {
-    return http("/ajax_cargo_charge_details", {
+    return http("/api_cargo_charge_details", {
       method: "POST",
       body: { action: "add", cargo_id, row },
     });
@@ -162,22 +162,22 @@ export const chargeDetailsService = {
   ): Promise<{ success: boolean; error?: string }> {
     // cargo_id es obligatorio en el backend para el guard IDOR (autoriza la
     // edición sobre un cargo accesible). Sin él → 400 "cargo_id is required".
-    return http("/ajax_cargo_charge_details", {
-      method: "POST",
+    return http("/api_cargo_charge_details", {
+      method: "PATCH",
       body: { action: "update", id, field, value, cargo_id },
     });
   },
   recalculate(
     cargo_id: number,
   ): Promise<{ success: boolean; data?: unknown; error?: string }> {
-    return http("/ajax_cargo_charge_details", {
+    return http("/api_cargo_charge_details", {
       method: "POST",
       body: { action: "recalculate", cargo_id },
     });
   },
   remove(id: number): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_charge_details", {
-      method: "POST",
+    return http("/api_cargo_charge_details", {
+      method: "DELETE",
       body: { action: "delete", id },
     });
   },
@@ -185,7 +185,7 @@ export const chargeDetailsService = {
 
 // ────────────────────────────────────────────────────────────
 // Packages (spedizioni_colli with id_cargo set)
-// Route: ajax_cargo_packages (session wrapper of api_cargo_packages)
+// Route: api_cargo_packages (PATCH update, DELETE delete, POST add/bulk)
 // ────────────────────────────────────────────────────────────
 
 export interface CargoPackagesPayload {
@@ -202,13 +202,13 @@ export const packagesService = {
     data?: CargoPackagesPayload;
     error?: string;
   }> {
-    return http("/ajax_cargo_packages", { query: { shipment_id } });
+    return http("/api_cargo_packages", { query: { shipment_id } });
   },
   add(
     shipment_id: number,
     pkg: Partial<CargoPackage>,
   ): Promise<{ success: boolean; data?: unknown; error?: string }> {
-    return http("/ajax_cargo_packages", {
+    return http("/api_cargo_packages", {
       method: "POST",
       body: { action: "add", shipment_id, ...pkg },
     });
@@ -217,7 +217,7 @@ export const packagesService = {
     shipment_id: number,
     packages: Partial<CargoPackage>[],
   ): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_packages", {
+    return http("/api_cargo_packages", {
       method: "POST",
       body: { action: "bulk", shipment_id, packages },
     });
@@ -226,14 +226,14 @@ export const packagesService = {
     package_id: number,
     fields: Partial<CargoPackage>,
   ): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_packages", {
-      method: "POST",
+    return http("/api_cargo_packages", {
+      method: "PATCH",
       body: { action: "patch", package_id, ...fields },
     });
   },
   remove(package_id: number): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_packages", {
-      method: "POST",
+    return http("/api_cargo_packages", {
+      method: "DELETE",
       body: { action: "delete", package_id },
     });
   },
@@ -241,7 +241,7 @@ export const packagesService = {
 
 // ────────────────────────────────────────────────────────────
 // Cargo addresses (spedizioni_indirizzi with id_spedizione = cargo id)
-// Route: ajax_cargo_addresses
+// Route: api_cargo_addresses_compat
 //   tipo='D' destination, 'P' pickup, 'A' customs agency, 'H' handler
 // ────────────────────────────────────────────────────────────
 
@@ -304,7 +304,7 @@ export const cargoAddressesService = {
     data?: CargoAddressesPayload;
     error?: string;
   }> {
-    return http("/ajax_cargo_addresses", { query: { cargo_id } });
+    return http("/api_cargo_addresses_compat", { query: { cargo_id } });
   },
   /** Create OR update by tipo (the controller archives the previous active row of the same tipo). */
   upsert(
@@ -316,7 +316,7 @@ export const cargoAddressesService = {
     data?: { id: number; tipo: CargoAddressTipo };
     error?: string;
   }> {
-    return http("/ajax_cargo_addresses", {
+    return http("/api_cargo_addresses_compat", {
       method: "POST",
       body: { item: { cargo_id, tipo, ...fields } },
     });
@@ -326,7 +326,7 @@ export const cargoAddressesService = {
     address_id: number,
     fields: Partial<CargoAddress>,
   ): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_addresses", {
+    return http("/api_cargo_addresses_compat", {
       method: "POST",
       body: { item: { id: address_id, ...fields } },
     });
@@ -340,13 +340,13 @@ export const cargoAddressesService = {
     data?: { cargo_id: number; uses_sede_address: boolean; sede: CargoSede };
     error?: string;
   }> {
-    return http("/ajax_cargo_addresses", {
+    return http("/api_cargo_addresses_compat", {
       method: "POST",
       body: { action: "use_sede", cargo_id },
     });
   },
   remove(address_id: number): Promise<{ success: boolean; error?: string }> {
-    return http("/ajax_cargo_addresses", {
+    return http("/api_cargo_addresses_compat", {
       method: "POST",
       body: { action: "delete", id: address_id },
     });
@@ -539,18 +539,18 @@ export const cargoListService = {
   },
 
   /**
-   * Bulk archive cargo shipments. Routes to /set_archiviata_cargo
+   * Bulk archive cargo shipments. Routes to /api_cargo_archive
    * (Set_Archiviata_Cargo_Controller) which accepts `id` as an array.
    */
   bulkArchive(ids: number[]): Promise<{ success: boolean; error?: string }> {
-    return http("/set_archiviata_cargo", {
+    return http("/api_cargo_archive", {
       method: "POST",
       body: { id: ids },
     });
   },
 
   bulkControl(ids: number[]): Promise<{ success: boolean; error?: string }> {
-    return http("/set_controllata_cargo", {
+    return http("/api_cargo_review", {
       method: "POST",
       body: { id: ids },
     });

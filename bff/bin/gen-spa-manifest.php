@@ -33,6 +33,7 @@ if ($root === '' || $modules === [] || !is_dir($root . '/config/routes')) {
 // response_on => [tier, controlador]
 $backend = [];
 $streams = []; // rutas SSE: se declaran con response: stream
+$declared = []; // ruta => verbos declarados en `methods:` del backend (si los hay)
 foreach (glob($root . '/config/routes/*.yml') ?: [] as $file) {
     $yaml = Yaml::parseFile($file);
     foreach (is_array($yaml) ? $yaml : [] as $items) {
@@ -40,6 +41,9 @@ foreach (glob($root . '/config/routes/*.yml') ?: [] as $file) {
             if (is_array($item) && isset($item['response_on'], $item['controller'])) {
                 $parts = explode('\\', (string) $item['controller']);
                 $backend[(string) $item['response_on']] = $parts[2] ?? '?';
+                if (isset($item['methods'])) {
+                    $declared[(string) $item['response_on']] = array_map('trim', explode(',', strtoupper((string) $item['methods'])));
+                }
                 if (preg_match('/\bSSE\b|event-stream/i', (string) ($item['description'] ?? '')) === 1
                     && !str_contains((string) $item['response_on'], 'token')) {
                     $streams[(string) $item['response_on']] = true;
@@ -105,7 +109,15 @@ foreach ($methods as $name => $verbs) {
         continue;
     }
     $writesFiles = preg_match('/files|upload|import/', $name) === 1;
-    foreach (array_keys($verbs) as $verb) {
+    $allowed = array_keys($verbs);
+    if (isset($declared[$name])) {
+        // `methods:` del backend manda: se descartan los verbos que el controlador no admite.
+        $allowed = array_values(array_intersect($allowed, $declared[$name]));
+        if ($allowed === []) {
+            fwrite(STDERR, "AVISO: {$name} usa " . implode(',', array_keys($verbs)) . ' pero el backend declara ' . implode(',', $declared[$name]) . "\n");
+        }
+    }
+    foreach ($allowed as $verb) {
         $route = [
             'id' => strtolower($verb) . '.' . $name,
             'method' => $verb,

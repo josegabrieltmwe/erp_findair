@@ -43,7 +43,7 @@ export interface CapCityProvResponse {
 export const geoService = {
   /** ajax_remote_zone_check — fast remote-area detection by (country, cap|city). */
   isRemote(req: RemoteZoneCheckRequest): Promise<RemoteZoneCheckResponse> {
-    return http<RemoteZoneCheckResponse>('/ajax_remote_zone_check', { query: req });
+    return http<RemoteZoneCheckResponse>('/api_remote_zone_check_compat', { query: req });
   },
 
   /** cap_city_prov — CAP + province + closer airports (legacy autocomplete bundle). */

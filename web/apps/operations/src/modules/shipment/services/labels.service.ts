@@ -125,7 +125,7 @@ export const labelsService = {
    * "ajax-only" rule is honoured (we only *consume* the metadata).
    */
   getCourierLabels(shipment_id: number): Promise<CourierLabelMetadata> {
-    return http<CourierLabelMetadata>("/ajax_get_label_courier_shipment", {
+    return http<CourierLabelMetadata>("/get_label_courier_shipment", {
       query: { shipment_id },
     });
   },
@@ -135,7 +135,7 @@ export const labelsService = {
    * shipment's sender. Replaces the legacy `spedy_ldv_mitt.php` call.
    */
   sendLdvToMittente(shipment_id: number): Promise<SendLdvToMittenteResponse> {
-    return http<SendLdvToMittenteResponse>("/ajax_send_ldv_to_mittente", {
+    return http<SendLdvToMittenteResponse>("/api_send_ldv_to_mittente_compat", {
       query: { shipment_id },
     });
   },
@@ -156,10 +156,14 @@ export const labelsService = {
       package_number?: number;
     } = {},
   ): Promise<TmweLabelResponse> {
-    const query: Record<string, string | number> = { shipment_id };
-    if (opts.output_format) query.output_format = opts.output_format;
-    if (opts.package_number != null) query.package_number = opts.package_number;
-    return http<TmweLabelResponse>("/ajax_tmwe_label", { query });
+    // Con Bearer el contrato es POST con `options` anidado (no query plana).
+    const options: Record<string, string | number> = {};
+    if (opts.output_format) options.output_format = opts.output_format;
+    if (opts.package_number != null) options.package_number = opts.package_number;
+    return http<TmweLabelResponse>("/tmwe_label", {
+      method: "POST",
+      body: { shipment_id, options },
+    });
   },
 
   /**

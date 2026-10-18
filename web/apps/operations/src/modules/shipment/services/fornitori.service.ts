@@ -32,7 +32,7 @@ export const fornitoriService = {
   list(
     shipment_id: number,
   ): Promise<{ success: boolean; fornitori?: FornitoreOption[] }> {
-    return http("/spedy_ajax_lista_fornitori_box", {
+    return http("/api_provider_box_compat", {
       query: { idd: shipment_id, froms: "ERP" },
     });
   },
@@ -70,7 +70,7 @@ export const fornitoriService = {
       err?: number | string;
       etxt?: string;
       [k: string]: unknown;
-    }>("/set_fornitori_service", {
+    }>("/api_shipment_set_service", {
       method: "POST",
       body: {
         id: shipment_id,
@@ -94,7 +94,7 @@ export const fornitoriService = {
   listServices(
     shipment_id: number,
   ): Promise<{ success: boolean; services?: ServiceOption[] }> {
-    return http("/spedy_ajax_lista_servizi", {
+    return http("/api_service_list_compat", {
       query: { idd: shipment_id, froms: "ERP" },
     });
   },

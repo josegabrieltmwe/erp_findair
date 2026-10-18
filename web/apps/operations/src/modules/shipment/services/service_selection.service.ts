@@ -7,8 +7,8 @@
  *   - /api_express_service_select                → persist selection + cascade pricing
  *
  * Replaces the legacy direct calls to
- *   - /spedy_ajax_lista_servizi
- *   - /spedy_ajax_lista_fornitori_box
+ *   - /api_service_list_compat
+ *   - /api_provider_box_compat
  * that fornitori.service.ts still uses (deprecated, to be removed once the
  * SPA fully migrates).
  */

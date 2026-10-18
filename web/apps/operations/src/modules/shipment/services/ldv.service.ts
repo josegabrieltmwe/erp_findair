@@ -13,7 +13,7 @@ export const ldvService = {
     shipment_id: number,
     otp = "",
   ): Promise<SendLdvToMittenteResponse> {
-    return http<SendLdvToMittenteResponse>("/ajax_send_ldv_to_mittente", {
+    return http<SendLdvToMittenteResponse>("/api_send_ldv_to_mittente_compat", {
       query: { shipment_id, otp },
     });
   },

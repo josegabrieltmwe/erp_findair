@@ -94,6 +94,18 @@ export async function deleteSession(idSession: number): Promise<void> {
   }
 }
 
+/**
+ * Pasa de `?action=<ruta>&...` (dispatcher de tmwe_json) a `/<ruta>?...` (BFF): el navegador
+ * nunca ve app.php y el BFF no admite `action` desde el cliente.
+ */
+function bffRoute(params: URLSearchParams): string {
+  const rest = new URLSearchParams(params);
+  const action = rest.get("action") ?? "";
+  rest.delete("action");
+  const query = rest.toString();
+  return `/${action}${query ? `?${query}` : ""}`;
+}
+
 export async function fetchPending(
   includeDone = false,
 ): Promise<PendingSession[]> {
@@ -107,7 +119,7 @@ export async function fetchPending(
 
   const response = await http<
     ApiEnvelope<{ sessions: PendingSession[]; count: number }>
-  >(`/app.php?${params.toString()}`);
+  >(bffRoute(params));
   return response.data?.sessions ?? [];
 }
 
@@ -163,7 +175,7 @@ export async function downloadDistinta(params: {
   if (params.format) q.set("format", params.format);
 
   const base = window.__TMWE_NAV__?.basePath ?? "/bff/v1";
-  const res = await fetch(`${base}/app.php?${q.toString()}`, {
+  const res = await fetch(`${base}${bffRoute(q)}`, {
     credentials: "include",
   });
 
@@ -230,7 +242,7 @@ export async function fetchSuggestions(
   }
 
   const response = await http<ApiEnvelope<SuggestionResult>>(
-    `/app.php?${params.toString()}`,
+    bffRoute(params),
   );
   return response.data ?? { candidates: [], total: 0, exact: false };
 }
@@ -254,7 +266,7 @@ export async function searchShipments(
   });
 
   const response = await http<ApiEnvelope<SuggestionResult>>(
-    `/app.php?${params.toString()}`,
+    bffRoute(params),
   );
   return response.data ?? { candidates: [], total: 0, exact: false };
 }
