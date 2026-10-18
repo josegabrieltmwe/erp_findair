@@ -70,8 +70,10 @@ equivale a nuestro `X-Impersonate-Partner-Id` y exige los mismos requisitos (ana
 
 **Privacidad del partner, en el gateway** (`api/_lib/privacy_partner.js`, `ambito.js`): quita costes y márgenes de TMWE a
 cualquier profundidad y los precios de envíos que no son de clientes del partner; restringe los agentes al partner.
-En erp_findair esto no existe en el BFF: lo decide el backend con el token del usuario. Falta probar con un usuario partner real
-que ningún campo de coste (`costo*`, `billing_check`, `supplier_cost*`…) llegue por `/bff/v1`.
+En erp_findair esto no existe en el BFF: lo decide el backend con el token del usuario. **Decisión de producto (2026-10-19):**
+los partners pueden ver los costes de los proveedores, así que no hay que filtrar `costo*`/`supplier_cost*` ni ocultarlos en la SPA.
+Los márgenes y precios de clientes ajenos siguen siendo cosa del backend (ámbito por anagrafica). Todo texto nuevo de la SPA
+debe existir en los cinco idiomas seleccionables (es, it, en, de, nl).
 
 ### Vistas: equivalencias
 | Jose_master | erp_findair |
