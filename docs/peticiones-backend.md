@@ -107,16 +107,22 @@ registrarlo como migración, no como cambio manual.
 ## 6. Suplantación de partner (personal TMWE) con `app_internal_erp`
 
 El BFF expone `/bff/impersonation` y envía `X-Impersonate-Partner-Id` (backend: `Security_Service::apply_oauth_impersonation`).
-Exige el scope `partner:impersonate`, que `app_internal_erp` **no** lleva (a propósito: lo comprueba
-`AppRolesParityTest`). Sin el scope, con la cabecera presente el backend rechaza la petición entera.
+Con `scope_source=roles` y `authorization_code`, el scope efectivo es rol del cliente ∩ rol del usuario:
+`partner:impersonate` debe estar en **ambos**. `app_internal_erp` no lo lleva (a propósito:
+`AppRolesParityTest`). Con la cabecera presente y sin el scope, el backend rechaza la petición entera.
+Verificado en local (2026-10-19): `jose` obtiene 403 `impersonation_not_allowed` al elegir partner.
 
-Decisión: **un rol aparte**, no un grant por cliente. Petición:
+Peticiones (migración con copia `bak_*` y rollback):
 
-- Rol `app_internal_erp_staff` en `config/rbac_seed.yml` (migración con copia `bak_*` y rollback):
-  los scopes de `app_internal_erp` + `partner:impersonate`.
-- Añadirlo a `Scope_Service::INTERNAL_ONLY_ROLES`; ampliar `AppRolesParityTest` (mismos scopes que
-  `app_internal_erp` salvo `partner:impersonate`, y solo internal).
-- Como un cliente tiene un único rol, el cliente 527 de la SPA usaría este rol (la autorización real
-  sigue exigiendo `id_anagrafica == 1`, así que el resto de usuarios no se ven afectados).
-- Cuando falla la suplantación, devolver un código distinguible (403 `IMPERSONATION_DENIED`) en vez de
-  un 401 genérico; hoy el BFF lo deduce sondeando el token sin la cabecera.
+1. **Rol de cliente** `app_internal_erp_staff` en `config/rbac_seed.yml`: los scopes de `app_internal_erp` +
+   `partner:impersonate`. Añadirlo a `Scope_Service::INTERNAL_ONLY_ROLES` y ampliar `AppRolesParityTest`
+   (mismos scopes que `app_internal_erp` salvo `partner:impersonate`; solo internal). El cliente 527 de la
+   SPA pasa a este rol (un cliente tiene un único rol).
+2. **Rol de usuario** para todo el personal TMWE (anagrafica 1): añadir `partner:impersonate` a
+   `tmwe_staff_portal` (id 14) o, si ese rol no agrupa a todos, crear `tmwe_staff` y asignarlo en
+   `contatti_oauth_role` a los usuarios con `id_anagrafica = 1`. Comprobar antes qué usuarios TMWE
+   tienen hoy `tmwe_staff_portal`.
+3. El gate real no cambia: anagrafica real == 1 + scope + partner ERP válido + auditoría. Un usuario
+   que no es de TMWE no suplanta aunque tenga el scope.
+4. Cuando falla la suplantación, devolver 403 `IMPERSONATION_DENIED` en vez de un 401 genérico; hoy el
+   BFF lo deduce sondeando el token sin la cabecera.
