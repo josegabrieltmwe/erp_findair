@@ -119,14 +119,14 @@
         </div>
 
         <div class="tmwe-cockpit__content">
-          <template v-for="group in visibleGroups(entry)" :key="group.group">
+          <template v-for="group in visibleNonEmptyGroups(entry)" :key="group.group">
             <HomeKpiGroup
               :title="kpiGroupLabel(t, group.group)"
               :total="groupTotal(group)"
               :loading="isSectionLoading(entry)"
             >
               <HomeKpiTile
-                v-for="tile in group.tiles"
+                v-for="tile in tilesToRender(group, entry)"
                 :key="tile.key"
                 :icon="tile.icon"
                 :label="kpiLabel(t, tile)"
@@ -142,6 +142,15 @@
         </div>
         <v-alert v-if="entry.groups.length === 0" type="info" density="compact" variant="tonal">
           {{ t('home.cockpit.pending_section') }}
+        </v-alert>
+        <v-alert
+          v-else-if="!isSectionLoading(entry) && hideZero && visibleNonEmptyGroups(entry).length === 0"
+          type="success"
+          density="compact"
+          variant="tonal"
+          icon="mdi-check-circle-outline"
+        >
+          {{ t('home.cockpit.all_zero') }}
         </v-alert>
       </div>
     </section>
@@ -181,6 +190,14 @@ const props = defineProps<{
   categories: KpiCategory[];
   /** Base path for dashboard AJAX endpoints. */
   basePath?: string;
+  /**
+   * Oculta las cestas en 0 (y el grupo entero si todas sus cestas quedan en
+   * 0) una vez que su categoría ya cargó. Mientras una categoría sigue
+   * `pending` el valor es `null`, no 0 — no se puede saber aún si es cero,
+   * así que esas cestas nunca se ocultan por esto, solo muestran su
+   * skeleton de siempre.
+   */
+  hideZero?: boolean;
 }>();
 
 /* ----------------------------------------------------- catalog filtering */
@@ -228,6 +245,27 @@ function visibleGroups(entry: {
 }) {
   const selected = activeGroups.value[entry.section.id] ?? ALL_GROUPS;
   return selected === ALL_GROUPS ? entry.groups : entry.groups.filter((group) => group.group === selected);
+}
+
+/** Una cesta se oculta por `hideZero` solo tras resolverse en 0 — `pending` (valor `null`) nunca cuenta como cero. */
+function isHiddenZero(tile: HomeKpiDescriptor): boolean {
+  return props.hideZero === true && !pendingBuckets.value.has(tile.category) && (counts.value[tile.key] ?? 0) === 0;
+}
+
+function tilesToRender(
+  group: { tiles: HomeKpiDescriptor[] },
+  entry: { section: HomeSectionSpec },
+): HomeKpiDescriptor[] {
+  if (isSectionLoading(entry)) return group.tiles;
+  return group.tiles.filter((tile) => !isHiddenZero(tile));
+}
+
+/** `visibleGroups` + descarta los grupos que quedan sin cestas tras `hideZero` (mismo criterio que `tilesToRender`). */
+function visibleNonEmptyGroups(entry: {
+  section: HomeSectionSpec;
+  groups: Array<{ group: string; tiles: HomeKpiDescriptor[] }>;
+}) {
+  return visibleGroups(entry).filter((group) => tilesToRender(group, entry).length > 0);
 }
 
 watch(activeSection, (section) => {

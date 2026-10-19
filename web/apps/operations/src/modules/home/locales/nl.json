@@ -223,6 +223,7 @@
         },
         "cockpit": {
             "pending_section": "Indicatoren worden voorbereid; niet-beschikbare waarden worden niet als nul getoond.",
+            "all_zero": "Alles in orde: in deze sectie staat niets open.",
             "morning": "Ochtendprioriteiten",
             "all_groups": "Alle",
             "urgent": "Dringend",

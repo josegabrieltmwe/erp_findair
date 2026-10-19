@@ -56,25 +56,26 @@ function myOrgTarget(tab?: string) {
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "root", redirect: { name: "home" } },
 
-  // ── Inicio (landing) — el dashboard rico de la app `home` clásica
-  //    (CTAs, alertas, KPIs vía SSE, recientes). Trae su propio
-  //    DashboardShell + PlatformSidebar → ruta fullscreen. ──────────
+  // ── Inicio (landing) — fusiona el dashboard de KPIs (antes en
+  //    /home/activities) con los accesos rápidos. El fetch de KPIs del
+  //    cockpit es no bloqueante (cola propia, máx. 3 en paralelo, cliente
+  //    `ofetch` propio) y el router nunca lo espera, así que navegar a otra
+  //    pantalla (p. ej. buscar una expedición) no se retrasa aunque los KPIs
+  //    sigan cargando en segundo plano. ──────────
   {
     path: "/home",
     name: "home",
-    // Landing SIN datos: accesos rápidos + botón a las actividades del día.
     component: () => import("@/modules/home/pages/HomeLandingPage.vue"),
     // Content-only: se muestra dentro del DashboardShell de operations (con la
     // nav de dominios). Ya no es fullscreen.
     meta: { title: "Inicio", icon: "mdi-home-outline" },
   },
-  // Actividades del día: el cockpit de indicadores (antes era la home). Se
-  // calculan al abrir esta vista, no al entrar en la aplicación.
+  // Compatibilidad: la ruta vivía separada ("Actividades del día"); ahora es
+  // la propia home. Se conserva el nombre por si queda algún enlace/favorito.
   {
     path: "/home/activities",
     name: "home-activities",
-    component: () => import("@/modules/home/pages/CockpitHomePage.vue"),
-    meta: { title: "Actividades del día", icon: "mdi-clipboard-check-outline" },
+    redirect: { name: "home" },
   },
   // ── Expediciones — cargo (aéreo), integrado "tal cual" (módulo con
   //    sus propias sub-rutas bajo /cargo, sin fusionar). ──────────

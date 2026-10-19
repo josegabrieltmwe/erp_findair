@@ -223,6 +223,7 @@
         },
         "cockpit": {
             "pending_section": "Indicatori in preparazione: i valori non disponibili non vengono mostrati come zero.",
+            "all_zero": "Tutto in ordine: non c'è nulla in sospeso in questa sezione.",
             "morning": "Il mattino",
             "all_groups": "Tutte",
             "urgent": "Urgenti",

@@ -223,6 +223,7 @@
         },
         "cockpit": {
             "pending_section": "Indicators are being prepared; unavailable values are not displayed as zero.",
+            "all_zero": "All clear: nothing pending in this section.",
             "morning": "Morning priorities",
             "all_groups": "All",
             "urgent": "Urgent",
