@@ -48,3 +48,19 @@ describe("menú reducido del partner", () => {
     expect(keys(admin)).not.toContain("price_lists");
   });
 });
+
+describe("i18n del menú en los cinco idiomas", () => {
+  const LOCALES = ["es", "it", "en", "de", "nl"];
+  const entries = NAV_SECTION_DEFS.flatMap((s) => s.items);
+  const keysI18n = [...new Set(entries.flatMap((i) => [i.key, i.partnerKey].filter((k): k is string => !!k)))];
+
+  it.each(LOCALES)("«%s» tiene nombre para cada acceso, partnerKey y sección", async (lang) => {
+    const mod = await import(`../../locales/${lang}.json`);
+    const opsnav = (mod.default ?? mod).platform?.opsnav ?? {};
+    const missing = keysI18n.filter((k) => typeof opsnav[k] !== "string" || opsnav[k] === "");
+    const missingSections = NAV_SECTION_DEFS.map((s) => s.sectionKey)
+      .filter((k) => typeof opsnav.sections?.[k] !== "string");
+    expect({ missing, missingSections }).toEqual({ missing: [], missingSections: [] });
+    for (const k of ["show_more", "show_less"]) expect(typeof opsnav[k]).toBe("string");
+  });
+});

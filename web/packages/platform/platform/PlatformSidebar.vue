@@ -73,10 +73,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
+import { onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { usePlatformContext, type PlatformModule } from './usePlatformContext';
 import { moduleHref } from './navTargets';
+import { useNavRole } from './useNavRole';
 
 const { t } = useI18n();
 
@@ -113,10 +114,8 @@ const items = computed<NavItem[]>(() => [
   { module: 'clients',  labelKey: 'platform.nav.clients',  icon: 'mdi-account-multiple',   href: moduleHref('clients'),     shortcut: 'g l' },
 ]);
 
-// Default true (admin) so admins NEVER lose access while the profile is
-// loading. Partners see Admin briefly then it hides on profile arrival —
-// preferable to flickering an admin's link. (`is_admin` === TMWE id 1.)
-const isAdmin = ref<boolean>(true);
+// Rol compartido con OperationsNav: falla CERRADO (false hasta resolver el perfil).
+const { isAdmin, load: loadProfile } = useNavRole();
 
 /**
  * "Herramientas" — utilidades secundarias que antes vivían en el menú
@@ -201,20 +200,6 @@ function onAnchorClick(id: HomeAnchor['id'], ev: MouseEvent): void {
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 const visibleItems = computed(() => items.value.filter(roleVisible));
-
-async function loadProfile(): Promise<void> {
-  try {
-    const r = await fetch('/bff/v1/get_my_profile', {
-      credentials: 'include',
-      headers: { Accept: 'application/json' },
-    });
-    if (!r.ok) return;
-    const body = await r.json();
-    isAdmin.value = body.is_admin === true;
-  } catch {
-    // Network error: keep default (admin) — see comment above.
-  }
-}
 
 // ── keyboard shortcuts (vim-style "g <letter>") ──────────────────────
 let chord: 'idle' | 'g' = 'idle';
