@@ -101,3 +101,80 @@ routes:
     upstream:
       action: api_copilot_elevenlabs_credential
     limits: { body: 64k, timeout: 30 }
+
+  # Administración de IA (contrato ai-admin/1, docs/agent-factory/10-contrato-ai-admin.md en tmwe_json).
+  # Los scopes (ai:admin, ai:audit:read, ai:memory:erase) los aplica la API; el BFF solo abre la lista blanca.
+  # Los métodos que cambian estado llevan CSRF por defecto.
+  - id: ai_admin.settings.get
+    method: GET
+    path: /api_admin_ai_settings
+    upstream:
+      action: api_admin_ai_settings
+      forward_query: [partner_id]
+
+  - id: ai_admin.settings.put
+    method: PUT
+    path: /api_admin_ai_settings
+    upstream:
+      action: api_admin_ai_settings
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.budgets.get
+    method: GET
+    path: /api_admin_ai_budgets
+    upstream:
+      action: api_admin_ai_budgets
+      forward_query: [partner_id]
+
+  - id: ai_admin.budgets.put
+    method: PUT
+    path: /api_admin_ai_budgets
+    upstream:
+      action: api_admin_ai_budgets
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.budgets.delete
+    method: DELETE
+    path: /api_admin_ai_budgets
+    upstream:
+      action: api_admin_ai_budgets
+      forward_query: [id]
+
+  - id: ai_admin.usage.get
+    method: GET
+    path: /api_admin_ai_usage
+    upstream:
+      action: api_admin_ai_usage
+      forward_query: [from, to, partner_id, feature, group_by]
+    limits: { timeout: 30 }
+
+  - id: ai_admin.audit.get
+    method: GET
+    path: /api_admin_ai_audit
+    upstream:
+      action: api_admin_ai_audit
+      forward_query: [partner_id, feature, event, status, from, to, limit, cursor]
+    limits: { timeout: 30 }
+
+  - id: ai_admin.copilot_memory.get
+    method: GET
+    path: /api_admin_copilot_memory
+    upstream:
+      action: api_admin_copilot_memory
+      forward_query: [user_id, limit, cursor]
+
+  - id: ai_admin.copilot_memory.delete
+    method: DELETE
+    path: /api_admin_copilot_memory
+    upstream:
+      action: api_admin_copilot_memory
+      forward_query: [user_id, id]
+
+  # live=1 hace que la API consulte a ElevenLabs: puede tardar.
+  - id: ai_admin.elevenlabs_health.get
+    method: GET
+    path: /api_admin_elevenlabs_health
+    upstream:
+      action: api_admin_elevenlabs_health
+      forward_query: [live]
+    limits: { timeout: 30 }

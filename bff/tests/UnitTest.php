@@ -59,6 +59,32 @@ final class UnitTest extends TestCase
         }
     }
 
+    public function testProductionManifestExposesAiAdminRoutesWithExactMethods(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        $expected = [
+            '/api_admin_ai_settings' => ['GET', 'PUT'],
+            '/api_admin_ai_budgets' => ['GET', 'PUT', 'DELETE'],
+            '/api_admin_ai_usage' => ['GET'],
+            '/api_admin_ai_audit' => ['GET'],
+            '/api_admin_copilot_memory' => ['GET', 'DELETE'],
+            '/api_admin_elevenlabs_health' => ['GET'],
+        ];
+
+        foreach ($expected as $path => $methods) {
+            foreach (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as $method) {
+                $route = $manifest->match($method, $path);
+                if (in_array($method, $methods, true)) {
+                    self::assertNotNull($route, "{$method} {$path} debe estar en el manifiesto");
+                    self::assertSame($method !== 'GET', $route['route']->csrf, "{$method} {$path}: CSRF solo en métodos que cambian estado");
+                } else {
+                    self::assertNull($route, "{$method} {$path} no debe estar en el manifiesto");
+                }
+            }
+        }
+    }
+
     public function testManifestRejectsBadAction(): void
     {
         $this->expectException(\InvalidArgumentException::class);
