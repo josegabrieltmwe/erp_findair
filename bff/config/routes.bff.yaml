@@ -20,6 +20,9 @@ include:
 exclude:
   # partner_switch lo sustituye /bff/impersonation: el backend guarda el partner en $_SESSION
   - GET /partner_switch
+  # El copilot lo llama la SPA con POST (postJson); el generador solo veía un GET
+  - GET /copilot_chat
+  - GET /api_copilot_elevenlabs_credential
   - POST /partner_switch
   - GET /api_admin_config_section_usage
   - GET /api_admin_external_client
@@ -83,3 +86,18 @@ routes:
       action: api_home_box_indicators
       forward_query: '*'
     limits: { timeout: 45 }
+
+  # Copilot del ERP: la SPA usa postJson() (método dinámico), que el generador no detecta.
+  - id: copilot.chat
+    method: POST
+    path: /copilot_chat
+    upstream:
+      action: copilot_chat
+    limits: { body: 1m, timeout: 120 }
+
+  - id: copilot.elevenlabs_credential
+    method: POST
+    path: /api_copilot_elevenlabs_credential
+    upstream:
+      action: api_copilot_elevenlabs_credential
+    limits: { body: 64k, timeout: 30 }

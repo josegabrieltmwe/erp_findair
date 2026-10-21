@@ -49,6 +49,16 @@ final class UnitTest extends TestCase
         self::assertNull($manifest->match('GET', '/things/4/2'));
     }
 
+    public function testProductionManifestExposesCopilotAsPost(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        foreach (['/copilot_chat', '/api_copilot_elevenlabs_credential'] as $path) {
+            self::assertNotNull($manifest->match('POST', $path), "POST {$path} debe estar en el manifiesto");
+            self::assertNull($manifest->match('GET', $path), "GET {$path} no debe estar: el backend es POST");
+        }
+    }
+
     public function testManifestRejectsBadAction(): void
     {
         $this->expectException(\InvalidArgumentException::class);
