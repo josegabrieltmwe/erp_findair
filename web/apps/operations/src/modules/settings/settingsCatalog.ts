@@ -18,6 +18,8 @@
  * funciones aún no migradas.
  */
 
+import type { AiScope } from '@shared/ai_admin/composables/useAiScopes';
+
 /** Campos comunes a toda tarjeta, sin importar su destino. */
 interface SettingsCardBase {
   key: string;
@@ -43,6 +45,9 @@ interface SettingsCardBase {
    * (caso de `organization`, con una sola tarjeta).
    */
   subgroup?: string;
+  /** Scope de IA (contrato ai-admin/1) que hace visible la tarjeta. Sin campo =
+   *  visible para todos. Es solo UX; la API autoriza. */
+  aiScope?: AiScope;
 }
 
 /** Navega SIN recarga (`router.push`): la sección ya vive en
@@ -495,6 +500,60 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         routeName: 'settings-elevenlabs-my-agent',
         subgroup: 'ai_integrations',
         aliases: ['My voice agent', 'Own ElevenLabs agent', 'Partner voice agent'],
+      },
+      // Administracion de IA (contrato ai-admin/1).
+      {
+        key: 'ai_center',
+        i18nKey: 'ai_center',
+        icon: 'mdi-chart-box-outline',
+        routeName: 'settings-ai-center',
+        subgroup: 'ai_integrations',
+        aiScope: 'ai:admin',
+        aliases: ['AI usage','AI cost','Voice health'],
+      },
+      {
+        key: 'ai_budgets',
+        i18nKey: 'ai_budgets',
+        icon: 'mdi-cash-clock',
+        routeName: 'settings-ai-budgets',
+        subgroup: 'ai_integrations',
+        aiScope: 'ai:admin',
+        aliases: ['AI budgets','Token limits'],
+      },
+      {
+        key: 'ai_flags',
+        i18nKey: 'ai_flags',
+        icon: 'mdi-toggle-switch-outline',
+        routeName: 'settings-ai-flags',
+        subgroup: 'ai_integrations',
+        aiScope: 'ai:admin',
+        aliases: ['AI feature flags','AI settings'],
+      },
+      {
+        key: 'voice_memory',
+        i18nKey: 'voice_memory',
+        icon: 'mdi-brain',
+        routeName: 'settings-voice-memory',
+        subgroup: 'ai_integrations',
+        aiScope: 'ai:memory:erase',
+        aliases: ['Voice memory','Erase memory'],
+      },
+      {
+        key: 'ai_audit',
+        i18nKey: 'ai_audit',
+        icon: 'mdi-clipboard-text-clock-outline',
+        routeName: 'settings-ai-audit',
+        subgroup: 'ai_integrations',
+        aiScope: 'ai:audit:read',
+        aliases: ['AI audit log'],
+      },
+      {
+        key: 'my_ai_usage',
+        i18nKey: 'my_ai_usage',
+        icon: 'mdi-account-clock-outline',
+        routeName: 'settings-my-ai-usage',
+        subgroup: 'ai_integrations',
+        aliases: ['My AI usage'],
       },
       // Revision y aprobacion de esos agentes por un administrador de TMWE.
       {

@@ -267,6 +267,30 @@
         "scheduler": {
           "title": "Geplande taken",
           "description": "Status, schema en geschiedenis van de automatische taken van het ERP"
+        },
+        "ai_center": {
+          "title": "AI-centrum",
+          "description": "AI-gebruik, kosten en status van de spraakagent"
+        },
+        "ai_budgets": {
+          "title": "AI-budgetten",
+          "description": "Limieten voor tokens, spraakminuten en kosten"
+        },
+        "ai_flags": {
+          "title": "AI-schakelaars",
+          "description": "Schakel AI-functies in en kies de provider"
+        },
+        "voice_memory": {
+          "title": "Spraakgeheugen",
+          "description": "Bekijk en wis het spraakgeheugen per gebruiker"
+        },
+        "ai_audit": {
+          "title": "AI-audit",
+          "description": "Logboek van AI-gebeurtenissen (zonder prompts of antwoorden)"
+        },
+        "my_ai_usage": {
+          "title": "Mijn AI-gebruik",
+          "description": "Je eigen AI-gebruik (alleen lezen)"
         }
       }
     }
@@ -2123,5 +2147,127 @@
     "total": "{n} kosten",
     "delete_title": "Kost verwijderen",
     "delete_confirm": "Kost \"{descr}\" verwijderen?"
+  },
+  "ai_admin": {
+    "feature": {
+      "specialist": "Specialist",
+      "copilot": "Copilot",
+      "extract": "Extractie",
+      "voice": "Stem"
+    },
+    "load_more": "Meer laden",
+    "usage": {
+      "from": "Van",
+      "to": "Tot",
+      "feature": "Functie",
+      "group_by": "Groeperen op",
+      "partner_id": "Partner-ID",
+      "apply": "Toepassen",
+      "empty": "Geen AI-gebruik in deze periode",
+      "requests": "Verzoeken",
+      "tokens_in": "Tokens in",
+      "tokens_out": "Tokens uit",
+      "voice_minutes": "Spraakminuten",
+      "cost": "Kosten",
+      "errors": "Fouten",
+      "group_day": "Dag",
+      "group_feature": "Functie",
+      "group_partner": "Partner",
+      "group_model": "Model"
+    },
+    "health": {
+      "title": "Status van de spraakagent",
+      "refresh": "Vernieuwen",
+      "check_live": "Controleren bij ElevenLabs",
+      "empty": "Geen statusgegevens",
+      "drift_yes": "Afwijking gedetecteerd",
+      "drift_no": "Gesynchroniseerd",
+      "agent_id": "Agent-ID",
+      "api_key": "API-sleutel",
+      "last_sync": "Laatste synchronisatie",
+      "never": "Nooit",
+      "tools_expected": "Verwachte tools",
+      "tools_remote": "Tools in ElevenLabs",
+      "not_checked": "Niet gecontroleerd",
+      "last_token": "Laatste agenttoken"
+    },
+    "center": {
+      "title": "AI-centrum",
+      "subtitle": "Gebruik, kosten en status van de spraakagent",
+      "tab_usage": "Gebruik en kosten",
+      "tab_health": "Status stem"
+    },
+    "mine": {
+      "title": "Mijn AI-gebruik",
+      "subtitle": "Alleen-lezen overzicht van je eigen AI-gebruik"
+    },
+    "flags": {
+      "title": "AI-schakelaars",
+      "subtitle": "Schakel AI-functies globaal of per partner in of uit",
+      "partner_id": "Partner-ID",
+      "partner_hint": "Leeg = globale instellingen",
+      "empty": "Geen instellingen beschikbaar",
+      "saved": "Instelling opgeslagen",
+      "scope_global": "Globaal",
+      "scope_partner": "Partner",
+      "key_specialist_enabled": "Specialist ingeschakeld",
+      "key_copilot_enabled": "Copilot ingeschakeld",
+      "key_voice_enabled": "Stem ingeschakeld",
+      "key_voice_memory_enabled": "Spraakgeheugen ingeschakeld",
+      "key_provider_preference": "Voorkeursprovider"
+    },
+    "budgets": {
+      "title": "AI-budgetten",
+      "subtitle": "Limieten per functie en periode. Leeg betekent onbeperkt.",
+      "new": "Nieuw budget",
+      "partner_id": "Partner-ID",
+      "partner_hint": "Leeg = globaal budget",
+      "empty": "Geen budgetten ingesteld",
+      "empty_hint": "Zonder budgetten is het AI-gebruik onbeperkt.",
+      "partner": "Partner",
+      "global": "Globaal",
+      "feature": "Functie",
+      "period": "Periode",
+      "period_day": "Dag",
+      "period_month": "Maand",
+      "max_tokens": "Max. tokens",
+      "max_voice_minutes": "Max. spraakminuten",
+      "max_cost": "Max. kosten",
+      "max_cost_cents": "Max. kosten (centen)",
+      "unlimited": "Onbeperkt",
+      "blank_unlimited": "Leeg = onbeperkt",
+      "dialog_title": "Budget",
+      "invalid_limit": "Limieten moeten leeg zijn of niet-negatieve getallen",
+      "saved": "Budget opgeslagen",
+      "deleted": "Budget verwijderd",
+      "confirm_delete_title": "Budget verwijderen",
+      "confirm_delete_message": "Het budget ({period}) voor {feature} verwijderen? De limiet wordt onbeperkt."
+    },
+    "memory": {
+      "title": "Spraakgeheugen",
+      "subtitle": "Metagegevens van het spraakgeheugen per gebruiker, met wissen op verzoek",
+      "privacy_note": "De inhoud van het geheugen wordt hier nooit getoond, alleen aantallen en groottes.",
+      "filter_user": "Filteren op gebruikers-ID",
+      "empty": "Geen spraakgeheugen opgeslagen",
+      "user": "Gebruiker",
+      "entries": "Items",
+      "size": "Grootte (tekens)",
+      "last": "Laatste item",
+      "erase_user": "Geheugen wissen",
+      "confirm_title": "Spraakgeheugen wissen",
+      "confirm_message": "Dit wist permanent al het spraakgeheugen van gebruiker {user}. Dit kan niet ongedaan worden gemaakt.",
+      "erased": "{n} items gewist"
+    },
+    "audit": {
+      "title": "AI-audit",
+      "subtitle": "AI-gebeurtenissen zonder prompts of antwoorden",
+      "empty": "Geen auditgebeurtenissen voor deze filters",
+      "event": "Gebeurtenis",
+      "status": "Status",
+      "ts": "Datum",
+      "user": "Gebruiker",
+      "tools": "Tools",
+      "request_id": "Verzoek-ID"
+    }
   }
 }

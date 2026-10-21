@@ -6,6 +6,7 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
+import { canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
 import { can as codCan } from "@/modules/cod_assegni/env";
@@ -18,6 +19,9 @@ declare module "vue-router" {
      *  el guard de abajo si se navega directo por URL. Ver comentario junto
      *  a `/settings` más abajo. */
     requiresAdmin?: boolean;
+    /** Scope de IA (contrato ai-admin/1) exigido para ver la ruta. Es UX: la
+     *  autorización real es de la API (AI_FORBIDDEN). */
+    aiScope?: AiScope;
   }
 }
 
@@ -412,6 +416,44 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@shared/elevenlabs_agent_sync/feature/ElevenlabsAgentSyncPage.vue"),
     meta: { requiresAdmin: true },
+  },
+  // Administración de IA (contrato ai-admin/1, docs/agent-factory/10). `aiScope`
+  // oculta la ruta si el perfil trae scopes y no incluye el requerido; la API
+  // sigue siendo quien autoriza. /settings/my-ai-usage es para cualquier usuario.
+  {
+    path: "/settings/ai-center",
+    name: "settings-ai-center",
+    component: () => import("@shared/ai_admin/feature/AiCenterPage.vue"),
+    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+  },
+  {
+    path: "/settings/ai-budgets",
+    name: "settings-ai-budgets",
+    component: () => import("@shared/ai_admin/feature/AiBudgetsPage.vue"),
+    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+  },
+  {
+    path: "/settings/ai-flags",
+    name: "settings-ai-flags",
+    component: () => import("@shared/ai_admin/feature/AiFlagsPage.vue"),
+    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+  },
+  {
+    path: "/settings/voice-memory",
+    name: "settings-voice-memory",
+    component: () => import("@shared/ai_admin/feature/VoiceMemoryPage.vue"),
+    meta: { requiresAdmin: true, aiScope: "ai:memory:erase" },
+  },
+  {
+    path: "/settings/ai-audit",
+    name: "settings-ai-audit",
+    component: () => import("@shared/ai_admin/feature/AiAuditPage.vue"),
+    meta: { requiresAdmin: true, aiScope: "ai:audit:read" },
+  },
+  {
+    path: "/settings/my-ai-usage",
+    name: "settings-my-ai-usage",
+    component: () => import("@shared/ai_admin/feature/MyAiUsagePage.vue"),
   },
   // Agentes de voz PROPIOS de partner (docs/agent-factory/09). La pagina del
   // partner NO es requiresAdmin: la controla el permiso RBAC
@@ -1171,12 +1213,14 @@ export const router = createRouter({
  * seguridad.
  */
 router.beforeEach(async (to) => {
-  if (!to.meta.requiresAdmin) return true;
+  if (!to.meta.requiresAdmin && !to.meta.aiScope) return true;
 
-  const { isAdmin, ensureProfile } = useProfile();
+  const { isAdmin, profile, ensureProfile } = useProfile();
   await ensureProfile();
 
-  if (isAdmin.value === true) return true;
-
-  return { name: "home" };
+  if (to.meta.requiresAdmin && isAdmin.value !== true) return { name: "home" };
+  if (to.meta.aiScope && !canSeeAiScope(profile.value, isAdmin.value, to.meta.aiScope)) {
+    return { name: "home" };
+  }
+  return true;
 });

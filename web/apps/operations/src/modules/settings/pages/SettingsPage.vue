@@ -113,10 +113,15 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import SettingsCard from '../components/SettingsCard.vue';
 import { SETTINGS_CATALOG } from '../settingsCatalog';
+import { useProfile } from '@shared/composables/useProfile';
+import { canSeeAiScope } from '@shared/ai_admin/composables/useAiScopes';
 
 const { t } = useI18n();
 const router = useRouter();
 const query = ref('');
+// Las tarjetas de IA se ocultan si el perfil trae scopes y falta el requerido (UX; la API autoriza).
+const { profile, isAdmin, ensureProfile } = useProfile();
+void ensureProfile();
 
 interface ResolvedItem {
   key: string;
@@ -161,7 +166,9 @@ function normalize(s: string): string {
 const groups = computed<ResolvedGroup[]>(() =>
   SETTINGS_CATALOG.map((g) => {
     const groupTitle = t('settings.settings.groups.' + g.i18nKey);
-    const items = g.items.map((it) => {
+    const items = g.items
+      .filter((it) => !it.aiScope || canSeeAiScope(profile.value, isAdmin.value, it.aiScope))
+      .map((it) => {
       const title = t('settings.settings.catalog.' + it.i18nKey + '.title');
       const description = t('settings.settings.catalog.' + it.i18nKey + '.description');
       const searchIndex = normalize(

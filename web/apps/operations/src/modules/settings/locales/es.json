@@ -267,6 +267,30 @@
         "scheduler": {
           "title": "Tareas programadas",
           "description": "Estado, horario e historial de los jobs automáticos del ERP"
+        },
+        "ai_center": {
+          "title": "Centro de IA",
+          "description": "Uso y coste de la IA y salud del agente de voz"
+        },
+        "ai_budgets": {
+          "title": "Presupuestos de IA",
+          "description": "Límites de tokens, minutos de voz y coste"
+        },
+        "ai_flags": {
+          "title": "Interruptores de IA",
+          "description": "Activa funciones de IA y elige el proveedor"
+        },
+        "voice_memory": {
+          "title": "Memoria de voz",
+          "description": "Consulta y borra la memoria de voz guardada por usuario"
+        },
+        "ai_audit": {
+          "title": "Auditoría de IA",
+          "description": "Registro de eventos de IA (sin prompts ni respuestas)"
+        },
+        "my_ai_usage": {
+          "title": "Mi uso de IA",
+          "description": "Tu propio uso de IA (solo lectura)"
         }
       }
     }
@@ -2123,5 +2147,127 @@
     "total": "{n} cargos",
     "delete_title": "Eliminar cargo",
     "delete_confirm": "¿Eliminar el cargo «{descr}»?"
+  },
+  "ai_admin": {
+    "feature": {
+      "specialist": "Especialista",
+      "copilot": "Copilot",
+      "extract": "Extracción",
+      "voice": "Voz"
+    },
+    "load_more": "Cargar más",
+    "usage": {
+      "from": "Desde",
+      "to": "Hasta",
+      "feature": "Función",
+      "group_by": "Agrupar por",
+      "partner_id": "ID de partner",
+      "apply": "Aplicar",
+      "empty": "Sin uso de IA en este periodo",
+      "requests": "Peticiones",
+      "tokens_in": "Tokens de entrada",
+      "tokens_out": "Tokens de salida",
+      "voice_minutes": "Minutos de voz",
+      "cost": "Coste",
+      "errors": "Errores",
+      "group_day": "Día",
+      "group_feature": "Función",
+      "group_partner": "Partner",
+      "group_model": "Modelo"
+    },
+    "health": {
+      "title": "Salud del agente de voz",
+      "refresh": "Actualizar",
+      "check_live": "Comprobar contra ElevenLabs",
+      "empty": "Sin datos de salud",
+      "drift_yes": "Desfase detectado",
+      "drift_no": "Sincronizado",
+      "agent_id": "ID de agente",
+      "api_key": "API key",
+      "last_sync": "Última sincronización",
+      "never": "Nunca",
+      "tools_expected": "Tools esperadas",
+      "tools_remote": "Tools en ElevenLabs",
+      "not_checked": "Sin comprobar",
+      "last_token": "Último token de agente"
+    },
+    "center": {
+      "title": "Centro de IA",
+      "subtitle": "Uso, coste y salud del agente de voz",
+      "tab_usage": "Uso y coste",
+      "tab_health": "Salud de voz"
+    },
+    "mine": {
+      "title": "Mi uso de IA",
+      "subtitle": "Resumen de solo lectura de tu propio uso de IA"
+    },
+    "flags": {
+      "title": "Interruptores de IA",
+      "subtitle": "Activa o desactiva funciones de IA de forma global o por partner",
+      "partner_id": "ID de partner",
+      "partner_hint": "Vacío = ajustes globales",
+      "empty": "Sin ajustes disponibles",
+      "saved": "Ajuste guardado",
+      "scope_global": "Global",
+      "scope_partner": "Partner",
+      "key_specialist_enabled": "Especialista activo",
+      "key_copilot_enabled": "Copilot activo",
+      "key_voice_enabled": "Voz activa",
+      "key_voice_memory_enabled": "Memoria de voz activa",
+      "key_provider_preference": "Proveedor preferido"
+    },
+    "budgets": {
+      "title": "Presupuestos de IA",
+      "subtitle": "Límites por función y periodo. Vacío significa ilimitado.",
+      "new": "Nuevo presupuesto",
+      "partner_id": "ID de partner",
+      "partner_hint": "Vacío = presupuesto global",
+      "empty": "Sin presupuestos definidos",
+      "empty_hint": "Sin presupuestos, el uso de IA es ilimitado.",
+      "partner": "Partner",
+      "global": "Global",
+      "feature": "Función",
+      "period": "Período",
+      "period_day": "Día",
+      "period_month": "Mes",
+      "max_tokens": "Máx. tokens",
+      "max_voice_minutes": "Máx. minutos de voz",
+      "max_cost": "Coste máx.",
+      "max_cost_cents": "Coste máx. (céntimos)",
+      "unlimited": "Ilimitado",
+      "blank_unlimited": "Vacío = ilimitado",
+      "dialog_title": "Presupuesto",
+      "invalid_limit": "Los límites deben estar vacíos o ser números no negativos",
+      "saved": "Presupuesto guardado",
+      "deleted": "Presupuesto eliminado",
+      "confirm_delete_title": "Eliminar presupuesto",
+      "confirm_delete_message": "¿Eliminar el presupuesto ({period}) de {feature}? El límite pasará a ser ilimitado."
+    },
+    "memory": {
+      "title": "Memoria de voz",
+      "subtitle": "Metadatos de la memoria de voz por usuario, con borrado a petición",
+      "privacy_note": "El contenido de la memoria nunca se muestra aquí, solo recuentos y tamaños.",
+      "filter_user": "Filtrar por ID de usuario",
+      "empty": "No hay memoria de voz guardada",
+      "user": "Usuario",
+      "entries": "Entradas",
+      "size": "Tamaño (caracteres)",
+      "last": "Última entrada",
+      "erase_user": "Borrar memoria",
+      "confirm_title": "Borrar memoria de voz",
+      "confirm_message": "Esto borra de forma permanente toda la memoria de voz del usuario {user}. No se puede deshacer.",
+      "erased": "{n} entradas borradas"
+    },
+    "audit": {
+      "title": "Auditoría de IA",
+      "subtitle": "Eventos de IA sin prompts ni respuestas",
+      "empty": "Sin eventos de auditoría con estos filtros",
+      "event": "Tipo de evento",
+      "status": "Estado",
+      "ts": "Fecha",
+      "user": "Usuario",
+      "tools": "Tools",
+      "request_id": "ID de petición"
+    }
   }
 }

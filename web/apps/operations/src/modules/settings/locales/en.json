@@ -267,6 +267,30 @@
         "scheduler": {
           "title": "Scheduled tasks",
           "description": "Status, schedule and history of the ERP's automatic jobs"
+        },
+        "ai_center": {
+          "title": "AI center",
+          "description": "AI usage, cost and voice agent health"
+        },
+        "ai_budgets": {
+          "title": "AI budgets",
+          "description": "Token, voice minute and cost limits"
+        },
+        "ai_flags": {
+          "title": "AI switches",
+          "description": "Enable AI features and choose the provider"
+        },
+        "voice_memory": {
+          "title": "Voice memory",
+          "description": "See and erase the voice memory kept per user"
+        },
+        "ai_audit": {
+          "title": "AI audit",
+          "description": "Log of AI events (no prompts or answers)"
+        },
+        "my_ai_usage": {
+          "title": "My AI usage",
+          "description": "Your own AI usage (read-only)"
         }
       }
     }
@@ -2123,5 +2147,127 @@
     "total": "{n} charges",
     "delete_title": "Delete charge",
     "delete_confirm": "Delete charge \"{descr}\"?"
+  },
+  "ai_admin": {
+    "feature": {
+      "specialist": "Specialist",
+      "copilot": "Copilot",
+      "extract": "Extraction",
+      "voice": "Voice"
+    },
+    "load_more": "Load more",
+    "usage": {
+      "from": "From",
+      "to": "To",
+      "feature": "Feature",
+      "group_by": "Group by",
+      "partner_id": "Partner ID",
+      "apply": "Apply",
+      "empty": "No AI usage in this period",
+      "requests": "Requests",
+      "tokens_in": "Tokens in",
+      "tokens_out": "Tokens out",
+      "voice_minutes": "Voice minutes",
+      "cost": "Cost",
+      "errors": "Errors",
+      "group_day": "Day",
+      "group_feature": "Feature",
+      "group_partner": "Partner",
+      "group_model": "Model"
+    },
+    "health": {
+      "title": "Voice agent health",
+      "refresh": "Refresh",
+      "check_live": "Check against ElevenLabs",
+      "empty": "No health data",
+      "drift_yes": "Drift detected",
+      "drift_no": "In sync",
+      "agent_id": "Agent ID",
+      "api_key": "API key",
+      "last_sync": "Last sync",
+      "never": "Never",
+      "tools_expected": "Expected tools",
+      "tools_remote": "Tools in ElevenLabs",
+      "not_checked": "Not checked",
+      "last_token": "Last agent token"
+    },
+    "center": {
+      "title": "AI center",
+      "subtitle": "Usage, cost and voice agent health",
+      "tab_usage": "Usage and cost",
+      "tab_health": "Voice health"
+    },
+    "mine": {
+      "title": "My AI usage",
+      "subtitle": "Read-only summary of your own AI usage"
+    },
+    "flags": {
+      "title": "AI switches",
+      "subtitle": "Enable or disable AI features globally or per partner",
+      "partner_id": "Partner ID",
+      "partner_hint": "Empty = global settings",
+      "empty": "No settings available",
+      "saved": "Setting saved",
+      "scope_global": "Global",
+      "scope_partner": "Partner",
+      "key_specialist_enabled": "Specialist enabled",
+      "key_copilot_enabled": "Copilot enabled",
+      "key_voice_enabled": "Voice enabled",
+      "key_voice_memory_enabled": "Voice memory enabled",
+      "key_provider_preference": "Preferred provider"
+    },
+    "budgets": {
+      "title": "AI budgets",
+      "subtitle": "Limits per feature and period. Empty means unlimited.",
+      "new": "New budget",
+      "partner_id": "Partner ID",
+      "partner_hint": "Empty = global budget",
+      "empty": "No budgets defined",
+      "empty_hint": "Without budgets, AI usage is unlimited.",
+      "partner": "Partner",
+      "global": "Global",
+      "feature": "Feature",
+      "period": "Period",
+      "period_day": "Day",
+      "period_month": "Month",
+      "max_tokens": "Max tokens",
+      "max_voice_minutes": "Max voice minutes",
+      "max_cost": "Max cost",
+      "max_cost_cents": "Max cost (cents)",
+      "unlimited": "Unlimited",
+      "blank_unlimited": "Empty = unlimited",
+      "dialog_title": "Budget",
+      "invalid_limit": "Limits must be empty or non-negative numbers",
+      "saved": "Budget saved",
+      "deleted": "Budget deleted",
+      "confirm_delete_title": "Delete budget",
+      "confirm_delete_message": "Delete the {period} budget for {feature}? The limit will become unlimited."
+    },
+    "memory": {
+      "title": "Voice memory",
+      "subtitle": "Metadata of the voice memory kept per user, with erasure on request",
+      "privacy_note": "The content of the memory is never shown here, only counts and sizes.",
+      "filter_user": "Filter by user ID",
+      "empty": "No voice memory stored",
+      "user": "User",
+      "entries": "Entries",
+      "size": "Size (chars)",
+      "last": "Last entry",
+      "erase_user": "Erase memory",
+      "confirm_title": "Erase voice memory",
+      "confirm_message": "This permanently erases all voice memory of user {user}. It cannot be undone.",
+      "erased": "{n} entries erased"
+    },
+    "audit": {
+      "title": "AI audit",
+      "subtitle": "AI events without prompts or answers",
+      "empty": "No audit events for these filters",
+      "event": "Event",
+      "status": "Status",
+      "ts": "Date",
+      "user": "User",
+      "tools": "Tools",
+      "request_id": "Request ID"
+    }
   }
 }

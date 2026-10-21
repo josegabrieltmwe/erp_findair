@@ -267,6 +267,30 @@
         "scheduler": {
           "title": "Geplante Aufgaben",
           "description": "Status, Zeitplan und Verlauf der automatischen Jobs des ERP"
+        },
+        "ai_center": {
+          "title": "KI-Zentrum",
+          "description": "KI-Nutzung, Kosten und Zustand des Sprachagenten"
+        },
+        "ai_budgets": {
+          "title": "KI-Budgets",
+          "description": "Limits für Tokens, Sprachminuten und Kosten"
+        },
+        "ai_flags": {
+          "title": "KI-Schalter",
+          "description": "KI-Funktionen aktivieren und Anbieter wählen"
+        },
+        "voice_memory": {
+          "title": "Sprachgedächtnis",
+          "description": "Sprachgedächtnis pro Benutzer ansehen und löschen"
+        },
+        "ai_audit": {
+          "title": "KI-Audit",
+          "description": "Protokoll der KI-Ereignisse (ohne Prompts oder Antworten)"
+        },
+        "my_ai_usage": {
+          "title": "Meine KI-Nutzung",
+          "description": "Ihre eigene KI-Nutzung (schreibgeschützt)"
         }
       }
     }
@@ -2123,5 +2147,127 @@
     "total": "{n} Gebühren",
     "delete_title": "Gebühr löschen",
     "delete_confirm": "Gebühr „{descr}“ löschen?"
+  },
+  "ai_admin": {
+    "feature": {
+      "specialist": "Spezialist",
+      "copilot": "Copilot",
+      "extract": "Extraktion",
+      "voice": "Sprache"
+    },
+    "load_more": "Mehr laden",
+    "usage": {
+      "from": "Von",
+      "to": "Bis",
+      "feature": "Funktion",
+      "group_by": "Gruppieren nach",
+      "partner_id": "Partner-ID",
+      "apply": "Anwenden",
+      "empty": "Keine KI-Nutzung in diesem Zeitraum",
+      "requests": "Anfragen",
+      "tokens_in": "Eingabe-Tokens",
+      "tokens_out": "Ausgabe-Tokens",
+      "voice_minutes": "Sprachminuten",
+      "cost": "Kosten",
+      "errors": "Fehler",
+      "group_day": "Tag",
+      "group_feature": "Funktion",
+      "group_partner": "Partner",
+      "group_model": "Modell"
+    },
+    "health": {
+      "title": "Zustand des Sprachagenten",
+      "refresh": "Aktualisieren",
+      "check_live": "Mit ElevenLabs abgleichen",
+      "empty": "Keine Zustandsdaten",
+      "drift_yes": "Abweichung erkannt",
+      "drift_no": "Synchron",
+      "agent_id": "Agent-ID",
+      "api_key": "API-Schlüssel",
+      "last_sync": "Letzte Synchronisierung",
+      "never": "Nie",
+      "tools_expected": "Erwartete Tools",
+      "tools_remote": "Tools in ElevenLabs",
+      "not_checked": "Nicht geprüft",
+      "last_token": "Letztes Agent-Token"
+    },
+    "center": {
+      "title": "KI-Zentrum",
+      "subtitle": "Nutzung, Kosten und Zustand des Sprachagenten",
+      "tab_usage": "Nutzung und Kosten",
+      "tab_health": "Sprachzustand"
+    },
+    "mine": {
+      "title": "Meine KI-Nutzung",
+      "subtitle": "Schreibgeschützte Übersicht Ihrer eigenen KI-Nutzung"
+    },
+    "flags": {
+      "title": "KI-Schalter",
+      "subtitle": "KI-Funktionen global oder pro Partner aktivieren oder deaktivieren",
+      "partner_id": "Partner-ID",
+      "partner_hint": "Leer = globale Einstellungen",
+      "empty": "Keine Einstellungen verfügbar",
+      "saved": "Einstellung gespeichert",
+      "scope_global": "Global",
+      "scope_partner": "Partner",
+      "key_specialist_enabled": "Spezialist aktiv",
+      "key_copilot_enabled": "Copilot aktiv",
+      "key_voice_enabled": "Sprache aktiv",
+      "key_voice_memory_enabled": "Sprachgedächtnis aktiv",
+      "key_provider_preference": "Bevorzugter Anbieter"
+    },
+    "budgets": {
+      "title": "KI-Budgets",
+      "subtitle": "Limits pro Funktion und Zeitraum. Leer bedeutet unbegrenzt.",
+      "new": "Neues Budget",
+      "partner_id": "Partner-ID",
+      "partner_hint": "Leer = globales Budget",
+      "empty": "Keine Budgets definiert",
+      "empty_hint": "Ohne Budgets ist die KI-Nutzung unbegrenzt.",
+      "partner": "Partner",
+      "global": "Global",
+      "feature": "Funktion",
+      "period": "Zeitraum",
+      "period_day": "Tag",
+      "period_month": "Monat",
+      "max_tokens": "Max. Tokens",
+      "max_voice_minutes": "Max. Sprachminuten",
+      "max_cost": "Max. Kosten",
+      "max_cost_cents": "Max. Kosten (Cent)",
+      "unlimited": "Unbegrenzt",
+      "blank_unlimited": "Leer = unbegrenzt",
+      "dialog_title": "Budget",
+      "invalid_limit": "Limits müssen leer oder nicht negative Zahlen sein",
+      "saved": "Budget gespeichert",
+      "deleted": "Budget gelöscht",
+      "confirm_delete_title": "Budget löschen",
+      "confirm_delete_message": "Das Budget ({period}) für {feature} löschen? Das Limit wird unbegrenzt."
+    },
+    "memory": {
+      "title": "Sprachgedächtnis",
+      "subtitle": "Metadaten des Sprachgedächtnisses pro Benutzer, mit Löschung auf Anfrage",
+      "privacy_note": "Der Inhalt des Gedächtnisses wird hier nie angezeigt, nur Anzahl und Größe.",
+      "filter_user": "Nach Benutzer-ID filtern",
+      "empty": "Kein Sprachgedächtnis gespeichert",
+      "user": "Benutzer",
+      "entries": "Einträge",
+      "size": "Größe (Zeichen)",
+      "last": "Letzter Eintrag",
+      "erase_user": "Gedächtnis löschen",
+      "confirm_title": "Sprachgedächtnis löschen",
+      "confirm_message": "Dies löscht das gesamte Sprachgedächtnis von Benutzer {user} dauerhaft. Es kann nicht rückgängig gemacht werden.",
+      "erased": "{n} Einträge gelöscht"
+    },
+    "audit": {
+      "title": "KI-Audit",
+      "subtitle": "KI-Ereignisse ohne Prompts oder Antworten",
+      "empty": "Keine Audit-Ereignisse für diese Filter",
+      "event": "Ereignis",
+      "status": "Status",
+      "ts": "Datum",
+      "user": "Benutzer",
+      "tools": "Tools",
+      "request_id": "Anfrage-ID"
+    }
   }
 }
