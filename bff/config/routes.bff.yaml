@@ -24,6 +24,9 @@ exclude:
   - GET /copilot_chat
   - GET /api_copilot_elevenlabs_credential
   - POST /partner_switch
+  # Revision de agentes: el controlador solo admite GET y POST con op (resto -> 405) y la SPA no usa PUT/DELETE
+  - PUT /api_admin_elevenlabs_review
+  - DELETE /api_admin_elevenlabs_review
   - GET /api_admin_config_section_usage
   - GET /api_admin_external_client
   - GET /api_admin_module_permissions_bulk
@@ -94,6 +97,16 @@ routes:
     upstream:
       action: copilot_chat
     limits: { body: 1m, timeout: 120 }
+
+  # TTS del copilot: devuelve audio/mpeg (la SPA lo pide con POST y responseType blob).
+  # Fijado a mano para no depender del generado; bin/gen-spa-manifest.php lo regenera igual y esta entrada gana.
+  - id: copilot.tts
+    method: POST
+    path: /copilot_tts
+    upstream:
+      action: copilot_tts
+    response: binary
+    limits: { body: 1m, timeout: 30 }
 
   - id: copilot.elevenlabs_credential
     method: POST

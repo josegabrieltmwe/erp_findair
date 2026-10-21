@@ -53,10 +53,30 @@ final class UnitTest extends TestCase
     {
         $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
 
-        foreach (['/copilot_chat', '/api_copilot_elevenlabs_credential'] as $path) {
+        foreach (['/copilot_chat', '/api_copilot_elevenlabs_credential', '/copilot_tts'] as $path) {
             self::assertNotNull($manifest->match('POST', $path), "POST {$path} debe estar en el manifiesto");
             self::assertNull($manifest->match('GET', $path), "GET {$path} no debe estar: el backend es POST");
         }
+    }
+
+    public function testCopilotTtsIsPinnedByHandAsBinaryPost(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        $match = $manifest->match('POST', '/copilot_tts');
+        self::assertNotNull($match);
+        self::assertSame('copilot.tts', $match['route']->id);
+        self::assertSame('binary', $match['route']->response);
+    }
+
+    public function testElevenlabsReviewOnlyExposesGetAndPost(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        self::assertNotNull($manifest->match('GET', '/api_admin_elevenlabs_review'));
+        self::assertNotNull($manifest->match('POST', '/api_admin_elevenlabs_review'));
+        self::assertNull($manifest->match('PUT', '/api_admin_elevenlabs_review'));
+        self::assertNull($manifest->match('DELETE', '/api_admin_elevenlabs_review'));
     }
 
     public function testProductionManifestExposesAiAdminRoutesWithExactMethods(): void
