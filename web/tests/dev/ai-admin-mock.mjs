@@ -49,8 +49,9 @@ const samples = {
 
 function body(route, method) {
   const name = `${route}.${method.toLowerCase()}`;
-  const file = join(dir, `${name}.json`);
-  if (existsSync(file)) {
+  // La API nombra las fixtures con el método en mayúsculas (<ruta>.GET.json).
+  const file = [`${route}.${method.toUpperCase()}`, name].map((n) => join(dir, `${n}.json`)).find(existsSync);
+  if (file) {
     const j = JSON.parse(readFileSync(file, 'utf8'));
     return j && typeof j === 'object' && 'success' in j ? j : { success: true, data: j };
   }
