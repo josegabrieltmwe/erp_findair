@@ -17,7 +17,7 @@
  */
 import { ref, shallowRef } from "vue";
 import { Conversation, type Conversation as ConversationInstance } from "@elevenlabs/client";
-import { postJson } from "../services/http";
+import { http } from "@shared/anagrafiche/services/http";
 
 export type VoiceAgentState =
   | "idle"
@@ -94,8 +94,9 @@ export function useCopilotVoiceAgent() {
   }
 
   async function requestCredential(): Promise<CopilotCredentialResponse> {
-    return postJson<CopilotCredentialResponse>("api_copilot_elevenlabs_credential", {
-      transport: "websocket",
+    return http<CopilotCredentialResponse>("/api_copilot_elevenlabs_credential", {
+      method: "POST",
+      body: { transport: "websocket" },
     });
   }
 

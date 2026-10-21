@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { postJson } from "../services/http";
+import { http } from "@shared/anagrafiche/services/http";
 import { runActions } from "../services/actions";
 import type { ChatBubble, ChatMessage, CopilotChatResponse } from "../types";
 
@@ -46,10 +46,13 @@ export const useChatStore = defineStore("copilotChat", () => {
       typeof window !== "undefined" ? window.location.pathname : undefined;
 
     try {
-      const res = await postJson<CopilotChatResponse>("copilot_chat", {
-        message: text,
-        history: history.value,
-        context: currentRoute ? { current_route: currentRoute } : {},
+      const res = await http<CopilotChatResponse>("/copilot_chat", {
+        method: "POST",
+        body: {
+          message: text,
+          history: history.value,
+          context: currentRoute ? { current_route: currentRoute } : {},
+        },
       });
 
       const bubble = bubbles.value.find((b) => b.id === pendingId);

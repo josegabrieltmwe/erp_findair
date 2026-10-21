@@ -8,13 +8,7 @@
  *    never reaches the browser; we just fetch and play the returned MP3.
  */
 import { ref } from "vue";
-
-function basePath(): string {
-  return (
-    (typeof window !== "undefined" && window.__TMWE_OPERATIONS__?.basePath) ||
-    "/bff/v1"
-  );
-}
+import { http } from "@shared/anagrafiche/services/http";
 
 // Minimal typing for the non-standard SpeechRecognition API.
 type SpeechRecognitionLike = {
@@ -94,14 +88,11 @@ export function useVoice(localeIso2: string) {
     if (!text.trim()) return;
     stopSpeaking();
     try {
-      const res = await fetch(`${basePath()}/copilot_tts`, {
+      const blob = await http<Blob, "blob">("/copilot_tts", {
         method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: { text },
+        responseType: "blob",
       });
-      if (!res.ok) return;
-      const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       currentAudio = new Audio(url);
       speaking.value = true;
