@@ -4,7 +4,7 @@ const httpMock = vi.fn();
 vi.mock('@shared/anagrafiche/services/http', () => ({ http: (...args: unknown[]) => httpMock(...args) }));
 
 import { AiAdminError, aiAdminService, cleanQuery } from '@shared/ai_admin/services/aiAdmin.service';
-import { canSeeAiScope, extractScopes } from '@shared/ai_admin/composables/useAiScopes';
+import { AI_ROUTE_SCOPES, canSeeAiScope, extractScopes } from '@shared/ai_admin/composables/useAiScopes';
 import { flagIsOn, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
 
 describe('aiAdminService (contrato ai-admin/1)', () => {
@@ -113,6 +113,19 @@ describe('scopes de IA (visibilidad de menu)', () => {
     expect(canSeeAiScope({}, false, 'ai:admin')).toBe(false);
     expect(canSeeAiScope(null, null, 'ai:audit:read')).toBe(false);
     expect(canSeeAiScope(null, false, null)).toBe(true);
+  });
+});
+
+describe('mapa unico de scopes por pantalla', () => {
+  it('conserva el scope que exigia cada ruta', () => {
+    expect(AI_ROUTE_SCOPES).toEqual({
+      'settings-ai-center': 'ai:admin',
+      'settings-ai-budgets': 'ai:admin',
+      'settings-ai-flags': 'ai:admin',
+      'settings-voice-memory': 'ai:memory:erase',
+      'settings-ai-audit': 'ai:audit:read',
+      'settings-my-ai-usage': null,
+    });
   });
 });
 

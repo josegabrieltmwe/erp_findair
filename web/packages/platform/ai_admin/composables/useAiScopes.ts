@@ -8,7 +8,10 @@ import { useProfile, type RawProfile } from '../../composables/useProfile';
 export const AI_SCOPES = ['ai:admin', 'ai:audit:read', 'ai:memory:erase', 'ai:generate'] as const;
 export type AiScope = (typeof AI_SCOPES)[number];
 
-/** Scope exigido por cada pantalla (`null` = cualquier usuario autenticado). */
+/**
+ * Scope exigido por cada pantalla (`null` = cualquier usuario autenticado).
+ * Única fuente: la leen el router (`meta.aiScope`) y el catálogo de Settings.
+ */
 export const AI_ROUTE_SCOPES = {
   'settings-ai-center': 'ai:admin',
   'settings-ai-budgets': 'ai:admin',

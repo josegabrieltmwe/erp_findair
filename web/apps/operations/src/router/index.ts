@@ -6,7 +6,7 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
-import { canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
+import { AI_ROUTE_SCOPES, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
 import { can as codCan } from "@/modules/cod_assegni/env";
@@ -424,31 +424,31 @@ const routes: RouteRecordRaw[] = [
     path: "/settings/ai-center",
     name: "settings-ai-center",
     component: () => import("@shared/ai_admin/feature/AiCenterPage.vue"),
-    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-center"] },
   },
   {
     path: "/settings/ai-budgets",
     name: "settings-ai-budgets",
     component: () => import("@shared/ai_admin/feature/AiBudgetsPage.vue"),
-    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-budgets"] },
   },
   {
     path: "/settings/ai-flags",
     name: "settings-ai-flags",
     component: () => import("@shared/ai_admin/feature/AiFlagsPage.vue"),
-    meta: { requiresAdmin: true, aiScope: "ai:admin" },
+    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-flags"] },
   },
   {
     path: "/settings/voice-memory",
     name: "settings-voice-memory",
     component: () => import("@shared/ai_admin/feature/VoiceMemoryPage.vue"),
-    meta: { requiresAdmin: true, aiScope: "ai:memory:erase" },
+    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-voice-memory"] },
   },
   {
     path: "/settings/ai-audit",
     name: "settings-ai-audit",
     component: () => import("@shared/ai_admin/feature/AiAuditPage.vue"),
-    meta: { requiresAdmin: true, aiScope: "ai:audit:read" },
+    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-audit"] },
   },
   {
     path: "/settings/my-ai-usage",
