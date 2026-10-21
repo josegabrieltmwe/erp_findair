@@ -71,6 +71,11 @@
         </v-card>
       </template>
     </CmAsyncSection>
+
+    <v-card v-if="canSeeHealth" variant="outlined" class="pa-5 mt-4" data-testid="ai-health">
+      <div class="text-subtitle-2 mb-2">{{ t('ai_admin.health.title') }}</div>
+      <ElevenlabsHealthPanel ref="healthPanel" profile="public_form" />
+    </v-card>
   </div>
 </template>
 
@@ -80,6 +85,8 @@ import { useI18n } from 'vue-i18n';
 import { mdiAlertCircleOutline, mdiRefresh, mdiRobotOutline, mdiSync } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmAsyncSection from '../../anagrafiche/components/CmAsyncSection.vue';
+import ElevenlabsHealthPanel from '../../ai_admin/components/ElevenlabsHealthPanel.vue';
+import { useAiScopes } from '../../ai_admin/composables/useAiScopes';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
 import { elevenlabsAgentSyncService, type ElevenlabsAgentStatus } from '../services/elevenlabsAgentSync.service';
@@ -87,6 +94,10 @@ import { elevenlabsAgentSyncService, type ElevenlabsAgentStatus } from '../servi
 const { t } = useI18n();
 const toast = useToastStore();
 const confirm = useConfirm();
+const aiScopes = useAiScopes();
+const canSeeHealth = aiScopes.can('ai:admin');
+void aiScopes.ensureProfile();
+const healthPanel = ref<InstanceType<typeof ElevenlabsHealthPanel> | null>(null);
 
 const status = ref<ElevenlabsAgentStatus | null>(null);
 const loading = ref(false);
@@ -118,6 +129,7 @@ async function onSyncClick() {
     const result = await elevenlabsAgentSyncService.sync();
     toast.success(t('elevenlabs_agent_sync.sync_success', { n: result.tools_synced }));
     await load();
+    await healthPanel.value?.reload(false);
   } catch (e) {
     toast.error(e instanceof Error ? e.message : String(e));
   } finally {

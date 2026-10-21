@@ -37,6 +37,11 @@
       </v-table>
     </v-card>
 
+    <v-card v-if="canSeeHealth" class="pa-4 mb-4" variant="outlined" data-testid="ai-health">
+      <div class="text-subtitle-2 mb-2">{{ t('ai_admin.health.title') }}</div>
+      <ElevenlabsHealthPanel />
+    </v-card>
+
     <v-card class="pa-4 mb-4" variant="outlined">
       <div class="cm-filters">
         <v-select
@@ -244,6 +249,8 @@ import { useI18n } from 'vue-i18n';
 import { mdiPlus, mdiPencil, mdiDelete, mdiRobotOutline, mdiMagnify } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmEmptyState from '../../anagrafiche/components/CmEmptyState.vue';
+import ElevenlabsHealthPanel from '../../ai_admin/components/ElevenlabsHealthPanel.vue';
+import { useAiScopes } from '../../ai_admin/composables/useAiScopes';
 import ListingDataView from '../../listing/ListingDataView.vue';
 import { useClientSideListSource } from '../../listing/useClientSideListSource';
 import type { DataTableHeader } from '../../listing/types';
@@ -259,6 +266,9 @@ import {
 } from '../services/elevenlabsCredentials.service';
 
 const { t } = useI18n();
+const aiScopes = useAiScopes();
+const canSeeHealth = aiScopes.can('ai:admin');
+void aiScopes.ensureProfile();
 const toast = useToastStore();
 const confirm = useConfirm();
 
