@@ -153,6 +153,35 @@ routes:
       action: api_admin_ai_budgets
       forward_query: [id]
 
+  # «Mis credenciales de IA»: un partner gestiona SU clave (el servidor fija el partner; la API nunca
+  # devuelve la clave). TMWE sigue usando /api_admin_ai_credentials.
+  - id: ai_admin.my_credentials.get
+    method: GET
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+
+  - id: ai_admin.my_credentials.post
+    method: POST
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.my_credentials.put
+    method: PUT
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.my_credentials.delete
+    method: DELETE
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+      forward_query: [id]
+
   - id: ai_admin.usage.get
     method: GET
     path: /api_admin_ai_usage
