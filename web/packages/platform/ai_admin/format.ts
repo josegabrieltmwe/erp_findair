@@ -34,6 +34,17 @@ export function flagIsOn(value: string | null | undefined): boolean {
   return ['1', 'true', 'on', 'yes'].includes(String(value ?? '').toLowerCase());
 }
 
+/**
+ * Claves de ajuste que NO son interruptores. `provider_preference` no la lee el
+ * resolver de credenciales (ai-surface/1 §2): el proveedor por defecto se elige
+ * solo en Credenciales de IA (marca «predeterminado»), así que aquí no se ofrece.
+ */
+export const NON_FLAG_SETTINGS = ['provider_preference'] as const;
+
+export function flagSettingsOnly<T extends { key: string }>(items: T[]): T[] {
+  return items.filter((i) => !(NON_FLAG_SETTINGS as readonly string[]).includes(i.key));
+}
+
 export function flagToValue(on: boolean): string {
   return on ? '1' : '0';
 }

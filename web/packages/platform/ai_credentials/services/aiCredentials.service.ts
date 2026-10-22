@@ -11,7 +11,7 @@ import { http } from '../../anagrafiche/services/http';
  * devuelve — solo `has_key`. ElevenLabs (voz) tiene su propio panel.
  */
 
-export const AI_PROVIDERS = ['anthropic', 'openai'] as const;
+export const AI_PROVIDERS = ['openai', 'anthropic'] as const;
 export type AiProvider = (typeof AI_PROVIDERS)[number];
 
 /** Sugerencias para el combobox de modelo (el campo admite texto libre). */

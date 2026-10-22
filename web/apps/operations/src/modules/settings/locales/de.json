@@ -1750,12 +1750,14 @@
     }
   },
   "ai_credentials": {
+    "tab_llm": "LLM",
+    "tab_voice": "Sprache",
     "title": "KI-Zugangsdaten",
     "subtitle": "API-Keys für Anthropic (Claude) und OpenAI pro Partner, mit Fallback auf die globalen TMWE-Zugangsdaten",
     "new_credential": "Neue Zugangsdaten",
     "filter_provider": "Nach Anbieter filtern",
     "empty_title": "Keine KI-Zugangsdaten",
-    "resolution_hint": "Auflösungsreihenfolge: Partner-Zugangsdaten → globale Zugangsdaten (TMWE). Verwendet wird der Standardanbieter des Partners, sonst der globale Standard, sonst Anthropic, dann OpenAI.",
+    "resolution_hint": "Auflösungsreihenfolge: Partner-Zugangsdaten → globale Zugangsdaten (TMWE). Verwendet wird der Standardanbieter des Partners, sonst der globale Standard, sonst OpenAI, dann Anthropic.",
     "usage_hint": "Verwendet für Chat/Copilot, Dateiextraktion, Audiotranskription (Whisper, erfordert OpenAI), den Vorlagenassistenten, Tracking-Klassifizierung und COD-Verarbeitung.",
     "elevenlabs_hint": "Sprache (ElevenLabs) wird separat verwaltet:",
     "elevenlabs_link": "ElevenLabs-Zugangsdaten",

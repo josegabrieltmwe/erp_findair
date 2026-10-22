@@ -1,5 +1,6 @@
 {
   "anagrafica_tabs": {
+    "ai_credentials": "AI credentials (LLM and voice)",
     "air_carrier_credentials": "Air carrier credentials (KLM/AF)",
     "webcargo": "WebCargo credentials",
     "fornitori_accnt": "Courier credentials",

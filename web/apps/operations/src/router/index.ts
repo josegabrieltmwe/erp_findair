@@ -400,15 +400,13 @@ const routes: RouteRecordRaw[] = [
     path: "/settings/ai-credentials",
     name: "settings-ai-credentials",
     component: () =>
-      import("@shared/ai_credentials/feature/AiCredentialsPage.vue"),
+      import("@shared/ai_credentials/feature/AiCredentialsCenterPage.vue"),
     meta: { requiresAdmin: true },
   },
   {
+    // Credenciales ElevenLabs: ahora son la pestaña «Voz» de las credenciales de IA.
     path: "/settings/elevenlabs-credentials",
-    name: "settings-elevenlabs-credentials",
-    component: () =>
-      import("@shared/elevenlabs_credentials/feature/ElevenlabsCredentialsPage.vue"),
-    meta: { requiresAdmin: true },
+    redirect: { name: "settings-ai-credentials", query: { tab: "voice" } },
   },
   {
     path: "/settings/elevenlabs-agent-sync",

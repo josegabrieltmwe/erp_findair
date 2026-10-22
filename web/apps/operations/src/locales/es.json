@@ -1,5 +1,6 @@
 {
   "anagrafica_tabs": {
+    "ai_credentials": "Credenciales de IA (LLM y voz)",
     "air_carrier_credentials": "Credenciales aéreas (KLM/AF)",
     "webcargo": "Credenciales WebCargo",
     "fornitori_accnt": "Credenciales courier",

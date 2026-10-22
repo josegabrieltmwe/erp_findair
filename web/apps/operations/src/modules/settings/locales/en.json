@@ -1750,12 +1750,14 @@
     }
   },
   "ai_credentials": {
+    "tab_llm": "LLM",
+    "tab_voice": "Voice",
     "title": "AI credentials",
     "subtitle": "Anthropic (Claude) and OpenAI API keys per partner, falling back to the global TMWE credential",
     "new_credential": "New credential",
     "filter_provider": "Filter by provider",
     "empty_title": "No AI credentials",
-    "resolution_hint": "Resolution order: partner credential → global credential (TMWE). The provider used is the partner's default; otherwise the global default; otherwise Anthropic, then OpenAI.",
+    "resolution_hint": "Resolution order: partner credential → global credential (TMWE). The provider used is the partner's default; otherwise the global default; otherwise OpenAI, then Anthropic.",
     "usage_hint": "Used by chat/copilot, file extraction, audio transcription (Whisper, requires OpenAI), the template assistant, tracking classification and COD processing.",
     "elevenlabs_hint": "Voice (ElevenLabs) is managed separately:",
     "elevenlabs_link": "ElevenLabs credentials",

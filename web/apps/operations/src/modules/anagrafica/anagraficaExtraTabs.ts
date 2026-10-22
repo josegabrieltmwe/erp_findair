@@ -4,7 +4,7 @@ import type { AnagraficaExtraTab } from "@shared/anagrafiche/utils/extraTabs";
 import AirCarrierCredentialsPartnerTab from "@shared/air_carrier_credentials/feature/AirCarrierCredentialsPartnerTab.vue";
 import WebcargoCredentialsPartnerTab from "@shared/webcargo_key/feature/WebcargoCredentialsPartnerTab.vue";
 import FornitoriAccntPartnerTab from "@shared/fornitori_accnt/feature/FornitoriAccntPartnerTab.vue";
-import ElevenlabsCredentialsPartnerTab from "@shared/elevenlabs_credentials/feature/ElevenlabsCredentialsPartnerTab.vue";
+import AiCredentialsPartnerTab from "@shared/ai_credentials/feature/AiCredentialsPartnerTab.vue";
 import DatosFiscalesAnagraficaTab from "@/modules/invoicing/components/fiscal/DatosFiscalesAnagraficaTab.vue";
 
 /**
@@ -28,7 +28,7 @@ import DatosFiscalesAnagraficaTab from "@/modules/invoicing/components/fiscal/Da
  * sin filas en ningún entorno, ver package service_credentials — se deja
  * sin borrar por si en el futuro llega a usarse, pero no se registra aquí).
  *
- * `elevenlabs_credentials` lista SOLO las filas propias de este partner
+ * `ai_credentials` (pestañas LLM y Voz) lista SOLO las filas propias de este partner
  * (id_anagrafica = registro actual) -- nunca la fila global/TMWE
  * (id_anagrafica NULL), que sigue gestionándose desde el panel admin
  * (Settings → ElevenLabs credentials). Que un partner no tenga filas aquí
@@ -67,10 +67,10 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       group: "integrations",
     },
     {
-      key: "elevenlabs_credentials",
-      label: t("anagrafica_tabs.elevenlabs_credentials") as string,
+      key: "ai_credentials",
+      label: t("anagrafica_tabs.ai_credentials") as string,
       icon: "mdi-robot-outline",
-      component: markRaw(ElevenlabsCredentialsPartnerTab),
+      component: markRaw(AiCredentialsPartnerTab),
       group: "integrations",
     },
     {

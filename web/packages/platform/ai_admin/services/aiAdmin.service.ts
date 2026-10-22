@@ -18,10 +18,8 @@ export const AI_SETTING_KEYS = [
   'copilot_enabled',
   'voice_enabled',
   'voice_memory_enabled',
-  'provider_preference',
 ] as const;
 export type AiSettingKey = (typeof AI_SETTING_KEYS)[number];
-export const AI_PROVIDERS = ['anthropic', 'openai'] as const;
 
 export type AiErrorCode =
   | 'AI_FORBIDDEN'

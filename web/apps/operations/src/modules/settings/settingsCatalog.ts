@@ -468,18 +468,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         icon: 'mdi-brain',
         routeName: 'settings-ai-credentials',
         subgroup: 'ai_integrations',
-        aliases: ['Anthropic', 'Claude', 'OpenAI', 'GPT', 'AI API keys', 'LLM'],
-      },
-      // Credenciales ElevenLabs por partner+perfil (copilot_operator |
-      // public_form), backend NUEVO (Elevenlabs_Credentials_Admin_Controller).
-      // Fallback: partner sin fila propia usa la global/TMWE (id_anagrafica NULL).
-      {
-        key: 'elevenlabs_credentials',
-        i18nKey: 'elevenlabs_credentials',
-        icon: 'mdi-robot-outline',
-        routeName: 'settings-elevenlabs-credentials',
-        subgroup: 'ai_integrations',
-        aliases: ['ElevenLabs', 'Voice assistant credentials', 'Copilot voice'],
+        aliases: ['Anthropic', 'Claude', 'OpenAI', 'GPT', 'AI API keys', 'LLM', 'ElevenLabs', 'Voice assistant credentials', 'Copilot voice'],
       },
       // Estado del agente ConvAI public_form real + botón para empujar
       // prompt/tools versionados (Elevenlabs_Agent_Controller, admin-only).

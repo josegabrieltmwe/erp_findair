@@ -5,7 +5,9 @@ vi.mock('@shared/anagrafiche/services/http', () => ({ http: (...args: unknown[])
 
 import { AI_FEATURES, AiAdminError, aiAdminService, cleanQuery } from '@shared/ai_admin/services/aiAdmin.service';
 import { AI_LEGACY_ROUTE_TABS, AI_TAB_SCOPES, canSeeAiScope, extractScopes, resolveAiTab, visibleAiTabs } from '@shared/ai_admin/composables/useAiScopes';
-import { flagIsOn, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
+import { resolveCredentialTab } from '@shared/ai_credentials/credentialTabs';
+import { AI_PROVIDERS } from '@shared/ai_credentials/services/aiCredentials.service';
+import { flagIsOn, flagSettingsOnly, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
 
 describe('aiAdminService (contrato ai-admin/1)', () => {
   beforeEach(() => {
@@ -191,5 +193,23 @@ describe('formato', () => {
       { user_id: 1, count: 1, size: 50, last: '2026-10-02 10:00:00' },
       { user_id: 2, count: 2, size: 120, last: '2026-10-03 10:00:00' },
     ]);
+  });
+});
+
+describe('credenciales de IA: un solo sitio para el proveedor por defecto', () => {
+  it('el selector de proveedor no sale en los interruptores', () => {
+    const items = [{ key: 'copilot_enabled' }, { key: 'provider_preference' }, { key: 'voice_enabled' }];
+    expect(flagSettingsOnly(items).map((i) => i.key)).toEqual(['copilot_enabled', 'voice_enabled']);
+  });
+
+  it('openai va antes que anthropic', () => {
+    expect([...AI_PROVIDERS]).toEqual(['openai', 'anthropic']);
+  });
+
+  it('pestanas LLM y Voz con LLM por defecto', () => {
+    expect(resolveCredentialTab('voice')).toBe('voice');
+    expect(resolveCredentialTab(['voice'])).toBe('voice');
+    expect(resolveCredentialTab('x')).toBe('llm');
+    expect(resolveCredentialTab(undefined)).toBe('llm');
   });
 });

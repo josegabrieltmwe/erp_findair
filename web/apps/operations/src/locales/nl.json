@@ -1,5 +1,6 @@
 {
   "anagrafica_tabs": {
+    "ai_credentials": "AI-inloggegevens (LLM en stem)",
     "air_carrier_credentials": "Luchtvracht-inloggegevens (KLM/AF)",
     "webcargo": "WebCargo-inloggegevens",
     "fornitori_accnt": "Vervoerder-inloggegevens",

@@ -1,5 +1,6 @@
 {
   "anagrafica_tabs": {
+    "ai_credentials": "KI-Zugangsdaten (LLM und Sprache)",
     "air_carrier_credentials": "Luftfracht-Zugangsdaten (KLM/AF)",
     "webcargo": "WebCargo-Zugangsdaten",
     "fornitori_accnt": "Kurier-Zugangsdaten",

@@ -1750,12 +1750,14 @@
     }
   },
   "ai_credentials": {
+    "tab_llm": "LLM",
+    "tab_voice": "Stem",
     "title": "AI-inloggegevens",
     "subtitle": "API-keys voor Anthropic (Claude) en OpenAI per partner, met fallback naar de globale TMWE-inloggegevens",
     "new_credential": "Nieuwe inloggegevens",
     "filter_provider": "Filteren op provider",
     "empty_title": "Geen AI-inloggegevens",
-    "resolution_hint": "Volgorde: inloggegevens van de partner → globale inloggegevens (TMWE). Gebruikt wordt de standaardprovider van de partner, anders de globale standaard, anders Anthropic en daarna OpenAI.",
+    "resolution_hint": "Volgorde: inloggegevens van de partner → globale inloggegevens (TMWE). Gebruikt wordt de standaardprovider van de partner, anders de globale standaard, anders OpenAI en daarna Anthropic.",
     "usage_hint": "Gebruikt door chat/copilot, bestandsextractie, audiotranscriptie (Whisper, vereist OpenAI), de sjabloonassistent, trackingclassificatie en COD-verwerking.",
     "elevenlabs_hint": "Spraak (ElevenLabs) wordt apart beheerd:",
     "elevenlabs_link": "ElevenLabs-inloggegevens",

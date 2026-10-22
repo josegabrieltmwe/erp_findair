@@ -40,18 +40,7 @@
                 <v-chip size="x-small" variant="tonal">{{ t('ai_admin.flags.scope_' + s.scope) }}</v-chip>
               </td>
               <td style="width: 220px">
-                <v-select
-                  v-if="s.key === 'provider_preference'"
-                  :model-value="s.value"
-                  :items="providerItems"
-                  density="compact"
-                  variant="outlined"
-                  hide-details
-                  :disabled="saving === s.key"
-                  @update:model-value="(v: string) => save(s.key, v)"
-                />
                 <v-switch
-                  v-else
                   :model-value="flagIsOn(s.value)"
                   color="primary"
                   hide-details
@@ -70,15 +59,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiToggleSwitchOffOutline } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmAsyncSection from '../../anagrafiche/components/CmAsyncSection.vue';
 import CmEmptyState from '../../anagrafiche/components/CmEmptyState.vue';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
-import { AI_PROVIDERS, aiAdminService, type AiSetting } from '../services/aiAdmin.service';
-import { errorMessage, flagIsOn, flagToValue } from '../format';
+import { aiAdminService, type AiSetting } from '../services/aiAdmin.service';
+import { errorMessage, flagIsOn, flagSettingsOnly, flagToValue } from '../format';
 
 const { t } = useI18n();
 const toast = useToastStore();
@@ -89,8 +78,6 @@ const saving = ref<string | null>(null);
 const error = ref<string | null>(null);
 const partnerId = ref('');
 
-const providerItems = computed(() => AI_PROVIDERS.map((p) => ({ title: p, value: p })));
-
 function currentPartner(): number | null {
   const n = Number(partnerId.value);
   return partnerId.value && Number.isFinite(n) && n > 0 ? n : null;
@@ -100,7 +87,7 @@ async function load() {
   loading.value = true;
   error.value = null;
   try {
-    settings.value = await aiAdminService.listSettings(currentPartner());
+    settings.value = flagSettingsOnly(await aiAdminService.listSettings(currentPartner()));
   } catch (e) {
     settings.value = [];
     error.value = errorMessage(e);

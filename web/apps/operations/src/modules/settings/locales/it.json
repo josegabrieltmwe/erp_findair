@@ -1750,12 +1750,14 @@
     }
   },
   "ai_credentials": {
+    "tab_llm": "LLM",
+    "tab_voice": "Voce",
     "title": "Credenziali IA",
     "subtitle": "API key di Anthropic (Claude) e OpenAI per partner, con fallback alla credenziale globale TMWE",
     "new_credential": "Nuova credenziale",
     "filter_provider": "Filtra per provider",
     "empty_title": "Nessuna credenziale IA",
-    "resolution_hint": "Ordine di risoluzione: credenziale del partner → credenziale globale (TMWE). Il provider usato è il predefinito del partner; altrimenti quello globale; altrimenti Anthropic, poi OpenAI.",
+    "resolution_hint": "Ordine di risoluzione: credenziale del partner → credenziale globale (TMWE). Il provider usato è il predefinito del partner; altrimenti quello globale; altrimenti OpenAI, poi Anthropic.",
     "usage_hint": "Usate da chat/copilot, estrazione file, trascrizione audio (Whisper, richiede OpenAI), assistente modelli, classificazione tracking ed elaborazione COD.",
     "elevenlabs_hint": "La voce (ElevenLabs) si gestisce a parte:",
     "elevenlabs_link": "Credenziali ElevenLabs",

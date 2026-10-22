@@ -1,22 +1,21 @@
 <template>
   <div>
-    <CmSectionHeader :title="t('ai_credentials.title')" :subtitle="t('ai_credentials.subtitle')">
+    <CmSectionHeader v-if="!embedded" :title="t('ai_credentials.title')" :subtitle="t('ai_credentials.subtitle')">
       <template #actions>
         <v-btn color="primary" :prepend-icon="mdiPlus" @click="openCreate">
           {{ t('ai_credentials.new_credential') }}
         </v-btn>
       </template>
     </CmSectionHeader>
+    <div v-else class="d-flex justify-end mb-3">
+      <v-btn color="primary" :prepend-icon="mdiPlus" @click="openCreate">
+        {{ t('ai_credentials.new_credential') }}
+      </v-btn>
+    </div>
 
     <v-alert type="info" variant="tonal" density="compact" class="mb-4">
       <div>{{ t('ai_credentials.resolution_hint') }}</div>
       <div class="mt-1">{{ t('ai_credentials.usage_hint') }}</div>
-      <div class="mt-1">
-        {{ t('ai_credentials.elevenlabs_hint') }}
-        <router-link :to="{ name: 'settings-elevenlabs-credentials' }">
-          {{ t('ai_credentials.elevenlabs_link') }}
-        </router-link>
-      </div>
     </v-alert>
 
     <v-card class="pa-4 mb-4" variant="outlined">
@@ -123,6 +122,7 @@
               :label="t('ai_credentials.form_provider')"
             />
             <CmAnagraficaAutocomplete
+              v-if="!embedded"
               v-model="form.id_anagrafica"
               :label="t('ai_credentials.form_partner')"
               clearable
@@ -184,7 +184,7 @@
  * ElevenlabsCredentialsPage.vue. La key es solo escritura: nunca se precarga
  * ni se recibe del backend (solo has_key).
  */
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   mdiPlus,
@@ -211,6 +211,13 @@ import {
   type AiCredential,
   type AiCredentialPayload,
 } from '../services/aiCredentials.service';
+
+/**
+ * `idAnagrafica`: copia de la ficha de anagrafica (`/anagrafica/:id`). Solo lista
+ * y crea credenciales propias de ese partner; las globales siguen en Ajustes.
+ */
+const props = defineProps<{ idAnagrafica?: number }>();
+const embedded = computed(() => props.idAnagrafica != null);
 
 const { t } = useI18n();
 const toast = useToastStore();
@@ -298,7 +305,8 @@ async function load(): Promise<void> {
   loading.value = true;
   error.value = null;
   try {
-    allItems.value = await aiCredentialsService.list();
+    const rows = await aiCredentialsService.list(props.idAnagrafica);
+    allItems.value = embedded.value ? rows.filter((r) => r.id_anagrafica === props.idAnagrafica) : rows;
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
   } finally {
@@ -309,7 +317,7 @@ async function load(): Promise<void> {
 function resetForm(): void {
   form.id = undefined;
   form.provider = AI_PROVIDERS[0];
-  form.id_anagrafica = null;
+  form.id_anagrafica = props.idAnagrafica ?? null;
   form.api_key = '';
   form.model = '';
   form.name = '';
@@ -426,6 +434,7 @@ async function openDelete(item: AiCredential): Promise<void> {
   }
 }
 
+watch(() => props.idAnagrafica, load);
 onMounted(() => {
   void load();
 });
