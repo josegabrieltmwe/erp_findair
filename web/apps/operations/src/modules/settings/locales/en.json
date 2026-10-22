@@ -1793,7 +1793,15 @@
     "updated": "Credential updated",
     "deleted": "Credential deleted",
     "confirm_delete_title": "Delete credential",
-    "confirm_delete_message": "Delete the {provider} credential for {name}?"
+    "confirm_delete_message": "Delete the {provider} credential for {name}?",
+    "own_subtitle": "Your own Anthropic (Claude) or OpenAI key. Without one, your company uses the TMWE key.",
+    "own_hint": "If you add your own key, your requests use it and you pay for that usage. If you have none, or you deactivate it, TMWE’s key is used instead and TMWE sets your limits.",
+    "own_effective_own": "You are using your own key (you pay for it).",
+    "own_effective_tmwe": "You are using the TMWE key. TMWE pays for this usage and sets your limits.",
+    "own_effective_none": "No AI key is available right now. Add your own key to use AI.",
+    "own_forbidden": "You do not have permission to manage AI credentials. Ask your TMWE contact for the AI administrator role.",
+    "form_default_own": "Use this provider by default",
+    "confirm_delete_own_message": "Deactivate your {provider} key? You will use the TMWE key instead."
   },
   "elevenlabs_agents_admin": {
     "tab_sync": "Sync",

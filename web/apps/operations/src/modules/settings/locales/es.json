@@ -1793,7 +1793,15 @@
     "updated": "Credencial actualizada",
     "deleted": "Credencial eliminada",
     "confirm_delete_title": "Eliminar credencial",
-    "confirm_delete_message": "¿Eliminar la credencial de {provider} de {name}?"
+    "confirm_delete_message": "¿Eliminar la credencial de {provider} de {name}?",
+    "own_subtitle": "Tu propia clave de Anthropic (Claude) o de OpenAI. Sin ella, tu empresa usa la de TMWE.",
+    "own_hint": "Si añades tu propia clave, tus peticiones la usan y pagas ese consumo. Si no tienes ninguna, o la desactivas, se usa la de TMWE y TMWE fija tus límites.",
+    "own_effective_own": "Estás usando tu propia clave (la pagas tú).",
+    "own_effective_tmwe": "Estás usando la clave de TMWE. TMWE paga este consumo y fija tus límites.",
+    "own_effective_none": "Ahora mismo no hay ninguna clave de IA disponible. Añade la tuya para usar la IA.",
+    "own_forbidden": "No tienes permiso para gestionar las credenciales de IA. Pide a tu contacto de TMWE el rol de administrador de IA.",
+    "form_default_own": "Usar este proveedor por defecto",
+    "confirm_delete_own_message": "¿Desactivar tu clave de {provider}? Pasarás a usar la de TMWE."
   },
   "elevenlabs_agents_admin": {
     "tab_sync": "Sincronizar",

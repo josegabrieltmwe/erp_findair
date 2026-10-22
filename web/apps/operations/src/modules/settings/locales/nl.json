@@ -1793,7 +1793,15 @@
     "updated": "Inloggegevens bijgewerkt",
     "deleted": "Inloggegevens verwijderd",
     "confirm_delete_title": "Inloggegevens verwijderen",
-    "confirm_delete_message": "{provider}-inloggegevens van {name} verwijderen?"
+    "confirm_delete_message": "{provider}-inloggegevens van {name} verwijderen?",
+    "own_subtitle": "Uw eigen Anthropic- (Claude) of OpenAI-sleutel. Zonder sleutel gebruikt uw bedrijf die van TMWE.",
+    "own_hint": "Voegt u uw eigen sleutel toe, dan gebruiken uw verzoeken die en betaalt u dat verbruik. Heeft u er geen of deactiveert u hem, dan wordt de sleutel van TMWE gebruikt en bepaalt TMWE uw limieten.",
+    "own_effective_own": "U gebruikt uw eigen sleutel (u betaalt hem).",
+    "own_effective_tmwe": "U gebruikt de sleutel van TMWE. TMWE betaalt dit verbruik en bepaalt uw limieten.",
+    "own_effective_none": "Er is nu geen AI-sleutel beschikbaar. Voeg uw eigen sleutel toe om AI te gebruiken.",
+    "own_forbidden": "U heeft geen toestemming om AI-inloggegevens te beheren. Vraag uw TMWE-contactpersoon om de rol AI-beheerder.",
+    "form_default_own": "Deze aanbieder standaard gebruiken",
+    "confirm_delete_own_message": "Uw {provider}-sleutel deactiveren? U gebruikt dan de sleutel van TMWE."
   },
   "elevenlabs_agents_admin": {
     "tab_sync": "Synchroniseren",

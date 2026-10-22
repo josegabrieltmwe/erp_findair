@@ -43,6 +43,15 @@ const samples = {
     { profile: 'copilot_operator', agent_id_set: true, key_set: true, last_sync_at: '2026-10-18 08:00:00', tools_expected: 12, tools_remote: null, drift: false, last_agent_token_at: '2026-10-20 09:00:00' },
     { profile: 'public_form', agent_id_set: true, key_set: true, last_sync_at: null, tools_expected: 5, tools_remote: null, drift: true, last_agent_token_at: null },
   ],
+  // «Mis credenciales de IA»: un partner con clave propia (uses_tmwe_key=false). Para ver el aviso de fallback
+  // a TMWE, cambia source a 'global' y uses_tmwe_key a true. Nunca lleva la clave: solo has_key.
+  'api_admin_ai_my_credentials.get': {
+    items: [{ id: 21, provider: 'anthropic', name: 'Mi clave', model: 'claude-sonnet-5', is_default: 'S', has_key: true, created_at: '2026-10-20 10:00:00', updated_at: '2026-10-21 09:30:00' }],
+    effective: { source: 'partner', provider: 'anthropic', uses_tmwe_key: false },
+  },
+  'api_admin_ai_my_credentials.post': { id: 22, provider: 'openai', name: '', model: '', is_default: 'N', has_key: true },
+  'api_admin_ai_my_credentials.put': { id: 21, provider: 'anthropic', name: 'Mi clave', model: 'claude-sonnet-5', is_default: 'S', has_key: true },
+  'api_admin_ai_my_credentials.delete': { id: 21, effective: { source: 'global', provider: 'anthropic', uses_tmwe_key: true } },
   'api_admin_ai_settings.put': {}, 'api_admin_ai_budgets.put': {}, 'api_admin_ai_budgets.delete': {},
   'api_admin_copilot_memory.delete': { deleted: 1 },
 };
