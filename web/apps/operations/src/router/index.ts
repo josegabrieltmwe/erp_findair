@@ -409,11 +409,16 @@ const routes: RouteRecordRaw[] = [
     redirect: { name: "settings-ai-credentials", query: { tab: "voice" } },
   },
   {
-    path: "/settings/elevenlabs-agent-sync",
-    name: "settings-elevenlabs-agent-sync",
+    // Agentes de voz (admin TMWE): pestañas Sincronizar y Revisión.
+    path: "/settings/elevenlabs-agents",
+    name: "settings-elevenlabs-agents-admin",
     component: () =>
-      import("@shared/elevenlabs_agent_sync/feature/ElevenlabsAgentSyncPage.vue"),
+      import("@shared/elevenlabs_agents/feature/ElevenlabsAgentsAdminPage.vue"),
     meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/elevenlabs-agent-sync",
+    redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "sync" } },
   },
   // Administración de IA (contrato ai-admin/1, docs/agent-factory/10). `aiScope`
   // oculta la ruta si el perfil trae scopes y no incluye el requerido; la API
@@ -442,10 +447,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/settings/elevenlabs-agent-review",
-    name: "settings-elevenlabs-agent-review",
-    component: () =>
-      import("@shared/elevenlabs_agents/feature/ElevenlabsAgentReviewPage.vue"),
-    meta: { requiresAdmin: true },
+    redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "review" } },
   },
   // Continuación del montaje de identidad/seguridad (ver comentario junto a
   // "settings-users" más arriba). internal_roles y module_permissions

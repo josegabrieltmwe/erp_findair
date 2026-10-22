@@ -160,6 +160,10 @@
           "title": "Credenziali IA",
           "description": "API key di Anthropic (Claude) e OpenAI per partner, con fallback a TMWE"
         },
+        "elevenlabs_agents_admin": {
+          "title": "Agenti vocali (admin)",
+          "description": "Sincronizza l'agente reale e rivedi gli agenti dei partner"
+        },
         "elevenlabs_agent_sync": {
           "title": "Sincronizza agente ElevenLabs",
           "description": "Stato dell'agente public_form reale e sincronizzazione del prompt e delle tools"
@@ -1796,6 +1800,10 @@
     "deleted": "Credenziale eliminata",
     "confirm_delete_title": "Elimina credenziale",
     "confirm_delete_message": "Eliminare la credenziale {provider} di {name}?"
+  },
+  "elevenlabs_agents_admin": {
+    "tab_sync": "Sincronizza",
+    "tab_review": "Revisione"
   },
   "elevenlabs_agent_sync": {
     "title": "Sincronizza agente ElevenLabs",

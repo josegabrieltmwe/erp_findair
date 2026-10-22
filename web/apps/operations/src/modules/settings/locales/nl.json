@@ -160,6 +160,10 @@
           "title": "AI-inloggegevens",
           "description": "API-keys voor Anthropic (Claude) en OpenAI per partner, met TMWE-fallback"
         },
+        "elevenlabs_agents_admin": {
+          "title": "Spraakagenten (beheer)",
+          "description": "Synchroniseer de echte agent en beoordeel partneragenten"
+        },
         "elevenlabs_agent_sync": {
           "title": "ElevenLabs-agent synchroniseren",
           "description": "Status van de echte public_form-agent en synchronisatie van prompt en tools"
@@ -1796,6 +1800,10 @@
     "deleted": "Inloggegevens verwijderd",
     "confirm_delete_title": "Inloggegevens verwijderen",
     "confirm_delete_message": "{provider}-inloggegevens van {name} verwijderen?"
+  },
+  "elevenlabs_agents_admin": {
+    "tab_sync": "Synchroniseren",
+    "tab_review": "Beoordeling"
   },
   "elevenlabs_agent_sync": {
     "title": "ElevenLabs-agent synchroniseren",

@@ -7,6 +7,7 @@ import { AI_FEATURES, AiAdminError, aiAdminService, cleanQuery } from '@shared/a
 import { AI_LEGACY_ROUTE_TABS, AI_TAB_SCOPES, canSeeAiScope, extractScopes, resolveAiTab, visibleAiTabs } from '@shared/ai_admin/composables/useAiScopes';
 import { resolveCredentialTab } from '@shared/ai_credentials/credentialTabs';
 import { AI_PROVIDERS } from '@shared/ai_credentials/services/aiCredentials.service';
+import { resolveAgentAdminTab } from '@shared/elevenlabs_agents/agentAdminTabs';
 import { flagIsOn, flagSettingsOnly, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
 
 describe('aiAdminService (contrato ai-admin/1)', () => {
@@ -211,5 +212,14 @@ describe('credenciales de IA: un solo sitio para el proveedor por defecto', () =
     expect(resolveCredentialTab(['voice'])).toBe('voice');
     expect(resolveCredentialTab('x')).toBe('llm');
     expect(resolveCredentialTab(undefined)).toBe('llm');
+  });
+});
+
+describe('agentes de voz del admin', () => {
+  it('pestanas Sincronizar y Revision con Sincronizar por defecto', () => {
+    expect(resolveAgentAdminTab('review')).toBe('review');
+    expect(resolveAgentAdminTab(['review'])).toBe('review');
+    expect(resolveAgentAdminTab('otra')).toBe('sync');
+    expect(resolveAgentAdminTab(undefined)).toBe('sync');
   });
 });

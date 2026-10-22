@@ -473,12 +473,12 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
       // Estado del agente ConvAI public_form real + botón para empujar
       // prompt/tools versionados (Elevenlabs_Agent_Controller, admin-only).
       {
-        key: 'elevenlabs_agent_sync',
-        i18nKey: 'elevenlabs_agent_sync',
+        key: 'elevenlabs_agents_admin',
+        i18nKey: 'elevenlabs_agents_admin',
         icon: 'mdi-sync',
-        routeName: 'settings-elevenlabs-agent-sync',
+        routeName: 'settings-elevenlabs-agents-admin',
         subgroup: 'ai_integrations',
-        aliases: ['ElevenLabs agent sync', 'Sync agent', 'public_form agent'],
+        aliases: ['ElevenLabs agent sync', 'Sync agent', 'public_form agent', 'Approve voice agents', 'Review partner agents'],
       },
       // Agente de voz PROPIO del partner (su cuenta de ElevenLabs, aprobado por
       // TMWE) -- autoservicio del partner. docs/agent-factory/09.
@@ -498,15 +498,6 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         routeName: 'settings-ai-center',
         subgroup: 'ai_integrations',
         aliases: ['AI usage','AI cost','Voice health','AI budgets','Token limits','AI feature flags','AI settings','AI audit log','Voice memory','Erase memory','My AI usage'],
-      },
-      // Revision y aprobacion de esos agentes por un administrador de TMWE.
-      {
-        key: 'elevenlabs_agent_review',
-        i18nKey: 'elevenlabs_agent_review',
-        icon: 'mdi-clipboard-check-outline',
-        routeName: 'settings-elevenlabs-agent-review',
-        subgroup: 'ai_integrations',
-        aliases: ['Approve voice agents', 'Review partner agents'],
       },
     ],
   },

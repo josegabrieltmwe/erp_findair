@@ -160,6 +160,10 @@
           "title": "KI-Zugangsdaten",
           "description": "API-Keys für Anthropic (Claude) und OpenAI pro Partner, mit TMWE-Fallback"
         },
+        "elevenlabs_agents_admin": {
+          "title": "Sprachagenten (Admin)",
+          "description": "Echten Agenten synchronisieren und Partner-Agenten prüfen"
+        },
         "elevenlabs_agent_sync": {
           "title": "ElevenLabs-Agent synchronisieren",
           "description": "Status des echten public_form-Agents und Synchronisierung von Prompt und Tools"
@@ -1796,6 +1800,10 @@
     "deleted": "Zugangsdaten gelöscht",
     "confirm_delete_title": "Zugangsdaten löschen",
     "confirm_delete_message": "{provider}-Zugangsdaten von {name} löschen?"
+  },
+  "elevenlabs_agents_admin": {
+    "tab_sync": "Synchronisieren",
+    "tab_review": "Prüfung"
   },
   "elevenlabs_agent_sync": {
     "title": "ElevenLabs-Agent synchronisieren",

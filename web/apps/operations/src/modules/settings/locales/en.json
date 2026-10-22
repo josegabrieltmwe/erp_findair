@@ -160,6 +160,10 @@
           "title": "AI credentials",
           "description": "Anthropic (Claude) and OpenAI API keys per partner, with TMWE fallback"
         },
+        "elevenlabs_agents_admin": {
+          "title": "Voice agents (admin)",
+          "description": "Sync the real agent and review partner agents"
+        },
         "elevenlabs_agent_sync": {
           "title": "Sync ElevenLabs agent",
           "description": "Status of the real public_form agent and sync of the prompt and tools"
@@ -1796,6 +1800,10 @@
     "deleted": "Credential deleted",
     "confirm_delete_title": "Delete credential",
     "confirm_delete_message": "Delete the {provider} credential for {name}?"
+  },
+  "elevenlabs_agents_admin": {
+    "tab_sync": "Sync",
+    "tab_review": "Review"
   },
   "elevenlabs_agent_sync": {
     "title": "Sync ElevenLabs agent",
