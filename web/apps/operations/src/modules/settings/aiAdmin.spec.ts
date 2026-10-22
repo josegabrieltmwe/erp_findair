@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const httpMock = vi.fn();
 vi.mock('@shared/anagrafiche/services/http', () => ({ http: (...args: unknown[]) => httpMock(...args) }));
 
-import { AiAdminError, aiAdminService, cleanQuery } from '@shared/ai_admin/services/aiAdmin.service';
+import { AI_FEATURES, AiAdminError, aiAdminService, cleanQuery } from '@shared/ai_admin/services/aiAdmin.service';
 import { AI_ROUTE_SCOPES, canSeeAiScope, extractScopes } from '@shared/ai_admin/composables/useAiScopes';
 import { flagIsOn, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
 
@@ -126,6 +126,16 @@ describe('mapa unico de scopes por pantalla', () => {
       'settings-ai-audit': 'ai:audit:read',
       'settings-my-ai-usage': null,
     });
+  });
+});
+
+describe('features de IA', () => {
+  it('incluye wizard, cod y tracking con etiqueta en todos los idiomas', async () => {
+    expect([...AI_FEATURES]).toEqual(['specialist', 'copilot', 'extract', 'voice', 'wizard', 'cod', 'tracking']);
+    for (const l of ['de', 'en', 'es', 'it', 'nl']) {
+      const j = (await import(`./locales/${l}.json`)).default;
+      for (const f of AI_FEATURES) expect(j.ai_admin.feature[f], `${l}.${f}`).toBeTruthy();
+    }
   });
 });
 

@@ -7,7 +7,7 @@ import { http } from '../../anagrafiche/services/http';
  * de memoria o prompts: solo metadatos y recuentos, y este servicio tampoco los pide.
  */
 
-export const AI_FEATURES = ['specialist', 'copilot', 'extract', 'voice'] as const;
+export const AI_FEATURES = ['specialist', 'copilot', 'extract', 'voice', 'wizard', 'cod', 'tracking'] as const;
 export type AiFeature = (typeof AI_FEATURES)[number];
 export const AI_PERIODS = ['day', 'month'] as const;
 export type AiPeriod = (typeof AI_PERIODS)[number];

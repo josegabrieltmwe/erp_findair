@@ -2153,7 +2153,10 @@
       "specialist": "Spezialist",
       "copilot": "Copilot",
       "extract": "Extraktion",
-      "voice": "Sprache"
+      "voice": "Sprache",
+      "wizard": "Assistent",
+      "cod": "COD",
+      "tracking": "Tracking"
     },
     "load_more": "Mehr laden",
     "usage": {
