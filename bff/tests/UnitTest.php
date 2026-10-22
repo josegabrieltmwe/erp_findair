@@ -86,6 +86,7 @@ final class UnitTest extends TestCase
         $expected = [
             '/api_admin_ai_settings' => ['GET', 'PUT'],
             '/api_admin_ai_budgets' => ['GET', 'PUT', 'DELETE'],
+            '/api_admin_ai_my_credentials' => ['GET', 'POST', 'PUT', 'DELETE'],
             '/api_admin_ai_usage' => ['GET'],
             '/api_admin_ai_audit' => ['GET'],
             '/api_admin_copilot_memory' => ['GET', 'DELETE'],

@@ -1793,7 +1793,15 @@
     "updated": "Zugangsdaten aktualisiert",
     "deleted": "Zugangsdaten gelöscht",
     "confirm_delete_title": "Zugangsdaten löschen",
-    "confirm_delete_message": "{provider}-Zugangsdaten von {name} löschen?"
+    "confirm_delete_message": "{provider}-Zugangsdaten von {name} löschen?",
+    "own_subtitle": "Ihr eigener Anthropic- (Claude) oder OpenAI-Schlüssel. Ohne eigenen Schlüssel nutzt Ihr Unternehmen den von TMWE.",
+    "own_hint": "Wenn Sie Ihren eigenen Schlüssel hinzufügen, nutzen Ihre Anfragen ihn und Sie bezahlen diese Nutzung. Haben Sie keinen oder deaktivieren Sie ihn, wird der Schlüssel von TMWE verwendet und TMWE legt Ihre Limits fest.",
+    "own_effective_own": "Sie nutzen Ihren eigenen Schlüssel (Sie bezahlen ihn).",
+    "own_effective_tmwe": "Sie nutzen den Schlüssel von TMWE. TMWE bezahlt diese Nutzung und legt Ihre Limits fest.",
+    "own_effective_none": "Derzeit ist kein KI-Schlüssel verfügbar. Fügen Sie Ihren eigenen hinzu, um die KI zu nutzen.",
+    "own_forbidden": "Sie haben keine Berechtigung, KI-Zugangsdaten zu verwalten. Bitten Sie Ihren TMWE-Ansprechpartner um die Rolle KI-Administrator.",
+    "form_default_own": "Diesen Anbieter standardmäßig verwenden",
+    "confirm_delete_own_message": "Ihren {provider}-Schlüssel deaktivieren? Danach wird der Schlüssel von TMWE verwendet."
   },
   "elevenlabs_agents_admin": {
     "tab_sync": "Synchronisieren",

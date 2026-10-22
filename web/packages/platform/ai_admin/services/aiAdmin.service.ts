@@ -173,6 +173,9 @@ async function call<T>(url: string, options?: Record<string, unknown>): Promise<
   return raw.data;
 }
 
+/** Misma llamada y normalización de errores del contrato ai-admin/1, para otros paquetes (ai_credentials). */
+export { call as aiAdminCall };
+
 /** Quita claves vacías para no mandar `partner_id=` ni `feature=` en blanco. */
 export function cleanQuery(params: object): Record<string, string> {
   const out: Record<string, string> = {};
