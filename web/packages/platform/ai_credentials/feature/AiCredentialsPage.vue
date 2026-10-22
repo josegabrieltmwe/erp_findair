@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CmSectionHeader v-if="!embedded" :title="t('ai_credentials.title')" :subtitle="t('ai_credentials.subtitle')">
+    <CmSectionHeader v-if="!embedded" :title="t('ai_credentials.title')" :subtitle="ownMode ? t('ai_credentials.own_subtitle') : t('ai_credentials.subtitle')">
       <template #actions>
         <v-btn color="primary" :prepend-icon="mdiPlus" @click="openCreate">
           {{ t('ai_credentials.new_credential') }}
@@ -13,8 +13,19 @@
       </v-btn>
     </div>
 
+    <v-alert
+      v-if="ownMode && !loading && !error"
+      :type="effectiveState === 'own' ? 'success' : effectiveState === 'tmwe' ? 'info' : 'warning'"
+      variant="tonal"
+      density="compact"
+      class="mb-4"
+      data-testid="own-effective"
+    >
+      {{ t('ai_credentials.own_effective_' + effectiveState) }}
+    </v-alert>
+
     <v-alert type="info" variant="tonal" density="compact" class="mb-4">
-      <div>{{ t('ai_credentials.resolution_hint') }}</div>
+      <div>{{ ownMode ? t('ai_credentials.own_hint') : t('ai_credentials.resolution_hint') }}</div>
       <div class="mt-1">{{ t('ai_credentials.usage_hint') }}</div>
     </v-alert>
 
@@ -50,6 +61,7 @@
         <v-chip size="small" class="cm-tone-neutral">
           {{ providerLabel((item as AiCredential).provider) }}
         </v-chip>
+        <div v-if="ownMode && (item as AiCredential).name" class="cm-cell-hint">{{ (item as AiCredential).name }}</div>
       </template>
       <template #cell.partner_name="{ item }">
         <div>{{ partnerLabel(item as AiCredential) }}</div>
@@ -81,6 +93,7 @@
       <template #cell.actions="{ item }">
         <div class="cm-actions-right">
           <v-btn
+            v-if="!ownMode"
             size="small"
             variant="text"
             :prepend-icon="mdiConnection"
@@ -120,9 +133,10 @@
               v-model="form.provider"
               :items="providerOptions"
               :label="t('ai_credentials.form_provider')"
+              :disabled="ownMode && formMode === 'edit'"
             />
             <CmAnagraficaAutocomplete
-              v-if="!embedded"
+              v-if="!embedded && !ownMode"
               v-model="form.id_anagrafica"
               :label="t('ai_credentials.form_partner')"
               clearable
@@ -159,7 +173,7 @@
           />
           <v-switch
             v-model="form.is_default"
-            :label="form.id_anagrafica ? t('ai_credentials.form_default_partner') : t('ai_credentials.form_default_global')"
+            :label="ownMode ? t('ai_credentials.form_default_own') : form.id_anagrafica ? t('ai_credentials.form_default_partner') : t('ai_credentials.form_default_global')"
             color="primary"
             hide-details
             class="mt-2"
@@ -203,21 +217,38 @@ import type { DataTableHeader } from '../../listing/types';
 import CmAnagraficaAutocomplete from '../../listini/components/CmAnagraficaAutocomplete.vue';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { buildCredentialPayload, describeCredentialError, effectiveKind } from '../credentialForm';
 import {
   aiCredentialsService,
+  myAiCredentialsService,
   AI_PROVIDERS,
   AI_MODEL_SUGGESTIONS,
   type AiProvider,
   type AiCredential,
-  type AiCredentialPayload,
+  type AiCredentialsEffective,
 } from '../services/aiCredentials.service';
 
 /**
  * `idAnagrafica`: copia de la ficha de anagrafica (`/anagrafica/:id`). Solo lista
  * y crea credenciales propias de ese partner; las globales siguen en Ajustes.
  */
-const props = defineProps<{ idAnagrafica?: number }>();
+/**
+ * `own`: modo propio. Un partner que NO es TMWE gestiona SU clave por
+ * /api_admin_ai_my_credentials: sin selector de partner (lo fija el servidor), sin
+ * columna de titular, sin prueba de conexión, y con un aviso de si usa la clave de
+ * TMWE (la paga TMWE) o la suya (la paga él). El modo TMWE no cambia.
+ */
+const props = defineProps<{ idAnagrafica?: number; own?: boolean }>();
 const embedded = computed(() => props.idAnagrafica != null);
+const ownMode = computed(() => props.own === true);
+const effective = ref<AiCredentialsEffective | null>(null);
+/** 'own' = clave propia, 'tmwe' = fallback a TMWE, 'none' = sin ninguna. */
+const effectiveState = computed(() => effectiveKind(effective.value));
+
+/** Traduce los errores del contrato; AI_FORBIDDEN en modo propio tiene mensaje propio. */
+function describeError(e: unknown): string {
+  return describeCredentialError(e, ownMode.value, t('ai_credentials.own_forbidden') as string);
+}
 
 const { t } = useI18n();
 const toast = useToastStore();
@@ -256,7 +287,7 @@ function partnerLabel(item: AiCredential): string {
 const listSource = useClientSideListSource(items, { loading });
 const tableHeaders: DataTableHeader[] = [
   { title: t('ai_credentials.col_provider') as string, key: 'provider' },
-  { title: t('ai_credentials.col_partner') as string, key: 'partner_name' },
+  ...(props.own === true ? [] : [{ title: t('ai_credentials.col_partner') as string, key: 'partner_name' }]),
   { title: t('ai_credentials.col_model') as string, key: 'model', sortable: false },
   { title: t('ai_credentials.col_default') as string, key: 'is_default', sortable: false },
   { title: t('ai_credentials.col_key') as string, key: 'has_key', sortable: false },
@@ -305,10 +336,16 @@ async function load(): Promise<void> {
   loading.value = true;
   error.value = null;
   try {
-    const rows = await aiCredentialsService.list(props.idAnagrafica);
-    allItems.value = embedded.value ? rows.filter((r) => r.id_anagrafica === props.idAnagrafica) : rows;
+    if (ownMode.value) {
+      const mine = await myAiCredentialsService.list();
+      allItems.value = mine.items;
+      effective.value = mine.effective;
+    } else {
+      const rows = await aiCredentialsService.list(props.idAnagrafica);
+      allItems.value = embedded.value ? rows.filter((r) => r.id_anagrafica === props.idAnagrafica) : rows;
+    }
   } catch (e) {
-    error.value = e instanceof Error ? e.message : String(e);
+    error.value = describeError(e);
   } finally {
     loading.value = false;
   }
@@ -358,30 +395,21 @@ function openEdit(item: AiCredential): void {
 async function save(): Promise<void> {
   saving.value = true;
   try {
-    const payload: AiCredentialPayload = {
-      id: form.id,
-      provider: form.provider,
-      id_anagrafica: form.id_anagrafica,
-      model: (form.model || '').trim(),
-      name: form.name.trim(),
-    };
-    if (formMode.value === 'create' || form.is_default !== form.was_default) {
-      payload.is_default = form.is_default ? 'S' : 'N';
-    }
-    // Solo envía la key cuando el usuario la escribió (vacío en edit = sin cambios).
-    if (form.api_key.trim()) payload.api_key = form.api_key.trim();
+    // Modo propio: sin id_anagrafica (lo fija el servidor). El modo TMWE conserva su payload.
+    const payload = buildCredentialPayload(form, formMode.value, ownMode.value);
 
+    const service = ownMode.value ? myAiCredentialsService : aiCredentialsService;
     if (formMode.value === 'create') {
-      await aiCredentialsService.create(payload);
+      await service.create(payload);
       toast.success(t('ai_credentials.created'));
     } else {
-      await aiCredentialsService.update(payload);
+      await service.update(payload);
       toast.success(t('ai_credentials.updated'));
     }
     closeForm();
     await load();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(describeError(e));
   } finally {
     saving.value = false;
   }
@@ -390,11 +418,12 @@ async function save(): Promise<void> {
 async function makeDefault(item: AiCredential): Promise<void> {
   busyId.value = item.id;
   try {
-    await aiCredentialsService.setDefault(item.id_anagrafica, item.provider);
+    if (ownMode.value) await myAiCredentialsService.setDefault(item.id);
+    else await aiCredentialsService.setDefault(item.id_anagrafica, item.provider);
     toast.success(t('ai_credentials.default_set'));
     await load();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(describeError(e));
   } finally {
     busyId.value = null;
   }
@@ -418,19 +447,22 @@ async function testConnection(item: AiCredential): Promise<void> {
 
 async function openDelete(item: AiCredential): Promise<void> {
   const ok = await confirm.askDanger(
-    t('ai_credentials.confirm_delete_message', {
-      provider: providerLabel(item.provider),
-      name: partnerLabel(item),
-    }),
+    ownMode.value
+      ? t('ai_credentials.confirm_delete_own_message', { provider: providerLabel(item.provider) })
+      : t('ai_credentials.confirm_delete_message', {
+          provider: providerLabel(item.provider),
+          name: partnerLabel(item),
+        }),
     t('ai_credentials.confirm_delete_title'),
   );
   if (!ok) return;
   try {
-    await aiCredentialsService.remove(item.id);
+    if (ownMode.value) await myAiCredentialsService.remove(item.id);
+    else await aiCredentialsService.remove(item.id);
     toast.success(t('ai_credentials.deleted'));
     await load();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(describeError(e));
   }
 }
 

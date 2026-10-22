@@ -397,11 +397,14 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAdmin: true },
   },
   {
+    // TMWE: credenciales de cualquier partner + voz. Administrador de partner (scope
+    // ai:admin, rol partner_staff_ai_admin): SOLO su clave (modo propio). Antes `requiresAdmin`,
+    // que dejaba fuera al partner; ahora lo gobierna el scope y la API sigue autorizando.
     path: "/settings/ai-credentials",
     name: "settings-ai-credentials",
     component: () =>
       import("@shared/ai_credentials/feature/AiCredentialsCenterPage.vue"),
-    meta: { requiresAdmin: true },
+    meta: { aiScope: "ai:admin" },
   },
   {
     // Credenciales ElevenLabs: ahora son la pestaña «Voz» de las credenciales de IA.
