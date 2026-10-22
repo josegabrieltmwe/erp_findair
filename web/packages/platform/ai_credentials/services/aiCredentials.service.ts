@@ -1,4 +1,5 @@
 import { http } from '../../anagrafiche/services/http';
+import { aiAdminCall } from '../../ai_admin/services/aiAdmin.service';
 
 /**
  * Credenciales de proveedores de IA (chat, extracción de ficheros, Whisper,
@@ -110,5 +111,86 @@ export const aiCredentialsService = {
       http_status: raw?.http_status ?? null,
       message: raw?.message || '',
     };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// «Mis credenciales de IA» (modo propio). Un partner que NO es TMWE gestiona SU
+// clave por /api_admin_ai_my_credentials (contrato ai-admin/1). Decisiones:
+//  - El partner lo fija el servidor: el cuerpo NUNCA lleva id_anagrafica ni partner_id
+//    (ownBody solo deja pasar campos conocidos).
+//  - Sin clave propia se usa la de TMWE (`effective.uses_tmwe_key`); quien usa la suya la paga.
+//  - No hay op de prueba ni de proveedor por defecto aparte: el defecto es un PUT {is_default}.
+//  - TMWE (anagrafica 1) recibe 403: usa api_admin_ai_credentials (aiCredentialsService).
+// ---------------------------------------------------------------------------
+
+export interface AiCredentialsEffective {
+  /** De donde sale la clave que se usa ahora: la del partner, la global de TMWE o ninguna. */
+  source: 'partner' | 'global' | null;
+  provider: string | null;
+  uses_tmwe_key: boolean;
+}
+
+export interface MyAiCredentials {
+  items: AiCredential[];
+  effective: AiCredentialsEffective | null;
+}
+
+export interface MyAiCredentialPayload {
+  id?: number;
+  /** Solo en alta: el proveedor de una fila no cambia (se desactiva y se crea otra). */
+  provider?: string;
+  name?: string;
+  model?: string;
+  is_default?: 'S' | 'N';
+  /** Solo escritura. Vacío/ausente en update = deja la clave guardada sin cambios. */
+  api_key?: string;
+}
+
+const MY_ENDPOINT = '/api_admin_ai_my_credentials';
+const MY_FIELDS = ['id', 'provider', 'name', 'model', 'is_default', 'api_key'] as const;
+
+/** Copia solo los campos del contrato; descarta cualquier otro (id_anagrafica, partner_id, stato...). */
+function ownBody(payload: MyAiCredentialPayload): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  const source = payload as unknown as Record<string, unknown>;
+  for (const field of MY_FIELDS) {
+    if (source[field] !== undefined) out[field] = source[field];
+  }
+  return out;
+}
+
+export const myAiCredentialsService = {
+  async list(): Promise<MyAiCredentials> {
+    const data = await aiAdminCall<{ items?: AiCredential[]; effective?: AiCredentialsEffective | null }>(MY_ENDPOINT);
+    const items = Array.isArray(data.items) ? data.items : [];
+    // El contrato no devuelve el titular: se normaliza al tipo de fila común.
+    return {
+      items: items.map((i) => ({ ...i, id_anagrafica: null })),
+      effective: data.effective ?? null,
+    };
+  },
+
+  async create(payload: MyAiCredentialPayload): Promise<void> {
+    await aiAdminCall<unknown>(MY_ENDPOINT, { method: 'POST', body: ownBody(payload) });
+  },
+
+  /** No envía `provider`: la API no lo cambia. */
+  async update(payload: MyAiCredentialPayload): Promise<void> {
+    const { provider: _provider, ...rest } = payload;
+    await aiAdminCall<unknown>(MY_ENDPOINT, { method: 'PUT', body: ownBody(rest) });
+  },
+
+  /** Desactiva la credencial; devuelve de dónde saldrá la clave a partir de ahora. */
+  async remove(id: number): Promise<AiCredentialsEffective | null> {
+    const data = await aiAdminCall<{ effective?: AiCredentialsEffective | null }>(MY_ENDPOINT, {
+      method: 'DELETE',
+      query: { id: String(id) },
+    });
+    return data?.effective ?? null;
+  },
+
+  async setDefault(id: number): Promise<void> {
+    await aiAdminCall<unknown>(MY_ENDPOINT, { method: 'PUT', body: ownBody({ id, is_default: 'S' }) });
   },
 };
