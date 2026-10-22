@@ -18,7 +18,7 @@
  * funciones aún no migradas.
  */
 
-import { AI_ROUTE_SCOPES, type AiScope } from '@shared/ai_admin/composables/useAiScopes';
+import { type AiScope } from '@shared/ai_admin/composables/useAiScopes';
 
 /** Campos comunes a toda tarjeta, sin importar su destino. */
 interface SettingsCardBase {
@@ -508,52 +508,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         icon: 'mdi-chart-box-outline',
         routeName: 'settings-ai-center',
         subgroup: 'ai_integrations',
-        aiScope: AI_ROUTE_SCOPES['settings-ai-center'],
-        aliases: ['AI usage','AI cost','Voice health'],
-      },
-      {
-        key: 'ai_budgets',
-        i18nKey: 'ai_budgets',
-        icon: 'mdi-cash-clock',
-        routeName: 'settings-ai-budgets',
-        subgroup: 'ai_integrations',
-        aiScope: AI_ROUTE_SCOPES['settings-ai-budgets'],
-        aliases: ['AI budgets','Token limits'],
-      },
-      {
-        key: 'ai_flags',
-        i18nKey: 'ai_flags',
-        icon: 'mdi-toggle-switch-outline',
-        routeName: 'settings-ai-flags',
-        subgroup: 'ai_integrations',
-        aiScope: AI_ROUTE_SCOPES['settings-ai-flags'],
-        aliases: ['AI feature flags','AI settings'],
-      },
-      {
-        key: 'voice_memory',
-        i18nKey: 'voice_memory',
-        icon: 'mdi-brain',
-        routeName: 'settings-voice-memory',
-        subgroup: 'ai_integrations',
-        aiScope: AI_ROUTE_SCOPES['settings-voice-memory'],
-        aliases: ['Voice memory','Erase memory'],
-      },
-      {
-        key: 'ai_audit',
-        i18nKey: 'ai_audit',
-        icon: 'mdi-clipboard-text-clock-outline',
-        routeName: 'settings-ai-audit',
-        subgroup: 'ai_integrations',
-        aiScope: AI_ROUTE_SCOPES['settings-ai-audit'],
-        aliases: ['AI audit log'],
-      },
-      {
-        key: 'my_ai_usage',
-        i18nKey: 'my_ai_usage',
-        icon: 'mdi-account-clock-outline',
-        routeName: 'settings-my-ai-usage',
-        subgroup: 'ai_integrations',
-        aliases: ['My AI usage'],
+        aliases: ['AI usage','AI cost','Voice health','AI budgets','Token limits','AI feature flags','AI settings','AI audit log','Voice memory','Erase memory','My AI usage'],
       },
       // Revision y aprobacion de esos agentes por un administrador de TMWE.
       {

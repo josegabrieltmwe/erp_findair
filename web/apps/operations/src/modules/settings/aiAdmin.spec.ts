@@ -4,7 +4,7 @@ const httpMock = vi.fn();
 vi.mock('@shared/anagrafiche/services/http', () => ({ http: (...args: unknown[]) => httpMock(...args) }));
 
 import { AI_FEATURES, AiAdminError, aiAdminService, cleanQuery } from '@shared/ai_admin/services/aiAdmin.service';
-import { AI_ROUTE_SCOPES, canSeeAiScope, extractScopes } from '@shared/ai_admin/composables/useAiScopes';
+import { AI_LEGACY_ROUTE_TABS, AI_TAB_SCOPES, canSeeAiScope, extractScopes, resolveAiTab, visibleAiTabs } from '@shared/ai_admin/composables/useAiScopes';
 import { flagIsOn, flagToValue, formatCost, groupMemoryByUser, parseLimit } from '@shared/ai_admin/format';
 
 describe('aiAdminService (contrato ai-admin/1)', () => {
@@ -116,16 +116,44 @@ describe('scopes de IA (visibilidad de menu)', () => {
   });
 });
 
-describe('mapa unico de scopes por pantalla', () => {
-  it('conserva el scope que exigia cada ruta', () => {
-    expect(AI_ROUTE_SCOPES).toEqual({
-      'settings-ai-center': 'ai:admin',
-      'settings-ai-budgets': 'ai:admin',
-      'settings-ai-flags': 'ai:admin',
-      'settings-voice-memory': 'ai:memory:erase',
-      'settings-ai-audit': 'ai:audit:read',
-      'settings-my-ai-usage': null,
+describe('Centro de IA: pestanas y scopes', () => {
+  it('mapa unico de scopes por pestana', () => {
+    expect(AI_TAB_SCOPES).toEqual({
+      usage: 'ai:admin',
+      budgets: 'ai:admin',
+      flags: 'ai:admin',
+      audit: 'ai:audit:read',
+      memory: 'ai:memory:erase',
+      health: 'ai:admin',
+      mine: null,
     });
+  });
+
+  it('oculta pestanas sin permiso', () => {
+    expect(visibleAiTabs({ scopes: ['ai:audit:read'] }, false)).toEqual(['audit', 'mine']);
+    expect(visibleAiTabs({ scopes: 'ai:admin' }, false)).toEqual(['usage', 'budgets', 'flags', 'audit', 'memory', 'health', 'mine']);
+    expect(visibleAiTabs({ scopes: ['ai:generate'] }, false)).toEqual(['mine']);
+    expect(visibleAiTabs({}, true)).toHaveLength(7);
+    expect(visibleAiTabs({}, false)).toEqual(['mine']);
+  });
+
+  it('resuelve la pestana pedida o cae a la primera visible', () => {
+    const v = visibleAiTabs({ scopes: ['ai:audit:read'] }, false);
+    expect(resolveAiTab('audit', v)).toBe('audit');
+    expect(resolveAiTab('budgets', v)).toBe('audit');
+    expect(resolveAiTab(['mine'], v)).toBe('mine');
+    expect(resolveAiTab(undefined, [])).toBeNull();
+  });
+
+  it('las rutas antiguas apuntan a pestanas existentes', () => {
+    expect(AI_LEGACY_ROUTE_TABS).toEqual({
+      '/settings/ai-budgets': 'budgets',
+      '/settings/ai-flags': 'flags',
+      '/settings/ai-audit': 'audit',
+      '/settings/voice-memory': 'memory',
+      '/settings/my-ai-usage': 'mine',
+    });
+    for (const tab of Object.values(AI_LEGACY_ROUTE_TABS)) expect(tab in AI_TAB_SCOPES).toBe(true);
   });
 });
 

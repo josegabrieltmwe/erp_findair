@@ -270,7 +270,7 @@
         },
         "ai_center": {
           "title": "Centro de IA",
-          "description": "Uso y coste de la IA y salud del agente de voz"
+          "description": "Uso, presupuestos, interruptores, auditoría, memoria y salud de la IA"
         },
         "ai_budgets": {
           "title": "Presupuestos de IA",
@@ -2196,9 +2196,15 @@
     },
     "center": {
       "title": "Centro de IA",
-      "subtitle": "Uso, coste y salud del agente de voz",
+      "subtitle": "Uso, presupuestos, interruptores, auditoría, memoria y salud de la IA",
       "tab_usage": "Uso y coste",
-      "tab_health": "Salud de voz"
+      "tab_health": "Salud de voz",
+      "tab_budgets": "Presupuestos",
+      "tab_flags": "Interruptores",
+      "tab_audit": "Auditoría",
+      "tab_memory": "Memoria",
+      "tab_mine": "Mi uso",
+      "no_access": "No tienes permisos para ver ninguna sección del Centro de IA"
     },
     "mine": {
       "title": "Mi uso de IA",

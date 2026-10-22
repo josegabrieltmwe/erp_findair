@@ -270,7 +270,7 @@
         },
         "ai_center": {
           "title": "AI center",
-          "description": "AI usage, cost and voice agent health"
+          "description": "AI usage, budgets, switches, audit, memory and health"
         },
         "ai_budgets": {
           "title": "AI budgets",
@@ -2196,9 +2196,15 @@
     },
     "center": {
       "title": "AI center",
-      "subtitle": "Usage, cost and voice agent health",
+      "subtitle": "AI usage, budgets, switches, audit, memory and health",
       "tab_usage": "Usage and cost",
-      "tab_health": "Voice health"
+      "tab_health": "Voice health",
+      "tab_budgets": "Budgets",
+      "tab_flags": "Switches",
+      "tab_audit": "Audit",
+      "tab_memory": "Memory",
+      "tab_mine": "My usage",
+      "no_access": "You have no permission to see any AI Center section"
     },
     "mine": {
       "title": "My AI usage",

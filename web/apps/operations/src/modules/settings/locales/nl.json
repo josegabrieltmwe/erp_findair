@@ -270,7 +270,7 @@
         },
         "ai_center": {
           "title": "AI-centrum",
-          "description": "AI-gebruik, kosten en status van de spraakagent"
+          "description": "AI-gebruik, budgetten, schakelaars, audit, geheugen en status"
         },
         "ai_budgets": {
           "title": "AI-budgetten",
@@ -2196,9 +2196,15 @@
     },
     "center": {
       "title": "AI-centrum",
-      "subtitle": "Gebruik, kosten en status van de spraakagent",
+      "subtitle": "AI-gebruik, budgetten, schakelaars, audit, geheugen en status",
       "tab_usage": "Gebruik en kosten",
-      "tab_health": "Status stem"
+      "tab_health": "Status stem",
+      "tab_budgets": "Budgetten",
+      "tab_flags": "Schakelaars",
+      "tab_audit": "Audit",
+      "tab_memory": "Geheugen",
+      "tab_mine": "Mijn gebruik",
+      "no_access": "Je hebt geen rechten voor onderdelen van het AI-centrum"
     },
     "mine": {
       "title": "Mijn AI-gebruik",

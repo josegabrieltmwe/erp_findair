@@ -8,18 +8,33 @@ import { useProfile, type RawProfile } from '../../composables/useProfile';
 export const AI_SCOPES = ['ai:admin', 'ai:audit:read', 'ai:memory:erase', 'ai:generate'] as const;
 export type AiScope = (typeof AI_SCOPES)[number];
 
+/** Pestañas del Centro de IA (orden de aparición). */
+export const AI_CENTER_TABS = ['usage', 'budgets', 'flags', 'audit', 'memory', 'health', 'mine'] as const;
+export type AiCenterTab = (typeof AI_CENTER_TABS)[number];
+
 /**
- * Scope exigido por cada pantalla (`null` = cualquier usuario autenticado).
- * Única fuente: la leen el router (`meta.aiScope`) y el catálogo de Settings.
+ * Scope exigido por cada pestaña del Centro de IA (`null` = cualquier usuario
+ * autenticado). Única fuente: la lee el propio Centro. «Mi uso» (`mine`) es la
+ * vista de Uso en modo propio.
  */
-export const AI_ROUTE_SCOPES = {
-  'settings-ai-center': 'ai:admin',
-  'settings-ai-budgets': 'ai:admin',
-  'settings-ai-flags': 'ai:admin',
-  'settings-voice-memory': 'ai:memory:erase',
-  'settings-ai-audit': 'ai:audit:read',
-  'settings-my-ai-usage': null,
-} as const satisfies Record<string, AiScope | null>;
+export const AI_TAB_SCOPES = {
+  usage: 'ai:admin',
+  budgets: 'ai:admin',
+  flags: 'ai:admin',
+  audit: 'ai:audit:read',
+  memory: 'ai:memory:erase',
+  health: 'ai:admin',
+  mine: null,
+} as const satisfies Record<AiCenterTab, AiScope | null>;
+
+/** Rutas antiguas -> pestaña del Centro (se mantienen como redirecciones). */
+export const AI_LEGACY_ROUTE_TABS = {
+  '/settings/ai-budgets': 'budgets',
+  '/settings/ai-flags': 'flags',
+  '/settings/ai-audit': 'audit',
+  '/settings/voice-memory': 'memory',
+  '/settings/my-ai-usage': 'mine',
+} as const satisfies Record<string, AiCenterTab>;
 
 /**
  * Lista de scopes del perfil si el backend la expone (`scopes`, array o cadena
@@ -56,4 +71,15 @@ export function useAiScopes() {
   const can = (scope: AiScope | null): ComputedRef<boolean> =>
     computed(() => canSeeAiScope(profile.value, isAdmin.value, scope));
   return { ensureProfile, can, profile, isAdmin };
+}
+
+/** Pestañas visibles para el perfil, en orden. */
+export function visibleAiTabs(profile: RawProfile | null, isAdmin: boolean | null): AiCenterTab[] {
+  return AI_CENTER_TABS.filter((t) => canSeeAiScope(profile, isAdmin, AI_TAB_SCOPES[t]));
+}
+
+/** Pestaña pedida si es visible; si no, la primera visible (`null` si no hay). */
+export function resolveAiTab(requested: unknown, visible: readonly AiCenterTab[]): AiCenterTab | null {
+  const r = Array.isArray(requested) ? requested[0] : requested;
+  return visible.find((t) => t === r) ?? visible[0] ?? null;
 }

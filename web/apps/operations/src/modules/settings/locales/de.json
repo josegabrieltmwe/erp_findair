@@ -270,7 +270,7 @@
         },
         "ai_center": {
           "title": "KI-Zentrum",
-          "description": "KI-Nutzung, Kosten und Zustand des Sprachagenten"
+          "description": "KI-Nutzung, Budgets, Schalter, Audit, Speicher und Status"
         },
         "ai_budgets": {
           "title": "KI-Budgets",
@@ -2196,9 +2196,15 @@
     },
     "center": {
       "title": "KI-Zentrum",
-      "subtitle": "Nutzung, Kosten und Zustand des Sprachagenten",
+      "subtitle": "KI-Nutzung, Budgets, Schalter, Audit, Speicher und Status",
       "tab_usage": "Nutzung und Kosten",
-      "tab_health": "Sprachzustand"
+      "tab_health": "Sprachzustand",
+      "tab_budgets": "Budgets",
+      "tab_flags": "Schalter",
+      "tab_audit": "Audit",
+      "tab_memory": "Speicher",
+      "tab_mine": "Meine Nutzung",
+      "no_access": "Keine Berechtigung für Bereiche des KI-Zentrums"
     },
     "mine": {
       "title": "Meine KI-Nutzung",

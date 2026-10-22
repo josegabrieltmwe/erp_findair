@@ -270,7 +270,7 @@
         },
         "ai_center": {
           "title": "Centro IA",
-          "description": "Utilizzo e costi IA e stato dell'agente vocale"
+          "description": "Uso, budget, interruttori, audit, memoria e salute dell'IA"
         },
         "ai_budgets": {
           "title": "Budget IA",
@@ -2196,9 +2196,15 @@
     },
     "center": {
       "title": "Centro IA",
-      "subtitle": "Utilizzo, costi e stato dell'agente vocale",
+      "subtitle": "Uso, budget, interruttori, audit, memoria e salute dell'IA",
       "tab_usage": "Utilizzo e costi",
-      "tab_health": "Stato voce"
+      "tab_health": "Stato voce",
+      "tab_budgets": "Budget",
+      "tab_flags": "Interruttori",
+      "tab_audit": "Audit",
+      "tab_memory": "Memoria",
+      "tab_mine": "Il mio uso",
+      "no_access": "Non hai i permessi per vedere nessuna sezione del Centro IA"
     },
     "mine": {
       "title": "Il mio utilizzo IA",

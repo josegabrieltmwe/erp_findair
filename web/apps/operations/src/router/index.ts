@@ -6,7 +6,7 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
-import { AI_ROUTE_SCOPES, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
+import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
 import { can as codCan } from "@/modules/cod_assegni/env";
@@ -421,40 +421,17 @@ const routes: RouteRecordRaw[] = [
   // oculta la ruta si el perfil trae scopes y no incluye el requerido; la API
   // sigue siendo quien autoriza. /settings/my-ai-usage es para cualquier usuario.
   {
+    // Centro de IA: pestañas Uso, Presupuestos, Interruptores, Auditoría, Memoria,
+    // Salud y Mi uso. Cada pestaña se oculta según su scope (AI_TAB_SCOPES).
     path: "/settings/ai-center",
     name: "settings-ai-center",
     component: () => import("@shared/ai_admin/feature/AiCenterPage.vue"),
-    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-center"] },
   },
-  {
-    path: "/settings/ai-budgets",
-    name: "settings-ai-budgets",
-    component: () => import("@shared/ai_admin/feature/AiBudgetsPage.vue"),
-    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-budgets"] },
-  },
-  {
-    path: "/settings/ai-flags",
-    name: "settings-ai-flags",
-    component: () => import("@shared/ai_admin/feature/AiFlagsPage.vue"),
-    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-flags"] },
-  },
-  {
-    path: "/settings/voice-memory",
-    name: "settings-voice-memory",
-    component: () => import("@shared/ai_admin/feature/VoiceMemoryPage.vue"),
-    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-voice-memory"] },
-  },
-  {
-    path: "/settings/ai-audit",
-    name: "settings-ai-audit",
-    component: () => import("@shared/ai_admin/feature/AiAuditPage.vue"),
-    meta: { requiresAdmin: true, aiScope: AI_ROUTE_SCOPES["settings-ai-audit"] },
-  },
-  {
-    path: "/settings/my-ai-usage",
-    name: "settings-my-ai-usage",
-    component: () => import("@shared/ai_admin/feature/MyAiUsagePage.vue"),
-  },
+  // Rutas antiguas de IA -> pestaña del Centro.
+  ...Object.entries(AI_LEGACY_ROUTE_TABS).map(([path, tab]) => ({
+    path,
+    redirect: { name: "settings-ai-center", query: { tab } },
+  })),
   // Agentes de voz PROPIOS de partner (docs/agent-factory/09). La pagina del
   // partner NO es requiresAdmin: la controla el permiso RBAC
   // elevenlabs_partner_agent (rol partner_admin) y el servidor, que ademas
