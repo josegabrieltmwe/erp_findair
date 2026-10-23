@@ -147,11 +147,11 @@ Peticiones (ruta, síntoma, cambio esperado):
    Sin él `api_copilot_write_proposal` responde 503 `proposal_secret_not_configured` (fail-closed) y el chat no puede
    firmar propuestas. El BFF convierte todo 5xx del backend en 502 `upstream_error`, así que la SPA solo ve
    «servicio no disponible». Hay que definirlo en cada entorno (local, sandbox, producción) antes de abrir las escrituras.
-2. **Scope propio `copilot:write`.** Hoy las tools `propose*` exigen `shipment:write` +
-   `elevenlabs:copilot_operator` (scope del puente de voz). Los partners necesitan la migración pendiente
-   `docs/sql/migrations/20261023_copilot_partner_write_scope.sql`. Propuesta: un scope `copilot:write` distinto del de
-   voz, para poder retirar las escrituras del chat sin tocar la voz y para que el rol del cliente OAuth (techo) lo
-   conceda explícitamente. Migración con copia `bak_*` y rollback; no la ejecuta el BFF.
+2. **Scope propio `copilot:write`.** ✅ Resuelto en backend (rama `feat/copilot-scope-write`). Las tools `propose*` exigen
+   `shipment:write` + `copilot:write`; la voz sigue con `elevenlabs:copilot_operator` y no se ve afectada. Los partners
+   necesitan la migración pendiente `docs/sql/migrations/20261023_copilot_partner_write_scope.sql` (techos
+   `app_partner_erp`, `app_internal_erp`, `app_internal_erp_staff` + rol `partner_staff_copilot`; con copia `bak_*` y
+   rollback; no la ejecuta el BFF). El rol se asigna a mano y el usuario debe volver a iniciar sesión.
 3. **`op=proponer` por HTTP sin kill-switch.** El controlador acepta `op=proponer {ruta,payload}` con el Bearer del usuario:
    quien llame directo puede firmar una propuesta propia saltándose el modelo, `copilot_write_enabled='0'` y la auditoría
    `COPILOT_PROPOSAL` del chat. El BFF lo bloquea (`body_enum`), pero conviene que el backend aplique
