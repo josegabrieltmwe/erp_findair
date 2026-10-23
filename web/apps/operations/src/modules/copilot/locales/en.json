@@ -30,6 +30,99 @@
       "week": "Show my courier shipments this week",
       "track": "Track shipment 5022310",
       "contact": "Find contacts in Milano in my address book"
+    },
+    "errors": {
+      "busy": "A request is already in progress. Wait for it to finish and try again.",
+      "rate_limited": "Too many requests in a row or usage limit reached. Wait a few seconds and try again.",
+      "unavailable": "The Copilot is busy or unavailable. Try again in a few seconds.",
+      "disabled": "The Copilot is disabled for your organization.",
+      "ai_not_configured": "AI is not configured for your account. Contact your administrator.",
+      "ai_unavailable": "The AI service is not available right now. Try again in a few minutes.",
+      "ai_budget": "The AI budget has been used up. Try again later or contact your administrator."
+    },
+    "tools": {
+      "listShipments": "shipment list",
+      "trackShipment": "shipment tracking",
+      "searchAddressBook": "address book",
+      "getShipment": "shipment details",
+      "listCargo": "cargo list",
+      "countShipments": "shipment count",
+      "getTrackingEvents": "tracking events",
+      "getShipmentDocuments": "shipment documents",
+      "navigateTo": "navigation",
+      "proposeCreateShipment": "new shipment proposal",
+      "proposeEditCargoShipment": "cargo edit proposal",
+      "proposeCancelCargoShipment": "cargo cancellation proposal",
+      "proposeCancelExpressShipment": "express cancellation proposal",
+      "unknown": "other data"
+    },
+    "proposal": {
+      "actions": {
+        "create_shipment": "Create express shipment (draft)",
+        "edit_cargo": "Edit cargo shipment",
+        "cancel_cargo": "Cancel cargo shipment",
+        "cancel_express": "Cancel express shipment"
+      },
+      "risk": {
+        "medium": "Medium risk",
+        "high": "High risk"
+      },
+      "draft": "Draft: no carrier assigned",
+      "kind": {
+        "express": "Express shipment",
+        "cargo": "Cargo shipment"
+      },
+      "fields": {
+        "target_id": "ID",
+        "target_awb": "AWB",
+        "target_reference": "Reference",
+        "name": "Recipient",
+        "address": "Address",
+        "postal_code": "Postal code",
+        "city": "City",
+        "province": "Province",
+        "country": "Country",
+        "phone": "Phone",
+        "email": "Email",
+        "attention": "Attention",
+        "reference": "Reference",
+        "note_courier": "Note for the courier",
+        "parcels": "Parcels",
+        "weight": "Weight",
+        "pickup_date": "Pickup date",
+        "note": "Note",
+        "cost": "Cost"
+      },
+      "reinforced_ack": "I understand that {target} will be cancelled and this cannot be undone from here",
+      "expires_in": "Expires in {time}",
+      "expired": "Proposal expired. Ask the Copilot again.",
+      "confirm": "Confirm",
+      "retry": "Retry",
+      "dismiss": "Dismiss",
+      "status": {
+        "verified": "Done and verified in the ERP.",
+        "verified_created": "Done and verified in the ERP. New shipment no. {id}.",
+        "unverified": "Executed, but NOT verified (not checked: {fields}). Check it in the ERP before treating it as done.",
+        "mismatch": "The ERP said yes, but what it holds does NOT match what was requested. Do not assume it is done: check it in the ERP.",
+        "rejected": "NOT done: the ERP rejected the operation ({error}). The proposal is spent; ask for a new one if it is still needed.",
+        "no_detail": "no detail",
+        "dismissed": "Proposal dismissed. Nothing was changed."
+      },
+      "errors": {
+        "payload_mismatch": "NOT done: the data does not match what the Copilot proposed. Ask for the proposal again.",
+        "operator_mismatch": "NOT done: this proposal was created by another user and only that user can confirm it.",
+        "expired": "NOT done: the proposal expired (5 minutes). Ask for it again.",
+        "already_executed": "This proposal was already used (double click or retry). Check the result in the ERP before asking for another.",
+        "invalid_token": "NOT done: the proposal is not valid. Ask for it again.",
+        "bad_request": "NOT done: malformed request. Ask for the proposal again.",
+        "session": "Your session has expired. Sign in again.",
+        "rate_limited": "Too many attempts in a row. Wait a few seconds and retry.",
+        "busy": "A confirmation is already in progress. Wait and retry.",
+        "unavailable": "Service busy. NOTHING was carried out: try again in a few seconds.",
+        "uncertain": "The result could not be confirmed. The operation MAY have been carried out. Do not repeat it yet: check the shipment in the ERP list before asking for another proposal.",
+        "forbidden": "NOT done: you do not have permission for this operation.",
+        "unknown": "NOT done because of an unexpected error. Ask for the proposal again."
+      }
     }
   }
 }

@@ -48,7 +48,10 @@
         >
           {{ voiceAgentLabel }}
         </v-btn>
-        <span v-if="voiceAgent.state.value === 'error'" class="text-caption text-error ml-2">
+        <span
+          v-if="voiceAgent.state.value === 'error'"
+          class="text-caption text-error ml-2"
+        >
           {{
             voiceAgent.errorMessage.value === "unsupported_browser"
               ? t("copilot.voice_agent.unsupported")
@@ -86,6 +89,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
 import { useChatStore } from "../stores/chat.store";
 import { useVoice } from "../composables/useVoice";
 import { useCopilotVoiceAgent } from "../composables/useCopilotVoiceAgent";
@@ -94,6 +98,8 @@ import ChatComposer from "../components/ChatComposer.vue";
 
 const { t, locale } = useI18n();
 const store = useChatStore();
+const router = useRouter();
+const route = useRoute();
 const scrollEl = ref<HTMLElement | null>(null);
 const voice = useVoice(locale.value);
 const voiceAgent = useCopilotVoiceAgent();
@@ -163,9 +169,14 @@ const suggestions = computed(() => [
   t("copilot.suggestions.contact"),
 ]);
 
+/** Context for the backend: UI language and current SPA route (path only, no query). */
+function chatContext() {
+  return { locale: locale.value, currentRoute: route.path, router };
+}
+
 async function onSend(message: string): Promise<void> {
   voiceTurn.value = false;
-  await store.send(message);
+  await store.send(message, chatContext());
 }
 
 async function onMic(): Promise<void> {
@@ -177,7 +188,7 @@ async function onMic(): Promise<void> {
   const transcript = await voice.listen();
   if (transcript.trim()) {
     voiceTurn.value = true;
-    await store.send(transcript);
+    await store.send(transcript, chatContext());
   }
 }
 

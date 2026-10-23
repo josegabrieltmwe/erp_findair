@@ -30,6 +30,99 @@
       "week": "Zeige meine Kuriersendungen dieser Woche",
       "track": "Verfolge Sendung 5022310",
       "contact": "Suche Kontakte in Mailand im Adressbuch"
+    },
+    "errors": {
+      "busy": "Es läuft bereits eine Anfrage. Warte, bis sie beendet ist, und versuche es erneut.",
+      "rate_limited": "Zu viele Anfragen hintereinander oder Nutzungslimit erreicht. Warte einige Sekunden und versuche es erneut.",
+      "unavailable": "Der Copilot ist ausgelastet oder nicht verfügbar. Versuche es in einigen Sekunden erneut.",
+      "disabled": "Der Copilot ist für deine Organisation deaktiviert.",
+      "ai_not_configured": "Die KI ist für dein Konto nicht konfiguriert. Wende dich an deinen Administrator.",
+      "ai_unavailable": "Der KI-Dienst ist derzeit nicht verfügbar. Versuche es in ein paar Minuten erneut.",
+      "ai_budget": "Das KI-Budget ist aufgebraucht. Versuche es später erneut oder wende dich an deinen Administrator."
+    },
+    "tools": {
+      "listShipments": "Sendungsliste",
+      "trackShipment": "Sendungsverfolgung",
+      "searchAddressBook": "Adressbuch",
+      "getShipment": "Sendungsdetails",
+      "listCargo": "Cargo-Liste",
+      "countShipments": "Sendungsanzahl",
+      "getTrackingEvents": "Tracking-Ereignisse",
+      "getShipmentDocuments": "Sendungsdokumente",
+      "navigateTo": "Navigation",
+      "proposeCreateShipment": "Vorschlag neue Sendung",
+      "proposeEditCargoShipment": "Vorschlag Cargo-Änderung",
+      "proposeCancelCargoShipment": "Vorschlag Cargo-Stornierung",
+      "proposeCancelExpressShipment": "Vorschlag Express-Stornierung",
+      "unknown": "weitere Daten"
+    },
+    "proposal": {
+      "actions": {
+        "create_shipment": "Express-Sendung anlegen (Entwurf)",
+        "edit_cargo": "Cargo-Sendung bearbeiten",
+        "cancel_cargo": "Cargo-Sendung stornieren",
+        "cancel_express": "Express-Sendung stornieren"
+      },
+      "risk": {
+        "medium": "Mittleres Risiko",
+        "high": "Hohes Risiko"
+      },
+      "draft": "Entwurf: kein Frachtführer zugewiesen",
+      "kind": {
+        "express": "Express-Sendung",
+        "cargo": "Cargo-Sendung"
+      },
+      "fields": {
+        "target_id": "ID",
+        "target_awb": "AWB",
+        "target_reference": "Referenz",
+        "name": "Empfänger",
+        "address": "Adresse",
+        "postal_code": "Postleitzahl",
+        "city": "Stadt",
+        "province": "Provinz",
+        "country": "Land",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "attention": "z. Hd.",
+        "reference": "Referenz",
+        "note_courier": "Hinweis für den Kurier",
+        "parcels": "Packstücke",
+        "weight": "Gewicht",
+        "pickup_date": "Abholdatum",
+        "note": "Hinweis",
+        "cost": "Kosten"
+      },
+      "reinforced_ack": "Ich verstehe, dass {target} storniert wird und dies von hier aus nicht rückgängig gemacht werden kann",
+      "expires_in": "Läuft ab in {time}",
+      "expired": "Vorschlag abgelaufen. Frage den Copilot erneut.",
+      "confirm": "Bestätigen",
+      "retry": "Erneut versuchen",
+      "dismiss": "Verwerfen",
+      "status": {
+        "verified": "Erledigt und im ERP verifiziert.",
+        "verified_created": "Erledigt und im ERP verifiziert. Neue Sendung Nr. {id}.",
+        "unverified": "Ausgeführt, aber NICHT verifiziert (nicht geprüft: {fields}). Prüfe es im ERP, bevor du es als erledigt ansiehst.",
+        "mismatch": "Das ERP hat zugestimmt, aber der gespeicherte Stand entspricht NICHT dem Gewünschten. Nicht als erledigt ansehen: im ERP prüfen.",
+        "rejected": "NICHT ausgeführt: Das ERP hat den Vorgang abgelehnt ({error}). Der Vorschlag ist verbraucht; fordere bei Bedarf einen neuen an.",
+        "no_detail": "keine Details",
+        "dismissed": "Vorschlag verworfen. Es wurde nichts geändert."
+      },
+      "errors": {
+        "payload_mismatch": "NICHT ausgeführt: Die Daten stimmen nicht mit dem Vorschlag des Copilot überein. Fordere den Vorschlag erneut an.",
+        "operator_mismatch": "NICHT ausgeführt: Dieser Vorschlag stammt von einem anderen Benutzer und nur dieser kann ihn bestätigen.",
+        "expired": "NICHT ausgeführt: Der Vorschlag ist abgelaufen (5 Minuten). Fordere ihn erneut an.",
+        "already_executed": "Dieser Vorschlag wurde bereits verwendet (Doppelklick oder Wiederholung). Prüfe das Ergebnis im ERP, bevor du einen neuen anforderst.",
+        "invalid_token": "NICHT ausgeführt: Der Vorschlag ist ungültig. Fordere ihn erneut an.",
+        "bad_request": "NICHT ausgeführt: fehlerhafte Anfrage. Fordere den Vorschlag erneut an.",
+        "session": "Deine Sitzung ist abgelaufen. Melde dich erneut an.",
+        "rate_limited": "Zu viele Versuche hintereinander. Warte einige Sekunden und versuche es erneut.",
+        "busy": "Es läuft bereits eine Bestätigung. Warte und versuche es erneut.",
+        "unavailable": "Dienst ausgelastet. Es wurde NICHTS ausgeführt: In einigen Sekunden erneut versuchen.",
+        "uncertain": "Das Ergebnis konnte nicht bestätigt werden. Der Vorgang wurde MÖGLICHERWEISE ausgeführt. Noch nicht wiederholen: Prüfe die Sendung in der ERP-Liste, bevor du einen neuen Vorschlag anforderst.",
+        "forbidden": "NICHT ausgeführt: Du hast keine Berechtigung für diesen Vorgang.",
+        "unknown": "NICHT ausgeführt wegen eines unerwarteten Fehlers. Fordere den Vorschlag erneut an."
+      }
     }
   }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Findair\Bff;
 
+use Findair\Bff\Throttle\ThrottlePolicy;
+
 /**
  * Configuración tipada. Se construye una sola vez a partir del entorno.
  */
@@ -30,6 +32,10 @@ final class Settings
         public readonly string $contextAction = '',
         /** @var list<string> acciones (admite `*`) cuyas peticiones que cambian estado se bloquean con 403 */
         public readonly array $denyActions = [],
+        /** @var array<string, ThrottlePolicy> políticas de `throttle:` del manifiesto */
+        public readonly array $throttlePolicies = [],
+        /** @var list<string> IP/CIDR de proxies inversos de confianza; solo ellos pueden fijar X-Forwarded-For */
+        public readonly array $trustedProxies = [],
     ) {
     }
 
@@ -68,6 +74,21 @@ final class Settings
             contextAction: $get('UPSTREAM_CONTEXT_ACTION'),
             denyActions: array_values(array_filter(array_map('trim', explode(',', $get('UPSTREAM_DENY_ACTIONS'))), static fn (string $a): bool => $a !== '')),
             manifestPath: $manifestPath,
+            trustedProxies: array_values(array_filter(array_map('trim', explode(',', $get('TRUSTED_PROXIES'))), static fn (string $a): bool => $a !== '')),
+            throttlePolicies: [
+                // Copilot de IA: cada turno cuesta tokens y ocupa un worker hasta 120 s.
+                'copilot_chat' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('COPILOT_CHAT_RATE_PER_MIN', '20'),
+                    ratePerIp: (int) $get('COPILOT_CHAT_RATE_PER_IP_MIN', '60'),
+                    concurrencyPerUser: (int) $get('COPILOT_CHAT_MAX_PER_USER', '1'),
+                    concurrencyGlobal: (int) $get('COPILOT_CHAT_MAX_GLOBAL', '30'),
+                ),
+                'copilot_confirm' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('COPILOT_CONFIRM_RATE_PER_MIN', '30'),
+                    ratePerIp: (int) $get('COPILOT_CONFIRM_RATE_PER_IP_MIN', '60'),
+                    concurrencyPerUser: (int) $get('COPILOT_CONFIRM_MAX_PER_USER', '1'),
+                ),
+            ],
         );
     }
 

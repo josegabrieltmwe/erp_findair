@@ -88,6 +88,12 @@ contrato de respuesta**. Las de descarga deben devolver el binario con `Content-
 - `X-Forwarded-For`: el BFF lo envía con la IP del usuario; decide si se respeta (límites, `allowed_ips`,
   auditoría) y solo desde qué proxies; documéntalo.
 
+### 7. Copilot de IA (texto)
+Detalle en `peticiones-backend.md` §8: `ELEVENLABS_COPILOT_WRITE_PROPOSAL_SECRET` en cada entorno, scope propio
+`copilot:write` y migración de partners, `copilot_write_enabled` también en `op=proponer`, `cache_control` en el camino
+RPC, `X-Effective-Partner-Id` en todos los controladores Bearer (el BFF ya lo exige al suplantar) y fechas resueltas en
+`navigateTo`.
+
 ## Cómo comprobar tu trabajo
 Desde `/var/www/host/erp_findair/bff` (con una sesión: login en `https://erp-findair.php8/bff/auth/login`
 como `jose`, y la cookie `__Host-sid` del navegador):

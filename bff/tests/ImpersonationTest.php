@@ -103,8 +103,8 @@ final class ImpersonationTest extends AppTestCase
     {
         $this->boot([
             $this->upstreamOk(self::PARTNERS),
-            $this->upstreamOk(self::PARTNER_CONTEXT),
-            $this->upstreamOk('{"ok":true}'),
+            $this->asPartner(self::PARTNER_CONTEXT),
+            $this->asPartner('{"ok":true}'),
         ]);
         $sid = $this->tmweSession();
 
@@ -123,7 +123,7 @@ final class ImpersonationTest extends AppTestCase
 
     public function testClearingStopsSendingTheHeader(): void
     {
-        $this->boot([$this->upstreamOk(self::PARTNERS), $this->upstreamOk(self::PARTNER_CONTEXT), $this->upstreamOk()]);
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT), $this->upstreamOk()]);
         $sid = $this->tmweSession();
         $this->post($sid, '{"partner_id":9069}');
         $cleared = $this->post($sid, '{"partner_id":1}');
@@ -149,7 +149,7 @@ final class ImpersonationTest extends AppTestCase
     {
         $this->boot([
             $this->upstreamOk(self::PARTNERS),
-            $this->upstreamOk(self::PARTNER_CONTEXT),
+            $this->asPartner(self::PARTNER_CONTEXT),
             new UpstreamResponse(401, [], ''),  // la petición con la cabecera
             $this->upstreamOk(),                // sondeo: el token vale sin cabecera
         ]);
@@ -161,5 +161,132 @@ final class ImpersonationTest extends AppTestCase
         self::assertSame('impersonation_revoked', $this->json($response)['code']);
         self::assertNull($this->json($this->send($this->request('GET', '/bff/auth/session', $sid)))['impersonation']);
         self::assertTrue($this->json($this->send($this->request('GET', '/bff/auth/session', $sid)))['authenticated']);
+    }
+
+    private function asPartner(string $body, int $partnerId = 9069): UpstreamResponse
+    {
+        return new UpstreamResponse(200, ['Content-Type' => 'application/json', 'X-Effective-Partner-Id' => (string) $partnerId], $body);
+    }
+
+    public function testContextWithoutEffectivePartnerHeaderIsRejectedAndNothingIsStored(): void
+    {
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->upstreamOk(self::PARTNER_CONTEXT)]);
+        $sid = $this->tmweSession();
+        $response = $this->post($sid, '{"partner_id":9069}');
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('impersonation_not_allowed', $this->json($response)['code']);
+        self::assertNull($this->store->load($sid)['impersonation'] ?? null);
+    }
+
+    public function testContextWithOtherEffectivePartnerIsRejected(): void
+    {
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT, 1)]);
+        $sid = $this->tmweSession();
+
+        self::assertSame('impersonation_not_allowed', $this->json($this->post($sid, '{"partner_id":9069}'))['code']);
+        self::assertNull($this->store->load($sid)['impersonation'] ?? null);
+    }
+
+    public function testProxiedResponseWithoutEffectivePartnerIsDiscardedAsProblemDetails(): void
+    {
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT), $this->upstreamOk('{"secret_rows":[1,2,3]}')]);
+        $sid = $this->tmweSession();
+        $this->post($sid, '{"partner_id":9069}');
+
+        $response = $this->send($this->request('GET', '/bff/v1/things/7', $sid));
+
+        self::assertSame(502, $response->getStatusCode());
+        self::assertStringStartsWith('application/problem+json', $response->getHeaderLine('Content-Type'));
+        self::assertSame('effective_partner_mismatch', $this->json($response)['code']);
+        self::assertStringNotContainsString('secret_rows', (string) $response->getBody());
+    }
+
+    public function testProxiedResponseWithDifferentEffectivePartnerIsDiscarded(): void
+    {
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT), $this->asPartner('{"rows":[1]}', 1)]);
+        $sid = $this->tmweSession();
+        $this->post($sid, '{"partner_id":9069}');
+
+        $response = $this->send($this->request('GET', '/bff/v1/things/7', $sid));
+
+        self::assertSame('effective_partner_mismatch', $this->json($response)['code']);
+        self::assertStringNotContainsString('rows', (string) $response->getBody());
+    }
+
+    public function testNonNumericOrDuplicatedEffectivePartnerHeaderIsRejected(): void
+    {
+        $this->boot([
+            $this->upstreamOk(self::PARTNERS),
+            $this->asPartner(self::PARTNER_CONTEXT),
+            new UpstreamResponse(200, ['X-Effective-Partner-Id' => '9069abc'], '{}'),
+            new UpstreamResponse(200, ['X-Effective-Partner-Id' => ['9069', '1']], '{}'),
+        ]);
+        $sid = $this->tmweSession();
+        $this->post($sid, '{"partner_id":9069}');
+
+        self::assertSame('effective_partner_mismatch', $this->json($this->send($this->request('GET', '/bff/v1/things/7', $sid)))['code']);
+        self::assertSame('effective_partner_mismatch', $this->json($this->send($this->request('GET', '/bff/v1/things/7', $sid)))['code']);
+    }
+
+    /** @param list<mixed> $queue */
+    private function impersonatedSession(array $queue): string
+    {
+        $this->boot(array_merge([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT)], $queue));
+        $sid = $this->tmweSession();
+        $this->post($sid, '{"partner_id":9069}');
+
+        return $sid;
+    }
+
+    public function testBinaryResponseWithoutHeaderIsDeliveredWhileImpersonating(): void
+    {
+        $sid = $this->impersonatedSession([new UpstreamResponse(200, ['Content-Type' => 'application/pdf'], '%PDF-1.4')]);
+
+        $response = $this->send($this->request('GET', '/bff/v1/file', $sid));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringContainsString('%PDF', (string) $response->getBody());
+    }
+
+    public function testNoContentResponseWithoutHeaderIsDeliveredWhileImpersonating(): void
+    {
+        $sid = $this->impersonatedSession([new UpstreamResponse(204)]);
+
+        self::assertNotSame(502, $this->send($this->request('GET', '/bff/v1/things/7', $sid))->getStatusCode());
+    }
+
+    public function testRouteThatOptsOutOfTheCheckIsDeliveredWithoutHeader(): void
+    {
+        $sid = $this->impersonatedSession([$this->upstreamOk('{"ok":true}')]);
+
+        $response = $this->send($this->request('GET', '/bff/v1/nocheck', $sid));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringContainsString('ok', (string) $response->getBody());
+    }
+
+    public function testJsonRoutesStillRequireTheHeaderByDefault(): void
+    {
+        $sid = $this->impersonatedSession([$this->upstreamOk('{"x":1}')]);
+
+        self::assertSame(502, $this->send($this->request('GET', '/bff/v1/things/7', $sid))->getStatusCode());
+    }
+
+    public function testWithoutImpersonationTheHeaderIsNotRequired(): void
+    {
+        $this->boot([$this->upstreamOk('{"id":1}')]);
+        $sid = $this->tmweSession();
+
+        self::assertSame(200, $this->send($this->request('GET', '/bff/v1/things/7', $sid))->getStatusCode());
+    }
+
+    public function testBackendErrorsDuringImpersonationKeepTheirOwnStatus(): void
+    {
+        $this->boot([$this->upstreamOk(self::PARTNERS), $this->asPartner(self::PARTNER_CONTEXT), new UpstreamResponse(404, [], '{"error":"not_found"}')]);
+        $sid = $this->tmweSession();
+        $this->post($sid, '{"partner_id":9069}');
+
+        self::assertSame(404, $this->send($this->request('GET', '/bff/v1/things/7', $sid))->getStatusCode());
     }
 }

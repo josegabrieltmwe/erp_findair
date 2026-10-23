@@ -23,7 +23,19 @@
       </div>
 
       <template v-else>
-        <div class="bubble-text" v-text="bubble.text" />
+        <!-- Plain text only (textContent): no raw HTML, no markdown, no auto-links. -->
+        <div
+          v-if="bubble.errorKey"
+          class="bubble-text"
+          v-text="t(bubble.errorKey)"
+        />
+        <div v-else class="bubble-text" v-text="bubble.text" />
+
+        <ProposalCard
+          v-if="bubble.proposal"
+          :bubble-id="bubble.id"
+          :view="bubble.proposal"
+        />
 
         <div v-if="bubble.toolsUsed?.length" class="tools">
           <v-icon icon="mdi-tools" size="12" class="mr-1" />
@@ -38,12 +50,16 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { ChatBubble } from "../types";
+import { toolLabelKeys } from "../services/toolLabels";
+import ProposalCard from "./ProposalCard.vue";
 
 const props = defineProps<{ bubble: ChatBubble }>();
 const { t } = useI18n();
 
 const toolNames = computed(() =>
-  (props.bubble.toolsUsed ?? []).map((tool) => tool.name).join(", "),
+  toolLabelKeys(props.bubble.toolsUsed ?? [])
+    .map((key) => t(key))
+    .join(", "),
 );
 </script>
 

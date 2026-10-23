@@ -15,6 +15,8 @@ final class Redactor implements ProcessorInterface
     private const SENSITIVE = [
         'authorization', 'cookie', 'set-cookie', 'password', 'client_secret', 'access_token',
         'refresh_token', 'code', 'code_verifier', 'token', 'user_token', 'x-csrf-token', 'app_key',
+        'api_key', 'apikey', 'api-key', 'x-api-key', 'x-auth-token', 'api_secret', 'secret', 'private_key',
+        'payload_override',
     ];
 
     public function __invoke(LogRecord $record): LogRecord

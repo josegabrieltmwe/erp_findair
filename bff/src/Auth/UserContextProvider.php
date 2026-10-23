@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Findair\Bff\Auth;
 
+use Findair\Bff\Impersonation\EffectivePartner;
 use Findair\Bff\Proxy\UpstreamUrl;
 use Findair\Bff\Settings;
 use GuzzleHttp\ClientInterface;
@@ -114,6 +115,11 @@ final class UserContextProvider
         ]);
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException('contexto: HTTP ' . $response->getStatusCode());
+        }
+        if ($impersonate !== null && !EffectivePartner::matches($response, $impersonate)) {
+            // B1/C11: sin confirmación del partner efectivo no se acepta el contexto suplantado.
+            EffectivePartner::logMismatch($this->logger, $action, $impersonate, $response, $requestId);
+            throw new \RuntimeException('contexto: X-Effective-Partner-Id ausente o distinto');
         }
         $decoded = json_decode((string) $response->getBody(), true);
 
