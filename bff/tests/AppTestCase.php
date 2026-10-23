@@ -11,6 +11,8 @@ use Findair\Bff\Session\ArraySessionStore;
 use Findair\Bff\Session\Session;
 use Findair\Bff\Session\SessionStore;
 use Findair\Bff\Settings;
+use Findair\Bff\Throttle\ArrayCounterStore;
+use Findair\Bff\Throttle\CounterStore;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Handler\MockHandler;
@@ -33,6 +35,7 @@ abstract class AppTestCase extends TestCase
     protected Settings $settings;
     protected TokenVault $vault;
     protected MockHandler $upstream;
+    protected ArrayCounterStore $counters;
 
     /** @var array<string, string> variables de entorno extra para boot() */
     protected array $extraEnv = [];
@@ -43,7 +46,7 @@ abstract class AppTestCase extends TestCase
     /** @var App<\Psr\Container\ContainerInterface|null> */
     protected App $app;
 
-    /** @param list<UpstreamResponse|\Throwable> $queue */
+    /** @param list<UpstreamResponse|\Throwable|callable(): mixed> $queue */
     protected function boot(array $queue = []): void
     {
         $key = 'base64:' . base64_encode(str_repeat('k', 32));
@@ -60,6 +63,7 @@ abstract class AppTestCase extends TestCase
         ] + $this->extraEnv, __DIR__ . '/fixtures/routes.yaml');
 
         $this->store = new ArraySessionStore();
+        $this->counters = new ArrayCounterStore();
         $this->vault = new TokenVault($key);
         $this->upstream = new MockHandler($queue);
         $this->history = [];
@@ -69,6 +73,7 @@ abstract class AppTestCase extends TestCase
         $client = new Client(['handler' => $stack]);
         $this->app = AppFactory::create($this->settings, [
             SessionStore::class => $this->store,
+            CounterStore::class => $this->counters,
             ClientInterface::class => $client,
             \Findair\Bff\Proxy\UpstreamStreamer::class => new GuzzleStreamer($client),
             LoggerInterface::class => new NullLogger(),
@@ -90,10 +95,13 @@ abstract class AppTestCase extends TestCase
         return $id;
     }
 
-    /** @param array<string, string> $headers */
-    protected function request(string $method, string $path, ?string $sessionId = null, array $headers = [], string $body = ''): ServerRequestInterface
+    /**
+     * @param array<string, string> $headers
+     * @param array<string, string> $server parámetros de servidor (REMOTE_ADDR…)
+     */
+    protected function request(string $method, string $path, ?string $sessionId = null, array $headers = [], string $body = '', array $server = []): ServerRequestInterface
     {
-        $request = (new ServerRequestFactory())->createServerRequest($method, self::ORIGIN . $path);
+        $request = (new ServerRequestFactory())->createServerRequest($method, self::ORIGIN . $path, $server);
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }

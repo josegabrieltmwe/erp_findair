@@ -23,6 +23,8 @@ use Findair\Bff\Proxy\UpstreamUrl;
 use Findair\Bff\Session\RedisSessionStore;
 use Findair\Bff\Session\SessionStore;
 use Findair\Bff\Support\Redactor;
+use Findair\Bff\Throttle\CounterStore;
+use Findair\Bff\Throttle\RedisCounterStore;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Monolog\Formatter\JsonFormatter;
@@ -48,6 +50,7 @@ final class AppFactory
         $builder->addDefinitions([
             Settings::class => $settings,
             SessionStore::class => static fn (): SessionStore => new RedisSessionStore(new Redis($settings->redisDsn)),
+            CounterStore::class => static fn (): CounterStore => new RedisCounterStore(new Redis($settings->redisDsn)),
             ClientInterface::class => static fn (): ClientInterface => new Client([
                 'timeout' => $settings->upstreamTimeout,
                 'connect_timeout' => $settings->upstreamConnectTimeout,
@@ -61,7 +64,12 @@ final class AppFactory
             UpstreamStreamer::class => static fn (): UpstreamStreamer => new CurlUpstreamStreamer(),
             TokenVault::class => static fn (): TokenVault => new TokenVault($settings->appKey),
             UpstreamUrl::class => static fn (): UpstreamUrl => new UpstreamUrl($settings->upstreamBaseUrl, $settings->upstreamPublicUrl),
-            RouteManifest::class => static fn (): RouteManifest => RouteManifest::fromFile($settings->manifestPath),
+            RouteManifest::class => static function () use ($settings): RouteManifest {
+                $manifest = RouteManifest::fromFile($settings->manifestPath);
+                $manifest->assertThrottlePolicies(array_keys($settings->throttlePolicies));
+
+                return $manifest;
+            },
         ]);
         $builder->addDefinitions($overrides);
         $container = $builder->build();

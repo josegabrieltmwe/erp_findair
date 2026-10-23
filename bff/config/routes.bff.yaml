@@ -97,6 +97,23 @@ routes:
     upstream:
       action: copilot_chat
     limits: { body: 1m, timeout: 120 }
+    # 1 chat simultáneo por usuario, tope global y ritmo por minuto (contadores atómicos en Valkey; ver Settings).
+    throttle: copilot_chat
+
+  # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
+  # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
+  # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).
+  # Sin legacy_envelope: los rechazos son HTTP 4xx/5xx con {success:false,error}; un 200 con
+  # executed:false es un rechazo del ERP y lo interpreta la SPA. Tier oauth_external: Bearer, sin hermano de sesión.
+  - id: copilot.write_proposal
+    method: POST
+    path: /api_copilot_write_proposal
+    upstream:
+      action: api_copilot_write_proposal
+    limits: { body: 64k, timeout: 30 }
+    body_enum:
+      op: [confirmar]
+    throttle: copilot_confirm
 
   # TTS del copilot: devuelve audio/mpeg (la SPA lo pide con POST y responseType blob).
   # Fijado a mano para no depender del generado; bin/gen-spa-manifest.php lo regenera igual y esta entrada gana.

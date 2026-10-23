@@ -111,6 +111,21 @@ final class RouteManifest
         return false;
     }
 
+    /**
+     * Falla al cargar (cerrado) si una ruta nombra una política de `throttle:` que Settings no define;
+     * si no, el error saldría en cada petición a esa ruta como un 500.
+     *
+     * @param list<string> $known nombres de políticas definidas
+     */
+    public function assertThrottlePolicies(array $known): void
+    {
+        foreach ($this->routes as $route) {
+            if ($route->throttle !== null && !in_array($route->throttle, $known, true)) {
+                throw new \InvalidArgumentException("throttle '{$route->throttle}' de '{$route->id}' no está definido en Settings.");
+            }
+        }
+    }
+
     /** @return list<Route> */
     public function all(): array
     {
@@ -170,7 +185,40 @@ final class RouteManifest
             timeout: (float) ($i['limits']['timeout'] ?? 15),
             csrf: (bool) ($i['csrf'] ?? !in_array($method, ['GET', 'HEAD'], true)),
             pattern: '#^' . $pattern . '$#',
+            throttle: self::throttle($i),
+            bodyEnum: self::bodyEnum($i),
+            checkEffectivePartner: (bool) ($i['check_effective_partner'] ?? true),
         );
+    }
+
+    /** @param array<mixed> $i */
+    private static function throttle(array $i): ?string
+    {
+        if (!isset($i['throttle'])) {
+            return null;
+        }
+        if (!is_string($i['throttle']) || preg_match('/^[a-z0-9_]{1,40}$/', $i['throttle']) !== 1) {
+            throw new \InvalidArgumentException("throttle inválido en '{$i['id']}'.");
+        }
+
+        return $i['throttle'];
+    }
+
+    /**
+     * @param array<mixed> $i
+     * @return array<string, list<string>>
+     */
+    private static function bodyEnum(array $i): array
+    {
+        $out = [];
+        foreach (is_array($i['body_enum'] ?? null) ? $i['body_enum'] : [] as $field => $values) {
+            if (!is_string($field) || !is_array($values) || $values === []) {
+                throw new \InvalidArgumentException("body_enum inválido en '{$i['id']}'.");
+            }
+            $out[$field] = array_values(array_map('strval', $values));
+        }
+
+        return $out;
     }
 
     private static function bytes(string $value): int

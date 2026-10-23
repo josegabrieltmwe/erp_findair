@@ -6,6 +6,12 @@ routes:
       action: api_thing
       params: { id: thing_id }
       forward_query: [lang]
+  - id: thing.nocheck
+    method: GET
+    path: /nocheck
+    upstream:
+      action: api_nocheck
+    check_effective_partner: false
   - id: thing.create
     method: POST
     path: /things
@@ -18,6 +24,34 @@ routes:
     upstream:
       action: legacy_thing
     legacy_envelope: true
+  - id: chat.send
+    method: POST
+    path: /chat
+    upstream:
+      action: api_chat
+    limits: { body: 1k, timeout: 20 }
+    throttle: copilot_chat
+  - id: copilot.chat
+    method: POST
+    path: /copilot_chat
+    upstream:
+      action: copilot_chat
+    limits: { body: 1k }
+  - id: chat.confirm
+    method: POST
+    path: /confirm
+    upstream:
+      action: api_confirm
+    limits: { body: 1k }
+    body_enum:
+      op: [confirmar]
+    throttle: copilot_confirm
+  - id: chat.big
+    method: POST
+    path: /bigchat
+    upstream:
+      action: api_bigchat
+    limits: { body: 64k }
   - id: file.download
     method: GET
     path: /file
