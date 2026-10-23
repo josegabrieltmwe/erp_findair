@@ -30,6 +30,99 @@
       "week": "Muéstrame mis expediciones courier de esta semana",
       "track": "Rastrea la expedición 5022310",
       "contact": "Busca contactos en Milano en mi rubrica"
+    },
+    "errors": {
+      "busy": "Ya hay una consulta en curso. Espera a que termine e inténtalo de nuevo.",
+      "rate_limited": "Demasiadas consultas seguidas o límite de uso alcanzado. Espera unos segundos e inténtalo de nuevo.",
+      "unavailable": "El Copilot está ocupado o no disponible. Inténtalo de nuevo en unos segundos.",
+      "disabled": "El Copilot está desactivado para tu organización.",
+      "ai_not_configured": "La IA no está configurada para tu cuenta. Contacta con tu administrador.",
+      "ai_unavailable": "El servicio de IA no está disponible en este momento. Inténtalo de nuevo en unos minutos.",
+      "ai_budget": "Se ha agotado el presupuesto de IA. Inténtalo más tarde o contacta con tu administrador."
+    },
+    "tools": {
+      "listShipments": "listado de envíos",
+      "trackShipment": "seguimiento de envío",
+      "searchAddressBook": "agenda de contactos",
+      "getShipment": "ficha del envío",
+      "listCargo": "listado de cargo",
+      "countShipments": "recuento de envíos",
+      "getTrackingEvents": "eventos de seguimiento",
+      "getShipmentDocuments": "documentos del envío",
+      "navigateTo": "navegación",
+      "proposeCreateShipment": "propuesta de nuevo envío",
+      "proposeEditCargoShipment": "propuesta de edición de cargo",
+      "proposeCancelCargoShipment": "propuesta de cancelación de cargo",
+      "proposeCancelExpressShipment": "propuesta de cancelación de envío express",
+      "unknown": "otros datos"
+    },
+    "proposal": {
+      "actions": {
+        "create_shipment": "Crear expedición express (borrador)",
+        "edit_cargo": "Editar expedición cargo",
+        "cancel_cargo": "Cancelar expedición cargo",
+        "cancel_express": "Cancelar expedición express"
+      },
+      "risk": {
+        "medium": "Riesgo medio",
+        "high": "Riesgo alto"
+      },
+      "draft": "Borrador: sin transportista asignado",
+      "kind": {
+        "express": "Expedición express",
+        "cargo": "Expedición cargo"
+      },
+      "fields": {
+        "target_id": "ID",
+        "target_awb": "AWB",
+        "target_reference": "Referencia",
+        "name": "Destinatario",
+        "address": "Dirección",
+        "postal_code": "Código postal",
+        "city": "Ciudad",
+        "province": "Provincia",
+        "country": "País",
+        "phone": "Teléfono",
+        "email": "Email",
+        "attention": "A la atención de",
+        "reference": "Referencia",
+        "note_courier": "Nota para el courier",
+        "parcels": "Bultos",
+        "weight": "Peso",
+        "pickup_date": "Fecha de recogida",
+        "note": "Nota",
+        "cost": "Coste"
+      },
+      "reinforced_ack": "Entiendo que se cancelará {target} y que no se puede deshacer desde aquí",
+      "expires_in": "Caduca en {time}",
+      "expired": "Propuesta caducada. Pídela de nuevo al Copilot.",
+      "confirm": "Confirmar",
+      "retry": "Reintentar",
+      "dismiss": "Descartar",
+      "status": {
+        "verified": "Hecho y verificado en el ERP.",
+        "verified_created": "Hecho y verificado en el ERP. Nueva expedición n.º {id}.",
+        "unverified": "Ejecutado, pero NO verificado (sin comprobar: {fields}). Revísalo en el ERP antes de darlo por hecho.",
+        "mismatch": "El ERP respondió que sí, pero lo que contiene NO coincide con lo pedido. No lo des por hecho: revísalo en el ERP.",
+        "rejected": "NO se ha realizado: el ERP rechazó la operación ({error}). La propuesta ya está gastada; pídela de nuevo si sigue haciendo falta.",
+        "no_detail": "sin detalle",
+        "dismissed": "Propuesta descartada. No se ha cambiado nada."
+      },
+      "errors": {
+        "payload_mismatch": "NO se ha realizado: los datos no coinciden con los que propuso el Copilot. Pídele la propuesta de nuevo.",
+        "operator_mismatch": "NO se ha realizado: esta propuesta la generó otro usuario y solo puede confirmarla quien la pidió.",
+        "expired": "NO se ha realizado: la propuesta caducó (5 minutos). Pídela de nuevo.",
+        "already_executed": "Esta propuesta ya se usó (doble clic o reintento). Comprueba el resultado en el ERP antes de pedir otra.",
+        "invalid_token": "NO se ha realizado: la propuesta no es válida. Pídela de nuevo.",
+        "bad_request": "NO se ha realizado: petición incorrecta. Pide la propuesta de nuevo.",
+        "session": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+        "rate_limited": "Demasiados intentos seguidos. Espera unos segundos y reintenta.",
+        "busy": "Ya hay una confirmación en curso. Espera y reintenta.",
+        "unavailable": "Servicio ocupado. NO se ha realizado nada: reintenta en unos segundos.",
+        "uncertain": "No se pudo confirmar el resultado. Puede que la operación SÍ se haya realizado. No la repitas todavía: comprueba el envío en la lista del ERP antes de pedir otra propuesta.",
+        "forbidden": "NO se ha realizado: no tienes permiso para esta operación.",
+        "unknown": "NO se ha realizado por un error inesperado. Pide la propuesta de nuevo."
+      }
     }
   }
 }
