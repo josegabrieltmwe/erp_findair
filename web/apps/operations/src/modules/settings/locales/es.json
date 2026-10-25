@@ -237,8 +237,8 @@
           "description": "Plantillas de rol OAuth2 (scopes y endpoints permitidos) para OAuth clients"
         },
         "oauth_clients": {
-          "title": "OAuth clients",
-          "description": "Aplicaciones que consumen la API — provisión, rotación de credenciales, asignación de rol"
+          "title": "Aplicaciones y claves",
+          "description": "Aplicaciones de todos los clientes que consumen la API — claves, rotación, rol, actividad y estado"
         },
         "internal_roles": {
           "title": "Roles internos",
@@ -407,7 +407,7 @@
     "subtitle": "Definiciones de servicios de courier, zonas y suplementos.",
     "new_service": "Nuevo servicio",
     "filter_carrier": "Courier",
-    "filter_type": "Tipo",
+    "filter_type": "Tipo de aplicación",
     "filter_geozone": "Geozona",
     "n_services": "{n} servicios",
     "clone": "Clonar",
@@ -968,7 +968,7 @@
     "delete_blocked_in_use": "No se puede eliminar: asignado a {clients} client(s) y {users} usuario(s)"
   },
   "oauth_clients": {
-    "title": "OAuth clients",
+    "title": "Aplicaciones y claves",
     "subtitle": "Aplicaciones que consumen la API — credenciales, rol OAuth y estado",
     "new_client": "Nuevo client",
     "empty_title": "Sin OAuth clients",
@@ -1015,7 +1015,25 @@
     "effective_scopes": "Scopes efectivos",
     "effective_scopes_title": "Scopes efectivos — {name}",
     "effective_scopes_subtitle": "Combinación de scopes del rol y overrides individuales del client.",
-    "role_external_hint": "Client externo: los roles reservados a clients internos (scopes admin/config) no se pueden seleccionar."
+    "role_external_hint": "Client externo: los roles reservados a clients internos (scopes admin/config) no se pueden seleccionar.",
+    "search": "Buscar por id, nombre, empresa, email o rol",
+    "filter_type": "Tipo de aplicación",
+    "filter_stale": "Sin actividad en más de {days} días",
+    "summary": "Mostrando {shown} de {total} aplicaciones · {stale} latentes (activas sin uso reciente)",
+    "col_last_activity": "Último uso",
+    "never_used": "Nunca",
+    "stale": "Latente",
+    "details": "Detalles",
+    "detail_title": "Aplicación: {name}",
+    "detail_secret": "Clave secreta",
+    "detail_secret_hint": "No se puede consultar: solo se muestra al crearla o al rotarla.",
+    "detail_created": "Creada",
+    "detail_last_activity": "Último uso",
+    "detail_scopes": "Permisos efectivos (nº)",
+    "detail_origins": "Orígenes permitidos",
+    "detail_ips": "IPs permitidas",
+    "detail_readonly_note": "Orígenes, IPs, URIs de redirección y rol se muestran sin editar aquí: su formato aún no es único en el API.",
+    "saved": "Aplicación guardada"
   },
   "internal_roles": {
     "title": "Roles internos",
@@ -1201,7 +1219,8 @@
       "api_role_revoke": "Revocar rol",
       "api_role_revoke_confirm": "¿Revocar el rol API de este usuario? Dejará de poder usar la API a través de aplicaciones OAuth.",
       "api_role_saved": "Rol API guardado",
-      "api_role_revoked": "Rol API revocado"
+      "api_role_revoked": "Rol API revocado",
+      "addon_roles_title": "Roles adicionales (se suman al rol base)"
     }
   },
   "client_onboarding": {

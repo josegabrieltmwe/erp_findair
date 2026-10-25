@@ -237,8 +237,8 @@
           "description": "OAuth2-Rollenvorlagen (Scopes und erlaubte Endpoints) für OAuth-Clients"
         },
         "oauth_clients": {
-          "title": "OAuth-Clients",
-          "description": "Anwendungen, die die API nutzen — Provisionierung, Rotation der Zugangsdaten, Rollenzuweisung"
+          "title": "Anwendungen und Schlüssel",
+          "description": "Anwendungen aller Kunden, die die API nutzen — Schlüssel, Rotation, Rolle, Aktivität und Status"
         },
         "internal_roles": {
           "title": "Interne Rollen",
@@ -968,7 +968,7 @@
     "delete_blocked_in_use": "Löschen nicht möglich: {clients} Client(s) und {users} Benutzer(n) zugewiesen"
   },
   "oauth_clients": {
-    "title": "OAuth-Clients",
+    "title": "Anwendungen und Schlüssel",
     "subtitle": "Anwendungen, die die API nutzen — Zugangsdaten, OAuth-Rolle und Status",
     "new_client": "Neuer Client",
     "empty_title": "Keine OAuth-Clients",
@@ -1015,7 +1015,25 @@
     "effective_scopes": "Effektive Scopes",
     "effective_scopes_title": "Effektive Scopes — {name}",
     "effective_scopes_subtitle": "Kombination aus Rollen-Scopes und individuellen Client-Overrides.",
-    "role_external_hint": "Externer Client: Rollen, die internen Clients vorbehalten sind (admin/config-Scopes), können nicht gewählt werden."
+    "role_external_hint": "Externer Client: Rollen, die internen Clients vorbehalten sind (admin/config-Scopes), können nicht gewählt werden.",
+    "search": "Suche nach ID, Name, Firma, E-Mail oder Rolle",
+    "filter_type": "Typ",
+    "filter_stale": "Keine Aktivität seit über {days} Tagen",
+    "summary": "{shown} von {total} Anwendungen angezeigt · {stale} inaktiv (aktiv, aber lange nicht genutzt)",
+    "col_last_activity": "Zuletzt genutzt",
+    "never_used": "Nie",
+    "stale": "Inaktiv",
+    "details": "Details",
+    "detail_title": "Anwendung: {name}",
+    "detail_secret": "Geheimer Schlüssel",
+    "detail_secret_hint": "Nicht abrufbar: wird nur beim Erstellen oder Rotieren angezeigt.",
+    "detail_created": "Erstellt",
+    "detail_last_activity": "Zuletzt genutzt",
+    "detail_scopes": "Wirksame Berechtigungen (Anzahl)",
+    "detail_origins": "Erlaubte Origins",
+    "detail_ips": "Erlaubte IPs",
+    "detail_readonly_note": "Origins, IPs, Redirect-URIs und Rolle werden hier nicht bearbeitet: Das Format ist in der API noch nicht einheitlich.",
+    "saved": "Anwendung gespeichert"
   },
   "internal_roles": {
     "title": "Interne Rollen",
@@ -1201,7 +1219,8 @@
       "api_role_revoke": "Rolle entziehen",
       "api_role_revoke_confirm": "Die API-Rolle dieses Benutzers entziehen? Er kann die API dann nicht mehr über OAuth-Anwendungen nutzen.",
       "api_role_saved": "API-Rolle gespeichert",
-      "api_role_revoked": "API-Rolle entzogen"
+      "api_role_revoked": "API-Rolle entzogen",
+      "addon_roles_title": "Zusätzliche Rollen (zur Basisrolle addiert)"
     }
   },
   "client_onboarding": {

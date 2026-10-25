@@ -13,6 +13,14 @@
 
     <v-card class="pa-4 mb-4" variant="outlined">
       <div class="cm-filters">
+        <v-text-field
+          v-model="search"
+          :label="t('oauth_clients.search')"
+          :prepend-inner-icon="mdiMagnify"
+          density="compact"
+          hide-details
+          clearable
+        />
         <v-select
           v-model="filterStatus"
           :label="t('oauth_clients.filter_status')"
@@ -31,7 +39,25 @@
           clearable
           @update:model-value="load"
         />
+        <v-select
+          v-model="filterType"
+          :label="t('oauth_clients.filter_type')"
+          :items="typeOptions"
+          density="compact"
+          hide-details
+          clearable
+        />
+        <v-switch
+          v-model="onlyStale"
+          :label="t('oauth_clients.filter_stale', { days: STALE_AFTER_DAYS })"
+          density="compact"
+          color="warning"
+          hide-details
+        />
       </div>
+      <p class="text-caption text-medium-emphasis mt-2 mb-0">
+        {{ t('oauth_clients.summary', { shown: visibleClients.length, total: clients.length, stale: staleCount }) }}
+      </p>
     </v-card>
 
     <CmEmptyState
@@ -72,6 +98,19 @@
           {{ (item as OAuthClient).tier || '—' }}
         </v-chip>
       </template>
+      <template #cell.last_activity="{ item }">
+        <span v-if="(item as OAuthClient).last_activity" class="cm-mono">
+          {{ String((item as OAuthClient).last_activity).slice(0, 10) }}
+        </span>
+        <span v-else class="cm-cell-hint">{{ t('oauth_clients.never_used') }}</span>
+        <v-chip
+          v-if="isStaleClient(item as OAuthClient)"
+          size="x-small"
+          class="ml-1 cm-tone-warning"
+        >
+          {{ t('oauth_clients.stale') }}
+        </v-chip>
+      </template>
       <template #cell.status="{ item }">
         <v-chip size="small" :class="isActive(item as OAuthClient) ? 'cm-tone-success' : 'cm-tone-neutral'">
           {{ (item as OAuthClient).status || (item as OAuthClient).stato || '—' }}
@@ -79,6 +118,9 @@
       </template>
       <template #cell.actions="{ item }">
         <div class="cm-actions-right">
+          <v-btn size="small" variant="text" :prepend-icon="mdiPencil" @click="openDetail(item as OAuthClient)">
+            {{ t('oauth_clients.details') }}
+          </v-btn>
           <v-btn
             size="small"
             variant="text"
@@ -125,6 +167,56 @@
     <v-alert v-if="error" type="error" variant="tonal" density="compact" class="mt-2" closable @click:close="error = null">
       {{ error }}
     </v-alert>
+
+    <!-- Diálogo de detalle / edición de la aplicación -->
+    <v-dialog v-model="detailDialog" max-width="700" persistent>
+      <v-card v-if="detailTarget">
+        <v-card-title>{{ t('oauth_clients.detail_title', { name: detailTarget.client_name || detailTarget.client_id }) }}</v-card-title>
+        <v-card-text>
+          <v-text-field
+            :model-value="detailTarget.client_id"
+            :label="t('oauth_clients.field_client_id')"
+            readonly
+            variant="outlined"
+            density="comfortable"
+            class="mb-3"
+            :append-inner-icon="mdiContentCopy"
+            @click:append-inner="copy(detailTarget.client_id)"
+          />
+          <v-text-field v-model="detailForm.client_name" :label="t('oauth_clients.form_client_name')" class="mb-3" />
+          <v-text-field v-model="detailForm.company_name" :label="t('oauth_clients.form_company_name')" class="mb-3" />
+          <v-text-field
+            v-model="detailForm.contact_email"
+            :label="t('oauth_clients.form_contact_email')"
+            type="email"
+            class="mb-3"
+          />
+          <v-select v-model="detailForm.tier" :label="t('oauth_clients.form_tier')" :items="tierOptions" class="mb-3" />
+          <dl class="cm-detail-readonly">
+            <dt>{{ t('oauth_clients.detail_secret') }}</dt>
+            <dd>{{ t('oauth_clients.detail_secret_hint') }}</dd>
+            <dt>{{ t('oauth_clients.detail_created') }}</dt>
+            <dd>{{ detailTarget.created_at || '—' }}</dd>
+            <dt>{{ t('oauth_clients.detail_last_activity') }}</dt>
+            <dd>{{ detailTarget.last_activity || t('oauth_clients.never_used') }}</dd>
+            <dt>{{ t('oauth_clients.detail_scopes') }}</dt>
+            <dd>{{ detailTarget.scopes?.length ?? 0 }}</dd>
+            <dt>{{ t('oauth_clients.detail_origins') }}</dt>
+            <dd class="cm-mono">{{ listText(detailTarget.allowed_origins) }}</dd>
+            <dt>{{ t('oauth_clients.detail_ips') }}</dt>
+            <dd class="cm-mono">{{ listText(detailTarget.allowed_ips) }}</dd>
+          </dl>
+          <p class="text-caption text-medium-emphasis mt-2 mb-0">{{ t('oauth_clients.detail_readonly_note') }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" :disabled="saving" @click="detailDialog = false">{{ t('common.cancel') }}</v-btn>
+          <v-btn color="primary" :loading="saving" :disabled="!detailFormValid" @click="saveDetail">
+            {{ t('common.save') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Diálogo de provisión -->
     <v-dialog v-model="provisionDialog" max-width="700" persistent>
@@ -260,6 +352,8 @@ import {
   mdiAlert,
   mdiContentCopy,
   mdiShieldKey,
+  mdiMagnify,
+  mdiPencil,
 } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmEmptyState from '../../anagrafiche/components/CmEmptyState.vue';
@@ -273,6 +367,7 @@ import EffectivePermissionsPreview from '../../authz_explain/components/Effectiv
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
 import { oauthClientsService, type OAuthClient } from '../services/oauthClients.service';
+import { isStaleClient, matchesClientSearch, STALE_AFTER_DAYS } from '../services/clientActivity';
 
 const { t } = useI18n();
 const toast = useToastStore();
@@ -285,8 +380,21 @@ const error = ref<string | null>(null);
 const filterStatus = ref<string | undefined>(undefined);
 const filterTier = ref<string | undefined>(undefined);
 const selected = ref<{ id: number }[]>([]);
+const search = ref<string | null>('');
+const filterType = ref<string | undefined>(undefined);
+const onlyStale = ref(false);
 
-const listSource = useClientSideListSource(clients, { loading });
+const visibleClients = computed(() =>
+  clients.value.filter(
+    (c) =>
+      matchesClientSearch(c, search.value ?? '') &&
+      (!filterType.value || (c.client_type || 'internal') === filterType.value) &&
+      (!onlyStale.value || isStaleClient(c)),
+  ),
+);
+const staleCount = computed(() => clients.value.filter((c) => isStaleClient(c)).length);
+
+const listSource = useClientSideListSource(() => visibleClients.value, { loading });
 const tableHeaders: DataTableHeader[] = [
   { title: t('oauth_clients.col_client_id') as string, key: 'client_id' },
   { title: t('oauth_clients.col_name') as string, key: 'client_name' },
@@ -294,12 +402,13 @@ const tableHeaders: DataTableHeader[] = [
   { title: t('oauth_clients.col_type') as string, key: 'client_type' },
   { title: t('oauth_clients.col_role') as string, key: 'role_name' },
   { title: t('oauth_clients.col_tier') as string, key: 'tier' },
+  { title: t('oauth_clients.col_last_activity') as string, key: 'last_activity' },
   { title: t('oauth_clients.col_status') as string, key: 'status' },
   { title: t('oauth_clients.col_actions') as string, key: 'actions', sortable: false, align: 'end' },
 ];
 const sortKeyMap: Record<string, string> = {
   client_id: 'client_id', client_name: 'client_name', company_name: 'company_name',
-  client_type: 'client_type', role_name: 'role_name', tier: 'tier', status: 'status',
+  client_type: 'client_type', role_name: 'role_name', tier: 'tier', last_activity: 'last_activity', status: 'status',
 };
 
 const provisionDialog = ref(false);
@@ -332,7 +441,59 @@ const statusOptions = [
 const tierOptions = [
   { title: 'standard', value: 'standard' },
   { title: 'premium', value: 'premium' },
+  { title: 'enterprise', value: 'enterprise' },
 ];
+const typeOptions = [
+  { title: 'internal', value: 'internal' },
+  { title: 'external', value: 'external' },
+];
+
+const detailDialog = ref(false);
+const detailTarget = ref<OAuthClient | null>(null);
+const detailForm = reactive({ client_name: '', company_name: '', contact_email: '', tier: 'standard' });
+const detailFormValid = computed(() => !!detailForm.client_name.trim() && !!detailForm.company_name.trim());
+
+/** Los orígenes/IPs llegan como JSON o como texto separado por comas según el cliente: solo se muestran. */
+function listText(v: unknown): string {
+  if (Array.isArray(v)) return v.join(', ') || '—';
+  if (typeof v !== 'string' || !v.trim()) return '—';
+  try {
+    const parsed = JSON.parse(v);
+    if (Array.isArray(parsed)) return parsed.join(', ') || '—';
+  } catch {
+    /* texto plano */
+  }
+  return v;
+}
+
+function openDetail(c: OAuthClient): void {
+  detailTarget.value = c;
+  detailForm.client_name = c.client_name ?? '';
+  detailForm.company_name = c.company_name ?? '';
+  detailForm.contact_email = c.contact_email ?? '';
+  detailForm.tier = c.tier || 'standard';
+  detailDialog.value = true;
+}
+
+async function saveDetail(): Promise<void> {
+  if (!detailTarget.value) return;
+  saving.value = true;
+  try {
+    await oauthClientsService.update(detailTarget.value.id, {
+      client_name: detailForm.client_name.trim(),
+      company_name: detailForm.company_name.trim(),
+      contact_email: detailForm.contact_email.trim() || undefined,
+      tier: detailForm.tier,
+    });
+    detailDialog.value = false;
+    toast.success(t('oauth_clients.saved'));
+    await load();
+  } catch (e) {
+    toast.error(e instanceof Error ? e.message : String(e));
+  } finally {
+    saving.value = false;
+  }
+}
 
 const provFormValid = computed(
   () =>
@@ -469,3 +630,20 @@ onMounted(() => {
   void load();
 });
 </script>
+
+<style scoped>
+.cm-detail-readonly {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 0;
+}
+.cm-detail-readonly dt {
+  color: rgb(var(--v-theme-on-surface-variant, 100, 100, 100));
+  font-size: 0.8125rem;
+}
+.cm-detail-readonly dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+</style>

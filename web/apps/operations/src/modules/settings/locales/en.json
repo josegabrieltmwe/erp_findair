@@ -237,8 +237,8 @@
           "description": "OAuth2 role templates (scopes and allowed endpoints) for OAuth clients"
         },
         "oauth_clients": {
-          "title": "OAuth clients",
-          "description": "Applications consuming the API — provisioning, credential rotation, role assignment"
+          "title": "Applications & keys",
+          "description": "Applications of every client consuming the API — keys, rotation, role, activity and status"
         },
         "internal_roles": {
           "title": "Internal roles",
@@ -968,7 +968,7 @@
     "delete_blocked_in_use": "Cannot delete: assigned to {clients} client(s) and {users} user(s)"
   },
   "oauth_clients": {
-    "title": "OAuth clients",
+    "title": "Applications & keys",
     "subtitle": "Applications consuming the API — credentials, OAuth role and status",
     "new_client": "New client",
     "empty_title": "No OAuth clients",
@@ -1015,7 +1015,25 @@
     "effective_scopes": "Effective scopes",
     "effective_scopes_title": "Effective scopes — {name}",
     "effective_scopes_subtitle": "Combination of role scopes and individual client overrides.",
-    "role_external_hint": "External client: roles reserved for internal clients (admin/config scopes) cannot be selected."
+    "role_external_hint": "External client: roles reserved for internal clients (admin/config scopes) cannot be selected.",
+    "search": "Search by id, name, company, email or role",
+    "filter_type": "Type",
+    "filter_stale": "No activity in over {days} days",
+    "summary": "Showing {shown} of {total} applications · {stale} dormant (active but not used recently)",
+    "col_last_activity": "Last used",
+    "never_used": "Never",
+    "stale": "Dormant",
+    "details": "Details",
+    "detail_title": "Application: {name}",
+    "detail_secret": "Secret key",
+    "detail_secret_hint": "It cannot be retrieved: it is only shown when created or rotated.",
+    "detail_created": "Created",
+    "detail_last_activity": "Last used",
+    "detail_scopes": "Effective permissions (count)",
+    "detail_origins": "Allowed origins",
+    "detail_ips": "Allowed IPs",
+    "detail_readonly_note": "Origins, IPs, redirect URIs and role are not edited here: their format is not yet uniform in the API.",
+    "saved": "Application saved"
   },
   "internal_roles": {
     "title": "Internal roles",
@@ -1201,7 +1219,8 @@
       "api_role_revoke": "Revoke role",
       "api_role_revoke_confirm": "Revoke this user's API role? They will no longer be able to use the API through OAuth applications.",
       "api_role_saved": "API role saved",
-      "api_role_revoked": "API role revoked"
+      "api_role_revoked": "API role revoked",
+      "addon_roles_title": "Additional roles (added to the base role)"
     }
   },
   "client_onboarding": {

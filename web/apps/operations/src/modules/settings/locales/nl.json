@@ -237,8 +237,8 @@
           "description": "OAuth2-rolsjablonen (scopes en toegestane endpoints) voor OAuth-clients"
         },
         "oauth_clients": {
-          "title": "OAuth-clients",
-          "description": "Applicaties die de API gebruiken — provisioning, rotatie van inloggegevens, roltoewijzing"
+          "title": "Applicaties en sleutels",
+          "description": "Applicaties van alle klanten die de API gebruiken — sleutels, rotatie, rol, activiteit en status"
         },
         "internal_roles": {
           "title": "Interne rollen",
@@ -968,7 +968,7 @@
     "delete_blocked_in_use": "Kan niet worden verwijderd: toegewezen aan {clients} client(s) en {users} gebruiker(s)"
   },
   "oauth_clients": {
-    "title": "OAuth-clients",
+    "title": "Applicaties en sleutels",
     "subtitle": "Applicaties die de API gebruiken — inloggegevens, OAuth-rol en status",
     "new_client": "Nieuwe client",
     "empty_title": "Geen OAuth-clients",
@@ -1015,7 +1015,25 @@
     "effective_scopes": "Effectieve scopes",
     "effective_scopes_title": "Effectieve scopes — {name}",
     "effective_scopes_subtitle": "Combinatie van rol-scopes en individuele client-overrides.",
-    "role_external_hint": "Externe client: rollen die voorbehouden zijn aan interne clients (admin/config-scopes) kunnen niet worden gekozen."
+    "role_external_hint": "Externe client: rollen die voorbehouden zijn aan interne clients (admin/config-scopes) kunnen niet worden gekozen.",
+    "search": "Zoek op id, naam, bedrijf, e-mail of rol",
+    "filter_type": "Type",
+    "filter_stale": "Geen activiteit gedurende meer dan {days} dagen",
+    "summary": "{shown} van {total} applicaties getoond · {stale} slapend (actief maar recent niet gebruikt)",
+    "col_last_activity": "Laatst gebruikt",
+    "never_used": "Nooit",
+    "stale": "Slapend",
+    "details": "Details",
+    "detail_title": "Applicatie: {name}",
+    "detail_secret": "Geheime sleutel",
+    "detail_secret_hint": "Niet op te vragen: wordt alleen getoond bij aanmaken of roteren.",
+    "detail_created": "Aangemaakt",
+    "detail_last_activity": "Laatst gebruikt",
+    "detail_scopes": "Effectieve rechten (aantal)",
+    "detail_origins": "Toegestane origins",
+    "detail_ips": "Toegestane IP-adressen",
+    "detail_readonly_note": "Origins, IP-adressen, redirect-URI’s en rol worden hier niet bewerkt: het formaat is in de API nog niet uniform.",
+    "saved": "Applicatie opgeslagen"
   },
   "internal_roles": {
     "title": "Interne rollen",
@@ -1201,7 +1219,8 @@
       "api_role_revoke": "Rol intrekken",
       "api_role_revoke_confirm": "De API-rol van deze gebruiker intrekken? De gebruiker kan de API dan niet meer via OAuth-applicaties gebruiken.",
       "api_role_saved": "API-rol opgeslagen",
-      "api_role_revoked": "API-rol ingetrokken"
+      "api_role_revoked": "API-rol ingetrokken",
+      "addon_roles_title": "Extra rollen (komen bij de basisrol)"
     }
   },
   "client_onboarding": {

@@ -237,8 +237,8 @@
           "description": "Modelli di ruolo OAuth2 (scope ed endpoint consentiti) per gli OAuth client"
         },
         "oauth_clients": {
-          "title": "OAuth client",
-          "description": "Applicazioni che consumano l'API — provisioning, rotazione credenziali, assegnazione ruolo"
+          "title": "Applicazioni e chiavi",
+          "description": "Applicazioni di tutti i clienti che usano l'API — chiavi, rotazione, ruolo, attività e stato"
         },
         "internal_roles": {
           "title": "Ruoli interni",
@@ -968,7 +968,7 @@
     "delete_blocked_in_use": "Non eliminabile: assegnato a {clients} client e {users} utenti"
   },
   "oauth_clients": {
-    "title": "OAuth client",
+    "title": "Applicazioni e chiavi",
     "subtitle": "Applicazioni che consumano l'API — credenziali, ruolo OAuth e stato",
     "new_client": "Nuovo client",
     "empty_title": "Nessun OAuth client",
@@ -1015,7 +1015,25 @@
     "effective_scopes": "Scope effettivi",
     "effective_scopes_title": "Scope effettivi — {name}",
     "effective_scopes_subtitle": "Combinazione degli scope del ruolo e degli override individuali del client.",
-    "role_external_hint": "Client esterno: i ruoli riservati ai client interni (scope admin/config) non sono selezionabili."
+    "role_external_hint": "Client esterno: i ruoli riservati ai client interni (scope admin/config) non sono selezionabili.",
+    "search": "Cerca per id, nome, azienda, email o ruolo",
+    "filter_type": "Tipo",
+    "filter_stale": "Senza attività da oltre {days} giorni",
+    "summary": "Mostrate {shown} di {total} applicazioni · {stale} dormienti (attive ma non usate di recente)",
+    "col_last_activity": "Ultimo uso",
+    "never_used": "Mai",
+    "stale": "Dormiente",
+    "details": "Dettagli",
+    "detail_title": "Applicazione: {name}",
+    "detail_secret": "Chiave segreta",
+    "detail_secret_hint": "Non è consultabile: viene mostrata solo alla creazione o alla rotazione.",
+    "detail_created": "Creata",
+    "detail_last_activity": "Ultimo uso",
+    "detail_scopes": "Permessi effettivi (n.)",
+    "detail_origins": "Origini consentite",
+    "detail_ips": "IP consentiti",
+    "detail_readonly_note": "Origini, IP, URI di reindirizzamento e ruolo non si modificano qui: il formato non è ancora uniforme nell'API.",
+    "saved": "Applicazione salvata"
   },
   "internal_roles": {
     "title": "Ruoli interni",
@@ -1201,7 +1219,8 @@
       "api_role_revoke": "Revoca ruolo",
       "api_role_revoke_confirm": "Revocare il ruolo API di questo utente? Non potrà più usare l'API tramite le applicazioni OAuth.",
       "api_role_saved": "Ruolo API salvato",
-      "api_role_revoked": "Ruolo API revocato"
+      "api_role_revoked": "Ruolo API revocato",
+      "addon_roles_title": "Ruoli aggiuntivi (si sommano al ruolo base)"
     }
   },
   "client_onboarding": {
