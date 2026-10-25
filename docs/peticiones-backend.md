@@ -179,3 +179,25 @@ Peticiones (ruta, síntoma, cambio esperado):
 10. **Partners y `contacts:read`.** `searchAddressBook` pide `contacts:read`, que los partners no tienen: pierden esa tool.
     Decidir si se les concede (la SPA no lo oculta: los partners ven costes y datos de su propia agenda).
 
+
+## 9. Gestión de aplicaciones y de roles tras el cambio de autenticación (2026-10-25)
+
+Análisis completo en `docs/informe-autenticacion-autorizacion.md`. Lo que la SPA necesita del API:
+
+1. **Contexto de acceso** (`me/access` o ampliar `get_my_profile`): `roles` de la persona, `permissions` efectivos
+   (`módulo:operación`, ya con el techo persona ∩ aplicación) y los flags de datos relevantes. Hoy `get_my_profile` solo trae
+   `is_admin = (idanagfrc === 1)` y 4 scopes de IA; el BFF deduce `capabilities` de ahí. Sustituye a §2 de este documento.
+2. **Formato único de `allowed_origins` y `allowed_ips`.** En `auth_client` el origen del BFF está como JSON
+   (`["https://erp-findair.php8"]`), pero `Authorization_Login_Controller::allowed_origins()` lo parte por comas, así que no coincide;
+   `allowed_ips` se lee como JSON en `Authz_Service` y como comas en `Oauth_Client::is_ip_allowed`. Elegir uno, normalizar los datos
+   y validar al escribir. Hasta entonces la SPA los muestra y no los edita.
+3. **Exponer en `api_admin_external_clients`** `redirect_uris`, `require_pkce`, `grant_types` (cuando exista) y `role_ids` si se
+   implanta `client_roles` N:M. Hoy no se pueden ver ni gestionar por API.
+4. **`Role_Assignment_Policy` y `root`.** Resuelto (2026-10-25): `api_anagrafica_findair_access` informa `grantable_roles`/`addon_role_details` y
+   `api_admin_oauth_roles` rechaza editar los scopes de `root`. `api_admin_user_roles` y el bulk operan sobre el RBAC interno, no sobre `auth_role`.
+5. **Confirmar qué capas del RBAC interno siguen decidiendo** (`user_permission_overrides`: 120 filas `deny`;
+   `user_endpoint_restrictions`, `module_permissions`: 0 filas) en `Authz_Service`/`Permission_Resolver`. Determina si la SPA retira
+   o congela esas pantallas (R5/R6 del plan `oauth_puro`).
+6. **Secretos de aplicación con hash** (`client_secret_hash`): hoy en claro en `auth_client` (77 filas). La SPA ya los muestra una
+   sola vez, así que no cambia.
+7. **Depuración de aplicaciones**: 76 de 77 activas sin uso en 90 días y 17 sin rol (paso R0 del plan). La SPA ya marca las latentes.
