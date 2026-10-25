@@ -509,7 +509,19 @@
         "no_roles": "Sin roles disponibles",
         "no_role": "Sin rol",
         "role_changed": "Rol API actualizado: {role}",
-        "manage_in_user": "Gestionar en la ficha de usuario"
+        "manage_in_user": "Gestionar en la ficha de usuario",
+        "base_role": "Rol base",
+        "change_base_role": "Cambiar rol base",
+        "addon_roles": "Roles adicionales",
+        "no_addon_roles": "Sin roles adicionales",
+        "add_addon_role": "Añadir rol adicional",
+        "roles_read_only": "No puedes cambiar los roles de esta persona.",
+        "roles_unavailable": "No se pudieron cargar los roles.",
+        "role_added": "Rol añadido",
+        "role_removed": "Rol retirado",
+        "role_changed_base": "Rol base actualizado",
+        "confirm_remove_role": "¿Retirar el rol «{role}»? La persona perderá sus permisos en su próximo acceso.",
+        "confirm_remove_role_title": "Retirar rol"
       },
       "contatti_filters": {
         "search": "Buscar (nombre, email, login…)",

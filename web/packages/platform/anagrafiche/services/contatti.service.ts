@@ -35,22 +35,62 @@ export type FindairLevel = 'basic' | 'full';
  * `level` es la vista "findair" del rol (basic/full) que el backend deriva
  * cuando el rol es findair_basic/findair_full; para cualquier otro rol es null.
  */
+export interface ApiRoleRef {
+  id: number;
+  name: string;
+  display_name: string;
+  /** Rol aditivo: se suma al base en lugar de sustituirlo. */
+  addon: boolean;
+}
+
 export interface ApiRoleState {
   enabled: boolean;
   level: FindairLevel | null;
   role_id: number | null;
   role_name: string | null;
+  /** Roles aditivos que el contacto tiene hoy. */
+  addon_roles: ApiRoleRef[];
+  /**
+   * Roles que QUIEN LLAMA puede conceder a este contacto (los acepta la política del API:
+   * `Role_Assignment_Policy`). Vacío = no puede cambiar roles. La UI ofrece solo estos.
+   */
+  grantable_roles: ApiRoleRef[];
+}
+
+function normalizeRoleRefs(list: unknown): ApiRoleRef[] {
+  if (!Array.isArray(list)) return [];
+  const out: ApiRoleRef[] = [];
+  for (const r of list) {
+    const o = r as Partial<ApiRoleRef> | null;
+    const id = Number(o?.id);
+    if (!o || !Number.isFinite(id) || id <= 0 || typeof o.name !== 'string' || !o.name) continue;
+    out.push({
+      id,
+      name: o.name,
+      display_name: typeof o.display_name === 'string' && o.display_name ? o.display_name : o.name,
+      addon: o.addon === true,
+    });
+  }
+  return out;
 }
 /** Alias histórico: el "acceso findair" es el caso particular de rol API findair_*. */
 export type FindairAccessState = ApiRoleState;
 
-function normalizeApiRole(data: Partial<ApiRoleState> | null | undefined): ApiRoleState {
+/** Cuerpo crudo de `api_anagrafica_findair_access` (los roles aditivos llegan en `addon_role_details`). */
+type RawApiRole = Partial<Omit<ApiRoleState, 'addon_roles' | 'grantable_roles'>> & {
+  addon_role_details?: unknown;
+  grantable_roles?: unknown;
+};
+
+function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
   const roleId = data?.role_id == null ? null : Number(data.role_id);
   return {
     enabled: Boolean(data?.enabled),
     level: data?.level === 'full' ? 'full' : data?.level === 'basic' ? 'basic' : null,
     role_id: roleId != null && Number.isFinite(roleId) && roleId > 0 ? roleId : null,
     role_name: typeof data?.role_name === 'string' && data.role_name ? data.role_name : null,
+    addon_roles: normalizeRoleRefs(data?.addon_role_details),
+    grantable_roles: normalizeRoleRefs(data?.grantable_roles),
   };
 }
 
@@ -193,7 +233,7 @@ export const contattiService = {
    */
   async getApiRole(contattoId: number): Promise<ApiRoleState> {
     const raw = await http<unknown>(FINDAIR_ENDPOINT, { query: { id: contattoId } });
-    return normalizeApiRole(unwrap<Partial<ApiRoleState>>(raw));
+    return normalizeApiRole(unwrap<RawApiRole>(raw));
   },
 
   /**
@@ -204,9 +244,22 @@ export const contattiService = {
     const body = roleId == null
       ? { id: contattoId, enabled: false }
       : { id: contattoId, enabled: true, role_id: roleId };
-    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body,
+    });
+    if (raw?.error) throw new Error(raw.error);
+    return normalizeApiRole(raw?.data);
+  },
+
+  /**
+   * Suma (enabled) o retira un rol ADITIVO sin tocar el rol base. El API valida con
+   * `Role_Assignment_Policy` quién puede conceder qué; devuelve el estado completo.
+   */
+  async setAddonRole(contattoId: number, roleId: number, enabled: boolean): Promise<ApiRoleState> {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
+      method: 'POST',
+      body: { id: contattoId, enabled, role_id: roleId },
     });
     if (raw?.error) throw new Error(raw.error);
     return normalizeApiRole(raw?.data);
@@ -227,7 +280,7 @@ export const contattiService = {
     enabled: boolean,
     level?: FindairLevel,
   ): Promise<FindairAccessState> {
-    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body: enabled && level ? { id, enabled, level } : { id, enabled },
     });

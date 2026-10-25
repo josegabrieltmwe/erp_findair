@@ -281,7 +281,7 @@
           </div>
         </div>
 
-        <!-- ROL API (contatti_oauth_role) — 1 rol por usuario; el permiso
+        <!-- ROL API BASE (contatti_oauth_role) — un rol base por usuario más los aditivos (editor de abajo); el permiso
              efectivo por API es la intersección con el rol del client OAuth. -->
         <div class="cm-section-block">
           <div class="cm-block-title">
@@ -333,6 +333,12 @@
             </v-btn>
           </div>
         </div>
+
+        <!-- Roles API ADITIVOS (se suman al rol base). Mismo editor que el diálogo de permisos del contacto. -->
+        <div class="cm-section-block">
+          <div class="cm-block-title">{{ t('users.security.addon_roles_title') }}</div>
+          <ContactApiRolesEditor :key="userId" :contatto-id="userId" addons-only />
+        </div>
       </div>
     </template>
   </CmAsyncSection>
@@ -368,6 +374,7 @@ import {
   type EndpointRestriction,
 } from '../services/userEndpointRestrictions.service';
 import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
+import ContactApiRolesEditor from '../../anagrafiche/components/ContactApiRolesEditor.vue';
 import { roleConflictMessage } from '../../oauth_roles/services/oauthRoles.service';
 import { contattiService, type ApiRoleState } from '../../anagrafiche/services/contatti.service';
 import { useAuthCapabilities } from '../../anagrafiche/composables/useAuthCapabilities';

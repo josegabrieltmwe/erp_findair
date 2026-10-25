@@ -509,7 +509,19 @@
         "no_roles": "Keine Rollen verfügbar",
         "no_role": "Keine Rolle",
         "role_changed": "API-Rolle aktualisiert: {role}",
-        "manage_in_user": "In der Benutzerseite verwalten"
+        "manage_in_user": "In der Benutzerseite verwalten",
+        "base_role": "Basisrolle",
+        "change_base_role": "Basisrolle ändern",
+        "addon_roles": "Zusätzliche Rollen",
+        "no_addon_roles": "Keine zusätzlichen Rollen",
+        "add_addon_role": "Zusätzliche Rolle hinzufügen",
+        "roles_read_only": "Du kannst die Rollen dieser Person nicht ändern.",
+        "roles_unavailable": "Die Rollen konnten nicht geladen werden.",
+        "role_added": "Rolle hinzugefügt",
+        "role_removed": "Rolle entfernt",
+        "role_changed_base": "Basisrolle aktualisiert",
+        "confirm_remove_role": "Rolle „{role}“ entfernen? Die Person verliert ihre Berechtigungen bei der nächsten Anmeldung.",
+        "confirm_remove_role_title": "Rolle entfernen"
       },
       "contatti_filters": {
         "search": "Suchen (Name, E-Mail, Login…)",

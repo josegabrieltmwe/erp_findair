@@ -509,7 +509,19 @@
         "no_roles": "Geen rollen beschikbaar",
         "no_role": "Geen rol",
         "role_changed": "API-rol bijgewerkt: {role}",
-        "manage_in_user": "Beheren op de gebruikerspagina"
+        "manage_in_user": "Beheren op de gebruikerspagina",
+        "base_role": "Basisrol",
+        "change_base_role": "Basisrol wijzigen",
+        "addon_roles": "Extra rollen",
+        "no_addon_roles": "Geen extra rollen",
+        "add_addon_role": "Extra rol toevoegen",
+        "roles_read_only": "Je kunt de rollen van deze persoon niet wijzigen.",
+        "roles_unavailable": "De rollen konden niet worden geladen.",
+        "role_added": "Rol toegevoegd",
+        "role_removed": "Rol verwijderd",
+        "role_changed_base": "Basisrol bijgewerkt",
+        "confirm_remove_role": "De rol \"{role}\" verwijderen? De persoon verliest de rechten bij de volgende aanmelding.",
+        "confirm_remove_role_title": "Rol verwijderen"
       },
       "contatti_filters": {
         "search": "Zoeken (naam, e-mail, login…)",

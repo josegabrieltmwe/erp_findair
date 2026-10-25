@@ -509,7 +509,19 @@
         "no_roles": "No roles available",
         "no_role": "No role",
         "role_changed": "API role updated: {role}",
-        "manage_in_user": "Manage in the user page"
+        "manage_in_user": "Manage in the user page",
+        "base_role": "Base role",
+        "change_base_role": "Change base role",
+        "addon_roles": "Additional roles",
+        "no_addon_roles": "No additional roles",
+        "add_addon_role": "Add additional role",
+        "roles_read_only": "You can't change this person's roles.",
+        "roles_unavailable": "Roles could not be loaded.",
+        "role_added": "Role added",
+        "role_removed": "Role removed",
+        "role_changed_base": "Base role updated",
+        "confirm_remove_role": "Remove the role \"{role}\"? The person will lose its permissions the next time they sign in.",
+        "confirm_remove_role_title": "Remove role"
       },
       "contatti_filters": {
         "search": "Search (name, email, login…)",

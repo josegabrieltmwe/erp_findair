@@ -52,24 +52,13 @@
 
         <v-divider class="my-4" />
 
-        <!-- Rol API (contatti_oauth_role), solo lectura: se cambia desde la
-             columna Findair del listado o desde la ficha de usuario. -->
+        <!-- Roles API (rol base + aditivos). El editor ofrece solo lo que el API deja conceder a quien mira (un
+             administrador de cuenta ve los roles de cliente; TMWE, casi todos). Aplica al momento. -->
         <p class="text-caption mb-2">{{ t('anagrafiche.findair.api_role') }}</p>
-        <div class="cm-api-role-row mb-2">
-          <v-progress-circular v-if="apiRoleLoading" indeterminate size="16" width="2" />
-          <template v-else>
-            <v-chip
-              size="small"
-              variant="tonal"
-              :color="apiRole?.role_id ? 'primary' : 'grey'"
-            >
-              <span class="cm-mono">{{ apiRole?.role_name || t('anagrafiche.findair.no_role') }}</span>
-            </v-chip>
-            <RouterLink v-if="userDetailRoute" :to="userDetailRoute" class="cm-api-role-link">
-              {{ t('anagrafiche.findair.manage_in_user') }}
-            </RouterLink>
-          </template>
-        </div>
+        <ContactApiRolesEditor v-if="contatto?.id" :key="contatto.id" :contatto-id="contatto.id" />
+        <RouterLink v-if="userDetailRoute" :to="userDetailRoute" class="cm-api-role-link">
+          {{ t('anagrafiche.findair.manage_in_user') }}
+        </RouterLink>
 
         <v-divider class="my-4" />
 
@@ -102,11 +91,12 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink, useRouter, type RouteLocationRaw } from 'vue-router';
 import type { ContattoRow } from '../services/anagrafica.service';
-import { contattiService, type ApiRoleState } from '../services/contatti.service';
+import { contattiService } from '../services/contatti.service';
 import { contactRolesService } from '../services/contactRoles.service';
 import { useAnagraficaContext } from '../composables/useAnagraficaContext';
 import { useToast } from '../composables/useToast';
 import AuthFlagsEditor from '../components/AuthFlagsEditor.vue';
+import ContactApiRolesEditor from '../components/ContactApiRolesEditor.vue';
 
 const props = defineProps<{ modelValue: boolean; contatto: ContattoRow | null }>();
 const emit = defineEmits<{ 'update:modelValue': [value: boolean]; saved: [] }>();
@@ -117,26 +107,13 @@ const router = useRouter();
 
 const saving = ref(false);
 
-// Rol API actual (solo lectura). El enlace a la ficha de usuario solo si el
-// host tiene esa ruta (operations: `user-detail`) y el operador es TMWE.
-const apiRole = ref<ApiRoleState | null>(null);
-const apiRoleLoading = ref(false);
+// El enlace a la ficha de usuario solo si el host tiene esa ruta (operations: `user-detail`) y el operador es TMWE.
 const userDetailRoute = computed<RouteLocationRaw | null>(() => {
   const id = props.contatto?.id;
   if (!isTmwe.value || !id || !router?.hasRoute('user-detail')) return null;
   return { name: 'user-detail', params: { id: String(id) } };
 });
 
-async function loadApiRole(contattoId: number): Promise<void> {
-  apiRoleLoading.value = true;
-  try {
-    apiRole.value = await contattiService.getApiRole(contattoId);
-  } catch {
-    apiRole.value = null;
-  } finally {
-    apiRoleLoading.value = false;
-  }
-}
 const authFlags = ref<Record<string, 'S' | 'N'>>({});
 const alerts = ref<Record<string, string>>({});
 // Login por app (enum S/N) — antes no editables en la UI moderna.
@@ -199,8 +176,6 @@ watch(() => props.modelValue, (v) => {
     b2b_login_app: row.b2b_login_app === 'S' ? 'S' : 'N',
   };
   if (isTmwe.value && props.contatto.id) void loadRolesContext(props.contatto.id);
-  apiRole.value = null;
-  if (props.contatto.id) void loadApiRole(props.contatto.id);
 });
 
 function onClose(): void {
@@ -235,12 +210,6 @@ async function onSave(): Promise<void> {
 </script>
 
 <style scoped>
-.cm-api-role-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 28px;
-}
 .cm-api-role-link {
   font-size: 0.8em;
   color: rgb(var(--v-theme-primary));

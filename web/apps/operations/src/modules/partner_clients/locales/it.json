@@ -509,7 +509,19 @@
         "no_roles": "Nessun ruolo disponibile",
         "no_role": "Nessun ruolo",
         "role_changed": "Ruolo API aggiornato: {role}",
-        "manage_in_user": "Gestisci nella scheda utente"
+        "manage_in_user": "Gestisci nella scheda utente",
+        "base_role": "Ruolo base",
+        "change_base_role": "Cambia ruolo base",
+        "addon_roles": "Ruoli aggiuntivi",
+        "no_addon_roles": "Nessun ruolo aggiuntivo",
+        "add_addon_role": "Aggiungi ruolo aggiuntivo",
+        "roles_read_only": "Non puoi modificare i ruoli di questa persona.",
+        "roles_unavailable": "Impossibile caricare i ruoli.",
+        "role_added": "Ruolo aggiunto",
+        "role_removed": "Ruolo rimosso",
+        "role_changed_base": "Ruolo base aggiornato",
+        "confirm_remove_role": "Rimuovere il ruolo «{role}»? La persona perderà i relativi permessi al prossimo accesso.",
+        "confirm_remove_role_title": "Rimuovi ruolo"
       },
       "contatti_filters": {
         "search": "Cerca (nome, email, login…)",
