@@ -6,6 +6,8 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
+import { buildAccess } from "@shared/composables/useAccess";
+import { canEnterSettingsHub, canOpenAdminRoute } from "@/modules/settings/settingsAccess";
 import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
@@ -1198,7 +1200,13 @@ router.beforeEach(async (to) => {
   const { isAdmin, profile, ensureProfile } = useProfile();
   await ensureProfile();
 
-  if (to.meta.requiresAdmin && isAdmin.value !== true) return { name: "home" };
+  // TMWE entra como siempre; el resto solo a las rutas con scope de personal (settingsAccess.ts).
+  if (to.meta.requiresAdmin) {
+    const ctx = { isAdmin: isAdmin.value, access: buildAccess(profile.value) };
+    const allowed =
+      to.name === "settings" ? canEnterSettingsHub(ctx) : canOpenAdminRoute(String(to.name ?? ""), ctx);
+    if (!allowed) return { name: "home" };
+  }
   if (to.meta.aiScope && !canSeeAiScope(profile.value, isAdmin.value, to.meta.aiScope)) {
     return { name: "home" };
   }
