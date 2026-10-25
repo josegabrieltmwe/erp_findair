@@ -136,6 +136,22 @@ final class UnitTest extends TestCase
         self::assertFalse($ctx['user']['is_admin'], 'is_admin solo es verdadero si es booleano true');
     }
 
+    public function testProfileAccessIsSanitizedAndOptional(): void
+    {
+        $none = \Findair\Bff\Auth\UserContextProvider::fromProfile(['idanagfrc' => 1]);
+        self::assertSame(['roles' => [], 'scopes' => [], 'is_root' => false], $none['user']['access']);
+
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromProfile(['idanagfrc' => 77, 'access' => [
+            'roles' => [['name' => 'findair_basic'], ['name' => '<x>'], ['name' => 'findair_basic'], 'plano', ['id' => 3]],
+            'scopes' => ['shipment:read', 'shipment:read', 'Bad Scope', 7, str_repeat('s', 70)],
+            'is_root' => 'true',
+        ]]);
+
+        self::assertSame(['findair_basic'], $ctx['user']['access']['roles']);
+        self::assertSame(['shipment:read'], $ctx['user']['access']['scopes']);
+        self::assertFalse($ctx['user']['access']['is_root'], 'is_root solo es verdadero si es booleano true');
+    }
+
     public function testBackendContextCapabilitiesAreSanitized(): void
     {
         $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext([

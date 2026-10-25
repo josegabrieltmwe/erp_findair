@@ -77,6 +77,7 @@ final class UserContextProvider
                 'partner_id' => $partnerId,
                 'is_admin' => ($profile['is_admin'] ?? false) === true,
                 'is_tmwe' => $isTmwe,
+                'access' => self::access($profile['access'] ?? null),
             ],
             // Conservador: mostrar de menos es seguro, cada pantalla sigue autorizando en el backend.
             'capabilities' => $isTmwe ? ['tmwe', 'clients'] : [],
@@ -124,6 +125,36 @@ final class UserContextProvider
         $decoded = json_decode((string) $response->getBody(), true);
 
         return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
+     * Roles y scopes efectivos del token que informa `get_my_profile.access`. Es informativo para la SPA (menús y
+     * pantallas); el backend sigue autorizando cada petición. Se sanea porque viene del upstream.
+     *
+     * @return array{roles: list<string>, scopes: list<string>, is_root: bool}
+     */
+    private static function access(mixed $access): array
+    {
+        $access = is_array($access) ? $access : [];
+        $roles = [];
+        foreach (is_array($access['roles'] ?? null) ? $access['roles'] : [] as $role) {
+            $name = is_array($role) ? ($role['name'] ?? null) : null;
+            if (is_string($name) && preg_match('/^[a-z0-9_]{1,50}$/', $name) === 1) {
+                $roles[] = $name;
+            }
+        }
+        $scopes = [];
+        foreach (is_array($access['scopes'] ?? null) ? $access['scopes'] : [] as $scope) {
+            if (is_string($scope) && preg_match('/^[a-z0-9_.:-]{1,64}$/', $scope) === 1) {
+                $scopes[] = $scope;
+            }
+        }
+
+        return [
+            'roles' => array_slice(array_values(array_unique($roles)), 0, 50),
+            'scopes' => array_slice(array_values(array_unique($scopes)), 0, 300),
+            'is_root' => ($access['is_root'] ?? false) === true,
+        ];
     }
 
     private static function text(mixed $value): string

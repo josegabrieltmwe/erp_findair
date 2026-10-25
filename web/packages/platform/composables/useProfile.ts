@@ -31,6 +31,13 @@ export interface RawProfile {
   company?: string;
   partner_logo_url?: string;
   data?: { partner_logo_url?: string };
+  /** Roles y scopes efectivos del token (`get_my_profile.access`); ausente en backends antiguos. */
+  access?: {
+    roles?: Array<{ id?: number; name?: string; display_name?: string; addon?: boolean }>;
+    scopes?: string[];
+    is_root?: boolean;
+    grant?: string | null;
+  };
   [key: string]: unknown;
 }
 
