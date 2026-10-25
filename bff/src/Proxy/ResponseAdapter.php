@@ -189,6 +189,9 @@ final class ResponseAdapter
      */
     private function pick(array $payload, array $keys): ?string
     {
+        // tmwe_api: error canónico {error:{code,message}}; los alias planos error_code/message están deprecados.
+        $nested = is_array($payload['error'] ?? null) ? $payload['error'] : [];
+        $payload += array_filter(['error_code' => $nested['code'] ?? null, 'message' => $nested['message'] ?? null], 'is_string');
         foreach ($keys as $key) {
             if (isset($payload[$key]) && is_string($payload[$key]) && $payload[$key] !== '') {
                 return mb_substr($payload[$key], 0, 300);

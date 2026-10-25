@@ -179,14 +179,14 @@ routes:
     method: GET
     path: /ajax_validate_before_ldv
     upstream:
-      action: ajax_validate_before_ldv
+      action: web_validate_before_ldv
       forward_query: '*'
   -
     id: post.ajax_validate_before_ldv
     method: POST
     path: /ajax_validate_before_ldv
     upstream:
-      action: ajax_validate_before_ldv
+      action: web_validate_before_ldv
       forward_query: '*'
     limits:
       body: 1m
@@ -2664,7 +2664,7 @@ routes:
     method: POST
     path: /api_cargo_shipment_flight_search
     upstream:
-      action: api_cargo_shipment_flight_search
+      action: api_cargo_shipment_flight_search_oauth
       forward_query: '*'
     response: stream
     limits:
@@ -2674,7 +2674,7 @@ routes:
     method: GET
     path: /api_cargo_shipment_flight_search
     upstream:
-      action: api_cargo_shipment_flight_search
+      action: api_cargo_shipment_flight_search_oauth
       forward_query: '*'
     response: stream
     limits:
