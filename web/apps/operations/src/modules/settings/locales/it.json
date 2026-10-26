@@ -1205,14 +1205,22 @@
       "clear_all_restrictions": "Rimuovi tutte le restrizioni",
       "clear_all_restrictions_confirm": "Rimuovere tutte le restrizioni endpoint di questo utente?",
       "restrictions_cleared": "Restrizioni rimosse",
-      "api_role_title": "Ruolo API",
+      "api_role_title": "Ruolo base",
       "api_role_hint": "Determina cosa può fare questo utente tramite l'API quando entra da un'applicazione OAuth. Il permesso effettivo è l'intersezione con il ruolo dell'applicazione.",
       "api_role_label": "Ruolo API",
       "api_role_none": "Nessun ruolo",
       "api_role_revoke": "Revoca ruolo",
       "api_role_revoke_confirm": "Revocare il ruolo API di questo utente? Non potrà più usare l'API tramite le applicazioni OAuth.",
       "api_role_saved": "Ruolo API salvato",
-      "api_role_revoked": "Ruolo API revocato"
+      "api_role_revoked": "Ruolo API revocato",
+      "addon_title": "Ruoli aggiuntivi",
+      "addon_hint": "Si sommano al ruolo base: ciò che l'utente può fare è l'unione di tutti i suoi ruoli, limitata dal ruolo dell'applicazione. Vengono offerti solo i ruoli che puoi concedere a questo utente.",
+      "addon_none": "Nessun ruolo aggiuntivo",
+      "addon_add_label": "Aggiungi un ruolo aggiuntivo",
+      "addon_add": "Aggiungi",
+      "addon_added": "Ruolo aggiuntivo aggiunto",
+      "addon_removed": "Ruolo aggiuntivo rimosso",
+      "addon_failed": "Impossibile modificare il ruolo aggiuntivo"
     }
   },
   "client_onboarding": {

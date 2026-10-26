@@ -30,27 +30,57 @@ const FINDAIR_ENDPOINT = '/api_anagrafica_findair_access';
 
 export type FindairLevel = 'basic' | 'full';
 
+/** Rol OAuth tal como lo describe `api_anagrafica_findair_access`. */
+export interface RoleSummary {
+  id: number;
+  name: string;
+  display_name: string;
+  /** true = aditivo: se suma al rol base en lugar de sustituirlo. */
+  addon: boolean;
+}
+
 /**
- * Rol API de un contacto (tabla `contatti_oauth_role`, 1 rol por contacto).
- * `level` es la vista "findair" del rol (basic/full) que el backend deriva
- * cuando el rol es findair_basic/findair_full; para cualquier otro rol es null.
+ * Roles API de un contacto (tabla `contatti_oauth_role`): UN rol base más los aditivos que se suman (la unión de
+ * sus scopes es lo que cuenta, luego se cruza con el techo del client OAuth).
+ * `level` es la vista "findair" del rol base (basic/full) cuando es findair_basic/full; para otro rol es null.
+ * `grantable_roles` son los que el llamante puede conceder a ESTE contacto: la UI solo ofrece esos.
  */
 export interface ApiRoleState {
   enabled: boolean;
   level: FindairLevel | null;
   role_id: number | null;
   role_name: string | null;
+  addon_roles: string[];
+  addon_role_details: RoleSummary[];
+  grantable_roles: RoleSummary[];
 }
 /** Alias histórico: el "acceso findair" es el caso particular de rol API findair_*. */
 export type FindairAccessState = ApiRoleState;
 
+/** Roles aditivos conocidos (espejo de Contatti_Oauth_Role_Model::ADDON_ROLE_NAMES) para no ofrecerlos como rol base. */
+export const ADDON_ROLE_NAMES = [
+  'erp_operator', 'accounting_viewer', 'account_admin', 'history_viewer', 'archive_manager',
+  'contacts_search_all', 'courier_driver', 'dispatcher', 'root', 'partner_pricing', 'partner_mail_admin',
+] as const;
+
+function normalizeSummary(r: Partial<RoleSummary> | null | undefined): RoleSummary | null {
+  const id = Number(r?.id);
+  if (!r || !Number.isFinite(id) || id <= 0 || typeof r.name !== 'string') return null;
+  return { id, name: r.name, display_name: typeof r.display_name === 'string' && r.display_name ? r.display_name : r.name, addon: Boolean(r.addon) };
+}
+
 function normalizeApiRole(data: Partial<ApiRoleState> | null | undefined): ApiRoleState {
   const roleId = data?.role_id == null ? null : Number(data.role_id);
+  const list = (v: unknown): RoleSummary[] =>
+    (Array.isArray(v) ? v : []).map((r) => normalizeSummary(r as Partial<RoleSummary>)).filter((r): r is RoleSummary => r !== null);
   return {
     enabled: Boolean(data?.enabled),
     level: data?.level === 'full' ? 'full' : data?.level === 'basic' ? 'basic' : null,
     role_id: roleId != null && Number.isFinite(roleId) && roleId > 0 ? roleId : null,
     role_name: typeof data?.role_name === 'string' && data.role_name ? data.role_name : null,
+    addon_roles: Array.isArray(data?.addon_roles) ? data!.addon_roles!.filter((n): n is string => typeof n === 'string') : [],
+    addon_role_details: list(data?.addon_role_details),
+    grantable_roles: list(data?.grantable_roles),
   };
 }
 
@@ -207,6 +237,19 @@ export const contattiService = {
     const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body,
+    });
+    if (raw?.error) throw new Error(raw.error);
+    return normalizeApiRole(raw?.data);
+  },
+
+  /**
+   * Suma (enabled=true) o retira (enabled=false) un rol ADITIVO sin tocar el rol base. El backend decide por el
+   * propio rol si es aditivo; para un rol base usar setApiRole.
+   */
+  async setAddonRole(contattoId: number, roleId: number, enabled: boolean): Promise<ApiRoleState> {
+    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+      method: 'POST',
+      body: { id: contattoId, enabled, role_id: roleId },
     });
     if (raw?.error) throw new Error(raw.error);
     return normalizeApiRole(raw?.data);

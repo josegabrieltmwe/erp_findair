@@ -65,6 +65,14 @@
             >
               <span class="cm-mono">{{ apiRole?.role_name || t('anagrafiche.findair.no_role') }}</span>
             </v-chip>
+            <!-- Aditivos: editables solo si el servidor dice que el llamante puede conceder alguno a este contacto
+                 (un administrador de cuenta con profile:write o el personal de TMWE). -->
+            <ContactAddonRoles
+              v-if="apiRole && (apiRole.addon_role_details.length || apiRole.grantable_roles.some((r) => r.addon))"
+              :contatto-id="contatto?.id as number"
+              :state="apiRole"
+              @updated="apiRole = $event"
+            />
             <RouterLink v-if="userDetailRoute" :to="userDetailRoute" class="cm-api-role-link">
               {{ t('anagrafiche.findair.manage_in_user') }}
             </RouterLink>
@@ -103,6 +111,7 @@ import { useI18n } from 'vue-i18n';
 import { RouterLink, useRouter, type RouteLocationRaw } from 'vue-router';
 import type { ContattoRow } from '../services/anagrafica.service';
 import { contattiService, type ApiRoleState } from '../services/contatti.service';
+import ContactAddonRoles from '../../users/components/ContactAddonRoles.vue';
 import { contactRolesService } from '../services/contactRoles.service';
 import { useAnagraficaContext } from '../composables/useAnagraficaContext';
 import { useToast } from '../composables/useToast';

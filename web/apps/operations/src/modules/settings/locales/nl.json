@@ -1205,14 +1205,22 @@
       "clear_all_restrictions": "Alle beperkingen verwijderen",
       "clear_all_restrictions_confirm": "Alle endpoint-beperkingen van deze gebruiker verwijderen?",
       "restrictions_cleared": "Beperkingen verwijderd",
-      "api_role_title": "API-rol",
+      "api_role_title": "Basisrol",
       "api_role_hint": "Bepaalt wat deze gebruiker via de API mag doen wanneer hij inlogt via een OAuth-applicatie. De effectieve rechten zijn de doorsnede met de rol van de applicatie.",
       "api_role_label": "API-rol",
       "api_role_none": "Geen rol",
       "api_role_revoke": "Rol intrekken",
       "api_role_revoke_confirm": "De API-rol van deze gebruiker intrekken? De gebruiker kan de API dan niet meer via OAuth-applicaties gebruiken.",
       "api_role_saved": "API-rol opgeslagen",
-      "api_role_revoked": "API-rol ingetrokken"
+      "api_role_revoked": "API-rol ingetrokken",
+      "addon_title": "Aanvullende rollen",
+      "addon_hint": "Ze komen bovenop de basisrol: wat de gebruiker kan doen is de unie van al zijn rollen, begrensd door de rol van de applicatie. Alleen rollen die je aan deze gebruiker mag toekennen worden aangeboden.",
+      "addon_none": "Geen aanvullende rollen",
+      "addon_add_label": "Aanvullende rol toevoegen",
+      "addon_add": "Toevoegen",
+      "addon_added": "Aanvullende rol toegevoegd",
+      "addon_removed": "Aanvullende rol verwijderd",
+      "addon_failed": "De aanvullende rol kon niet worden gewijzigd"
     }
   },
   "client_onboarding": {

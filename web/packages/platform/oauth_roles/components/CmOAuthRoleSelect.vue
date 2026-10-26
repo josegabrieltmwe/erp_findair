@@ -44,6 +44,8 @@ interface Props {
    * OAuth externos usar `disable`; para contactos que no son de TMWE, `hide`.
    */
   internalOnly?: 'show' | 'disable' | 'hide';
+  /** Nombres de rol que no se ofrecen (p. ej. los aditivos en el selector del rol base). */
+  excludeNames?: readonly string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -55,6 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   clearable: true,
   rules: () => [],
   internalOnly: 'show',
+  excludeNames: () => [],
 });
 
 const emit = defineEmits<{
@@ -81,6 +84,7 @@ function formatSecondary(r: OAuthRoleLite): string | undefined {
 }
 
 function filterRole(r: OAuthRoleLite): boolean {
+  if (props.excludeNames.includes(r.role_name)) return false;
   return props.internalOnly === 'hide' ? !isInternalOnlyRole(r) : true;
 }
 

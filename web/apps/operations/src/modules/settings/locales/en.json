@@ -1205,14 +1205,22 @@
       "clear_all_restrictions": "Remove all restrictions",
       "clear_all_restrictions_confirm": "Remove all endpoint restrictions for this user?",
       "restrictions_cleared": "Restrictions removed",
-      "api_role_title": "API role",
+      "api_role_title": "Base role",
       "api_role_hint": "Determines what this user can do through the API when signing in via an OAuth application. The effective permission is the intersection with the application's role.",
       "api_role_label": "API role",
       "api_role_none": "No role",
       "api_role_revoke": "Revoke role",
       "api_role_revoke_confirm": "Revoke this user's API role? They will no longer be able to use the API through OAuth applications.",
       "api_role_saved": "API role saved",
-      "api_role_revoked": "API role revoked"
+      "api_role_revoked": "API role revoked",
+      "addon_title": "Add-on roles",
+      "addon_hint": "They add to the base role: what the user can do is the union of all their roles, capped by the application's role. Only roles you may grant to this user are offered.",
+      "addon_none": "No add-on roles",
+      "addon_add_label": "Add an add-on role",
+      "addon_add": "Add",
+      "addon_added": "Add-on role added",
+      "addon_removed": "Add-on role removed",
+      "addon_failed": "The add-on role could not be changed"
     }
   },
   "client_onboarding": {

@@ -1205,14 +1205,22 @@
       "clear_all_restrictions": "Alle Beschränkungen entfernen",
       "clear_all_restrictions_confirm": "Alle Endpoint-Beschränkungen dieses Benutzers entfernen?",
       "restrictions_cleared": "Beschränkungen entfernt",
-      "api_role_title": "API-Rolle",
+      "api_role_title": "Basisrolle",
       "api_role_hint": "Bestimmt, was dieser Benutzer über die API tun darf, wenn er sich über eine OAuth-Anwendung anmeldet. Die effektive Berechtigung ist die Schnittmenge mit der Rolle der Anwendung.",
       "api_role_label": "API-Rolle",
       "api_role_none": "Keine Rolle",
       "api_role_revoke": "Rolle entziehen",
       "api_role_revoke_confirm": "Die API-Rolle dieses Benutzers entziehen? Er kann die API dann nicht mehr über OAuth-Anwendungen nutzen.",
       "api_role_saved": "API-Rolle gespeichert",
-      "api_role_revoked": "API-Rolle entzogen"
+      "api_role_revoked": "API-Rolle entzogen",
+      "addon_title": "Zusatzrollen",
+      "addon_hint": "Sie ergänzen die Basisrolle: Was der Benutzer tun kann, ist die Vereinigung aller seiner Rollen, begrenzt durch die Rolle der Anwendung. Es werden nur Rollen angeboten, die Sie diesem Benutzer erteilen dürfen.",
+      "addon_none": "Keine Zusatzrollen",
+      "addon_add_label": "Zusatzrolle hinzufügen",
+      "addon_add": "Hinzufügen",
+      "addon_added": "Zusatzrolle hinzugefügt",
+      "addon_removed": "Zusatzrolle entfernt",
+      "addon_failed": "Die Zusatzrolle konnte nicht geändert werden"
     }
   },
   "client_onboarding": {

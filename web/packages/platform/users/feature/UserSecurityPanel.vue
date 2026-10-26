@@ -281,8 +281,8 @@
           </div>
         </div>
 
-        <!-- ROL API (contatti_oauth_role) — 1 rol por usuario; el permiso
-             efectivo por API es la intersección con el rol del client OAuth. -->
+        <!-- ROL BASE API (contatti_oauth_role): uno por usuario; los aditivos van en el bloque de abajo. El permiso
+             efectivo por API es la unión de roles ∩ el rol del client OAuth. -->
         <div class="cm-section-block">
           <div class="cm-block-title">
             {{ t('users.security.api_role_title') }}
@@ -306,6 +306,7 @@
               :label="t('users.security.api_role_label')"
               :placeholder="t('users.security.api_role_none')"
               :internal-only="apiRoleInternalOnlyMode"
+              :exclude-names="ADDON_ROLE_NAMES"
               :disabled="apiRoleSaving || apiRoleLoading"
               class="cm-roles-select"
             />
@@ -332,6 +333,13 @@
               {{ t('users.security.api_role_revoke') }}
             </v-btn>
           </div>
+        </div>
+
+        <!-- ROLES ADITIVOS — se suman al rol base; la unión de sus scopes es lo que cuenta. -->
+        <div class="cm-section-block">
+          <div class="cm-block-title">{{ t('users.security.addon_title') }}</div>
+          <p class="cm-restriction-hint">{{ t('users.security.addon_hint') }}</p>
+          <ContactAddonRoles :contatto-id="userId" :state="apiRole" @updated="onAddonUpdated" />
         </div>
       </div>
     </template>
@@ -369,7 +377,8 @@ import {
 } from '../services/userEndpointRestrictions.service';
 import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
 import { roleConflictMessage } from '../../oauth_roles/services/oauthRoles.service';
-import { contattiService, type ApiRoleState } from '../../anagrafiche/services/contatti.service';
+import { contattiService, ADDON_ROLE_NAMES, type ApiRoleState } from '../../anagrafiche/services/contatti.service';
+import ContactAddonRoles from '../components/ContactAddonRoles.vue';
 import { useAuthCapabilities } from '../../anagrafiche/composables/useAuthCapabilities';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
@@ -690,6 +699,13 @@ async function persistApiRole(roleId: number | null): Promise<void> {
   } finally {
     apiRoleSaving.value = false;
   }
+}
+
+/** Un rol aditivo se sumó o retiró: el estado del contacto cambia, y con él los permisos efectivos. */
+function onAddonUpdated(state: ApiRoleState): void {
+  apiRole.value = state;
+  emit('saved');
+  effectiveRefreshKey.value += 1;
 }
 
 /** Guarda el rol elegido; con el selector vacío ("sin rol") revoca. */
