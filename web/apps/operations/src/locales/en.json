@@ -5,7 +5,8 @@
     "webcargo": "WebCargo credentials",
     "fornitori_accnt": "Courier credentials",
     "elevenlabs_credentials": "ElevenLabs credentials",
-    "datos_fiscales": "Tax data"
+    "datos_fiscales": "Tax data",
+    "partner_smtp": "SMTP (outgoing email)"
   },
   "common": {
     "cancel": "Cancel",

@@ -2355,6 +2355,11 @@
     "purpose_reset_password": "Passwörter",
     "purpose_transactional": "Transaktional",
     "purpose_other": "Sonstige",
-    "purpose_pec": "PEC"
+    "purpose_pec": "PEC",
+    "section_use": "Verwendung",
+    "section_connection": "Verbindung",
+    "section_sender": "Absender",
+    "password_stored": "Gespeichert — neues Passwort eingeben, um es zu ändern",
+    "partner_tab_hint": "SMTP-Konten dieses Partners. Ohne eigenes Konto für einen Zweck läuft der Versand über das von TMWE."
   }
 }

@@ -2355,6 +2355,11 @@
     "purpose_reset_password": "Wachtwoorden",
     "purpose_transactional": "Transactioneel",
     "purpose_other": "Overig",
-    "purpose_pec": "PEC"
+    "purpose_pec": "PEC",
+    "section_use": "Gebruik",
+    "section_connection": "Verbinding",
+    "section_sender": "Afzender",
+    "password_stored": "Opgeslagen — typ een nieuw wachtwoord om te wijzigen",
+    "partner_tab_hint": "SMTP-accounts van deze partner. Zonder eigen account voor een doel gaat de e-mail via dat van TMWE."
   }
 }

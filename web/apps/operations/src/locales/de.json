@@ -5,7 +5,8 @@
     "webcargo": "WebCargo-Zugangsdaten",
     "fornitori_accnt": "Kurier-Zugangsdaten",
     "elevenlabs_credentials": "ElevenLabs-Zugangsdaten",
-    "datos_fiscales": "Steuerdaten"
+    "datos_fiscales": "Steuerdaten",
+    "partner_smtp": "SMTP (ausgehende E-Mail)"
   },
   "common": {
     "cancel": "Abbrechen",

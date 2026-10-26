@@ -5,7 +5,8 @@
     "webcargo": "Credenziali WebCargo",
     "fornitori_accnt": "Credenziali corriere",
     "elevenlabs_credentials": "Credenziali ElevenLabs",
-    "datos_fiscales": "Dati fiscali"
+    "datos_fiscales": "Dati fiscali",
+    "partner_smtp": "SMTP (posta in uscita)"
   },
   "common": {
     "cancel": "Annulla",

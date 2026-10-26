@@ -5,7 +5,8 @@
     "webcargo": "WebCargo-inloggegevens",
     "fornitori_accnt": "Vervoerder-inloggegevens",
     "elevenlabs_credentials": "ElevenLabs-inloggegevens",
-    "datos_fiscales": "Fiscale gegevens"
+    "datos_fiscales": "Fiscale gegevens",
+    "partner_smtp": "SMTP (uitgaande e-mail)"
   },
   "common": {
     "cancel": "Annuleren",
