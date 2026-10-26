@@ -70,7 +70,7 @@
     <PartnerSmtpFormDialog v-model="formOpen" :service="service" :account="editing" :partner-id="partnerId ?? undefined" @saved="onSaved" />
 
     <AppDialog :open="testOpen" :title="t('partner_smtp.test')" icon="mdi-email-fast-outline" size="confirm" @close="testOpen = false">
-      <p class="text-body-2 mb-3">{{ t('partner_smtp.test_hint', { limit: 5 }) }}</p>
+      <p class="text-body-2 mb-3">{{ t('partner_smtp.test_hint', { limit: 20 }) }}</p>
       <v-text-field v-model="testRecipient" type="email" :label="t('partner_smtp.test_recipient')" />
       <v-alert v-if="testMessage" :type="testOk ? 'success' : 'error'" density="compact" class="mt-3">{{ testMessage }}</v-alert>
       <template #actions>
