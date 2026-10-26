@@ -29,6 +29,8 @@
     "filter": "Filteren",
     "back": "Terug",
     "logout": "Afmelden",
+    "processing": "Bezig met verwerken…",
+    "loggingOut": "Afmelden…",
     "empty": "Geen gegevens",
     "status": "Status",
     "active": "Actief",

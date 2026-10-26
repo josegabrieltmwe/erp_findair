@@ -29,6 +29,8 @@
     "filter": "Filtern",
     "back": "Zurück",
     "logout": "Abmelden",
+    "processing": "Wird verarbeitet…",
+    "loggingOut": "Abmeldung läuft…",
     "empty": "Keine Daten",
     "status": "Status",
     "active": "Aktiv",

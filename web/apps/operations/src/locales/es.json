@@ -29,6 +29,8 @@
     "filter": "Filtrar",
     "back": "Volver",
     "logout": "Cerrar sesión",
+    "processing": "Procesando…",
+    "loggingOut": "Cerrando sesión…",
     "empty": "Sin datos",
     "status": "Estado",
     "active": "Activo",

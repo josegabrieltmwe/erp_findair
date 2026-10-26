@@ -29,6 +29,8 @@
     "filter": "Filtra",
     "back": "Indietro",
     "logout": "Logout",
+    "processing": "Elaborazione in corso…",
+    "loggingOut": "Disconnessione in corso…",
     "empty": "Nessun dato",
     "status": "Stato",
     "active": "Attivo",
