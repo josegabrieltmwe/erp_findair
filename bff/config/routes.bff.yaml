@@ -191,3 +191,62 @@ routes:
       action: api_admin_elevenlabs_health
       forward_query: [live]
     limits: { timeout: 30 }
+
+  # Cuentas SMTP por partner. api_partner_smtp: el administrador del partner gestiona las suyas (el partner sale
+  # de la sesión, nunca del cliente); api_admin_partner_smtp: TMWE sobre cualquier partner. Scopes smtp:read/write y
+  # "administrador del partner" los aplica la API. POST puede ser {action:'test'}: abre una conexión SMTP real.
+  - id: partner_smtp.get
+    method: GET
+    path: /api_partner_smtp
+    upstream:
+      action: api_partner_smtp
+      forward_query: [id, view, purpose, environment, from]
+
+  - id: partner_smtp.post
+    method: POST
+    path: /api_partner_smtp
+    upstream:
+      action: api_partner_smtp
+    limits: { body: 16k, timeout: 30 }
+
+  - id: partner_smtp.put
+    method: PUT
+    path: /api_partner_smtp
+    upstream:
+      action: api_partner_smtp
+    limits: { body: 16k, timeout: 15 }
+
+  - id: partner_smtp.delete
+    method: DELETE
+    path: /api_partner_smtp
+    upstream:
+      action: api_partner_smtp
+    limits: { body: 4k, timeout: 15 }
+
+  - id: admin_partner_smtp.get
+    method: GET
+    path: /api_admin_partner_smtp
+    upstream:
+      action: api_admin_partner_smtp
+      forward_query: [id, anagrafica_id, view, purpose, environment, from]
+
+  - id: admin_partner_smtp.post
+    method: POST
+    path: /api_admin_partner_smtp
+    upstream:
+      action: api_admin_partner_smtp
+    limits: { body: 16k, timeout: 30 }
+
+  - id: admin_partner_smtp.put
+    method: PUT
+    path: /api_admin_partner_smtp
+    upstream:
+      action: api_admin_partner_smtp
+    limits: { body: 16k, timeout: 15 }
+
+  - id: admin_partner_smtp.delete
+    method: DELETE
+    path: /api_admin_partner_smtp
+    upstream:
+      action: api_admin_partner_smtp
+    limits: { body: 4k, timeout: 15 }

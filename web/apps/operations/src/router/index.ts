@@ -445,6 +445,21 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@shared/elevenlabs_agents/feature/ElevenlabsPartnerAgentPage.vue"),
   },
+  // Cuentas SMTP por partner. La del partner NO es requiresAdmin: la autoriza el servidor (scopes smtp:*
+  // y administrador del partner, authx_18). La de TMWE sobre cualquier partner si lo es.
+  {
+    path: "/settings/smtp",
+    name: "settings-partner-smtp",
+    component: () => import("@shared/partner_smtp/feature/PartnerSmtpPage.vue"),
+    props: { scope: "self" },
+  },
+  {
+    path: "/settings/smtp-admin",
+    name: "settings-partner-smtp-admin",
+    component: () => import("@shared/partner_smtp/feature/PartnerSmtpPage.vue"),
+    props: { scope: "admin" },
+    meta: { requiresAdmin: true },
+  },
   {
     path: "/settings/elevenlabs-agent-review",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "review" } },

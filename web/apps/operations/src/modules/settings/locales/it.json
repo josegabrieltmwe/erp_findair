@@ -295,6 +295,14 @@
         "my_ai_usage": {
           "title": "Il mio utilizzo IA",
           "description": "Il tuo utilizzo IA (sola lettura)"
+        },
+        "partner_smtp": {
+          "title": "Posta in uscita (SMTP)",
+          "description": "Gli account SMTP con cui la tua azienda invia le email"
+        },
+        "partner_smtp_admin": {
+          "title": "SMTP per partner",
+          "description": "Account SMTP di qualsiasi partner, con diagnosi di quale verrebbe usato"
         }
       }
     }
@@ -2288,5 +2296,65 @@
       "tools": "Tool",
       "request_id": "ID richiesta"
     }
+  },
+  "partner_smtp": {
+    "title": "Posta in uscita (SMTP)",
+    "subtitle": "Account con cui vengono inviate le email della tua azienda. Solo l'amministratore del partner può modificarli.",
+    "title_admin": "SMTP per partner",
+    "subtitle_admin": "Account SMTP di qualsiasi partner. Scegli un partner per creare account e vedere quale verrebbe usato in ogni invio.",
+    "new_account": "Nuovo account",
+    "filter_partner": "Partner",
+    "pick_partner_hint": "Scegli un partner per creare account o vedere l'account effettivo; altrimenti vengono elencati tutti.",
+    "empty": "Nessun account SMTP.",
+    "col_partner": "Partner",
+    "col_server": "Server",
+    "col_test": "Ultimo test",
+    "no_password": "Nessuna password salvata",
+    "test_ok": "Riuscito",
+    "test_failed": "Fallito",
+    "test_never": "Mai provato",
+    "test": "Prova account",
+    "test_hint": "Verrà inviata un'email di prova (massimo {limit} prove all'ora).",
+    "test_recipient": "Destinatario della prova",
+    "test_send": "Invia prova",
+    "test_sent": "Email di prova inviata a {to}.",
+    "effective_title": "Quale account viene usato in ogni invio",
+    "effective_hint": "Se uno scopo non ha un account proprio, si usa l'account predefinito e, in mancanza, quello di TMWE.",
+    "source_own": "Account proprio",
+    "source_tmwe_default": "Ripiego di TMWE",
+    "source_none": "Fallirà: nessun account",
+    "dialog_create": "Nuovo account SMTP",
+    "dialog_edit": "Modifica account SMTP",
+    "field_purpose": "Scopo",
+    "field_environment": "Ambiente",
+    "field_server": "Server SMTP",
+    "hint_server": "Nome pubblico del server, senza schema (smtp.esempio.com).",
+    "field_port": "Porta",
+    "field_security": "Sicurezza",
+    "field_user": "Utente",
+    "field_password": "Password",
+    "hint_password_write_only": "Solo scrittura: non viene più mostrata.",
+    "hint_password_keep": "Lasciala vuota per mantenere quella salvata.",
+    "field_from_email": "Mittente",
+    "field_from_name": "Nome del mittente",
+    "field_description": "Nota",
+    "warn_credentials_change": "Se cambi il server o l'utente devi riscrivere la password.",
+    "required": "Obbligatorio",
+    "error_generic": "Impossibile completare l'operazione.",
+    "saved": "Account salvato",
+    "deleted": "Account eliminato",
+    "confirm_delete_title": "Elimina account SMTP",
+    "confirm_delete_message": "Eliminare l'account {server} per lo scopo {purpose}?",
+    "env_production": "Produzione",
+    "env_sandbox": "Prove",
+    "purpose_default": "Predefinito",
+    "purpose_billing": "Fatturazione",
+    "purpose_tracking": "Tracking",
+    "purpose_crm": "CRM",
+    "purpose_alert": "Avvisi",
+    "purpose_reset_password": "Password",
+    "purpose_transactional": "Transazionale",
+    "purpose_other": "Altri",
+    "purpose_pec": "PEC"
   }
 }

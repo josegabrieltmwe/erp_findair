@@ -295,6 +295,14 @@
         "my_ai_usage": {
           "title": "Mi uso de IA",
           "description": "Tu propio uso de IA (solo lectura)"
+        },
+        "partner_smtp": {
+          "title": "Correo saliente (SMTP)",
+          "description": "Las cuentas SMTP con las que tu empresa envía sus correos"
+        },
+        "partner_smtp_admin": {
+          "title": "SMTP por partner",
+          "description": "Cuentas SMTP de cualquier partner, con diagnóstico de cuál se usaría"
         }
       }
     }
@@ -2288,5 +2296,65 @@
       "tools": "Tools",
       "request_id": "ID de petición"
     }
+  },
+  "partner_smtp": {
+    "title": "Correo saliente (SMTP)",
+    "subtitle": "Cuentas con las que se envían los correos de tu empresa. Solo el administrador del partner puede cambiarlas.",
+    "title_admin": "SMTP por partner",
+    "subtitle_admin": "Cuentas SMTP de cualquier partner. Elige un partner para crear cuentas y ver cuál se usaría en cada envío.",
+    "new_account": "Nueva cuenta",
+    "filter_partner": "Partner",
+    "pick_partner_hint": "Elige un partner para crear cuentas o ver la cuenta efectiva; sin elegir se listan todas.",
+    "empty": "No hay cuentas SMTP.",
+    "col_partner": "Partner",
+    "col_server": "Servidor",
+    "col_test": "Última prueba",
+    "no_password": "Sin contraseña guardada",
+    "test_ok": "Correcta",
+    "test_failed": "Fallida",
+    "test_never": "Sin probar",
+    "test": "Probar cuenta",
+    "test_hint": "Se enviará un correo de prueba (máximo {limit} pruebas por hora).",
+    "test_recipient": "Destinatario de la prueba",
+    "test_send": "Enviar prueba",
+    "test_sent": "Correo de prueba enviado a {to}.",
+    "effective_title": "Qué cuenta se usa en cada envío",
+    "effective_hint": "Si un propósito no tiene cuenta propia, se usa la cuenta por defecto y, si no la hay, la de TMWE.",
+    "source_own": "Cuenta propia",
+    "source_tmwe_default": "Respaldo de TMWE",
+    "source_none": "Fallará: sin cuenta",
+    "dialog_create": "Nueva cuenta SMTP",
+    "dialog_edit": "Editar cuenta SMTP",
+    "field_purpose": "Propósito",
+    "field_environment": "Entorno",
+    "field_server": "Servidor SMTP",
+    "hint_server": "Nombre público del servidor, sin esquema (smtp.ejemplo.com).",
+    "field_port": "Puerto",
+    "field_security": "Seguridad",
+    "field_user": "Usuario",
+    "field_password": "Contraseña",
+    "hint_password_write_only": "Solo escritura: no se vuelve a mostrar.",
+    "hint_password_keep": "Déjala vacía para conservar la guardada.",
+    "field_from_email": "Remitente",
+    "field_from_name": "Nombre del remitente",
+    "field_description": "Nota",
+    "warn_credentials_change": "Si cambias el servidor o el usuario debes volver a escribir la contraseña.",
+    "required": "Obligatorio",
+    "error_generic": "No se pudo completar la operación.",
+    "saved": "Cuenta guardada",
+    "deleted": "Cuenta eliminada",
+    "confirm_delete_title": "Eliminar cuenta SMTP",
+    "confirm_delete_message": "¿Eliminar la cuenta {server} del propósito {purpose}?",
+    "env_production": "Producción",
+    "env_sandbox": "Pruebas",
+    "purpose_default": "Por defecto",
+    "purpose_billing": "Facturación",
+    "purpose_tracking": "Seguimiento",
+    "purpose_crm": "CRM",
+    "purpose_alert": "Alertas",
+    "purpose_reset_password": "Contraseñas",
+    "purpose_transactional": "Transaccional",
+    "purpose_other": "Otros",
+    "purpose_pec": "PEC"
   }
 }
