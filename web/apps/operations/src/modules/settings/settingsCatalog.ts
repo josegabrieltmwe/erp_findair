@@ -555,6 +555,24 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'b2b_templates',
         aliases: ['Modelli email'],
       },
+      // Cuentas SMTP por partner: el administrador del partner gestiona las suyas y TMWE las de cualquiera.
+      // Backend: api_partner_smtp / api_admin_partner_smtp (Partner_Smtp_Service).
+      {
+        key: 'partner_smtp',
+        i18nKey: 'partner_smtp',
+        icon: 'mdi-email-fast-outline',
+        routeName: 'settings-partner-smtp',
+        subgroup: 'b2b_templates',
+        aliases: ['SMTP', 'Mail server', 'Correo saliente', 'Outgoing email'],
+      },
+      {
+        key: 'partner_smtp_admin',
+        i18nKey: 'partner_smtp_admin',
+        icon: 'mdi-email-lock-outline',
+        routeName: 'settings-partner-smtp-admin',
+        subgroup: 'b2b_templates',
+        aliases: ['SMTP por partner', 'Partner SMTP'],
+      },
       // Fase 5 / L17: plantillas de documentos/mensajes (modelli) — distinto
       // de email_templates (tabla y controlador propios: Modelli_Controller).
       {

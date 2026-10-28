@@ -295,6 +295,14 @@
         "my_ai_usage": {
           "title": "Mijn AI-gebruik",
           "description": "Je eigen AI-gebruik (alleen lezen)"
+        },
+        "partner_smtp": {
+          "title": "Uitgaande e-mail (SMTP)",
+          "description": "De SMTP-accounts waarmee je bedrijf e-mails verstuurt"
+        },
+        "partner_smtp_admin": {
+          "title": "SMTP per partner",
+          "description": "SMTP-accounts van elke partner, met een diagnose van welke gebruikt zou worden"
         }
       }
     }
@@ -1212,7 +1220,7 @@
       "clear_all_restrictions": "Alle beperkingen verwijderen",
       "clear_all_restrictions_confirm": "Alle endpoint-beperkingen van deze gebruiker verwijderen?",
       "restrictions_cleared": "Beperkingen verwijderd",
-      "api_role_title": "API-rol",
+      "api_role_title": "Basisrol",
       "api_role_hint": "Bepaalt wat deze gebruiker via de API mag doen wanneer hij inlogt via een OAuth-applicatie. De effectieve rechten zijn de doorsnede met de rol van de applicatie.",
       "api_role_label": "API-rol",
       "api_role_none": "Geen rol",
@@ -1220,7 +1228,8 @@
       "api_role_revoke_confirm": "De API-rol van deze gebruiker intrekken? De gebruiker kan de API dan niet meer via OAuth-applicaties gebruiken.",
       "api_role_saved": "API-rol opgeslagen",
       "api_role_revoked": "API-rol ingetrokken",
-      "addon_roles_title": "Extra rollen (komen bij de basisrol)"
+      "addon_roles_title": "Extra rollen (komen bij de basisrol)",
+      "addon_hint": "Ze komen bovenop de basisrol: wat de gebruiker kan doen is de unie van al zijn rollen, begrensd door de rol van de applicatie. Alleen rollen die je aan deze gebruiker mag toekennen worden aangeboden."
     }
   },
   "client_onboarding": {
@@ -2308,5 +2317,70 @@
       "tools": "Tools",
       "request_id": "Verzoek-ID"
     }
+  },
+  "partner_smtp": {
+    "title": "Uitgaande e-mail (SMTP)",
+    "subtitle": "Accounts waarmee de e-mails van je bedrijf worden verstuurd. Alleen de beheerder van de partner kan ze wijzigen.",
+    "title_admin": "SMTP per partner",
+    "subtitle_admin": "SMTP-accounts van elke partner. Kies een partner om accounts aan te maken en te zien welke bij elke verzending wordt gebruikt.",
+    "new_account": "Nieuw account",
+    "filter_partner": "Partner",
+    "pick_partner_hint": "Kies een partner om accounts aan te maken of het effectieve account te zien; anders worden alle accounts getoond.",
+    "empty": "Geen SMTP-accounts.",
+    "col_partner": "Partner",
+    "col_server": "Server",
+    "col_test": "Laatste test",
+    "no_password": "Geen wachtwoord opgeslagen",
+    "test_ok": "Geslaagd",
+    "test_failed": "Mislukt",
+    "test_never": "Nog niet getest",
+    "test": "Account testen",
+    "test_hint": "Er wordt een testmail verstuurd (maximaal {limit} tests per uur).",
+    "test_recipient": "Ontvanger van de test",
+    "test_send": "Test versturen",
+    "test_sent": "Testmail verstuurd naar {to}.",
+    "effective_title": "Welk account bij elke verzending wordt gebruikt",
+    "effective_hint": "Een doel zonder eigen account gebruikt het standaardaccount en anders dat van TMWE.",
+    "source_own": "Eigen account",
+    "source_tmwe_default": "Terugval van TMWE",
+    "source_none": "Mislukt: geen account",
+    "dialog_create": "Nieuw SMTP-account",
+    "dialog_edit": "SMTP-account bewerken",
+    "field_purpose": "Doel",
+    "field_environment": "Omgeving",
+    "field_server": "SMTP-server",
+    "hint_server": "Openbare servernaam, zonder schema (smtp.voorbeeld.com).",
+    "field_port": "Poort",
+    "field_security": "Beveiliging",
+    "field_user": "Gebruiker",
+    "field_password": "Wachtwoord",
+    "hint_password_write_only": "Alleen schrijven: wordt nooit meer getoond.",
+    "hint_password_keep": "Laat leeg om het opgeslagen wachtwoord te behouden.",
+    "field_from_email": "Afzender",
+    "field_from_name": "Naam van de afzender",
+    "field_description": "Notitie",
+    "warn_credentials_change": "Als je de server of de gebruiker wijzigt, moet je het wachtwoord opnieuw invoeren.",
+    "required": "Verplicht",
+    "error_generic": "De bewerking kon niet worden voltooid.",
+    "saved": "Account opgeslagen",
+    "deleted": "Account verwijderd",
+    "confirm_delete_title": "SMTP-account verwijderen",
+    "confirm_delete_message": "Het account {server} voor doel {purpose} verwijderen?",
+    "env_production": "Productie",
+    "env_sandbox": "Test",
+    "purpose_default": "Standaard",
+    "purpose_billing": "Facturatie",
+    "purpose_tracking": "Tracking",
+    "purpose_crm": "CRM",
+    "purpose_alert": "Meldingen",
+    "purpose_reset_password": "Wachtwoorden",
+    "purpose_transactional": "Transactioneel",
+    "purpose_other": "Overig",
+    "purpose_pec": "PEC",
+    "section_use": "Gebruik",
+    "section_connection": "Verbinding",
+    "section_sender": "Afzender",
+    "password_stored": "Opgeslagen — typ een nieuw wachtwoord om te wijzigen",
+    "partner_tab_hint": "SMTP-accounts van deze partner. Zonder eigen account voor een doel gaat de e-mail via dat van TMWE."
   }
 }

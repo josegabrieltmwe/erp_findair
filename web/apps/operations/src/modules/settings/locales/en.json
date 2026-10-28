@@ -295,6 +295,14 @@
         "my_ai_usage": {
           "title": "My AI usage",
           "description": "Your own AI usage (read-only)"
+        },
+        "partner_smtp": {
+          "title": "Outgoing email (SMTP)",
+          "description": "The SMTP accounts your company uses to send email"
+        },
+        "partner_smtp_admin": {
+          "title": "Partner SMTP",
+          "description": "SMTP accounts of any partner, with a diagnosis of which one would be used"
         }
       }
     }
@@ -1212,7 +1220,7 @@
       "clear_all_restrictions": "Remove all restrictions",
       "clear_all_restrictions_confirm": "Remove all endpoint restrictions for this user?",
       "restrictions_cleared": "Restrictions removed",
-      "api_role_title": "API role",
+      "api_role_title": "Base role",
       "api_role_hint": "Determines what this user can do through the API when signing in via an OAuth application. The effective permission is the intersection with the application's role.",
       "api_role_label": "API role",
       "api_role_none": "No role",
@@ -1220,7 +1228,8 @@
       "api_role_revoke_confirm": "Revoke this user's API role? They will no longer be able to use the API through OAuth applications.",
       "api_role_saved": "API role saved",
       "api_role_revoked": "API role revoked",
-      "addon_roles_title": "Additional roles (added to the base role)"
+      "addon_roles_title": "Additional roles (added to the base role)",
+      "addon_hint": "They add to the base role: what the user can do is the union of all their roles, capped by the application's role. Only roles you may grant to this user are offered."
     }
   },
   "client_onboarding": {
@@ -2308,5 +2317,70 @@
       "tools": "Tools",
       "request_id": "Request ID"
     }
+  },
+  "partner_smtp": {
+    "title": "Outgoing email (SMTP)",
+    "subtitle": "Accounts used to send your company's email. Only the partner administrator can change them.",
+    "title_admin": "Partner SMTP",
+    "subtitle_admin": "SMTP accounts of any partner. Pick a partner to create accounts and see which one each message would use.",
+    "new_account": "New account",
+    "filter_partner": "Partner",
+    "pick_partner_hint": "Pick a partner to create accounts or see the effective account; otherwise all accounts are listed.",
+    "empty": "No SMTP accounts.",
+    "col_partner": "Partner",
+    "col_server": "Server",
+    "col_test": "Last test",
+    "no_password": "No password stored",
+    "test_ok": "Passed",
+    "test_failed": "Failed",
+    "test_never": "Not tested",
+    "test": "Test account",
+    "test_hint": "A test email will be sent (up to {limit} tests per hour).",
+    "test_recipient": "Test recipient",
+    "test_send": "Send test",
+    "test_sent": "Test email sent to {to}.",
+    "effective_title": "Which account each message uses",
+    "effective_hint": "A purpose without its own account uses the default account and, failing that, TMWE's.",
+    "source_own": "Own account",
+    "source_tmwe_default": "TMWE fallback",
+    "source_none": "Will fail: no account",
+    "dialog_create": "New SMTP account",
+    "dialog_edit": "Edit SMTP account",
+    "field_purpose": "Purpose",
+    "field_environment": "Environment",
+    "field_server": "SMTP server",
+    "hint_server": "Public server name, without scheme (smtp.example.com).",
+    "field_port": "Port",
+    "field_security": "Security",
+    "field_user": "User",
+    "field_password": "Password",
+    "hint_password_write_only": "Write-only: it is never shown again.",
+    "hint_password_keep": "Leave empty to keep the stored one.",
+    "field_from_email": "Sender",
+    "field_from_name": "Sender name",
+    "field_description": "Note",
+    "warn_credentials_change": "If you change the server or the user you must type the password again.",
+    "required": "Required",
+    "error_generic": "The operation could not be completed.",
+    "saved": "Account saved",
+    "deleted": "Account deleted",
+    "confirm_delete_title": "Delete SMTP account",
+    "confirm_delete_message": "Delete the {server} account for purpose {purpose}?",
+    "env_production": "Production",
+    "env_sandbox": "Sandbox",
+    "purpose_default": "Default",
+    "purpose_billing": "Billing",
+    "purpose_tracking": "Tracking",
+    "purpose_crm": "CRM",
+    "purpose_alert": "Alerts",
+    "purpose_reset_password": "Passwords",
+    "purpose_transactional": "Transactional",
+    "purpose_other": "Other",
+    "purpose_pec": "PEC",
+    "section_use": "Use",
+    "section_connection": "Connection",
+    "section_sender": "Sender",
+    "password_stored": "Stored — type a new one to change it",
+    "partner_tab_hint": "This partner's SMTP accounts. Without its own account for a purpose, its email goes out through TMWE's."
   }
 }

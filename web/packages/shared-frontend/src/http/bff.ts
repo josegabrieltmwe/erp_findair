@@ -15,6 +15,64 @@ const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 let csrfToken: string | null = null;
 let redirecting = false;
 
+/**
+ * Indicador global de "procesando": cuenta las peticiones que cambian estado hacia `/bff/`
+ * y avisa a los suscriptores (el modal del shell). Las rutas de `BUSY_IGNORED` y las
+ * peticiones con `X-Busy: off` no lo activan (chat del copilot, que tiene su propio estado).
+ */
+export interface BusyState {
+  active: boolean;
+  /** Clave i18n del texto del modal. */
+  labelKey: string;
+}
+
+const BUSY_IGNORED = [/\/(api_)?copilot_/];
+const BUSY_LABEL = 'common.processing';
+const BUSY_LABEL_LOGOUT = 'common.loggingOut';
+
+const busyListeners = new Set<(state: BusyState) => void>();
+let busyPending = 0;
+let busyLabelKey = BUSY_LABEL;
+/** Tras el logout la página navega: el modal no se cierra en ningún caso. */
+let busyLocked = false;
+
+export function getBusyState(): BusyState {
+  return { active: busyLocked || busyPending > 0, labelKey: busyLabelKey };
+}
+
+export function subscribeBusy(listener: (state: BusyState) => void): () => void {
+  busyListeners.add(listener);
+  return () => {
+    busyListeners.delete(listener);
+  };
+}
+
+function notifyBusy(): void {
+  const state = getBusyState();
+  for (const l of busyListeners) l(state);
+}
+
+function busyBegin(labelKey: string): void {
+  busyPending += 1;
+  busyLabelKey = labelKey;
+  notifyBusy();
+}
+
+function busyEnd(): void {
+  busyPending = Math.max(0, busyPending - 1);
+  if (busyPending === 0 && !busyLocked) busyLabelKey = BUSY_LABEL;
+  notifyBusy();
+}
+
+/** Solo para pruebas. */
+export function resetBusyForTests(): void {
+  busyPending = 0;
+  busyLocked = false;
+  busyLabelKey = BUSY_LABEL;
+  logoutInFlight = false;
+  notifyBusy();
+}
+
 export function setCsrfToken(token: string | null): void {
   csrfToken = token;
 }
@@ -65,12 +123,22 @@ export function installBffFetch(): void {
 
     const method = (init?.method ?? (input instanceof Request ? input.method : 'GET')).toUpperCase();
     let next = init;
+    const url = requestUrl(input);
+    const optOut = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('X-Busy') === 'off';
+    const trackBusy = !SAFE_METHODS.has(method) && !optOut && !BUSY_IGNORED.some((re) => re.test(url));
     if (!SAFE_METHODS.has(method) && csrfToken) {
       const headers = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined));
       if (!headers.has('X-CSRF-Token')) headers.set('X-CSRF-Token', csrfToken);
+      headers.delete('X-Busy');
       next = { ...init, headers };
     }
-    const response = await original(input, { credentials: 'same-origin', ...next });
+    if (trackBusy) busyBegin(url.includes(`${BFF_AUTH_PATH}/logout`) ? BUSY_LABEL_LOGOUT : BUSY_LABEL);
+    let response: Response;
+    try {
+      response = await original(input, { credentials: 'same-origin', ...next });
+    } finally {
+      if (trackBusy) busyEnd();
+    }
 
     if (response.status === 401 && !requestUrl(input).includes('/bff/auth/')) {
       redirectToBffLogin();
@@ -80,7 +148,15 @@ export function installBffFetch(): void {
 }
 
 /** Cierra la sesión en el BFF (revoca tokens y destruye la sesión) y vuelve al inicio. */
+let logoutInFlight = false;
+
 export async function bffLogout(): Promise<void> {
+  // Un segundo clic mientras el primero sigue en curso no repite la petición.
+  if (logoutInFlight) return;
+  logoutInFlight = true;
+  busyLocked = true;
+  busyLabelKey = BUSY_LABEL_LOGOUT;
+  notifyBusy();
   try {
     await fetch(`${BFF_AUTH_PATH}/logout`, { method: 'POST', credentials: 'same-origin' });
   } finally {

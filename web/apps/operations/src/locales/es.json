@@ -5,7 +5,8 @@
     "webcargo": "Credenciales WebCargo",
     "fornitori_accnt": "Credenciales courier",
     "elevenlabs_credentials": "Credenciales ElevenLabs",
-    "datos_fiscales": "Datos fiscales"
+    "datos_fiscales": "Datos fiscales",
+    "partner_smtp": "SMTP (correo saliente)"
   },
   "common": {
     "cancel": "Cancelar",
@@ -29,6 +30,8 @@
     "filter": "Filtrar",
     "back": "Volver",
     "logout": "Cerrar sesión",
+    "processing": "Procesando…",
+    "loggingOut": "Cerrando sesión…",
     "empty": "Sin datos",
     "status": "Estado",
     "active": "Activo",

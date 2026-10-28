@@ -5,7 +5,8 @@
     "webcargo": "WebCargo-Zugangsdaten",
     "fornitori_accnt": "Kurier-Zugangsdaten",
     "elevenlabs_credentials": "ElevenLabs-Zugangsdaten",
-    "datos_fiscales": "Steuerdaten"
+    "datos_fiscales": "Steuerdaten",
+    "partner_smtp": "SMTP (ausgehende E-Mail)"
   },
   "common": {
     "cancel": "Abbrechen",
@@ -29,6 +30,8 @@
     "filter": "Filtern",
     "back": "Zurück",
     "logout": "Abmelden",
+    "processing": "Wird verarbeitet…",
+    "loggingOut": "Abmeldung läuft…",
     "empty": "Keine Daten",
     "status": "Status",
     "active": "Aktiv",

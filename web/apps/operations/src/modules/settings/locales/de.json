@@ -295,6 +295,14 @@
         "my_ai_usage": {
           "title": "Meine KI-Nutzung",
           "description": "Ihre eigene KI-Nutzung (schreibgeschützt)"
+        },
+        "partner_smtp": {
+          "title": "Ausgehende E-Mail (SMTP)",
+          "description": "Die SMTP-Konten, mit denen Ihr Unternehmen E-Mails versendet"
+        },
+        "partner_smtp_admin": {
+          "title": "SMTP pro Partner",
+          "description": "SMTP-Konten beliebiger Partner, mit Diagnose, welches verwendet würde"
         }
       }
     }
@@ -1212,7 +1220,7 @@
       "clear_all_restrictions": "Alle Beschränkungen entfernen",
       "clear_all_restrictions_confirm": "Alle Endpoint-Beschränkungen dieses Benutzers entfernen?",
       "restrictions_cleared": "Beschränkungen entfernt",
-      "api_role_title": "API-Rolle",
+      "api_role_title": "Basisrolle",
       "api_role_hint": "Bestimmt, was dieser Benutzer über die API tun darf, wenn er sich über eine OAuth-Anwendung anmeldet. Die effektive Berechtigung ist die Schnittmenge mit der Rolle der Anwendung.",
       "api_role_label": "API-Rolle",
       "api_role_none": "Keine Rolle",
@@ -1220,7 +1228,8 @@
       "api_role_revoke_confirm": "Die API-Rolle dieses Benutzers entziehen? Er kann die API dann nicht mehr über OAuth-Anwendungen nutzen.",
       "api_role_saved": "API-Rolle gespeichert",
       "api_role_revoked": "API-Rolle entzogen",
-      "addon_roles_title": "Zusätzliche Rollen (zur Basisrolle addiert)"
+      "addon_roles_title": "Zusätzliche Rollen (zur Basisrolle addiert)",
+      "addon_hint": "Sie ergänzen die Basisrolle: Was der Benutzer tun kann, ist die Vereinigung aller seiner Rollen, begrenzt durch die Rolle der Anwendung. Es werden nur Rollen angeboten, die Sie diesem Benutzer erteilen dürfen."
     }
   },
   "client_onboarding": {
@@ -2308,5 +2317,70 @@
       "tools": "Tools",
       "request_id": "Anfrage-ID"
     }
+  },
+  "partner_smtp": {
+    "title": "Ausgehende E-Mail (SMTP)",
+    "subtitle": "Konten, über die die E-Mails Ihres Unternehmens versendet werden. Nur der Administrator des Partners kann sie ändern.",
+    "title_admin": "SMTP pro Partner",
+    "subtitle_admin": "SMTP-Konten beliebiger Partner. Wählen Sie einen Partner, um Konten anzulegen und zu sehen, welches bei jedem Versand verwendet würde.",
+    "new_account": "Neues Konto",
+    "filter_partner": "Partner",
+    "pick_partner_hint": "Wählen Sie einen Partner, um Konten anzulegen oder das wirksame Konto zu sehen; sonst werden alle aufgelistet.",
+    "empty": "Keine SMTP-Konten.",
+    "col_partner": "Partner",
+    "col_server": "Server",
+    "col_test": "Letzter Test",
+    "no_password": "Kein Passwort gespeichert",
+    "test_ok": "Erfolgreich",
+    "test_failed": "Fehlgeschlagen",
+    "test_never": "Nie getestet",
+    "test": "Konto testen",
+    "test_hint": "Es wird eine Test-E-Mail gesendet (höchstens {limit} Tests pro Stunde).",
+    "test_recipient": "Empfänger des Tests",
+    "test_send": "Test senden",
+    "test_sent": "Test-E-Mail an {to} gesendet.",
+    "effective_title": "Welches Konto bei jedem Versand verwendet wird",
+    "effective_hint": "Ein Zweck ohne eigenes Konto verwendet das Standardkonto und sonst das von TMWE.",
+    "source_own": "Eigenes Konto",
+    "source_tmwe_default": "Rückfall auf TMWE",
+    "source_none": "Schlägt fehl: kein Konto",
+    "dialog_create": "Neues SMTP-Konto",
+    "dialog_edit": "SMTP-Konto bearbeiten",
+    "field_purpose": "Zweck",
+    "field_environment": "Umgebung",
+    "field_server": "SMTP-Server",
+    "hint_server": "Öffentlicher Servername ohne Schema (smtp.beispiel.com).",
+    "field_port": "Port",
+    "field_security": "Sicherheit",
+    "field_user": "Benutzer",
+    "field_password": "Passwort",
+    "hint_password_write_only": "Nur schreibbar: wird nie wieder angezeigt.",
+    "hint_password_keep": "Leer lassen, um das gespeicherte zu behalten.",
+    "field_from_email": "Absender",
+    "field_from_name": "Name des Absenders",
+    "field_description": "Notiz",
+    "warn_credentials_change": "Wenn Sie Server oder Benutzer ändern, müssen Sie das Passwort erneut eingeben.",
+    "required": "Pflichtfeld",
+    "error_generic": "Der Vorgang konnte nicht abgeschlossen werden.",
+    "saved": "Konto gespeichert",
+    "deleted": "Konto gelöscht",
+    "confirm_delete_title": "SMTP-Konto löschen",
+    "confirm_delete_message": "Konto {server} für den Zweck {purpose} löschen?",
+    "env_production": "Produktion",
+    "env_sandbox": "Test",
+    "purpose_default": "Standard",
+    "purpose_billing": "Fakturierung",
+    "purpose_tracking": "Tracking",
+    "purpose_crm": "CRM",
+    "purpose_alert": "Warnungen",
+    "purpose_reset_password": "Passwörter",
+    "purpose_transactional": "Transaktional",
+    "purpose_other": "Sonstige",
+    "purpose_pec": "PEC",
+    "section_use": "Verwendung",
+    "section_connection": "Verbindung",
+    "section_sender": "Absender",
+    "password_stored": "Gespeichert — neues Passwort eingeben, um es zu ändern",
+    "partner_tab_hint": "SMTP-Konten dieses Partners. Ohne eigenes Konto für einen Zweck läuft der Versand über das von TMWE."
   }
 }

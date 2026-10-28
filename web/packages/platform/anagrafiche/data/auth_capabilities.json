@@ -1,241 +1,212 @@
 {
-    "_generated_at": "2026-05-28 10:33:02",
-    "capabilities": {
-        "auth_10": {
-            "type": "capability",
-            "display_name": "ERP Login Access",
-            "description": "Required to log into the internal ERP web interface.",
-            "semantic": "primary_access_gate",
-            "audience": [
-                "internal_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "Gate principal. Sin este flag, no se puede iniciar sesión en el ERP. NO concede permisos de módulo — solo es un gate binario verificado por profilo_chk_lgn.php y Security_Service::verify_user()."
-        },
-        "auth_11": {
-            "type": "capability",
-            "display_name": "Show Old Records (legacy)",
-            "description": "Mostrar registros antiguos/archivados. Uso legacy poco frecuente.",
-            "semantic": "display_preference",
-            "audience": [
-                "internal_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "Stored as $_SESSION['shw_old']. Semántica exacta no documentada.",
-            "deprecated": false
-        },
-        "auth_12": {
-            "type": "reserved",
-            "display_name": "Reserved (auth_12)",
-            "description": "Slot reservado para futuro uso.",
-            "semantic": "reserved",
-            "audience": [],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "No tiene uso activo en el código."
-        },
-        "auth_13": {
-            "type": "reserved",
-            "display_name": "Reserved (auth_13)",
-            "description": "Slot reservado para futuro uso.",
-            "semantic": "reserved",
-            "audience": [],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": []
-        },
-        "auth_14": {
-            "type": "reserved",
-            "display_name": "Reserved (auth_14)",
-            "description": "Slot reservado para futuro uso.",
-            "semantic": "reserved",
-            "audience": [],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": []
-        },
-        "auth_15": {
-            "type": "reserved",
-            "display_name": "Reserved (auth_15)",
-            "description": "Slot reservado para futuro uso.",
-            "semantic": "reserved",
-            "audience": [],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": []
-        },
-        "auth_16": {
-            "type": "reserved",
-            "display_name": "Reserved (auth_16)",
-            "description": "Slot reservado para futuro uso.",
-            "semantic": "reserved",
-            "audience": [],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": []
-        },
-        "auth_17": {
-            "type": "capability",
-            "display_name": "B2B Portal Access (legacy)",
-            "description": "Acceso al portal B2B legacy. Uso parcial en checks históricos.",
-            "semantic": "legacy_gate",
-            "audience": [
-                "b2b_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "Referenciado en algunos chequeos del rate controller; uso limitado.",
-            "deprecated": true
-        },
-        "auth_18": {
-            "type": "capability",
-            "display_name": "Billing & Commercial Admin",
-            "description": "Admin total de facturación, pagos, contactos, listini, master data.",
-            "semantic": "domain_admin",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [
-                "fatturazione:admin",
-                "fatturazione_fornitori:admin",
-                "pagamenti:admin",
-                "pagamenti_config:admin",
-                "anagrafiche:admin",
-                "anagrafiche_contacts:admin",
-                "anagrafiche_addresses:admin",
-                "anagrafiche_banks:admin",
-                "fornitori_servizi:read",
-                "master_data:read",
-                "master_data:write",
-                "listini:admin",
-                "spedizioni:read"
-            ],
-            "bypasses": [
-                "auth_21",
-                "auth_22"
-            ],
-            "bypassed_by": [],
-            "notes": "Domain admin. Bypassa filtros de visibilidad auth_21/auth_22."
-        },
-        "auth_19": {
-            "type": "capability",
-            "display_name": "Logistics & Operations Admin",
-            "description": "Operaciones de driver, pickups, spedizioni, cargo, labels.",
-            "semantic": "operations_admin",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [
-                "driver:read",
-                "driver:write",
-                "pickups:read",
-                "pickups:write",
-                "spedizioni:read",
-                "spedizioni:write",
-                "cargo:read",
-                "cargo:write",
-                "labels:read",
-                "labels:write",
-                "labels:print_tmwe",
-                "labels:print_courier",
-                "tracking:read"
-            ],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "Capacidad operacional completa. NO incluye facturación (eso es auth_18)."
-        },
-        "auth_20": {
-            "type": "capability",
-            "display_name": "Billing Read-Only",
-            "description": "Lectura de facturas, pagos, listini (cara al cliente B2B).",
-            "semantic": "billing_viewer",
-            "audience": [
-                "internal_user",
-                "b2b_user",
-                "external_client"
-            ],
-            "introduces": [
-                "fatturazione:read",
-                "fatturazione:export",
-                "pagamenti:read",
-                "listini:read",
-                "spedizioni:read"
-            ],
-            "bypasses": [],
-            "bypassed_by": [],
-            "notes": "Subset read-only de auth_18. Redundante si auth_18 está activo."
-        },
-        "auth_21": {
-            "type": "filter",
-            "display_name": "Own Data Only",
-            "description": "Restringe spedizioni a las creadas por el propio usuario.",
-            "semantic": "row_level_filter_user",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [
-                "auth_18"
-            ],
-            "filter_sql": "owner_user = :user.id OR insert_user = :user.id",
-            "notes": "Aplicado por External_Access_Control_Trait. Bypassed por auth_18."
-        },
-        "auth_22": {
-            "type": "filter",
-            "display_name": "Own Sede Only",
-            "description": "Restringe spedizioni a la sede interna del usuario.",
-            "semantic": "row_level_filter_sede",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [
-                "auth_18"
-            ],
-            "filter_sql": "id_sede = :user.id_sede_interna OR id_sede = 0",
-            "notes": "id_sede=0 es accesible para todos. Bypassed por auth_18."
-        },
-        "auth_23": {
-            "type": "filter",
-            "display_name": "Cargo Address Book — Own Contacts",
-            "description": "Filtra spedizioni_rubrica a los contactos del propio usuario.",
-            "semantic": "rubrica_filter_user",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "filter_sql": "owner_user = :user.id OR owner_user = 0",
-            "notes": "Específico para cargo address book."
-        },
-        "auth_24": {
-            "type": "filter",
-            "display_name": "Cargo Address Book — Sede Contacts",
-            "description": "Filtra spedizioni_rubrica a los contactos de la sede.",
-            "semantic": "rubrica_filter_sede",
-            "audience": [
-                "internal_user",
-                "b2b_user"
-            ],
-            "introduces": [],
-            "bypasses": [],
-            "bypassed_by": [],
-            "filter_sql": "id_sede = :user.id_sede_interna OR id_sede = 0",
-            "notes": "Específico para cargo address book."
-        }
+  "_generated_at": "2026-10-26 manual",
+  "capabilities": {
+    "auth_10": {
+      "type": "capability",
+      "display_name": "ERP Access (legacy flag)",
+      "description": "Marca de acceso al ERP/portal legacy. La entrada a las apps internas la decide el rol erp_operator (scope erp:view), no este flag.",
+      "semantic": "erp_access_legacy",
+      "audience": [
+        "internal_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Sin efecto sobre los permisos del API. Lo leen la vista ERP del listado/exportacion, el perfil y el login por QR; NO darlo a clientes."
+    },
+    "auth_11": {
+      "type": "reserved",
+      "display_name": "History view (legacy ERP)",
+      "description": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui.",
+      "semantic": "legacy_erp_only",
+      "audience": [
+        "internal_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui.",
+      "deprecated": false
+    },
+    "auth_12": {
+      "type": "reserved",
+      "display_name": "Archived records (legacy ERP)",
+      "description": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui.",
+      "semantic": "legacy_erp_only",
+      "audience": [],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui."
+    },
+    "auth_13": {
+      "type": "reserved",
+      "display_name": "Unfiltered search (legacy ERP)",
+      "description": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui.",
+      "semantic": "legacy_erp_only",
+      "audience": [],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui."
+    },
+    "auth_14": {
+      "type": "reserved",
+      "display_name": "Reserved (auth_14)",
+      "description": "Libre.",
+      "semantic": "reserved",
+      "audience": [],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Sin uso."
+    },
+    "auth_15": {
+      "type": "reserved",
+      "display_name": "Reserved (auth_15)",
+      "description": "Libre.",
+      "semantic": "reserved",
+      "audience": [],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Sin uso."
+    },
+    "auth_16": {
+      "type": "reserved",
+      "display_name": "Contacts management (legacy ERP)",
+      "description": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui.",
+      "semantic": "legacy_erp_only",
+      "audience": [],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Solo lo lee el ERP legacy; el API moderno no le da ningun efecto, por eso no se edita desde aqui."
+    },
+    "auth_17": {
+      "type": "capability",
+      "display_name": "Account Administrator",
+      "description": "Administrador de la cuenta: nivel de precio «admin general» y alta de usuarios de su cuenta. Los permisos de gestion los da el rol account_admin.",
+      "semantic": "account_admin_flag",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Lo lee Price_Visibility_Service (nivel admin). Quien gestiona usuarios lo hace por el rol account_admin, no por este flag."
+    },
+    "auth_18": {
+      "type": "capability",
+      "display_name": "View Accounting & Costs",
+      "description": "Ver contabilidad: ve costes y levanta las restricciones de fila de los flags «solo mis envios» y «solo mi sede». Un cliente final nunca ve costes aunque lo tenga.",
+      "semantic": "data_scope_costs",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [
+        "auth_21",
+        "auth_22"
+      ],
+      "bypassed_by": [],
+      "notes": "No concede permisos de facturacion (eso lo da el rol accounting_viewer). Lo lee Data_Scope. Tope por actor: un cliente final nunca ve el coste."
+    },
+    "auth_19": {
+      "type": "capability",
+      "display_name": "Create Shipments (veto)",
+      "description": "Permite insertar y reservar envios. En N es un veto: el alta de envios responde 403 SHIPMENT_CREATION_VETOED.",
+      "semantic": "shipment_creation_veto",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "No concede etiquetas ni acceso a modulos: eso lo dan los scopes del rol. Es un interruptor de creacion."
+    },
+    "auth_20": {
+      "type": "capability",
+      "display_name": "View Prices",
+      "description": "Ver los precios de los envios (en listados, detalle y exportacion). Con auth_18 el nivel sube a coste.",
+      "semantic": "data_scope_price",
+      "audience": [
+        "internal_user",
+        "b2b_user",
+        "external_client"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "notes": "Lo lee Data_Scope::price_level."
+    },
+    "auth_21": {
+      "type": "filter",
+      "display_name": "Own Shipments Only",
+      "description": "Restringe envios, hilos de CRM y comunicacion a los creados por el propio usuario. auth_18 lo levanta en envios.",
+      "semantic": "row_level_filter_user",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [
+        "auth_18"
+      ],
+      "filter_sql": "owner_user = :user.id OR insert_user = :user.id",
+      "notes": "Aplicado por External_Access_Control_Trait. Bypassed por auth_18."
+    },
+    "auth_22": {
+      "type": "filter",
+      "display_name": "Own Branch Shipments Only",
+      "description": "Restringe envios a los de la sede del usuario. auth_18 lo levanta.",
+      "semantic": "row_level_filter_sede",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [
+        "auth_18"
+      ],
+      "filter_sql": "id_sede = :user.id_sede_interna OR id_sede = 0",
+      "notes": "id_sede=0 es accesible para todos. Bypassed por auth_18."
+    },
+    "auth_23": {
+      "type": "filter",
+      "display_name": "Own Address Book Only",
+      "description": "Libreta de direcciones: solo las propias o sin dueño.",
+      "semantic": "rubrica_filter_user",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "filter_sql": "owner_user = :user.id OR owner_user = 0",
+      "notes": "Específico para cargo address book."
+    },
+    "auth_24": {
+      "type": "filter",
+      "display_name": "Branch Address Book Only",
+      "description": "Libreta de direcciones: solo las de su sede o sin sede.",
+      "semantic": "rubrica_filter_sede",
+      "audience": [
+        "internal_user",
+        "b2b_user"
+      ],
+      "introduces": [],
+      "bypasses": [],
+      "bypassed_by": [],
+      "filter_sql": "id_sede = :user.id_sede_interna OR id_sede = 0",
+      "notes": "Específico para cargo address book."
     }
+  },
+  "_source": "Mantenido a mano contra docs/plans/oauth_puro/09_flags_auth_y_roles.md del API: el backend ya no genera auth_capabilities.yml. Los flags 21-24, 18, 19 y 20 son alcance de datos que lee Data_Scope; no conceden scopes."
 }
