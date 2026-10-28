@@ -26,10 +26,15 @@
     "lint:openapi:shipment": "spectral lint --ruleset ../docs/openapi/shipment/.spectral.yaml --fail-severity=error ../docs/openapi/shipment/*.yaml",
     "lint:openapi:all": "pnpm run lint:openapi && pnpm run lint:openapi:shipment",
     "check:i18n": "tsx packages/scripts/check_i18n.ts",
-    "check:raw-text": "tsx packages/scripts/check_raw_text.ts"
+    "check:raw-text": "tsx packages/scripts/check_raw_text.ts",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright show-report e2e/report",
+    "e2e:smoke": "playwright test smoke"
   },
   "devDependencies": {
     "@intlify/eslint-plugin-vue-i18n": "^4.5.1",
+    "@playwright/test": "1.64.1",
     "@stoplight/spectral-cli": "^6.16.0",
     "tsx": "^4.19.2"
   }
