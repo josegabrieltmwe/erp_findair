@@ -1,7 +1,7 @@
 # Tarea: preparar tmwe_json para el BFF de ERP Findair (segunda entrega)
 
 ## Contexto
-La SPA de operaciones (Vue + Vuetify) vive ahora en `/var/www/host/erp_findair` y habla con tmwe_json
+La SPA de operaciones (Vue + Vuetify) vive ahora en este repositorio (`erp_findair`) y habla con tmwe_json
 **solo con Bearer**, a través de un BFF (Slim 4, `erp_findair/bff`): login Authorization Code + PKCE
 contra `action=auth`, y cada petición como `app.php?action=<ruta>`. Todo lo que use la SPA debe funcionar
 con token, no con sesión PHP. Plan completo: `erp_findair/docs/plan-migracion.md`; detalle técnico:
@@ -95,7 +95,7 @@ RPC, `X-Effective-Partner-Id` en todos los controladores Bearer (el BFF ya lo ex
 `navigateTo`.
 
 ## Cómo comprobar tu trabajo
-Desde `/var/www/host/erp_findair/bff` (con una sesión: login en `https://erp-findair.php8/bff/auth/login`
+Desde `bff/` (con una sesión: login en `https://erp-findair.php8/bff/auth/login`
 como `jose`, y la cookie `__Host-sid` del navegador):
 - `bin/regen-spa-manifest.sh` → «NO expuestas, tier ajax» debe quedar vacío.
 - `php bin/probe-routes.php <cookie>` → sondeo de solo lectura; los 403 y 401 de las tareas 1 y 2 deben
