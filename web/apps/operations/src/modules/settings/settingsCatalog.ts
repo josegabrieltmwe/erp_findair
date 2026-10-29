@@ -681,7 +681,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
   // `administration`/`identity` ya tenían clave i18n reservada en los 5
   // locales antes de este montaje — se usan tal cual, no son invención de
   // esta pasada. Completo con las 6 restantes en la misma pasada
-  // (internal_roles, module_permissions, authz_explain, mfa_setup,
+  // (authz_explain, mfa_setup,
   // scheduler, client_onboarding): sus claves i18n también estaban ya
   // preparadas y completas en los 5 locales, solo sin conectar. Quedan 3
   // huérfanas MÁS, no pedidas y sin i18n preparado (air_carrier_delegation,
@@ -697,20 +697,6 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         i18nKey: 'users',
         icon: 'mdi-account-key-outline',
         routeName: 'settings-users',
-        subgroup: 'identity',
-      },
-      {
-        key: 'internal_roles',
-        i18nKey: 'internal_roles',
-        icon: 'mdi-account-group-outline',
-        routeName: 'settings-internal-roles',
-        subgroup: 'identity',
-      },
-      {
-        key: 'module_permissions',
-        i18nKey: 'module_permissions',
-        icon: 'mdi-key-outline',
-        routeName: 'settings-module-permissions',
         subgroup: 'identity',
       },
       {

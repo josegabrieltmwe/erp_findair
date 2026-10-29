@@ -30,7 +30,7 @@
             :rules="[ruleRequiredId]"
             class="mb-3"
           />
-          <CmInternalRoleSelect
+          <CmOAuthRoleSelect
             v-model="form.role_ids"
             multiple
             :label="t('users.field_initial_roles')"
@@ -87,7 +87,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccountPlus } from '@mdi/js';
 import CmAnagraficaAutocomplete from '../../listini/components/CmAnagraficaAutocomplete.vue';
-import CmInternalRoleSelect from '../../internal_roles/components/CmInternalRoleSelect.vue';
+import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
 import CredentialsRevealCard from '../../anagrafiche/components/CredentialsRevealCard.vue';
 import { usersService, type UserCredentials } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
