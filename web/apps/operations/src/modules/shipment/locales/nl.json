@@ -170,6 +170,8 @@
       "toast_reserved_code": "Ophaling geboekt: {code}",
       "toast_reserved": "Ophaling geboekt",
       "toast_reserve_failed": "Ophaalboeking mislukt",
+      "toast_reserve_missing_address": "Stel eerst het ophaaladres in",
+      "toast_reserve_invalid_date": "Stel een geldige verzenddatum naar de afzender in (niet in het verleden)",
       "toast_cancelled": "Ophaling geannuleerd",
       "toast_cancel_failed": "Annulering ophaling mislukt",
       "schedule_title": "Ophaalplanning",

@@ -170,6 +170,8 @@
       "toast_reserved_code": "Ritiro prenotato: {code}",
       "toast_reserved": "Ritiro prenotato",
       "toast_reserve_failed": "Prenotazione ritiro fallita",
+      "toast_reserve_missing_address": "Imposta prima l'indirizzo di ritiro",
+      "toast_reserve_invalid_date": "Imposta una data di invio al mittente valida (non passata)",
       "toast_cancelled": "Presa annullata",
       "toast_cancel_failed": "Annullamento presa fallito",
       "schedule_title": "Programmazione ritiro",

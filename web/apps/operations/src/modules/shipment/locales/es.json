@@ -170,6 +170,8 @@
       "toast_reserved_code": "Recogida reservada: {code}",
       "toast_reserved": "Recogida reservada",
       "toast_reserve_failed": "Reserva de recogida fallida",
+      "toast_reserve_missing_address": "Configura primero la dirección de recogida",
+      "toast_reserve_invalid_date": "Configura una fecha de envío al remitente válida (no pasada)",
       "toast_cancelled": "Recogida anulada",
       "toast_cancel_failed": "Anulación de recogida fallida",
       "schedule_title": "Programación de recogida",

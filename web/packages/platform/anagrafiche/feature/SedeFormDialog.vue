@@ -282,7 +282,13 @@ async function onSave(): Promise<void> {
     if (isEdit.value && form.value.id) {
       await sediInterneService.update(form.value.id, form.value);
     } else {
-      await sediInterneService.create(props.idAnagrafica, form.value);
+      const created = await sediInterneService.create(props.idAnagrafica, form.value);
+      if (created?.id) {
+        const all = await sediInterneService.listByPartner(props.idAnagrafica);
+        if (all.length === 1) {
+          await sediInterneService.setDefault(props.idAnagrafica, created.id);
+        }
+      }
     }
     toast.success(t('anagrafiche.updated'));
     emit('saved');

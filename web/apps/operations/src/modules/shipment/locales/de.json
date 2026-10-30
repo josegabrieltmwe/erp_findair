@@ -170,6 +170,8 @@
       "toast_reserved_code": "Abholung reserviert: {code}",
       "toast_reserved": "Abholung reserviert",
       "toast_reserve_failed": "Abholungsreservierung fehlgeschlagen",
+      "toast_reserve_missing_address": "Zuerst die Abholadresse festlegen",
+      "toast_reserve_invalid_date": "Ein gültiges Versanddatum an den Absender festlegen (nicht in der Vergangenheit)",
       "toast_cancelled": "Abholung storniert",
       "toast_cancel_failed": "Stornierung der Abholung fehlgeschlagen",
       "schedule_title": "Abholplanung",

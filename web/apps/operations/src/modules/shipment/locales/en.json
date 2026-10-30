@@ -170,6 +170,8 @@
       "toast_reserved_code": "Pickup booked: {code}",
       "toast_reserved": "Pickup booked",
       "toast_reserve_failed": "Pickup booking failed",
+      "toast_reserve_missing_address": "Set the pickup address first",
+      "toast_reserve_invalid_date": "Set a valid sender dispatch date (not in the past)",
       "toast_cancelled": "Pickup cancelled",
       "toast_cancel_failed": "Pickup cancellation failed",
       "schedule_title": "Pickup schedule",

@@ -349,7 +349,19 @@ const hasAwb = computed<boolean>(() => {
  * (When there is no AWB yet the pickup is reserved together with the AWB from
  * the LDV/AWB hub, so this button targets the already-labelled case.)
  */
+function isBeforeToday(dateStr: string): boolean {
+  return dateStr < new Date().toISOString().slice(0, 10);
+}
+
 function onReservePickup(): void {
+  if (!shipment.value?.origin_address) {
+    toasts.push("error", t("shipment.pickup.toast_reserve_missing_address"));
+    return;
+  }
+  if (!presaInvioMitt.local || isBeforeToday(presaInvioMitt.local)) {
+    toasts.push("error", t("shipment.pickup.toast_reserve_invalid_date"));
+    return;
+  }
   reserveAlertOpen.value = true;
 }
 
