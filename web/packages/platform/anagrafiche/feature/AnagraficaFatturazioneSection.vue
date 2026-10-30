@@ -283,13 +283,14 @@ const billingFlags = [
 ] as const;
 
 // Fase C: bloqueos por carrier (paridad legacy anagr_form.php:332-337).
-// ids fijos: 2=DHL, 3=UPS, 5=BRT, 7=FedEx, 8=TNT, 3338=Palletways.
+// ids fijos confirmados por prueba E2E contra el backend real (2026-10-30):
+// 2=BRT, 3=DHL, 5=FedEx, 7=UPS. 8=TNT y 3338=Palletways sin discrepancia reportada.
 const carrierBlocks: { field: string; label: string }[] = [
-  { field: 'blocca_CORR_2', label: 'DHL' },
-  { field: 'blocca_CORR_3', label: 'UPS' },
-  { field: 'blocca_CORR_7', label: 'FedEx' },
+  { field: 'blocca_CORR_2', label: 'BRT' },
+  { field: 'blocca_CORR_3', label: 'DHL' },
+  { field: 'blocca_CORR_7', label: 'UPS' },
   { field: 'blocca_CORR_8', label: 'TNT' },
-  { field: 'blocca_CORR_5', label: 'BRT' },
+  { field: 'blocca_CORR_5', label: 'FedEx' },
   { field: 'blocca_CORR_3338', label: 'Palletways' },
 ];
 

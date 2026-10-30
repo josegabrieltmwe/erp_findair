@@ -209,8 +209,12 @@ export const contattiService = {
   },
 
   async updatePermissions(id: number, perms: Record<string, string | boolean>): Promise<void> {
+    // PUT, no PATCH: el BFF solo tiene GET/POST/PUT/DELETE en la lista blanca
+    // para api_anagrafica_contacts (bff/config/routes.spa.yaml); con PATCH la
+    // petición nunca llegaba al backend (404 del proxy) y los permisos no se
+    // guardaban nunca, sin error visible.
     const raw = await http<{ error?: string }>(ENDPOINT, {
-      method: 'PATCH',
+      method: 'PUT',
       query: { id },
       body: { id, ...perms },
     });
