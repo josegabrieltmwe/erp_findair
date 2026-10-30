@@ -613,6 +613,43 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: get.api_admin_forward_air_accounts
+    method: GET
+    path: /api_admin_forward_air_accounts
+    upstream:
+      action: api_admin_forward_air_accounts
+      forward_query: '*'
+  -
+    id: post.api_admin_forward_air_accounts
+    method: POST
+    path: /api_admin_forward_air_accounts
+    upstream:
+      action: api_admin_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_admin_forward_air_accounts
+    method: PUT
+    path: /api_admin_forward_air_accounts
+    upstream:
+      action: api_admin_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_admin_forward_air_accounts
+    method: DELETE
+    path: /api_admin_forward_air_accounts
+    upstream:
+      action: api_admin_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_admin_freschi_remote_area_import
     method: POST
     path: /api_admin_freschi_remote_area_import

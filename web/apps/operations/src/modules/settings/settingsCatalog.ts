@@ -429,6 +429,14 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'carrier_credentials',
         aliases: ['API Keys Courier'],
       },
+      {
+        key: 'forward_air_accounts',
+        i18nKey: 'forward_air_accounts',
+        icon: 'mdi-truck-fast-outline',
+        routeName: 'settings-forward-air-accounts',
+        subgroup: 'carrier_credentials',
+        aliases: ['Forward Air', 'LTL', 'Forward Air credentials', 'Forward Air accounts'],
+      },
       // Fase 6 / L20: estado del token OAuth de UPS, solo lectura, backend
       // NUEVO (Ups_Token_Status_Controller). Sin renovar/revocar.
       {
