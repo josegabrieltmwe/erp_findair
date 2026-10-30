@@ -5,6 +5,7 @@ import AirCarrierCredentialsPartnerTab from "@shared/air_carrier_credentials/fea
 import WebcargoCredentialsPartnerTab from "@shared/webcargo_key/feature/WebcargoCredentialsPartnerTab.vue";
 import FornitoriAccntPartnerTab from "@shared/fornitori_accnt/feature/FornitoriAccntPartnerTab.vue";
 import AiCredentialsPartnerTab from "@shared/ai_credentials/feature/AiCredentialsPartnerTab.vue";
+import PartnerSmtpPartnerTab from "@shared/partner_smtp/feature/PartnerSmtpPartnerTab.vue";
 import DatosFiscalesAnagraficaTab from "@/modules/invoicing/components/fiscal/DatosFiscalesAnagraficaTab.vue";
 
 /**
@@ -72,6 +73,16 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       icon: "mdi-robot-outline",
       component: markRaw(AiCredentialsPartnerTab),
       group: "integrations",
+    },
+    {
+      // Cuentas SMTP del partner (administración de TMWE sobre api_admin_partner_smtp). Solo partners y la casa
+      // TMWE: un cliente final no envía correo con cuenta propia.
+      key: "partner_smtp",
+      label: t("anagrafica_tabs.partner_smtp") as string,
+      icon: "mdi-email-fast-outline",
+      component: markRaw(PartnerSmtpPartnerTab),
+      group: "integrations",
+      visible: (record) => ["P", "I"].includes(String(record.tipo ?? "").toUpperCase()),
     },
     {
       // «Datos fiscales» (DISENO §5): ajustes con vigencia y datos que exige

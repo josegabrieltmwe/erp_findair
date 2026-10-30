@@ -4,10 +4,8 @@ import { paginated } from '../../anagrafiche/services/normalizers';
 /**
  * Usuarios (`contatti` con acceso al ERP) — Fase A2 del plan de deprecación
  * de `admin_config` (docs/plan-deprecacion-admin-config.md). Backend:
- * /api_admin_users (CRUD), /api_admin_user_roles_web (perfil de seguridad),
- * /api_admin_user_role_bulk (asignación masiva), /api_admin_module_permissions
- * (catálogo de módulos), /api_admin_external_clients (OAuth clients del
- * usuario, solo lectura). Todos admin-only (TMWE). Portado 1:1 desde
+ * /api_admin_users (CRUD), /api_admin_user_roles (roles auth_user_role de la
+ * persona), /api_admin_external_clients (OAuth clients del usuario, solo lectura). Todos admin-only (TMWE). Portado 1:1 desde
  * `admin_config/src/services/users.service.ts`.
  *
  * Reemplaza el subconjunto mínimo que vivía en
@@ -200,48 +198,31 @@ export const usersService = {
     return raw;
   },
 
-  /** Reemplaza roles + overrides de un usuario en una sola llamada. */
-  async saveSecurity(
-    userId: number,
-    roleIds: number[],
-    overrides: UserOverride[],
-  ): Promise<void> {
-    const raw = await http<{ error?: string }>(ROLES_ENDPOINT, {
-      method: 'POST',
-      query: { user_id: userId },
-      body: { role_ids: roleIds, overrides },
-    });
-    if (raw?.error) throw new Error(raw.error);
-  },
-
-  /** Asigna o revoca un rol en bloque para varios usuarios. */
+  /**
+   * Concede o retira un rol a varias personas, una a una (api_admin_user_roles).
+   * `skipped` cuenta las que el API rechaza (p. ej. retirar un rol base).
+   */
   async bulkAssignRole(
     userIds: number[],
     roleId: number,
     action: 'grant' | 'revoke',
   ): Promise<{ processed: number; skipped?: number }> {
-    const raw = await http<{
-      processed?: number;
-      skipped?: number;
-      error?: string;
-    }>(BULK_ROLE_ENDPOINT, {
-      method: 'POST',
-      body: { user_ids: userIds, role_id: roleId, action },
-    });
-    if (raw?.error) throw new Error(raw.error);
-    return { processed: raw.processed ?? 0, skipped: raw.skipped };
-  },
-
-  /** Catálogo de módulos (key → descripción). Cachear en cliente vía useEntityCache. */
-  async getAvailableModules(): Promise<Record<string, string>> {
-    const raw = await http<{
-      modules?: Record<string, string>;
-      error?: string;
-    }>(MODULE_PERMISSIONS_ENDPOINT, {
-      query: { view: 'available' },
-    });
-    if (raw?.error) throw new Error(raw.error);
-    return raw?.modules ?? {};
+    let processed = 0;
+    let skipped = 0;
+    for (const userId of userIds) {
+      try {
+        const raw = await http<{ error?: string }>(ROLES_ENDPOINT, {
+          method: action === 'grant' ? 'POST' : 'DELETE',
+          query: action === 'grant' ? { user_id: userId } : { user_id: userId, role_id: roleId },
+          ...(action === 'grant' ? { body: { role_id: roleId } } : {}),
+        });
+        if (raw?.error) skipped += 1;
+        else processed += 1;
+      } catch {
+        skipped += 1;
+      }
+    }
+    return { processed, skipped };
   },
 
   /** OAuth clients vinculados a un usuario (resumen de solo lectura). */
@@ -269,24 +250,14 @@ export const usersService = {
 // (UserSecurityPanel.vue está roto en esa app por este motivo). Se usa
 // aquí la ruta real, no la documentada.
 const ROLES_ENDPOINT = '/api_admin_user_roles';
-const BULK_ROLE_ENDPOINT = '/api_admin_user_role_bulk';
-const MODULE_PERMISSIONS_ENDPOINT = '/api_admin_module_permissions';
 const EXTERNAL_CLIENTS_ENDPOINT = '/api_admin_external_clients';
 
-export type OverrideEffect = 'grant' | 'deny';
-export type OverrideOperation = 'read' | 'write' | 'delete' | 'admin';
-
-export interface UserOverride {
-  module: string;
-  operation: OverrideOperation;
-  effect: OverrideEffect;
-  reason?: string;
-}
-
 export interface UserRoleRef {
-  role_id: number;
-  name?: string;
-  is_system?: number;
+  id: number;
+  role_name: string;
+  display_name?: string | null;
+  addon?: boolean;
+  scopes?: string[];
 }
 
 export interface UserLegacyAuth {
@@ -310,12 +281,6 @@ export interface UserLegacyAuth {
   [k: `auth_${number}`]: string | undefined;
 }
 
-/**
- * Matriz de permisos efectivos: { modulo: { op: origen } }
- * donde origen es 'role' | 'grant' | 'deny'.
- */
-export type EffectivePermissions = Record<string, Record<string, string>>;
-
 export interface UserSecurityProfile {
   success: boolean;
   user: {
@@ -325,11 +290,9 @@ export interface UserSecurityProfile {
     loginn: string;
     rag_soc?: string;
     id_anagrafica: number;
-  };
-  legacy: UserLegacyAuth;
+  } & UserLegacyAuth;
   roles: UserRoleRef[];
-  overrides: UserOverride[];
-  effective: EffectivePermissions;
+  effective_scopes?: string[];
   oauth_clients?: OAuthClientSummary[];
 }
 

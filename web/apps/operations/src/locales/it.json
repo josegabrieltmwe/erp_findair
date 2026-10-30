@@ -5,7 +5,8 @@
     "webcargo": "Credenziali WebCargo",
     "fornitori_accnt": "Credenziali corriere",
     "elevenlabs_credentials": "Credenziali ElevenLabs",
-    "datos_fiscales": "Dati fiscali"
+    "datos_fiscales": "Dati fiscali",
+    "partner_smtp": "SMTP (posta in uscita)"
   },
   "common": {
     "cancel": "Annulla",
@@ -29,6 +30,8 @@
     "filter": "Filtra",
     "back": "Indietro",
     "logout": "Logout",
+    "processing": "Elaborazione in corso…",
+    "loggingOut": "Disconnessione in corso…",
     "empty": "Nessun dato",
     "status": "Stato",
     "active": "Attivo",

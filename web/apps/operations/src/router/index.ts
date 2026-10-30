@@ -450,26 +450,24 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@shared/elevenlabs_agents/feature/ElevenlabsPartnerAgentPage.vue"),
   },
+  // Cuentas SMTP por partner. La del partner NO es requiresAdmin: la autoriza el servidor (scopes smtp:*
+  // y administrador del partner, authx_18). La de TMWE sobre cualquier partner si lo es.
+  {
+    path: "/settings/smtp",
+    name: "settings-partner-smtp",
+    component: () => import("@shared/partner_smtp/feature/PartnerSmtpPage.vue"),
+    props: { scope: "self" },
+  },
+  {
+    path: "/settings/smtp-admin",
+    name: "settings-partner-smtp-admin",
+    component: () => import("@shared/partner_smtp/feature/PartnerSmtpPage.vue"),
+    props: { scope: "admin" },
+    meta: { requiresAdmin: true },
+  },
   {
     path: "/settings/elevenlabs-agent-review",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "review" } },
-  },
-  // Continuación del montaje de identidad/seguridad (ver comentario junto a
-  // "settings-users" más arriba). internal_roles y module_permissions
-  // migran juntos: comparten el catálogo de módulos (?view=available).
-  {
-    path: "/settings/internal-roles",
-    name: "settings-internal-roles",
-    component: () =>
-      import("@shared/internal_roles/feature/InternalRolesPage.vue"),
-    meta: { requiresAdmin: true },
-  },
-  {
-    path: "/settings/module-permissions",
-    name: "settings-module-permissions",
-    component: () =>
-      import("@shared/module_permissions/feature/ModulePermissionsPage.vue"),
-    meta: { requiresAdmin: true },
   },
   {
     path: "/settings/authz-explain",
@@ -774,6 +772,13 @@ const routes: RouteRecordRaw[] = [
     name: "settings-air-carrier-credentials",
     component: () =>
       import("@shared/air_carrier_credentials/feature/AirCarrierCredentialsPage.vue"),
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/forward-air-accounts",
+    name: "settings-forward-air-accounts",
+    component: () =>
+      import("@shared/forward_air_accounts/feature/ForwardAirAccountsPage.vue"),
     meta: { requiresAdmin: true },
   },
   // Fase 6 / L20: estado del token OAuth de UPS, solo lectura. Backend NUEVO

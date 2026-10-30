@@ -429,6 +429,14 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'carrier_credentials',
         aliases: ['API Keys Courier'],
       },
+      {
+        key: 'forward_air_accounts',
+        i18nKey: 'forward_air_accounts',
+        icon: 'mdi-truck-fast-outline',
+        routeName: 'settings-forward-air-accounts',
+        subgroup: 'carrier_credentials',
+        aliases: ['Forward Air', 'LTL', 'Forward Air credentials', 'Forward Air accounts'],
+      },
       // Fase 6 / L20: estado del token OAuth de UPS, solo lectura, backend
       // NUEVO (Ups_Token_Status_Controller). Sin renovar/revocar.
       {
@@ -555,6 +563,24 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'b2b_templates',
         aliases: ['Modelli email'],
       },
+      // Cuentas SMTP por partner: el administrador del partner gestiona las suyas y TMWE las de cualquiera.
+      // Backend: api_partner_smtp / api_admin_partner_smtp (Partner_Smtp_Service).
+      {
+        key: 'partner_smtp',
+        i18nKey: 'partner_smtp',
+        icon: 'mdi-email-fast-outline',
+        routeName: 'settings-partner-smtp',
+        subgroup: 'b2b_templates',
+        aliases: ['SMTP', 'Mail server', 'Correo saliente', 'Outgoing email'],
+      },
+      {
+        key: 'partner_smtp_admin',
+        i18nKey: 'partner_smtp_admin',
+        icon: 'mdi-email-lock-outline',
+        routeName: 'settings-partner-smtp-admin',
+        subgroup: 'b2b_templates',
+        aliases: ['SMTP por partner', 'Partner SMTP'],
+      },
       // Fase 5 / L17: plantillas de documentos/mensajes (modelli) — distinto
       // de email_templates (tabla y controlador propios: Modelli_Controller).
       {
@@ -663,7 +689,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
   // `administration`/`identity` ya tenían clave i18n reservada en los 5
   // locales antes de este montaje — se usan tal cual, no son invención de
   // esta pasada. Completo con las 6 restantes en la misma pasada
-  // (internal_roles, module_permissions, authz_explain, mfa_setup,
+  // (authz_explain, mfa_setup,
   // scheduler, client_onboarding): sus claves i18n también estaban ya
   // preparadas y completas en los 5 locales, solo sin conectar. Quedan 3
   // huérfanas MÁS, no pedidas y sin i18n preparado (air_carrier_delegation,
@@ -679,20 +705,6 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         i18nKey: 'users',
         icon: 'mdi-account-key-outline',
         routeName: 'settings-users',
-        subgroup: 'identity',
-      },
-      {
-        key: 'internal_roles',
-        i18nKey: 'internal_roles',
-        icon: 'mdi-account-group-outline',
-        routeName: 'settings-internal-roles',
-        subgroup: 'identity',
-      },
-      {
-        key: 'module_permissions',
-        i18nKey: 'module_permissions',
-        icon: 'mdi-key-outline',
-        routeName: 'settings-module-permissions',
         subgroup: 'identity',
       },
       {

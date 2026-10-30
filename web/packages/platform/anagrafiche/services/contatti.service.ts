@@ -94,6 +94,13 @@ function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
   };
 }
 
+/** Roles aditivos conocidos (espejo de Contatti_Oauth_Role_Model::ADDON_ROLE_NAMES) para no ofrecerlos como rol base. */
+export const ADDON_ROLE_NAMES = [
+  'erp_operator', 'accounting_viewer', 'account_admin', 'history_viewer', 'archive_manager',
+  'contacts_search_all', 'courier_driver', 'dispatcher', 'root', 'partner_pricing', 'partner_mail_admin',
+  'partner_admin', 'partner_price_manager', 'tmwe_billing', 'partner_billing',
+] as const;
+
 export const contattiService = {
   /**
    * List all contacts for a given partner (id_anagrafica is required by backend).

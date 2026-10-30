@@ -80,6 +80,7 @@
     <!-- Hosts globales montados 1 vez para toda la SPA. -->
     <AppToaster />
     <AppConfirmHost />
+    <BusyHost />
     <NotificationActionHost />
   </v-app>
 </template>
@@ -94,6 +95,7 @@ import { resolveSpaTarget } from "@shared/platform/navTargets";
 import OperationsNav from "@shared/platform/OperationsNav.vue";
 import AppToaster from "@/shell/AppToaster.vue";
 import AppConfirmHost from "@/shell/AppConfirmHost.vue";
+import BusyHost from "@/shell/BusyHost.vue";
 import NotificationActionHost from "@/shell/NotificationActionHost.vue";
 
 const router = useRouter();
