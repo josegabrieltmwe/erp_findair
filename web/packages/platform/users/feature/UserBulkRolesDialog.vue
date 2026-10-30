@@ -15,7 +15,7 @@
             : t('users.bulk.revoke_hint') }}
         </p>
 
-        <CmInternalRoleSelect
+        <CmOAuthRoleSelect
           v-model="selectedRoleId"
           :label="t('users.bulk.role_label')"
           :rules="[ruleRequiredId]"
@@ -56,7 +56,7 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccountPlus, mdiAccountRemove } from '@mdi/js';
-import CmInternalRoleSelect from '../../internal_roles/components/CmInternalRoleSelect.vue';
+import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
 import { usersService } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useSelectorRules } from '../../anagrafiche/composables/useSelectorRules';

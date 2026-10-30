@@ -13,8 +13,8 @@ import { unwrap } from '../../anagrafiche/services/normalizers';
  *   - service/rbac/Permission_Audit_Service.php
  *   - tabla: permission_audit_log
  *
- * Sumidero de solo lectura de todo lo que escriben users/internal_roles/
- * module_permissions/oauth_roles (Fase A1-A2) — no tiene sentido migrarlo
+ * Sumidero de solo lectura de todo lo que escriben users/
+ * oauth_roles (Fase A1-A2) — no tiene sentido migrarlo
  * antes de que exista algo reciente que mostrar.
  */
 

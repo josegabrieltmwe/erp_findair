@@ -98,7 +98,7 @@ function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
 export const ADDON_ROLE_NAMES = [
   'erp_operator', 'accounting_viewer', 'account_admin', 'history_viewer', 'archive_manager',
   'contacts_search_all', 'courier_driver', 'dispatcher', 'root', 'partner_pricing', 'partner_mail_admin',
-  'partner_admin', 'partner_price_manager',
+  'partner_admin', 'partner_price_manager', 'tmwe_billing', 'partner_billing',
 ] as const;
 
 export const contattiService = {

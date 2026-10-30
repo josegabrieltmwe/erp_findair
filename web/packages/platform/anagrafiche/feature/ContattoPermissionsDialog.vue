@@ -29,27 +29,6 @@
           />
         </div>
 
-        <!-- Roles RBAC internos: SOLO TMWE (endpoint admin_only). Permite dar a
-             un contatto creado desde la ficha de anagrafica el mismo rol que el
-             flujo admin_config → Users, para que pueda "trabajar" en el sistema. -->
-        <template v-if="isTmwe">
-          <v-divider class="my-4" />
-          <p class="text-caption mb-2">{{ t('anagrafiche.perm.roles') }}</p>
-          <v-autocomplete
-            v-model="selectedRoleIds"
-            :items="roleItems"
-            :loading="loadingRoles"
-            :label="t('anagrafiche.perm.roles_label')"
-            item-title="title"
-            item-value="value"
-            multiple
-            chips
-            closable-chips
-            density="compact"
-            variant="outlined"
-          />
-        </template>
-
         <v-divider class="my-4" />
 
         <!-- Roles API (rol base + aditivos). El editor ofrece solo lo que el API deja conceder a quien mira (un
@@ -92,7 +71,6 @@ import { useI18n } from 'vue-i18n';
 import { RouterLink, useRouter, type RouteLocationRaw } from 'vue-router';
 import type { ContattoRow } from '../services/anagrafica.service';
 import { contattiService } from '../services/contatti.service';
-import { contactRolesService } from '../services/contactRoles.service';
 import { useAnagraficaContext } from '../composables/useAnagraficaContext';
 import { useToast } from '../composables/useToast';
 import AuthFlagsEditor from '../components/AuthFlagsEditor.vue';
@@ -122,40 +100,6 @@ const appAccess = ref<Record<'erp_login_app' | 'b2b_login_app', 'S' | 'N'>>({
   b2b_login_app: 'N',
 });
 
-// Roles RBAC (solo TMWE). selectedRoleIds se compara con el estado original para
-// guardar solo si cambió (evita POST admin_only innecesarios).
-const roleItems = ref<{ title: string; value: number }[]>([]);
-const selectedRoleIds = ref<number[]>([]);
-const originalRoleIds = ref<number[]>([]);
-const loadingRoles = ref(false);
-let rolesLoaded = false;
-
-async function loadRolesContext(contattoId: number): Promise<void> {
-  loadingRoles.value = true;
-  try {
-    if (!rolesLoaded) {
-      const roles = await contactRolesService.listRoles();
-      roleItems.value = roles.map((r) => ({ title: r.name ?? r.slug ?? `#${r.id}`, value: r.id }));
-      rolesLoaded = true;
-    }
-    const assigned = await contactRolesService.getAssignedRoleIds(contattoId);
-    selectedRoleIds.value = [...assigned];
-    originalRoleIds.value = [...assigned];
-  } catch {
-    roleItems.value = [];
-    selectedRoleIds.value = [];
-    originalRoleIds.value = [];
-  } finally {
-    loadingRoles.value = false;
-  }
-}
-
-function rolesChanged(): boolean {
-  const a = [...selectedRoleIds.value].sort();
-  const b = [...originalRoleIds.value].sort();
-  return a.length !== b.length || a.some((v, i) => v !== b[i]);
-}
-
 // auth_* gestionados por AuthFlagsEditor (catálogo). Notificaciones aparte.
 const authKeys = ['auth_10', 'auth_11', 'auth_12', 'auth_13', 'auth_14', 'auth_15', 'auth_16',
   'auth_17', 'auth_18', 'auth_19', 'auth_20', 'auth_21', 'auth_22', 'auth_23', 'auth_24'];
@@ -175,7 +119,6 @@ watch(() => props.modelValue, (v) => {
     erp_login_app: row.erp_login_app === 'S' ? 'S' : 'N',
     b2b_login_app: row.b2b_login_app === 'S' ? 'S' : 'N',
   };
-  if (isTmwe.value && props.contatto.id) void loadRolesContext(props.contatto.id);
 });
 
 function onClose(): void {
@@ -193,11 +136,6 @@ async function onSave(): Promise<void> {
       ...appAccess.value,
       ...alerts.value,
     });
-    // Roles RBAC (solo TMWE): endpoint admin_only aparte; solo si cambió.
-    if (isTmwe.value && rolesChanged()) {
-      await contactRolesService.replaceRoles(props.contatto.id, selectedRoleIds.value);
-      originalRoleIds.value = [...selectedRoleIds.value];
-    }
     toast.success(t('anagrafiche.updated'));
     emit('saved');
     onClose();
