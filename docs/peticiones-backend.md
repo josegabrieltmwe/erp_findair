@@ -201,3 +201,65 @@ Análisis completo en `docs/informe-autenticacion-autorizacion.md`. Lo que la SP
 6. **Secretos de aplicación con hash** (`client_secret_hash`): hoy en claro en `auth_client` (77 filas). La SPA ya los muestra una
    sola vez, así que no cambia.
 7. **Depuración de aplicaciones**: 76 de 77 activas sin uso en 90 días y 17 sin rol (paso R0 del plan). La SPA ya marca las latentes.
+
+## 10. Ronda E2E de Luca (pedido → spedizione → fattura, 2026-10-30)
+
+Tres ciclos completos solo con ripiegos manuales. Lo que depende de `tmwe_json` (código, datos o config) y no
+se puede resolver desde el BFF/SPA:
+
+1. **`POST /unified_shipment` no está declarado.** El manifiesto `routes.spa.yaml` se genera leyendo
+   `methods:` de `config/routes/*.yml` del backend (`bin/gen-spa-manifest.php:44-45,113-119`); hoy solo hay
+   `GET` para `unified_shipment`, así que el generador descarta el `POST` que la SPA ya usa
+   (`web/apps/operations/src/modules/shipment/stores/shipment.store.ts:150-163`, flujo "Nuova spedizione") y
+   Slim responde **405** (la ruta existe en GET, el verbo no). El hermano `unified_cargo_shipment` sí tiene
+   GET/POST/PATCH/DELETE declarados y ya funciona para altas de cargo con el mismo patrón
+   (`routes.spa.yaml:6353-6386`). Petición: declarar `methods: GET,POST` (o el verbo que use el controlador)
+   para `unified_shipment`, igual que para `unified_cargo_shipment`. En cuanto se declare, basta con
+   `bff/bin/regen-spa-manifest.sh` — no hace falta tocar código del BFF ni de la SPA. No proponemos editar a
+   mano `routes.spa.yaml` (es generado) ni añadir un alias manual en `routes.bff.yaml`: si el backend aún no
+   acepta el verbo, el proxy solo trasladaría el mismo error un salto más allá.
+2. **Config de sandbox: reglas fiscales de TMWE + rol con `fatturazione:admin`.** Sin esto la factura
+   automática no arranca (bloqueo "regole fiscali vuote, admin senza permesso di caricarle"). Es dato/config
+   del entorno de `tmwe_json` (tabla de reglas fiscales + asignación de rol), no código de `erp_findair`;
+   no se puede resolver desde este repo. Quien tenga acceso a la sandbox de `tmwe_json` debe cargar las
+   reglas y conceder el scope al admin de pruebas.
+3. **Bloqueos de courier con los ids trocados.** `blocca_CORR_5` bloquea de hecho a FedEx y `blocca_CORR_2` a
+   BRT, no al revés (ids confirmados por Luca contra el backend real: 2=BRT, 3=DHL, 5=FedEx, 7=UPS). Ya
+   corregimos la etiqueta en la SPA (`AnagraficaFatturazioneSection.vue`, ver abajo), pero en producción puede
+   haber clientes con el carrier equivocado bloqueado desde que se migró esta pantalla. Pedimos auditar
+   `anagrafiche.blocca_CORR_2/3/5/7` en `tmwe_development`/producción: para cada fila con alguno de esos
+   flags en `S`, confirmar con el cliente/comercial si el carrier bloqueado hoy es realmente el que querían, y
+   corregir con copia `bak_*` y rollback antes de ejecutar nada. Esto es dato, no código, y no lo tocamos
+   desde aquí.
+4. **Alta de cliente: el primer contacto nace con permisos de administrador.** Confirmado que ni la SPA ni el
+   BFF fijan `is_admin` ni ningún flag de rol al crear un contacto: `contattiService.create()`
+   (`web/packages/platform/anagrafiche/services/contatti.service.ts:143-153`) solo reenvía los campos del
+   formulario (que no incluye ningún campo de admin/rol — `ContattoFormDialog.vue` solo tiene `ruolo` como
+   texto libre de puesto, no un control de permisos) y `UserContextProvider.php:78` del BFF solo **lee**
+   `profile['is_admin']`, nunca lo escribe. El valor por defecto lo pone `tmwe_json` al crear el contacto (o
+   al asignarle rol). Esto es un hallazgo de seguridad, no solo funcional: cada cliente nuevo arranca con un
+   usuario de máximo privilegio sin que nadie lo pidiera. Petición: que el alta de contacto/cliente asigne
+   por defecto un rol base sin privilegios de administración (p. ej. `partner_basic`), y que elevar a admin
+   sea un paso explícito y auditado. Indicarnos dónde vive esa asignación (tabla/columna, o el servicio que
+   crea el contacto) para poder documentar el contrato y, si aplica, añadir un control explícito en el
+   formulario de alta de la SPA en lugar de depender de un valor por defecto del backend.
+5. **Fuel duplicado y coste de proveedor contando el fuel dos veces** (`Anagrafiche_Listvol.php:382` y el
+   cálculo de coste de proveedor): puramente backend, fuera de este repo. No hay ningún contrato de la SPA
+   que necesite cambiar para que se corrija — la SPA ya muestra y guarda lo que el backend le devuelve, así
+   que si el backend deja de duplicar el fuel, la pantalla queda correcta sin tocar código aquí. Si al corregirlo
+   el backend decide separar "ajuste del cliente" y "fuel del servicio" en dos campos distintos en la
+   respuesta, sí habría que ajustar el diálogo del listado de precios para no mezclar ambos — lo evaluamos
+   cuando esté el contrato nuevo.
+6. **SDI: orden `ContattiTrasmittente`/`PECDestinatario`, código IVA sin validar, bollo en lettera d'intento,
+   nota de credito sin reducir rate** (`Sdi_Xml_Builder_Service.php:379-390`, `Sdi_Natura_Resolver_Service.php:280`
+   y el servicio de notas de crédito): puramente backend, fuera de este repo. Ninguno de estos cuatro cambia
+   ningún contrato que consuma la SPA hoy (la SPA no construye XML, no valida IVA ni calcula rate); una vez
+   corregidos en `tmwe_json` no requieren ningún cambio en `erp_findair`.
+7. **Generar las cuotas/rate de una factura a partir de las condiciones de pago del cliente.** Hoy no existe
+   ninguna acción para esto ni en el backend (no hay endpoint que la SPA pueda llamar) ni, por tanto, en el
+   manifiesto del BFF — no es un olvido de manifiesto, es una funcionalidad que aún no existe. Cuando
+   `tmwe_json` tenga la acción (p. ej. `api_invoice_installments_generate` o similar, con su tier y verbo),
+   añadirla al BFF es una línea de manifiesto (`routes.bff.yaml` si hace falta algo manual, o automática si la
+   detecta `bin/gen-spa-manifest.php` cuando la SPA la use) — no hace falta código nuevo de proxy. Lo que sí
+   toca este repo es la pantalla de la SPA que dispare esa acción (pendiente de diseñar una vez exista el
+   endpoint).
