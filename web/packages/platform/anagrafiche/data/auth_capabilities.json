@@ -208,5 +208,5 @@
       "notes": "Específico para cargo address book."
     }
   },
-  "_source": "Mantenido a mano contra docs/plans/oauth_puro/09_flags_auth_y_roles.md del API: el backend ya no genera auth_capabilities.yml. Los flags 21-24, 18, 19 y 20 son alcance de datos que lee Data_Scope; no conceden scopes."
+  "_source": "Mantenido a mano contra docs/02-arquitectura/oauth_puro/09_flags_auth_y_roles.md del API: el backend ya no genera auth_capabilities.yml. Los flags 21-24, 18, 19 y 20 son alcance de datos que lee Data_Scope; no conceden scopes."
 }

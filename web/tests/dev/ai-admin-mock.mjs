@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Servidor simulado del contrato ai-admin/1 (docs/agent-factory/10-contrato-ai-admin.md en tmwe_json).
+ * Servidor simulado del contrato ai-admin/1 (docs/06-api/agentes-ia/10-contrato-ai-admin.md en tmwe_json).
  * Solo desarrollo: sirve /bff/v1/<ruta> con las fixtures de
- *   $AI_ADMIN_FIXTURES (por defecto tmwe_json/docs/agent-factory/ai-admin-fixtures/<ruta>.<metodo>.json)
+ *   $AI_ADMIN_FIXTURES (por defecto tmwe_json/docs/06-api/agentes-ia/ai-admin-fixtures/<ruta>.<metodo>.json)
  * y, si falta alguna, con las respuestas de ejemplo del propio contrato.
  *
  *   node tests/dev/ai-admin-mock.mjs [puerto]     # 8787 por defecto
@@ -15,7 +15,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const port = Number(process.argv[2] ?? 8787);
-const dir = process.env.AI_ADMIN_FIXTURES ?? '/var/www/host/tmwe/erp/tmwe_json/docs/agent-factory/ai-admin-fixtures';
+const dir = process.env.AI_ADMIN_FIXTURES ?? '/var/www/host/tmwe/erp/tmwe_json/docs/06-api/agentes-ia/ai-admin-fixtures';
 const fail = process.env.AI_ADMIN_MOCK_FAIL;
 const STATUS = { AI_FORBIDDEN: 403, AI_VALIDATION: 422, AI_NOT_FOUND: 404, AI_BUDGET_EXCEEDED: 429, AI_TIMEOUT: 504, AI_UNAVAILABLE: 503 };
 

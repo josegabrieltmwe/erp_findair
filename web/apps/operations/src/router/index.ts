@@ -425,7 +425,7 @@ const routes: RouteRecordRaw[] = [
     path: "/settings/elevenlabs-agent-sync",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "sync" } },
   },
-  // Administración de IA (contrato ai-admin/1, docs/agent-factory/10). `aiScope`
+  // Administración de IA (contrato ai-admin/1, docs/06-api/agentes-ia/10-contrato-ai-admin.md). `aiScope`
   // oculta la ruta si el perfil trae scopes y no incluye el requerido; la API
   // sigue siendo quien autoriza. /settings/my-ai-usage es para cualquier usuario.
   {
@@ -440,7 +440,7 @@ const routes: RouteRecordRaw[] = [
     path,
     redirect: { name: "settings-ai-center", query: { tab } },
   })),
-  // Agentes de voz PROPIOS de partner (docs/agent-factory/09). La pagina del
+  // Agentes de voz PROPIOS de partner (docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md). La pagina del
   // partner NO es requiresAdmin: la controla el permiso RBAC
   // elevenlabs_partner_agent (rol partner_admin) y el servidor, que ademas
   // limita todo a las filas del propio partner.

@@ -489,7 +489,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         aliases: ['ElevenLabs agent sync', 'Sync agent', 'public_form agent', 'Approve voice agents', 'Review partner agents'],
       },
       // Agente de voz PROPIO del partner (su cuenta de ElevenLabs, aprobado por
-      // TMWE) -- autoservicio del partner. docs/agent-factory/09.
+      // TMWE) -- autoservicio del partner. docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md.
       {
         key: 'elevenlabs_partner_agent',
         i18nKey: 'elevenlabs_partner_agent',

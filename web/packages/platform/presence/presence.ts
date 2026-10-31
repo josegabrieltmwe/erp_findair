@@ -1,5 +1,5 @@
 /**
- * Presencia online — lado cliente (docs/plans/presencia_online/PROPUESTA.md §5.10).
+ * Presencia online — lado cliente (docs/03-diseno/presencia_online/PROPUESTA.md §5.10).
  *
  * El backend infiere la presencia de las señales que recibe (modelo de lease):
  *   - cada petición autenticada renueva la CONEXIÓN de esta pestaña;

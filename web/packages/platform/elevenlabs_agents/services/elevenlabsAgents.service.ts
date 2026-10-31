@@ -3,7 +3,7 @@ import { http } from '../../anagrafiche/services/http';
 import { ApiError } from '../../anagrafiche/services/api.types';
 
 /**
- * Agentes de voz PROPIOS de partner (ElevenLabs), docs/agent-factory/09.
+ * Agentes de voz PROPIOS de partner (ElevenLabs), docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md.
  *
  *  - partnerAgentsService: autoservicio del partner sobre SUS filas
  *    (/api_partner_elevenlabs_agents). El partner nunca envia su id: el

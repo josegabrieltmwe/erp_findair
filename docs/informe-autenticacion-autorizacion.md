@@ -18,7 +18,7 @@ Alcance y límites: lectura de código y de datos de desarrollo. No se probó na
 
 **Autenticación.** OAuth 2.1: `authorization_code` + PKCE para personas (el BFF es cliente confidencial), `client_credentials` para máquinas, token opaco `Bearer`. Login en la pantalla del propio API (`/auth`), restaurada y con QR (`redirect` informado al generar).
 
-**Autorización** (`docs/plans/oauth_puro/09_flags_auth_y_roles.md`, revisiones 3-8):
+**Autorización** (`docs/02-arquitectura/oauth_puro/09_flags_auth_y_roles.md`, revisiones 3-8):
 
 | Pieza | Estado real |
 |---|---|

@@ -1,7 +1,7 @@
 import { http } from '../../anagrafiche/services/http';
 
 /**
- * Administración de IA (contrato `ai-admin/1`, docs/agent-factory/10-contrato-ai-admin.md
+ * Administración de IA (contrato `ai-admin/1`, docs/06-api/agentes-ia/10-contrato-ai-admin.md
  * en tmwe_json). Todas las respuestas llegan como `{success, data}` o
  * `{success:false, error_code, error}`. El contrato nunca devuelve claves ni contenido
  * de memoria o prompts: solo metadatos y recuentos, y este servicio tampoco los pide.

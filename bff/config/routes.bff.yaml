@@ -141,7 +141,7 @@ routes:
       action: api_qr_login_generate
     limits: { body: 4k, timeout: 30 }
 
-  # Administración de IA (contrato ai-admin/1, docs/agent-factory/10-contrato-ai-admin.md en tmwe_json).
+  # Administración de IA (contrato ai-admin/1, docs/06-api/agentes-ia/10-contrato-ai-admin.md en tmwe_json).
   # Los scopes (ai:admin, ai:audit:read, ai:memory:erase) los aplica la API; el BFF solo abre la lista blanca.
   # Los métodos que cambian estado llevan CSRF por defecto.
   - id: ai_admin.settings.get
