@@ -50,6 +50,17 @@ exclude:
   - GET /web_chat_typing
 
 routes:
+  # "Nueva expedición" crea con POST /unified_shipment a través de useEntityCreate, que recibe el
+  # endpoint como parámetro: el generador no lo ve y solo emite el GET. Mismo límite que
+  # post.unified_cargo_shipment.
+  - id: post.unified_shipment
+    method: POST
+    path: /unified_shipment
+    upstream:
+      action: unified_shipment
+      forward_query: '*'
+    limits: { body: 1m, timeout: 30 }
+
   - id: me.profile
     method: GET
     path: /me
