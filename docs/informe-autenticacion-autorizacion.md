@@ -1,5 +1,7 @@
 # Informe: autenticación, autorización y roles en el ERP (SPA + BFF) tras el cambio del API
 
+> **Estado:** vigente (su implementación en la SPA es parcial) · **Última modificación:** 2026-10-25 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 Fecha: 2026-10-25 · Backend analizado: `/var/www/dev/tmwe_api` (rama `tmwe_api`, `https://tmwe-api.php7`), BD `tmwe_development` (solo lectura) · Frontend: `web/` y `bff/` de este repo.
 
 Alcance y límites: lectura de código y de datos de desarrollo. No se probó nada contra producción ni sandbox. La pantalla nueva se verificó con `vue-tsc`, tests unitarios y el gate de i18n; **no se abrió en el navegador** (requiere una sesión de login real).

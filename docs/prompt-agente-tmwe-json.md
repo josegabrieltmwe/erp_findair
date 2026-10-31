@@ -1,5 +1,7 @@
 # Tarea: preparar tmwe_json para el BFF de ERP Findair (segunda entrega)
 
+> **Estado:** obsoleto como prompt (refleja el estado de 2026-10-18; sus tareas 0, 3 y 4 ya están hechas en `sandbox`). Su lista de peticiones está fusionada en `contrato-con-api.md` · **Última modificación:** 2026-10-28 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 ## Contexto
 La SPA de operaciones (Vue + Vuetify) vive ahora en este repositorio (`erp_findair`) y habla con tmwe_json
 **solo con Bearer**, a través de un BFF (Slim 4, `erp_findair/bff`): login Authorization Code + PKCE
