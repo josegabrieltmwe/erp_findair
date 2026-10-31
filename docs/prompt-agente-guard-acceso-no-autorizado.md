@@ -1,5 +1,7 @@
 # Tarea: no montar el dashboard ERP para usuarios sin acceso (pantalla de "no autorizado")
 
+> **Estado:** pendiente de ejecutar (prompt de tarea; a 2026-10-31 no existe ningún componente `Unauthorized`/`Forbidden` y `web/apps/operations/src/main.ts` sigue montando la app con solo comprobar la sesión) · **Última modificación:** 2026-10-30 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 ## Contexto
 
 Un usuario tipo Cliente (sin rol de partner/staff válido, ej. `accessoadmin_64ef0f`) puede iniciar sesión
