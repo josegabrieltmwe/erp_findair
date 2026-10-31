@@ -61,7 +61,7 @@ Leyenda verificacion: RESUELTA-EN-CODIGO / ABIERTA-EN-CODIGO / PARCIAL / NO-VERI
 |---|---|---|---|---|---|
 | P27 | Definir `ELEVENLABS_COPILOT_WRITE_PROPOSAL_SECRET` en local, sandbox y produccion | pet §8.1; prompt T7 | abierta (sin ella 503 `proposal_secret_not_configured`) | pet §8.1 | NO-VERIFICABLE (variable de entorno). Soporte en codigo: app/config/config.yaml.example:122; service/ai/elevenlabs/Copilot_Write_Proposal_Service.php:37; 503 en Copilot_Write_Proposal_Controller.php:165-168. |
 | P28 | Scope propio `copilot:write` + migracion de partners | pet §8.2 | RESUELTA en backend (rama feat/copilot-scope-write); migracion `20261023_copilot_partner_write_scope.sql` pendiente de ejecutar | pet §8.2 | Segun texto resuelta en codigo; ejecucion de la migracion NO-VERIFICABLE. |
-| P29 | `op=proponer` por HTTP sin kill-switch (`copilot_write_enabled`) | pet §8.3 | abierta (BFF lo bloquea con `body_enum`) | pet §8.3 | ABIERTA-EN-CODIGO: controller/api/external/Copilot_Write_Proposal_Controller.php:145-176 `handle_proponer()` no consulta `copilot_write_enabled`; ese flag solo se evalua en controller/api/copilot/Copilot_Chat_Controller.php:96 y service/ai/admin/Ai_Settings_Service.php:21. |
+| P29 | `op=proponer` por HTTP sin kill-switch (`copilot_write_enabled`) | pet §8.3 | abierta (BFF lo bloquea con `body_enum`) | pet §8.3 | **RESUELTA en código (2026-10-31, `tmwe_api` sandbox `f3e36c95f`).** `Copilot_Write_Proposal_Controller::handle_proponer()` responde 403 `copilot_write_disabled` si `copilot_write_enabled` vale `0` para la anagrafica del usuario autenticado, con la misma regla que el chat (solo un `0` explícito apaga; sin fila = activo). `op=confirmar` no se toca. Tests: `CopilotWriteProposalControllerTest` (2 nuevos, pasan). Pendiente: probar en sandbox con un partner que tenga el ajuste apagado; el `body_enum` del BFF puede mantenerse como segunda barrera. |
 | P30 | `cache_control` por RPC (`options.system_cache_prefix`) | pet §8.4 | abierta | pet §8.4 | NO-VERIFICABLE: el worker RabbitMQ no esta en estos repos (lo dice el propio doc). |
 | P31 | `navigateTo`: enviar `date_from/date_to` resueltos y confirmar que es `status` | pet §8.6 | abierta | pet §8.6 | NO-VERIFICADA. |
 | P32 | Codigos de error `AI_*` distinguibles | pet §8.7 | RESUELTA (BFF `aiProblem()`; backend 503 con `AI_CREDENTIALS_MISSING`) | pet §8.7 | Segun texto resuelta; no reverificado. |
@@ -85,7 +85,7 @@ Total: 41 peticiones unificadas (P01-P41).
 ### Recuento de estado (verificacion contra sandbox)
 - RESUELTA-EN-CODIGO: 4 (P01 refresh, P02 get_ops_bootstrap, P11 rol app_internal_erp_staff, P13 IMPERSONATION_DENIED); + 3 resueltas segun texto sin reverificar (P05, P17, P32) + P28 (resuelta en codigo, migracion pendiente).
 - MAYORMENTE RESUELTA / PARCIAL: P21 (ajax), P07, P08, P12, P14.
-- ABIERTA-EN-CODIGO confirmada: P16, P22, P26, P29, P34, P41 (6; P23 se resolvió en el BFF el 2026-10-31); probable: P33.
+- ABIERTA-EN-CODIGO confirmada: P16, P22, P26, P34, P41 (5; P23 se resolvió en el BFF y P29 en `tmwe_api` el 2026-10-31); probable: P33.
 - NO-VERIFICABLE (datos/entorno/worker): P04, P19, P20, P27, P30, P36, P37.
 - NO-VERIFICADA (sin tiempo/grep inconcluso): P03, P06, P09, P10, P15, P18, P24, P25, P31, P35, P38, P39, P40.
 
