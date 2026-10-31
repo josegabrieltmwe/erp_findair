@@ -1,5 +1,7 @@
 # Peticiones al backend (tmwe_json)
 
+> **Estado:** vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en `tmwe_api`). Lista única y verificada: `contrato-con-api.md` · **Última modificación:** 2026-10-30 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 > **Estado 2026-10-18.** Este documento es el detalle técnico y su historia. La lista vigente y ordenada
 > está en `prompt-agente-tmwe-json.md`; el plan, en `plan-migracion.md`. Ya resuelto en el backend:
 > `redirect_uris` + PKCE (§4), cliente 527 `internal` y scopes de personal ampliados (§3). Siguen abiertos:

@@ -1,5 +1,7 @@
 # Comparativa: Jose_master vs. BFF + Vue/Vuetify (erp_findair)
 
+> **Estado:** vigente en lo de producto; su sección «bugs del backend» está obsoleta · **Última modificación:** 2026-10-19 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 Análisis estático de `github.com/tmwe-dev/Jose_master` (no se ejecutó su código). Fecha: 2026-10-18.
 
 ## Qué es Jose_master

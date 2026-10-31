@@ -1,5 +1,7 @@
 # Plan de migración ERP Findair (BFF + SPA)
 
+> **Estado:** vigente, parcialmente desfasado (cifras de 2026-10-18/19; el §3 «Pendiente en backend» está en parte resuelto, ver `contrato-con-api.md`) · **Última modificación:** 2026-10-23 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+
 Estado a 2026-10-18. Cifras de la última pasada de solo lectura (`bff/bin/probe-routes.php`,
 225 rutas GET, usuario `jose`).
 
