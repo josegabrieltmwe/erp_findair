@@ -33,6 +33,11 @@ test.describe.serial("Courier del partner: direcciones", () => {
 
   test("SHP-10-01 · la dirección de entrega se guarda y se ve en la tarjeta tras recargar", async ({ page }) => {
     const d = await abrirDestino(page, envio);
+    // País desde el catálogo público (el partner no tiene master_data): sin él la dirección se guardaba sin país.
+    const pais = d.getByLabel("Country (ISO)");
+    await pais.click();
+    await pais.pressSequentially("NL", { delay: 40 });
+    await page.locator(".v-overlay--active .v-list-item", { hasText: "NL —" }).first().click();
     for (const [etiqueta, valor] of [
       ["Name / Company", "QA Consignee BV"],
       ["Address", "Keizersgracht 1"],
@@ -50,6 +55,7 @@ test.describe.serial("Courier del partner: direcciones", () => {
     expect((await r.json()).success).toBe(true);
     const cuerpo = r.request().postDataJSON() as { address: Record<string, unknown> };
     expect(cuerpo.address).toMatchObject({ nome: "QA Consignee BV", adress: "Keizersgracht 1", cap: "1015AA", citta: "Amsterdam" });
+    expect(JSON.stringify(cuerpo.address)).toContain('"NL"');
 
     await page.reload();
     await page.waitForTimeout(4000);
@@ -58,17 +64,15 @@ test.describe.serial("Courier del partner: direcciones", () => {
     await expect(page.locator(".addr-grid")).toContainText("Amsterdam");
   });
 
-  // HALLAZGO 2026-11-01: el partner recibe 403 en /api_master_countries (falta master_data:read, P58): el
-  // desplegable «Country (ISO)» queda vacío y la dirección se guarda SIN país (el payload no lo lleva) y
-  // sin aviso. Sin país no se puede tarifar ni expedir. Pasará a rojo cuando se conceda el scope.
-  test("SHP-10 · el selector de país carga la lista para el partner", async ({ page }) => {
-    test.fail(true, "api_master_countries devuelve 403 al partner (P58)");
+  // Regresión del hallazgo 2026-11-01 (corregido): el partner recibía 403 en /api_master_countries (módulo master_data,
+  // restringido a internos) y el desplegable «Country (ISO)» salía vacío. Ahora usa el catálogo público /get-api-countries.
+  test("SHP-10 · el selector de país carga la lista para el partner sin errores de permisos", async ({ page }) => {
     const denegadas: string[] = [];
-    page.on("response", (r) => r.status() === 403 && /api_master_countries/.test(r.url()) && denegadas.push(r.url()));
+    page.on("response", (r) => r.status() === 403 && /api_master_countries|get-api-countries/.test(r.url()) && denegadas.push(r.url()));
     const d = await abrirDestino(page, envio);
     await d.getByLabel("Country (ISO)").click();
-    await page.waitForTimeout(1500);
-    expect(denegadas).toEqual([]);
     await expect(page.locator(".v-overlay--active .v-list-item").first()).toBeVisible();
+    expect(await page.locator(".v-overlay--active .v-list-item").count()).toBeGreaterThan(5) // la lista es virtual: solo se renderizan unas docenas;
+    expect(denegadas).toEqual([]);
   });
 });

@@ -1,11 +1,13 @@
 import { http } from './http';
+import { currenciesFromPublic } from './publicCatalogs';
 
 /**
  * Currencies (valute) — global master table. Populates the `valuta_sigla`
  * select of a client (parity with the legacy `$pll_valuta_sigla`, which read
  * `SELECT id, sigla, nome FROM valute WHERE sigla!='AAA' ORDER BY sigla`).
  *
- * Endpoint: /api_master_currencies (Web_Valute_Controller, hybrid auth).
+ * Endpoint: /get-api-currencies (Currency_Controller, public_oauth): lo puede leer cualquier perfil. El mantenimiento de
+ * monedas (packages/platform/currencies) sigue usando /api_master_currencies, que exige `master_data` (internos).
  */
 export interface CurrencyOption {
   id: number;
@@ -14,21 +16,10 @@ export interface CurrencyOption {
   [k: string]: unknown;
 }
 
-const ENDPOINT = '/api_master_currencies';
-
-function unwrapList<T>(raw: unknown): T[] {
-  const r = raw as { data?: T[]; items?: T[] } | null;
-  if (Array.isArray(r?.data)) return r!.data as T[];
-  if (Array.isArray(r?.items)) return r!.items as T[];
-  return [];
-}
+const ENDPOINT = '/get-api-currencies';
 
 export const currenciesService = {
   async list(): Promise<CurrencyOption[]> {
-    const raw = await http<unknown>(ENDPOINT, {});
-    // Filtra el placeholder 'AAA' del legacy y ordena por sigla.
-    return unwrapList<CurrencyOption>(raw)
-      .filter((c) => c.sigla && c.sigla !== 'AAA')
-      .sort((a, b) => a.sigla.localeCompare(b.sigla));
+    return currenciesFromPublic(await http<unknown>(ENDPOINT, {}));
   },
 };
