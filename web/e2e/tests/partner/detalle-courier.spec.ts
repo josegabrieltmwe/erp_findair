@@ -23,10 +23,8 @@ test.beforeEach(() => {
 });
 
 test("SHP · el detalle del borrador carga sin errores de permisos para el partner", async ({ page }) => {
-  // HALLAZGO 2026-11-01: GET /bff/v1/api_master_currencies → 403 (falta el scope master_data:read en el
-  // token del partner) y la SPA muestra «No tienes permiso para esta acción» nada más abrir el detalle.
-  // test.fail() invierte el resultado: cuando se corrija pasará a rojo y habrá que quitarlo.
-  test.fail(true, "api_master_currencies 403 en el detalle courier del partner (ver docs/plan-mitigacion…)");
+  // Regresión (corregido 2026-11-01): antes el detalle disparaba GET /api_master_currencies → 403 (master_data, solo
+  // internos) y la SPA mostraba «No tienes permiso para esta acción». Ahora los desplegables usan los catálogos públicos.
   const ruta = ultimo("SHP-01");
   test.skip(!ruta, "no hay borrador courier anotado; ejecuta antes npm run test:alta");
   const denegadas: string[] = [];

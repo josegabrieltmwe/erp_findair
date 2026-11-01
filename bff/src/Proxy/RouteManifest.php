@@ -141,8 +141,8 @@ final class RouteManifest
             }
         }
         $upstream = $i['upstream'];
-        if (!is_array($upstream) || !is_string($upstream['action'] ?? null) || preg_match('/^[a-z0-9_]+$/', $upstream['action']) !== 1) {
-            throw new \InvalidArgumentException("La ruta '{$i['id']}' necesita upstream.action (a-z, 0-9, _).");
+        if (!is_array($upstream) || !is_string($upstream['action'] ?? null) || preg_match('/^[a-z0-9][a-z0-9_-]*$/', $upstream['action']) !== 1) {
+            throw new \InvalidArgumentException("La ruta '{$i['id']}' necesita upstream.action (a-z, 0-9, _ y -).");
         }
         $response = (string) ($i['response'] ?? 'json');
         if (!in_array($response, self::RESPONSES, true)) {
