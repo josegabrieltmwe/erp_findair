@@ -68,14 +68,6 @@
       >
         {{ t("common.refresh") }}
       </v-btn>
-      <v-btn
-        color="primary"
-        variant="flat"
-        prepend-icon="mdi-plus"
-        @click="openCreate"
-      >
-        {{ t("cargo.hawblist.new_hawb") }}
-      </v-btn>
     </template>
   </ModalWrapper>
 </template>
@@ -165,19 +157,6 @@ async function reload(): Promise<void> {
   }
 }
 
-async function openCreate(): Promise<void> {
-  // Native HAWB create: insert an empty row then open the form modal
-  // for the new id. The HawbFormModal field bindings will commit each
-  // mutation via PATCH.
-  if (!cargoId.value) return;
-  // Load the store rows first so HawbFormModal can resolve the new id.
-  await hawbStore.load(cargoId.value);
-  const created = await hawbStore.create(cargoId.value, { awb_number: "" });
-  if (created) {
-    await reload();
-    ui.openHawbFormModal(Number(created.id));
-  }
-}
 async function openEdit(row: HawbRow): Promise<void> {
   if (!cargoId.value) return;
   // HawbFormModal resolves the row from useCargoHawbStore().rows — the LIST

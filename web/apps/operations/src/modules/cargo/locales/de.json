@@ -1451,6 +1451,7 @@
       "no_booking_note": "Es wird keine WebCargo-Buchung erstellt. Die Buchung ist eine separate Aktion.",
       "active_booking_pre": "Die Fracht hat eine aktive Buchung",
       "active_booking_post": "die storniert wird. Die Aktion ist unwiderruflich.",
+      "ack_cancel_booking": "Ich verstehe, dass die aktive Buchung bei der Fluggesellschaft storniert wird",
       "confirm_pre": "Ich bestätige die Zuweisung von",
       "confirm_at": "zu",
       "confirm_post": "zur Fracht.",
@@ -1498,7 +1499,10 @@
       "warning": "Sie sind dabei, Fracht #{id} zu stornieren. Der Vorgang markiert den Datensatz als gelöscht (Soft-Delete) und wirkt sich auf Adressen, Packstücke und AWB aus. Er kann in der SPA nicht rückgängig gemacht werden.",
       "reason": "Stornierungsgrund (optional)",
       "done": "Fracht storniert",
-      "failed": "Stornierung fehlgeschlagen"
+      "failed": "Stornierung fehlgeschlagen",
+      "invoiced": "Die Fracht ist fakturiert: Sie kann nicht storniert werden.",
+      "has_awb": "Die Fracht hat ein ausgestelltes AWB. Die Stornierung macht das bereits ausgestellte AWB nicht ungültig.",
+      "active_booking": "Die Fracht hat eine aktive Buchung bei der Fluggesellschaft. Storniere zuerst die Buchung, sonst bleibt sie verwaist."
     },
     "modalwrap": {
       "unsaved_title": "Nicht gespeicherte Änderungen",
@@ -1515,8 +1519,7 @@
     "hawblist": {
       "print_hawb": "HAWB drucken",
       "empty_title": "Kein HAWB",
-      "empty_text": "Erstellen Sie den ersten mit der Fracht verknüpften House AWB.",
-      "new_hawb": "Neuer HAWB",
+      "empty_text": "HAWB werden durch die Konsolidierung von Sendungen erzeugt.",
       "col_spediz": "Sendung",
       "col_pieces_weight": "Packstücke · Gewicht"
     },
@@ -1794,6 +1797,7 @@
       "offer_removed": "Angebot entfernt",
       "address_saved": "Adresse gespeichert",
       "packages_saved": "Packstücke gespeichert",
+      "package_weight_required": "Das Gewicht jedes neuen Packstücks muss größer als 0 sein.",
       "hawb_created": "HAWB erstellt",
       "hawb_saved": "HAWB gespeichert",
       "hawb_removed": "HAWB entfernt",

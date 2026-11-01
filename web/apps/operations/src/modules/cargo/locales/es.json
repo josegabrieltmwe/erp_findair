@@ -1451,6 +1451,7 @@
       "no_booking_note": "No se creará ninguna reserva WebCargo. La reserva es una acción independiente.",
       "active_booking_pre": "El cargo tiene una reserva activa",
       "active_booking_post": "que será cancelada. La acción es irreversible.",
+      "ack_cancel_booking": "Entiendo que se cancelará la reserva activa con la aerolínea",
       "confirm_pre": "Confirmo la asignación de",
       "confirm_at": "a",
       "confirm_post": "al cargo.",
@@ -1498,7 +1499,10 @@
       "warning": "Estás a punto de cancelar el cargo #{id}. La operación marca el registro como eliminado (borrado lógico) y se propaga a direcciones, bultos y AWB. No se puede deshacer desde la SPA.",
       "reason": "Motivo de la cancelación (opcional)",
       "done": "Cargo cancelado",
-      "failed": "Error al cancelar"
+      "failed": "Error al cancelar",
+      "invoiced": "El cargo está facturado: no se puede cancelar.",
+      "has_awb": "El cargo tiene un AWB emitido. Cancelarlo no anula el AWB ya emitido.",
+      "active_booking": "El cargo tiene una reserva activa con la aerolínea. Cancela la reserva antes; si no, quedará huérfana."
     },
     "modalwrap": {
       "unsaved_title": "Cambios sin guardar",
@@ -1515,8 +1519,7 @@
     "hawblist": {
       "print_hawb": "Imprimir HAWB",
       "empty_title": "Sin HAWB",
-      "empty_text": "Crea el primer House AWB vinculado al cargo.",
-      "new_hawb": "Nuevo HAWB",
+      "empty_text": "Los HAWB se generan al consolidar expediciones.",
       "col_spediz": "Envío",
       "col_pieces_weight": "Bultos · peso"
     },
@@ -1794,6 +1797,7 @@
       "offer_removed": "Oferta eliminada",
       "address_saved": "Dirección guardada",
       "packages_saved": "Bultos guardados",
+      "package_weight_required": "El peso de cada bulto nuevo debe ser mayor que 0.",
       "hawb_created": "HAWB creado",
       "hawb_saved": "HAWB guardado",
       "hawb_removed": "HAWB eliminado",

@@ -1451,6 +1451,7 @@
       "no_booking_note": "Er wordt geen WebCargo-boeking gemaakt. Boeken is een aparte actie.",
       "active_booking_pre": "De vracht heeft een actieve boeking",
       "active_booking_post": "die wordt geannuleerd. De actie is onomkeerbaar.",
+      "ack_cancel_booking": "Ik begrijp dat de actieve boeking bij de luchtvaartmaatschappij wordt geannuleerd",
       "confirm_pre": "Ik bevestig de toewijzing van",
       "confirm_at": "voor",
       "confirm_post": "aan de vracht.",
@@ -1498,7 +1499,10 @@
       "warning": "Je staat op het punt vracht #{id} te annuleren. De bewerking markeert het record als verwijderd (soft-delete) en werkt door op adressen, colli en AWB. Dit kan niet ongedaan worden gemaakt vanuit de SPA.",
       "reason": "Reden van annulering (optioneel)",
       "done": "Vracht geannuleerd",
-      "failed": "Annulering mislukt"
+      "failed": "Annulering mislukt",
+      "invoiced": "De vracht is gefactureerd: ze kan niet worden geannuleerd.",
+      "has_awb": "De vracht heeft een uitgegeven AWB. Annuleren maakt de reeds uitgegeven AWB niet ongeldig.",
+      "active_booking": "De vracht heeft een actieve boeking bij de luchtvaartmaatschappij. Annuleer eerst de boeking, anders blijft die verweesd."
     },
     "modalwrap": {
       "unsaved_title": "Niet-opgeslagen wijzigingen",
@@ -1515,8 +1519,7 @@
     "hawblist": {
       "print_hawb": "HAWB afdrukken",
       "empty_title": "Geen HAWB",
-      "empty_text": "Maak de eerste House AWB gekoppeld aan de vracht.",
-      "new_hawb": "Nieuwe HAWB",
+      "empty_text": "HAWB's worden gegenereerd door zendingen te consolideren.",
       "col_spediz": "Zending",
       "col_pieces_weight": "Colli · gewicht"
     },
@@ -1794,6 +1797,7 @@
       "offer_removed": "Offerte verwijderd",
       "address_saved": "Adres opgeslagen",
       "packages_saved": "Colli opgeslagen",
+      "package_weight_required": "Het gewicht van elk nieuw collo moet groter zijn dan 0.",
       "hawb_created": "HAWB aangemaakt",
       "hawb_saved": "HAWB opgeslagen",
       "hawb_removed": "HAWB verwijderd",
