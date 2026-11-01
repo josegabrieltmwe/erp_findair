@@ -289,3 +289,9 @@ Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El 
 - **Mismo defecto, confirmado y corregido en `CargoChargesTableV2.vue`:** la edición en línea de una voz de coste enviaba `costo_unit: null`, `nome: {isTrusted…}` y `somma: "S"` siempre (el API respondía HTTP 200 con un error 400 dentro); los precios del cargo no se podían editar. Corregidos también, sin prueba de navegador propia, `CargoOffersTable.vue`, `CargoHawbListV2.vue`, `MawbTactField.vue` y el interruptor de `CargoAccessoriCard.vue` (esta última sí probada en `cargo-importes.spec.ts`). `TerminalsPage.vue` ya leía `e.target.value` y no se tocó. Faltan por probar con datos: ofertas de transportista (CGO-18) y la tarifa TACT del MAWB.
 - Hallazgos del API: P59 (los candidatos a consolidar no incluyen las expediciones de los clientes del partner), P60 (el MAWB acepta «abc»; test `test.fail`), P61 y P62.
 - No se confirmó el MAWB (acción de cierre) ni se envió correo.
+
+**Courier del partner: direcciones (SHP-10, 2026-11-01)** (`tests/partner/courier-direcciones.spec.ts`)
+
+- La dirección de entrega se guarda (`ajax_shipment_addresses` → «Indirizzo creato») y aparece en la tarjeta tras recargar.
+- **Hallazgo confirmado:** el partner recibe `403` en `GET /api_master_countries`; el desplegable «Country (ISO)» queda vacío y la dirección se guarda **sin país** y sin aviso (P58 ampliada). Test `test.fail` hasta que se conceda el scope.
+- Revisado todo `apps/` y `packages/` en busca del patrón `@change="(v…)"`: ya no queda ninguno sobre campos de Vuetify (los de `FlagToggle` son componentes propios que sí emiten el valor).
