@@ -231,3 +231,39 @@ Peticiones de `contrato-con-api.md` que cambian lo que se puede probar hoy (esta
 - Las cifras de pruebas existentes (392, 145) son las de los documentos, no de una ejecución.
 - Los resultados esperados de permisos asumen el modelo de `informe-autenticacion-autorizacion.md`; si el backend lo cambia, revisarlos.
 - El contrato con el API pide revisión humana de su clasificación: comprobar cada petición antes de actuar sobre ella.
+
+## 9. Entorno local y ejecución
+
+Las pruebas de navegador viven en `web/e2e/` (Playwright, fuera del workspace pnpm; se instala con `npm install`). La URL se cambia con `E2E_BASE_URL`.
+
+| Pieza | URL / ruta local | Notas |
+|---|---|---|
+| SPA + BFF | `https://erp-findair.php8` | Vhost `deploy/apache/erp-findair.php8.conf` (activo y idéntico a la plantilla). Sirve `web/dist` y publica `bff/public` bajo `/bff` |
+| Backend | `https://tmwe-api.php7` | Vhost `tmwe-api.php7.conf`, raíz `/var/www/dev/tmwe_api`, solo `app.php`. Aloja también la pantalla de login (`#oauth-login-username`, `#oauth-login-password`) |
+| Callback OAuth | `https://erp-findair.php8/bff/auth/callback` | Es `OAUTH_REDIRECT_URI` de `bff/.env` y el cliente 527 debe tenerlo registrado |
+| Sesión del BFF | Valkey/Redis en `127.0.0.1:6379` | `REDIS_DSN` de `bff/.env` |
+| Sandbox (referencia) | `https://sandbox.erp.findair.it` | `deploy/apache/sandbox.erp.findair.it.conf`; no es el entorno de estas pruebas |
+
+`/etc/hosts` ya resuelve `erp-findair.php8` y `tmwe-api.php7` a `127.0.0.1`. `tmwe-json.php7` es el backend antiguo y no interviene.
+
+**Importante: el vhost sirve `web/dist` ya compilado.** Un cambio en la SPA no se ve hasta reconstruirla:
+
+```bash
+cd web/apps/operations
+NODE_OPTIONS=--max-old-space-size=6144 ./node_modules/.bin/vite build
+```
+
+Con menos memoria el build se cae por falta de heap **después de vaciar `web/dist`**, y el sitio local queda sin SPA hasta repetirlo con éxito.
+
+**Ejecución** (desde `web/e2e/`):
+
+```bash
+npm install                      # primera vez; usa los Chromium ya presentes en ~/.cache/ms-playwright
+cp .env.e2e.example .env.e2e     # y rellenar las credenciales de cada perfil
+npm run test:anon                # sin credenciales: sesión anónima, PKCE, cookie, CSRF, redirección al login
+npm run test:smoke               # humo de todas las rutas sin parámetros, por perfil (staff, partner, sinacc)
+```
+
+Un perfil sin `E2E_<PERFIL>_USER` y `E2E_<PERFIL>_PASS` se omite. El humo lee las rutas de `apps/operations/src/router/index.ts`, así que una ruta nueva entra sola. El caso AC-08 está marcado `fixme` hasta que exista el guard.
+
+Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El humo por perfil no se ha ejecutado porque no hay credenciales de prueba cargadas.

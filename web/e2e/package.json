@@ -1,0 +1,16 @@
+{
+  "name": "@tmwe/e2e",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pruebas de navegador (Playwright) de la SPA operativa contra la instalación local. Fuera del workspace pnpm: se instala con npm.",
+  "type": "module",
+  "scripts": {
+    "test": "node --env-file-if-exists=.env.e2e ./node_modules/.bin/playwright test",
+    "test:anon": "node --env-file-if-exists=.env.e2e ./node_modules/.bin/playwright test --project=anon",
+    "test:smoke": "node --env-file-if-exists=.env.e2e ./node_modules/.bin/playwright test --project=staff --project=partner --project=sinacc",
+    "report": "./node_modules/.bin/playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}
