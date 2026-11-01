@@ -147,7 +147,7 @@ Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller
 
 ### G.3 `api_partner_currency_compat` rechaza al propio partner (P63)
 `Partner_Currency_Compat_Controller` solo deja consultar `id_client === caller` (o TMWE). Un partner pregunta por su **cliente** (`id_client=9586`, titolare 9069) y recibe `ACCESS_DENIED`, aunque el servicio resuelve justo la moneda del titolare.
-- **Cambio:** permitir también cuando `Shipment_Access_Service::is_client_owner($id_client, $caller)` sea verdadero (ya existe, `service/security/Shipment_Access_Service.php`).
+- **Hecho 2026-11-01 (commit local en `tmwe_api`, sin desplegar):** se permite también cuando `Shipment_Access_Service::is_client_owner($id_client, $caller)` es verdadero (`service/shipment/Shipment_Access_Service.php`). Test `PartnerCurrencyCompatAccessTest` (titular, ajeno, TMWE, propia).
 - **Prueba:** partner → su cliente 200; partner → cliente ajeno 403; TMWE → cualquiera 200.
 
 ### G.4 Candidatos a consolidar y «Nuevo HAWB» (P59)
