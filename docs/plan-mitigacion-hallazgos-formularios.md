@@ -1,6 +1,6 @@
 # Plan de mitigación de los hallazgos de la revisión de formularios
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01
+> **Estado:** borrador (Ola 1 en curso) · **Última modificación:** 2026-11-01
 
 Resultado de verificar, con una segunda lectura independiente del código, los 24 hallazgos de [plan-pruebas-formularios.md](plan-pruebas-formularios.md) §3 y plan para corregir los que se confirmaron. **La verificación fue solo lectura: no se ejecutó ninguna prueba contra datos ni en el navegador**, salvo `vue-tsc`, `vitest` de un módulo, `phpunit` del BFF, `check:i18n` y `check:raw-text`. Un «confirmado» significa que el código lo implica; los casos de la columna «Prueba» lo comprueban de verdad en sandbox.
 
@@ -122,3 +122,27 @@ H6 (`useAnagraficaContext` lee `__TMWE_OPERATIONS__.isTmwe`), H5 (leer `auth_err
 - Las correcciones de API que cambian reglas (P43 cancelación, P47 fecha futura, P49 y P50 validaciones, P52 secretos) pueden romper flujos que hoy funcionan; acordar con operaciones y contabilidad antes.
 - No se revisó `User_Plain_Password_Controller`, que podría necesitar el mismo guard que H1.
 - Estimaciones en días son orientativas y no incluyen revisión ni despliegue.
+
+## 6. Estado de ejecución
+
+Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA, vitest 523 de 523, `vue-tsc` sin errores y PHPUnit del BFF 147 de 147. Nada se ha probado en navegador ni en sandbox: los casos de ficha siguen pendientes.
+
+| Hallazgo | Estado | Notas |
+|---|---|---|
+| Ola 0.1 (ver H7 en navegador) | Sustituida | No hay sesión de prueba; se confirmó en código que nadie fijaba `__TMWE_INVOICING__` |
+| H7 | Hecho | El BFF conserva `invoicing_capabilities` (solo booleanos) en `user.invoicing`; `bootstrapBff` fija `__TMWE_INVOICING__`. `audience` queda siempre en `operator`: **decisión de producto pendiente** sobre si un partner debe ser solo lectura |
+| H8 | Hecho | `quotesToSend` descarta cuotas vacías sea cual sea el año |
+| H11b, H11c | Hecho | Importes recordados por id; `Math.round(min*100)` |
+| H12.1 | Hecho | Confirmación con recuento y suma antes del riaddebito masivo |
+| H12.3 | Hecho | `@change`, rango 0-100 y >= 0, no envía vacíos. Falta comprobar en navegador que `@change` llega al `<input>` |
+| H16a | Hecho (parcial) | Se retiró «Nuevo HAWB»; falta la decisión P44 |
+| H16b | Hecho | Peso > 0 en cliente; orden añadir, actualizar, borrar. El guardado sigue sin ser atómico (P45) |
+| H16c tarifa | Hecho | Casilla propia de cancelación de reserva |
+| H16c cancelar cargo | Hecho en SPA | Bloquea si hay factura y avisa de AWB y reserva viva; falta el 409 del servidor (P43). El aviso de reserva depende de que el store del flight manager esté cargado |
+| H17a | Hecho | El aviso de entrega se difiere hasta que el borrador se confirme |
+| H17b | Hecho | `generatePdf` aborta si `save()` falla |
+| H1 (SPA) | Hecho | Aviso de roles no concedidos y toast correcto en el masivo |
+| H1 (API, P42) | Pendiente | Lo decide el equipo de `tmwe_api`; sigue siendo la corrección más urgente |
+| H16c cancelar cargo (API, P43) | Pendiente | Equipo de `tmwe_api` |
+| Casos de ficha de la Ola 1 | Pendiente | Ejecutar en sandbox con `UPSTREAM_DENY_ACTIONS` activo |
+| Olas 2 y 3 | Pendiente | |
