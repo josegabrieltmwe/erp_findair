@@ -83,18 +83,23 @@ test.describe.serial("Cargo del partner: MAWB y HAWB", () => {
     await esPdf(page, () => d.getByText("MAWB", { exact: true }).last().click(), /api_awb_documents.*type=mawb/);
   });
 
-  // HALLAZGO 2026-11-01: el MAWB acepta cualquier texto («abc») o un dígito de control erróneo con 200 y
-  // sin aviso; no hay validación de formato al guardar. Se invierte con test.fail hasta que se decida
-  // dónde validar (guardar o confirmar).
+  // P60 (resuelto en tmwe_api): al cambiar el número se rechaza con 422 lo que no es una referencia plausible
+  // («abc») o un AWB IATA con dígito de control erróneo.
   test("CGO-14 · un AWB con formato o dígito de control inválido se rechaza al guardar", async ({ page }) => {
-    test.fail(true, "el MAWB acepta «abc» sin validar");
     await abrirCargo(page, cargo);
     const d = await abrirMawb(page);
     const campo = d.getByLabel("AWB Number");
-    const resp = page.waitForResponse((r) => r.request().method() === "PATCH" && /api_cargo_mawb/.test(r.url()));
-    await campo.fill("abc");
-    await campo.blur();
-    expect((await resp).status()).toBeGreaterThanOrEqual(400);
+    for (const [valor, mensaje] of [
+      ["abc", /not a valid number or reference/],
+      ["074-45686293", /invalid IATA check digit/],
+    ] as const) {
+      const resp = page.waitForResponse((r) => r.request().method() === "PATCH" && /api_cargo_mawb/.test(r.url()));
+      await campo.fill(valor);
+      await campo.blur();
+      const r = await resp;
+      expect(r.status(), valor).toBe(422);
+      expect(await r.text()).toMatch(mensaje); // el BFF no reenvía el código, sí el detalle
+    }
     // Deja un número válido para los siguientes tests.
     await campo.fill(awbPrueba());
     await campo.blur();

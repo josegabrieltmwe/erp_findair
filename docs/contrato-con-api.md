@@ -134,7 +134,8 @@ Resultado de leer `/var/www/dev/tmwe_api` contra las peticiones P42–P63. Orden
 
 ### G.1 Errores que salen con HTTP 200 (P61) — causa raíz hallada, prioridad alta
 Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller`, `hawb/Cargo_Hawb_Crud_Controller`, `charges/Cargo_Charges_Crud_Controller`, `consolidation/Consolidation_Controller`, `audit/Cargo_Audit_Controller`, `relations/Cargo_Relations_Controller`, `pricing/Cargo_Pricing_Breakdown_Controller`, `pricing/Cargo_Margin_Explain_Controller`) tienen un `problem()` privado que hace `http_response_code($status)` y devuelve el cuerpo `problem+json` **sin** clave `_status`. Después, el despachador de la misma clase hace `$status = $result['_status'] ?? 200; http_response_code($status);` y pisa el código con 200. Resultado: ediciones rechazadas (`update_failed`, `invalid_item_id`, duplicado de HAWB) llegan al navegador como éxito y la SPA no avisa.
-- **Cambio:** que `problem()` devuelva también `'_status' => $status` (el despachador ya lo elimina antes de responder), o mejor, extraerlo a un trait `Problem_Details_Trait` común y borrar las ocho copias.
+- **Hecho 2026-11-01 (commit local en `tmwe_api`, sin desplegar):** solo cuatro de los ocho tienen despachador que pisa el código (`Cargo_Mawb_Crud_Controller`, `Cargo_Hawb_Crud_Controller`, `Cargo_Charges_Crud_Controller`, `Consolidation_Controller`); los otros cuatro no lo pisan. Ahora usan `$result['_status'] ?? (http_response_code() ?: 200)`; test `Problem_Status_Not_Overwritten_Test`.
+- **Propuesta original:** que `problem()` devuelva también `'_status' => $status` (el despachador ya lo elimina antes de responder), o mejor, extraerlo a un trait `Problem_Details_Trait` común y borrar las ocho copias.
 - **Prueba:** un test por controlador que fuerce un 400/409 y compruebe `http_response_code()`.
 - **Efecto en la SPA:** los errores empezarán a mostrarse como errores reales; conviene revisar los toasts de las pantallas de cargo tras el despliegue.
 
@@ -146,19 +147,22 @@ Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller
 
 ### G.3 `api_partner_currency_compat` rechaza al propio partner (P63)
 `Partner_Currency_Compat_Controller` solo deja consultar `id_client === caller` (o TMWE). Un partner pregunta por su **cliente** (`id_client=9586`, titolare 9069) y recibe `ACCESS_DENIED`, aunque el servicio resuelve justo la moneda del titolare.
-- **Cambio:** permitir también cuando `Shipment_Access_Service::is_client_owner($id_client, $caller)` sea verdadero (ya existe, `service/security/Shipment_Access_Service.php`).
+- **Hecho 2026-11-01 (commit local en `tmwe_api`, sin desplegar):** se permite también cuando `Shipment_Access_Service::is_client_owner($id_client, $caller)` es verdadero (`service/shipment/Shipment_Access_Service.php`). Test `PartnerCurrencyCompatAccessTest` (titular, ajeno, TMWE, propia).
 - **Prueba:** partner → su cliente 200; partner → cliente ajeno 403; TMWE → cualquiera 200.
 
 ### G.4 Candidatos a consolidar y «Nuevo HAWB» (P59)
 `Consolidation_Service::list_attachable()` llama a `Spedizioni::find_attachable([$uid], …)`, que filtra `id_cliente IN (uid)`, aunque su docblock promete incluir los clientes cuyo titolare es el llamante.
-- **Cambio:** construir la lista de ids como `[$uid] ∪ {id de anagrafiche con id_anagr_titolare = $uid}` (una consulta) antes de llamar a `find_attachable`, y mantener el alcance de sede/propietario (`Shipment_Access_Service::row_conditions()`). Quitar el parche de la SPA (número tecleado) cuando esté.
+- **Hecho 2026-11-01 (commit local en `tmwe_api`, sin desplegar):** en vez de construir la lista en el servicio, `Spedizioni::find_attachable` añade `OR id_cliente IN (SELECT id FROM anagrafiche WHERE id_anagr_titolare IN (…))`; `attach` sigue validando acceso a cargo y expedición. Test `SpedizioniFindAttachableTest`. Cuando se despliegue, quitar el parche de la SPA (número tecleado en «Nuevo HAWB»).
+- **Propuesta original:** construir la lista de ids como `[$uid] ∪ {id de anagrafiche con id_anagr_titolare = $uid}` (una consulta) antes de llamar a `find_attachable`, y mantener el alcance de sede/propietario (`Shipment_Access_Service::row_conditions()`). Quitar el parche de la SPA (número tecleado) cuando esté.
 - **Prueba:** partner ve borradores de su cliente 9586 y no los de otro partner; `attach` sigue validando acceso.
 
-### G.5 Validación del número de AWB (P60) — decisión de producto, no defecto claro
+### G.5 Validación del número de AWB (P60) — decidido: bloquear con 422 (hecho 2026-11-01)
+**Hecho (commit en `tmwe_api` `sandbox`, sin desplegar):** `Awb_Validator_Service::check_manual_input()` y su uso en `Awb_Service::set_cargo_awb_number()`. Solo se valida al **cambiar** el número (lo ya guardado no se revalida): 11 dígitos → dígito de control IATA (`awb_invalid_checkdigit`); el resto → referencia de 4–30 caracteres `[A-Za-z0-9 /._-]` o `LCL`/`FCL` (`awb_invalid_format`), de modo que «BY SEA» y «MIL/LOS/01705» siguen valiendo. Responde 422. Tests `AwbManualInputTest` y `AwbServiceSetNumberValidationTest`. El BFF no reenvía el código de error, solo el `detail`. Texto de la propuesta original:
 `Awb_Service::set_cargo_awb_number()` respeta literalmente lo que no sea un AWB de 11 dígitos (comentario: «lo demás se respeta literal»), porque hay numeraciones de mensajería que no siguen IATA. `Awb_Validator_Service` ya sabe comprobar formato y dígito (serie mod 7).
 - **Propuesta mínima:** si el valor tiene 11 dígitos (IATA), exigir dígito de control válido y devolver 422 `awb_invalid_checkdigit`; para el resto, aceptar solo `^[A-Za-z0-9 -]{4,20}$` (rechaza «abc» por longitud). Si negocio prefiere avisar y no bloquear, devolver `warnings` en la respuesta y mostrarlas en la SPA.
 
 ### G.6 PDF de AWB lento (P62)
+**Hecho 2026-11-01 (solo BFF):** la ruta `get.api_awb_documents` se redefine en `routes.bff.yaml` con `timeout: 60` (tenía el 15 por defecto, de ahí el 504); test en `PublicCatalogRoutesTest`. **Pendiente en la API:** medir y cachear el generador.
 `GET /api_awb_documents` tarda 10–14 s en local y la ruta del BFF tiene `timeout: 30`; un `504` aislado sugiere carga puntual. Medir el generador (¿arranque del navegador/worker por petición?), cachear el PDF por (`awb_id`, hash de los datos) y, si hace falta, subir el timeout de esa ruta a 60 s.
 
 ### G.7 Resto de la lista, ya verificado en sesiones previas

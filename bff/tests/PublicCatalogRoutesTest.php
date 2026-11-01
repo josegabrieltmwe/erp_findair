@@ -35,4 +35,12 @@ final class PublicCatalogRoutesTest extends AppTestCase
             }
         }
     }
+
+    public function testAwbDocumentsTieneTimeoutDe60sParaElPdf(): void
+    {
+        $m = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        $hit = $m->match('GET', '/api_awb_documents');
+        $this->assertNotNull($hit);
+        $this->assertSame(60.0, $hit['route']->timeout);
+    }
 }
