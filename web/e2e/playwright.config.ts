@@ -38,5 +38,7 @@ export default defineConfig({
     profile("staff", "smoke"),
     profile("partner", "smoke"),
     profile("sinacc", "smoke"),
+    // Altas reales del partner (escriben datos): exige E2E_ALLOW_WRITE=1, ver tests/partner/alta.spec.ts.
+    { ...profile("partner-alta", "partner"), use: { ...devices["Desktop Chrome"], storageState: ".auth/partner.json" } },
   ],
 });

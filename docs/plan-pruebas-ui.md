@@ -267,3 +267,7 @@ npm run test:smoke               # humo de todas las rutas sin parámetros, por 
 Un perfil sin `E2E_<PERFIL>_USER` y `E2E_<PERFIL>_PASS` se omite. El humo lee las rutas de `apps/operations/src/router/index.ts`, así que una ruta nueva entra sola. El caso AC-08 está marcado `fixme` hasta que exista el guard.
 
 Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El humo por perfil no se ha ejecutado porque no hay credenciales de prueba cargadas.
+
+### Altas reales del partner (CGO-01 y SHP-01)
+
+`npm run test:alta` (proyecto `partner-alta`, `tests/partner/alta.spec.ts`) crea un cargo y una expedición courier con el usuario partner. **Escribe datos**: no corre sin `E2E_ALLOW_WRITE=1` y sin `E2E_PARTNER_CLIENT` (texto de búsqueda de un cliente propio del partner). Comprueba el botón deshabilitado sin cliente, que una sola letra no busca, la redirección al detalle y que el doble clic envía un único `POST`. No reserva, no genera AWB, no factura ni envía correos. Los IDs creados quedan en `test-results/ids-creados.txt` para anularlos. Antes de lanzarlo hay que confirmar que la base del API es de pruebas. Estado: escrito y listado, sin ejecutar con credenciales.
