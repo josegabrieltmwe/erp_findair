@@ -82,6 +82,29 @@ Leyenda verificacion: RESUELTA-EN-CODIGO / ABIERTA-EN-CODIGO / PARCIAL / NO-VERI
 
 Total: 41 peticiones unificadas (P01-P41).
 
+### F. Hallazgos de la revisión de formularios (2026-11-01)
+
+Verificados leyendo código de `tmwe_api` y la SPA (sin ejecutar). Detalle y prioridad en `plan-mitigacion-hallazgos-formularios.md`. Verificación en `tmwe_api`: ABIERTA-EN-CODIGO salvo indicación.
+
+| ID | Titulo | Detalle | Prioridad |
+|---|---|---|---|
+| P42 | `root` sin proteger en la ficha de usuario | `User_Admin_Controller` (`reset_password`, `update_user`, `delete_user`) solo exige anagrafica 1: un administrador TMWE sin `root` puede restablecer la contraseña de un `root` y recibirla en la respuesta. Añadir guard de destino `root` (403 `ROLE_ROOT_ONLY`); en el alta, devolver 403 o `roles_denied` en vez de omitir el rol `root` en silencio. Revisar `User_Plain_Password_Controller` | Alta |
+| P43 | Cancelar cargo sin comprobaciones | `Cancel_Controller` no consulta factura, AWB ni reserva viva. Responder 409 en esos casos, con `force` o rol para AWB emitido | Media-alta |
+| P44 | HAWB manual sin expedición | `Awb_Service::validate_create_data` exige `id_spediz` para HAWB; decidir si se admite el alta manual o solo por consolidación | Media (decisión de producto) |
+| P45 | Guardado transaccional de bultos | La SPA borra, modifica y añade bulto a bulto; un fallo deja datos a medias. Endpoint de reemplazo con rollback | Media |
+| P46 | Conciliación COD: fecha futura y estado inválido | `Cod_Reconciliation_Service` acepta fecha futura y convierte un estado inválido en «cobrado». Rechazar ambos | Media |
+| P47 | Factura manual con fecha futura | No se encontró comprobación de fecha futura en `Invoice_Service` (solo la cronológica de la serie) | Media |
+| P48 | Márgenes por escalón sin rango | `Scaglioni_Service` acepta cualquier valor (negativo o 9999) | Media |
+| P49 | Causales de factura: alícuota sin validar | `Invoice_Causal_Model` no valida el rango de `aliquota` | Media |
+| P50 | Plazos de pago sin tramos | `Payment_Schedule_Model` guarda un plazo sin ningún `gg*` en `S` | Media |
+| P51 | Datos fiscales sin validar | PEC, mail, `cod_destin` (SDI), `pi_cf`, `cf`, CAP, SWIFT y ABI no se validan al guardar (el IBAN sí, mod-97) | Media |
+| P52 | `fornitori_accnt` devuelve `pw` y `chiave` en claro | «Paridad legacy». Devolver `has_pw`/`has_chiave` y tratar el vacío como «conservar»; revisar consumidores legacy | Media |
+| P53 | Modificación múltiple de precios: regex permisiva | `Listini_Bulk_Update_Service` acepta `--5` y `1.2.3` y los interpreta como 0 y 1,2. Usar `^-?\d+(\.\d+)?$` | Baja-media |
+| P54 | Cuentas bancarias del emisor: error sin 4xx | `Issuer_Bank_Accounts_Controller` (~L91) responde `nome o iban requerido` con 200; devolver 422 con `error_code` | Media |
+| P55 | `offerta_txt` sin sanear y saneador por regex débil | `set_offer_text` guarda HTML sin sanear; `Email_Html_Sanitizer` no cubre `onX=` sin comillas, `javascript:` con entidades ni `data:`. Sanear al guardar y pasar a un saneador basado en DOM | Baja-media |
+| P56 | Alta de anagrafica: contactos base | `Anagrafica_Service::generate_password` usa `str_shuffle` (no criptográfico) y los contactos base nacen sin sede ni dueño. Usar `random_int` y asignar sede (relacionada con P38) | Baja-media |
+| P57 | Exponer la lista de campos de solo lectura de una expedición facturada | La SPA mantiene su propia lista y difiere de `READONLY_FIELDS_INVOICED`; exponer `readonly_fields` en la carga de la expedición | Baja |
+
 ### Recuento de estado (verificacion contra sandbox)
 - RESUELTA-EN-CODIGO: 4 (P01 refresh, P02 get_ops_bootstrap, P11 rol app_internal_erp_staff, P13 IMPERSONATION_DENIED); + 3 resueltas segun texto sin reverificar (P05, P17, P32) + P28 (resuelta en codigo, migracion pendiente).
 - MAYORMENTE RESUELTA / PARCIAL: P21 (ajax), P07, P08, P12, P14.

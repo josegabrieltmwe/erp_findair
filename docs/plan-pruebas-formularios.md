@@ -30,6 +30,8 @@ Los formularios de filtros y buscadores están incluidos. `/cargo/from-express` 
 
 ## 3. Hallazgos que conviene confirmar antes de probar
 
+> **Actualización 2026-11-01:** estos hallazgos se verificaron con una segunda lectura del código. El resultado (confirmados, parciales y refutados) y el plan de corrección están en [plan-mitigacion-hallazgos-formularios.md](plan-mitigacion-hallazgos-formularios.md). Cuatro resultaron no ser defectos (`Math.abs` en conciliación, `cod_iva` «21», IBAN sin validar, cierre masivo de giacenze/tracking sin confirmar) y el texto de abajo no se ha reescrito.
+
 Posibles defectos que los agentes encontraron al leer el código. Ordenados por riesgo. «Contrastado» significa que lo revisé con un `grep` rápido; el resto viene solo del informe del agente.
 
 **Permisos y seguridad**
