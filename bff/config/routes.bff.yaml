@@ -50,6 +50,23 @@ exclude:
   - GET /web_chat_typing
 
 routes:
+  # Catálogos públicos del backend (public_oauth: cualquier Bearer válido, sin módulo master_data). El generador no los
+  # ve porque su nombre lleva guiones. Los usan los desplegables de país y moneda de cualquier perfil, partner incluido;
+  # api_master_countries / api_master_currencies quedan para el mantenimiento (internos). Solo columnas públicas.
+  - id: get.get-api-countries
+    method: GET
+    path: /get-api-countries
+    upstream:
+      action: get-api-countries
+      forward_query: '*'
+
+  - id: get.get-api-currencies
+    method: GET
+    path: /get-api-currencies
+    upstream:
+      action: get-api-currencies
+      forward_query: '*'
+
   # "Nueva expedición" crea con POST /unified_shipment a través de useEntityCreate, que recibe el
   # endpoint como parámetro: el generador no lo ve y solo emite el GET. Mismo límite que
   # post.unified_cargo_shipment.

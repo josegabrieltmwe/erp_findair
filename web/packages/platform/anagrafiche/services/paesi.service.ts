@@ -1,4 +1,5 @@
 import { http } from './http';
+import { countriesFromPublic } from './publicCatalogs';
 
 /**
  * Paesi (paesi_iso) — catálogo global de países. Alimenta los selectores de
@@ -13,8 +14,8 @@ import { http } from './http';
  *     países y NO deben aparecer en el selector de país.
  * Por eso el value del selector es `ISO` (no ISO2) y filtramos ISO2 IS NULL.
  *
- * Endpoint: /api_master_countries (Paesi_Iso_Controller, hybrid auth). Pagina
- * (per_page máx 100); cargamos todas las páginas una vez y cacheamos.
+ * Endpoint: /get-api-countries (Country_Controller, public_oauth): catálogo público de países soberanos activos, legible por
+ * cualquier perfil (el partner no tiene `master_data` y /api_master_countries le daba 403). Se cachea en memoria.
  */
 export interface PaeseOption {
   id: number;
@@ -25,35 +26,13 @@ export interface PaeseOption {
   [k: string]: unknown;
 }
 
-const ENDPOINT = '/api_master_countries';
-const PER_PAGE = 100;
-
-interface PaginatedResponse {
-  data?: PaeseOption[];
-  pagination?: { total_pages?: number; page?: number };
-}
+const ENDPOINT = '/get-api-countries';
 
 let cache: PaeseOption[] | null = null;
 let inFlight: Promise<PaeseOption[]> | null = null;
 
 async function fetchAll(): Promise<PaeseOption[]> {
-  const first = await http<PaginatedResponse>(ENDPOINT, { query: { per_page: PER_PAGE, page: 1 } });
-  const rows: PaeseOption[] = Array.isArray(first?.data) ? [...first.data] : [];
-  const totalPages = first?.pagination?.total_pages ?? 1;
-  for (let page = 2; page <= totalPages; page++) {
-    const res = await http<PaginatedResponse>(ENDPOINT, { query: { per_page: PER_PAGE, page } });
-    if (Array.isArray(res?.data)) rows.push(...res.data);
-  }
-  // Solo PAÍSES soberanos de primer nivel: ISO2 vacío/null (su código de 2
-  // letras vive en `ISO`). Descarta subentidades provinciales (ISO2 poblado:
-  // estados USA, provincias, subdivisiones GB). Requiere un `ISO` de 2 letras.
-  return rows
-    .filter((p) => {
-      const iso2 = p.ISO2 == null ? '' : String(p.ISO2).trim();
-      const iso = String(p.ISO ?? '').trim();
-      return iso2 === '' && /^[A-Za-z]{2}$/.test(iso);
-    })
-    .sort((a, b) => String(a.nome ?? '').localeCompare(String(b.nome ?? '')));
+  return countriesFromPublic(await http<unknown>(ENDPOINT));
 }
 
 export const paesiService = {
