@@ -56,8 +56,39 @@ export function selectedTotal(
   return Math.round(sum * 100) / 100;
 }
 
+/**
+ * Memoria id→importe: la selección persiste entre páginas pero `rows` solo
+ * contiene la página cargada, así que se recuerdan los importes vistos.
+ */
+export function rememberAmounts(
+  known: Record<number, number>,
+  rows: { id: number; contras_imp: number }[],
+): Record<number, number> {
+  const next = { ...known };
+  for (const r of rows) next[r.id] = Number(r.contras_imp) || 0;
+  return next;
+}
+
+/** Total de la selección completa (todas las páginas) a partir de lo recordado. */
+export function selectedTotalKnown(
+  known: Record<number, number>,
+  selected: number[],
+): number {
+  const sum = selected.reduce((s, id) => s + (known[id] ?? 0), 0);
+  return Math.round(sum * 100) / 100;
+}
+
 /** Un id de remesa válido es un entero positivo. */
 export function isValidReportId(v: unknown): boolean {
   const n = Number(v);
   return Number.isInteger(n) && n > 0;
+}
+
+/** Importe en céntimos >= mínimo en euros; redondea para evitar 1.1*100=110.00000000000001. */
+export function meetsMinAmount(
+  cents: number | null | undefined,
+  minEuros: number | null,
+): boolean {
+  if (minEuros === null) return true;
+  return (cents ?? 0) >= Math.round(minEuros * 100);
 }
