@@ -280,3 +280,12 @@ Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El 
 - **Observación sin reproducir de forma estable:** en un borrador con filas, teclear «Weight (kg)» se perdió una vez (total a 0 kg) y otra se guardó (61 kg) con 4 bultos de cabecera frente a 5 filas. Los datos del borrador `1001086644` quedaron inconsistentes tras pruebas exploratorias. Hay que investigar si el encabezado y las filas tienen dos fuentes de verdad.
 - Observación de UI: con la sesión sin preferencia guardada, el menú lateral arranca abierto y su velo tapa el formulario; las pruebas lo cierran (`tests/support/ui.ts`).
 - Cada ejecución de `test:alta` crea 3 borradores (cargo, courier y uno de colli). Los IDs quedan en `web/e2e/.auth/ids-creados.txt`.
+
+**Cargo del partner (2026-11-01): MAWB y HAWB** (`tests/partner/cargo-awb.spec.ts`)
+
+- Pasan: número de MAWB (guarda, sobrevive a recargar, PDF real de ~47 KB); alta manual de HAWB tecleando la expedición, edición de peso, descripción y remitente leídos de vuelta del API, listado con expedición/remitente/peso y PDF del HAWB (~15 KB); un segundo HAWB para la misma expedición se rechaza.
+- **Fallo real corregido en la SPA:** en `HawbFormModal.vue` y `MawbAddressBlock.vue` los campos usaban `@change="(v: string) => …"` sobre `v-text-field`/`v-textarea`, que reciben el `Event` nativo. Se enviaba `{"isTrusted":true,…}`: el API guardaba «Array» en `goods_descr` y el peso del HAWB quedaba en `null`. Nada de lo tecleado en el formulario del HAWB ni en las direcciones del MAWB se guardaba. Corregido con `utils/fieldValue.ts`.
+- **Fallo real corregido:** el listado de HAWB dejaba vacías las columnas Envío, Remitente y Consignatario (`ListingDataView` solo pinta columnas con plantilla `cell.<clave>` y el API devuelve `shipper_nome`/`consignee_nome`).
+- **Sin verificar (mismo patrón `@change="(v: string)"` sobre campos Vuetify):** `CargoHawbListV2.vue`, `MawbTactField.vue`, `CargoChargesTableV2.vue`, `CargoOffersTable.vue`, `CargoAccessoriCard.vue` y `packages/platform/terminals/feature/TerminalsPage.vue`. Si son campos Vuetify directos tienen el mismo defecto; hay que probarlos uno a uno (los cargos y las ofertas afectan a precios).
+- Hallazgos del API: P59 (los candidatos a consolidar no incluyen las expediciones de los clientes del partner), P60 (el MAWB acepta «abc»; test `test.fail`), P61 y P62.
+- No se confirmó el MAWB (acción de cierre) ni se envió correo.

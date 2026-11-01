@@ -1524,7 +1524,9 @@
       "col_pieces_weight": "Colli · gewicht",
       "new_hawb": "Nieuw HAWB",
       "pick_label": "Zending voor het HAWB",
-      "pick_no_data": "Geen zendingen beschikbaar"
+      "pick_no_data": "Geen zendingen beschikbaar",
+      "use_number": "Zending #{id} gebruiken",
+      "pick_hint": "Staat hij er niet bij, typ dan het zendingnummer."
     },
     "emailmawb": {
       "intro": "Selecteer de MAWB-ontvangers voor vracht #{id}. De lijst wordt gevuld met de contacten van de klant; je kunt meer e-mails toevoegen, gescheiden door komma's.",

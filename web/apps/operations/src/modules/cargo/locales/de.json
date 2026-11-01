@@ -1524,7 +1524,9 @@
       "col_pieces_weight": "Packstücke · Gewicht",
       "new_hawb": "Neues HAWB",
       "pick_label": "Sendung für das HAWB",
-      "pick_no_data": "Keine Sendungen verfügbar"
+      "pick_no_data": "Keine Sendungen verfügbar",
+      "use_number": "Sendung #{id} verwenden",
+      "pick_hint": "Falls nicht aufgeführt, die Sendungsnummer eingeben."
     },
     "emailmawb": {
       "intro": "Wählen Sie die MAWB-Empfänger für Fracht #{id}. Die Liste wird aus den Kontakten des Kunden gefüllt; Sie können weitere durch Kommas getrennte E-Mails hinzufügen.",

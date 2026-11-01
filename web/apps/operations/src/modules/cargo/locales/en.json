@@ -1524,7 +1524,9 @@
       "col_pieces_weight": "Packages · weight",
       "new_hawb": "New HAWB",
       "pick_label": "Shipment for the HAWB",
-      "pick_no_data": "No shipments available"
+      "pick_no_data": "No shipments available",
+      "use_number": "Use shipment #{id}",
+      "pick_hint": "If it is not listed, type the shipment number."
     },
     "emailmawb": {
       "intro": "Select the MAWB recipients for cargo #{id}. The list is populated from the client's contacts; you can add more emails separated by commas.",

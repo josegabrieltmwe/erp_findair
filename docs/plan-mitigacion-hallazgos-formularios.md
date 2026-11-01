@@ -135,7 +135,7 @@ Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA,
 | H11b, H11c | Hecho | Importes recordados por id; `Math.round(min*100)` |
 | H12.1 | Hecho | Confirmación con recuento y suma antes del riaddebito masivo |
 | H12.3 | Hecho | `@change`, rango 0-100 y >= 0, no envía vacíos. Falta comprobar en navegador que `@change` llega al `<input>` |
-| H16a | Hecho (sin probar en navegador) | «Nuevo HAWB» vuelve con selector de expedición; el API rechaza vuelos ya salidos |
+| H16a | Hecho y probado con partner | «Nuevo HAWB» vuelve con selector y número tecleado (P59); el formulario y el listado del HAWB estaban rotos (`@change` con Event) y se corrigieron |
 | H16b | Hecho | Peso > 0 en cliente; orden añadir, actualizar, borrar. El guardado sigue sin ser atómico (P45) |
 | H16c tarifa | Hecho | Casilla propia de cancelación de reserva |
 | H16c cancelar cargo | Hecho en SPA | Bloquea si hay factura y avisa de AWB y reserva viva; falta el 409 del servidor (P43). El aviso de reserva depende de que el store del flight manager esté cargado |

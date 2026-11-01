@@ -1524,7 +1524,9 @@
       "col_pieces_weight": "Bultos · peso",
       "new_hawb": "Nuevo HAWB",
       "pick_label": "Expedición del HAWB",
-      "pick_no_data": "No hay expediciones disponibles"
+      "pick_no_data": "No hay expediciones disponibles",
+      "use_number": "Usar la expedición #{id}",
+      "pick_hint": "Si no aparece, escribe el número de la expedición."
     },
     "emailmawb": {
       "intro": "Selecciona los destinatarios del MAWB para el cargo #{id}. La lista se rellena con los contactos del cliente; puedes añadir más emails separados por comas.",

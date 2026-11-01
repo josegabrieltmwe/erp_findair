@@ -1524,7 +1524,9 @@
       "col_pieces_weight": "Colli · peso",
       "new_hawb": "Nuovo HAWB",
       "pick_label": "Spedizione dell'HAWB",
-      "pick_no_data": "Nessuna spedizione disponibile"
+      "pick_no_data": "Nessuna spedizione disponibile",
+      "use_number": "Usa la spedizione #{id}",
+      "pick_hint": "Se non compare, digita il numero della spedizione."
     },
     "emailmawb": {
       "intro": "Seleziona i destinatari del MAWB per il cargo #{id}. La lista è popolata dai contatti del cliente; puoi aggiungere ulteriori email separate da virgola.",

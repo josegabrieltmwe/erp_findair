@@ -26,6 +26,8 @@
           :disabled="hawbStore.saving"
           :label="t('cargo.hawblist.pick_label')"
           :no-data-text="t('cargo.hawblist.pick_no_data')"
+          :hint="t('cargo.hawblist.pick_hint')"
+          persistent-hint
           prepend-inner-icon="mdi-magnify"
           @update:search="onSearch"
           @update:model-value="onPick"
@@ -47,6 +49,18 @@
             <span class="metric-mono">{{
               (item as HawbRow).awb_number || "—"
             }}</span>
+          </template>
+          <!-- ListingDataView solo pinta las columnas que tienen plantilla `cell.<clave>`. -->
+          <template #cell.id_spediz="{ item }">
+            <span class="metric-mono">{{
+              (item as HawbRow).id_spediz ? `#${(item as HawbRow).id_spediz}` : "—"
+            }}</span>
+          </template>
+          <template #cell.shipper_name="{ item }">
+            {{ (item as HawbRow).shipper_name || "—" }}
+          </template>
+          <template #cell.consignee_name="{ item }">
+            {{ (item as HawbRow).consignee_name || "—" }}
           </template>
           <template #cell.pieces="{ item }">
             {{ (item as HawbRow).pieces }} ·
@@ -212,10 +226,17 @@ async function doSearch(q: string): Promise<void> {
   searching.value = true;
   try {
     const { items } = await consolidationService.attachable(cargoId.value, q);
-    pickItems.value = items.map((sh) => ({
+    const found = items.map((sh) => ({
       id: Number(sh.id),
       label: labelOf(sh),
     }));
+    // La lista del API solo trae expediciones del propio usuario; las de sus clientes no salen.
+    // Un número tecleado se ofrece tal cual y el API valida el acceso al crear (P59).
+    const typed = /^\d+$/.test(q.trim()) ? Number(q.trim()) : 0;
+    if (typed > 0 && !found.some((f) => f.id === typed)) {
+      found.push({ id: typed, label: t("cargo.hawblist.use_number", { id: typed }) });
+    }
+    pickItems.value = found;
   } finally {
     searching.value = false;
   }

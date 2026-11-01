@@ -1,7 +1,6 @@
-import { test, expect, type Page } from "@playwright/test";
-import { appendFileSync, mkdirSync } from "node:fs";
+import { test, expect } from "@playwright/test";
 import { credentials } from "../support/profiles";
-import { cerrarVelo } from "../support/ui";
+import { CLIENT, anotar, botonCrear as crear, elegirCliente } from "../support/borradores";
 
 /**
  * Alta de un cargo (CGO-01) y de una expedición courier (SHP-01) con un usuario PARTNER
@@ -12,7 +11,6 @@ import { cerrarVelo } from "../support/ui";
  * No reserva vuelo, no genera AWB, no factura ni envía correos. Los IDs creados se anotan en
  * .auth/ids-creados.txt para que alguien los anule o los borre.
  */
-const CLIENT = process.env.E2E_PARTNER_CLIENT ?? "";
 const ALLOWED = process.env.E2E_ALLOW_WRITE === "1";
 
 test.beforeEach(({}, info) => {
@@ -21,32 +19,6 @@ test.beforeEach(({}, info) => {
   test.skip(CLIENT.trim().length < 2, "falta E2E_PARTNER_CLIENT (cliente propio del partner, 2+ caracteres)");
   void info;
 });
-
-function anotar(tipo: string, url: string): void {
-  mkdirSync(".auth", { recursive: true });
-  appendFileSync(".auth/ids-creados.txt", `${new Date().toISOString()} ${tipo} ${url}\n`);
-}
-
-const crear = (page: Page) => page.locator("button:has(.mdi-check)").last();
-
-async function elegirCliente(page: Page): Promise<void> {
-  // El menú lateral puede reabrirse al hidratar la página: se cierra y se reintenta si el desplegable no sale.
-  for (let intento = 1; intento <= 3; intento++) {
-    await cerrarVelo(page);
-    const input = page.locator(".v-autocomplete input").first();
-    await input.click();
-    await input.fill("");
-    const busqueda = page.waitForResponse((r) => /api_anagrafica_crud/.test(r.url()), { timeout: 8000 }).catch(() => null);
-    await input.pressSequentially(CLIENT, { delay: 40 });
-    await busqueda;
-    const opcion = page.locator(".v-overlay--active .v-list-item").first();
-    if (await opcion.waitFor({ state: "visible", timeout: 4000 }).then(() => true, () => false)) {
-      await opcion.click();
-      return;
-    }
-  }
-  throw new Error(`ningún cliente coincide con «${CLIENT}» tras 3 intentos`);
-}
 
 const CASOS = [
   { id: "CGO-01", titulo: "alta de cargo", ruta: "/cargo/new", post: /unified_cargo_shipment/, detalle: /\/cargo\/\d+/ },
