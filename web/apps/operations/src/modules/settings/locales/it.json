@@ -1075,7 +1075,8 @@
       "revoke_action": "Revoca",
       "result": "{processed} elaborati, {skipped} saltati",
       "granted": "Ruolo concesso a {n} utente/i",
-      "revoked": "Ruolo revocato a {n} utente/i"
+      "revoked": "Ruolo revocato a {n} utente/i",
+      "none_processed": "Nessun utente elaborato ({n} omessi)"
     },
     "detail": {
       "open": "Vedi dettaglio",
@@ -1094,6 +1095,7 @@
     "field_name": "Nome",
     "field_email": "Email",
     "field_initial_roles": "Ruoli iniziali",
+    "roles_not_granted": "Ruoli non concessi (il server li ha omessi): {roles}",
     "field_login": "Utente",
     "field_legacy_role": "Ruolo legacy",
     "field_legacy_role_hint": "Campo di testo libero ereditato dall'ERP classico",

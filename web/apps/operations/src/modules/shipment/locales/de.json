@@ -704,6 +704,7 @@
         "departure_date": "Abgangsdatum",
         "tracking": "Sendungsverfolgung",
         "confirm_notify": "Zustellbenachrichtigung an den Absender senden?",
+        "notice_on_save": "Die Zustellbenachrichtigung wird beim Speichern gesendet",
         "notice": "Zustellbenachrichtigung",
         "signature_image": "Erfasste Unterschrift"
       },
@@ -1227,6 +1228,8 @@
       "empty_faddebit": "Keine Sendungen mit Kurierdifferenzen zu prüfen.",
       "empty_to_apply": "Keine Nachberechnung anzuwenden.",
       "apply_recharge_n": "Nachberechnung auf {n} anwenden",
+      "confirm_bulk_title": "Nachbelastung anwenden",
+      "confirm_bulk": "Nachbelastung auf {n} Sendungen mit einer Summe von {total} anwenden. Dies kann hier nicht rückgängig gemacht werden.",
       "toast_applied_n": "Nachberechnung auf {n} Sendungen angewendet",
       "toast_failed_n": "{n} nicht angewendet",
       "error": "Fehler",

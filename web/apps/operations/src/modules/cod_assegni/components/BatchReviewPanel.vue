@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import StatusChip from "@shared/ui/StatusChip.vue";
 import ConfirmDialog from "@shared/ui/ConfirmDialog.vue";
 import EmptyState from "@shared/ui/EmptyState.vue";
+import { meetsMinAmount } from "../reconciliation.logic";
 import SuggestionPicker from "../components/SuggestionPicker.vue";
 import InlineSuggestions from "../components/InlineSuggestions.vue";
 import {
@@ -236,10 +237,7 @@ const decisions = computed(() => {
     ) {
       return false;
     }
-    if (
-      minAmount.value !== null &&
-      (c.importo_cents ?? 0) < minAmount.value * 100
-    ) {
+    if (!meetsMinAmount(c.importo_cents, minAmount.value)) {
       return false;
     }
     return matchesQuery(c, q);

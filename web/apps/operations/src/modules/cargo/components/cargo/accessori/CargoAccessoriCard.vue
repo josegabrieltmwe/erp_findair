@@ -29,7 +29,7 @@
           hide-details
           inset
           :disabled="cargo.saving"
-          @change="(v: boolean) => toggle(f.key, v)"
+          @update:model-value="(v: boolean | null) => toggle(f.key, !!v)"
         />
         <div>
           <div class="acc-row__label">{{ f.label }}</div>

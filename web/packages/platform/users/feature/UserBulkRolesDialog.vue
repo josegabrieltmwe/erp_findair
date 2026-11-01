@@ -58,6 +58,7 @@ import { useI18n } from 'vue-i18n';
 import { mdiAccountPlus, mdiAccountRemove } from '@mdi/js';
 import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
 import { usersService } from '../services/users.service';
+import { bulkRolesToastKind } from '../services/userRoleResults';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useSelectorRules } from '../../anagrafiche/composables/useSelectorRules';
 
@@ -104,11 +105,20 @@ async function execute(): Promise<void> {
   try {
     const res = await usersService.bulkAssignRole(props.userIds, roleId, props.action);
     result.value = res;
-    toast.success(
-      props.action === 'grant'
-        ? t('users.bulk.granted', { n: res.processed })
-        : t('users.bulk.revoked', { n: res.processed }),
-    );
+    const kind = bulkRolesToastKind(res);
+    if (kind === 'error') {
+      toast.error(t('users.bulk.none_processed', { n: res.skipped ?? 0 }));
+    } else {
+      const msg =
+        props.action === 'grant'
+          ? t('users.bulk.granted', { n: res.processed })
+          : t('users.bulk.revoked', { n: res.processed });
+      if (kind === 'warning') {
+        toast.warning(`${msg}. ${t('users.bulk.result', { processed: res.processed, skipped: res.skipped ?? 0 })}`);
+      } else {
+        toast.success(msg);
+      }
+    }
     emit('done');
     // Cerrar automáticamente tras una breve pausa para que se vea el resultado.
     setTimeout(() => onClose(false), 1200);

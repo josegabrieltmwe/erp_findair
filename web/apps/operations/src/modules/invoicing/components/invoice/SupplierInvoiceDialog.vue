@@ -174,6 +174,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { quotesToSend } from "../../services/supplierQuotes.logic";
 import { anagraficaService } from "../../services/anagrafica.service";
 import { invoiceService } from "../../services/invoice.service";
 import CmPianoContoAutocomplete from "../../components/invoice/CmPianoContoAutocomplete.vue";
@@ -301,18 +302,7 @@ async function save(): Promise<void> {
       importo_netto: Number(importoNetto.value) || 0,
       importo_iva: Number(importoIva.value) || 0,
       valuta_sigla: "EUR",
-      quotes: quotes.value
-        .filter(
-          (q) =>
-            Number(q.anno) !== 0 ||
-            Number(q.importo_netto) !== 0 ||
-            Number(q.id_piano_conto) !== 0,
-        )
-        .map((q) => ({
-          anno: Number(q.anno) || 0,
-          importo_netto: Number(q.importo_netto) || 0,
-          id_piano_conto: Number(q.id_piano_conto) || 0,
-        })),
+      quotes: quotesToSend(quotes.value),
     });
     toasts.push("success", t("invoicing.invoice.supplier.created"));
     emit("created", Number(inv.id));

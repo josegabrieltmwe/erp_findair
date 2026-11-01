@@ -98,7 +98,28 @@ final class UserContextProvider
         }
         $user = is_array($context['user'] ?? null) ? $context['user'] : [];
 
-        return ['user' => self::fromProfile($user)['user'] + ['capabilities_source' => 'backend'], 'capabilities' => array_values(array_unique($caps))];
+        return [
+            'user' => self::fromProfile($user)['user']
+                + ['capabilities_source' => 'backend', 'invoicing' => self::invoicing($context['invoicing_capabilities'] ?? null)],
+            'capabilities' => array_values(array_unique($caps)),
+        ];
+    }
+
+    /**
+     * Capacidades de facturación/almacén/cobros/COD para la UI (solo booleanos conocidos; el resto se descarta).
+     * Sin dato fiable, todo `false`: la UI ofrece menos, y el backend sigue autorizando cada operación.
+     *
+     * @return array{can_read: bool, can_write: bool, can_send: bool, can_export: bool, can_admin_numbering: bool}
+     */
+    private static function invoicing(mixed $raw): array
+    {
+        $raw = is_array($raw) ? $raw : [];
+        $out = [];
+        foreach (['can_read', 'can_write', 'can_send', 'can_export', 'can_admin_numbering'] as $key) {
+            $out[$key] = ($raw[$key] ?? false) === true;
+        }
+
+        return $out;
     }
 
     /** @return array<string, mixed> */

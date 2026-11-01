@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   COLLECT_STATES,
   isValidReportId,
+  meetsMinAmount,
+  rememberAmounts,
   selectedTotal,
+  selectedTotalKnown,
   setPageSelection,
   stateLabelKey,
   toggleSelection,
@@ -47,5 +50,34 @@ describe("selección en lote", () => {
     expect(isValidReportId(0)).toBe(false);
     expect(isValidReportId("1.5")).toBe(false);
     expect(isValidReportId("")).toBe(false);
+  });
+});
+
+describe("total seleccionado entre páginas", () => {
+  it("suma también las filas de páginas ya abandonadas", () => {
+    let known = rememberAmounts({}, [
+      { id: 1, contras_imp: 10.1 },
+      { id: 2, contras_imp: 20.2 },
+    ]);
+    known = rememberAmounts(known, [{ id: 3, contras_imp: 5 }]);
+    expect(selectedTotalKnown(known, [1, 3])).toBe(15.1);
+    expect(selectedTotalKnown(known, [])).toBe(0);
+    expect(selectedTotalKnown(known, [99])).toBe(0);
+  });
+});
+
+describe("meetsMinAmount", () => {
+  it("1,1 no excluye un cheque de 110 céntimos", () => {
+    expect(meetsMinAmount(110, 1.1)).toBe(true);
+    expect(meetsMinAmount(109, 1.1)).toBe(false);
+  });
+  it("0,29 y 4,35", () => {
+    expect(meetsMinAmount(29, 0.29)).toBe(true);
+    expect(meetsMinAmount(435, 4.35)).toBe(true);
+    expect(meetsMinAmount(434, 4.35)).toBe(false);
+  });
+  it("sin mínimo todo pasa", () => {
+    expect(meetsMinAmount(0, null)).toBe(true);
+    expect(meetsMinAmount(null, 0.01)).toBe(false);
   });
 });

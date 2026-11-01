@@ -88,7 +88,7 @@
                   hide-details
                   :suffix="unit === 'metric' ? 'kg' : 'lb'"
                   class="cm-tier-input"
-                  @update:model-value="(v) => updateField(t_, `kg${pad(tier.tier)}`, Number(v))"
+                  @change="(e: Event) => commitNumeric(e, t_, `kg${pad(tier.tier)}`, tier.kg)"
                 />
                 <v-btn-toggle
                   :model-value="tier.margin_type === 'FIXED' ? 'FIXED' : 'PERCENT'"
@@ -111,7 +111,7 @@
                   hide-details
                   :suffix="bracketByTipo[t_]!.margin_currency ?? 'EUR'"
                   class="cm-tier-input"
-                  @update:model-value="(v) => updateField(t_, `fx${pad(tier.tier)}`, Number(v))"
+                  @change="(e: Event) => commitNumeric(e, t_, `fx${pad(tier.tier)}`, tier.fixed_amount ?? 0)"
                 />
                 <v-text-field
                   v-else
@@ -123,7 +123,7 @@
                   hide-details
                   suffix="%"
                   class="cm-tier-input"
-                  @update:model-value="(v) => updateField(t_, `pr${pad(tier.tier)}`, Number(v))"
+                  @change="(e: Event) => commitNumeric(e, t_, `pr${pad(tier.tier)}`, tier.profit_pct)"
                 />
               </div>
             </section>
@@ -159,7 +159,7 @@
                   hide-details
                   suffix="€"
                   class="mb-2"
-                  @update:model-value="(v) => updateField(t_, 'ass_min', Number(v))"
+                  @change="(e: Event) => commitNumeric(e, t_, 'ass_min', bracketByTipo[t_]!.insurance_min)"
                 />
                 <v-text-field
                   :model-value="bracketByTipo[t_]!.insurance_pct"
@@ -170,7 +170,7 @@
                   variant="outlined"
                   hide-details
                   suffix="%"
-                  @update:model-value="(v) => updateField(t_, 'ass_perc', Number(v))"
+                  @change="(e: Event) => commitNumeric(e, t_, 'ass_perc', bracketByTipo[t_]!.insurance_pct)"
                 />
               </div>
             </aside>
@@ -342,6 +342,7 @@ import {
   type VettoreBracket,
   type VettoreConfiguration,
 } from '../services/scaglioniVettore.service';
+import { fieldKind, parseTierValue } from './scaglioniFieldValidation';
 import { useToast } from '../composables/useToast';
 import CmSectionHeader from '../components/CmSectionHeader.vue';
 import CmAirlineTail from '../components/CmAirlineTail.vue';
@@ -572,6 +573,24 @@ async function createBrackets(tipoVal: ScaglioniTipo): Promise<void> {
   } finally {
     creating.value = null;
   }
+}
+
+// Guarda al terminar de editar (change/blur), no por pulsación; un valor vacío,
+// no numérico o fuera de rango no se envía y se restaura el anterior.
+async function commitNumeric(
+  e: Event,
+  tipoVal: ScaglioniTipo,
+  field: string,
+  previous: number | string | null | undefined,
+): Promise<void> {
+  const input = e.target as HTMLInputElement;
+  const parsed = parseTierValue(input.value, fieldKind(field));
+  if (!parsed.ok) {
+    toast.error(t('anagrafiche.scaglioni.invalid_value') as string);
+    input.value = String(previous ?? ''); // el model-value no cambia, hay que restaurar el DOM
+    return;
+  }
+  await updateField(tipoVal, field, parsed.value);
 }
 
 async function updateField(tipoVal: ScaglioniTipo, field: string, value: number | string): Promise<void> {

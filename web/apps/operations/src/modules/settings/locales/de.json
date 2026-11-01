@@ -1075,7 +1075,8 @@
       "revoke_action": "Widerrufen",
       "result": "{processed} verarbeitet, {skipped} übersprungen",
       "granted": "Rolle an {n} Benutzer erteilt",
-      "revoked": "Rolle von {n} Benutzer widerrufen"
+      "revoked": "Rolle von {n} Benutzer widerrufen",
+      "none_processed": "Kein Benutzer verarbeitet ({n} übersprungen)"
     },
     "detail": {
       "open": "Details ansehen",
@@ -1094,6 +1095,7 @@
     "field_name": "Name",
     "field_email": "E-Mail",
     "field_initial_roles": "Anfängliche Rollen",
+    "roles_not_granted": "Rollen nicht vergeben (vom Server übersprungen): {roles}",
     "field_login": "Benutzername",
     "field_legacy_role": "Legacy-Rolle",
     "field_legacy_role_hint": "Freitextfeld, geerbt vom klassischen ERP",

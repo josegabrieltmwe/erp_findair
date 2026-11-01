@@ -171,6 +171,14 @@ export interface BffUser {
   partner_id?: number;
   is_admin?: boolean;
   is_tmwe?: boolean;
+  /** Capacidades de facturación/almacén/cobros/COD que calcula el backend (solo booleanos). */
+  invoicing?: {
+    can_read?: boolean;
+    can_write?: boolean;
+    can_send?: boolean;
+    can_export?: boolean;
+    can_admin_numbering?: boolean;
+  };
 }
 
 export interface BffSession {
@@ -181,6 +189,35 @@ export interface BffSession {
   user?: BffUser;
   /** Qué puede ver la SPA (`tmwe`, `clients`, `my_org`…); lo calcula el BFF al autenticar. */
   capabilities?: string[];
+}
+
+/**
+ * Bootstrap `__TMWE_INVOICING__` a partir de la sesión del BFF. Lo leen invoicing, payments, cod_assegni
+ * y warehouse (`env.ts`) para decidir qué acciones de escritura ofrecer; el backend sigue autorizando.
+ * Sin capacidades en la sesión devuelve `undefined` y esos módulos conservan su valor por defecto (solo lectura).
+ * `audience` es siempre `operator`: ser partner no implica solo lectura, lo decide `can_write`.
+ */
+export function invoicingBootstrapFrom(
+  user: BffUser | undefined,
+  base: { basePath: string; language: string | null; csrf: string },
+): Record<string, unknown> | undefined {
+  const c = user?.invoicing;
+  if (!c) return undefined;
+  return {
+    invoiceId: null,
+    isNew: false,
+    basePath: base.basePath,
+    language: base.language,
+    csrf: base.csrf,
+    audience: 'operator',
+    capabilities: {
+      canRead: c.can_read === true,
+      canWrite: c.can_write === true,
+      canSend: c.can_send === true,
+      canExport: c.can_export === true,
+      canAdminNumbering: c.can_admin_numbering === true,
+    },
+  };
 }
 
 /**
@@ -219,5 +256,7 @@ export async function bootstrapBff(): Promise<boolean> {
     partnerId: session.user?.partner_id ?? 0,
     capabilities: session.capabilities ?? [],
   };
+  const invoicing = invoicingBootstrapFrom(session.user, { basePath: BFF_BASE_PATH, language, csrf: session.csrf_token });
+  if (invoicing) w.__TMWE_INVOICING__ = invoicing;
   return true;
 }

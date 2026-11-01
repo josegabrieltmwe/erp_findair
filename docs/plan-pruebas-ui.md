@@ -231,3 +231,67 @@ Peticiones de `contrato-con-api.md` que cambian lo que se puede probar hoy (esta
 - Las cifras de pruebas existentes (392, 145) son las de los documentos, no de una ejecución.
 - Los resultados esperados de permisos asumen el modelo de `informe-autenticacion-autorizacion.md`; si el backend lo cambia, revisarlos.
 - El contrato con el API pide revisión humana de su clasificación: comprobar cada petición antes de actuar sobre ella.
+
+## 9. Entorno local y ejecución
+
+Las pruebas de navegador viven en `web/e2e/` (Playwright, fuera del workspace pnpm; se instala con `npm install`). La URL se cambia con `E2E_BASE_URL`.
+
+| Pieza | URL / ruta local | Notas |
+|---|---|---|
+| SPA + BFF | `https://erp-findair.php8` | Vhost `deploy/apache/erp-findair.php8.conf` (activo y idéntico a la plantilla). Sirve `web/dist` y publica `bff/public` bajo `/bff` |
+| Backend | `https://tmwe-api.php7` | Vhost `tmwe-api.php7.conf`, raíz `/var/www/dev/tmwe_api`, solo `app.php`. Aloja también la pantalla de login (`#oauth-login-username`, `#oauth-login-password`) |
+| Callback OAuth | `https://erp-findair.php8/bff/auth/callback` | Es `OAUTH_REDIRECT_URI` de `bff/.env` y el cliente 527 debe tenerlo registrado |
+| Sesión del BFF | Valkey/Redis en `127.0.0.1:6379` | `REDIS_DSN` de `bff/.env` |
+| Sandbox (referencia) | `https://sandbox.erp.findair.it` | `deploy/apache/sandbox.erp.findair.it.conf`; no es el entorno de estas pruebas |
+
+`/etc/hosts` ya resuelve `erp-findair.php8` y `tmwe-api.php7` a `127.0.0.1`. `tmwe-json.php7` es el backend antiguo y no interviene.
+
+**Importante: el vhost sirve `web/dist` ya compilado.** Un cambio en la SPA no se ve hasta reconstruirla:
+
+```bash
+cd web/apps/operations
+NODE_OPTIONS=--max-old-space-size=6144 ./node_modules/.bin/vite build
+```
+
+Con menos memoria el build se cae por falta de heap **después de vaciar `web/dist`**, y el sitio local queda sin SPA hasta repetirlo con éxito.
+
+**Ejecución** (desde `web/e2e/`):
+
+```bash
+npm install                      # primera vez; usa los Chromium ya presentes en ~/.cache/ms-playwright
+cp .env.e2e.example .env.e2e     # y rellenar las credenciales de cada perfil
+npm run test:anon                # sin credenciales: sesión anónima, PKCE, cookie, CSRF, redirección al login
+npm run test:smoke               # humo de todas las rutas sin parámetros, por perfil (staff, partner, sinacc)
+```
+
+Un perfil sin `E2E_<PERFIL>_USER` y `E2E_<PERFIL>_PASS` se omite. El humo lee las rutas de `apps/operations/src/router/index.ts`, así que una ruta nueva entra sola. El caso AC-08 está marcado `fixme` hasta que exista el guard.
+
+Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El humo por perfil no se ha ejecutado porque no hay credenciales de prueba cargadas.
+
+### Altas reales del partner (CGO-01 y SHP-01)
+
+`npm run test:alta` (proyecto `partner-alta`, `tests/partner/alta.spec.ts`) crea un cargo y una expedición courier con el usuario partner. **Escribe datos**: no corre sin `E2E_ALLOW_WRITE=1` y sin `E2E_PARTNER_CLIENT` (texto de búsqueda de un cliente propio del partner). Comprueba el botón deshabilitado sin cliente, que una sola letra no busca, la redirección al detalle y que el doble clic envía un único `POST`. No reserva, no genera AWB, no factura ni envía correos. Los IDs creados quedan en `web/e2e/.auth/ids-creados.txt` para anularlos. Antes de lanzarlo hay que confirmar que la base del API es de pruebas. `web/e2e/scripts/rellenar-env.sh` rellena `.env.e2e` del partner leyendo la BD del API local (solo lectura; `--list` muestra usuarios y clientes; `--allow-write` fija `E2E_ALLOW_WRITE=1`). Estado: escrito y listado, sin ejecutar con credenciales.
+
+**Resultados de la primera ejecución con partner (2026-11-01, usuario `JRN9069B` de 123Logistix, BD `tmwe_development`)**
+
+- Altas de cargo (CGO-01) y de expedición courier (SHP-01): pasan. El cargo queda con partner 9069 y propietario del usuario; no hay doble alta con doble clic.
+- `detalle-courier.spec.ts`: guardar un bulto con peso y medidas persiste y suma al total; en un borrador nuevo, bultos y peso del encabezado coinciden con las filas guardadas.
+- **Hallazgo confirmado:** el detalle courier del partner dispara `403` en `/bff/v1/api_master_currencies` y muestra un aviso de «sin permiso» (petición P58 en `contrato-con-api.md`). El test está marcado `test.fail` y pasará a rojo cuando se corrija.
+- **Observación sin reproducir de forma estable:** en un borrador con filas, teclear «Weight (kg)» se perdió una vez (total a 0 kg) y otra se guardó (61 kg) con 4 bultos de cabecera frente a 5 filas. Los datos del borrador `1001086644` quedaron inconsistentes tras pruebas exploratorias. Hay que investigar si el encabezado y las filas tienen dos fuentes de verdad.
+- Observación de UI: con la sesión sin preferencia guardada, el menú lateral arranca abierto y su velo tapa el formulario; las pruebas lo cierran (`tests/support/ui.ts`).
+- Cada ejecución de `test:alta` crea 3 borradores (cargo, courier y uno de colli). Los IDs quedan en `web/e2e/.auth/ids-creados.txt`.
+
+**Cargo del partner (2026-11-01): MAWB y HAWB** (`tests/partner/cargo-awb.spec.ts`)
+
+- Pasan: número de MAWB (guarda, sobrevive a recargar, PDF real de ~47 KB); alta manual de HAWB tecleando la expedición, edición de peso, descripción y remitente leídos de vuelta del API, listado con expedición/remitente/peso y PDF del HAWB (~15 KB); un segundo HAWB para la misma expedición se rechaza.
+- **Fallo real corregido en la SPA:** en `HawbFormModal.vue` y `MawbAddressBlock.vue` los campos usaban `@change="(v: string) => …"` sobre `v-text-field`/`v-textarea`, que reciben el `Event` nativo. Se enviaba `{"isTrusted":true,…}`: el API guardaba «Array» en `goods_descr` y el peso del HAWB quedaba en `null`. Nada de lo tecleado en el formulario del HAWB ni en las direcciones del MAWB se guardaba. Corregido con `utils/fieldValue.ts`.
+- **Fallo real corregido:** el listado de HAWB dejaba vacías las columnas Envío, Remitente y Consignatario (`ListingDataView` solo pinta columnas con plantilla `cell.<clave>` y el API devuelve `shipper_nome`/`consignee_nome`).
+- **Mismo defecto, confirmado y corregido en `CargoChargesTableV2.vue`:** la edición en línea de una voz de coste enviaba `costo_unit: null`, `nome: {isTrusted…}` y `somma: "S"` siempre (el API respondía HTTP 200 con un error 400 dentro); los precios del cargo no se podían editar. Corregidos también, sin prueba de navegador propia, `CargoOffersTable.vue`, `CargoHawbListV2.vue`, `MawbTactField.vue` y el interruptor de `CargoAccessoriCard.vue` (esta última sí probada en `cargo-importes.spec.ts`). `TerminalsPage.vue` ya leía `e.target.value` y no se tocó. Faltan por probar con datos: ofertas de transportista (CGO-18) y la tarifa TACT del MAWB.
+- Hallazgos del API: P59 (los candidatos a consolidar no incluyen las expediciones de los clientes del partner), P60 (el MAWB acepta «abc»; test `test.fail`), P61 y P62.
+- No se confirmó el MAWB (acción de cierre) ni se envió correo.
+
+**Courier del partner: direcciones (SHP-10, 2026-11-01)** (`tests/partner/courier-direcciones.spec.ts`)
+
+- La dirección de entrega se guarda (`ajax_shipment_addresses` → «Indirizzo creato») y aparece en la tarjeta tras recargar.
+- **Hallazgo confirmado:** el partner recibe `403` en `GET /api_master_countries`; el desplegable «Country (ISO)» queda vacío y la dirección se guarda **sin país** y sin aviso (P58 ampliada). Test `test.fail` hasta que se conceda el scope.
+- Revisado todo `apps/` y `packages/` en busca del patrón `@change="(v…)"`: ya no queda ninguno sobre campos de Vuetify (los de `FlagToggle` son componentes propios que sí emiten el valor).

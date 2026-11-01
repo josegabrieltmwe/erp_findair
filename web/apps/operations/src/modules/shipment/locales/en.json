@@ -704,6 +704,7 @@
         "departure_date": "Departure date",
         "tracking": "Tracking",
         "confirm_notify": "Send the delivery notice to the sender?",
+        "notice_on_save": "The delivery notice will be sent on save",
         "notice": "Delivery notice",
         "signature_image": "Scanned signature"
       },
@@ -1250,6 +1251,8 @@
       "empty_faddebit": "No shipments with courier differences to check.",
       "empty_to_apply": "No recharge to apply.",
       "apply_recharge_n": "Apply recharge to {n}",
+      "confirm_bulk_title": "Apply recharge",
+      "confirm_bulk": "Apply the recharge to {n} shipments for a total of {total}. This cannot be undone from here.",
       "toast_applied_n": "Recharge applied to {n} shipments",
       "toast_failed_n": "{n} not applied",
       "error": "Error",

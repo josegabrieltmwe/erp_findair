@@ -161,4 +161,24 @@ final class UnitTest extends TestCase
 
         self::assertSame(['clients', 'my_org'], $ctx['capabilities']);
     }
+
+    public function testBackendContextExposesOnlyKnownInvoicingBooleans(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext([
+            'user' => ['idanagfrc' => 5],
+            'invoicing_capabilities' => ['can_read' => true, 'can_write' => true, 'can_send' => 'yes', 'is_root' => true],
+        ]);
+
+        self::assertSame(
+            ['can_read' => true, 'can_write' => true, 'can_send' => false, 'can_export' => false, 'can_admin_numbering' => false],
+            $ctx['user']['invoicing'],
+        );
+    }
+
+    public function testBackendContextWithoutInvoicingDeniesEverything(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext(['user' => ['idanagfrc' => 5]]);
+
+        self::assertSame(['can_read' => false, 'can_write' => false, 'can_send' => false, 'can_export' => false, 'can_admin_numbering' => false], $ctx['user']['invoicing']);
+    }
 }

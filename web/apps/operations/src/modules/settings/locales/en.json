@@ -1075,7 +1075,8 @@
       "revoke_action": "Revoke",
       "result": "{processed} processed, {skipped} skipped",
       "granted": "Role granted to {n} user(s)",
-      "revoked": "Role revoked from {n} user(s)"
+      "revoked": "Role revoked from {n} user(s)",
+      "none_processed": "No users processed ({n} skipped)"
     },
     "detail": {
       "open": "View detail",
@@ -1094,6 +1095,7 @@
     "field_name": "Name",
     "field_email": "Email",
     "field_initial_roles": "Initial roles",
+    "roles_not_granted": "Roles not granted (the server skipped them): {roles}",
     "field_login": "Username",
     "field_legacy_role": "Legacy role",
     "field_legacy_role_hint": "Free-text field inherited from the classic ERP",

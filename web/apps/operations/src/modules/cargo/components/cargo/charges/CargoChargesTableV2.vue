@@ -78,7 +78,8 @@
             hide-details
             :disabled="store.saving.has((item as CargoChargeRow).id)"
             @change="
-              (v: string) => onPatch((item as CargoChargeRow).id, { code: v })
+              (e: Event) =>
+                onPatch((item as CargoChargeRow).id, { code: fieldValue(e) })
             "
           />
         </template>
@@ -91,7 +92,8 @@
             hide-details
             :disabled="store.saving.has((item as CargoChargeRow).id)"
             @change="
-              (v: string) => onPatch((item as CargoChargeRow).id, { nome: v })
+              (e: Event) =>
+                onPatch((item as CargoChargeRow).id, { nome: fieldValue(e) })
             "
           />
         </template>
@@ -107,8 +109,10 @@
             class="text-right"
             :disabled="store.saving.has((item as CargoChargeRow).id)"
             @change="
-              (v: string) =>
-                onPatch((item as CargoChargeRow).id, { costo_unit: Number(v) })
+              (e: Event) =>
+                onPatch((item as CargoChargeRow).id, {
+                  costo_unit: Number(fieldValue(e)),
+                })
             "
           />
         </template>
@@ -124,8 +128,10 @@
             class="text-right"
             :disabled="store.saving.has((item as CargoChargeRow).id)"
             @change="
-              (v: string) =>
-                onPatch((item as CargoChargeRow).id, { costo_min: Number(v) })
+              (e: Event) =>
+                onPatch((item as CargoChargeRow).id, {
+                  costo_min: Number(fieldValue(e)),
+                })
             "
           />
         </template>
@@ -141,8 +147,10 @@
             class="text-right"
             :disabled="store.saving.has((item as CargoChargeRow).id)"
             @change="
-              (v: string) =>
-                onPatch((item as CargoChargeRow).id, { costo_max: Number(v) })
+              (e: Event) =>
+                onPatch((item as CargoChargeRow).id, {
+                  costo_max: Number(fieldValue(e)),
+                })
             "
           />
         </template>
@@ -156,8 +164,8 @@
             inset
             class="d-inline-flex"
             :disabled="store.saving.has((item as CargoChargeRow).id)"
-            @change="
-              (v: boolean) =>
+            @update:model-value="
+              (v: boolean | null) =>
                 onPatch((item as CargoChargeRow).id, { somma: v ? 'S' : 'N' })
             "
           />
@@ -269,6 +277,7 @@
 </template>
 
 <script setup lang="ts">
+import { fieldValue } from "@cargo/utils/fieldValue";
 import EmptyState from "@shared/ui/EmptyState.vue";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
 import { useClientSideListSource } from "@shared/listing/useClientSideListSource";

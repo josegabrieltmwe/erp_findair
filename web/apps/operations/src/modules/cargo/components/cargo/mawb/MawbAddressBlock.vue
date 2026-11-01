@@ -64,19 +64,19 @@
           :model-value="local.nome"
           :label="t('cargo.addr.name')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('nome', v)"
+          @change="(e: Event) => onLocalChange('nome', fieldValue(e))"
         />
         <v-text-field
           :model-value="local.attenzione"
           :label="t('cargo.addr.attention_contact')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('attenzione', v)"
+          @change="(e: Event) => onLocalChange('attenzione', fieldValue(e))"
         />
         <v-text-field
           :model-value="local.adress"
           :label="t('cargo.addr.address')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('adress', v)"
+          @change="(e: Event) => onLocalChange('adress', fieldValue(e))"
         />
       </div>
       <!-- Two even columns instead of four hardcoded pixel widths: the block
@@ -87,13 +87,13 @@
           :model-value="local.cap"
           :label="t('cargo.addr.cap')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('cap', v)"
+          @change="(e: Event) => onLocalChange('cap', fieldValue(e))"
         />
         <v-text-field
           :model-value="local.citta"
           :label="t('cargo.addr.city')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('citta', v)"
+          @change="(e: Event) => onLocalChange('citta', fieldValue(e))"
         />
         <CmProvinciaSelect
           :model-value="local.prov"
@@ -109,19 +109,19 @@
           :model-value="local.id_paese_iso"
           :label="t('cargo.addr.country')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('id_paese_iso', v)"
+          @change="(e: Event) => onLocalChange('id_paese_iso', fieldValue(e))"
         />
         <v-text-field
           :model-value="local.tel"
           :label="t('cargo.addr.phone')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('tel', v)"
+          @change="(e: Event) => onLocalChange('tel', fieldValue(e))"
         />
         <v-text-field
           :model-value="local.mail"
           :label="t('cargo.addr.email')"
           :disabled="readonly"
-          @change="(v: string) => onLocalChange('mail', v)"
+          @change="(e: Event) => onLocalChange('mail', fieldValue(e))"
         />
       </div>
     </div>
@@ -129,6 +129,7 @@
 </template>
 
 <script setup lang="ts">
+import { fieldValue } from "@cargo/utils/fieldValue";
 import { ref, reactive, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {

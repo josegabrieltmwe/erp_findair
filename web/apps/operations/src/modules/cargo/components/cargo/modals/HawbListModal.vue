@@ -10,6 +10,32 @@
     </div>
 
     <template v-else>
+      <div v-if="creating" class="d-flex align-center ga-2 pb-3">
+        <v-autocomplete
+          :model-value="null"
+          :items="pickItems"
+          :loading="searching"
+          :search="search"
+          item-title="label"
+          item-value="id"
+          variant="outlined"
+          density="compact"
+          hide-details
+          clearable
+          autofocus
+          :disabled="hawbStore.saving"
+          :label="t('cargo.hawblist.pick_label')"
+          :no-data-text="t('cargo.hawblist.pick_no_data')"
+          :hint="t('cargo.hawblist.pick_hint')"
+          persistent-hint
+          prepend-inner-icon="mdi-magnify"
+          @update:search="onSearch"
+          @update:model-value="onPick"
+        />
+        <v-btn variant="text" @click="closeCreate">{{
+          t("common.cancel")
+        }}</v-btn>
+      </div>
       <div v-if="rows.length" class="hawb-listing">
         <ListingDataView
           :source="listSource"
@@ -23,6 +49,18 @@
             <span class="metric-mono">{{
               (item as HawbRow).awb_number || "—"
             }}</span>
+          </template>
+          <!-- ListingDataView solo pinta las columnas que tienen plantilla `cell.<clave>`. -->
+          <template #cell.id_spediz="{ item }">
+            <span class="metric-mono">{{
+              (item as HawbRow).id_spediz ? `#${(item as HawbRow).id_spediz}` : "—"
+            }}</span>
+          </template>
+          <template #cell.shipper_name="{ item }">
+            {{ (item as HawbRow).shipper_name || "—" }}
+          </template>
+          <template #cell.consignee_name="{ item }">
+            {{ (item as HawbRow).consignee_name || "—" }}
           </template>
           <template #cell.pieces="{ item }">
             {{ (item as HawbRow).pieces }} ·
@@ -72,6 +110,7 @@
         color="primary"
         variant="flat"
         prepend-icon="mdi-plus"
+        :disabled="!cargoId"
         @click="openCreate"
       >
         {{ t("cargo.hawblist.new_hawb") }}
@@ -88,6 +127,10 @@ import { storeToRefs } from "pinia";
 import { useUiStore } from "@cargo/stores/ui.store";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { hawbService, type HawbRow } from "@cargo/services/hawb.service";
+import {
+  consolidationService,
+  type AttachableShipment,
+} from "@cargo/services/consolidation.service";
 import { cargoActionsService } from "@cargo/services/cargo_actions.service";
 import { useCargoHawbStore } from "@cargo/stores/cargo_hawb.store";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
@@ -165,19 +208,69 @@ async function reload(): Promise<void> {
   }
 }
 
-async function openCreate(): Promise<void> {
-  // Native HAWB create: insert an empty row then open the form modal
-  // for the new id. The HawbFormModal field bindings will commit each
-  // mutation via PATCH.
+// Alta manual: un HAWB cuelga siempre de una expedición (el API exige id_spediz),
+// asi que se elige la expedición y se crea la casa; despues se abre el formulario.
+const creating = ref(false);
+const searching = ref(false);
+const search = ref("");
+const pickItems = ref<{ id: number; label: string }[]>([]);
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
+
+function labelOf(sh: AttachableShipment): string {
+  const rif = sh.RIF_cliente ? ` · ${sh.RIF_cliente}` : "";
+  return `#${sh.id}${rif} · ${Number(sh.peso).toFixed(1)}kg · ${sh.colli}c`;
+}
+
+async function doSearch(q: string): Promise<void> {
   if (!cargoId.value) return;
-  // Load the store rows first so HawbFormModal can resolve the new id.
-  await hawbStore.load(cargoId.value);
-  const created = await hawbStore.create(cargoId.value, { awb_number: "" });
-  if (created) {
-    await reload();
-    ui.openHawbFormModal(Number(created.id));
+  searching.value = true;
+  try {
+    const { items } = await consolidationService.attachable(cargoId.value, q);
+    const found = items.map((sh) => ({
+      id: Number(sh.id),
+      label: labelOf(sh),
+    }));
+    // La lista del API solo trae expediciones del propio usuario; las de sus clientes no salen.
+    // Un número tecleado se ofrece tal cual y el API valida el acceso al crear (P59).
+    const typed = /^\d+$/.test(q.trim()) ? Number(q.trim()) : 0;
+    if (typed > 0 && !found.some((f) => f.id === typed)) {
+      found.push({ id: typed, label: t("cargo.hawblist.use_number", { id: typed }) });
+    }
+    pickItems.value = found;
+  } finally {
+    searching.value = false;
   }
 }
+
+function onSearch(q: string): void {
+  search.value = q ?? "";
+  if (searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => void doSearch(search.value), 250);
+}
+
+function openCreate(): void {
+  creating.value = true;
+  void doSearch("");
+}
+
+function closeCreate(): void {
+  creating.value = false;
+  search.value = "";
+  pickItems.value = [];
+}
+
+async function onPick(spedizId: number | null): Promise<void> {
+  if (!spedizId || !cargoId.value) return;
+  await hawbStore.load(cargoId.value);
+  const created = await hawbStore.create(cargoId.value, {
+    id_spediz: Number(spedizId),
+  });
+  if (!created) return; // el store ya muestra el error del servidor
+  closeCreate();
+  await reload();
+  ui.openHawbFormModal(Number(created.id));
+}
+
 async function openEdit(row: HawbRow): Promise<void> {
   if (!cargoId.value) return;
   // HawbFormModal resolves the row from useCargoHawbStore().rows — the LIST

@@ -16,6 +16,7 @@ import { useToastStore } from "./toast.store";
 import type { Cargo, CargoPackage } from "@cargo/services/cargo.types";
 import { useCargoState } from "@cargo/composables/useCargoState";
 import { validateDraft } from "@cargo/validation/cargoRules";
+import { hasNewRowWithoutWeight } from "../utils/packagesValidation";
 
 export const useCargoStore = defineStore("cargo", () => {
   const cargo = ref<Cargo | null>(null);
@@ -349,45 +350,47 @@ export const useCargoStore = defineStore("cargo", () => {
    * Cargo has NO bulk-replace endpoint (unlike express `ajax_shipment_packages`):
    * `ajax_cargo_packages` only exposes add / patch / delete one-at-a-time.
    * So we diff the buffer against `packages.value` and issue the minimal set
-   * of calls:
-   *   - rows WITH id present in buffer  → patch (always, simplest + safe)
-   *   - rows WITHOUT id                 → add
-   *   - server rows missing from buffer → delete (soft-delete, stato='O')
+   * of calls, in this order so a mid-way failure never loses data:
+   *   1) rows WITHOUT id                 → add
+   *   2) rows WITH id present in buffer  → patch (always, simplest + safe)
+   *   3) server rows missing from buffer → delete (soft-delete, stato='O')
    *
-   * This is BD-only — no courier APIs are touched. On any failure we surface
-   * the error and reload to re-sync the UI with whatever did persist.
+   * Las filas nuevas deben traer peso > 0: el servidor lo rechaza
+   * (`validate_add_params`) y NO se envía `allow_placeholder` para no crear
+   * bultos sin peso. Se valida antes de tocar nada.
+   *
+   * This is BD-only — no courier APIs are touched. On success AND on any
+   * failure we reload to re-sync the UI with whatever did persist.
    */
   async function savePackages(
     rows: Array<Partial<CargoPackage> & { id?: number | string }>,
   ): Promise<boolean> {
     if (!id.value) return false;
+    const serverIds = new Set(
+      packages.value
+        .map((p) => String(p.id))
+        .filter((x) => x && x !== "undefined"),
+    );
+    const isExisting = (r: { id?: number | string }): boolean => {
+      const pid = String(r.id ?? "");
+      return !!pid && serverIds.has(pid);
+    };
+
+    if (hasNewRowWithoutWeight(rows, isExisting)) {
+      toasts.push("error", i18n.global.t("cargo.toast.package_weight_required"));
+      return false;
+    }
+
     saving.value = true;
     try {
-      const serverIds = new Set(
-        packages.value
-          .map((p) => String(p.id))
-          .filter((x) => x && x !== "undefined"),
-      );
       const bufferIds = new Set(
         rows.map((r) => String(r.id)).filter((x) => x && x !== "undefined"),
       );
 
-      // 1) Deletes: server rows no longer in the buffer.
-      for (const p of packages.value) {
-        const pid = String(p.id);
-        if (pid && !bufferIds.has(pid)) {
-          const res = await packagesService.remove(Number(p.id));
-          if (!res.success) {
-            toasts.push("error", res.error ?? "Package delete failed");
-            await refreshPackages();
-            return false;
-          }
-        }
-      }
-
-      // 2) Adds + 3) Updates.
-      for (const r of rows) {
-        const pid = String(r.id ?? "");
+      // 1) Adds + 2) Updates.
+      const toAdd = rows.filter((r) => !isExisting(r));
+      const toUpdate = rows.filter((r) => isExisting(r));
+      for (const r of [...toAdd, ...toUpdate]) {
         const payload: Partial<CargoPackage> = {
           n_collo: r.n_collo,
           peso: r.peso,
@@ -397,7 +400,7 @@ export const useCargoStore = defineStore("cargo", () => {
           stackable: r.stackable,
           turnable: r.turnable,
         };
-        if (pid && serverIds.has(pid)) {
+        if (isExisting(r)) {
           const res = await packagesService.update(Number(r.id), payload);
           if (!res.success) {
             toasts.push("error", res.error ?? "Package update failed");
@@ -408,6 +411,19 @@ export const useCargoStore = defineStore("cargo", () => {
           const res = await packagesService.add(id.value, payload);
           if (!res.success) {
             toasts.push("error", res.error ?? "Package add failed");
+            await refreshPackages();
+            return false;
+          }
+        }
+      }
+
+      // 3) Deletes: server rows no longer in the buffer.
+      for (const p of packages.value) {
+        const pid = String(p.id);
+        if (pid && !bufferIds.has(pid)) {
+          const res = await packagesService.remove(Number(p.id));
+          if (!res.success) {
+            toasts.push("error", res.error ?? "Package delete failed");
             await refreshPackages();
             return false;
           }

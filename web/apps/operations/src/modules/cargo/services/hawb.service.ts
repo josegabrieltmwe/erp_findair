@@ -49,8 +49,9 @@ export const hawbService = {
         id: Number(x.id),
         awb_number: String(x.awb_number ?? ""),
         id_spediz: Number(x.id_spediz ?? 0),
-        shipper_name: String((x.shipper_name as string) ?? ""),
-        consignee_name: String((x.consignee_name as string) ?? ""),
+        // El API devuelve las columnas legacy `shipper_nome` / `consignee_nome`.
+        shipper_name: String((x.shipper_nome as string) ?? (x.shipper_name as string) ?? ""),
+        consignee_name: String((x.consignee_nome as string) ?? (x.consignee_name as string) ?? ""),
         pieces: Number((x.pieces as number) ?? 0),
         weight: Number(x.peso_house ?? (x.weight as number) ?? 0),
         currency: String((x.currency as string) ?? "EUR"),

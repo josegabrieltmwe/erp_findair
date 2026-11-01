@@ -96,6 +96,10 @@ import {
   useFieldBinding,
   type FieldBinding,
 } from "@shipment/composables/useFieldBinding";
+import {
+  deliveryNoticeAction,
+  isDeliveredWithDate,
+} from "@shipment/utils/deliveryNotice";
 import { notificationService } from "@shipment/services/notification.service";
 import {
   deliveryStatusService,
@@ -136,26 +140,44 @@ const consegnaData = useFieldBinding("consegna_data", "");
 const consegnaFirma = useFieldBinding("consegna_firma", "");
 const dataSped1 = useFieldBinding("data_sped1", "");
 
-// Tracking record id for "consegnata" (legacy `dlv=7`).
-const DELIVERED_STATO = "7";
-
 /**
  * Commit a delivery field, then — mirroring legacy Consegnato() — when the
  * shipment is marked delivered (consegna_stato=7 + a delivery date) offer to
  * email the delivery notice to the sender (spedy_delivered_mail / TRKc). The
  * send is gated by an explicit confirm() like the legacy form, never automatic.
+ *
+ * El servidor arma el correo con los datos guardados: con un borrador activo
+ * (modal Estado, always-draft) no se pregunta ni se envía ahora, sino cuando
+ * el borrador se confirme; si se cancela, no sale ningún correo.
  */
-async function onConsegnaCommit(field: FieldBinding<string>): Promise<void> {
-  await field.commit();
-  const isDelivered = String(consegnaStato.local) === DELIVERED_STATO;
-  const hasDate = String(consegnaData.local).trim() !== "";
-  if (!id.value || !isDelivered || !hasDate) return;
+async function sendDeliveryNotice(): Promise<void> {
+  const shipId = id.value;
+  if (!shipId) return;
+  // Se revalida con lo guardado: el usuario pudo cambiar el estado después.
+  const saved = store.shipment;
+  if (!isDeliveredWithDate(saved?.consegna_stato, saved?.consegna_data)) return;
   if (!window.confirm(t("shipment.modals.delivery.confirm_notify"))) return;
-  const r = await notificationService.delivered(Number(id.value));
+  const r = await notificationService.delivered(Number(shipId));
   toasts.push(
     r.success ? "success" : "error",
     r.message ?? r.error ?? t("shipment.modals.delivery.notice"),
   );
+}
+
+async function onConsegnaCommit(field: FieldBinding<string>): Promise<void> {
+  await field.commit();
+  const action = deliveryNoticeAction({
+    hasId: Boolean(id.value),
+    stato: consegnaStato.local,
+    data: consegnaData.local,
+    draftActive: store.draftActive,
+  });
+  if (action === "defer") {
+    store.deferUntilCommit("delivery-notice", sendDeliveryNotice);
+    toasts.push("info", t("shipment.modals.delivery.notice_on_save"));
+  } else if (action === "ask") {
+    await sendDeliveryNotice();
+  }
 }
 
 const trackingUrl = computed(() =>
