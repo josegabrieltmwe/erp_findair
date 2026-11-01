@@ -35,7 +35,7 @@ describe("roles múltiples del contacto", () => {
     };
     const state = await contattiService.getApiRole(9);
     expect(state.role_name).toBe("partner_staff");
-    expect(state.addon_role_details.map((r) => r.name)).toEqual(["account_admin"]);
+    expect(state.addon_roles.map((r) => r.name)).toEqual(["account_admin"]);
     expect(state.grantable_roles).toHaveLength(1); // la fila inválida se descarta
     expect(state.grantable_roles[0].addon).toBe(true);
   });
@@ -43,7 +43,7 @@ describe("roles múltiples del contacto", () => {
   it("sin datos devuelve listas vacías, no undefined", async () => {
     reply = { success: true, data: { enabled: false } };
     const state = await contattiService.getApiRole(9);
-    expect(state.addon_role_details).toEqual([]);
+    expect(state.addon_roles).toEqual([]);
     expect(state.grantable_roles).toEqual([]);
   });
 
@@ -60,7 +60,8 @@ describe("roles múltiples del contacto", () => {
     expect(calls[0].opts.body).not.toHaveProperty("role_id");
   });
 
-  it("el rol de correo del partner figura entre los aditivos que no se ofrecen como base", () => {
+  it("los roles de partner figuran entre los aditivos que no se ofrecen como base", () => {
     expect(ADDON_ROLE_NAMES).toContain("partner_mail_admin");
+    expect(ADDON_ROLE_NAMES).toContain("partner_admin");
   });
 });

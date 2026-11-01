@@ -151,7 +151,7 @@
 <script setup lang="ts">
 /**
  * Revision y aprobacion de agentes propios de partner por un administrador de
- * TMWE (docs/agent-factory/09, fase 4). El servidor repite la inspeccion al
+ * TMWE (docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md, fase 4). El servidor repite la inspeccion al
  * aprobar: lo que se ve aqui es informativo, nunca se envia como "verificacion".
  */
 import { ref, computed, onMounted } from 'vue';

@@ -221,7 +221,7 @@
 <script setup lang="ts">
 /**
  * Autoservicio del partner sobre su agente de voz propio (ElevenLabs).
- * docs/agent-factory/09, fase 4. Las claves son de solo escritura: nunca se
+ * docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md, fase 4. Las claves son de solo escritura: nunca se
  * precargan ni se muestran.
  */
 import { ref, reactive, computed, onMounted } from 'vue';

@@ -9,6 +9,34 @@
       {{ t("cargo.cancelmodal.warning", { id: cargoId }) }}
     </v-alert>
 
+    <v-alert
+      v-if="guard.invoiced"
+      type="error"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ t("cargo.cancelmodal.invoiced") }}
+    </v-alert>
+    <v-alert
+      v-if="guard.hasAwb"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ t("cargo.cancelmodal.has_awb") }}
+    </v-alert>
+    <v-alert
+      v-if="guard.hasActiveBooking"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ t("cargo.cancelmodal.active_booking") }}
+    </v-alert>
+
     <v-textarea
       v-model="reason"
       :label="t('cargo.cancelmodal.reason')"
@@ -26,7 +54,7 @@
         variant="flat"
         prepend-icon="mdi-delete-forever"
         :loading="loading"
-        :disabled="!cargoId"
+        :disabled="!cargoId || guard.blocked"
         @click="confirm"
       >
         {{ t("cargo.modal.cancel_cargo") }}
@@ -45,6 +73,8 @@ import { useUiStore } from "@cargo/stores/ui.store";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useToastStore } from "@cargo/stores/toast.store";
 import { cargoActionsService } from "@cargo/services/cargo_actions.service";
+import { useCargoFlightManagerStore } from "@cargo/stores/cargo_flight_manager.store";
+import { cancelCargoState } from "@cargo/utils/cargoGuards";
 import ModalWrapper from "./ModalWrapper.vue";
 
 const { t } = useI18n();
@@ -52,7 +82,12 @@ const ui = useUiStore();
 const cargoStore = useCargoStore();
 const toasts = useToastStore();
 const router = useRouter();
-const { id } = storeToRefs(cargoStore);
+const { id, cargo } = storeToRefs(cargoStore);
+// Misma instancia Pinia que hidrata la tarjeta de vuelos del detalle.
+const flightMgr = useCargoFlightManagerStore();
+const guard = computed(() =>
+  cancelCargoState(cargo.value, flightMgr.hasActiveBooking),
+);
 
 const cargoId = computed<number | null>(() => {
   if (!id.value) return null;
@@ -72,7 +107,7 @@ watch(
 );
 
 async function confirm(): Promise<void> {
-  if (!cargoId.value) return;
+  if (!cargoId.value || guard.value.blocked) return;
   loading.value = true;
   try {
     const r = await cargoActionsService.cancel(

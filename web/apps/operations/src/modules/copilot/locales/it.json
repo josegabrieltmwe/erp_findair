@@ -30,6 +30,99 @@
       "week": "Mostra le mie spedizioni courier di questa settimana",
       "track": "Traccia la spedizione 5022310",
       "contact": "Cerca contatti a Milano nella rubrica"
+    },
+    "errors": {
+      "busy": "C'è già una richiesta in corso. Attendi che finisca e riprova.",
+      "rate_limited": "Troppe richieste consecutive o limite di utilizzo raggiunto. Attendi qualche secondo e riprova.",
+      "unavailable": "Il Copilot è occupato o non disponibile. Riprova tra qualche secondo.",
+      "disabled": "Il Copilot è disattivato per la tua organizzazione.",
+      "ai_not_configured": "L'IA non è configurata per il tuo account. Contatta il tuo amministratore.",
+      "ai_unavailable": "Il servizio di IA non è disponibile al momento. Riprova tra qualche minuto.",
+      "ai_budget": "Il budget di IA è esaurito. Riprova più tardi o contatta il tuo amministratore."
+    },
+    "tools": {
+      "listShipments": "elenco spedizioni",
+      "trackShipment": "tracking della spedizione",
+      "searchAddressBook": "rubrica contatti",
+      "getShipment": "scheda spedizione",
+      "listCargo": "elenco cargo",
+      "countShipments": "conteggio spedizioni",
+      "getTrackingEvents": "eventi di tracking",
+      "getShipmentDocuments": "documenti della spedizione",
+      "navigateTo": "navigazione",
+      "proposeCreateShipment": "proposta di nuova spedizione",
+      "proposeEditCargoShipment": "proposta di modifica cargo",
+      "proposeCancelCargoShipment": "proposta di annullamento cargo",
+      "proposeCancelExpressShipment": "proposta di annullamento express",
+      "unknown": "altri dati"
+    },
+    "proposal": {
+      "actions": {
+        "create_shipment": "Creare spedizione express (bozza)",
+        "edit_cargo": "Modificare spedizione cargo",
+        "cancel_cargo": "Annullare spedizione cargo",
+        "cancel_express": "Annullare spedizione express"
+      },
+      "risk": {
+        "medium": "Rischio medio",
+        "high": "Rischio alto"
+      },
+      "draft": "Bozza: nessun corriere assegnato",
+      "kind": {
+        "express": "Spedizione express",
+        "cargo": "Spedizione cargo"
+      },
+      "fields": {
+        "target_id": "ID",
+        "target_awb": "AWB",
+        "target_reference": "Riferimento",
+        "name": "Destinatario",
+        "address": "Indirizzo",
+        "postal_code": "CAP",
+        "city": "Città",
+        "province": "Provincia",
+        "country": "Paese",
+        "phone": "Telefono",
+        "email": "Email",
+        "attention": "All'attenzione di",
+        "reference": "Riferimento",
+        "note_courier": "Nota per il corriere",
+        "parcels": "Colli",
+        "weight": "Peso",
+        "pickup_date": "Data di ritiro",
+        "note": "Nota",
+        "cost": "Costo"
+      },
+      "reinforced_ack": "Capisco che {target} verrà annullata e che da qui non si può annullare l'operazione",
+      "expires_in": "Scade tra {time}",
+      "expired": "Proposta scaduta. Chiedila di nuovo al Copilot.",
+      "confirm": "Conferma",
+      "retry": "Riprova",
+      "dismiss": "Scarta",
+      "status": {
+        "verified": "Fatto e verificato nell'ERP.",
+        "verified_created": "Fatto e verificato nell'ERP. Nuova spedizione n. {id}.",
+        "unverified": "Eseguito, ma NON verificato (non controllato: {fields}). Controllalo nell'ERP prima di darlo per fatto.",
+        "mismatch": "L'ERP ha risposto di sì, ma ciò che contiene NON corrisponde a quanto richiesto. Non darlo per fatto: controllalo nell'ERP.",
+        "rejected": "NON eseguito: l'ERP ha rifiutato l'operazione ({error}). La proposta è esaurita; chiedine una nuova se serve ancora.",
+        "no_detail": "nessun dettaglio",
+        "dismissed": "Proposta scartata. Non è stato modificato nulla."
+      },
+      "errors": {
+        "payload_mismatch": "NON eseguito: i dati non corrispondono a quelli proposti dal Copilot. Chiedi di nuovo la proposta.",
+        "operator_mismatch": "NON eseguito: questa proposta è stata generata da un altro utente e solo lui può confermarla.",
+        "expired": "NON eseguito: la proposta è scaduta (5 minuti). Chiedila di nuovo.",
+        "already_executed": "Questa proposta è già stata usata (doppio clic o nuovo tentativo). Controlla il risultato nell'ERP prima di chiederne un'altra.",
+        "invalid_token": "NON eseguito: la proposta non è valida. Chiedila di nuovo.",
+        "bad_request": "NON eseguito: richiesta non corretta. Chiedi di nuovo la proposta.",
+        "session": "La sessione è scaduta. Accedi di nuovo.",
+        "rate_limited": "Troppi tentativi consecutivi. Attendi qualche secondo e riprova.",
+        "busy": "C'è già una conferma in corso. Attendi e riprova.",
+        "unavailable": "Servizio occupato. NON è stato eseguito nulla: riprova tra qualche secondo.",
+        "uncertain": "Non è stato possibile confermare l'esito. L'operazione POTREBBE essere stata eseguita. Non ripeterla ancora: controlla la spedizione nell'elenco dell'ERP prima di chiedere un'altra proposta.",
+        "forbidden": "NON eseguito: non hai il permesso per questa operazione.",
+        "unknown": "NON eseguito per un errore imprevisto. Chiedi di nuovo la proposta."
+      }
     }
   }
 }

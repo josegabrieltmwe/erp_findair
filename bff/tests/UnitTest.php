@@ -86,6 +86,7 @@ final class UnitTest extends TestCase
         $expected = [
             '/api_admin_ai_settings' => ['GET', 'PUT'],
             '/api_admin_ai_budgets' => ['GET', 'PUT', 'DELETE'],
+            '/api_admin_ai_my_credentials' => ['GET', 'POST', 'PUT', 'DELETE'],
             '/api_admin_ai_usage' => ['GET'],
             '/api_admin_ai_audit' => ['GET'],
             '/api_admin_copilot_memory' => ['GET', 'DELETE'],
@@ -135,6 +136,22 @@ final class UnitTest extends TestCase
         self::assertFalse($ctx['user']['is_admin'], 'is_admin solo es verdadero si es booleano true');
     }
 
+    public function testProfileAccessIsSanitizedAndOptional(): void
+    {
+        $none = \Findair\Bff\Auth\UserContextProvider::fromProfile(['idanagfrc' => 1]);
+        self::assertSame(['roles' => [], 'scopes' => [], 'is_root' => false], $none['user']['access']);
+
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromProfile(['idanagfrc' => 77, 'access' => [
+            'roles' => [['name' => 'findair_basic'], ['name' => '<x>'], ['name' => 'findair_basic'], 'plano', ['id' => 3]],
+            'scopes' => ['shipment:read', 'shipment:read', 'Bad Scope', 7, str_repeat('s', 70)],
+            'is_root' => 'true',
+        ]]);
+
+        self::assertSame(['findair_basic'], $ctx['user']['access']['roles']);
+        self::assertSame(['shipment:read'], $ctx['user']['access']['scopes']);
+        self::assertFalse($ctx['user']['access']['is_root'], 'is_root solo es verdadero si es booleano true');
+    }
+
     public function testBackendContextCapabilitiesAreSanitized(): void
     {
         $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext([
@@ -143,5 +160,25 @@ final class UnitTest extends TestCase
         ]);
 
         self::assertSame(['clients', 'my_org'], $ctx['capabilities']);
+    }
+
+    public function testBackendContextExposesOnlyKnownInvoicingBooleans(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext([
+            'user' => ['idanagfrc' => 5],
+            'invoicing_capabilities' => ['can_read' => true, 'can_write' => true, 'can_send' => 'yes', 'is_root' => true],
+        ]);
+
+        self::assertSame(
+            ['can_read' => true, 'can_write' => true, 'can_send' => false, 'can_export' => false, 'can_admin_numbering' => false],
+            $ctx['user']['invoicing'],
+        );
+    }
+
+    public function testBackendContextWithoutInvoicingDeniesEverything(): void
+    {
+        $ctx = \Findair\Bff\Auth\UserContextProvider::fromBackendContext(['user' => ['idanagfrc' => 5]]);
+
+        self::assertSame(['can_read' => false, 'can_write' => false, 'can_send' => false, 'can_export' => false, 'can_admin_numbering' => false], $ctx['user']['invoicing']);
     }
 }

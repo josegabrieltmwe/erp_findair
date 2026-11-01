@@ -30,7 +30,7 @@
             :rules="[ruleRequiredId]"
             class="mb-3"
           />
-          <CmInternalRoleSelect
+          <CmOAuthRoleSelect
             v-model="form.role_ids"
             multiple
             :label="t('users.field_initial_roles')"
@@ -87,8 +87,10 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccountPlus } from '@mdi/js';
 import CmAnagraficaAutocomplete from '../../listini/components/CmAnagraficaAutocomplete.vue';
-import CmInternalRoleSelect from '../../internal_roles/components/CmInternalRoleSelect.vue';
+import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vue';
 import CredentialsRevealCard from '../../anagrafiche/components/CredentialsRevealCard.vue';
+import { oauthRolesService } from '../../oauth_roles/services/oauthRoles.service';
+import { rolesNotGranted } from '../services/userRoleResults';
 import { usersService, type UserCredentials } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useSelectorRules } from '../../anagrafiche/composables/useSelectorRules';
@@ -149,11 +151,33 @@ async function submit(): Promise<void> {
       api_only: form.value.api_only,
     });
     createdCredentials.value = creds;
+    await warnRolesNotGranted(creds, form.value.role_ids);
     emit('created', creds);
   } catch (e) {
     toast.error(e instanceof Error ? e.message : 'Create failed');
   } finally {
     saving.value = false;
+  }
+}
+
+// El servidor omite en silencio los roles que su política deniega (p. ej. root
+// para un no-root): se contrastan con roles_assigned y se avisa de los que faltan.
+async function warnRolesNotGranted(
+  creds: UserCredentials,
+  requestedIds: number[],
+): Promise<void> {
+  if (!requestedIds.length) return;
+  try {
+    const roles = await oauthRolesService.list();
+    const requested = requestedIds.map(
+      (id) => roles.find((r) => r.id === id)?.role_name ?? String(id),
+    );
+    const missing = rolesNotGranted(requested, creds.roles_assigned);
+    if (missing.length) {
+      toast.warning(t('users.roles_not_granted', { roles: missing.join(', ') }), 10000);
+    }
+  } catch {
+    // Sin catálogo no se puede contrastar por nombre: no bloquea el alta.
   }
 }
 

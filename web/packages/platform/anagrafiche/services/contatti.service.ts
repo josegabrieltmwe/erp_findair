@@ -30,59 +30,76 @@ const FINDAIR_ENDPOINT = '/api_anagrafica_findair_access';
 
 export type FindairLevel = 'basic' | 'full';
 
-/** Rol OAuth tal como lo describe `api_anagrafica_findair_access`. */
-export interface RoleSummary {
+/**
+ * Rol API de un contacto (tabla `contatti_oauth_role`, 1 rol por contacto).
+ * `level` es la vista "findair" del rol (basic/full) que el backend deriva
+ * cuando el rol es findair_basic/findair_full; para cualquier otro rol es null.
+ */
+export interface ApiRoleRef {
   id: number;
   name: string;
   display_name: string;
-  /** true = aditivo: se suma al rol base en lugar de sustituirlo. */
+  /** Rol aditivo: se suma al base en lugar de sustituirlo. */
   addon: boolean;
 }
 
-/**
- * Roles API de un contacto (tabla `contatti_oauth_role`): UN rol base más los aditivos que se suman (la unión de
- * sus scopes es lo que cuenta, luego se cruza con el techo del client OAuth).
- * `level` es la vista "findair" del rol base (basic/full) cuando es findair_basic/full; para otro rol es null.
- * `grantable_roles` son los que el llamante puede conceder a ESTE contacto: la UI solo ofrece esos.
- */
 export interface ApiRoleState {
   enabled: boolean;
   level: FindairLevel | null;
   role_id: number | null;
   role_name: string | null;
-  addon_roles: string[];
-  addon_role_details: RoleSummary[];
-  grantable_roles: RoleSummary[];
+  /** Roles aditivos que el contacto tiene hoy. */
+  addon_roles: ApiRoleRef[];
+  /**
+   * Roles que QUIEN LLAMA puede conceder a este contacto (los acepta la política del API:
+   * `Role_Assignment_Policy`). Vacío = no puede cambiar roles. La UI ofrece solo estos.
+   */
+  grantable_roles: ApiRoleRef[];
+}
+
+function normalizeRoleRefs(list: unknown): ApiRoleRef[] {
+  if (!Array.isArray(list)) return [];
+  const out: ApiRoleRef[] = [];
+  for (const r of list) {
+    const o = r as Partial<ApiRoleRef> | null;
+    const id = Number(o?.id);
+    if (!o || !Number.isFinite(id) || id <= 0 || typeof o.name !== 'string' || !o.name) continue;
+    out.push({
+      id,
+      name: o.name,
+      display_name: typeof o.display_name === 'string' && o.display_name ? o.display_name : o.name,
+      addon: o.addon === true,
+    });
+  }
+  return out;
 }
 /** Alias histórico: el "acceso findair" es el caso particular de rol API findair_*. */
 export type FindairAccessState = ApiRoleState;
 
-/** Roles aditivos conocidos (espejo de Contatti_Oauth_Role_Model::ADDON_ROLE_NAMES) para no ofrecerlos como rol base. */
-export const ADDON_ROLE_NAMES = [
-  'erp_operator', 'accounting_viewer', 'account_admin', 'history_viewer', 'archive_manager',
-  'contacts_search_all', 'courier_driver', 'dispatcher', 'root', 'partner_pricing', 'partner_mail_admin',
-] as const;
+/** Cuerpo crudo de `api_anagrafica_findair_access` (los roles aditivos llegan en `addon_role_details`). */
+type RawApiRole = Partial<Omit<ApiRoleState, 'addon_roles' | 'grantable_roles'>> & {
+  addon_role_details?: unknown;
+  grantable_roles?: unknown;
+};
 
-function normalizeSummary(r: Partial<RoleSummary> | null | undefined): RoleSummary | null {
-  const id = Number(r?.id);
-  if (!r || !Number.isFinite(id) || id <= 0 || typeof r.name !== 'string') return null;
-  return { id, name: r.name, display_name: typeof r.display_name === 'string' && r.display_name ? r.display_name : r.name, addon: Boolean(r.addon) };
-}
-
-function normalizeApiRole(data: Partial<ApiRoleState> | null | undefined): ApiRoleState {
+function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
   const roleId = data?.role_id == null ? null : Number(data.role_id);
-  const list = (v: unknown): RoleSummary[] =>
-    (Array.isArray(v) ? v : []).map((r) => normalizeSummary(r as Partial<RoleSummary>)).filter((r): r is RoleSummary => r !== null);
   return {
     enabled: Boolean(data?.enabled),
     level: data?.level === 'full' ? 'full' : data?.level === 'basic' ? 'basic' : null,
     role_id: roleId != null && Number.isFinite(roleId) && roleId > 0 ? roleId : null,
     role_name: typeof data?.role_name === 'string' && data.role_name ? data.role_name : null,
-    addon_roles: Array.isArray(data?.addon_roles) ? data!.addon_roles!.filter((n): n is string => typeof n === 'string') : [],
-    addon_role_details: list(data?.addon_role_details),
-    grantable_roles: list(data?.grantable_roles),
+    addon_roles: normalizeRoleRefs(data?.addon_role_details),
+    grantable_roles: normalizeRoleRefs(data?.grantable_roles),
   };
 }
+
+/** Roles aditivos conocidos (espejo de Contatti_Oauth_Role_Model::ADDON_ROLE_NAMES) para no ofrecerlos como rol base. */
+export const ADDON_ROLE_NAMES = [
+  'erp_operator', 'accounting_viewer', 'account_admin', 'history_viewer', 'archive_manager',
+  'contacts_search_all', 'courier_driver', 'dispatcher', 'root', 'partner_pricing', 'partner_mail_admin',
+  'partner_admin', 'partner_price_manager', 'tmwe_billing', 'partner_billing',
+] as const;
 
 export const contattiService = {
   /**
@@ -199,8 +216,12 @@ export const contattiService = {
   },
 
   async updatePermissions(id: number, perms: Record<string, string | boolean>): Promise<void> {
+    // PUT, no PATCH: el BFF solo tiene GET/POST/PUT/DELETE en la lista blanca
+    // para api_anagrafica_contacts (bff/config/routes.spa.yaml); con PATCH la
+    // petición nunca llegaba al backend (404 del proxy) y los permisos no se
+    // guardaban nunca, sin error visible.
     const raw = await http<{ error?: string }>(ENDPOINT, {
-      method: 'PATCH',
+      method: 'PUT',
       query: { id },
       body: { id, ...perms },
     });
@@ -223,7 +244,7 @@ export const contattiService = {
    */
   async getApiRole(contattoId: number): Promise<ApiRoleState> {
     const raw = await http<unknown>(FINDAIR_ENDPOINT, { query: { id: contattoId } });
-    return normalizeApiRole(unwrap<Partial<ApiRoleState>>(raw));
+    return normalizeApiRole(unwrap<RawApiRole>(raw));
   },
 
   /**
@@ -234,7 +255,7 @@ export const contattiService = {
     const body = roleId == null
       ? { id: contattoId, enabled: false }
       : { id: contattoId, enabled: true, role_id: roleId };
-    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body,
     });
@@ -243,11 +264,11 @@ export const contattiService = {
   },
 
   /**
-   * Suma (enabled=true) o retira (enabled=false) un rol ADITIVO sin tocar el rol base. El backend decide por el
-   * propio rol si es aditivo; para un rol base usar setApiRole.
+   * Suma (enabled) o retira un rol ADITIVO sin tocar el rol base. El API valida con
+   * `Role_Assignment_Policy` quién puede conceder qué; devuelve el estado completo.
    */
   async setAddonRole(contattoId: number, roleId: number, enabled: boolean): Promise<ApiRoleState> {
-    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body: { id: contattoId, enabled, role_id: roleId },
     });
@@ -270,7 +291,7 @@ export const contattiService = {
     enabled: boolean,
     level?: FindairLevel,
   ): Promise<FindairAccessState> {
-    const raw = await http<{ data?: Partial<ApiRoleState>; error?: string }>(FINDAIR_ENDPOINT, {
+    const raw = await http<{ data?: RawApiRole; error?: string }>(FINDAIR_ENDPOINT, {
       method: 'POST',
       body: enabled && level ? { id, enabled, level } : { id, enabled },
     });

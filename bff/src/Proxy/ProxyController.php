@@ -9,9 +9,12 @@ use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenSet;
 use Findair\Bff\Http\CsrfGuard;
 use Findair\Bff\Http\ImpersonationController;
+use Findair\Bff\Impersonation\EffectivePartner;
 use Findair\Bff\Session\Session;
 use Findair\Bff\Settings;
+use Findair\Bff\Support\ClientIp;
 use Findair\Bff\Support\ProblemDetails;
+use Findair\Bff\Throttle\Throttler;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\TransferException;
@@ -25,6 +28,8 @@ use Psr\Log\LoggerInterface;
  */
 final class ProxyController
 {
+    private readonly ClientIp $clientIp;
+
     public function __construct(
         private readonly RouteManifest $manifest,
         private readonly UpstreamUrl $urls,
@@ -36,7 +41,9 @@ final class ProxyController
         private readonly Settings $settings,
         private readonly UpstreamStreamer $streamer,
         private readonly TokenProbe $probe,
+        private readonly Throttler $throttler,
     ) {
+        $this->clientIp = new ClientIp($settings->trustedProxies);
     }
 
     /** @param array<string, string> $args */
@@ -74,8 +81,31 @@ final class ProxyController
             return ProblemDetails::response(413, 'payload_too_large', 'Cuerpo demasiado grande', null, $requestId);
         }
 
+        $bodyError = $this->checkBodyEnum($route, $body, $requestId);
+        if ($bodyError !== null) {
+            return $bodyError;
+        }
+
+        $lease = null;
+        if ($route->throttle !== null) {
+            $lease = $this->throttler->enter($route->throttle, $this->userKey($session), $this->clientIp->resolve($request), $requestId, (int) ceil($route->timeout) * 2); // x2: un 401 puede reenviar tras refrescar el token
+            if ($lease->rejection !== null) {
+                return $lease->rejection;
+            }
+        }
+
+        try {
+            return $this->forward($request, $route, $match['params'], $session, $tokens, $body, $requestId, $started);
+        } finally {
+            $lease?->release();
+        }
+    }
+
+    /** @param array<string, string> $params */
+    private function forward(Request $request, Route $route, array $params, Session $session, TokenSet $tokens, string $body, string $requestId, float $started): ResponseInterface
+    {
         $impersonate = ImpersonationController::impersonatedPartner($session);
-        $url = $this->urls->internal($route->action, $this->buildQuery($request, $route, $match['params']));
+        $url = $this->urls->internal($route->action, $this->buildQuery($request, $route, $params));
 
         try {
             $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId, $impersonate);
@@ -111,6 +141,14 @@ final class ProxyController
             return ProblemDetails::response(502, 'upstream_error', 'Error del servicio', null, $requestId);
         }
 
+        if ($impersonate !== null && $route->checkEffectivePartner && EffectivePartner::isCheckable($upstream, !$route->isBinaryOrStream()) && !EffectivePartner::matches($upstream, $impersonate)) {
+            // B1/C11: el backend no confirma que atendió como el partner pedido. No se entrega la respuesta.
+            EffectivePartner::logMismatch($this->logger, $route->id, $impersonate, $upstream, $requestId);
+            $upstream->getBody()->close();
+
+            return ProblemDetails::response(502, 'effective_partner_mismatch', 'Partner efectivo no confirmado', 'El servicio no confirmó que la respuesta corresponda al partner seleccionado; se descarta.', $requestId);
+        }
+
         $adapted = $this->adapter->adapt($upstream, $route, $requestId);
         $this->logger->info('proxy', [
             'route' => $route->id,
@@ -120,6 +158,36 @@ final class ProxyController
         ]);
 
         return $adapted;
+    }
+
+    /** Valida campos JSON del cuerpo contra la lista cerrada del manifiesto (`body_enum`). */
+    private function checkBodyEnum(Route $route, string $body, string $requestId): ?ResponseInterface
+    {
+        if ($route->bodyEnum === []) {
+            return null;
+        }
+        $decoded = json_decode($body, true);
+        if (!is_array($decoded) || array_is_list($decoded)) {
+            return ProblemDetails::response(400, 'invalid_body', 'Cuerpo no válido', 'Se esperaba un objeto JSON.', $requestId);
+        }
+        foreach ($route->bodyEnum as $field => $allowed) {
+            $value = $decoded[$field] ?? null;
+            if (!is_string($value) || !in_array($value, $allowed, true)) {
+                return ProblemDetails::response(400, 'invalid_body', 'Cuerpo no válido', "Valor no permitido en '{$field}'.", $requestId);
+            }
+        }
+
+        return null;
+    }
+
+    /** Identidad estable para los límites: el usuario real (no el partner suplantado); si falta, la sesión. */
+    private function userKey(Session $session): string
+    {
+        $context = $session->get('context');
+        $user = is_array($context) && is_array($context['user'] ?? null) ? $context['user'] : [];
+        $name = is_string($user['username'] ?? null) ? $user['username'] : '';
+
+        return $name !== '' ? 'user:' . $name : 'session:' . $session->id();
     }
 
     /** El backend rechaza esta operación con 401 aunque la sesión es válida: se informa como 403 y no se cierra la sesión. */
@@ -160,8 +228,8 @@ final class ProxyController
         if (preg_match('/^[a-z]{2}(-[A-Za-z]{2})?$/', $lang) === 1) {
             $headers['X-Tmwe-Lang'] = $lang;
         }
-        $ip = $request->getServerParams()['REMOTE_ADDR'] ?? '';
-        if (is_string($ip) && $ip !== '') {
+        $ip = $this->clientIp->resolve($request);
+        if ($ip !== '') {
             $headers['X-Forwarded-For'] = $ip;
         }
         if ($body !== '' && $request->getHeaderLine('Content-Type') !== '') {
@@ -221,7 +289,16 @@ final class ProxyController
         }
         $body = $request->getBody();
         $body->rewind();
-        $data = $body->read($max + 1);
+        // php://input entrega como mucho ~8 KiB por lectura: un único read() truncaba en silencio los
+        // cuerpos mayores (y el límite nunca saltaba). Se lee hasta EOF o hasta pasar el máximo.
+        $data = '';
+        while (!$body->eof() && strlen($data) <= $max) {
+            $chunk = $body->read(min(65536, $max + 1 - strlen($data)));
+            if ($chunk === '') {
+                break;
+            }
+            $data .= $chunk;
+        }
 
         return strlen($data) > $max ? null : $data;
     }

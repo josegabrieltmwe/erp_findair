@@ -36,7 +36,7 @@
             hide-details
             style="flex: 0 0 240px"
             :disabled="store.saving"
-            @change="(v: string) => patch({ id_spediz: toNum(v) })"
+            @change="(e: Event) => patch({ id_spediz: toNum(fieldValue(e)) })"
           />
           <v-text-field
             :model-value="String(hawb.peso_house ?? '')"
@@ -46,7 +46,7 @@
             hide-details
             style="flex: 0 0 200px"
             :disabled="store.saving"
-            @change="(v: string) => patch({ peso_house: toNum(v) })"
+            @change="(e: Event) => patch({ peso_house: toNum(fieldValue(e)) })"
           />
         </div>
       </FormSection>
@@ -98,7 +98,7 @@
           hide-details
           class="mb-2"
           :disabled="store.saving"
-          @change="(v: string) => patch({ goods_descr: v })"
+          @change="(e: Event) => patch({ goods_descr: fieldValue(e) })"
         />
         <v-textarea
           :model-value="String(hawb.mnf_descr ?? '')"
@@ -109,7 +109,7 @@
           hide-details
           class="mb-2"
           :disabled="store.saving"
-          @change="(v: string) => patch({ mnf_descr: v })"
+          @change="(e: Event) => patch({ mnf_descr: fieldValue(e) })"
         />
         <div class="d-flex ga-2">
           <v-text-field
@@ -119,7 +119,7 @@
             hide-details
             :disabled="store.saving"
             class="flex-grow-1"
-            @change="(v: string) => patch({ SSR: v })"
+            @change="(e: Event) => patch({ SSR: fieldValue(e) })"
           />
           <v-text-field
             :model-value="String(hawb.OSI ?? '')"
@@ -128,7 +128,7 @@
             hide-details
             :disabled="store.saving"
             class="flex-grow-1"
-            @change="(v: string) => patch({ OSI: v })"
+            @change="(e: Event) => patch({ OSI: fieldValue(e) })"
           />
           <v-text-field
             :model-value="String(hawb.wvc ?? '')"
@@ -137,7 +137,7 @@
             hide-details
             :disabled="store.saving"
             class="flex-grow-1"
-            @change="(v: string) => patch({ wvc: v })"
+            @change="(e: Event) => patch({ wvc: fieldValue(e) })"
           />
           <v-switch
             :model-value="hawb.rated_as_agreed === 'S'"
@@ -146,7 +146,9 @@
             hide-details
             inset
             :disabled="store.saving"
-            @change="(v: boolean) => patch({ rated_as_agreed: v ? 'S' : 'N' })"
+            @update:model-value="
+              (v: boolean | null) => patch({ rated_as_agreed: v ? 'S' : 'N' })
+            "
           />
         </div>
         <v-textarea
@@ -158,7 +160,7 @@
           hide-details
           class="mt-2"
           :disabled="store.saving"
-          @change="(v: string) => patch({ note_interne: v })"
+          @change="(e: Event) => patch({ note_interne: fieldValue(e) })"
         />
       </FormSection>
 
@@ -235,9 +237,10 @@
                 class="text-right"
                 :disabled="store.saving"
                 @change="
-                  (v: string) =>
+                  (e: Event) =>
                     patch({
-                      [`oth_crg_val_${(item as ChargeRow).id}`]: toNum(v) ?? '',
+                      [`oth_crg_val_${(item as ChargeRow).id}`]:
+                        toNum(fieldValue(e)) ?? '',
                     })
                 "
               />
@@ -266,6 +269,7 @@ import { useCargoMawbStore } from "@cargo/stores/cargo_mawb.store";
 import type { HawbPatch, HawbRow } from "@cargo/services/cargo_hawb.service";
 import type { MawbAddress } from "@cargo/services/cargo_mawb.types";
 import ModalWrapper from "./ModalWrapper.vue";
+import { fieldValue } from "@cargo/utils/fieldValue";
 import MawbAddressBlock from "../mawb/MawbAddressBlock.vue";
 import FormSection from "@shared/ui/FormSection.vue";
 import ListingDataView from "@shared/listing/ListingDataView.vue";

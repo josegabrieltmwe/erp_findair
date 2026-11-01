@@ -114,6 +114,8 @@ import { useRouter } from 'vue-router';
 import SettingsCard from '../components/SettingsCard.vue';
 import { SETTINGS_CATALOG } from '../settingsCatalog';
 import { useProfile } from '@shared/composables/useProfile';
+import { useAccess } from '@shared/composables/useAccess';
+import { canOpenAdminRoute } from '../settingsAccess';
 import { canSeeAiScope } from '@shared/ai_admin/composables/useAiScopes';
 
 const { t } = useI18n();
@@ -122,6 +124,7 @@ const query = ref('');
 // Las tarjetas de IA se ocultan si el perfil trae scopes y falta el requerido (UX; la API autoriza).
 const { profile, isAdmin, ensureProfile } = useProfile();
 void ensureProfile();
+const { access } = useAccess();
 
 interface ResolvedItem {
   key: string;
@@ -168,6 +171,8 @@ const groups = computed<ResolvedGroup[]>(() =>
     const groupTitle = t('settings.settings.groups.' + g.i18nKey);
     const items = g.items
       .filter((it) => !it.aiScope || canSeeAiScope(profile.value, isAdmin.value, it.aiScope))
+      // Quien no es TMWE solo ve las tarjetas que puede abrir por scope (TMWE las ve todas).
+      .filter((it) => it.aiScope || !it.routeName || canOpenAdminRoute(it.routeName, { isAdmin: isAdmin.value, access: access.value }))
       .map((it) => {
       const title = t('settings.settings.catalog.' + it.i18nKey + '.title');
       const description = t('settings.settings.catalog.' + it.i18nKey + '.description');

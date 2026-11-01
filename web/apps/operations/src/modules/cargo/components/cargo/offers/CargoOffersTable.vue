@@ -91,8 +91,10 @@
               class="text-right"
               :disabled="store.saving.has(Number((item as CargoOffer).id))"
               @change="
-                (v: string) =>
-                  onPatch(Number((item as CargoOffer).id), { costo: Number(v) })
+                (e: Event) =>
+                  onPatch(Number((item as CargoOffer).id), {
+                    costo: Number(fieldValue(e)),
+                  })
               "
             />
           </template>
@@ -105,8 +107,10 @@
               hide-details
               :disabled="store.saving.has(Number((item as CargoOffer).id))"
               @change="
-                (v: string) =>
-                  onPatch(Number((item as CargoOffer).id), { change_valuta: v })
+                (e: Event) =>
+                  onPatch(Number((item as CargoOffer).id), {
+                    change_valuta: fieldValue(e),
+                  })
               "
             />
           </template>
@@ -395,6 +399,7 @@
 </template>
 
 <script setup lang="ts">
+import { fieldValue } from "@cargo/utils/fieldValue";
 import EmptyState from "@shared/ui/EmptyState.vue";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
 import { useClientSideListSource } from "@shared/listing/useClientSideListSource";

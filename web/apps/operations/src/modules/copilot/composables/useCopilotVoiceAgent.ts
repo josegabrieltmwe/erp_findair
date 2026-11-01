@@ -8,7 +8,7 @@
  * un formulario en pantalla), aqui no hace falta tool-registry ni
  * FormBridge: las 11 tools del perfil son todas webhook tools resueltas por
  * ElevenLabs llamando de vuelta al ERP con el Bearer `user_token`
- * (ver docs/agent-factory/09 y Elevenlabs_Tools_Definition.php en el backend).
+ * (ver docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md y Elevenlabs_Tools_Definition.php en el backend).
  *
  * dynamicVariables obligatorias (Elevenlabs_Partner_Agent_Verifier::
  * SESSION_VARIABLES en el backend): sin apertura/partner, ElevenLabs

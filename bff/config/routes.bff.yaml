@@ -50,6 +50,17 @@ exclude:
   - GET /web_chat_typing
 
 routes:
+  # "Nueva expedición" crea con POST /unified_shipment a través de useEntityCreate, que recibe el
+  # endpoint como parámetro: el generador no lo ve y solo emite el GET. Mismo límite que
+  # post.unified_cargo_shipment.
+  - id: post.unified_shipment
+    method: POST
+    path: /unified_shipment
+    upstream:
+      action: unified_shipment
+      forward_query: '*'
+    limits: { body: 1m, timeout: 30 }
+
   - id: me.profile
     method: GET
     path: /me
@@ -97,6 +108,23 @@ routes:
     upstream:
       action: copilot_chat
     limits: { body: 1m, timeout: 120 }
+    # 1 chat simultáneo por usuario, tope global y ritmo por minuto (contadores atómicos en Valkey; ver Settings).
+    throttle: copilot_chat
+
+  # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
+  # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
+  # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).
+  # Sin legacy_envelope: los rechazos son HTTP 4xx/5xx con {success:false,error}; un 200 con
+  # executed:false es un rechazo del ERP y lo interpreta la SPA. Tier oauth_external: Bearer, sin hermano de sesión.
+  - id: copilot.write_proposal
+    method: POST
+    path: /api_copilot_write_proposal
+    upstream:
+      action: api_copilot_write_proposal
+    limits: { body: 64k, timeout: 30 }
+    body_enum:
+      op: [confirmar]
+    throttle: copilot_confirm
 
   # TTS del copilot: devuelve audio/mpeg (la SPA lo pide con POST y responseType blob).
   # Fijado a mano para no depender del generado; bin/gen-spa-manifest.php lo regenera igual y esta entrada gana.
@@ -115,7 +143,16 @@ routes:
       action: api_copilot_elevenlabs_credential
     limits: { body: 64k, timeout: 30 }
 
-  # Administración de IA (contrato ai-admin/1, docs/agent-factory/10-contrato-ai-admin.md en tmwe_json).
+  # QR de login: el escritorio (con Bearer) genera un QR y el móvil abre sesión al escanearlo. El destino del móvil
+  # se informa aquí ({client_id, redirect} o {return_to}); tmwe_api lo valida al generar (origen registrado del client).
+  - id: qr_login.generate
+    method: POST
+    path: /api_qr_login_generate
+    upstream:
+      action: api_qr_login_generate
+    limits: { body: 4k, timeout: 30 }
+
+  # Administración de IA (contrato ai-admin/1, docs/06-api/agentes-ia/10-contrato-ai-admin.md en tmwe_json).
   # Los scopes (ai:admin, ai:audit:read, ai:memory:erase) los aplica la API; el BFF solo abre la lista blanca.
   # Los métodos que cambian estado llevan CSRF por defecto.
   - id: ai_admin.settings.get
@@ -151,6 +188,35 @@ routes:
     path: /api_admin_ai_budgets
     upstream:
       action: api_admin_ai_budgets
+      forward_query: [id]
+
+  # «Mis credenciales de IA»: un partner gestiona SU clave (el servidor fija el partner; la API nunca
+  # devuelve la clave). TMWE sigue usando /api_admin_ai_credentials.
+  - id: ai_admin.my_credentials.get
+    method: GET
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+
+  - id: ai_admin.my_credentials.post
+    method: POST
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.my_credentials.put
+    method: PUT
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
+    limits: { body: 16k, timeout: 15 }
+
+  - id: ai_admin.my_credentials.delete
+    method: DELETE
+    path: /api_admin_ai_my_credentials
+    upstream:
+      action: api_admin_ai_my_credentials
       forward_query: [id]
 
   - id: ai_admin.usage.get

@@ -8,7 +8,7 @@ Eres un arquitecto de software senior responsable de la arquitectura de **ERP Fi
 
 ## Contexto del proyecto
 
-Repositorio `/var/www/host/erp_findair`:
+Repositorio `erp_findair` (raíz del proyecto, donde está `.git`):
 
 - **`bff/`** — Backend For Frontend en **Slim 4, PHP 8.3+** (PHP-DI, Guzzle, Predis, Monolog, Symfony YAML). Namespace `Findair\Bff\`. Calidad: PHPUnit 11 (`composer test`, sin red ni Redis), **PHPStan nivel 8** (`composer stan`), PHP-CS-Fixer PSR-12 (`composer cs`).
   - `src/Auth` (OAuthClient, TokenVault, TokenRefresher, TokenProbe, UserContextProvider, PartnerSwitcher), `src/Http` (AuthController, ImpersonationController, CsrfGuard, StreamingEmitter, ProblemErrorHandler, Middleware), `src/Proxy` (ProxyController, RouteManifest, Route, UpstreamUrl, CurlUpstreamStreamer…), `src/Session` (Redis/Array store), `src/Support` (ProblemDetails, Redactor).

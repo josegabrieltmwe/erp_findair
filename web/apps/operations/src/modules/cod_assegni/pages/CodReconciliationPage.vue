@@ -19,7 +19,8 @@ import {
   COLLECT_STATES,
   DEFAULT_COLLECT_STATE,
   isValidReportId,
-  selectedTotal,
+  rememberAmounts,
+  selectedTotalKnown,
   setPageSelection,
   stateLabelKey,
   toggleSelection,
@@ -46,6 +47,8 @@ const perPage = ref(25);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const selected = ref<number[]>([]);
+// Importes vistos por id: la selección sobrevive al paginar y el total debe incluirla.
+const knownAmounts = ref<Record<number, number>>({});
 
 const dateFrom = ref("");
 const dateTo = ref("");
@@ -110,6 +113,7 @@ async function load(): Promise<void> {
       perPage.value,
     );
     rows.value = res.items;
+    knownAmounts.value = rememberAmounts(knownAmounts.value, res.items);
     total.value = res.total;
   } catch (e) {
     error.value = e instanceof Error ? e.message : t("cod_assegni.recon.load_failed");
@@ -168,7 +172,7 @@ const allOnPage = computed(
     pageIds.value.length > 0 &&
     pageIds.value.every((id) => selected.value.includes(id)),
 );
-const selTotal = computed(() => selectedTotal(rows.value, selected.value));
+const selTotal = computed(() => selectedTotalKnown(knownAmounts.value, selected.value));
 
 /* ── Marcar como cobrado ───────────────────────────────── */
 const collectTarget = ref<ReconRow | null>(null);

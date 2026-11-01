@@ -27,7 +27,7 @@ app.use(vuetify);
 app.mount("#app-wrapper");
 
 // Presencia online: latido de esta pestaña (se para solo si el backend tiene
-// la presencia desactivada). Ver docs/plans/presencia_online/PROPUESTA.md.
+// la presencia desactivada). Ver docs/03-diseno/presencia_online/PROPUESTA.md.
 startPresenceHeartbeat({
   basePath: () => window.__TMWE_NAV__?.basePath ?? "/bff/v1",
 });

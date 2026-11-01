@@ -6,6 +6,8 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
+import { buildAccess } from "@shared/composables/useAccess";
+import { canEnterSettingsHub, canOpenAdminRoute } from "@/modules/settings/settingsAccess";
 import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
@@ -397,11 +399,14 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAdmin: true },
   },
   {
+    // TMWE: credenciales de cualquier partner + voz. Administrador de partner (scope
+    // ai:admin, rol partner_staff_ai_admin): SOLO su clave (modo propio). Antes `requiresAdmin`,
+    // que dejaba fuera al partner; ahora lo gobierna el scope y la API sigue autorizando.
     path: "/settings/ai-credentials",
     name: "settings-ai-credentials",
     component: () =>
       import("@shared/ai_credentials/feature/AiCredentialsCenterPage.vue"),
-    meta: { requiresAdmin: true },
+    meta: { aiScope: "ai:admin" },
   },
   {
     // Credenciales ElevenLabs: ahora son la pestaña «Voz» de las credenciales de IA.
@@ -420,7 +425,7 @@ const routes: RouteRecordRaw[] = [
     path: "/settings/elevenlabs-agent-sync",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "sync" } },
   },
-  // Administración de IA (contrato ai-admin/1, docs/agent-factory/10). `aiScope`
+  // Administración de IA (contrato ai-admin/1, docs/06-api/agentes-ia/10-contrato-ai-admin.md). `aiScope`
   // oculta la ruta si el perfil trae scopes y no incluye el requerido; la API
   // sigue siendo quien autoriza. /settings/my-ai-usage es para cualquier usuario.
   {
@@ -435,7 +440,7 @@ const routes: RouteRecordRaw[] = [
     path,
     redirect: { name: "settings-ai-center", query: { tab } },
   })),
-  // Agentes de voz PROPIOS de partner (docs/agent-factory/09). La pagina del
+  // Agentes de voz PROPIOS de partner (docs/02-arquitectura/agentes-ia/09-seguridad-agentes-propios-de-partner.md). La pagina del
   // partner NO es requiresAdmin: la controla el permiso RBAC
   // elevenlabs_partner_agent (rol partner_admin) y el servidor, que ademas
   // limita todo a las filas del propio partner.
@@ -463,23 +468,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/settings/elevenlabs-agent-review",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "review" } },
-  },
-  // Continuación del montaje de identidad/seguridad (ver comentario junto a
-  // "settings-users" más arriba). internal_roles y module_permissions
-  // migran juntos: comparten el catálogo de módulos (?view=available).
-  {
-    path: "/settings/internal-roles",
-    name: "settings-internal-roles",
-    component: () =>
-      import("@shared/internal_roles/feature/InternalRolesPage.vue"),
-    meta: { requiresAdmin: true },
-  },
-  {
-    path: "/settings/module-permissions",
-    name: "settings-module-permissions",
-    component: () =>
-      import("@shared/module_permissions/feature/ModulePermissionsPage.vue"),
-    meta: { requiresAdmin: true },
   },
   {
     path: "/settings/authz-explain",
@@ -784,6 +772,13 @@ const routes: RouteRecordRaw[] = [
     name: "settings-air-carrier-credentials",
     component: () =>
       import("@shared/air_carrier_credentials/feature/AirCarrierCredentialsPage.vue"),
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/forward-air-accounts",
+    name: "settings-forward-air-accounts",
+    component: () =>
+      import("@shared/forward_air_accounts/feature/ForwardAirAccountsPage.vue"),
     meta: { requiresAdmin: true },
   },
   // Fase 6 / L20: estado del token OAuth de UPS, solo lectura. Backend NUEVO
@@ -1210,7 +1205,13 @@ router.beforeEach(async (to) => {
   const { isAdmin, profile, ensureProfile } = useProfile();
   await ensureProfile();
 
-  if (to.meta.requiresAdmin && isAdmin.value !== true) return { name: "home" };
+  // TMWE entra como siempre; el resto solo a las rutas con scope de personal (settingsAccess.ts).
+  if (to.meta.requiresAdmin) {
+    const ctx = { isAdmin: isAdmin.value, access: buildAccess(profile.value) };
+    const allowed =
+      to.name === "settings" ? canEnterSettingsHub(ctx) : canOpenAdminRoute(String(to.name ?? ""), ctx);
+    if (!allowed) return { name: "home" };
+  }
   if (to.meta.aiScope && !canSeeAiScope(profile.value, isAdmin.value, to.meta.aiScope)) {
     return { name: "home" };
   }

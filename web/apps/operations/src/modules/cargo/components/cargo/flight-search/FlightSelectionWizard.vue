@@ -164,6 +164,16 @@
             </span>
           </template>
         </v-checkbox>
+
+        <v-checkbox
+          v-if="hasActiveBooking"
+          v-model="cancelAck"
+          density="compact"
+          color="error"
+          hide-details
+          :disabled="busy"
+          :label="t('cargo.wizard.ack_cancel_booking')"
+        />
       </div>
     </v-expand-transition>
 
@@ -203,7 +213,7 @@
         variant="flat"
         prepend-icon="mdi-check-decagram"
         :loading="busy"
-        :disabled="!confirmCheckbox || busy"
+        :disabled="!canConfirm"
         @click="advance"
       >
         {{ t("cargo.wizard.confirm_assign") }}
@@ -215,6 +225,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { computed, ref, watch } from "vue";
+import { canConfirmFlightAssign } from "@cargo/utils/cargoGuards";
 import {
   sourceShortLabel,
   sourceColorFor,
@@ -253,6 +264,16 @@ const emit = defineEmits<{
 
 const confirmLevel = ref<1 | 2>(1);
 const confirmCheckbox = ref(false);
+// Con reserva viva, asignar la tarifa la cancela: exige su propia casilla.
+const cancelAck = ref(false);
+const canConfirm = computed<boolean>(() =>
+  canConfirmFlightAssign({
+    confirmCheckbox: confirmCheckbox.value,
+    hasActiveBooking: props.hasActiveBooking,
+    cancelAck: cancelAck.value,
+    busy: props.busy,
+  }),
+);
 
 /**
  * Reiniciar el wizard SOLO si el operador eligió otro vuelo.
@@ -281,6 +302,7 @@ watch(
     }
     confirmLevel.value = 1;
     confirmCheckbox.value = false;
+    cancelAck.value = false;
   },
 );
 
@@ -289,7 +311,7 @@ function advance(): void {
     confirmLevel.value = 2;
     return;
   }
-  if (confirmCheckbox.value) {
+  if (canConfirm.value) {
     emit("confirm");
   }
 }

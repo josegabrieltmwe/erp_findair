@@ -33,6 +33,10 @@ export interface OAuthClient {
   allowed_origins?: string[] | null;
   allowed_ips?: string[] | null;
   allowed_endpoints?: string[] | null;
+  /** Último uso del client (`oauth_client.last_activity_at`); `null` = nunca. */
+  last_activity?: string | null;
+  created_at?: string | null;
+  disabled_reason?: string | null;
   [k: string]: unknown;
 }
 

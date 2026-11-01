@@ -30,6 +30,99 @@
       "week": "Toon mijn koerierzendingen van deze week",
       "track": "Volg zending 5022310",
       "contact": "Zoek contacten in Milaan in het adresboek"
+    },
+    "errors": {
+      "busy": "Er loopt al een verzoek. Wacht tot het klaar is en probeer opnieuw.",
+      "rate_limited": "Te veel verzoeken achter elkaar of gebruikslimiet bereikt. Wacht enkele seconden en probeer opnieuw.",
+      "unavailable": "De Copilot is bezet of niet beschikbaar. Probeer het over enkele seconden opnieuw.",
+      "disabled": "De Copilot is uitgeschakeld voor je organisatie.",
+      "ai_not_configured": "AI is niet geconfigureerd voor je account. Neem contact op met je beheerder.",
+      "ai_unavailable": "De AI-dienst is momenteel niet beschikbaar. Probeer het over een paar minuten opnieuw.",
+      "ai_budget": "Het AI-budget is op. Probeer het later opnieuw of neem contact op met je beheerder."
+    },
+    "tools": {
+      "listShipments": "zendingenlijst",
+      "trackShipment": "zendingtracking",
+      "searchAddressBook": "adresboek",
+      "getShipment": "zendinggegevens",
+      "listCargo": "cargolijst",
+      "countShipments": "aantal zendingen",
+      "getTrackingEvents": "trackinggebeurtenissen",
+      "getShipmentDocuments": "zendingdocumenten",
+      "navigateTo": "navigatie",
+      "proposeCreateShipment": "voorstel nieuwe zending",
+      "proposeEditCargoShipment": "voorstel cargo-wijziging",
+      "proposeCancelCargoShipment": "voorstel cargo-annulering",
+      "proposeCancelExpressShipment": "voorstel express-annulering",
+      "unknown": "overige gegevens"
+    },
+    "proposal": {
+      "actions": {
+        "create_shipment": "Expresszending aanmaken (concept)",
+        "edit_cargo": "Cargozending bewerken",
+        "cancel_cargo": "Cargozending annuleren",
+        "cancel_express": "Expresszending annuleren"
+      },
+      "risk": {
+        "medium": "Gemiddeld risico",
+        "high": "Hoog risico"
+      },
+      "draft": "Concept: geen vervoerder toegewezen",
+      "kind": {
+        "express": "Expresszending",
+        "cargo": "Cargozending"
+      },
+      "fields": {
+        "target_id": "ID",
+        "target_awb": "AWB",
+        "target_reference": "Referentie",
+        "name": "Ontvanger",
+        "address": "Adres",
+        "postal_code": "Postcode",
+        "city": "Plaats",
+        "province": "Provincie",
+        "country": "Land",
+        "phone": "Telefoon",
+        "email": "E-mail",
+        "attention": "T.a.v.",
+        "reference": "Referentie",
+        "note_courier": "Opmerking voor de koerier",
+        "parcels": "Colli",
+        "weight": "Gewicht",
+        "pickup_date": "Ophaaldatum",
+        "note": "Opmerking",
+        "cost": "Kosten"
+      },
+      "reinforced_ack": "Ik begrijp dat {target} wordt geannuleerd en dat dit vanaf hier niet ongedaan kan worden gemaakt",
+      "expires_in": "Verloopt over {time}",
+      "expired": "Voorstel verlopen. Vraag het de Copilot opnieuw.",
+      "confirm": "Bevestigen",
+      "retry": "Opnieuw proberen",
+      "dismiss": "Verwerpen",
+      "status": {
+        "verified": "Gedaan en geverifieerd in het ERP.",
+        "verified_created": "Gedaan en geverifieerd in het ERP. Nieuwe zending nr. {id}.",
+        "unverified": "Uitgevoerd, maar NIET geverifieerd (niet gecontroleerd: {fields}). Controleer het in het ERP voordat je het als gedaan beschouwt.",
+        "mismatch": "Het ERP antwoordde ja, maar de opgeslagen gegevens komen NIET overeen met wat gevraagd was. Beschouw het niet als gedaan: controleer het in het ERP.",
+        "rejected": "NIET uitgevoerd: het ERP heeft de bewerking geweigerd ({error}). Het voorstel is verbruikt; vraag zo nodig een nieuw voorstel.",
+        "no_detail": "geen details",
+        "dismissed": "Voorstel verworpen. Er is niets gewijzigd."
+      },
+      "errors": {
+        "payload_mismatch": "NIET uitgevoerd: de gegevens komen niet overeen met wat de Copilot voorstelde. Vraag het voorstel opnieuw.",
+        "operator_mismatch": "NIET uitgevoerd: dit voorstel is door een andere gebruiker gemaakt en alleen die kan het bevestigen.",
+        "expired": "NIET uitgevoerd: het voorstel is verlopen (5 minuten). Vraag het opnieuw.",
+        "already_executed": "Dit voorstel is al gebruikt (dubbelklik of nieuwe poging). Controleer het resultaat in het ERP voordat je een nieuw voorstel vraagt.",
+        "invalid_token": "NIET uitgevoerd: het voorstel is ongeldig. Vraag het opnieuw.",
+        "bad_request": "NIET uitgevoerd: onjuist verzoek. Vraag het voorstel opnieuw.",
+        "session": "Je sessie is verlopen. Log opnieuw in.",
+        "rate_limited": "Te veel pogingen achter elkaar. Wacht enkele seconden en probeer opnieuw.",
+        "busy": "Er loopt al een bevestiging. Wacht en probeer opnieuw.",
+        "unavailable": "Dienst bezet. Er is NIETS uitgevoerd: probeer het over enkele seconden opnieuw.",
+        "uncertain": "Het resultaat kon niet worden bevestigd. De bewerking is MOGELIJK uitgevoerd. Herhaal hem nog niet: controleer de zending in de ERP-lijst voordat je een nieuw voorstel vraagt.",
+        "forbidden": "NIET uitgevoerd: je hebt geen toestemming voor deze bewerking.",
+        "unknown": "NIET uitgevoerd door een onverwachte fout. Vraag het voorstel opnieuw."
+      }
     }
   }
 }

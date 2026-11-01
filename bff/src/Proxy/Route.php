@@ -31,6 +31,12 @@ final class Route
         public readonly float $timeout,
         public readonly bool $csrf,
         public readonly string $pattern,
+        /** Política de límites (RateLimiter) a aplicar; null = ninguna. */
+        public readonly ?string $throttle = null,
+        /** @var array<string, list<string>> campos JSON del cuerpo => valores permitidos (lista cerrada) */
+        public readonly array $bodyEnum = [],
+        /** Con suplantación, exige X-Effective-Partner-Id en respuestas JSON 2xx; `false` solo para rutas cuyo controlador no lo sella. */
+        public readonly bool $checkEffectivePartner = true,
     ) {
     }
 

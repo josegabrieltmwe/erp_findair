@@ -255,6 +255,8 @@ import {
   type RechargeListRow,
   type RechargeView,
 } from "@shipment/services/recharge.service";
+import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
+import { summarizeRechargeBulk } from "@shipment/utils/rechargeBulk";
 import { useToastStore } from "@shipment/stores/toast.store";
 import { useUiStore } from "@shipment/stores/ui.store";
 import DashboardShell from "@shared/listing/DashboardShell.vue";
@@ -281,6 +283,7 @@ const route = useRoute();
 const store = useRechargeListStore();
 const ui = useUiStore();
 const toasts = useToastStore();
+const confirmStore = useConfirmStore();
 const { state, rows, total, loading, error } = storeToRefs(store);
 
 const viewMode = useListViewMode("tmwe:list-view-mode", "paginated");
@@ -459,6 +462,16 @@ function clearAllFilters(): void {
 /** Aplicación masiva: aplica riaddebito a los seleccionados (paridad "Addebita differenze" batch). */
 async function onBulkApply(ids: number[]): Promise<void> {
   if (!ids.length) return;
+  const { count, total } = summarizeRechargeBulk(rows.value, ids);
+  const confirmed = await confirmStore.ask({
+    title: t("shipment.recharge.confirm_bulk_title"),
+    message: t("shipment.recharge.confirm_bulk", {
+      n: count,
+      total: fmtEur(total),
+    }),
+    confirmLabel: t("shipment.recharge.confirm_bulk_title"),
+  });
+  if (!confirmed) return;
   bulkBusy.value = true;
   let ok = 0;
   const errors: string[] = [];
