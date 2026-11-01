@@ -42,7 +42,8 @@
           hide-details
           class="text-right"
           @change="
-            (v: string) => onPatch(Number(item.id), { peso_house: Number(v) })
+            (e: Event) =>
+              onPatch(Number(item.id), { peso_house: Number(fieldValue(e)) })
           "
         />
       </template>
@@ -53,7 +54,9 @@
           variant="plain"
           density="compact"
           hide-details
-          @change="(v: string) => onPatch(Number(item.id), { goods_descr: v })"
+          @change="
+            (e: Event) => onPatch(Number(item.id), { goods_descr: fieldValue(e) })
+          "
         />
       </template>
 
@@ -140,6 +143,7 @@
 </template>
 
 <script setup lang="ts">
+import { fieldValue } from "@cargo/utils/fieldValue";
 import EmptyState from "@shared/ui/EmptyState.vue";
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";

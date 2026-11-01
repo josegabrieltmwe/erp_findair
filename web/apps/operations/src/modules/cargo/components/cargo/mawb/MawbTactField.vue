@@ -12,7 +12,12 @@
       hide-details
       :disabled="disabled"
       class="flex-grow-1"
-      @change="(v: string) => emit('update:tact', v === '' ? null : Number(v))"
+      @change="
+        (e: Event) => {
+          const v = fieldValue(e);
+          emit('update:tact', v === '' ? null : Number(v));
+        }
+      "
     >
       <template #append-inner>
         <v-btn
@@ -125,6 +130,7 @@
 </template>
 
 <script setup lang="ts">
+import { fieldValue } from "@cargo/utils/fieldValue";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import AppDialog from "@shared/ui/AppDialog.vue";
