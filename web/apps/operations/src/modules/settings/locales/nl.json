@@ -1075,7 +1075,8 @@
       "revoke_action": "Intrekken",
       "result": "{processed} verwerkt, {skipped} overgeslagen",
       "granted": "Rol toegekend aan {n} gebruiker(s)",
-      "revoked": "Rol ingetrokken bij {n} gebruiker(s)"
+      "revoked": "Rol ingetrokken bij {n} gebruiker(s)",
+      "none_processed": "Geen gebruikers verwerkt ({n} overgeslagen)"
     },
     "detail": {
       "open": "Details bekijken",
@@ -1094,6 +1095,7 @@
     "field_name": "Naam",
     "field_email": "E-mail",
     "field_initial_roles": "Initiële rollen",
+    "roles_not_granted": "Rollen niet toegekend (door de server overgeslagen): {roles}",
     "field_login": "Gebruikersnaam",
     "field_legacy_role": "Legacy-rol",
     "field_legacy_role_hint": "Vrij tekstveld, geërfd van het klassieke ERP",

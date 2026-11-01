@@ -11,6 +11,7 @@ import { supplementsService } from "@shipment/services/supplements.service";
 import { filesService } from "@shipment/services/files.service";
 import { http } from "@shipment/services/http";
 import { useToastStore } from "./toast.store";
+import { createAfterCommitQueue } from "@shipment/utils/afterCommitQueue";
 import { validateShipmentPatch } from "@shipment/validation/shipmentRules";
 import type {
   Shipment,
@@ -169,7 +170,11 @@ export const useShipmentStore = defineStore("shipment", () => {
     return createDraft({ id_cliente: customerId, ...extra });
   }
 
+  // Acciones diferidas hasta que el borrador se confirme (p. ej. aviso de entrega).
+  const afterCommit = createAfterCommitQueue();
+
   function clearDraft(): void {
+    afterCommit.clear();
     draftActive.value = false;
     draftPatch.value = {};
     draftSnapshot.value = null;
@@ -255,7 +260,10 @@ export const useShipmentStore = defineStore("shipment", () => {
     draftActive.value = false;
     const ok = await persistUpdate(patch);
     if (ok) {
+      const deferred = afterCommit.take();
       clearDraft();
+      // Sin await: no retrasan el cierre del modal; un fallo no invalida el guardado.
+      for (const fn of deferred) void Promise.resolve().then(fn).catch(() => {});
       return { ok: true, errors: [] };
     }
     // Persist failed: re-open the draft so the user can retry / cancel.
@@ -497,6 +505,7 @@ export const useShipmentStore = defineStore("shipment", () => {
     isDraftDirty,
     beginDraft,
     commitDraft,
+    deferUntilCommit: afterCommit.defer,
     discardDraft,
     clearDraft,
   };

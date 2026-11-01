@@ -704,6 +704,7 @@
         "departure_date": "Data partenza",
         "tracking": "Tracking",
         "confirm_notify": "Inviare la notifica di consegna al mittente?",
+        "notice_on_save": "L'avviso di consegna verrà inviato al salvataggio",
         "notice": "Notifica di consegna",
         "signature_image": "Firma acquisita"
       },
@@ -1250,6 +1251,8 @@
       "empty_faddebit": "Nessuna spedizione con differenze del corriere da controllare.",
       "empty_to_apply": "Nessun riaddebito da applicare.",
       "apply_recharge_n": "Riaddebita a {n}",
+      "confirm_bulk_title": "Applica riaddebito",
+      "confirm_bulk": "Applicare il riaddebito a {n} spedizioni per un totale di {total}. L'azione non è annullabile da qui.",
       "toast_applied_n": "Riaddebito applicato a {n} spedizioni",
       "toast_failed_n": "{n} non applicati",
       "error": "Errore",

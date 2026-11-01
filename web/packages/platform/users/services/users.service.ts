@@ -55,6 +55,8 @@ export interface UserUpdatePayload {
 export interface UserCredentials {
   loginn: string;
   password: string;
+  /** Nombres de los roles que el servidor concedió en el alta (puede omitir alguno). */
+  roles_assigned?: string[];
 }
 
 export interface UserListFilters {
@@ -144,7 +146,7 @@ export const usersService = {
       role_ids: payload.role_ids ?? [],
       auth_10: payload.api_only ? 'N' : 'S',
     };
-    const raw = await http<{ loginn?: string; password?: string; error?: string }>(
+    const raw = await http<{ loginn?: string; password?: string; roles_assigned?: string[]; error?: string }>(
       ENDPOINT,
       { method: 'POST', body },
     );
@@ -152,7 +154,11 @@ export const usersService = {
     if (!raw?.loginn || !raw?.password) {
       throw new Error('Server did not return credentials');
     }
-    return { loginn: raw.loginn, password: raw.password };
+    return {
+      loginn: raw.loginn,
+      password: raw.password,
+      roles_assigned: Array.isArray(raw.roles_assigned) ? raw.roles_assigned : undefined,
+    };
   },
 
   /** Actualiza nombre/email/rol de un usuario existente. */

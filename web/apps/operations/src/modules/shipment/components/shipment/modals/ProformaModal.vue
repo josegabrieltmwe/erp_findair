@@ -260,6 +260,7 @@ import {
   type CurrencyOption,
 } from "@shared/anagrafiche/services/currencies.service";
 import ModalWrapper from "./ModalWrapper.vue";
+import { generatePdfAfterSave } from "@shipment/utils/proformaFlow";
 
 const { t } = useI18n();
 const shipmentStore = useShipmentStore();
@@ -372,8 +373,9 @@ function addRow(): void {
   });
 }
 
-async function save(): Promise<void> {
-  if (!shipmentId.value) return;
+/** Devuelve true si el guardado se completó (generatePdf aborta si no). */
+async function save(): Promise<boolean> {
+  if (!shipmentId.value) return false;
   saving.value = true;
   try {
     const r = await proformaService.save(
@@ -388,9 +390,12 @@ async function save(): Promise<void> {
       );
     } else {
       toasts.push("success", t("shipment.modals.proforma.saved"));
+      return true;
     }
+    return false;
   } catch (e) {
     toasts.push("error", (e as Error).message);
+    return false;
   } finally {
     saving.value = false;
   }
@@ -399,10 +404,13 @@ async function save(): Promise<void> {
 async function generatePdf(): Promise<void> {
   if (!shipmentId.value) return;
   // Save first so the PDF reflects current edits.
-  await save();
   pdfLoading.value = true;
   try {
-    const r = await proformaService.generatePdf(Number(shipmentId.value));
+    const flow = await generatePdfAfterSave(save, () =>
+      proformaService.generatePdf(Number(shipmentId.value)),
+    );
+    if (flow.aborted) return;
+    const r = flow.result;
     if (r.success && r.url) {
       window.open(r.url, "_blank");
     } else {
