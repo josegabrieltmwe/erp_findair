@@ -161,6 +161,7 @@ Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller
 - **Propuesta mínima:** si el valor tiene 11 dígitos (IATA), exigir dígito de control válido y devolver 422 `awb_invalid_checkdigit`; para el resto, aceptar solo `^[A-Za-z0-9 -]{4,20}$` (rechaza «abc» por longitud). Si negocio prefiere avisar y no bloquear, devolver `warnings` en la respuesta y mostrarlas en la SPA.
 
 ### G.6 PDF de AWB lento (P62)
+**Hecho 2026-11-01 (solo BFF):** la ruta `get.api_awb_documents` se redefine en `routes.bff.yaml` con `timeout: 60` (tenía el 15 por defecto, de ahí el 504); test en `PublicCatalogRoutesTest`. **Pendiente en la API:** medir y cachear el generador.
 `GET /api_awb_documents` tarda 10–14 s en local y la ruta del BFF tiene `timeout: 30`; un `504` aislado sugiere carga puntual. Medir el generador (¿arranque del navegador/worker por petición?), cachear el PDF por (`awb_id`, hash de los datos) y, si hace falta, subir el timeout de esa ruta a 60 s.
 
 ### G.7 Resto de la lista, ya verificado en sesiones previas
