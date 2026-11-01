@@ -152,7 +152,8 @@ Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller
 
 ### G.4 Candidatos a consolidar y «Nuevo HAWB» (P59)
 `Consolidation_Service::list_attachable()` llama a `Spedizioni::find_attachable([$uid], …)`, que filtra `id_cliente IN (uid)`, aunque su docblock promete incluir los clientes cuyo titolare es el llamante.
-- **Cambio:** construir la lista de ids como `[$uid] ∪ {id de anagrafiche con id_anagr_titolare = $uid}` (una consulta) antes de llamar a `find_attachable`, y mantener el alcance de sede/propietario (`Shipment_Access_Service::row_conditions()`). Quitar el parche de la SPA (número tecleado) cuando esté.
+- **Hecho 2026-11-01 (commit local en `tmwe_api`, sin desplegar):** en vez de construir la lista en el servicio, `Spedizioni::find_attachable` añade `OR id_cliente IN (SELECT id FROM anagrafiche WHERE id_anagr_titolare IN (…))`; `attach` sigue validando acceso a cargo y expedición. Test `SpedizioniFindAttachableTest`. Cuando se despliegue, quitar el parche de la SPA (número tecleado en «Nuevo HAWB»).
+- **Propuesta original:** construir la lista de ids como `[$uid] ∪ {id de anagrafiche con id_anagr_titolare = $uid}` (una consulta) antes de llamar a `find_attachable`, y mantener el alcance de sede/propietario (`Shipment_Access_Service::row_conditions()`). Quitar el parche de la SPA (número tecleado) cuando esté.
 - **Prueba:** partner ve borradores de su cliente 9586 y no los de otro partner; `attach` sigue validando acceso.
 
 ### G.5 Validación del número de AWB (P60) — decisión de producto, no defecto claro
