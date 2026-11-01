@@ -145,6 +145,7 @@
         "kg": "Kg",
         "profit_pct": "% Winst",
         "insurance_min": "Min. verzekering (€)",
+        "invalid_value": "Ongeldige waarde: voer een getal in (percentages 0-100, bedragen ≥ 0). De vorige waarde is hersteld.",
         "insurance_pct": "Verzekering %",
         "preset": "Voorinstelling",
         "apply_preset": "Voorinstelling toepassen",

@@ -145,6 +145,7 @@
         "kg": "Kg",
         "profit_pct": "% Gewinn",
         "insurance_min": "Mindestversicherung (€)",
+        "invalid_value": "Ungültiger Wert: Zahl eingeben (Prozent 0-100, Beträge ≥ 0). Der vorherige Wert wurde wiederhergestellt.",
         "insurance_pct": "Versicherung %",
         "preset": "Voreinstellung",
         "apply_preset": "Voreinstellung anwenden",

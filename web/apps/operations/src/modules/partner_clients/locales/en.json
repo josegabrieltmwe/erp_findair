@@ -145,6 +145,7 @@
         "kg": "Kg",
         "profit_pct": "Profit %",
         "insurance_min": "Min insurance (€)",
+        "invalid_value": "Invalid value: enter a number (percentages 0-100, amounts ≥ 0). The previous value was restored.",
         "insurance_pct": "Insurance %",
         "preset": "Preset set",
         "apply_preset": "Apply preset",
