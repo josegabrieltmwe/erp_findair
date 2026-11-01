@@ -104,6 +104,7 @@ Verificados leyendo código de `tmwe_api` y la SPA (sin ejecutar). Detalle y pri
 | P55 | `offerta_txt` sin sanear y saneador por regex débil | `set_offer_text` guarda HTML sin sanear; `Email_Html_Sanitizer` no cubre `onX=` sin comillas, `javascript:` con entidades ni `data:`. Sanear al guardar y pasar a un saneador basado en DOM | Baja-media |
 | P56 | Alta de anagrafica: contactos base | `Anagrafica_Service::generate_password` usa `str_shuffle` (no criptográfico) y los contactos base nacen sin sede ni dueño. Usar `random_int` y asignar sede (relacionada con P38) | Baja-media |
 | P57 | Exponer la lista de campos de solo lectura de una expedición facturada | La SPA mantiene su propia lista y difiere de `READONLY_FIELDS_INVOICED`; exponer `readonly_fields` en la carga de la expedición | Baja |
+| P58 | Scope `master_data:read` para el partner | Al abrir el detalle de una expedición courier, el usuario partner recibe `403 oauth_insufficient_scope` (`required: master_data/read`) en `GET /api_master_currencies` y la SPA muestra «No tienes permiso para esta acción». Conceder el scope de lectura de monedas al partner, o que la SPA no pida ese catálogo en la carga (el selector de divisas usa el catálogo del día) | Media |
 
 ### Recuento de estado (verificacion contra sandbox)
 - RESUELTA-EN-CODIGO: 4 (P01 refresh, P02 get_ops_bootstrap, P11 rol app_internal_erp_staff, P13 IMPERSONATION_DENIED); + 3 resueltas segun texto sin reverificar (P05, P17, P32) + P28 (resuelta en codigo, migracion pendiente).

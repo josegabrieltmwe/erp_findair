@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { credentials } from "../support/profiles";
+import { cerrarVelo } from "../support/ui";
 
 /**
  * Alta de un cargo (CGO-01) y de una expedición courier (SHP-01) con un usuario PARTNER
@@ -9,7 +10,7 @@ import { credentials } from "../support/profiles";
  * Seguro: no se ejecuta sin E2E_ALLOW_WRITE=1 y sin E2E_PARTNER_CLIENT (texto de búsqueda de un
  * cliente PROPIO del partner, p. ej. su razón social de pruebas, mínimo 2 caracteres).
  * No reserva vuelo, no genera AWB, no factura ni envía correos. Los IDs creados se anotan en
- * test-results/ids-creados.txt para que alguien los anule o los borre.
+ * .auth/ids-creados.txt para que alguien los anule o los borre.
  */
 const CLIENT = process.env.E2E_PARTNER_CLIENT ?? "";
 const ALLOWED = process.env.E2E_ALLOW_WRITE === "1";
@@ -22,18 +23,29 @@ test.beforeEach(({}, info) => {
 });
 
 function anotar(tipo: string, url: string): void {
-  mkdirSync("test-results", { recursive: true });
-  appendFileSync("test-results/ids-creados.txt", `${new Date().toISOString()} ${tipo} ${url}\n`);
+  mkdirSync(".auth", { recursive: true });
+  appendFileSync(".auth/ids-creados.txt", `${new Date().toISOString()} ${tipo} ${url}\n`);
 }
 
 const crear = (page: Page) => page.locator("button:has(.mdi-check)").last();
 
 async function elegirCliente(page: Page): Promise<void> {
-  const input = page.locator(".v-autocomplete input").first();
-  await input.fill(CLIENT);
-  const opcion = page.locator(".v-overlay--active .v-list-item").first();
-  await expect(opcion, `ningún cliente coincide con «${CLIENT}»`).toBeVisible();
-  await opcion.click();
+  // El menú lateral puede reabrirse al hidratar la página: se cierra y se reintenta si el desplegable no sale.
+  for (let intento = 1; intento <= 3; intento++) {
+    await cerrarVelo(page);
+    const input = page.locator(".v-autocomplete input").first();
+    await input.click();
+    await input.fill("");
+    const busqueda = page.waitForResponse((r) => /api_anagrafica_crud/.test(r.url()), { timeout: 8000 }).catch(() => null);
+    await input.pressSequentially(CLIENT, { delay: 40 });
+    await busqueda;
+    const opcion = page.locator(".v-overlay--active .v-list-item").first();
+    if (await opcion.waitFor({ state: "visible", timeout: 4000 }).then(() => true, () => false)) {
+      await opcion.click();
+      return;
+    }
+  }
+  throw new Error(`ningún cliente coincide con «${CLIENT}» tras 3 intentos`);
 }
 
 const CASOS = [
