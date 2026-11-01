@@ -1519,9 +1519,12 @@
     "hawblist": {
       "print_hawb": "Stampa HAWB",
       "empty_title": "Nessun HAWB",
-      "empty_text": "Gli HAWB vengono generati consolidando le spedizioni.",
+      "empty_text": "Gli HAWB si creano consolidando le spedizioni o con «Nuovo HAWB».",
       "col_spediz": "Spediz",
-      "col_pieces_weight": "Colli · peso"
+      "col_pieces_weight": "Colli · peso",
+      "new_hawb": "Nuovo HAWB",
+      "pick_label": "Spedizione dell'HAWB",
+      "pick_no_data": "Nessuna spedizione disponibile"
     },
     "emailmawb": {
       "intro": "Seleziona i destinatari del MAWB per il cargo #{id}. La lista è popolata dai contatti del cliente; puoi aggiungere ulteriori email separate da virgola.",

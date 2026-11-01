@@ -10,6 +10,30 @@
     </div>
 
     <template v-else>
+      <div v-if="creating" class="d-flex align-center ga-2 pb-3">
+        <v-autocomplete
+          :model-value="null"
+          :items="pickItems"
+          :loading="searching"
+          :search="search"
+          item-title="label"
+          item-value="id"
+          variant="outlined"
+          density="compact"
+          hide-details
+          clearable
+          autofocus
+          :disabled="hawbStore.saving"
+          :label="t('cargo.hawblist.pick_label')"
+          :no-data-text="t('cargo.hawblist.pick_no_data')"
+          prepend-inner-icon="mdi-magnify"
+          @update:search="onSearch"
+          @update:model-value="onPick"
+        />
+        <v-btn variant="text" @click="closeCreate">{{
+          t("common.cancel")
+        }}</v-btn>
+      </div>
       <div v-if="rows.length" class="hawb-listing">
         <ListingDataView
           :source="listSource"
@@ -68,6 +92,15 @@
       >
         {{ t("common.refresh") }}
       </v-btn>
+      <v-btn
+        color="primary"
+        variant="flat"
+        prepend-icon="mdi-plus"
+        :disabled="!cargoId"
+        @click="openCreate"
+      >
+        {{ t("cargo.hawblist.new_hawb") }}
+      </v-btn>
     </template>
   </ModalWrapper>
 </template>
@@ -80,6 +113,10 @@ import { storeToRefs } from "pinia";
 import { useUiStore } from "@cargo/stores/ui.store";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { hawbService, type HawbRow } from "@cargo/services/hawb.service";
+import {
+  consolidationService,
+  type AttachableShipment,
+} from "@cargo/services/consolidation.service";
 import { cargoActionsService } from "@cargo/services/cargo_actions.service";
 import { useCargoHawbStore } from "@cargo/stores/cargo_hawb.store";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
@@ -155,6 +192,62 @@ async function reload(): Promise<void> {
   } finally {
     loading.value = false;
   }
+}
+
+// Alta manual: un HAWB cuelga siempre de una expedición (el API exige id_spediz),
+// asi que se elige la expedición y se crea la casa; despues se abre el formulario.
+const creating = ref(false);
+const searching = ref(false);
+const search = ref("");
+const pickItems = ref<{ id: number; label: string }[]>([]);
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
+
+function labelOf(sh: AttachableShipment): string {
+  const rif = sh.RIF_cliente ? ` · ${sh.RIF_cliente}` : "";
+  return `#${sh.id}${rif} · ${Number(sh.peso).toFixed(1)}kg · ${sh.colli}c`;
+}
+
+async function doSearch(q: string): Promise<void> {
+  if (!cargoId.value) return;
+  searching.value = true;
+  try {
+    const { items } = await consolidationService.attachable(cargoId.value, q);
+    pickItems.value = items.map((sh) => ({
+      id: Number(sh.id),
+      label: labelOf(sh),
+    }));
+  } finally {
+    searching.value = false;
+  }
+}
+
+function onSearch(q: string): void {
+  search.value = q ?? "";
+  if (searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => void doSearch(search.value), 250);
+}
+
+function openCreate(): void {
+  creating.value = true;
+  void doSearch("");
+}
+
+function closeCreate(): void {
+  creating.value = false;
+  search.value = "";
+  pickItems.value = [];
+}
+
+async function onPick(spedizId: number | null): Promise<void> {
+  if (!spedizId || !cargoId.value) return;
+  await hawbStore.load(cargoId.value);
+  const created = await hawbStore.create(cargoId.value, {
+    id_spediz: Number(spedizId),
+  });
+  if (!created) return; // el store ya muestra el error del servidor
+  closeCreate();
+  await reload();
+  ui.openHawbFormModal(Number(created.id));
 }
 
 async function openEdit(row: HawbRow): Promise<void> {

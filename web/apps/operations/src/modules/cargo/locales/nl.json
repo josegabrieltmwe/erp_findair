@@ -1519,9 +1519,12 @@
     "hawblist": {
       "print_hawb": "HAWB afdrukken",
       "empty_title": "Geen HAWB",
-      "empty_text": "HAWB's worden gegenereerd door zendingen te consolideren.",
+      "empty_text": "HAWB's ontstaan bij het consolideren van zendingen of via «Nieuw HAWB».",
       "col_spediz": "Zending",
-      "col_pieces_weight": "Colli · gewicht"
+      "col_pieces_weight": "Colli · gewicht",
+      "new_hawb": "Nieuw HAWB",
+      "pick_label": "Zending voor het HAWB",
+      "pick_no_data": "Geen zendingen beschikbaar"
     },
     "emailmawb": {
       "intro": "Selecteer de MAWB-ontvangers voor vracht #{id}. De lijst wordt gevuld met de contacten van de klant; je kunt meer e-mails toevoegen, gescheiden door komma's.",

@@ -90,7 +90,7 @@ Verificados leyendo código de `tmwe_api` y la SPA (sin ejecutar). Detalle y pri
 |---|---|---|---|
 | P42 | `root` sin proteger en la ficha de usuario | `User_Admin_Controller` (`reset_password`, `update_user`, `delete_user`) solo exige anagrafica 1: un administrador TMWE sin `root` puede restablecer la contraseña de un `root` y recibirla en la respuesta. Añadir guard de destino `root` (403 `ROLE_ROOT_ONLY`); en el alta, devolver 403 o `roles_denied` en vez de omitir el rol `root` en silencio. Revisar `User_Plain_Password_Controller` | Alta |
 | P43 | Cancelar cargo sin comprobaciones | `Cancel_Controller` no consulta factura, AWB ni reserva viva. Responder 409 en esos casos, con `force` o rol para AWB emitido | Media-alta |
-| P44 | HAWB manual sin expedición | `Awb_Service::validate_create_data` exige `id_spediz` para HAWB; decidir si se admite el alta manual o solo por consolidación | Media (decisión de producto) |
+| P44 | HAWB manual sin expedición | `Awb_Service::validate_create_data` exige `id_spediz` para HAWB; la SPA ya da el alta manual eligiendo la expedición; solo se pide al API si se quiere HAWB sin expedición | Baja (opcional) |
 | P45 | Guardado transaccional de bultos | La SPA borra, modifica y añade bulto a bulto; un fallo deja datos a medias. Endpoint de reemplazo con rollback | Media |
 | P46 | Conciliación COD: fecha futura y estado inválido | `Cod_Reconciliation_Service` acepta fecha futura y convierte un estado inválido en «cobrado». Rechazar ambos | Media |
 | P47 | Factura manual con fecha futura | No se encontró comprobación de fecha futura en `Invoice_Service` (solo la cronológica de la serie) | Media |

@@ -107,7 +107,7 @@ H6 (`useAnagraficaContext` lee `__TMWE_OPERATIONS__.isTmwe`), H5 (leer `auth_err
 - **H15.** No usar `canWrite` de facturación para proteger `/cod`: el servidor autoriza COD por el módulo `spedizioni`.
 
 ### 3.3 Cargo y expediciones
-- **H16a.** Decisión de producto pendiente: o no hay HAWB manual (se crea al consolidar expediciones) o la API lo admite (P44).
+- **H16a.** Decidido (2026-11-01): los operadores crean HAWB a mano y al consolidar, en cualquier vuelo. El alta manual elige la expedición y envía `id_spediz` (el API la exige); P44 solo queda abierta si se quiere HAWB sin expedición.
 - **H16b.** Un guardado transaccional de bultos exige un endpoint nuevo (P45); hasta entonces, el orden añadir, actualizar, borrar reduce la pérdida.
 - **H17e.** Los importes se guardan al instante por diseño (paridad con el legacy, por la conversión de divisa). Si no se quiere cambiar, bastan un aviso y quitar «Cancelar» en esos modales.
 - **H13, caja post-factura:** `ShipmentPostInvoiceBox` edita `postfatt`, `post_fuel_surc` y `peso_fornit_reale`, que el servidor también bloquea en expediciones facturadas. **No concluyente**: probar en sandbox con una expedición con `id_fattura_a` y `AWB_forn`.
@@ -135,7 +135,7 @@ Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA,
 | H11b, H11c | Hecho | Importes recordados por id; `Math.round(min*100)` |
 | H12.1 | Hecho | Confirmación con recuento y suma antes del riaddebito masivo |
 | H12.3 | Hecho | `@change`, rango 0-100 y >= 0, no envía vacíos. Falta comprobar en navegador que `@change` llega al `<input>` |
-| H16a | Hecho (parcial) | Se retiró «Nuevo HAWB»; falta la decisión P44 |
+| H16a | Hecho (sin probar en navegador) | «Nuevo HAWB» vuelve con selector de expedición; el API rechaza vuelos ya salidos |
 | H16b | Hecho | Peso > 0 en cliente; orden añadir, actualizar, borrar. El guardado sigue sin ser atómico (P45) |
 | H16c tarifa | Hecho | Casilla propia de cancelación de reserva |
 | H16c cancelar cargo | Hecho en SPA | Bloquea si hay factura y avisa de AWB y reserva viva; falta el 409 del servidor (P43). El aviso de reserva depende de que el store del flight manager esté cargado |

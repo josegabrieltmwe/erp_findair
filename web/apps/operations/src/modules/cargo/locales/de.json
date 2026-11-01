@@ -1519,9 +1519,12 @@
     "hawblist": {
       "print_hawb": "HAWB drucken",
       "empty_title": "Kein HAWB",
-      "empty_text": "HAWB werden durch die Konsolidierung von Sendungen erzeugt.",
+      "empty_text": "HAWBs entstehen beim Konsolidieren von Sendungen oder über „Neues HAWB“.",
       "col_spediz": "Sendung",
-      "col_pieces_weight": "Packstücke · Gewicht"
+      "col_pieces_weight": "Packstücke · Gewicht",
+      "new_hawb": "Neues HAWB",
+      "pick_label": "Sendung für das HAWB",
+      "pick_no_data": "Keine Sendungen verfügbar"
     },
     "emailmawb": {
       "intro": "Wählen Sie die MAWB-Empfänger für Fracht #{id}. Die Liste wird aus den Kontakten des Kunden gefüllt; Sie können weitere durch Kommas getrennte E-Mails hinzufügen.",
