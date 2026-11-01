@@ -156,7 +156,8 @@ Ocho controladores de `controller/api/cargo/*` (`mawb/Cargo_Mawb_Crud_Controller
 - **Propuesta original:** construir la lista de ids como `[$uid] ∪ {id de anagrafiche con id_anagr_titolare = $uid}` (una consulta) antes de llamar a `find_attachable`, y mantener el alcance de sede/propietario (`Shipment_Access_Service::row_conditions()`). Quitar el parche de la SPA (número tecleado) cuando esté.
 - **Prueba:** partner ve borradores de su cliente 9586 y no los de otro partner; `attach` sigue validando acceso.
 
-### G.5 Validación del número de AWB (P60) — decisión de producto, no defecto claro
+### G.5 Validación del número de AWB (P60) — decidido: bloquear con 422 (hecho 2026-11-01)
+**Hecho (commit en `tmwe_api` `sandbox`, sin desplegar):** `Awb_Validator_Service::check_manual_input()` y su uso en `Awb_Service::set_cargo_awb_number()`. Solo se valida al **cambiar** el número (lo ya guardado no se revalida): 11 dígitos → dígito de control IATA (`awb_invalid_checkdigit`); el resto → referencia de 4–30 caracteres `[A-Za-z0-9 /._-]` o `LCL`/`FCL` (`awb_invalid_format`), de modo que «BY SEA» y «MIL/LOS/01705» siguen valiendo. Responde 422. Tests `AwbManualInputTest` y `AwbServiceSetNumberValidationTest`. El BFF no reenvía el código de error, solo el `detail`. Texto de la propuesta original:
 `Awb_Service::set_cargo_awb_number()` respeta literalmente lo que no sea un AWB de 11 dígitos (comentario: «lo demás se respeta literal»), porque hay numeraciones de mensajería que no siguen IATA. `Awb_Validator_Service` ya sabe comprobar formato y dígito (serie mod 7).
 - **Propuesta mínima:** si el valor tiene 11 dígitos (IATA), exigir dígito de control válido y devolver 422 `awb_invalid_checkdigit`; para el resto, aceptar solo `^[A-Za-z0-9 -]{4,20}$` (rechaza «abc» por longitud). Si negocio prefiere avisar y no bloquear, devolver `warnings` en la respuesta y mostrarlas en la SPA.
 
