@@ -1311,6 +1311,15 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: post.api_contact_access_link
+    method: POST
+    path: /api_contact_access_link
+    upstream:
+      action: api_contact_access_link
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: put.api_anagrafica_contacts
     method: PUT
     path: /api_anagrafica_contacts

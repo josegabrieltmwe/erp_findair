@@ -1,5 +1,6 @@
 import { http } from './http';
 import { unwrap } from './normalizers';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 export interface ContattoLite {
   id: number;
@@ -27,6 +28,15 @@ export interface ContattoCreated {
 
 const ENDPOINT = '/api_anagrafica_contacts';
 const FINDAIR_ENDPOINT = '/api_anagrafica_findair_access';
+const ACCESS_LINK_ENDPOINT = '/api_contact_access_link';
+
+/** Resultado de (re)enviar el enlace de acceso. Nunca lleva contraseña ni token. */
+export interface AccessLinkSent {
+  id_contatto: number;
+  access_link_sent: boolean;
+  /** Correo enmascarado (`a***@dominio.tld`). */
+  sent_to: string | null;
+}
 
 export type FindairLevel = 'basic' | 'full';
 
@@ -297,6 +307,24 @@ export const contattiService = {
     });
     if (raw?.error) throw new Error(raw.error);
     return normalizeApiRole(raw?.data);
+  },
+
+  /**
+   * (Re)envía al contacto el enlace de acceso para fijar su contraseña (`POST api_contact_access_link`). La
+   * contraseña no se ve ni se pide. Los fallos llegan como `ApiError` con el cuerpo del API (códigos
+   * `ACCESS_LINK_RATE_LIMITED`, `CONTACT_EMAIL_REQUIRED`...): léelos con `accessLinkErrorText`.
+   */
+  async sendAccessLink(idContatto: number): Promise<AccessLinkSent> {
+    const raw = await http<{ data?: Partial<AccessLinkSent>; error?: RawApiError }>(ACCESS_LINK_ENDPOINT, {
+      method: 'POST',
+      body: { id_contatto: idContatto },
+    });
+    if (raw?.error) throw new Error(errorText(raw.error));
+    return {
+      id_contatto: Number(raw?.data?.id_contatto ?? idContatto),
+      access_link_sent: raw?.data?.access_link_sent === true,
+      sent_to: typeof raw?.data?.sent_to === 'string' ? raw.data.sent_to : null,
+    };
   },
 
   /**
