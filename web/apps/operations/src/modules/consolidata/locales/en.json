@@ -84,7 +84,8 @@
       "pieces": "Pieces",
       "volume": "Volume (cm³)",
       "value": "Value",
-      "readyDate": "Ready date"
+      "readyDate": "Ready date",
+      "colliInvalid": "Pieces must be a whole number greater than 0."
     },
     "legs": {
       "help": "Legs priced by the engine. A manual price needs a reason and is logged.",

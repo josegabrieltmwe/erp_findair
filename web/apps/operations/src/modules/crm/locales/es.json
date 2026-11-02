@@ -62,7 +62,8 @@
       "view": "Ver detalle",
       "detail_title": "Detalle del avance #{id}",
       "add": "Añadir",
-      "empty": "Sin eventos todavía"
+      "empty": "Sin eventos todavía",
+      "delete_confirm": "¿Eliminar este avance? No se puede deshacer."
     },
     "messaggi": {
       "title": "Mensajes enviados",
@@ -118,6 +119,7 @@
       "use_base_hint": "Envuelve tu texto en la plantilla del cliente",
       "files_cta": "Arrastra archivos o haz clic",
       "files_full": "Máximo de {max} archivos alcanzado"
-    }
+    },
+    "save_failed": "Cambio no guardado: {error}"
   }
 }

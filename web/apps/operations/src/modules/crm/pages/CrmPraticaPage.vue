@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
+import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
 import { useCrmStore } from "../stores/crm.store";
 import CrmEventiSection from "../components/CrmEventiSection.vue";
 import CrmMessaggiSection from "../components/CrmMessaggiSection.vue";
@@ -14,6 +15,7 @@ import type { CrmPratica, StatoPratica } from "../types";
 const props = defineProps<{ id: string }>();
 
 const store = useCrmStore();
+const toast = useToastStore();
 const router = useRouter();
 const { t } = useI18n();
 
@@ -47,6 +49,11 @@ async function persistField(field: keyof CrmPratica): Promise<void> {
     await store.saveHeader(idNum.value, {
       [field]: value,
     } as Partial<CrmPratica>);
+  } catch (e: unknown) {
+    // El servidor no guardó el cambio: se avisa y el campo vuelve al valor guardado, para que
+    // la pantalla no muestre como hecho algo que no lo está.
+    form.value = { ...form.value, [field]: (store.current as Record<string, unknown>)[field] };
+    toast.error(t("crm.save_failed", { error: e instanceof Error ? e.message : String(e) }));
   } finally {
     saving.value = false;
   }
@@ -59,6 +66,9 @@ async function persistFields(patch: Partial<CrmPratica>): Promise<void> {
   try {
     Object.assign(form.value, patch);
     await store.saveHeader(idNum.value, patch);
+  } catch (e: unknown) {
+    if (store.current) form.value = { ...store.current };
+    toast.error(t("crm.save_failed", { error: e instanceof Error ? e.message : String(e) }));
   } finally {
     saving.value = false;
   }

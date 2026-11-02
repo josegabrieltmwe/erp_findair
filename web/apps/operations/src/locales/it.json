@@ -223,7 +223,8 @@
       "profile": "Profilo"
     },
     "partner_switch": {
-      "label": "Cambia partner"
+      "label": "Cambia partner",
+      "failed": "Non è stato possibile cambiare partner. Riprova."
     },
     "new_shipment": {
       "title": "Nuova spedizione",

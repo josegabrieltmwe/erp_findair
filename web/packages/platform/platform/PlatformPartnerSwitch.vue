@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useToastStore } from '../anagrafiche/stores/toast.store';
 
 interface Partner {
   id: number;
@@ -42,6 +43,7 @@ interface Partner {
 }
 
 const { t } = useI18n();
+const toast = useToastStore();
 
 const partners = ref<Partner[]>([]);
 // activeId reflects the impersonated partner, or 1 (TMWE) when viewing as self.
@@ -84,12 +86,14 @@ async function onPick(idp: number | null): Promise<void> {
     });
     if (!r.ok) {
       switching.value = false;
+      toast.error(t('platform.partner_switch.failed'));
       return;
     }
     // Hard reload so all server-side scope filters re-apply (legacy parity).
     window.location.reload();
   } catch {
     switching.value = false;
+    toast.error(t('platform.partner_switch.failed'));
   }
 }
 </script>

@@ -5,6 +5,7 @@ import {
   errorI18nKey,
   normalizeApiError,
   shortDate,
+  shipmentFormErrors,
   stateColor,
 } from "./logic";
 
@@ -106,5 +107,17 @@ describe("helpers de presentación", () => {
     expect(shortDate("2026-10-14 12:30:45")).toBe("2026-10-14 12:30");
     expect(shortDate("2026-10-14")).toBe("2026-10-14");
     expect(shortDate(null)).toBe("");
+  });
+});
+
+describe("shipmentFormErrors (H20)", () => {
+  it("rechaza bultos nulos, cero, negativos o decimales", () => {
+    for (const colli of [null, 0, -2, 1.5]) {
+      expect(shipmentFormErrors({ colli }).colli).toBe("consolidata.shipments.colliInvalid");
+    }
+  });
+
+  it("acepta bultos enteros positivos", () => {
+    expect(shipmentFormErrors({ colli: 3 })).toEqual({});
   });
 });

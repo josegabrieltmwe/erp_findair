@@ -141,6 +141,7 @@ onUnmounted(() => {
           rows="1"
           auto-grow
           max-rows="6"
+          maxlength="4000"
           hide-details
           density="comfortable"
           :disabled="store.currentConversation?.is_open === false"

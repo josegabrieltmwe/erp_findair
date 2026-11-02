@@ -62,7 +62,8 @@
       "empty": "Geen gebeurtenissen",
       "data": "Datum en tijd",
       "view": "Details bekijken",
-      "detail_title": "Details voortgang #{id}"
+      "detail_title": "Details voortgang #{id}",
+      "delete_confirm": "Deze voortgangsregel verwijderen? Dit kan niet ongedaan worden gemaakt."
     },
     "messaggi": {
       "title": "Verzonden berichten",
@@ -118,6 +119,7 @@
       "use_base_hint": "Plaatst uw tekst in de klantsjabloon",
       "files_cta": "Sleep bestanden hierheen of klik",
       "files_full": "Maximum van {max} bestanden bereikt"
-    }
+    },
+    "save_failed": "Wijziging niet opgeslagen: {error}"
   }
 }

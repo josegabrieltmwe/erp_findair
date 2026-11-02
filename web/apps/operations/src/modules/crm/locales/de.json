@@ -62,7 +62,8 @@
       "empty": "Keine Ereignisse",
       "data": "Datum und Uhrzeit",
       "view": "Details anzeigen",
-      "detail_title": "Details zum Fortschritt #{id}"
+      "detail_title": "Details zum Fortschritt #{id}",
+      "delete_confirm": "Diesen Fortschrittseintrag löschen? Das kann nicht rückgängig gemacht werden."
     },
     "messaggi": {
       "title": "Gesendete Nachrichten",
@@ -118,6 +119,7 @@
       "use_base_hint": "Bettet Ihren Text in die Kundenvorlage ein",
       "files_cta": "Dateien hierher ziehen oder klicken",
       "files_full": "Maximal {max} Dateien erreicht"
-    }
+    },
+    "save_failed": "Änderung nicht gespeichert: {error}"
   }
 }

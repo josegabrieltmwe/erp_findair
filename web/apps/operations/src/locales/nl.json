@@ -223,7 +223,8 @@
       "profile": "Profiel"
     },
     "partner_switch": {
-      "label": "Partner wijzigen"
+      "label": "Partner wijzigen",
+      "failed": "Partner wisselen is mislukt. Probeer het opnieuw."
     },
     "new_shipment": {
       "title": "Nieuwe zending",
