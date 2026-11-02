@@ -887,7 +887,8 @@
     "deleted": "Credenziale disattivata",
     "confirm_delete": "Disattivare la credenziale di {country}?",
     "confirm_delete_primary": "E l'account PRINCIPALE di {country}. Disattivandolo, quell'origine quotera con l'account italiano. Continuare?",
-    "partner_tab_hint": "Mostra solo le chiavi in cui questa anagrafica e l'agente IATA proprietario del paese. WebCargo funziona per paese, non per partner: e normale che la maggior parte delle anagrafiche non abbia righe qui."
+    "partner_tab_hint": "Mostra solo le chiavi in cui questa anagrafica e l'agente IATA proprietario del paese. WebCargo funziona per paese, non per partner: e normale che la maggior parte delle anagrafiche non abbia righe qui.",
+    "terminals_too_many": "Massimo {max} terminali: rimuovi quelli in eccesso per salvare."
   },
   "webcargo_delegation": {
     "partner_tab_hint": "Delegazione WebCargo Realtime (coppia AV/DQ) — sistema diverso da WebCargo Published (chiavi per paese, scheda «WebCargo Published»). Ogni riga rappresenta un paese in cui questa anagrafica quota con l'identita di un altro agente.",

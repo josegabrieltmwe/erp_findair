@@ -887,7 +887,8 @@
     "deleted": "Credential disabled",
     "confirm_delete": "Disable the credential for {country}?",
     "confirm_delete_primary": "This is the PRIMARY account for {country}. Disabling it makes that origin quote with the Italian account. Continue?",
-    "partner_tab_hint": "Toont alleen sleutels waarbij dit record de IATA-agent van het land is. WebCargo werkt per land, niet per partner: het is normaal dat de meeste records hier geen rijen hebben."
+    "partner_tab_hint": "Toont alleen sleutels waarbij dit record de IATA-agent van het land is. WebCargo werkt per land, niet per partner: het is normaal dat de meeste records hier geen rijen hebben.",
+    "terminals_too_many": "Maximaal {max} terminals: verwijder de overtollige om op te slaan."
   },
   "webcargo_delegation": {
     "partner_tab_hint": "WebCargo Realtime-delegatie (AV/DQ-paar) — een ander systeem dan WebCargo Published (sleutels per land, tabblad \"WebCargo Published\"). Elke rij vertegenwoordigt een land waarin dit record offreert onder de identiteit van een andere agent.",
