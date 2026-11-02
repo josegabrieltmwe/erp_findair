@@ -9,6 +9,7 @@
  */
 
 import { authErrorFromSearch, renderAuthError } from './authError';
+import { renderNoAccess } from './noAccess';
 
 export const BFF_BASE_PATH = '/bff/v1';
 const BFF_AUTH_PATH = '/bff/auth';
@@ -173,6 +174,8 @@ export interface BffUser {
   partner_id?: number;
   is_admin?: boolean;
   is_tmwe?: boolean;
+  /** `backend` cuando las capacidades las calculó el contexto del API (no la deducción conservadora del BFF). */
+  capabilities_source?: string;
   /** Capacidades de facturación/almacén/cobros/COD que calcula el backend (solo booleanos). */
   invoicing?: {
     can_read?: boolean;
@@ -231,6 +234,31 @@ function safeLocale(): string | null {
 }
 
 /**
+ * ¿La sesión carece, de forma fiable, de todo acceso al ERP? Solo es cierto si el API declaró las
+ * capacidades (`capabilities_source === 'backend'`) y vinieron vacías y el usuario no es TMWE. Con la
+ * deducción de reserva del BFF (`get_my_profile`: vacío para todo no-TMWE) o ante un fallo al cargar el
+ * contexto, `[]` no significa «sin acceso» y no se bloquea a nadie: cada pantalla sigue autorizando en el API.
+ */
+export function sessionHasNoAccess(session: Pick<BffSession, 'user' | 'capabilities'>): boolean {
+  return (
+    session.user?.is_tmwe !== true &&
+    session.user?.capabilities_source === 'backend' &&
+    (session.capabilities ?? []).length === 0
+  );
+}
+
+/** Lo contrario de {@link sessionHasNoAccess} sobre la sesión ya cargada por `bootstrapBff`. */
+export function hasErpAccess(): boolean {
+  const ops = (window as unknown as { __TMWE_OPERATIONS__?: { noAccess?: boolean } }).__TMWE_OPERATIONS__;
+  return ops?.noAccess !== true;
+}
+
+/** Pinta la pantalla de «sin acceso» (cerrar sesión como única acción). */
+export function showNoAccess(): void {
+  renderNoAccess(safeLocale(), () => void bffLogout());
+}
+
+/**
  * Comprueba la sesión y deja el entorno listo para que arranque la SPA.
  * Devuelve false si se ha redirigido al login (no hay que montar la app).
  *
@@ -266,6 +294,7 @@ export async function bootstrapBff(): Promise<boolean> {
     isTmwe: session.user?.is_tmwe === true,
     partnerId: session.user?.partner_id ?? 0,
     capabilities: session.capabilities ?? [],
+    noAccess: sessionHasNoAccess(session),
   };
   const invoicing = invoicingBootstrapFrom(session.user, { basePath: BFF_BASE_PATH, language, csrf: session.csrf_token });
   if (invoicing) w.__TMWE_INVOICING__ = invoicing;
