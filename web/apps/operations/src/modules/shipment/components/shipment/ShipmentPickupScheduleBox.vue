@@ -254,6 +254,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
@@ -350,7 +351,7 @@ const hasAwb = computed<boolean>(() => {
  * the LDV/AWB hub, so this button targets the already-labelled case.)
  */
 function isBeforeToday(dateStr: string): boolean {
-  return dateStr < new Date().toISOString().slice(0, 10);
+  return dateStr < todayLocal();
 }
 
 function onReservePickup(): void {

@@ -241,6 +241,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
@@ -276,7 +277,7 @@ const header = ref<ProformaHeader>({
   iso_paese_origine: "",
   motivo: "",
   id_valuta: undefined,
-  data: new Date().toISOString().slice(0, 10),
+  data: todayLocal(),
 });
 const items = ref<ProformaItem[]>([]);
 
@@ -337,7 +338,7 @@ watch(
           iso_paese_origine: p.iso_paese_origine ?? "",
           motivo: p.motivo ?? "",
           id_valuta: p.id_valuta,
-          data: p.data ?? new Date().toISOString().slice(0, 10),
+          data: p.data ?? todayLocal(),
         };
         items.value = Array.isArray(p.items) ? p.items : [];
       } else {

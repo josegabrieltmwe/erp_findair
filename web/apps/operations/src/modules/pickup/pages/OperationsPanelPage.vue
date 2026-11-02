@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { operationsService } from "../services/operations.service";
@@ -6,7 +7,7 @@ import type { OperationsOverview } from "../types";
 
 const { t } = useI18n();
 
-const today = new Date().toISOString().slice(0, 10);
+const today = todayLocal();
 const date = ref(today);
 const loading = ref(true);
 const error = ref<string | null>(null);
