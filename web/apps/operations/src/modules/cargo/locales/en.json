@@ -1341,6 +1341,8 @@
       "action_select": "Select",
       "selected_short": "Selected",
       "summary_bookable": "bookable",
+      "account_tmwe_hint": "Rate obtained with the TMWE account, not the partner's delegation",
+      "account_tmwe_fallback_hint": "Rate obtained with the TMWE account because WebCargo rejected the partner's delegation",
       "summary_cheapest": "from",
       "summary_fastest": "fastest",
       "filters_reset": "Reset",

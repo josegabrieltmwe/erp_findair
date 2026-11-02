@@ -167,6 +167,16 @@ export interface FlightRate {
     ref_id?: number | null;
     label?: string;
   };
+  /**
+   * De quien es la credencial con la que se obtuvo la tarifa: `partner` (su
+   * delegacion) o `tmwe` (cuenta de TMWE). Solo lo declara el worker; ausente
+   * si no lo declaro (no se asume nada).
+   */
+  account_origin?: "partner" | "tmwe";
+  /** `true` cuando se uso la cuenta de TMWE por respaldo de una delegacion rechazada. */
+  account_fallback?: boolean;
+  /** Motivo del respaldo (p. ej. `HTTP 440`); solo para administradores. */
+  account_fallback_reason?: string;
   /** Money: rate.client_price can be number (post-normalize) or object. */
   client_price?:
     | number
@@ -1216,6 +1226,14 @@ export interface FlightPick {
   rate: NormalizedRate;
   /** Por qué se eligió, en datos — la UI decide cómo redactarlo. */
   reason: { price: number; hours: number; stops: number };
+}
+
+/**
+ * ¿La tarifa se obtuvo con la cuenta de TMWE y no con la delegacion del
+ * partner? Solo con lo que el backend declara explicitamente.
+ */
+export function isTmweAccountRate(r: Pick<FlightRate, "account_origin">): boolean {
+  return r.account_origin === "tmwe";
 }
 
 /** Precio de cliente ya normalizado; 0 cuando la tarifa no lo trae. */

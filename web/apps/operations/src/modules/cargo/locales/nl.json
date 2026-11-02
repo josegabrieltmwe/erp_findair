@@ -1341,6 +1341,8 @@
       "action_select": "Selecteren",
       "selected_short": "Gekozen",
       "summary_bookable": "boekbaar",
+      "account_tmwe_hint": "Tarief verkregen met het TMWE-account, niet met de delegatie van de partner",
+      "account_tmwe_fallback_hint": "Tarief verkregen met het TMWE-account omdat WebCargo de delegatie van de partner afwees",
       "summary_cheapest": "vanaf",
       "summary_fastest": "snelste",
       "filters_reset": "Wissen",
