@@ -41,6 +41,15 @@
             hide-details
             style="max-width: 220px"
           />
+          <v-select
+            v-model="currency"
+            :items="currencyOptions"
+            :label="t('invoicing.invoice.currency')"
+            density="comfortable"
+            variant="outlined"
+            hide-details
+            style="max-width: 130px"
+          />
 
           <!-- Serie de numeración. Solo se muestra si el partner tiene más de
                una: con una sola no hay nada que elegir. -->
@@ -209,6 +218,7 @@ import {
   type NumberingEngine,
 } from "../../services/numbering.service";
 import { useToastStore } from "../../stores/toast.store";
+import { useInvoiceCurrency } from "../../composables/invoiceCurrency";
 
 const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
@@ -237,6 +247,7 @@ const clientItems = ref<ClientItem[]>([]);
 const selectedClient = ref<ClientItem | null>(null);
 const searching = ref(false);
 const dataFattura = ref(today());
+const { currency, options: currencyOptions, load: loadCurrencies, reset: resetCurrency, money } = useInvoiceCurrency();
 const saving = ref(false);
 const lines = ref<ManualLine[]>([emptyLine()]);
 
@@ -280,9 +291,6 @@ const canSave = computed(
 
 function today(): string {
   return todayLocal();
-}
-function money(v: number): string {
-  return `${Number(v ?? 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
 }
 function emptyLine(): ManualLine {
   return {
@@ -348,7 +356,7 @@ async function save(): Promise<void> {
       id_anagrafica: clientId.value,
       data_fattura: dataFattura.value,
       tipo_fattura: "A",
-      valuta_sigla: "EUR",
+      valuta_sigla: currency.value,
       // Serie elegida. Si se omite, el backend usa el motor por defecto del
       // partner y, si no tiene ninguno, cae al MAX+1 legacy.
       ...(engineId.value ? { id_numbering_engine: engineId.value } : {}),
@@ -424,6 +432,8 @@ watch(
       clientItems.value = [];
       selectedClient.value = null;
       dataFattura.value = today();
+      resetCurrency();
+      void loadCurrencies();
       lines.value = [emptyLine()];
       previewLabel.value = "";
       mixingWarning.value = "";
