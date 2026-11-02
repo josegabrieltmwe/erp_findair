@@ -933,6 +933,8 @@
     "form_metric_system": "Meetsysteem",
     "form_note": "Notitie",
     "form_secret_hint": "Leeg laten om de opgeslagen waarde te behouden.",
+    "form_secret_set": "Ingesteld. Leeg laten om te behouden.",
+    "form_secret_unset": "Niet ingesteld.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperiaal (Lb/In)",
     "created": "Inloggegevens aangemaakt",

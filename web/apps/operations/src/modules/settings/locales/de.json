@@ -933,6 +933,8 @@
     "form_metric_system": "Maßsystem",
     "form_note": "Notiz",
     "form_secret_hint": "Leer lassen, um den gespeicherten Wert zu behalten.",
+    "form_secret_set": "Konfiguriert. Leer lassen, um sie zu behalten.",
+    "form_secret_unset": "Nicht konfiguriert.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Zugangsdaten erstellt",

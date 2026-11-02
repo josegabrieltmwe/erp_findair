@@ -933,6 +933,8 @@
     "form_metric_system": "Sistema de medida",
     "form_note": "Nota",
     "form_secret_hint": "Déjalo vacío para conservar el valor guardado.",
+    "form_secret_set": "Configurada. Déjalo vacío para conservarla.",
+    "form_secret_unset": "Sin configurar.",
     "metric_m": "Métrico (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credencial creada",
