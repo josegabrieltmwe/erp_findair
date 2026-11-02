@@ -28,7 +28,9 @@
       "batch_finished": "Abgeschlossen: {done} verarbeitet, {errors} Fehler.",
       "batch_failed": "Der Tracking-Job ist fehlgeschlagen.",
       "email_summary": "E-Mails heute: {sent} gesendet · {queued} in Warteschlange · {failed} fehlgeschlagen (von {total})",
-      "single_no_update": "Sendung {id} hat keine Aktualisierung vom Kurier erhalten."
+      "single_no_update": "Sendung {id} hat keine Aktualisierung vom Kurier erhalten.",
+      "batch_timeout": "Der Tracking-Job läuft seit über 30 Minuten und wird auf diesem Bildschirm nicht mehr überwacht. Zum Prüfen des Status neu laden.",
+      "batch_poll_lost": "Verbindung beim Überwachen des Tracking-Jobs verloren. Er kann auf dem Server weiterlaufen: zum Prüfen des Status neu laden."
     }
   }
 }

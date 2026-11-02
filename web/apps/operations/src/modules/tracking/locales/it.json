@@ -28,7 +28,9 @@
       "batch_finished": "Completato: {done} elaborate, {errors} errori.",
       "batch_failed": "Il job di tracking è fallito.",
       "email_summary": "Email oggi: {sent} inviate · {queued} in coda · {failed} fallite (di {total})",
-      "single_no_update": "La spedizione {id} non ha ricevuto aggiornamenti dal corriere."
+      "single_no_update": "La spedizione {id} non ha ricevuto aggiornamenti dal corriere.",
+      "batch_timeout": "Il job di tracking supera i 30 minuti: non è più monitorato da questa schermata. Ricarica per vedere lo stato.",
+      "batch_poll_lost": "Connessione persa durante il monitoraggio del job di tracking. Il job può continuare sul server: ricarica per vedere lo stato."
     }
   }
 }

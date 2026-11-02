@@ -28,7 +28,9 @@
       "batch_finished": "Voltooid: {done} verwerkt, {errors} fouten.",
       "batch_failed": "De trackingtaak is mislukt.",
       "email_summary": "E-mails vandaag: {sent} verstuurd · {queued} in wachtrij · {failed} mislukt (van {total})",
-      "single_no_update": "Zending {id} heeft geen update van de koerier ontvangen."
+      "single_no_update": "Zending {id} heeft geen update van de koerier ontvangen.",
+      "batch_timeout": "De trackingtaak loopt al meer dan 30 minuten en wordt niet meer vanuit dit scherm gevolgd. Ververs om de status te zien.",
+      "batch_poll_lost": "Verbinding verbroken tijdens het volgen van de trackingtaak. Die kan op de server doorlopen: ververs om de status te zien."
     }
   }
 }

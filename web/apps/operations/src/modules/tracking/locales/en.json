@@ -28,7 +28,9 @@
       "batch_finished": "Completed: {done} processed, {errors} errors.",
       "batch_failed": "The tracking job failed.",
       "email_summary": "Emails today: {sent} sent · {queued} queued · {failed} failed (of {total})",
-      "single_no_update": "Shipment {id} received no update from the courier."
+      "single_no_update": "Shipment {id} received no update from the courier.",
+      "batch_timeout": "The tracking job has run for over 30 minutes and is no longer monitored from this screen. Reload to see its status.",
+      "batch_poll_lost": "Connection lost while monitoring the tracking job. It may still be running on the server: reload to see its status."
     }
   }
 }

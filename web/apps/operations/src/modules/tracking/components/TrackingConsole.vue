@@ -234,6 +234,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import { mdiPlayCircle, mdiMagnify, mdiRefresh, mdiRadar } from "@mdi/js";
+import { POLL_INTERVAL_MS, pollGiveUp } from "../pollPolicy";
 import {
   trackingManagementService,
   type TrackingShipment,
@@ -396,9 +397,12 @@ async function startBatch(): Promise<void> {
 }
 
 function pollJob(jobId: number): void {
+  const started = Date.now();
+  let consecutiveErrors = 0;
   const tick = async (): Promise<void> => {
     try {
       const job = await trackingManagementService.pollJob(jobId);
+      consecutiveErrors = 0;
       batchProcessed.value = job.progress_done;
       batchTotal.value = job.progress_total;
       batchErrors.value = job.errors;
@@ -413,11 +417,20 @@ function pollJob(jobId: number): void {
         return;
       }
     } catch {
-      // transient poll error — keep polling, the job may still be queued
+      // Error transitorio: se sigue sondeando, pero solo hasta POLL_MAX_CONSECUTIVE_ERRORS seguidos.
+      consecutiveErrors += 1;
+    }
+    const giveUp = pollGiveUp(Date.now() - started, consecutiveErrors);
+    if (giveUp) {
+      batchRunning.value = false;
+      error.value = t(
+        giveUp === "timeout" ? "tracking.tracking.batch_timeout" : "tracking.tracking.batch_poll_lost",
+      );
+      return;
     }
     pollTimer = setTimeout(() => {
       void tick();
-    }, 2000);
+    }, POLL_INTERVAL_MS);
   };
   void tick();
 }
