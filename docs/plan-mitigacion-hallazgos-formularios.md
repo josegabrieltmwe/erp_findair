@@ -1,6 +1,6 @@
 # Plan de mitigación de los hallazgos de la revisión de formularios
 
-> **Estado:** borrador (Ola 1 en curso) · **Última modificación:** 2026-11-01
+> **Estado:** borrador (Ola 1 hecha en SPA; Ola 2 parte SPA hecha) · **Última modificación:** 2026-11-02
 
 Resultado de verificar, con una segunda lectura independiente del código, los 24 hallazgos de [plan-pruebas-formularios.md](plan-pruebas-formularios.md) §3 y plan para corregir los que se confirmaron. **La verificación fue solo lectura: no se ejecutó ninguna prueba contra datos ni en el navegador**, salvo `vue-tsc`, `vitest` de un módulo, `phpunit` del BFF, `check:i18n` y `check:raw-text`. Un «confirmado» significa que el código lo implica; los casos de la columna «Prueba» lo comprueban de verdad en sandbox.
 
@@ -145,4 +145,16 @@ Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA,
 | H1 (API, P42) | Pendiente | Lo decide el equipo de `tmwe_api`; sigue siendo la corrección más urgente |
 | H16c cancelar cargo (API, P43) | Pendiente | Equipo de `tmwe_api` |
 | Casos de ficha de la Ola 1 | Pendiente | Ejecutar en sandbox con `UPSTREAM_DENY_ACTIONS` activo |
-| Olas 2 y 3 | Pendiente | |
+| H9a | Hecho | `todayLocal()` en `@shared/utils/date`; sustituye `toISOString()` en 18 sitios (más de los 6 contados) |
+| H9b (SPA) | Hecho | `max` = hoy en la fecha de la factura manual. Falta que el API rechace fecha futura (P47) |
+| H13 | Hecho | `readonly()` alineado con `READONLY_FIELDS_INVOICED`, salvo `postfatt` y `post_fuel_surc` (la caja post-factura sigue sin concluir); aviso `warning` si el servidor ignora campos |
+| H21b | Hecho | El servicio extrae `error.message` y la cuenta exige nombre o IBAN |
+| H21c, H21d (SPA) | Hecho | Alícuota 0 a 100; un plazo sin tramos ni día del mes no se guarda. Faltan P49 y P50 en el API |
+| H12.4, H12.6 | Hecho | Confirmación al reemplazar precios y al guardar la matriz con celdas vaciadas |
+| H12.5 (SPA) | Hecho | `isSignedDecimal` en la modificación múltiple. Falta P53 en el API |
+| H19 (SPA) | Hecho | `plainToHtml` escapa y `safeLinkUrl` limita el editor a http, https y mailto. Falta P55 en el API |
+| H22a | Hecho | Aviso de los CAP descartados |
+| H14 (SPA) | Hecho | VIES comprueba el número tecleado, `cod_destin` se limpia fuera de IT, `csvCell` neutraliza fórmulas. Faltan PEC, SDI y `pi_cf` en el API (P51) |
+| H3a (SPA) | Hecho | `pw` y `chiave` no se precargan y son `type="password"`. Falta que el API deje de devolverlos (P52) |
+| Ola 2, parte API | Pendiente | P47, P49, P50, P51, P52, P53, P55 |
+| Ola 3 | Pendiente | |

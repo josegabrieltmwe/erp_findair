@@ -166,7 +166,19 @@ export interface FlightRate {
     source?: string;
     ref_id?: number | null;
     label?: string;
+    /** Id de la delegacion rechazada cuando la tarifa salio por respaldo. */
+    fallback_from?: number | null;
   };
+  /**
+   * De quien es la credencial con la que se obtuvo la tarifa: `partner` (su
+   * delegacion) o `tmwe` (cuenta de TMWE). Solo lo declara el worker; ausente
+   * si no lo declaro (no se asume nada).
+   */
+  account_origin?: "partner" | "tmwe";
+  /** `true` cuando se uso la cuenta de TMWE por respaldo de una delegacion rechazada. */
+  account_fallback?: boolean;
+  /** Motivo del respaldo (p. ej. `HTTP 440`); solo para administradores. */
+  account_fallback_reason?: string;
   /** Money: rate.client_price can be number (post-normalize) or object. */
   client_price?:
     | number
@@ -1216,6 +1228,28 @@ export interface FlightPick {
   rate: NormalizedRate;
   /** Por qué se eligió, en datos — la UI decide cómo redactarlo. */
   reason: { price: number; hours: number; stops: number };
+}
+
+/**
+ * ¿La tarifa se obtuvo con la cuenta de TMWE y no con la delegacion del
+ * partner? Solo con lo que el backend declara explicitamente.
+ */
+export function isTmweAccountRate(r: Pick<FlightRate, "account_origin">): boolean {
+  return r.account_origin === "tmwe";
+}
+
+/**
+ * Lo mismo, a partir de la `account_ref` que guarda la cache y devuelve el
+ * detalle de la tarifa (el gestor de vuelo no recibe `account_origin`):
+ * `fallback_from` = respaldo desde una delegacion; `ref_id` 0 en una tarifa
+ * realtime = sin delegacion, es decir, cuenta directa de TMWE.
+ */
+export function isTmweAccountRef(
+  ref: FlightRate["account_ref"] | null | undefined,
+): boolean {
+  if (!ref) return false;
+  if (ref.fallback_from != null) return true;
+  return ref.source === "webcargo_realtime" && ref.ref_id === 0;
 }
 
 /** Precio de cliente ya normalizado; 0 cuando la tarifa no lo trae. */

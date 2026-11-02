@@ -125,6 +125,7 @@
         "checking": "Prüfung läuft…",
         "ok": "Verifiziert",
         "ko": "Nicht verifiziert",
+        "unsaved_number": "Geben Sie die Nummer mit Länderpräfix an (z. B. IT01234567890) oder speichern Sie zuerst den Datensatz.",
         "na": "Nicht zutreffend"
       },
       "more": {

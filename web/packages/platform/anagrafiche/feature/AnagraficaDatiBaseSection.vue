@@ -252,7 +252,21 @@ function reset(): void {
 
 async function onCheckVies(): Promise<void> {
   try {
-    const r = await viesService.check({ id_anagrafica: props.modelValue.id });
+    // Se comprueba lo que hay en pantalla. Con id_anagrafica el API usa el valor
+    // guardado y además actualiza vies_check de la ficha, así que un número
+    // tecleado y sin guardar se envía suelto (país = prefijo del número).
+    const typed = String(form.value.pi_cf ?? '').replace(/\s+/g, '').toUpperCase();
+    const saved = String(original.value.pi_cf ?? '').replace(/\s+/g, '').toUpperCase();
+    let payload: Parameters<typeof viesService.check>[0] = { id_anagrafica: props.modelValue.id };
+    if (typed && typed !== saved) {
+      const m = /^([A-Z]{2})(.+)$/.exec(typed);
+      if (!m) {
+        toast.warning(t('anagrafiche.vies.unsaved_number'));
+        return;
+      }
+      payload = { iso_paese: m[1], partita_iva: m[2] };
+    }
+    const r = await viesService.check(payload);
     if (r.valid) {
       toast.success(`${t('anagrafiche.vies.ok')}: ${r.name ?? ''}`);
     } else {

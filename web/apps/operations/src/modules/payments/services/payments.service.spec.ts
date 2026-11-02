@@ -180,6 +180,14 @@ describe("utilidades", () => {
     ).toEqual([{ id: 3, reason: "x" }]);
   });
 
+  it("csvCell neutraliza fórmulas pero respeta números", () => {
+    expect(csvCell("=HYPERLINK(\"x\")")).toBe("\"'=HYPERLINK(\"\"x\"\")\"");
+    expect(csvCell("@cmd")).toBe("'@cmd");
+    expect(csvCell("+34 600")).toBe("'+34 600");
+    expect(csvCell("-12,50")).toBe("-12,50");
+    expect(csvCell(-12.5)).toBe("-12.5");
+  });
+
   it("toCsv escapa separadores y comillas", () => {
     expect(csvCell('a;b"c')).toBe('"a;b""c"');
     expect(toCsv(["h1", "h2"], [["x", 'y"z']])).toBe('h1;h2\r\nx;"y""z"');

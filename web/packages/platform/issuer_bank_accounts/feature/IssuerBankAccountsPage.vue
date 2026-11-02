@@ -172,6 +172,11 @@ function openEdit(item: IssuerBankAccount): void {
 }
 
 async function save(): Promise<void> {
+  // El API exige nombre o IBAN; se avisa antes de enviar una cuenta vacía.
+  if (!form.value.nome?.trim() && !form.value.iban?.trim()) {
+    toast.error(t('issuer_bank_accounts.name_or_iban_required'));
+    return;
+  }
   saving.value = true;
   try {
     if (editing.value) {

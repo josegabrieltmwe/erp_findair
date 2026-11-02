@@ -405,7 +405,8 @@
     "form_cap_list": "CAP inclusi",
     "form_cap_ko": "CAP esclusi",
     "cap_badge": "{n} CAP",
-    "form_cap_chip_hint": "CAP esatto (20100) o prefisso con ? (201? = tutti i 201xx). Invio per aggiungere."
+    "form_cap_chip_hint": "CAP esatto (20100) o prefisso con ? (201? = tutti i 201xx). Invio per aggiungere.",
+    "cap_discarded": "CAP non validi scartati: {list}"
   },
   "carrier_services": {
     "subtitle": "Definizioni dei servizi corriere, zone e supplementi.",
@@ -656,6 +657,7 @@
     "descr": "Descrizione (IT)",
     "descr_en": "Descrizione (EN)",
     "aliquota": "Aliquota IVA",
+    "aliquota_range": "L'aliquota deve essere compresa tra 0 e 100.",
     "xml_natura": "Natura SDI",
     "xml_rif_norm": "Riferimento normativo",
     "route": "Rotta",
@@ -803,7 +805,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Elimina conto",
-    "delete_message": "Eliminare il conto {name}?"
+    "delete_message": "Eliminare il conto {name}?",
+    "name_or_iban_required": "Indica almeno il nome o l'IBAN."
   },
   "payment_config": {
     "subtitle": "Gestisci i metodi di pagamento e le scadenze di pagamento.",
@@ -836,6 +839,7 @@
     "form_type": "Tipo *",
     "form_xml_code": "Codice XML (fattura elettronica)",
     "form_orderby": "Ordine",
+    "term_needs_bracket": "Seleziona almeno una fascia di giorni o indica un giorno del mese: altrimenti la scadenza non genera scadenze.",
     "form_day_of_month": "Giorno del mese (0 = fine mese)",
     "form_also_customers": "Usa anche per i pagamenti dei clienti",
     "brackets_title": "Fasce di rate",
@@ -928,7 +932,7 @@
     "form_country": "Paese account",
     "form_metric_system": "Sistema di misura",
     "form_note": "Nota",
-    "form_secret_hint": "Mostrato in chiaro — parità con il legacy",
+    "form_secret_hint": "Lascia vuoto per mantenere il valore salvato.",
     "metric_m": "Metrico (Kg/Cm)",
     "metric_i": "Imperiale (Lb/In)",
     "created": "Credenziale creata",

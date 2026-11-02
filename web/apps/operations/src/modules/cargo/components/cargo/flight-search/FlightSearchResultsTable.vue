@@ -161,6 +161,31 @@
                 </template>
               </v-tooltip>
 
+              <!--
+              Tarifa obtenida con la cuenta de TMWE y no con la delegacion del
+              partner (el backend la etiqueta account_origin = "tmwe"). Solo
+              se señala aqui: tmwe-wueform, para clientes, no muestra la diferencia.
+            -->
+              <v-tooltip
+                v-if="isTmweAccountRate(item)"
+                location="top"
+                :text="
+                  item.account_fallback
+                    ? t('cargo.flight.account_tmwe_fallback_hint')
+                    : t('cargo.flight.account_tmwe_hint')
+                "
+              >
+                <template #activator="{ props: accProps }">
+                  <v-icon
+                    v-bind="accProps"
+                    icon="mdi-account-switch"
+                    color="warning"
+                    size="15"
+                    data-testid="rate-account-tmwe"
+                  />
+                </template>
+              </v-tooltip>
+
               <v-tooltip
                 v-if="item._promotional"
                 location="top"
@@ -689,6 +714,7 @@ import AirlineLogo from "../AirlineLogo.vue";
 import {
   segmentsFromRate,
   isDirectBooking,
+  isTmweAccountRate,
   buildTabs,
   ratesForTab,
   groupBySimilarity,

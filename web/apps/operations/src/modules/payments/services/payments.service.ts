@@ -307,7 +307,16 @@ export function today(): string {
 
 /** Escapa un valor para CSV (separador `;`, comillas dobles). */
 export function csvCell(v: unknown): string {
-  const s = String(v ?? "");
+  let s = String(v ?? "");
+  // Un texto que empieza por = + - @ se ejecutaría como fórmula al abrirlo en
+  // Excel. Se antepone una comilla; los números (incluso negativos) quedan igual.
+  if (
+    typeof v === "string" &&
+    /^[=+\-@]/.test(s) &&
+    !/^[+-]?\d+([.,]\d+)?$/.test(s)
+  ) {
+    s = `'${s}`;
+  }
   return /[";\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 

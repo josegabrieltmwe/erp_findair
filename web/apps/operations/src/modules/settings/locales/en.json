@@ -405,7 +405,8 @@
     "form_cap_list": "Included postal codes",
     "form_cap_ko": "Excluded postal codes",
     "cap_badge": "{n} ZIP",
-    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add."
+    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add.",
+    "cap_discarded": "Invalid postcodes were discarded: {list}"
   },
   "carrier_services": {
     "subtitle": "Carrier service definitions, zones and supplements.",
@@ -656,6 +657,7 @@
     "descr": "Description (IT)",
     "descr_en": "Description (EN)",
     "aliquota": "VAT rate",
+    "aliquota_range": "The rate must be between 0 and 100.",
     "xml_natura": "SDI Natura",
     "xml_rif_norm": "Legal reference",
     "route": "Route",
@@ -803,7 +805,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Delete account",
-    "delete_message": "Delete account {name}?"
+    "delete_message": "Delete account {name}?",
+    "name_or_iban_required": "Enter at least the name or the IBAN."
   },
   "payment_config": {
     "subtitle": "Manage payment methods and payment terms.",
@@ -836,6 +839,7 @@
     "form_type": "Type *",
     "form_xml_code": "XML Code (electronic invoice)",
     "form_orderby": "Sort Order",
+    "term_needs_bracket": "Select at least one day bracket or set a day of the month: otherwise the term generates no due dates.",
     "form_day_of_month": "Day of month (0 = end of month)",
     "form_also_customers": "Also use for customer payments",
     "brackets_title": "Installment Brackets",
@@ -928,7 +932,7 @@
     "form_country": "Account country",
     "form_metric_system": "Measurement system",
     "form_note": "Note",
-    "form_secret_hint": "Shown in clear — legacy parity",
+    "form_secret_hint": "Leave empty to keep the stored value.",
     "metric_m": "Metric (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credential created",

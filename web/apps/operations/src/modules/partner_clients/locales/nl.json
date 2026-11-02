@@ -125,6 +125,7 @@
         "checking": "Controleren…",
         "ok": "Geverifieerd",
         "ko": "Niet geverifieerd",
+        "unsaved_number": "Geef het nummer met landcode op (bijvoorbeeld IT01234567890) of sla eerst het record op.",
         "na": "Niet van toepassing"
       },
       "more": {
