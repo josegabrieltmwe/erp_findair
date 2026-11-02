@@ -417,7 +417,8 @@
     "form_cap_list": "CAP incluidos",
     "form_cap_ko": "CAP excluidos",
     "cap_badge": "{n} CAP",
-    "form_cap_chip_hint": "CAP exacto (20100) o prefijo con ? (201? = todos los 201xx). Enter para añadir."
+    "form_cap_chip_hint": "CAP exacto (20100) o prefijo con ? (201? = todos los 201xx). Enter para añadir.",
+    "cap_discarded": "Se descartaron CAP no válidos: {list}"
   },
   "carrier_services": {
     "subtitle": "Definiciones de servicios de courier, zonas y suplementos.",
