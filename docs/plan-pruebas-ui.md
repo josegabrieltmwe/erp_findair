@@ -1,6 +1,6 @@
 # Plan de pruebas de la UI
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01
+> **Estado:** borrador · **Última modificación:** 2026-11-02
 
 Cómo comprobar, perfil por perfil y pantalla por pantalla, que la SPA (`web/apps/operations`) funciona sobre el BFF y respeta los permisos del API. Sale de la lectura de `docs/`, del router y de los tests existentes. **No se arrancó la aplicación ni se ejecutó ninguna prueba al redactarlo.**
 ## 1. Punto de partida
@@ -297,3 +297,5 @@ Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El 
 - Revisado todo `apps/` y `packages/` en busca del patrón `@change="(v…)"`: ya no queda ninguno sobre campos de Vuetify (los de `FlagToggle` son componentes propios que sí emiten el valor).
 
 **Catálogos públicos para el partner (2026-11-01):** los desplegables de país y moneda usan `/get-api-countries` y `/get-api-currencies` (rutas nuevas en `routes.bff.yaml`; `RouteManifest` admite `-` en `upstream.action`). Con el partner: el detalle courier ya no dispara 403 ni muestra el aviso de «sin permiso», el selector «Country (ISO)» lista países y la dirección se guarda con `NL` (antes sin país). Los dos tests `test.fail` de este hallazgo pasaron a pruebas normales. Pendiente: `api_partner_currency_compat` (P63, cambio en la API) y la validación de país obligatorio en la SPA.
+
+**Perfil interno (2026-11-02):** usuario `JRNSTAFF` (TMWE, anagrafica 1) en `E2E_STAFF_*`. Humo: 97 de 98 rutas sin errores; `/tickets` da 502 por `api_communication_stream_token` (501 del API, P64). Las altas del partner se repiten con `npm run test:alta-staff` (`tests/staff/`, 13 pasan): cargo, MAWB/HAWB, importes, courier y país. Hubo que localizar el campo «Customer» por etiqueta, porque el staff tiene un selector de partner en la cabecera.
