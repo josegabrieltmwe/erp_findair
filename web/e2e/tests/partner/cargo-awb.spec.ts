@@ -99,6 +99,9 @@ test.describe.serial("Cargo del partner: MAWB y HAWB", () => {
       const r = await resp;
       expect(r.status(), valor).toBe(422);
       expect(await r.text()).toMatch(mensaje); // el BFF no reenvía el código, sí el detalle
+      // El error debe verse: el almacén lo publica como aviso de error (role=alert). Con un aviso aún abierto el
+      // siguiente no se muestra, por eso solo se exige el del primer valor.
+      if (valor === "abc") await expect(page.getByRole("alert").filter({ hasText: mensaje })).toBeVisible({ timeout: 5000 });
     }
     // Deja un número válido para los siguientes tests.
     await campo.fill(awbPrueba());
