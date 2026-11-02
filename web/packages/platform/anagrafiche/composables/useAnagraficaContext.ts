@@ -18,6 +18,12 @@ import { computed, type ComputedRef } from 'vue';
  *  1. window.__TMWE_ANAGRAFICA_CTX__.isTmwe — explicit override an app can set
  *     (admin_config mirrors its permissions.store here in main.ts).
  *  2. window.__TMWE_PARTNER_CLIENTS__.isTmwe — partner_clients bootstrap payload.
+ *  3. window.__TMWE_OPERATIONS__.isTmwe — lo fija `bootstrapBff` a partir de la sesión del BFF
+ *     (en la SPA operations no existen los dos globales anteriores, así que antes siempre salía false).
+ *
+ * DUDA ABIERTA (plan de mitigación, H6): con suplantación activa `is_tmwe` sigue siendo el del
+ * usuario real, no el del suplantado. Aquí NO se cambia ese comportamiento; hay que decidir con
+ * producto qué se quiere (ver docs/plan-mitigacion-hallazgos-formularios.md §3.1).
  * Defaults to false (partner) when nothing is present — the safe, least-
  * privileged assumption; the backend enforces real isolation regardless.
  */
@@ -30,9 +36,11 @@ import { computed, type ComputedRef } from 'vue';
 interface TmweGlobals {
   __TMWE_ANAGRAFICA_CTX__?: { isTmwe?: boolean };
   __TMWE_PARTNER_CLIENTS__?: { isTmwe?: boolean };
+  __TMWE_OPERATIONS__?: { isTmwe?: boolean };
 }
 
-function readIsTmwe(): boolean {
+/** Solo para pruebas. */
+export function readIsTmwe(): boolean {
   if (typeof window === 'undefined') return false;
   const g = window as unknown as TmweGlobals;
   if (typeof g.__TMWE_ANAGRAFICA_CTX__?.isTmwe === 'boolean') {
@@ -40,6 +48,9 @@ function readIsTmwe(): boolean {
   }
   if (typeof g.__TMWE_PARTNER_CLIENTS__?.isTmwe === 'boolean') {
     return g.__TMWE_PARTNER_CLIENTS__.isTmwe;
+  }
+  if (typeof g.__TMWE_OPERATIONS__?.isTmwe === 'boolean') {
+    return g.__TMWE_OPERATIONS__.isTmwe;
   }
   return false;
 }
