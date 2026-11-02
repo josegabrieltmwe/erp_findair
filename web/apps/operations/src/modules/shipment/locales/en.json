@@ -754,7 +754,8 @@
         "unsaved_title": "Unsaved changes",
         "unsaved_body": "There are unsaved changes. Discard?",
         "keep_editing": "No, keep editing",
-        "discard": "Discard"
+        "discard": "Discard",
+        "instant_save": "Amounts are saved as soon as you leave each field: Cancel does not undo them."
       },
       "pricing": {
         "title": "Pricing breakdown",
@@ -1491,6 +1492,24 @@
     "quote_menu": {
       "label": "Communication",
       "pending_hint": "{n} request(s) awaiting reply"
+    },
+    "validation": {
+      "not_number": "{label}: must be a number",
+      "negative": "{label}: cannot be negative",
+      "currency_invalid": "{label}: invalid currency code (3 letters, e.g. EUR)",
+      "fields": {
+        "dogana_imp": "Customs value",
+        "assicuraz_imp": "Insurance",
+        "contras_imp": "Cash on delivery",
+        "peso": "Weight",
+        "peso_tassato": "Chargeable weight",
+        "peso_reale": "Actual weight",
+        "peso_fornit": "Supplier weight",
+        "peso_fornit_reale": "Supplier actual weight",
+        "id_valuta_dogana": "Customs currency",
+        "id_valuta_assic": "Insurance currency",
+        "id_valuta_contras": "COD currency"
+      }
     }
   },
   "platform": {

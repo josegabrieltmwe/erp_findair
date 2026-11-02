@@ -84,7 +84,8 @@
       "pieces": "Colli",
       "volume": "Volume (cm³)",
       "value": "Waarde",
-      "readyDate": "Gereed op"
+      "readyDate": "Gereed op",
+      "colliInvalid": "Het aantal colli moet een geheel getal groter dan 0 zijn."
     },
     "legs": {
       "help": "Trajecten geprijsd door de engine. Een handmatige prijs vereist een reden en wordt gelogd.",

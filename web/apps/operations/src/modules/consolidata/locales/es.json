@@ -84,7 +84,8 @@
       "pieces": "Bultos",
       "volume": "Volumen (cm³)",
       "value": "Valor",
-      "readyDate": "Fecha lista"
+      "readyDate": "Fecha lista",
+      "colliInvalid": "Los bultos deben ser un número entero mayor que 0."
     },
     "legs": {
       "help": "Tramos cotizados por el motor. Un precio manual exige motivo y queda registrado.",
@@ -156,7 +157,7 @@
       "cargoNoData": "Sin cargos",
       "complete": "Todas las expediciones enlazadas.",
       "incomplete": "{n} expedición(es) pendiente(s).",
-      "shipmentId": "ID spedizione",
+      "shipmentId": "ID envío",
       "result": "Resultado",
       "alreadyLinked": "Ya enlazada",
       "linked": "Enlazada",

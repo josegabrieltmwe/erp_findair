@@ -261,6 +261,7 @@ import { useClientSideListSource } from '../../listing/useClientSideListSource';
 import type { DataTableHeader } from '../../listing/types';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { localizedErrorText } from '../../utils/apiError';
 import {
   paymentConfigService,
   GG_BRACKETS,
@@ -270,7 +271,7 @@ import {
   type PaymentSchedulePayload,
 } from '../services/paymentConfig.service';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 const confirm = useConfirm();
 
@@ -419,7 +420,7 @@ async function saveMethod(): Promise<void> {
     methodDialog.value = false;
     await loadMethods();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   } finally {
     savingMethod.value = false;
   }
@@ -436,7 +437,7 @@ async function confirmDeleteMethod(m: PaymentMethod): Promise<void> {
     toast.success(t('payment_config.method_deleted'));
     await loadMethods();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   }
 }
 
@@ -510,7 +511,7 @@ async function saveSchedule(): Promise<void> {
     scheduleDialog.value = false;
     await loadSchedules();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   } finally {
     savingSchedule.value = false;
   }
@@ -527,7 +528,7 @@ async function confirmDeleteSchedule(s: PaymentSchedule): Promise<void> {
     toast.success(t('payment_config.term_deleted'));
     await loadSchedules();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   }
 }
 

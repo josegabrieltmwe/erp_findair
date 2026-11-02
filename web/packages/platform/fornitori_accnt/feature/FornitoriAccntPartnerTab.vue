@@ -98,7 +98,7 @@
             type="password"
             autocomplete="new-password"
             :label="t('fornitori_accnt.form_password')"
-            :hint="t('fornitori_accnt.form_secret_hint')"
+            :hint="secretHint(secretSet.pw)"
             persistent-hint
             maxlength="100"
             class="mb-3"
@@ -109,7 +109,7 @@
             type="password"
             autocomplete="new-password"
             :label="t('fornitori_accnt.form_key')"
-            :hint="t('fornitori_accnt.form_secret_hint')"
+            :hint="secretHint(secretSet.chiave)"
             persistent-hint
             maxlength="200"
             class="mb-3"
@@ -175,6 +175,7 @@ import { anagraficaService } from '../../anagrafiche/services/anagrafica.service
 import {
   fornitoriAccntService,
   fieldsForCourier,
+  hasSecret,
   KNOWN_COURIER_IDS,
   type FornitoreAccnt,
   type FornitoreAccntPayload,
@@ -270,6 +271,12 @@ function showField(name: string): boolean {
   return visibleFields.value.has(name);
 }
 
+// P52: el API solo dice si hay secreto guardado (has_pw / has_chiave); nunca su valor.
+const secretSet = reactive({ pw: false, chiave: false });
+function secretHint(isSet: boolean): string {
+  return t(isSet ? 'fornitori_accnt.form_secret_set' : 'fornitori_accnt.form_secret_unset');
+}
+
 const formValid = computed(
   () => !!form.id_fornitore && (!showField('id_account') || form.id_account.trim().length > 0),
 );
@@ -282,6 +289,8 @@ function resetForm(): void {
   form.user = '';
   form.pw = '';
   form.chiave = '';
+  secretSet.pw = false;
+  secretSet.chiave = false;
   form.iso = '';
   form.sis_metrico = '';
   form.note = '';
@@ -303,6 +312,8 @@ function openEdit(item: FornitoreAccnt): void {
   // Los secretos no se precargan: vacío = conservar el valor guardado.
   form.pw = '';
   form.chiave = '';
+  secretSet.pw = hasSecret(item, 'pw');
+  secretSet.chiave = hasSecret(item, 'chiave');
   form.iso = item.iso || '';
   form.sis_metrico = item.sis_metrico || '';
   form.note = item.note || '';

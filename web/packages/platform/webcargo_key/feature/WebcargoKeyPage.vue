@@ -117,6 +117,7 @@
             :label="t('webcargo_key.form_terminals')"
             :hint="t('webcargo_key.form_terminals_hint')"
             persistent-hint
+            :error-messages="terminalsTooMany ? [t('webcargo_key.terminals_too_many', { max: MAX_TERMINALS })] : []"
             placeholder="MIL, LHR"
             density="compact"
             class="mb-3"
@@ -151,7 +152,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="dialog = false">{{ t('common.cancel') }}</v-btn>
-          <v-btn color="primary" :loading="saving" @click="save">{{ t('common.save') }}</v-btn>
+          <v-btn color="primary" :loading="saving" :disabled="terminalsTooMany" @click="save">{{ t('common.save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -200,6 +201,12 @@ const formAnagraficaId = computed<number | null>({
   },
 });
 const terminalsInput = ref('');
+/** El servidor tiene 10 columnas (trm1..trm10): más códigos se descartaban en silencio. */
+const MAX_TERMINALS = 10;
+const parsedTerminals = computed<string[]>(() =>
+  terminalsInput.value.split(',').map((s) => s.trim()).filter(Boolean),
+);
+const terminalsTooMany = computed(() => parsedTerminals.value.length > MAX_TERMINALS);
 
 function terminals(row: WebcargoKey): string {
   const out: string[] = [];
@@ -255,8 +262,8 @@ async function save(): Promise<void> {
 
     // La lista de terminales se reparte en trm1..trm10; los huecos se limpian
     // para que al quitar uno no quede el valor viejo colgando.
-    const list = terminalsInput.value.split(',').map((s) => s.trim()).filter(Boolean).slice(0, 10);
-    for (let i = 1; i <= 10; i++) payload[`trm${i}`] = list[i - 1] ?? '';
+    const list = parsedTerminals.value;
+    for (let i = 1; i <= MAX_TERMINALS; i++) payload[`trm${i}`] = list[i - 1] ?? '';
 
     // Credencial vacía = conservar la guardada.
     if (!payload.key1) delete payload.key1;

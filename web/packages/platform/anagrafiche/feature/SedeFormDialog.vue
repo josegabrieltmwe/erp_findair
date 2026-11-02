@@ -78,6 +78,8 @@
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="form.PEC"
+                :error-messages="fieldError('PEC')"
+                @update:model-value="clearFieldError('PEC')"
                 :label="t('anagrafiche.fields.pec')"
                 density="compact"
                 variant="outlined"
@@ -86,6 +88,8 @@
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="form.cod_destin"
+                :error-messages="fieldError('cod_destin')"
+                @update:model-value="clearFieldError('cod_destin')"
                 v-field-help="'cod_destin'"
                 :label="t('anagrafiche.fields.codice_destinatario')"
                 density="compact"
@@ -113,7 +117,7 @@
               <v-text-field v-model="form.fax" v-field-help="'fax'" :label="t('anagrafiche.fields.fax')" density="compact" variant="outlined" />
             </v-col>
             <v-col cols="12" md="6">
-              <v-text-field v-model="form.mail" v-field-help="'mail'" :label="t('anagrafiche.fields.mail')" type="email" density="compact" variant="outlined" />
+              <v-text-field v-model="form.mail" v-field-help="'mail'" :error-messages="fieldError('mail')" @update:model-value="clearFieldError('mail')" :label="t('anagrafiche.fields.mail')" type="email" density="compact" variant="outlined" />
             </v-col>
           </v-row>
         </div>
@@ -214,6 +218,8 @@ import {
   mdiTruckOutline,
 } from '@mdi/js';
 import { useToast } from '../composables/useToast';
+import { useServerFieldErrors } from '../../composables/useServerFieldErrors';
+import { caughtText } from '../../utils/apiError';
 import { useAddressGeo } from '../composables/useAddressGeo';
 import CmCountrySelect from '../components/CmCountrySelect.vue';
 import CmTerminalSelect from '../components/CmTerminalSelect.vue';
@@ -225,6 +231,7 @@ const props = defineProps<{ modelValue: boolean; idAnagrafica: number; sede: Sed
 const emit = defineEmits<{ 'update:modelValue': [value: boolean]; saved: [] }>();
 const { t } = useI18n();
 const toast = useToast();
+const { setFrom: setFieldErrors, clear: clearFieldError, fieldError } = useServerFieldErrors();
 
 const saving = ref(false);
 const form = ref<Partial<SedeRow>>({});
@@ -283,6 +290,7 @@ async function onSave(): Promise<void> {
     form.value.cod_destin = '';
   }
   saving.value = true;
+  clearFieldError();
   try {
     if (isEdit.value && form.value.id) {
       await sediInterneService.update(form.value.id, form.value);
@@ -299,7 +307,9 @@ async function onSave(): Promise<void> {
     emit('saved');
     onClose();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    // 422 de formato (P51): el campo concreto queda marcado y el mensaje del servidor sale también en el aviso.
+    setFieldErrors(e);
+    toast.error(caughtText(e, t('common.error') as string));
   } finally {
     saving.value = false;
   }

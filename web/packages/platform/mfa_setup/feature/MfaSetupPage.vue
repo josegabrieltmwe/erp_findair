@@ -179,7 +179,7 @@
  *   - Verificar código TOTP (crea mfa_session de 5 min)
  *   - Deshabilitar MFA (requiere código TOTP válido)
  */
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   mdiShieldCheck,
@@ -193,7 +193,7 @@ import {
 } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmAsyncSection from '../../anagrafiche/components/CmAsyncSection.vue';
-import { mfaService, type MfaStatus, type MfaSetupResult, type MfaVerifyResult } from '../services/mfa.service';
+import { mfaService, mfaCodeErrorMessage, type MfaStatus, type MfaSetupResult, type MfaVerifyResult } from '../services/mfa.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 
 const { t } = useI18n();
@@ -212,6 +212,10 @@ const verifyResult = ref<MfaVerifyResult | null>(null);
 
 const disableCode = ref('');
 const disableRunning = ref(false);
+
+function codeErrorMessage(e: unknown): string {
+  return mfaCodeErrorMessage(e, t);
+}
 
 async function loadStatus(): Promise<void> {
   statusLoading.value = true;
@@ -243,9 +247,10 @@ async function runVerify(): Promise<void> {
   try {
     verifyResult.value = await mfaService.verify(verifyCode.value);
     toast.success(t('mfa_setup.verify_success'));
+    clearSecret();
     await loadStatus();
   } catch (e: unknown) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(codeErrorMessage(e));
   } finally {
     verifyRunning.value = false;
   }
@@ -259,10 +264,16 @@ async function runDisable(): Promise<void> {
     disableCode.value = '';
     await loadStatus();
   } catch (e: unknown) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(codeErrorMessage(e));
   } finally {
     disableRunning.value = false;
   }
+}
+
+/** El secreto TOTP no debe quedar en memoria ni en pantalla una vez verificado o al salir de la página. */
+function clearSecret(): void {
+  setupResult.value = null;
+  verifyCode.value = '';
 }
 
 function copy(text: string): void {
@@ -275,6 +286,8 @@ function copy(text: string): void {
 onMounted(() => {
   void loadStatus();
 });
+
+onBeforeUnmount(clearSecret);
 </script>
 
 <style scoped>

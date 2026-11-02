@@ -899,7 +899,8 @@
     "deleted": "Credential disabled",
     "confirm_delete": "Disable the credential for {country}?",
     "confirm_delete_primary": "This is the PRIMARY account for {country}. Disabling it makes that origin quote with the Italian account. Continue?",
-    "partner_tab_hint": "Shows only keys where this record is the IATA agent owning the country. WebCargo works per country, not per partner: it's normal for most records to have no rows here."
+    "partner_tab_hint": "Shows only keys where this record is the IATA agent owning the country. WebCargo works per country, not per partner: it's normal for most records to have no rows here.",
+    "terminals_too_many": "At most {max} terminals: remove the extra ones to save."
   },
   "webcargo_delegation": {
     "partner_tab_hint": "WebCargo Realtime delegation (AV/DQ pair) — a different system from WebCargo Published (per-country keys, \"WebCargo Published\" tab). Each row represents a country where this record quotes under another agent's identity.",
@@ -945,6 +946,8 @@
     "form_metric_system": "Measurement system",
     "form_note": "Note",
     "form_secret_hint": "Leave empty to keep the stored value.",
+    "form_secret_set": "Configured. Leave empty to keep it.",
+    "form_secret_unset": "Not configured.",
     "metric_m": "Metric (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credential created",
@@ -1092,7 +1095,8 @@
       "result": "{processed} processed, {skipped} skipped",
       "granted": "Role granted to {n} user(s)",
       "revoked": "Role revoked from {n} user(s)",
-      "none_processed": "No users processed ({n} skipped)"
+      "none_processed": "No users processed ({n} skipped)",
+      "root_denied": "{n} skipped because they are root accounts: only a root user can act on them."
     },
     "detail": {
       "open": "View detail",
@@ -1112,6 +1116,8 @@
     "field_email": "Email",
     "field_initial_roles": "Initial roles",
     "roles_not_granted": "Roles not granted (the server skipped them): {roles}",
+    "roles_denied": "Roles not granted: {roles}",
+    "root_only_action": "This is a root account: only a root user can edit it, reset its password or deactivate it.",
     "field_login": "Username",
     "field_legacy_role": "Legacy role",
     "field_legacy_role_hint": "Free-text field inherited from the classic ERP",
@@ -1317,7 +1323,8 @@
     "disable_title": "Disable MFA",
     "disable_desc": "Enter a valid code from your authenticator app to disable MFA",
     "disable_button": "Disable",
-    "disable_success": "MFA disabled"
+    "disable_success": "MFA disabled",
+    "code_invalid": "Invalid or expired code. Check your device clock and try again."
   },
   "scheduler": {
     "title": "Scheduled tasks",

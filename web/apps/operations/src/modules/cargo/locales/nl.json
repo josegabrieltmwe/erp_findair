@@ -1504,7 +1504,11 @@
       "failed": "Annulering mislukt",
       "invoiced": "De vracht is gefactureerd: ze kan niet worden geannuleerd.",
       "has_awb": "De vracht heeft een uitgegeven AWB. Annuleren maakt de reeds uitgegeven AWB niet ongeldig.",
-      "active_booking": "De vracht heeft een actieve boeking bij de luchtvaartmaatschappij. Annuleer eerst de boeking, anders blijft die verweesd."
+      "active_booking": "De vracht heeft een actieve boeking bij de luchtvaartmaatschappij. Annuleer eerst de boeking, anders blijft die verweesd.",
+      "force_ack": "Ik begrijp dat de cargo een uitgegeven AWB heeft en dat annuleren het AWB niet ongeldig maakt. Toch annuleren (alleen TMWE-personeel).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "Boeking {carrier}: {id}",
+      "detail_invoiced": "Facturen: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Niet-opgeslagen wijzigingen",
@@ -1937,6 +1941,33 @@
       "ready": "De cargo is klaar voor het genereren van de LDV.",
       "issues_found": "Er zijn {n} problemen gevonden die eerst opgelost moeten worden.",
       "run_again": "Opnieuw uitvoeren"
+    },
+    "validation": {
+      "not_number": "{label}: moet een getal zijn",
+      "negative": "{label}: mag niet negatief zijn",
+      "currency_invalid": "{label}: ongeldige valutacode (3 letters, bv. EUR)",
+      "not_integer": "{label}: moet een geheel getal zijn",
+      "fields": {
+        "dogana_imp": "Waarde bij douane",
+        "assicuraz_imp": "Verzekerde waarde",
+        "peso": "Gewicht",
+        "pesor": "Werkelijk gewicht",
+        "peso_reale": "Werkelijk gewicht",
+        "peso_fornit_reale": "Gewicht leverancier",
+        "carico_export": "Exportlading",
+        "carico_import": "Importlading",
+        "carico_volo": "Vluchtlading",
+        "costo_volo_previsto": "Geplande vluchtkosten",
+        "costo_volo_reale": "Werkelijke vluchtkosten",
+        "id_valuta_dogana": "Douanevaluta",
+        "id_valuta_assic": "Verzekeringsvaluta",
+        "id_valuta_cliente": "Klantvaluta",
+        "id_cliente": "Klant",
+        "id_sede": "Locatie",
+        "id_partner": "Partner",
+        "id_ag_export": "Exportagentschap",
+        "id_ag_import": "Importagentschap"
+      }
     }
   },
   "shell": {

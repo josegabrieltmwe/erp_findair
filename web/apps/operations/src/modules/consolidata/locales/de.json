@@ -84,7 +84,8 @@
       "pieces": "Packstücke",
       "volume": "Volumen (cm³)",
       "value": "Wert",
-      "readyDate": "Bereitstellung"
+      "readyDate": "Bereitstellung",
+      "colliInvalid": "Die Anzahl der Packstücke muss eine ganze Zahl größer als 0 sein."
     },
     "legs": {
       "help": "Vom System bepreiste Teilstrecken. Ein manueller Preis erfordert eine Begründung und wird protokolliert.",

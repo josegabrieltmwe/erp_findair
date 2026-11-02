@@ -84,7 +84,8 @@
       "pieces": "Colli",
       "volume": "Volume (cm³)",
       "value": "Valore",
-      "readyDate": "Data pronta"
+      "readyDate": "Data pronta",
+      "colliInvalid": "I colli devono essere un numero intero maggiore di 0."
     },
     "legs": {
       "help": "Tratte quotate dal motore. Un prezzo manuale richiede un motivo e viene registrato.",

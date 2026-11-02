@@ -1,5 +1,6 @@
 import { http } from './http';
 import { unwrap } from './normalizers';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 export interface SedeLite {
   id: number;
@@ -43,30 +44,30 @@ export const sediInterneService = {
   },
 
   async create(idAnagrafica: number, payload: Partial<SedeLite>): Promise<SedeLite | null> {
-    const raw = await http<{ data?: SedeLite; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: SedeLite; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { ...payload, id_anagrafica: idAnagrafica },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async update(id: number, payload: Partial<SedeLite>): Promise<SedeLite | null> {
-    const raw = await http<{ data?: SedeLite; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: SedeLite; error?: RawApiError }>(ENDPOINT, {
       method: 'PUT',
       query: { id },
       body: { id, ...payload },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async remove(id: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /**
@@ -75,11 +76,11 @@ export const sediInterneService = {
    * Ruta hybrid: api_anagrafica_set_default_address (PUT).
    */
   async setDefault(idAnagrafica: number, idSede: number): Promise<void> {
-    const raw = await http<{ error?: string }>('/api_anagrafica_set_default_address', {
+    const raw = await http<{ error?: RawApiError }>('/api_anagrafica_set_default_address', {
       method: 'PUT',
       body: { id_anagrafica: idAnagrafica, id_sede: idSede },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   filterClientSide(items: SedeLite[], query: string): SedeLite[] {

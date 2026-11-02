@@ -754,7 +754,8 @@
         "unsaved_title": "Cambios sin guardar",
         "unsaved_body": "Hay cambios sin guardar. ¿Descartar?",
         "keep_editing": "No, seguir editando",
-        "discard": "Descartar"
+        "discard": "Descartar",
+        "instant_save": "Los importes se guardan al salir de cada campo: Cancelar no los revierte."
       },
       "pricing": {
         "title": "Desglose de precio",
@@ -1220,7 +1221,7 @@
       "col_charge": "Cargo",
       "col_postfatt": "Postfact.",
       "col_status": "Estado",
-      "charge": "Addebita",
+      "charge": "Cargar",
       "cf_ca": "Cálculo agg.",
       "cf_no": "No addeb.",
       "cf_ok": "Verificada",
@@ -1491,6 +1492,24 @@
     "quote_menu": {
       "label": "Comunicación",
       "pending_hint": "{n} solicitud(es) sin respuesta"
+    },
+    "validation": {
+      "not_number": "{label}: debe ser un número",
+      "negative": "{label}: no puede ser negativo",
+      "currency_invalid": "{label}: código de moneda no válido (3 letras, p. ej. EUR)",
+      "fields": {
+        "dogana_imp": "Valor en aduana",
+        "assicuraz_imp": "Seguro",
+        "contras_imp": "Contrareembolso",
+        "peso": "Peso",
+        "peso_tassato": "Peso tasable",
+        "peso_reale": "Peso real",
+        "peso_fornit": "Peso del proveedor",
+        "peso_fornit_reale": "Peso real del proveedor",
+        "id_valuta_dogana": "Moneda de aduana",
+        "id_valuta_assic": "Moneda del seguro",
+        "id_valuta_contras": "Moneda del contrareembolso"
+      }
     }
   },
   "platform": {

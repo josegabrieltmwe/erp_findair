@@ -276,6 +276,7 @@ import {
   isRouteRuleEditable,
 } from '../services/invoiceCausals.service';
 import CountryTogglePicker from './CountryTogglePicker.vue';
+import { localizedErrorText } from '../../utils/apiError';
 
 /**
  * Editor del motor de determinación de IVA/SDI (`fatture_causali_new`).
@@ -288,7 +289,7 @@ import CountryTogglePicker from './CountryTogglePicker.vue';
  * y Vat_Determination_Service.php para el consumo real en facturación.
  */
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 const confirm = useConfirm();
 
@@ -462,7 +463,7 @@ async function doSave() {
     dialogOpen.value = false;
     load();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   } finally {
     saving.value = false;
   }
@@ -479,7 +480,7 @@ async function removeRow(row: InvoiceCausal) {
     toast.success(t('common.deleted'));
     load();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : String(e));
+    toast.error(localizedErrorText(e, { t, te }));
   }
 }
 

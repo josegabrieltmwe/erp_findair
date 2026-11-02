@@ -1,4 +1,5 @@
 import { http } from './http';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 export type ScaglioniTipo = 'A' | 'S' | 'E';
 export type ScaglioniUnit = 'metric' | 'imperial';
@@ -67,19 +68,19 @@ export const scaglioniService = {
     value: number | string,
     unit: ScaglioniUnit = 'metric',
   ): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'PATCH',
       body: { id_anagrafica: idAnagrafica, tipo, field, value, unit },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   async applyPreset(idAnagrafica: number, tipo: ScaglioniTipo, presetId: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { id_anagrafica: idAnagrafica, tipo, preset_id: presetId },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /**
@@ -89,19 +90,19 @@ export const scaglioniService = {
    * operador puede materializar la que falte. Idempotente (409 = ya existía).
    */
   async createBrackets(idAnagrafica: number, tipo: ScaglioniTipo): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { id_anagrafica: idAnagrafica, tipo },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   async convertUnit(idAnagrafica: number, toUnit: ScaglioniUnit): Promise<{ converted_records: number }> {
-    const raw = await http<{ data?: { converted_records?: number }; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: { converted_records?: number }; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { id_anagrafica: idAnagrafica, action: 'convert_unit', to_unit: toUnit },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return { converted_records: raw?.data?.converted_records ?? 0 };
   },
 };

@@ -2,12 +2,16 @@
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
+import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
 import { useCrmStore } from "../stores/crm.store";
 import type { CrmEvento, StatoPratica } from "../types";
 
 const props = defineProps<{ idCrm: number }>();
 
 const store = useCrmStore();
+const confirm = useConfirmStore();
+const toast = useToastStore();
 const { t } = useI18n();
 
 const newDescriz = ref("");
@@ -62,8 +66,21 @@ async function addEvent(): Promise<void> {
   }
 }
 
-async function removeEvent(id: number): Promise<void> {
-  await store.removeEvent(id, props.idCrm);
+/** Devuelve true si el evento se borró (el diálogo de detalle solo se cierra entonces). */
+async function removeEvent(id: number): Promise<boolean> {
+  const ok = await confirm.ask({
+    message: t("crm.eventi.delete_confirm"),
+    confirmLabel: t("common.delete"),
+    variant: "danger",
+  });
+  if (!ok) return false;
+  try {
+    await store.removeEvent(id, props.idCrm);
+    return true;
+  } catch (e: unknown) {
+    toast.error(e instanceof Error ? e.message : String(e));
+    return false;
+  }
 }
 
 function toDateTimeLocal(raw: string): string {
@@ -96,8 +113,7 @@ async function saveDetail(): Promise<void> {
 
 async function deleteSelected(): Promise<void> {
   if (!selected.value) return;
-  await removeEvent(selected.value.id);
-  detailOpen.value = false;
+  if (await removeEvent(selected.value.id)) detailOpen.value = false;
 }
 </script>
 

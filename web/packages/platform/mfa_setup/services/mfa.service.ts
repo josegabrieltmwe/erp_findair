@@ -1,5 +1,6 @@
 import { http } from '../../anagrafiche/services/http';
 import { unwrap } from '../../anagrafiche/services/normalizers';
+import { ApiError } from '../../anagrafiche/services/api.types';
 
 /**
  * MFA TOTP self-service — Fase A5 del plan de deprecación de `admin_config`
@@ -63,3 +64,13 @@ export const mfaService = {
     return unwrap<{ message: string }>(raw);
   },
 };
+
+/**
+ * Un código TOTP erróneo llega como 403 (el BFF traduce el 401 del servidor): su mensaje
+ * genérico («Forbidden», «Acceso denegado») hace creer que falta un permiso. Se muestra
+ * el motivo real (clave `mfa_setup.code_invalid`).
+ */
+export function mfaCodeErrorMessage(e: unknown, t: (key: string) => string): string {
+  if (e instanceof ApiError && (e.status === 403 || e.status === 401)) return t('mfa_setup.code_invalid');
+  return e instanceof Error ? e.message : String(e);
+}

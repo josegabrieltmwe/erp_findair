@@ -11,7 +11,7 @@ import { canEnterSettingsHub, canOpenAdminRoute } from "@/modules/settings/setti
 import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
-import { can as codCan } from "@/modules/cod_assegni/env";
+import { canOpenModuleRoute, MODULE_ROUTE_SCOPES } from "./moduleAccess";
 import { can as warehouseCan } from "@/modules/warehouse/env";
 import { can as invoicingCan } from "@/modules/invoicing/services/http";
 
@@ -153,11 +153,6 @@ const routes: RouteRecordRaw[] = [
         path: "new",
         name: "shipment-new",
         component: () => import("@shipment/pages/ShipmentNewPage.vue"),
-      },
-      {
-        path: "from-cargo",
-        name: "shipment-from-cargo",
-        component: () => import("@shipment/pages/ShipmentFromCargoPage.vue"),
       },
       {
         path: "recharge",
@@ -1064,7 +1059,6 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@/modules/cod_assegni/pages/CodReconciliationPage.vue"),
     meta: { title: "COD reconciliation", icon: "mdi-cash-check" },
-    beforeEnter: () => (codCan.read() ? true : { name: "home" }),
   },
   {
     path: "/email-templates",
@@ -1220,7 +1214,9 @@ export const router = createRouter({
  * seguridad.
  */
 router.beforeEach(async (to) => {
-  if (!to.meta.requiresAdmin && !to.meta.aiScope) return true;
+  const moduleName = String(to.name ?? "");
+  const moduleGuarded = moduleName in MODULE_ROUTE_SCOPES;
+  if (!to.meta.requiresAdmin && !to.meta.aiScope && !moduleGuarded) return true;
 
   const { isAdmin, profile, ensureProfile } = useProfile();
   await ensureProfile();
@@ -1231,6 +1227,10 @@ router.beforeEach(async (to) => {
     const allowed =
       to.name === "settings" ? canEnterSettingsHub(ctx) : canOpenAdminRoute(String(to.name ?? ""), ctx);
     if (!allowed) return { name: "home" };
+  }
+  // Rutas de módulo (cod, proforma): permiso real del módulo, no el de facturación (H15).
+  if (moduleGuarded && !canOpenModuleRoute(moduleName, { isAdmin: isAdmin.value, access: buildAccess(profile.value) })) {
+    return { name: "home" };
   }
   if (to.meta.aiScope && !canSeeAiScope(profile.value, isAdmin.value, to.meta.aiScope)) {
     return { name: "home" };

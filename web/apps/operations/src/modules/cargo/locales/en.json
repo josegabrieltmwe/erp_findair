@@ -1504,7 +1504,11 @@
       "failed": "Cancellation failed",
       "invoiced": "The cargo is invoiced: it cannot be cancelled.",
       "has_awb": "The cargo has an issued AWB. Cancelling does not void the AWB already issued.",
-      "active_booking": "The cargo has an active booking with the airline. Cancel the booking first, otherwise it will be left orphaned."
+      "active_booking": "The cargo has an active booking with the airline. Cancel the booking first, otherwise it will be left orphaned.",
+      "force_ack": "I understand the cargo has an issued AWB and cancelling it does not void the AWB. Cancel anyway (TMWE staff only).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "{carrier} booking: {id}",
+      "detail_invoiced": "Invoices: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Unsaved changes",
@@ -1937,6 +1941,33 @@
       "ready": "The cargo is ready for LDV generation.",
       "issues_found": "{n} issues found that must be resolved before proceeding.",
       "run_again": "Run again"
+    },
+    "validation": {
+      "not_number": "{label}: must be a number",
+      "negative": "{label}: cannot be negative",
+      "currency_invalid": "{label}: invalid currency code (3 letters, e.g. EUR)",
+      "not_integer": "{label}: must be a whole number",
+      "fields": {
+        "dogana_imp": "Value in customs",
+        "assicuraz_imp": "Insured value",
+        "peso": "Weight",
+        "pesor": "Actual weight",
+        "peso_reale": "Actual weight",
+        "peso_fornit_reale": "Supplier weight",
+        "carico_export": "Export load",
+        "carico_import": "Import load",
+        "carico_volo": "Flight load",
+        "costo_volo_previsto": "Planned flight cost",
+        "costo_volo_reale": "Actual flight cost",
+        "id_valuta_dogana": "Customs currency",
+        "id_valuta_assic": "Insurance currency",
+        "id_valuta_cliente": "Client currency",
+        "id_cliente": "Client",
+        "id_sede": "Site",
+        "id_partner": "Partner",
+        "id_ag_export": "Export agency",
+        "id_ag_import": "Import agency"
+      }
     }
   },
   "shell": {

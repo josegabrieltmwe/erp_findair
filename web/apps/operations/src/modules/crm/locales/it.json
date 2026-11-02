@@ -62,7 +62,8 @@
       "view": "Vedi dettaglio",
       "detail_title": "Dettaglio avanzamento #{id}",
       "add": "Aggiungi",
-      "empty": "Nessun evento"
+      "empty": "Nessun evento",
+      "delete_confirm": "Eliminare questo avanzamento? L'operazione non si può annullare."
     },
     "messaggi": {
       "title": "Messaggi inviati",
@@ -118,6 +119,7 @@
       "use_base_hint": "Racchiude il testo nel modello del cliente",
       "files_cta": "Trascina i file o fai clic",
       "files_full": "Raggiunto il massimo di {max} file"
-    }
+    },
+    "save_failed": "Modifica non salvata: {error}"
   }
 }

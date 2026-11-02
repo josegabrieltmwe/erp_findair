@@ -938,8 +938,8 @@
           "RETENER_ENVIO": "Se emite, pero queda retenida en la cola de envíos"
         },
         "resumen": {
-          "EXENCION": "{accion}: IVA 0 con Natura {natura}",
-          "INVERSION_SUJETO_PASIVO": "{accion}: IVA 0 con Natura {natura}",
+          "EXENCION": "{accion}: IVA 0 con Naturaleza {natura}",
+          "INVERSION_SUJETO_PASIVO": "{accion}: IVA 0 con Naturaleza {natura}",
           "FIJAR_TIPO": "IVA al {perc} %",
           "ESIGIBILIDAD": "Exigibilidad {codigo}",
           "ESIGIBILIDAD_S": "Exigibilidad S (split payment)",

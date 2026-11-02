@@ -1,4 +1,5 @@
 import { http } from '../../anagrafiche/services/http';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 // `fatture_causali_new` — motor de determinación de IVA/SDI por partner
 // (NO confundir con `fatture_causali_clienti`, el catálogo global de
@@ -82,28 +83,28 @@ export const invoiceCausalsService = {
   },
 
   async create(payload: Partial<InvoiceCausal>): Promise<InvoiceCausal | null> {
-    const raw = await http<{ data?: InvoiceCausal; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: InvoiceCausal; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: payload,
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async update(id: number, payload: Partial<InvoiceCausal>): Promise<InvoiceCausal | null> {
-    const raw = await http<{ data?: InvoiceCausal; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: InvoiceCausal; error?: RawApiError }>(ENDPOINT, {
       method: 'PUT',
       body: { id, ...payload },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async remove(id: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 };

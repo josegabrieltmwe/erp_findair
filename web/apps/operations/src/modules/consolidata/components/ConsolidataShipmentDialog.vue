@@ -73,6 +73,8 @@
               v-model.number="form.colli"
               :label="t('consolidata.shipments.pieces')"
               type="number"
+              min="1"
+              step="1"
               :error-messages="err('colli')"
             />
           </v-col>
@@ -117,7 +119,7 @@
         <v-btn
           color="primary"
           :loading="saving"
-          @click="emit('submit', { ...form })"
+          @click="submit"
           >{{ t("consolidata.common.save") }}</v-btn
         >
       </v-card-actions>
@@ -126,9 +128,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
+import { shipmentFormErrors } from "../logic";
 import type { ConsolidataError, Shipment, ShipmentForm } from "../types";
 
 const props = defineProps<{
@@ -160,15 +163,26 @@ const blank = (): ShipmentForm => ({
 const form = reactive<ShipmentForm>(blank());
 const editing = computed(() => props.shipment !== null);
 
+const clientErrors = ref<Partial<Record<string, string>>>({});
+
 function err(field: string): string[] | undefined {
+  const local = clientErrors.value[field];
+  if (local) return [t(local)];
   const m = props.error?.fields[`spedizione.${field}`];
   return m ? [m] : undefined;
+}
+
+function submit(): void {
+  clientErrors.value = shipmentFormErrors(form);
+  if (Object.keys(clientErrors.value).length > 0) return;
+  emit("submit", { ...form });
 }
 
 watch(
   () => props.modelValue,
   (open) => {
     if (!open) return;
+    clientErrors.value = {};
     const s = props.shipment;
     Object.assign(
       form,

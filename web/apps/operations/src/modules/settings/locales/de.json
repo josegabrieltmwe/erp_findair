@@ -899,7 +899,8 @@
     "deleted": "Credential disabled",
     "confirm_delete": "Disable the credential for {country}?",
     "confirm_delete_primary": "This is the PRIMARY account for {country}. Disabling it makes that origin quote with the Italian account. Continue?",
-    "partner_tab_hint": "Zeigt nur Schlüssel, bei denen dieser Datensatz der IATA-Agent des Landes ist. WebCargo funktioniert pro Land, nicht pro Partner: es ist normal, dass die meisten Datensätze hier keine Zeilen haben."
+    "partner_tab_hint": "Zeigt nur Schlüssel, bei denen dieser Datensatz der IATA-Agent des Landes ist. WebCargo funktioniert pro Land, nicht pro Partner: es ist normal, dass die meisten Datensätze hier keine Zeilen haben.",
+    "terminals_too_many": "Höchstens {max} Terminals: Überzählige entfernen, um zu speichern."
   },
   "webcargo_delegation": {
     "partner_tab_hint": "WebCargo Realtime-Delegation (AV/DQ-Paar) — ein anderes System als WebCargo Published (Schlüssel pro Land, Reiter „WebCargo Published“). Jede Zeile steht für ein Land, in dem dieser Datensatz unter der Identität eines anderen Agenten kalkuliert.",
@@ -945,6 +946,8 @@
     "form_metric_system": "Maßsystem",
     "form_note": "Notiz",
     "form_secret_hint": "Leer lassen, um den gespeicherten Wert zu behalten.",
+    "form_secret_set": "Konfiguriert. Leer lassen, um sie zu behalten.",
+    "form_secret_unset": "Nicht konfiguriert.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Zugangsdaten erstellt",
@@ -1092,7 +1095,8 @@
       "result": "{processed} verarbeitet, {skipped} übersprungen",
       "granted": "Rolle an {n} Benutzer erteilt",
       "revoked": "Rolle von {n} Benutzer widerrufen",
-      "none_processed": "Kein Benutzer verarbeitet ({n} übersprungen)"
+      "none_processed": "Kein Benutzer verarbeitet ({n} übersprungen)",
+      "root_denied": "{n} übersprungen, da Root-Konten: nur ein Root-Benutzer kann darauf zugreifen."
     },
     "detail": {
       "open": "Details ansehen",
@@ -1112,6 +1116,8 @@
     "field_email": "E-Mail",
     "field_initial_roles": "Anfängliche Rollen",
     "roles_not_granted": "Rollen nicht vergeben (vom Server übersprungen): {roles}",
+    "roles_denied": "Nicht vergebene Rollen: {roles}",
+    "root_only_action": "Dies ist ein Root-Konto: nur ein Root-Benutzer kann es bearbeiten, sein Passwort zurücksetzen oder es deaktivieren.",
     "field_login": "Benutzername",
     "field_legacy_role": "Legacy-Rolle",
     "field_legacy_role_hint": "Freitextfeld, geerbt vom klassischen ERP",
@@ -1317,7 +1323,8 @@
     "disable_title": "MFA deaktivieren",
     "disable_desc": "Gib einen gültigen Code aus deiner Authenticator-App ein, um MFA zu deaktivieren",
     "disable_button": "Deaktivieren",
-    "disable_success": "MFA deaktiviert"
+    "disable_success": "MFA deaktiviert",
+    "code_invalid": "Ungültiger oder abgelaufener Code. Prüfe die Uhrzeit deines Geräts und versuche es erneut."
   },
   "scheduler": {
     "title": "Geplante Aufgaben",

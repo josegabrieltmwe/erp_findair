@@ -17,6 +17,13 @@ import type { Shipment } from "@shipment/services/shipment.types";
  * are present but malformed.
  */
 
+/** Traductor con la forma de `i18n.global.t`: (clave, parametros) -> texto. */
+export type Translate = (key: string, params?: Record<string, unknown>) => string;
+
+/**
+ * Un validador devuelve la CLAVE i18n del motivo (`shipment.validation.<motivo>`), nunca texto: el
+ * nombre del campo sale de `shipment.validation.fields.<campo>`. El texto se resuelve al final con `Translate`.
+ */
 export type FieldValidator = (value: unknown) => string | null;
 
 function isBlank(value: unknown): boolean {
@@ -24,26 +31,25 @@ function isBlank(value: unknown): boolean {
 }
 
 /** Numeric and >= 0 (accepts numeric strings, the legacy on-wire format). */
-function nonNegativeNumber(label: string): FieldValidator {
+function nonNegativeNumber(): FieldValidator {
   return (value) => {
     if (isBlank(value)) return null;
     const n =
       typeof value === "number"
         ? value
         : Number(String(value).replace(",", "."));
-    if (!Number.isFinite(n)) return `${label}: deve essere un numero`;
-    if (n < 0) return `${label}: non può essere negativo`;
+    if (!Number.isFinite(n)) return "shipment.validation.not_number";
+    if (n < 0) return "shipment.validation.negative";
     return null;
   };
 }
 
 /** ISO 4217-ish: exactly 3 ASCII letters. */
-function currencyIso(label: string): FieldValidator {
+function currencyIso(): FieldValidator {
   return (value) => {
     if (isBlank(value)) return null;
     const s = String(value).trim();
-    if (!/^[A-Za-z]{3}$/.test(s))
-      return `${label}: codice valuta non valido (3 lettere, es. EUR)`;
+    if (!/^[A-Za-z]{3}$/.test(s)) return "shipment.validation.currency_invalid";
     return null;
   };
 }
@@ -55,33 +61,38 @@ function currencyIso(label: string): FieldValidator {
 export const SHIPMENT_FIELD_RULES: Partial<
   Record<keyof Shipment, FieldValidator>
 > = {
-  dogana_imp: nonNegativeNumber("Valore dogana"),
-  assicuraz_imp: nonNegativeNumber("Assicurazione"),
-  contras_imp: nonNegativeNumber("Contrassegno"),
-  peso: nonNegativeNumber("Peso"),
-  peso_tassato: nonNegativeNumber("Peso tassato"),
-  peso_reale: nonNegativeNumber("Peso reale"),
-  peso_fornit: nonNegativeNumber("Peso fornitore"),
-  peso_fornit_reale: nonNegativeNumber("Peso reale fornitore"),
-  id_valuta_dogana: currencyIso("Valuta dogana"),
-  id_valuta_assic: currencyIso("Valuta assicurazione"),
-  id_valuta_contras: currencyIso("Valuta contrassegno"),
+  dogana_imp: nonNegativeNumber(),
+  assicuraz_imp: nonNegativeNumber(),
+  contras_imp: nonNegativeNumber(),
+  peso: nonNegativeNumber(),
+  peso_tassato: nonNegativeNumber(),
+  peso_reale: nonNegativeNumber(),
+  peso_fornit: nonNegativeNumber(),
+  peso_fornit_reale: nonNegativeNumber(),
+  id_valuta_dogana: currencyIso(),
+  id_valuta_assic: currencyIso(),
+  id_valuta_contras: currencyIso(),
   // NOTE: email lives on ShipmentAddress, not Shipment, and addresses persist
   // via saveAddress() (outside the draft), so there is no top-level email rule.
 };
 
 /**
  * Validate a (partial) shipment patch against the rule map. Only fields present
- * in the patch are checked. Returns the list of human-readable errors (empty
- * when everything passes).
+ * in the patch are checked. Returns the list of human-readable errors, already
+ * translated with `t` (empty when everything passes).
  */
-export function validateShipmentPatch(patch: Partial<Shipment>): string[] {
+export function validateShipmentPatch(
+  patch: Partial<Shipment>,
+  t: Translate,
+): string[] {
   const errors: string[] = [];
   for (const key of Object.keys(patch) as (keyof Shipment)[]) {
     const rule = SHIPMENT_FIELD_RULES[key];
     if (!rule) continue;
-    const msg = rule(patch[key]);
-    if (msg) errors.push(msg);
+    const reason = rule(patch[key]);
+    if (reason) {
+      errors.push(t(reason, { label: t(`shipment.validation.fields.${String(key)}`) }));
+    }
   }
   return errors;
 }

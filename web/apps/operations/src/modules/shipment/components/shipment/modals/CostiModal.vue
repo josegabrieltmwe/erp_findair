@@ -4,6 +4,7 @@
     :title="t('shipment.modals.costi.title')"
     icon="mdi-currency-eur"
     :max-width="720"
+    instant-save
   >
     <ShipmentAmountsBox embedded />
   </ModalWrapper>

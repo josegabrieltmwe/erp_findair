@@ -30,6 +30,11 @@ export function useShipmentState(
     return Number(s.id_fattura_a ?? 0) > 0 && (s.AWB_forn ?? "") !== "";
   });
 
+  const serverReadonly = computed(() => {
+    const list = toValue(shipment)?.readonly_fields;
+    return new Set<string>(Array.isArray(list) ? list : []);
+  });
+
   const postFatturated = computed(() => {
     const s = toValue(shipment);
     if (!s) return false;
@@ -63,6 +68,9 @@ export function useShipmentState(
 
   /** Per-field readonly map. Components consume readonly(field). */
   function readonly(field: string): boolean {
+    // Lista del servidor (P57): es la fuente de verdad de lo que rechazará al
+    // guardar. Las reglas locales de abajo siguen añadiendo bloqueos de UX.
+    if (serverReadonly.value.has(field)) return true;
     if (giafatt.value) {
       switch (field) {
         // Block A (always when giafatt): client/sede/RIF, addresses, packages,

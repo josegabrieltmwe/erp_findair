@@ -37,11 +37,11 @@
           "description": "Países, zonas, subzonas y grupos"
         },
         "freschi_import": {
-          "title": "Import Freschi e Schiavoni",
+          "title": "Importación Freschi e Schiavoni",
           "description": "Carga masiva de zonas KO/remotas por archivo, reemplaza el conjunto completo"
         },
         "dhl_import": {
-          "title": "Import DHL",
+          "title": "Importación DHL",
           "description": "Carga masiva de aeropuertos y servicios prioritarios DHL"
         },
         "price_lists": {
@@ -321,9 +321,9 @@
     "tab_zones": "Asignación de zonas",
     "tab_groups": "Grupos de países",
     "tab_remote": "Áreas KO / remotas",
-    "filter_fornitore": "ID fornitore",
+    "filter_fornitore": "ID proveedor",
     "col_type": "Tipo",
-    "col_fornitore": "Fornitore",
+    "col_fornitore": "Proveedor",
     "col_iso": "ISO",
     "col_city": "Ciudad",
     "col_cap": "CAP",
@@ -334,7 +334,7 @@
     "remote_rm": "RM (recargo)",
     "dialog_new_remote": "Nueva área KO/remota",
     "dialog_edit_remote": "Editar área KO/remota",
-    "form_fornitore_id": "ID fornitore",
+    "form_fornitore_id": "ID proveedor",
     "form_city": "Ciudad",
     "form_city_hint": "Se normaliza sin espacios ni puntuación",
     "form_cap": "CAP",
@@ -473,7 +473,7 @@
     "peso_quale_vol": "Volumétrico",
     "f_colli_pall": "Aplica a",
     "colli_pall_both": "Colli y pallets",
-    "colli_pall_colli": "Solo colli",
+    "colli_pall_colli": "Solo bultos",
     "colli_pall_pallet": "Solo pallets",
     "f_lato_sup": "Lado mayor > (cm)",
     "f_num_colli_min": "Nº colli mínimo",
@@ -670,7 +670,7 @@
     "descr_en": "Descripción (EN)",
     "aliquota": "Alícuota IVA",
     "aliquota_range": "La alícuota debe estar entre 0 y 100.",
-    "xml_natura": "Natura SDI",
+    "xml_natura": "Naturaleza SDI",
     "xml_rif_norm": "Referencia normativa",
     "route": "Ruta",
     "route_section_title": "Exención por ruta (países)",
@@ -885,7 +885,7 @@
     "primary": "principal",
     "primary_hint": "Al marcarla como principal, la cuenta principal anterior de ese pais dejara de serlo.",
     "form_country": "Pais (ISO)",
-    "form_agent": "ID anagrafica",
+    "form_agent": "ID ficha",
     "form_key1": "Clave 1",
     "form_key2": "Clave 2",
     "form_key_keep": "(sin cambios)",
@@ -899,7 +899,8 @@
     "deleted": "Credencial desactivada",
     "confirm_delete": "Desactivar la credencial de {country}?",
     "confirm_delete_primary": "Es la cuenta PRINCIPAL de {country}. Al desactivarla, ese origen pasara a cotizar con la cuenta de Italia. Continuar?",
-    "partner_tab_hint": "Muestra solo las claves donde esta anagrafica es el agente IATA dueño del pais. WebCargo funciona por pais, no por partner: es normal que la mayoria de anagrafiche no tengan ninguna fila aqui."
+    "partner_tab_hint": "Muestra solo las claves donde esta anagrafica es el agente IATA dueño del pais. WebCargo funciona por pais, no por partner: es normal que la mayoria de anagrafiche no tengan ninguna fila aqui.",
+    "terminals_too_many": "Máximo {max} terminales: quita los que sobren para guardar."
   },
   "webcargo_delegation": {
     "partner_tab_hint": "Delegación WebCargo Realtime (par AV/DQ) — sistema distinto de WebCargo Published (claves por país, tab «WebCargo Published»). Cada fila representa un país en el que esta anagrafica cotiza con la identidad de otro agente.",
@@ -945,6 +946,8 @@
     "form_metric_system": "Sistema de medida",
     "form_note": "Nota",
     "form_secret_hint": "Déjalo vacío para conservar el valor guardado.",
+    "form_secret_set": "Configurada. Déjalo vacío para conservarla.",
+    "form_secret_unset": "Sin configurar.",
     "metric_m": "Métrico (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credencial creada",
@@ -1092,7 +1095,8 @@
       "result": "{processed} procesados, {skipped} omitidos",
       "granted": "Rol concedido a {n} usuario(s)",
       "revoked": "Rol revocado a {n} usuario(s)",
-      "none_processed": "Ningún usuario procesado ({n} omitidos)"
+      "none_processed": "Ningún usuario procesado ({n} omitidos)",
+      "root_denied": "{n} omitido(s) por ser cuentas root: solo un usuario root puede actuar sobre ellas."
     },
     "detail": {
       "open": "Ver detalle",
@@ -1112,6 +1116,8 @@
     "field_email": "Email",
     "field_initial_roles": "Roles iniciales",
     "roles_not_granted": "Roles no concedidos (el servidor los omitió): {roles}",
+    "roles_denied": "Roles no concedidos: {roles}",
+    "root_only_action": "Es una cuenta root: solo un usuario root puede modificarla, restablecer su contraseña o darla de baja.",
     "field_login": "Usuario",
     "field_legacy_role": "Rol legacy",
     "field_legacy_role_hint": "Campo de texto libre heredado del ERP clásico",
@@ -1317,7 +1323,8 @@
     "disable_title": "Desactivar MFA",
     "disable_desc": "Introduce un código válido de tu app autenticadora para desactivar la MFA",
     "disable_button": "Desactivar",
-    "disable_success": "MFA desactivada"
+    "disable_success": "MFA desactivada",
+    "code_invalid": "Código no válido o caducado. Comprueba la hora del dispositivo e inténtalo de nuevo."
   },
   "scheduler": {
     "title": "Tareas programadas",

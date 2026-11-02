@@ -8,6 +8,8 @@
  *   - arranca la sesión (`bootstrapBff`) y rellena los globales que antes inyectaba PHP.
  */
 
+import { authErrorFromSearch, renderAuthError } from './authError';
+
 export const BFF_BASE_PATH = '/bff/v1';
 const BFF_AUTH_PATH = '/bff/auth';
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -220,6 +222,14 @@ export function invoicingBootstrapFrom(
   };
 }
 
+function safeLocale(): string | null {
+  try {
+    return localStorage.getItem('tmwe.locale');
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Comprueba la sesión y deja el entorno listo para que arranque la SPA.
  * Devuelve false si se ha redirigido al login (no hay que montar la app).
@@ -233,18 +243,19 @@ export async function bootstrapBff(): Promise<boolean> {
   const res = await fetch(`${BFF_AUTH_PATH}/session`, { credentials: 'same-origin', headers: { Accept: 'application/json' } });
   const session = (await res.json()) as BffSession;
   if (!session.authenticated || !session.csrf_token) {
+    // Si el BFF nos devolvió con `?auth_error=`, no volvemos a mandar al login (bucle si el fallo
+    // se repite): se muestra el motivo y el reintento es un clic del usuario.
+    const authError = authErrorFromSearch(window.location.search);
+    if (authError) {
+      renderAuthError(authError, safeLocale(), bffLoginUrl('/'));
+      return false;
+    }
     redirectToBffLogin();
     return false;
   }
   setCsrfToken(session.csrf_token);
 
-  const language = (() => {
-    try {
-      return localStorage.getItem('tmwe.locale');
-    } catch {
-      return null;
-    }
-  })();
+  const language = safeLocale();
 
   const w = window as unknown as Record<string, unknown>;
   w.__TMWE_NAV__ = { basePath: BFF_BASE_PATH };

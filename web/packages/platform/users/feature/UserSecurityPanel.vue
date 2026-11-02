@@ -144,6 +144,7 @@ import { contattiService, ADDON_ROLE_NAMES, type ApiRoleState } from '../../anag
 import { useAuthCapabilities } from '../../anagrafiche/composables/useAuthCapabilities';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { localizedErrorText } from '../../utils/apiError';
 
 interface Props {
   userId: number;
@@ -152,9 +153,11 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits<{
   saved: [];
+  /** Nombres de rol de la persona, para que la página sepa si es una cuenta root (P42). */
+  'roles-loaded': [names: string[]];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 const confirmDialog = useConfirm();
 
@@ -193,6 +196,7 @@ async function load(): Promise<void> {
       contattiService.getApiRole(props.userId).catch(() => null),
     ]);
     profile.value = p;
+    emit('roles-loaded', (p.roles ?? []).map((r) => r.role_name));
     // Plan v5 F1-F7: hidratar el modelo auth_flags desde profile.user (el API devuelve ahí los auth_*)
     const legacy = p.user as unknown as Record<string, string | undefined>;
     const initial: Record<string, 'S' | 'N'> = {};
@@ -242,7 +246,7 @@ async function saveAuthFlags(): Promise<void> {
     await load();
     effectiveRefreshKey.value += 1;
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : t('users.security.auth_flags_save_failed'));
+    toast.error(localizedErrorText(e, { t, te }, t('users.security.auth_flags_save_failed')));
   } finally {
     authFlagsSaving.value = false;
   }
@@ -265,7 +269,7 @@ async function persistApiRole(roleId: number | null): Promise<void> {
     effectiveRefreshKey.value += 1;
   } catch (e) {
     // 409 ROLE_NOT_ASSIGNABLE: rol solo-interno para un usuario que no es de TMWE.
-    toast.error(roleConflictMessage(e, 'ROLE_NOT_ASSIGNABLE') ?? (e instanceof Error ? e.message : 'Save failed'));
+    toast.error(roleConflictMessage(e, 'ROLE_NOT_ASSIGNABLE') ?? localizedErrorText(e, { t, te }, 'Save failed'));
   } finally {
     apiRoleSaving.value = false;
   }

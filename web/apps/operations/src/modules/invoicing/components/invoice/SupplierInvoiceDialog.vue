@@ -57,6 +57,15 @@
             hide-details
             style="max-width: 200px"
           />
+          <v-select
+            v-model="currency"
+            :items="currencyOptions"
+            :label="t('invoicing.invoice.currency')"
+            density="comfortable"
+            variant="outlined"
+            hide-details
+            style="max-width: 130px"
+          />
         </div>
 
         <div class="d-flex ga-2 mb-3">
@@ -182,6 +191,7 @@ import CmPianoContoAutocomplete from "../../components/invoice/CmPianoContoAutoc
 import SupplierXmlImport from "./SupplierXmlImport.vue";
 import { useRouter } from "vue-router";
 import { useToastStore } from "../../stores/toast.store";
+import { useInvoiceCurrency } from "../../composables/invoiceCurrency";
 
 const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
@@ -216,6 +226,7 @@ const selectedProvider = ref<ProviderItem | null>(null);
 const searching = ref(false);
 const numeroAlfanum = ref("");
 const dataFattura = ref(today());
+const { currency, options: currencyOptions, load: loadCurrencies, reset: resetCurrency, money } = useInvoiceCurrency();
 const importoNetto = ref(0);
 const importoIva = ref(0);
 const quotes = ref<Quote[]>([emptyQuote()]);
@@ -242,9 +253,6 @@ const canSave = computed(
 
 function today(): string {
   return todayLocal();
-}
-function money(v: number): string {
-  return `${Number(v ?? 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
 }
 function emptyQuote(): Quote {
   return {
@@ -302,7 +310,7 @@ async function save(): Promise<void> {
       numero_alfanum: numeroAlfanum.value.trim(),
       importo_netto: Number(importoNetto.value) || 0,
       importo_iva: Number(importoIva.value) || 0,
-      valuta_sigla: "EUR",
+      valuta_sigla: currency.value,
       quotes: quotesToSend(quotes.value),
     });
     toasts.push("success", t("invoicing.invoice.supplier.created"));
@@ -329,6 +337,8 @@ watch(
       selectedProvider.value = null;
       numeroAlfanum.value = "";
       dataFattura.value = today();
+      resetCurrency();
+      void loadCurrencies();
       importoNetto.value = 0;
       importoIva.value = 0;
       quotes.value = [emptyQuote()];

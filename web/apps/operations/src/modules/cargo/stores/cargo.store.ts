@@ -15,7 +15,7 @@ import { anagraficaService } from "@cargo/services/anagrafica.service";
 import { useToastStore } from "./toast.store";
 import type { Cargo, CargoPackage } from "@cargo/services/cargo.types";
 import { useCargoState } from "@cargo/composables/useCargoState";
-import { validateDraft } from "@cargo/validation/cargoRules";
+import { validateDraft, type Translate } from "@cargo/validation/cargoRules";
 import { hasNewRowWithoutWeight } from "../utils/packagesValidation";
 
 export const useCargoStore = defineStore("cargo", () => {
@@ -238,7 +238,11 @@ export const useCargoStore = defineStore("cargo", () => {
       draftSnapshot.value = null;
       return true;
     }
-    const errors = validateDraft(patch, (f) => isFieldLocked(f as string));
+    const errors = validateDraft(
+      patch,
+      (f) => isFieldLocked(f as string),
+      i18n.global.t as unknown as Translate,
+    );
     if (Object.keys(errors).length > 0) {
       lastDraftErrors.value = errors;
       toasts.push("error", Object.values(errors)[0]);

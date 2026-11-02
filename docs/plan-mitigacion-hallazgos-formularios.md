@@ -1,6 +1,6 @@
 # Plan de mitigación de los hallazgos de la revisión de formularios
 
-> **Estado:** borrador (Ola 1 hecha en SPA; Ola 2 parte SPA hecha) · **Última modificación:** 2026-11-02
+> **Estado:** borrador (Ola 1 hecha en SPA; Ola 2 y Ola 3 parte SPA hechas, con excepciones) · **Última modificación:** 2026-11-02
 
 Resultado de verificar, con una segunda lectura independiente del código, los 24 hallazgos de [plan-pruebas-formularios.md](plan-pruebas-formularios.md) §3 y plan para corregir los que se confirmaron. **La verificación fue solo lectura: no se ejecutó ninguna prueba contra datos ni en el navegador**, salvo `vue-tsc`, `vitest` de un módulo, `phpunit` del BFF, `check:i18n` y `check:raw-text`. Un «confirmado» significa que el código lo implica; los casos de la columna «Prueba» lo comprueban de verdad en sandbox.
 
@@ -125,7 +125,7 @@ H6 (`useAnagraficaContext` lee `__TMWE_OPERATIONS__.isTmwe`), H5 (leer `auth_err
 
 ## 6. Estado de ejecución
 
-Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA, vitest 523 de 523, `vue-tsc` sin errores y PHPUnit del BFF 147 de 147. Nada se ha probado en navegador ni en sandbox: los casos de ficha siguen pendientes.
+Ramas `fix/ola1-formularios` y `ola3-spa` (sin fusionar). Cada corrección lleva test; en SPA, vitest 523 de 523, `vue-tsc` sin errores y PHPUnit del BFF 147 de 147. Nada se ha probado en navegador ni en sandbox: los casos de ficha siguen pendientes.
 
 | Hallazgo | Estado | Notas |
 |---|---|---|
@@ -156,5 +156,20 @@ Rama `fix/ola1-formularios` (sin fusionar). Cada corrección lleva test; en SPA,
 | H22a | Hecho | Aviso de los CAP descartados |
 | H14 (SPA) | Hecho | VIES comprueba el número tecleado, `cod_destin` se limpia fuera de IT, `csvCell` neutraliza fórmulas. Faltan PEC, SDI y `pi_cf` en el API (P51) |
 | H3a (SPA) | Hecho | `pw` y `chiave` no se precargan y son `type="password"`. Falta que el API deje de devolverlos (P52) |
-| Ola 2, parte API | Pendiente | P47, P49, P50, P51, P52, P53, P55 |
-| Ola 3 | Pendiente | |
+| Ola 2, parte API | Hecho en `tmwe_api` | Estado por petición en `contrato-con-api.md` §I. Falta integrar P45, P56 y P57 y probar en sandbox |
+| Puertas (Ola 3) | Hecho | `check:i18n` estaba en 401 frente a 368: eran cognados legítimos (Tipo, Cliente, Peso…) y 36 textos en italiano en `es`, que se tradujeron; baseline recongelado (365, luego 369 al añadir 4 cognados de `es`). `check:raw-text` recongelado en 2. Nuevo gate `check:ts-literals` |
+| H6 | Hecho, con duda | `useAnagraficaContext` lee `__TMWE_OPERATIONS__.isTmwe` después de los dos globales explícitos. **Duda abierta:** con suplantación activa `is_tmwe` sigue siendo el del usuario real; no se cambió |
+| H5 | Hecho | `bootstrapBff` muestra el `auth_error` (5 idiomas, enlace «Reintentar») y no redirige: sin bucle |
+| H2 | Hecho | Un 401/403 al verificar o desactivar TOTP muestra `mfa_setup.code_invalid`; `setupResult` se borra al verificar y al salir |
+| H20 | Hecho | Aviso si falla el cambio de partner; confirmación al borrar eventos CRM; `catch` en `persistField` (y vuelve al valor guardado); `maxlength` 4000 en la respuesta de tickets (el alta ya lo tenía); bultos entero > 0 en Consolidata |
+| H21a | Hecho | Se retira «restringir endpoints» del formulario de roles OAuth. Las claves i18n quedan sin uso |
+| H22b | Hecho | Más de 10 terminales WebCargo bloquea el guardado con mensaje en vez de descartarlos |
+| H17c | Hecho | Sondeo del tracking masivo: 30 min y 5 errores seguidos como límite. El de exportación ya tenía tope |
+| H17d | Hecho | `date_from=null` ya no se serializa ni cuenta como filtro activo |
+| H17e | Hecho, parcial | `checkforn` se compara con el dominio real (V y A cuentan como verificado: **confirmar con operaciones que A cuenta**). Aviso «Cancelar no revierte» solo en el modal de costes (único que persiste al instante) |
+| H15 | Hecho | `/cod`, `/cod/reconciliation` y `/proforma` usan los scopes del perfil (`shipment:read` o `courier:read`; `invoices:read`), no las capacidades de facturación. Falla abierto si el perfil no informa `access` |
+| H18 | Hecho | Eliminados `ShipmentFromCargoPage` (y su ruta) y `StoricoMessaggiPanel`. Quedan `docsstory.service.ts` y `fromCargo`/`tpc` de `env.d.ts` sin uso |
+| H10b | Hecho, parcial | Selector de moneda en factura manual y de proveedor. El resto de pantallas con EUR fijo (listados, resúmenes, conciliación de carriers) no se tocó |
+| H23 | Parcial | `cargoRules` y `shipmentRules` devuelven claves i18n; `check:ts-literals` cubre `validation/*.ts` y `*Rules.ts`. Quedan por revisar los demás literales italianos en `.ts` fuera de esos ficheros |
+| H4 (SPA) | No hecho | Depende de la decisión de producto de P38 (quién es el administrador de la cuenta y cómo se entregan las credenciales de los contactos base); `random_int` y sede son de API (P56) |
+| H16d | No hecho | Fuera de la lista de esta entrega |

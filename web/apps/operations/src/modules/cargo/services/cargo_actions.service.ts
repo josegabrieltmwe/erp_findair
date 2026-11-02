@@ -1,4 +1,12 @@
 import { http } from "./http";
+import {
+  apiErrorCode,
+  apiErrorDetails,
+  apiErrorStatus,
+  caughtText,
+  errorText,
+  type RawApiError,
+} from "@shared/utils/apiError";
 
 /**
  * Cargo actions service — covers operational workflows triggered from
@@ -20,6 +28,12 @@ export interface OperationResult {
   message?: string;
   error?: string;
   data?: unknown;
+  /** Código de negocio del error del API (p. ej. `CARGO_HAS_AWB`), si lo hubo. */
+  code?: string;
+  /** `error.details` del cuerpo del error (p. ej. el AWB o la reserva que bloquean). */
+  details?: Record<string, unknown>;
+  /** Estado HTTP del error (409 = regla de negocio). */
+  status?: number;
 }
 
 export type EwbType = "FWB" | "FHL";
@@ -92,7 +106,7 @@ interface CancelResponse {
     has_links?: boolean;
     cascaded?: { giacenze?: boolean; crm?: boolean };
   };
-  error?: string;
+  error?: RawApiError;
 }
 
 interface EmailMawbResponse {
@@ -111,18 +125,34 @@ export const cargoActionsService = {
    * Soft-cancel the cargo. Backend sets stato='O', appends a marker to
    * note_interne and cascades to giacenze + crm rows.
    */
-  async cancel(cargoId: number, reason?: string): Promise<OperationResult> {
+  async cancel(
+    cargoId: number,
+    reason?: string,
+    force = false,
+  ): Promise<OperationResult> {
     try {
       const r = await http<CancelResponse>("/api_cargo_cancel", {
         method: "POST",
-        body: { cargo_id: cargoId, reason: reason ?? "" },
+        body: {
+          cargo_id: cargoId,
+          reason: reason ?? "",
+          // P43: solo el personal de TMWE salta el AWB emitido; el resto lo ignora el servidor.
+          ...(force ? { force: true } : {}),
+        },
       });
       if (!r?.success) {
-        return { success: false, error: r?.error ?? "Cancel failed" };
+        return { success: false, error: errorText(r?.error, "Cancel failed") };
       }
       return { success: true, message: r.message, data: r.cascade };
     } catch (e) {
-      return { success: false, error: (e as Error).message };
+      // 409 de Cargo_Cancel_Guard: CARGO_INVOICED, CARGO_HAS_ACTIVE_BOOKING o CARGO_HAS_AWB.
+      return {
+        success: false,
+        error: caughtText(e, "Cancel failed"),
+        code: apiErrorCode(e) ?? undefined,
+        details: apiErrorDetails(e),
+        status: apiErrorStatus(e) || undefined,
+      };
     }
   },
 

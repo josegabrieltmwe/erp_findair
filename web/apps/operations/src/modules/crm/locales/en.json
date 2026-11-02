@@ -62,7 +62,8 @@
       "view": "View details",
       "detail_title": "Step details #{id}",
       "add": "Add",
-      "empty": "No events yet"
+      "empty": "No events yet",
+      "delete_confirm": "Delete this progress entry? This cannot be undone."
     },
     "messaggi": {
       "title": "Sent messages",
@@ -118,6 +119,7 @@
       "use_base_hint": "Wraps your text in the client template",
       "files_cta": "Drag files or click",
       "files_full": "Maximum of {max} files reached"
-    }
+    },
+    "save_failed": "Change not saved: {error}"
   }
 }

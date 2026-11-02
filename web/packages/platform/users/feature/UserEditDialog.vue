@@ -62,6 +62,7 @@ import { useI18n } from 'vue-i18n';
 import { mdiPencil, mdiContentSave } from '@mdi/js';
 import { usersService, type UserLite } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
+import { localizedErrorText } from '../../utils/apiError';
 
 interface Props {
   modelValue: boolean;
@@ -74,7 +75,7 @@ const emit = defineEmits<{
   saved: [];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 
 interface FormShape {
@@ -113,7 +114,7 @@ async function submit(): Promise<void> {
     emit('saved');
     onClose(false);
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Save failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Save failed'));
   } finally {
     saving.value = false;
   }

@@ -359,7 +359,7 @@
       },
       "group": {
         "origin_term": "Term. origen",
-        "dest_term": "Term. dest."
+        "dest_term": "Term. destino"
       },
       "fields": {
         "cargo_id": "ID cargo",
@@ -1456,7 +1456,7 @@
       "ack_cancel_booking": "Entiendo que se cancelará la reserva activa con la aerolínea",
       "confirm_pre": "Confirmo la asignación de",
       "confirm_at": "a",
-      "confirm_post": "al cargo.",
+      "confirm_post": "a la carga.",
       "back_to_results": "Volver a los resultados",
       "continue": "Continuar",
       "confirm_assign": "Confirmar y asignar",
@@ -1504,7 +1504,11 @@
       "failed": "Error al cancelar",
       "invoiced": "El cargo está facturado: no se puede cancelar.",
       "has_awb": "El cargo tiene un AWB emitido. Cancelarlo no anula el AWB ya emitido.",
-      "active_booking": "El cargo tiene una reserva activa con la aerolínea. Cancela la reserva antes; si no, quedará huérfana."
+      "active_booking": "El cargo tiene una reserva activa con la aerolínea. Cancela la reserva antes; si no, quedará huérfana.",
+      "force_ack": "Entiendo que el cargo tiene un AWB emitido y que cancelarlo no lo anula. Cancelar igualmente (solo personal de TMWE).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "Reserva {carrier}: {id}",
+      "detail_invoiced": "Facturas: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Cambios sin guardar",
@@ -1784,7 +1788,7 @@
       "intro_pre": "Estás a punto de cancelar la reserva",
       "intro_mid": "La acción notifica a WebCargo, libera el stock de AWB y",
       "intro_strong": "también elimina la información de vuelo del cargo",
-      "intro_post": "(paridad legacy).",
+      "intro_post": "(paridad con el sistema anterior).",
       "done": "Reserva cancelada",
       "confirm": "Confirmar cancelación",
       "late_warning": "Quedan {hours} h para la aceptación máxima: la aerolínea puede aplicar una penalización. La cancelación se cursará igualmente.",
@@ -1937,6 +1941,33 @@
       "ready": "El cargo está listo para generar la LDV.",
       "issues_found": "Se han detectado {n} anomalías que hay que resolver antes de continuar.",
       "run_again": "Ejecutar de nuevo"
+    },
+    "validation": {
+      "not_number": "{label}: debe ser un número",
+      "negative": "{label}: no puede ser negativo",
+      "currency_invalid": "{label}: código de moneda no válido (3 letras, p. ej. EUR)",
+      "not_integer": "{label}: debe ser un entero",
+      "fields": {
+        "dogana_imp": "Valor en aduana",
+        "assicuraz_imp": "Valor asegurado",
+        "peso": "Peso",
+        "pesor": "Peso real",
+        "peso_reale": "Peso real",
+        "peso_fornit_reale": "Peso del proveedor",
+        "carico_export": "Carga de exportación",
+        "carico_import": "Carga de importación",
+        "carico_volo": "Carga del vuelo",
+        "costo_volo_previsto": "Coste de vuelo previsto",
+        "costo_volo_reale": "Coste de vuelo real",
+        "id_valuta_dogana": "Moneda de aduana",
+        "id_valuta_assic": "Moneda del seguro",
+        "id_valuta_cliente": "Moneda del cliente",
+        "id_cliente": "Cliente",
+        "id_sede": "Sede",
+        "id_partner": "Partner",
+        "id_ag_export": "Agencia de exportación",
+        "id_ag_import": "Agencia de importación"
+      }
     }
   },
   "shell": {

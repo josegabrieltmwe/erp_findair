@@ -191,9 +191,13 @@ import { usersService, type UserLite } from '../services/users.service';
 import type { AnagraficaLite } from '../../anagrafiche/services/anagrafica.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { localizedErrorText } from '../../utils/apiError';
+import { useAccess } from '../../composables/useAccess';
+import { rootActionBlocked } from '../services/userRootPolicy';
 import { useDebouncedCallback } from '../../anagrafiche/composables/useDebouncedRef';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { access, ensureProfile } = useAccess();
 const router = useRouter();
 const toast = useToastStore();
 const confirm = useConfirm();
@@ -376,11 +380,15 @@ function goToDetail(user: UserLite): void {
 
 /** Acciones de fila: editar (visible) + resto en kebab. */
 function rowActions(user: UserLite): RowAction[] {
+  // P42: sobre una cuenta root solo actúa un root; si sabemos que no lo somos, las acciones se deshabilitan
+  // y el título explica por qué.
+  const blocked = rootActionBlocked(user, access.value);
+  const why = blocked ? ` — ${t('users.root_only_action')}` : '';
   return [
-    { key: 'edit', title: t('common.edit'), icon: mdiPencil, onClick: () => openEdit(user) },
+    { key: 'edit', title: t('common.edit') + why, icon: mdiPencil, disabled: blocked, onClick: () => openEdit(user) },
     { key: 'detail', title: t('users.detail.open'), icon: mdiAccountDetails, onClick: () => goToDetail(user) },
-    { key: 'reset_pw', title: t('users.reset_password'), icon: mdiKeyVariant, onClick: () => openResetPassword(user) },
-    { key: 'delete', title: t('common.delete'), icon: mdiDelete, color: 'error', divider: true, onClick: () => confirmDelete(user) },
+    { key: 'reset_pw', title: t('users.reset_password') + why, icon: mdiKeyVariant, disabled: blocked, onClick: () => openResetPassword(user) },
+    { key: 'delete', title: t('common.delete') + why, icon: mdiDelete, color: 'error', disabled: blocked, divider: true, onClick: () => confirmDelete(user) },
   ];
 }
 
@@ -423,11 +431,14 @@ async function confirmDelete(user: UserLite): Promise<void> {
     toast.success(t('users.deleted'));
     reload();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Delete failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Delete failed'));
   }
 }
 
-onMounted(reload);
+onMounted(() => {
+  void ensureProfile();
+  void reload();
+});
 </script>
 
 <style scoped>

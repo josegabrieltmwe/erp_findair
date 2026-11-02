@@ -3,7 +3,7 @@
  * errores del API y ayudas de presentación. No decide reglas de negocio —
  * las transiciones permitidas las dice el API (`meta`) y los servicios.
  */
-import type { ConsolidataError, ProjectState, Warning } from "./types";
+import type { ConsolidataError, ProjectState, ShipmentForm, Warning } from "./types";
 
 const EMPTY_ERROR: ConsolidataError = {
   code: "UNKNOWN",
@@ -128,4 +128,17 @@ export function blockingWarnings(avisos: Warning[]): Warning[] {
 export function shortDate(value: string | null | undefined): string {
   if (!value) return "";
   return value.length >= 16 ? value.slice(0, 16) : value;
+}
+
+/**
+ * Validación de cliente de la house: el servidor ya rechaza los bultos <= 0 con 422, pero el
+ * mensaje llega en bruto; aquí se evita la ida y vuelta. Devuelve claves i18n por campo.
+ */
+export function shipmentFormErrors(form: Pick<ShipmentForm, "colli">): Partial<Record<"colli", string>> {
+  const errors: Partial<Record<"colli", string>> = {};
+  const colli = Number(form.colli);
+  if (form.colli === null || !Number.isInteger(colli) || colli <= 0) {
+    errors.colli = "consolidata.shipments.colliInvalid";
+  }
+  return errors;
 }

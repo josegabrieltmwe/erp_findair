@@ -26,7 +26,8 @@
     "lint:openapi:shipment": "spectral lint --ruleset ../docs/openapi/shipment/.spectral.yaml --fail-severity=error ../docs/openapi/shipment/*.yaml",
     "lint:openapi:all": "pnpm run lint:openapi && pnpm run lint:openapi:shipment",
     "check:i18n": "tsx packages/scripts/check_i18n.ts",
-    "check:raw-text": "tsx packages/scripts/check_raw_text.ts"
+    "check:raw-text": "tsx packages/scripts/check_raw_text.ts",
+    "check:ts-literals": "tsx packages/scripts/check_ts_literals.ts"
   },
   "devDependencies": {
     "@intlify/eslint-plugin-vue-i18n": "^4.5.1",
