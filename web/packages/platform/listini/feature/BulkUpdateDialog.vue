@@ -125,6 +125,7 @@
 </template>
 
 <script setup lang="ts">
+import { isSignedDecimal } from '../numeric';
 /**
  * Modificación múltiple de listini en % (paridad listyupd_multi). Parámetros →
  * confirmación → ejecución por tandas con un mismo lote (batch), que permite
@@ -196,7 +197,6 @@ watch(
   },
 );
 
-const NUM = /^[0-9.-]{1,10}$/;
 
 function params(): BulkParams {
   const p: BulkParams = { opx_fix: form.opx_fix };
@@ -229,7 +229,7 @@ const canContinue = computed(() => {
   const p = params();
   const hasPct = Boolean(p.imp_zon || p.imp_bas || p.imp_min);
   const values = [p.imp_zon, p.imp_bas, p.imp_min, ...Object.values(p.spp ?? {}).flatMap((c) => Object.values(c))];
-  return (hasPct || suppliesChanged.value) && values.every((v) => !v || NUM.test(v));
+  return (hasPct || suppliesChanged.value) && values.every((v) => !v || isSignedDecimal(v));
 });
 
 function resultLabel(r: BulkListinoResult): string {
