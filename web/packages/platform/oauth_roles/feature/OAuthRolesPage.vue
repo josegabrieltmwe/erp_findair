@@ -179,22 +179,6 @@
               </template>
             </v-checkbox>
           </div>
-
-          <v-switch
-            v-model="restrictEndpoints"
-            :label="t('oauth_roles.restrict_endpoints')"
-            color="primary"
-            hide-details
-            class="mb-2"
-          />
-          <v-textarea
-            v-if="restrictEndpoints"
-            v-model="endpointsText"
-            :label="t('oauth_roles.form_allowed_endpoints')"
-            :placeholder="t('oauth_roles.endpoints_placeholder')"
-            rows="3"
-            hide-details
-          />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -253,8 +237,6 @@ const form = reactive({
   description: '',
   scopes: [] as string[],
 });
-const restrictEndpoints = ref(false);
-const endpointsText = ref('');
 
 const systemRoles = computed(() => roles.value.filter((r) => r.is_system === 1));
 const customRoles = computed(() => roles.value.filter((r) => r.is_system !== 1));
@@ -334,8 +316,6 @@ function resetForm(): void {
   form.display_name = '';
   form.description = '';
   form.scopes = [];
-  restrictEndpoints.value = false;
-  endpointsText.value = '';
 }
 
 function openCreate(): void {
@@ -351,27 +331,17 @@ function openEdit(role: OAuthRole): void {
   form.display_name = role.display_name || '';
   form.description = role.description || '';
   form.scopes = Array.isArray(role.scopes) ? [...role.scopes] : [];
-  const endpoints = Array.isArray(role.allowed_endpoints) ? role.allowed_endpoints : [];
-  restrictEndpoints.value = endpoints.length > 0;
-  endpointsText.value = endpoints.join('\n');
   formDialog.value = true;
 }
 
 async function save(): Promise<void> {
   saving.value = true;
   try {
-    const allowed = restrictEndpoints.value
-      ? endpointsText.value
-          .split('\n')
-          .map((s) => s.trim())
-          .filter(Boolean)
-      : null;
     const payload = {
       role_name: form.role_name,
       display_name: form.display_name,
       description: form.description,
       scopes: form.scopes,
-      allowed_endpoints: allowed,
     };
     if (formMode.value === 'create') {
       await oauthRolesService.create(payload);
