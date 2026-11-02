@@ -1,6 +1,6 @@
 # Formularios de Clientes y precios: casos de prueba
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
+> **Estado:** borrador · **Última modificación:** 2026-11-02 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
 
 ## Clientes y precios (prefijo CLI)
 
@@ -36,7 +36,12 @@ Convenciones: "Server" = `/var/www/dev/tmwe_api/controller/api/...`. Los errores
 | CLI-01-02 | Alta como TMWE eligiendo tipo | rag_soc + tipo=P (si el select está habilitado) | se crea con `tipo=P`; sin `id_anagr_titolare` forzado (partner_id=1). Comprobar a quién queda asignado | P0 | Manual |
 | CLI-01-03 | Partner intenta enviar tipo distinto por API | POST con `tipo=P` desde sesión partner (petición directa) | no determinado: el servidor no valida el enum ni restringe `tipo` en `handle_create`; verificar si un partner puede crear tipo P/I | P0 | Manual |
 | CLI-01-04 | Contactos base creados al alta (P38) | alta mínima; luego abrir pestaña Contactos | existen "Accesso admin" (tipo 6, `auth_17..20`=S) y "Accesso user" (tipo 3, `auth_17/18`=N, `auth_19/20`=S), sin sede asignada (`id_sede_interna` null porque el alta no envía sede); cada uno con login/pwd generados y rol por defecto | P0 | Auto |
-| CLI-01-05 | Credenciales de los contactos base no se muestran | alta mínima | la SPA redirige a la ficha sin mostrar loginn/password de los 2 contactos base (a diferencia del alta de contacto individual y del clon). Documentar como hueco de producto abierto en P38 | P0 | Manual |
+| CLI-01-05 | Credenciales de los contactos base no se muestran | alta mínima | decidido (P38): la contraseña nunca se muestra; el administrador recibe un enlace de acceso por correo. La SPA redirige a la ficha | P0 | Manual |
+| CLI-01-13 | Alta de partner (TMWE): sección «Administrador de la cuenta» | TMWE; tipo=P con «Partner del sistema» marcado | aparece la sección con nombre y correo obligatorios; correo sin formato bloquea el envío; el POST lleva `erp_partner=S` y `admin_contact {nome, mail}` | P0 | Manual |
+| CLI-01-14 | Alta de cliente no envía admin_contact | tipo=C | la sección no aparece; el POST no lleva `admin_contact` ni `erp_partner`; siguen los dos contactos genéricos | P0 | Auto |
+| CLI-01-15 | Usuario no TMWE no ve el tipo Partner | sesión partner | el selector de tipo no ofrece «Partner» y sigue deshabilitado; un POST directo con `erp_partner=S` recibe 403 | P0 | Manual |
+| CLI-01-16 | Resultado del alta de partner | alta con `access_link_sent` true / false | true: aviso de éxito con el correo; false: aviso con botón «Reenviar enlace de acceso» (POST `api_contact_access_link`) | P0 | Manual |
+| CLI-01-17 | 422 `ADMIN_CONTACT_REQUIRED` | forzar `details.fields` (`admin_contact.nome`/`.mail`) | los errores se pintan junto a los campos del administrador | P1 | Manual |
 | CLI-01-06 | Nombre con 101+ caracteres | rag_soc de 120 caracteres | no determinado: SPA sin maxlength; esperar 4xx/truncado del servidor. Registrar comportamiento real | P1 | Auto |
 | CLI-01-07 | Divisa inexistente / catálogo caído | simular fallo de `api_master_currencies` | autocomplete vacío, el alta funciona sin `valuta_sigla` | P2 | Auto |
 | CLI-01-08 | pi_cf duplicado | crear dos clientes con el mismo pi_cf | no determinado: nada impide el duplicado (el diálogo de clonado dice que dos anagrafiche con mismo pi_cf son la misma entidad fiscal) | P0 | Manual |
@@ -47,7 +52,7 @@ Convenciones: "Server" = `/var/www/dev/tmwe_api/controller/api/...`. Los errores
 
 - **Riesgos / dudas:**
   - `useAnagraficaContext.readIsTmwe()` (`composables/useAnagraficaContext.ts`) lee solo `window.__TMWE_ANAGRAFICA_CTX__` y `window.__TMWE_PARTNER_CLIENTS__`; en `apps/` nadie los define (grep sin resultados). La app operations expone `window.__TMWE_OPERATIONS__.isTmwe` (`apps/operations/src/env.d.ts:16`, y lo usa `listini/composables/useListiniAdmin.ts:21`). Consecuencia probable: `isTmwe` siempre `false` en operations, el select `tipo` queda deshabilitado también para TMWE y `scopeTitolare` no filtra por titolare (afecta CLI-02, CLI-03, CLI-05, CLI-06). Verificar en navegador con un usuario TMWE.
-  - P38 (`docs/contrato-con-api.md:78`): sin cambio de código; pendiente decidir si "Accesso admin" nace con `auth_17..20` y cómo se entregan las credenciales (no revisado).
+  - P38: decidido en el API (rama `p38-alta-partner-admin`, ver `docs/06-api/contactos-comportamientos.md` allí): el alta de partner crea solo el administrador indicado; cliente y resto no cambian. Enlace por contacto: `POST api_contact_access_link` (TMWE o administrador de la cuenta; 429 espera 60 s y 5 por hora). Los casos CLI-01-13 a 17 no se han ejecutado.
   - Server no valida longitud ni formato de `pi_cf`/`cf`; tampoco `tipo`.
 
 ### CLI-02 · Ficha: Datos base (edición) y comprobación VIES

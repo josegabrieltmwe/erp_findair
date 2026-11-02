@@ -1,6 +1,6 @@
 # Plan de pruebas de formularios de la UI
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01
+> **Estado:** borrador · **Última modificación:** 2026-11-02
 
 Casos de prueba para cada formulario de la SPA (`web/apps/operations` y `web/packages`). Complementa [plan-pruebas-ui.md](plan-pruebas-ui.md) (perfiles, fases, reglas de seguridad y criterios de salida), que sigue siendo el marco; aquí solo se detalla el nivel de formulario.
 
@@ -38,7 +38,7 @@ Posibles defectos que los agentes encontraron al leer el código. Ordenados por 
 1. **`root` desprotegido en la ficha de usuarios.** `User_Admin_Controller` no parece comprobar `root` al restablecer contraseña, editar o borrar; un administrador TMWE sin `root` podría tomar una cuenta `root` (SET-04-05, SET-03-04). El alta con rol `root` pedida por un no-root se omite en silencio y el bulk lo cuenta como éxito (SET-02-06, SET-06-03). *Contrastado:* en ese fichero solo aparece `root` en un comentario sobre la política de asignación.
 2. **MFA.** Un código TOTP erróneo devuelve 401 y el interceptor global lo trata como sesión caducada (`shared-frontend/http/bff.ts:143`). No se comprobó si el BFF lo traduce. El secreto sigue en pantalla tras verificar.
 3. **Secretos en claro.** `fornitori_accnt` precarga contraseñas y claves en campos de texto; las claves WebCargo y el `client_secret` OAuth se muestran sin enmascarar.
-4. **Alta de anagrafica (P38).** Crea dos contactos base con credenciales que la SPA no muestra y sin sede asignada (CLI).
+4. **Alta de anagrafica (P38).** Crea dos contactos base con credenciales que la SPA no muestra y sin sede asignada (CLI). *Actualizado 2026-11-02:* el alta de partner ya pide el administrador y envía un enlace de acceso (H4 en [plan-mitigacion-hallazgos-formularios.md](plan-mitigacion-hallazgos-formularios.md)); clientes y resto siguen igual.
 5. **Sesión y login.** El callback del BFF redirige a `/?auth_error=<código>` y ninguna parte de la SPA lee `auth_error`; podría haber un bucle de login (OTR-39, a confirmar en navegador). *Contrastado:* no hay lecturas de `auth_error` en la SPA.
 6. **`isTmwe` casi seguro `false` en anagrafiche.** `useAnagraficaContext.ts` lee globales que ninguna app define. Efecto probable: selects deshabilitados incluso para TMWE y roles API sin acotar (CLI-01).
 7. **Almacén en solo lectura para todos.** `modules/warehouse/env.ts:41-48` obtiene `canWrite` de globales (`__TMWE_INVOICING__`, `__TMWE_WAREHOUSE__`) que `bootstrapBff` no fija (OTR-23 a OTR-27). *Contrastado en parte:* en `web/` solo se encuentran lecturas de esos globales.
