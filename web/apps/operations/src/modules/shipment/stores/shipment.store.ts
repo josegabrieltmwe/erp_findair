@@ -220,15 +220,23 @@ export const useShipmentStore = defineStore("shipment", () => {
       // stayed visible, so "reset AWB" looked like it had done nothing.
       // Fields the server refused (ignored/locked) are excluded so the UI
       // never shows a value that was not actually stored.
+      const refusedKeys = new Set<string>([
+        ...((res.data?.ignored_fields as string[] | undefined) ?? []),
+        ...((res.data?.blocked_by_lock as string[] | undefined) ?? []),
+      ]);
       if (shipment.value) {
-        const refused = new Set<string>([
-          ...((res.data?.ignored_fields as string[] | undefined) ?? []),
-          ...((res.data?.blocked_by_lock as string[] | undefined) ?? []),
-        ]);
+        const refused = refusedKeys;
         const applied = Object.fromEntries(
           Object.entries(patch).filter(([k]) => !refused.has(k)),
         );
         shipment.value = { ...shipment.value, ...applied };
+      }
+      const notSaved = Object.keys(patch).filter((k) => refusedKeys.has(k));
+      if (notSaved.length > 0) {
+        // The server answers 200 but did not store these fields (locked on an
+        // invoiced shipment): a plain "Saved" would be false.
+        toasts.push("warning", `Not saved (locked): ${notSaved.join(", ")}`);
+        return notSaved.length < Object.keys(patch).length;
       }
       toasts.push("success", "Saved");
       return true;
