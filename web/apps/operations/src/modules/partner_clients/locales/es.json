@@ -351,6 +351,33 @@
       "reset_password_done": "Contraseña regenerada · mostrada una sola vez",
       "send_profile": "Enviar perfil por email",
       "send_profile_done": "Perfil enviado por email",
+      "access_link": {
+        "send": "Enviar enlace de acceso",
+        "confirm": "Se enviará a {mail} un correo con un enlace de un solo uso para que {name} fije su contraseña. Un enlace anterior pendiente dejará de valer. ¿Enviar?",
+        "sent": "Enlace de acceso enviado",
+        "sent_to": "Enlace de acceso enviado a {mail}",
+        "sent_creation": "Se ha enviado un enlace de acceso a {mail}, válido 24 horas, para que fije su contraseña.",
+        "not_sent": "La anagrafica se ha creado, pero el enlace de acceso no se ha podido enviar al administrador.",
+        "resend": "Reenviar enlace de acceso",
+        "not_found": "El contacto ya no existe.",
+        "rate_limited_seconds": "Se han enviado demasiados enlaces a este contacto. Espera {n} s antes de reintentar.",
+        "rate_limited_minutes": "Se han enviado demasiados enlaces a este contacto. Espera unos {n} min antes de reintentar."
+      },
+      "admin_contact": {
+        "title": "Administrador de la cuenta",
+        "hint": "Persona que administrará la cuenta del partner. Recibirá por correo un enlace para fijar su contraseña; la contraseña no se muestra.",
+        "nome": "Nombre del administrador",
+        "mail": "Correo del administrador",
+        "erp_partner": "Partner del sistema",
+        "erp_partner_hint": "Con acceso al ERP; exige indicar el administrador.",
+        "result_title": "Administrador de la cuenta",
+        "open_record": "Abrir la ficha",
+        "errors": {
+          "nome_required": "Indica el nombre del administrador.",
+          "mail_required": "Indica el correo del administrador.",
+          "mail_invalid": "El correo no tiene un formato válido."
+        }
+      },
       "perm": {
         "app_access": "Acceso por aplicación",
         "erp_login_app": "Login ERP (app)",

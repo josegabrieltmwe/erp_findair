@@ -351,6 +351,33 @@
       "reset_password_done": "Passwort neu erzeugt · nur einmal angezeigt",
       "send_profile": "Profil per E-Mail senden",
       "send_profile_done": "Profil per E-Mail gesendet",
+      "access_link": {
+        "send": "Zugangslink senden",
+        "confirm": "An {mail} wird eine E-Mail mit einem Einmal-Link gesendet, damit {name} ein Passwort festlegen kann. Ein früherer, noch offener Link wird ungültig. Senden?",
+        "sent": "Zugangslink gesendet",
+        "sent_to": "Zugangslink an {mail} gesendet",
+        "sent_creation": "Ein 24 Stunden gültiger Zugangslink wurde an {mail} gesendet, damit das Passwort festgelegt werden kann.",
+        "not_sent": "Der Datensatz wurde angelegt, aber der Zugangslink konnte nicht an den Administrator gesendet werden.",
+        "resend": "Zugangslink erneut senden",
+        "not_found": "Der Kontakt existiert nicht mehr.",
+        "rate_limited_seconds": "An diesen Kontakt wurden zu viele Links gesendet. Warten Sie {n} s, bevor Sie es erneut versuchen.",
+        "rate_limited_minutes": "An diesen Kontakt wurden zu viele Links gesendet. Warten Sie etwa {n} Min., bevor Sie es erneut versuchen."
+      },
+      "admin_contact": {
+        "title": "Kontoadministrator",
+        "hint": "Person, die das Partnerkonto verwaltet. Sie erhält per E-Mail einen Link zum Festlegen des Passworts; das Passwort wird nie angezeigt.",
+        "nome": "Name des Administrators",
+        "mail": "E-Mail des Administrators",
+        "erp_partner": "Systempartner",
+        "erp_partner_hint": "Mit ERP-Zugang; erfordert einen Administrator.",
+        "result_title": "Kontoadministrator",
+        "open_record": "Datensatz öffnen",
+        "errors": {
+          "nome_required": "Geben Sie den Namen des Administrators an.",
+          "mail_required": "Geben Sie die E-Mail des Administrators an.",
+          "mail_invalid": "Das E-Mail-Format ist ungültig."
+        }
+      },
       "perm": {
         "app_access": "Zugriff über Anwendung",
         "erp_login_app": "ERP-Login (App)",

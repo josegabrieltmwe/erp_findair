@@ -74,6 +74,22 @@ export interface LettIntRow {
   [k: string]: unknown;
 }
 
+/** Ids creados por el alta (`created_ids` de la respuesta). */
+export interface AnagraficaCreatedIds {
+  anagrafica: number;
+  sedi: number[];
+  banche: number[];
+  contatti: number[];
+  lettint: number[];
+}
+
+/** Respuesta del alta: la anagrafica más lo que añadió P38. */
+export interface AnagraficaCreated extends AnagraficaDetail {
+  created_ids?: AnagraficaCreatedIds;
+  /** El alta intentó enviar el enlace de acceso al administrador y salió bien. */
+  access_link_sent?: boolean;
+}
+
 export interface AnagraficaMore {
   id?: number;
   id_anagrafica?: number;
@@ -338,8 +354,8 @@ export const anagraficaService = {
     return raw?.data ?? null;
   },
 
-  async create(payload: Record<string, unknown>): Promise<AnagraficaDetail> {
-    const raw = await http<{ success?: boolean; data?: AnagraficaDetail; error?: RawApiError }>(ENDPOINT, {
+  async create(payload: Record<string, unknown>): Promise<AnagraficaCreated> {
+    const raw = await http<{ success?: boolean; data?: AnagraficaCreated; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: payload,
     });

@@ -351,6 +351,33 @@
       "reset_password_done": "Wachtwoord opnieuw gegenereerd · slechts eenmaal getoond",
       "send_profile": "Profiel per e-mail versturen",
       "send_profile_done": "Profiel per e-mail verstuurd",
+      "access_link": {
+        "send": "Toegangslink versturen",
+        "confirm": "Er wordt een e-mail met een eenmalige link naar {mail} gestuurd zodat {name} een wachtwoord kan instellen. Een eerdere openstaande link vervalt. Versturen?",
+        "sent": "Toegangslink verstuurd",
+        "sent_to": "Toegangslink verstuurd naar {mail}",
+        "sent_creation": "Er is een toegangslink (24 uur geldig) naar {mail} gestuurd om het wachtwoord in te stellen.",
+        "not_sent": "Het record is aangemaakt, maar de toegangslink kon niet naar de beheerder worden gestuurd.",
+        "resend": "Toegangslink opnieuw versturen",
+        "not_found": "Het contact bestaat niet meer.",
+        "rate_limited_seconds": "Er zijn te veel links naar dit contact gestuurd. Wacht {n} s voordat u het opnieuw probeert.",
+        "rate_limited_minutes": "Er zijn te veel links naar dit contact gestuurd. Wacht ongeveer {n} min voordat u het opnieuw probeert."
+      },
+      "admin_contact": {
+        "title": "Accountbeheerder",
+        "hint": "Persoon die het partneraccount beheert. Die ontvangt per e-mail een link om het wachtwoord in te stellen; het wachtwoord wordt nooit getoond.",
+        "nome": "Naam van de beheerder",
+        "mail": "E-mail van de beheerder",
+        "erp_partner": "Systeempartner",
+        "erp_partner_hint": "Met ERP-toegang; vereist een beheerder.",
+        "result_title": "Accountbeheerder",
+        "open_record": "Record openen",
+        "errors": {
+          "nome_required": "Geef de naam van de beheerder op.",
+          "mail_required": "Geef het e-mailadres van de beheerder op.",
+          "mail_invalid": "Het e-mailformaat is ongeldig."
+        }
+      },
       "perm": {
         "app_access": "Toegang via applicatie",
         "erp_login_app": "ERP-login (app)",

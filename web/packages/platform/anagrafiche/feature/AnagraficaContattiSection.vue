@@ -216,7 +216,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mdiPlus, mdiPencil, mdiDelete, mdiShieldKeyOutline, mdiKeyVariant, mdiEmailFastOutline, mdiCellphoneKey, mdiLoginVariant, mdiMenuDown } from '@mdi/js';
+import { mdiPlus, mdiPencil, mdiDelete, mdiShieldKeyOutline, mdiKeyVariant, mdiEmailFastOutline, mdiCellphoneKey, mdiLoginVariant, mdiMenuDown, mdiLinkVariant } from '@mdi/js';
 import type { ContattoRow } from '../services/anagrafica.service';
 import { contattiService, type FindairLevel, type ApiRoleState, type ContattoLite } from '../services/contatti.service';
 import { oauthRolesService, isInternalOnlyRole, roleConflictMessage, type OAuthRole } from '../../oauth_roles/services/oauthRoles.service';
@@ -232,6 +232,7 @@ import { useListViewMode } from '@shared/listing/useListViewMode';
 import type { ActiveFilter } from '@shared/listing/types';
 import { useToast } from '../composables/useToast';
 import { useConfirm } from '../composables/useConfirm';
+import { accessLinkErrorText } from '../utils/accessLink';
 import ContattoFormDialog from './ContattoFormDialog.vue';
 import CmSectionHeader from '../components/CmSectionHeader.vue';
 import CmRowActions, { type RowAction } from '../components/CmRowActions.vue';
@@ -240,7 +241,7 @@ import CredentialsRevealCard from '../components/CredentialsRevealCard.vue';
 
 const props = defineProps<{ idAnagrafica: number; contatti: ContattoRow[] }>();
 const emit = defineEmits<{ refresh: [] }>();
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToast();
 const confirm = useConfirm();
 const { isTmwe } = useAnagraficaContext();
@@ -521,6 +522,14 @@ function rowActions(row: ContattoRow): RowAction[] {
   return [
     { key: 'perms', title: t('users.bulk.grant_role'), icon: mdiShieldKeyOutline, onClick: () => openPerms(row) },
     { key: 'profile', title: t('anagrafiche.send_profile'), icon: mdiEmailFastOutline, onClick: () => sendProfile(row) },
+    {
+      key: 'access_link',
+      title: t('anagrafiche.access_link.send'),
+      icon: mdiLinkVariant,
+      loading: accessLinkBusy[row.id] === true,
+      disabled: accessLinkBusy[row.id] === true,
+      onClick: () => sendAccessLink(row),
+    },
     { key: 'reset_pw', title: t('anagrafiche.reset_password'), icon: mdiKeyVariant, onClick: () => resetPassword(row) },
     { key: 'app_token', title: t('anagrafiche.app_token.cta'), icon: mdiCellphoneKey, onClick: () => resetAppToken(row) },
     { key: 'b2b', title: t('anagrafiche.b2b_direct.cta'), icon: mdiLoginVariant, onClick: () => b2bDirect(row) },
@@ -612,6 +621,35 @@ async function b2bDirect(row: ContattoRow): Promise<void> {
     }
   } catch (e) {
     toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+  }
+}
+
+/**
+ * P38: envía (o reenvía) al contacto el enlace de acceso para fijar su contraseña. Lo pueden usar TMWE y el
+ * administrador de la cuenta; la SPA no sabe cuál es el caso, así que el 403 del API se muestra con su mensaje.
+ */
+const accessLinkBusy = reactive<Record<number, boolean>>({});
+async function sendAccessLink(row: ContattoRow): Promise<void> {
+  if (accessLinkBusy[row.id]) return;
+  const name = row.nome || row.loginn || `#${row.id}`;
+  const ok = await confirm.ask({
+    title: t('anagrafiche.access_link.send') as string,
+    message: t('anagrafiche.access_link.confirm', { name, mail: row.mail || '—' }) as string,
+    confirmLabel: t('anagrafiche.access_link.send') as string,
+  });
+  if (!ok) return;
+  accessLinkBusy[row.id] = true;
+  try {
+    const res = await contattiService.sendAccessLink(row.id);
+    toast.success(
+      res.sent_to
+        ? (t('anagrafiche.access_link.sent_to', { mail: res.sent_to }) as string)
+        : (t('anagrafiche.access_link.sent') as string),
+    );
+  } catch (e) {
+    toast.error(accessLinkErrorText(e, { t: (k, n) => t(k, n ?? {}) as string, te }));
+  } finally {
+    accessLinkBusy[row.id] = false;
   }
 }
 

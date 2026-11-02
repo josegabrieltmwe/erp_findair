@@ -351,6 +351,33 @@
       "reset_password_done": "Password rigenerata · mostrata una sola volta",
       "send_profile": "Invia profilo via email",
       "send_profile_done": "Profilo inviato via email",
+      "access_link": {
+        "send": "Invia link di accesso",
+        "confirm": "Verrà inviata a {mail} un'email con un link monouso perché {name} imposti la password. Un eventuale link precedente non sarà più valido. Inviare?",
+        "sent": "Link di accesso inviato",
+        "sent_to": "Link di accesso inviato a {mail}",
+        "sent_creation": "È stato inviato a {mail} un link di accesso valido 24 ore per impostare la password.",
+        "not_sent": "L'anagrafica è stata creata, ma non è stato possibile inviare il link di accesso all'amministratore.",
+        "resend": "Reinvia link di accesso",
+        "not_found": "Il contatto non esiste più.",
+        "rate_limited_seconds": "Sono stati inviati troppi link a questo contatto. Attendi {n} s prima di riprovare.",
+        "rate_limited_minutes": "Sono stati inviati troppi link a questo contatto. Attendi circa {n} min prima di riprovare."
+      },
+      "admin_contact": {
+        "title": "Amministratore dell'account",
+        "hint": "Persona che amministrerà l'account del partner. Riceverà via email un link per impostare la password; la password non viene mostrata.",
+        "nome": "Nome dell'amministratore",
+        "mail": "Email dell'amministratore",
+        "erp_partner": "Partner di sistema",
+        "erp_partner_hint": "Con accesso all'ERP; richiede l'amministratore.",
+        "result_title": "Amministratore dell'account",
+        "open_record": "Apri la scheda",
+        "errors": {
+          "nome_required": "Indica il nome dell'amministratore.",
+          "mail_required": "Indica l'email dell'amministratore.",
+          "mail_invalid": "Il formato dell'email non è valido."
+        }
+      },
       "perm": {
         "app_access": "Accesso da applicazione",
         "erp_login_app": "Login ERP (app)",

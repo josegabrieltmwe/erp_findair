@@ -15,7 +15,7 @@ Esfuerzo: S < 0,5 d; M 0,5 a 2 d; L > 2 d. Repo: SPA = `web/`, BFF = `bff/`, API
 | H1 | `root` sin proteger en reset, edición y baja de usuario; alta con `root` omitida en silencio | **Confirmado** | Alta (escalada) | S + S | API + SPA |
 | H2 | TOTP erróneo cierra la sesión | Refutado (el BFF lo traduce a 403). Confirmados: mensaje engañoso y secreto TOTP sin limpiar | Baja-media | S | SPA |
 | H3 | Secretos en claro | Parcial: `pw`/`chiave` de fornitori_accnt es defecto; WebCargo menor; `client_secret` es diseño aceptable | Media | M / S | API + SPA |
-| H4 | Contactos base del alta (P38) | Parcial: heredado y acotado a la cuenta; riesgo de higiene | Baja-media | S-M | API + SPA |
+| H4 | Contactos base del alta (P38) | Parcial: heredado y acotado a la cuenta; riesgo de higiene. SPA hecha (ver §Estado) | Baja-media | S-M | API + SPA |
 | H5 | Bucle por `auth_error` | Parcial: nadie lee `auth_error`; no hay bucle automático | Baja | S | SPA |
 | H6 | `isTmwe` siempre `false` en anagrafiche | **Confirmado** (falla hacia menos privilegios) | Media | S | SPA |
 | H7 | `canWrite` de almacén (y facturación, pagos, COD) siempre `false` | **Confirmado en código**; falta verlo en navegador | Alta (funcional) | S-M | BFF + SPA |
@@ -171,5 +171,5 @@ Ramas `fix/ola1-formularios` y `ola3-spa` (sin fusionar). Cada corrección lleva
 | H18 | Hecho | Eliminados `ShipmentFromCargoPage` (y su ruta) y `StoricoMessaggiPanel`. Quedan `docsstory.service.ts` y `fromCargo`/`tpc` de `env.d.ts` sin uso |
 | H10b | Hecho, parcial | Selector de moneda en factura manual y de proveedor. El resto de pantallas con EUR fijo (listados, resúmenes, conciliación de carriers) no se tocó |
 | H23 | Parcial | `cargoRules` y `shipmentRules` devuelven claves i18n; `check:ts-literals` cubre `validation/*.ts` y `*Rules.ts`. Quedan por revisar los demás literales italianos en `.ts` fuera de esos ficheros |
-| H4 (SPA) | No hecho | Depende de la decisión de producto de P38 (quién es el administrador de la cuenta y cómo se entregan las credenciales de los contactos base); `random_int` y sede son de API (P56) |
+| H4 (SPA) | Hecho | Decidido con P38 en el API (rama `p38-alta-partner-admin`): solo TMWE da de alta partners y el alta pide `admin_contact {nome, mail}`; la contraseña no se muestra, el contacto recibe un enlace de acceso por correo. SPA: sección «Administrador de la cuenta» (obligatoria, correo validado) solo con TMWE + `erp_partner=S` + `tipo=P`; el tipo P no se ofrece a quien no es TMWE; el resultado del alta muestra el administrador y si salió el enlace, con «Reenviar enlace de acceso»; acción «Enviar enlace de acceso» por contacto con confirmación y errores por código (429 con espera, correo ausente, 502). Falta en producción hasta que el API llegue a `sandbox`; `random_int` y sede son de API (P56). Sin probar en navegador |
 | H16d | Hecho | El guardado directo de una caja de cargo pasa por `cargoRules` (antes solo el modal con borrador) y cambiar el cliente del cargo pide confirmación |

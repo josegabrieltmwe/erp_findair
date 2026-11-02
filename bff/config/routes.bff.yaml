@@ -89,6 +89,16 @@ routes:
       forward_query: '*'
     limits: { body: 1m, timeout: 30 }
 
+  # Reenvio del enlace de acceso a un contacto (P38/H4). Es una ruta nueva del API: el generador la
+  # incorporara al regenerar el manifiesto contra un tmwe_api que ya la tenga; esta entrada manual
+  # la sustituye entonces (mismo metodo y ruta).
+  - id: post.api_contact_access_link
+    method: POST
+    path: /api_contact_access_link
+    upstream:
+      action: api_contact_access_link
+    limits: { body: 1m, timeout: 30 }
+
   - id: me.profile
     method: GET
     path: /me

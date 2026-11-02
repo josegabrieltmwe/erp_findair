@@ -60,7 +60,20 @@
              Espeja el legacy anagr.php: el registro nace al guardar y se salta a id=NUEVO. -->
         <v-card v-if="isCreate">
           <div class="cm-create-shell">
-            <AnagraficaCreateSection :saving="creating" @create="onCreate" @cancel="back" />
+            <PartnerCreateResult
+              v-if="partnerResult"
+              :created="partnerResult.created"
+              :admin-contact="partnerResult.admin"
+              @open="openCreated"
+            />
+            <AnagraficaCreateSection
+              v-else
+              :saving="creating"
+              :field-errors="createFieldErrors.errors.value"
+              @create="onCreate"
+              @cancel="back"
+              @clear-error="createFieldErrors.clear"
+            />
           </div>
         </v-card>
 
@@ -263,12 +276,16 @@ import CmAsyncSection from '../components/CmAsyncSection.vue';
 import EntityHeader from '../../ui/EntityHeader.vue';
 import {
   anagraficaService,
+  type AnagraficaCreated,
   type AnagraficaDetail,
   type AnagraficaMore,
 } from '../services/anagrafica.service';
 import { useToast } from '../composables/useToast';
 import { useConfirm } from '../composables/useConfirm';
 import AnagraficaCreateSection from './AnagraficaCreateSection.vue';
+import PartnerCreateResult from './PartnerCreateResult.vue';
+import { useServerFieldErrors } from '../../composables/useServerFieldErrors';
+import { localizedErrorText } from '../../utils/apiError';
 import AnagraficaDatiBaseSection from './AnagraficaDatiBaseSection.vue';
 import AnagraficaSediSection from './AnagraficaSediSection.vue';
 import AnagraficaContattiSection from './AnagraficaContattiSection.vue';
@@ -286,7 +303,7 @@ const props = defineProps<{
   /** Pestañas extra del host; vacío = comportamiento idéntico al anterior. */
   extraTabs?: AnagraficaExtraTab[];
 }>();
-const { t } = useI18n();
+const { t, te } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
@@ -298,6 +315,10 @@ const isCreate = computed(() => route.name === 'anagrafica-create');
 const record = ref<AnagraficaDetail | null>(null);
 const loading = ref(false);
 const creating = ref(false);
+// Errores por campo del 422 del alta (`admin_contact.nome`/`admin_contact.mail`...).
+const createFieldErrors = useServerFieldErrors();
+// Alta de partner: en vez de saltar al detalle se muestra el resultado (administrador y estado del enlace).
+const partnerResult = ref<{ created: AnagraficaCreated; admin: { nome: string; mail: string } } | null>(null);
 const error = ref<string | null>(null);
 
 const activeTab = ref(props.tab || 'dati_base');
@@ -415,7 +436,14 @@ async function onCreate(payload: Record<string, unknown>): Promise<void> {
   if (creating.value) return;
   creating.value = true;
   try {
+    createFieldErrors.clear();
     const created = await anagraficaService.create(payload);
+    const admin = payload.admin_contact as { nome: string; mail: string } | undefined;
+    if (admin) {
+      // Partner: la contraseña no existe en pantalla; se informa del enlace de acceso y se deja ir a la ficha.
+      partnerResult.value = { created, admin };
+      return;
+    }
     // Mensaje de confirmación con el nombre del cliente. Timeout ampliado (6s)
     // para que siga visible tras redirigir al detalle del nuevo registro.
     const name = (payload.rag_soc as string) || String(created.id);
@@ -424,10 +452,16 @@ async function onCreate(payload: Record<string, unknown>): Promise<void> {
     // contatti, banche…), igual que el legacy redirige a id=NUEVO.
     router.push({ name: 'anagrafica-detail', params: { id: String(created.id) } });
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    createFieldErrors.setFrom(e);
+    // Los campos del 422 se pintan junto al campo; el mensaje general sale de `errors.api.<CODE>` si existe.
+    toast.error(localizedErrorText(e, { t: (k) => t(k) as string, te }, t('common.error') as string));
   } finally {
     creating.value = false;
   }
+}
+
+function openCreated(id: number): void {
+  router.push({ name: 'anagrafica-detail', params: { id: String(id) } });
 }
 
 function back(): void {
