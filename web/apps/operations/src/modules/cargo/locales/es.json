@@ -1595,7 +1595,9 @@
       "search_ph": "Buscar por razón social, NIF o nombre corto...",
       "sede": "Sede",
       "client_rif": "RIF del cliente",
-      "client_num": "Cliente #{id}"
+      "client_num": "Cliente #{id}",
+      "change_title": "Cambiar de cliente",
+      "change_confirm": "Vas a asignar este cargo a «{name}». Cambia el cliente, y con él la divisa y los márgenes aplicables. ¿Continuar?"
     },
     "profit": {
       "title": "Beneficio",

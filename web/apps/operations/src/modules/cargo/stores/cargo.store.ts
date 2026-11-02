@@ -221,6 +221,17 @@ export const useCargoStore = defineStore("cargo", () => {
       draftPatch.value = { ...draftPatch.value, ...patch };
       return true;
     }
+    // Guardado directo (campo de una caja de la pagina, al salir del campo): antes no pasaba por
+    // cargoRules, que solo se aplicaban al confirmar un modal con borrador (H16d).
+    const errors = validateDraft(
+      patch,
+      (f) => isFieldLocked(f as string),
+      i18n.global.t as unknown as Translate,
+    );
+    if (Object.keys(errors).length > 0) {
+      toasts.push("error", Object.values(errors)[0]);
+      return false;
+    }
     return persistUpdate(patch);
   }
 

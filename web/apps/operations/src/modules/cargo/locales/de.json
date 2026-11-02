@@ -1595,7 +1595,9 @@
       "search_ph": "Suche nach Firmenname, USt-IdNr. oder Kurzname...",
       "sede": "Sitz",
       "client_rif": "Kunden-RIF",
-      "client_num": "Kunde #{id}"
+      "client_num": "Kunde #{id}",
+      "change_title": "Kunden wechseln",
+      "change_confirm": "Sie weisen diese Cargo-Sendung „{name}“ zu. Damit ändern sich der Kunde sowie Währung und anwendbare Margen. Fortfahren?"
     },
     "profit": {
       "title": "Gewinn",

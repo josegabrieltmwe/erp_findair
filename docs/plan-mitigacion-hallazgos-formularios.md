@@ -166,10 +166,10 @@ Ramas `fix/ola1-formularios` y `ola3-spa` (sin fusionar). Cada corrección lleva
 | H22b | Hecho | Más de 10 terminales WebCargo bloquea el guardado con mensaje en vez de descartarlos |
 | H17c | Hecho | Sondeo del tracking masivo: 30 min y 5 errores seguidos como límite. El de exportación ya tenía tope |
 | H17d | Hecho | `date_from=null` ya no se serializa ni cuenta como filtro activo |
-| H17e | Hecho, parcial | `checkforn` se compara con el dominio real (V y A cuentan como verificado: **confirmar con operaciones que A cuenta**). Aviso «Cancelar no revierte» solo en el modal de costes (único que persiste al instante) |
+| H17e | Hecho | Decidido 2026-11-02 con datos del esquema, de `Billing_Enums` y del legacy: solo `V` cuenta como verificado (`A` es un abono ya recibido) y X, R y A se etiquetan como ciclo de abono del proveedor. Decisión 2 (importes): se mantiene guardar al salir del campo con el aviso en el modal de costes |
 | H15 | Hecho | `/cod`, `/cod/reconciliation` y `/proforma` usan los scopes del perfil (`shipment:read` o `courier:read`; `invoices:read`), no las capacidades de facturación. Falla abierto si el perfil no informa `access` |
 | H18 | Hecho | Eliminados `ShipmentFromCargoPage` (y su ruta) y `StoricoMessaggiPanel`. Quedan `docsstory.service.ts` y `fromCargo`/`tpc` de `env.d.ts` sin uso |
 | H10b | Hecho, parcial | Selector de moneda en factura manual y de proveedor. El resto de pantallas con EUR fijo (listados, resúmenes, conciliación de carriers) no se tocó |
 | H23 | Parcial | `cargoRules` y `shipmentRules` devuelven claves i18n; `check:ts-literals` cubre `validation/*.ts` y `*Rules.ts`. Quedan por revisar los demás literales italianos en `.ts` fuera de esos ficheros |
 | H4 (SPA) | No hecho | Depende de la decisión de producto de P38 (quién es el administrador de la cuenta y cómo se entregan las credenciales de los contactos base); `random_int` y sede son de API (P56) |
-| H16d | No hecho | Fuera de la lista de esta entrega |
+| H16d | Hecho | El guardado directo de una caja de cargo pasa por `cargoRules` (antes solo el modal con borrador) y cambiar el cliente del cargo pide confirmación |

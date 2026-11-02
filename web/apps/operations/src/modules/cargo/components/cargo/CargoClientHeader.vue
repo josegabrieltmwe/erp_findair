@@ -62,6 +62,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useConfirm } from "@shared/anagrafiche/composables/useConfirm";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useCargoState } from "@cargo/composables/useCargoState";
@@ -71,6 +72,7 @@ import {
 } from "@cargo/services/anagrafica.service";
 
 const { t } = useI18n();
+const confirmDialog = useConfirm();
 const store = useCargoStore();
 const { cargo } = storeToRefs(store);
 const { readonly } = useCargoState(cargo);
@@ -133,6 +135,17 @@ function onSearch(text: string | undefined): void {
 async function onClientChange(client: AnagraficaLite | null): Promise<void> {
   if (!client || !client.id) return;
   if (Number(client.id) === Number(cargo.value?.id_cliente)) return;
+  // Cambiar el cliente reasigna el cargo (y con el, divisa y margenes): se confirma antes de enviar
+  // el PATCH para que un clic equivocado en el autocompletado no lo haga en silencio (H16d).
+  if (cargo.value?.id_cliente) {
+    const ok = await confirmDialog.ask({
+      title: t("cargo.clienthdr.change_title") as string,
+      message: t("cargo.clienthdr.change_confirm", {
+        name: client.rag_soc || `#${client.id}`,
+      }) as string,
+    });
+    if (!ok) return;
+  }
   await store.update({ id_cliente: String(client.id) });
 }
 

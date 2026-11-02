@@ -1595,7 +1595,9 @@
       "search_ph": "Cerca per ragione sociale, P.IVA o sigla...",
       "sede": "Sede",
       "client_rif": "RIF cliente",
-      "client_num": "Cliente #{id}"
+      "client_num": "Cliente #{id}",
+      "change_title": "Cambia cliente",
+      "change_confirm": "Stai per assegnare questo cargo a «{name}». Cambia il cliente e con esso valuta e margini applicabili. Continuare?"
     },
     "profit": {
       "title": "Profitto",

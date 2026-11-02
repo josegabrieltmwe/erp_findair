@@ -1595,7 +1595,9 @@
       "search_ph": "Zoek op bedrijfsnaam, btw-nummer of korte naam...",
       "sede": "Vestiging",
       "client_rif": "Klant-RIF",
-      "client_num": "Klant #{id}"
+      "client_num": "Klant #{id}",
+      "change_title": "Klant wijzigen",
+      "change_confirm": "U wijst deze cargo toe aan “{name}”. Hiermee wijzigen de klant en daarmee de valuta en de geldende marges. Doorgaan?"
     },
     "profit": {
       "title": "Winst",
