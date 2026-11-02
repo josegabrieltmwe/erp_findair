@@ -31,6 +31,7 @@
                     v-if="!editMode"
                     size="small"
                     variant="text"
+                    :disabled="rootBlocked"
                     :prepend-icon="mdiPencil"
                     @click="enterEdit"
                   >
@@ -89,10 +90,14 @@
             </v-card-text>
           </v-card>
 
+          <v-alert v-if="rootBlocked" type="info" variant="tonal" density="compact" class="mb-4">
+            {{ t('users.root_only_action') }}
+          </v-alert>
+
           <!-- PANEL DE SEGURIDAD -->
           <v-card variant="outlined" class="cm-card mb-4">
             <v-card-text>
-              <UserSecurityPanel :user-id="user.id" @saved="onSecuritySaved" />
+              <UserSecurityPanel :user-id="user.id" @saved="onSecuritySaved" @roles-loaded="securityRoleNames = $event" />
             </v-card-text>
           </v-card>
 
@@ -170,6 +175,7 @@
           <div class="cm-actions-row">
             <v-btn
               variant="outlined"
+              :disabled="rootBlocked"
               :prepend-icon="mdiKeyVariant"
               @click="resetDialog = true"
             >
@@ -178,6 +184,7 @@
             <v-btn
               variant="outlined"
               color="error"
+              :disabled="rootBlocked"
               :prepend-icon="mdiAccountOff"
               @click="confirmDelete"
             >
@@ -226,8 +233,25 @@ import {
 } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { localizedErrorText } from '../../utils/apiError';
+import { useAccess } from '../../composables/useAccess';
+import { rootActionBlocked } from '../services/userRootPolicy';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { access, ensureProfile } = useAccess();
+
+// P42: las acciones sobre una cuenta root se deshabilitan si sabemos que quien actúa no es root.
+const securityRoleNames = ref<string[]>([]);
+const rootBlocked = computed(() =>
+  rootActionBlocked(
+    {
+      role_names: [user.value?.role_names, ...securityRoleNames.value]
+        .filter((r) => typeof r === 'string' && r !== '')
+        .join(','),
+    },
+    access.value,
+  ),
+);
 const route = useRoute();
 const router = useRouter();
 const toast = useToastStore();
@@ -264,6 +288,7 @@ const headerSubtitle = computed(() =>
 );
 
 async function load(): Promise<void> {
+  void ensureProfile();
   if (!userId.value || userId.value <= 0) return;
   loading.value = true;
   error.value = null;
@@ -317,7 +342,7 @@ async function saveInfo(): Promise<void> {
     editMode.value = false;
     toast.success(t('users.updated'));
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Save failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Save failed'));
   } finally {
     savingInfo.value = false;
   }
@@ -341,7 +366,7 @@ async function confirmDelete(): Promise<void> {
     toast.success(t('users.deleted'));
     goBack();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Delete failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Delete failed'));
   }
 }
 

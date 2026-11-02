@@ -1082,7 +1082,8 @@
       "result": "{processed} verwerkt, {skipped} overgeslagen",
       "granted": "Rol toegekend aan {n} gebruiker(s)",
       "revoked": "Rol ingetrokken bij {n} gebruiker(s)",
-      "none_processed": "Geen gebruikers verwerkt ({n} overgeslagen)"
+      "none_processed": "Geen gebruikers verwerkt ({n} overgeslagen)",
+      "root_denied": "{n} overgeslagen omdat het root-accounts zijn: alleen een root-gebruiker kan erop handelen."
     },
     "detail": {
       "open": "Details bekijken",
@@ -1102,6 +1103,8 @@
     "field_email": "E-mail",
     "field_initial_roles": "Initiële rollen",
     "roles_not_granted": "Rollen niet toegekend (door de server overgeslagen): {roles}",
+    "roles_denied": "Rollen niet toegekend: {roles}",
+    "root_only_action": "Dit is een root-account: alleen een root-gebruiker kan het bewerken, het wachtwoord resetten of het deactiveren.",
     "field_login": "Gebruikersnaam",
     "field_legacy_role": "Legacy-rol",
     "field_legacy_role_hint": "Vrij tekstveld, geërfd van het klassieke ERP",

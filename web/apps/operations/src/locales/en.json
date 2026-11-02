@@ -85,7 +85,11 @@
       "COD_DATE_INVALID": "Enter a valid collection date.",
       "COD_DATE_FUTURE": "The collection date cannot be in the future.",
       "SCHEDULE_WITHOUT_INSTALLMENTS": "The payment term needs at least one instalment (gg) or a day of the month.",
-      "CAUSAL_ALIQUOTA_INVALID": "The tax rate must be a number between 0 and 100."
+      "CAUSAL_ALIQUOTA_INVALID": "The tax rate must be a number between 0 and 100.",
+      "ROLE_ROOT_ONLY": "Only a root user can act on a root account or grant the root role.",
+      "ROLE_ADMIN_REQUIRED": "Managing other people's permissions requires the account administrator role.",
+      "ROLE_NOT_GRANTABLE": "An account administrator cannot grant this role.",
+      "ROLE_NOT_FOUND": "The role does not exist or is inactive."
     }
   },
   "platform": {

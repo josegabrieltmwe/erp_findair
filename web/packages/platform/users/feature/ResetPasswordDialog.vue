@@ -55,6 +55,7 @@ import { mdiKeyVariant } from '@mdi/js';
 import { usersService, type UserLite } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import CredentialsRevealCard from '../../anagrafiche/components/CredentialsRevealCard.vue';
+import { localizedErrorText } from '../../utils/apiError';
 
 interface Props {
   modelValue: boolean;
@@ -66,7 +67,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 
 const resetting = ref(false);
@@ -87,7 +88,7 @@ async function reset(): Promise<void> {
   try {
     newPassword.value = await usersService.resetPassword(props.user.id);
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Reset failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Reset failed'));
     onClose(false);
   } finally {
     resetting.value = false;

@@ -91,9 +91,11 @@ import CmOAuthRoleSelect from '../../oauth_roles/components/CmOAuthRoleSelect.vu
 import CredentialsRevealCard from '../../anagrafiche/components/CredentialsRevealCard.vue';
 import { oauthRolesService } from '../../oauth_roles/services/oauthRoles.service';
 import { rolesNotGranted } from '../services/userRoleResults';
+import { formatRolesDenied } from '../services/userRootPolicy';
 import { usersService, type UserCredentials } from '../services/users.service';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useSelectorRules } from '../../anagrafiche/composables/useSelectorRules';
+import { localizedErrorText } from '../../utils/apiError';
 
 interface Props {
   modelValue: boolean;
@@ -105,7 +107,7 @@ const emit = defineEmits<{
   created: [credentials: UserCredentials];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 const { ruleRequiredId } = useSelectorRules();
 
@@ -154,7 +156,7 @@ async function submit(): Promise<void> {
     await warnRolesNotGranted(creds, form.value.role_ids);
     emit('created', creds);
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Create failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Create failed'));
   } finally {
     saving.value = false;
   }
@@ -167,6 +169,14 @@ async function warnRolesNotGranted(
   requestedIds: number[],
 ): Promise<void> {
   if (!requestedIds.length) return;
+  // P42: el servidor informa de los roles denegados con su código (p. ej. ROLE_ROOT_ONLY al pedir root sin serlo).
+  if (creds.roles_denied?.length) {
+    toast.warning(
+      t('users.roles_denied', { roles: formatRolesDenied(creds.roles_denied, { t, te }) }),
+      10000,
+    );
+    return;
+  }
   try {
     const roles = await oauthRolesService.list();
     const requested = requestedIds.map(

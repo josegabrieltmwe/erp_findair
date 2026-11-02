@@ -1,6 +1,7 @@
 import { http } from '../../anagrafiche/services/http';
 import { paginated } from '../../anagrafiche/services/normalizers';
-import { errorText, type RawApiError } from '../../utils/apiError';
+import { parseRolesDenied, type RoleDenied } from './userRootPolicy';
+import { apiErrorCode, errorText, type RawApiError } from '../../utils/apiError';
 
 /**
  * Usuarios (`contatti` con acceso al ERP) — Fase A2 del plan de deprecación
@@ -58,6 +59,8 @@ export interface UserCredentials {
   password: string;
   /** Nombres de los roles que el servidor concedió en el alta (puede omitir alguno). */
   roles_assigned?: string[];
+  /** Roles pedidos que la política del servidor denegó (P42), con su código (`ROLE_ROOT_ONLY`...). */
+  roles_denied?: RoleDenied[];
 }
 
 export interface UserListFilters {
@@ -147,7 +150,7 @@ export const usersService = {
       role_ids: payload.role_ids ?? [],
       auth_10: payload.api_only ? 'N' : 'S',
     };
-    const raw = await http<{ loginn?: string; password?: string; roles_assigned?: string[]; error?: RawApiError }>(
+    const raw = await http<{ loginn?: string; password?: string; roles_assigned?: string[]; roles_denied?: unknown; error?: RawApiError }>(
       ENDPOINT,
       { method: 'POST', body },
     );
@@ -159,6 +162,7 @@ export const usersService = {
       loginn: raw.loginn,
       password: raw.password,
       roles_assigned: Array.isArray(raw.roles_assigned) ? raw.roles_assigned : undefined,
+      roles_denied: parseRolesDenied(raw.roles_denied),
     };
   },
 
@@ -207,15 +211,16 @@ export const usersService = {
 
   /**
    * Concede o retira un rol a varias personas, una a una (api_admin_user_roles).
-   * `skipped` cuenta las que el API rechaza (p. ej. retirar un rol base).
+   * `skipped` cuenta las que el API rechaza (p. ej. retirar un rol base); `rootDenied`, las rechazadas por ser cuentas root (P42).
    */
   async bulkAssignRole(
     userIds: number[],
     roleId: number,
     action: 'grant' | 'revoke',
-  ): Promise<{ processed: number; skipped?: number }> {
+  ): Promise<{ processed: number; skipped?: number; rootDenied?: number }> {
     let processed = 0;
     let skipped = 0;
+    let rootDenied = 0;
     for (const userId of userIds) {
       try {
         const raw = await http<{ error?: RawApiError }>(ROLES_ENDPOINT, {
@@ -225,11 +230,12 @@ export const usersService = {
         });
         if (raw?.error) skipped += 1;
         else processed += 1;
-      } catch {
+      } catch (e) {
         skipped += 1;
+        if (apiErrorCode(e) === 'ROLE_ROOT_ONLY') rootDenied += 1;
       }
     }
-    return { processed, skipped };
+    return { processed, skipped, rootDenied };
   },
 
   /** OAuth clients vinculados a un usuario (resumen de solo lectura). */
