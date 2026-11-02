@@ -925,12 +925,12 @@
       "supplier_invoice_id": "Supplier invoice id",
       "opt_none": "— (none)",
       "opt_v": "V — Verified",
-      "opt_x": "X — Discrepancy",
+      "opt_x": "X — Credit note to request",
       "title": "Supplier check",
       "opt_o": "O — To check",
       "opt_k": "K — Check against invoice",
-      "opt_r": "R — Recharge",
-      "opt_a": "A — Accepted"
+      "opt_r": "R — Credit note requested",
+      "opt_a": "A — Credit note received"
     },
     "client_header": {
       "client": "Client",

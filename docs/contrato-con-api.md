@@ -135,6 +135,7 @@ Verificado con `git log` de `tmwe_api` y con tests PHPUnit de la suite Unit (la 
 
 | ID | Estado | Dónde está | Notas |
 |---|---|---|---|
+| P38 | Parcial | rama `fix/solo-tmwe-crea-partners` (`bbd4539bc`), sin integrar | **Regla de producto (2026-11-02): solo TMWE da de alta partners; un partner crea sus clientes, nunca otros partners.** Un partner del sistema es `erp_partner='S'` y `tipo='P'` (así lo usan `Default_Api_Role_Service` y `Anagrafiche::find_erp_partner`). `tipo='P'` con `erp_partner='N'` es una empresa de mensajería sin acceso al ERP y no es un partner a efectos del sistema. Tipos de `anagrafiche.tipo`: CV cliente por verificar, C cliente, P partner, F proveedor, T transportista (UPS es T), TP transportista clon de partner, I interno, A archivo. El alta de un llamante que no es TMWE se rechaza con 403 si pide `erp_partner=S` o `fatturazione_erp` S/R; el hueco era que el API solo forzaba `id_anagr_titolare`. Sigue pendiente de decisión: si el contacto «Accesso admin» debe seguir naciendo con `auth_17` a `auth_20` y cómo se entregan las credenciales de los contactos base |
 | P42 | Resuelta | `sandbox` (`e1dfea11c`) | 403 `ROLE_ROOT_ONLY`. SPA adaptada (mensaje y acciones sobre root deshabilitadas si se sabe que quien actúa no es root) |
 | P43 | Resuelta | `sandbox` (`b0e1c9707`) | 409 si facturado o con reserva viva; `force` solo para el AWB emitido. SPA adaptada: la reserva viva pasa de aviso a bloqueo |
 | P44 | Abierta (opcional) | — | La SPA ya elige la expedición |

@@ -925,12 +925,12 @@
       "supplier_invoice_id": "ID fattura fornitore",
       "opt_none": "— (nessuno)",
       "opt_v": "V — Verificato",
-      "opt_x": "X — Discrepanza",
+      "opt_x": "X — Storno da richiedere",
       "title": "Controllo fornitore",
       "opt_o": "O — Da controllare",
       "opt_k": "K — Da verificare con fattura",
-      "opt_r": "R — Riaddebito",
-      "opt_a": "A — Accettato"
+      "opt_r": "R — Storno richiesto",
+      "opt_a": "A — Storno ricevuto"
     },
     "client_header": {
       "client": "Cliente",
