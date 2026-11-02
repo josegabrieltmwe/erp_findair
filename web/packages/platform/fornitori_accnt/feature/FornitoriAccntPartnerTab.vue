@@ -95,6 +95,8 @@
           <v-text-field
             v-if="showField('pw')"
             v-model="form.pw"
+            type="password"
+            autocomplete="new-password"
             :label="t('fornitori_accnt.form_password')"
             :hint="t('fornitori_accnt.form_secret_hint')"
             persistent-hint
@@ -104,6 +106,8 @@
           <v-text-field
             v-if="showField('chiave')"
             v-model="form.chiave"
+            type="password"
+            autocomplete="new-password"
             :label="t('fornitori_accnt.form_key')"
             :hint="t('fornitori_accnt.form_secret_hint')"
             persistent-hint
@@ -296,8 +300,9 @@ function openEdit(item: FornitoreAccnt): void {
   form.id_account = item.id_account || '';
   form.customer = item.customer || '';
   form.user = item.user || '';
-  form.pw = item.pw || '';
-  form.chiave = item.chiave || '';
+  // Los secretos no se precargan: vacío = conservar el valor guardado.
+  form.pw = '';
+  form.chiave = '';
   form.iso = item.iso || '';
   form.sis_metrico = item.sis_metrico || '';
   form.note = item.note || '';

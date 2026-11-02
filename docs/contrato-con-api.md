@@ -170,3 +170,12 @@ P42 (guard de root en `User_Admin_Controller`), P43 (cancelar cargo con factura/
 
 ### Orden sugerido
 G.1 → G.3 → G.4 (cambios pequeños en la API, sin impacto de permisos) → G.2 (trabajo de SPA, sin tocar la API) → G.5 (tras decidir) → G.6.
+
+## H. Origen de la cuenta de cada tarifa realtime de WebCargo (2026-11-02)
+
+`POST api_cargo_webcargo_rate` (stream) etiqueta cada tarifa con `account_origin` (`partner` | `tmwe`) y `account_fallback` (`true` si se usó la cuenta de TMWE porque WebCargo rechazó la delegación del partner). Solo lo declara el worker; si no lo declara, los campos no aparecen. `account_fallback_reason` solo lo ven los administradores.
+
+- **ERP (`FlightSearchResultsTable.vue`):** las tarifas con `account_origin = tmwe` llevan un icono de aviso con tooltip junto al código de la aerolínea. El margen no cambia.
+- **ERP, al reservar (`BookingConfirmDialog.vue`):** aviso si la `account_ref` de la tarifa (que devuelve `api_cargo_webcargo_rate_detail`) indica la cuenta de TMWE: `fallback_from` presente, o `ref_id` 0 en una tarifa realtime. No bloquea la reserva.
+- **tmwe-wueform (clientes):** no muestra ninguna diferencia, por decisión de negocio (2026-11-02).
+- Diseño y riesgos asumidos: `tmwe_api/docs/02-arquitectura/decisiones/respaldo-cuenta-directa-webcargo.md`.

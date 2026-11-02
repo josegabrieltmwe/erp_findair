@@ -405,7 +405,8 @@
     "form_cap_list": "Included postal codes",
     "form_cap_ko": "Excluded postal codes",
     "cap_badge": "{n} ZIP",
-    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add."
+    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add.",
+    "cap_discarded": "Ongeldige postcodes zijn verwijderd: {list}"
   },
   "carrier_services": {
     "subtitle": "Carrier service definitions, zones and supplements.",
@@ -656,6 +657,7 @@
     "descr": "Omschrijving (IT)",
     "descr_en": "Omschrijving (EN)",
     "aliquota": "BTW-tarief",
+    "aliquota_range": "Het tarief moet tussen 0 en 100 liggen.",
     "xml_natura": "SDI Natura",
     "xml_rif_norm": "Wettelijke referentie",
     "route": "Route",
@@ -803,7 +805,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Delete account",
-    "delete_message": "Delete account {name}?"
+    "delete_message": "Delete account {name}?",
+    "name_or_iban_required": "Vul minstens de naam of de IBAN in."
   },
   "payment_config": {
     "subtitle": "Manage payment methods and payment terms.",
@@ -836,6 +839,7 @@
     "form_type": "Type *",
     "form_xml_code": "XML Code (electronic invoice)",
     "form_orderby": "Sort Order",
+    "term_needs_bracket": "Kies minstens één dagenschijf of een dag van de maand: anders ontstaan geen vervaldata.",
     "form_day_of_month": "Day of month (0 = end of month)",
     "form_also_customers": "Also use for customer payments",
     "brackets_title": "Installment Brackets",
@@ -928,7 +932,7 @@
     "form_country": "Land van account",
     "form_metric_system": "Meetsysteem",
     "form_note": "Notitie",
-    "form_secret_hint": "Wordt onversleuteld getoond — legacy-pariteit",
+    "form_secret_hint": "Leeg laten om de opgeslagen waarde te behouden.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperiaal (Lb/In)",
     "created": "Inloggegevens aangemaakt",

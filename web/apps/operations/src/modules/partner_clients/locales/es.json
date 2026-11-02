@@ -125,6 +125,7 @@
         "checking": "Verificando…",
         "ok": "Verificado",
         "ko": "No verificado",
+        "unsaved_number": "Indica el número con prefijo de país (por ejemplo IT01234567890) o guarda primero la ficha.",
         "na": "No aplicable"
       },
       "more": {

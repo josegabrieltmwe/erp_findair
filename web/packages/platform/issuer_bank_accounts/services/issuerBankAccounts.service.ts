@@ -44,17 +44,26 @@ export interface IssuerBankAccountPayload {
   orderby?: number;
 }
 
+/** El API responde `error` como texto o como `{code, message}`. */
+type RawError = string | { code?: string; message?: string };
+
 interface RawList {
   success?: boolean;
   data?: IssuerBankAccount[];
   total?: number;
-  error?: string;
+  error?: RawError;
 }
 
 interface RawWrite {
   success?: boolean;
-  error?: string;
+  error?: RawError;
   data?: { id: number };
+}
+
+/** Texto legible de un `error` del API (evita «[object Object]»). */
+export function errorText(error: RawError): string {
+  if (typeof error === 'string') return error;
+  return error.message || error.code || 'Error';
 }
 
 const ENDPOINT = '/api_issuer_bank_accounts';
@@ -62,23 +71,23 @@ const ENDPOINT = '/api_issuer_bank_accounts';
 export const issuerBankAccountsService = {
   async list(): Promise<IssuerBankAccount[]> {
     const raw = await http<RawList>(ENDPOINT);
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? [];
   },
 
   async create(payload: IssuerBankAccountPayload): Promise<number> {
     const raw = await http<RawWrite>(ENDPOINT, { method: 'POST', body: payload });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data?.id ?? 0;
   },
 
   async update(id: number, payload: IssuerBankAccountPayload): Promise<void> {
     const raw = await http<RawWrite>(ENDPOINT, { method: 'PUT', query: { id }, body: payload });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   async remove(id: number): Promise<void> {
     const raw = await http<RawWrite>(ENDPOINT, { method: 'DELETE', query: { id } });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 };

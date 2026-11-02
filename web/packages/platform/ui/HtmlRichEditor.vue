@@ -78,6 +78,7 @@
 </template>
 
 <script setup lang="ts">
+import { safeLinkUrl } from '../utils/html';
 import { onMounted, ref, watch } from 'vue';
 import {
   mdiFormatBold,
@@ -161,7 +162,7 @@ function exec(cmd: string, value?: string): void {
 }
 
 function insertLink(): void {
-  const url = window.prompt('URL:');
+  const url = safeLinkUrl(window.prompt('URL:') ?? '');
   if (!url) return;
   exec('createLink', url);
 }

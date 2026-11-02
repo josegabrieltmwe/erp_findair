@@ -1,3 +1,4 @@
+import { todayLocal } from "@shared/utils/date";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { toUserMessage } from "@tmwe/shared-frontend/http";
@@ -25,7 +26,7 @@ export const useFiscConfigStore = defineStore("invoicing-fisc-config", () => {
   const canWrite = computed(() => !!meta.value?.puede_escribir);
   const esTmwe = computed(() => !!meta.value?.es_tmwe);
   const hoy = computed(
-    () => meta.value?.hoy ?? new Date().toISOString().slice(0, 10),
+    () => meta.value?.hoy ?? todayLocal(),
   );
 
   async function load(force = false): Promise<void> {

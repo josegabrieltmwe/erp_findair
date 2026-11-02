@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConfirmDialog from "@shared/ui/ConfirmDialog.vue";
@@ -32,7 +33,7 @@ const { t } = useI18n();
 const toasts = useToastStore();
 const caps = capabilities();
 
-const today = (): string => new Date().toISOString().slice(0, 10);
+const today = (): string => todayLocal();
 const money = (v: number): string =>
   Number(v).toLocaleString("it-IT", {
     minimumFractionDigits: 2,

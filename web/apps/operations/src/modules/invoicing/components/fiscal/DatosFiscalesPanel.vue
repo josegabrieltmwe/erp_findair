@@ -401,6 +401,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { computed, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { toUserMessage } from "@tmwe/shared-frontend/http";
@@ -453,7 +454,7 @@ function fuenteTexto(ref: string | null | undefined): string {
   return `${t(kt)} · ${t(kc)}${extra ? ` ${extra}` : ""}`;
 }
 
-const today = new Date().toISOString().slice(0, 10);
+const today = todayLocal();
 const fecha = ref(today);
 const data = ref<DatosFiscales | null>(null);
 const loading = ref(false);

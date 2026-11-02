@@ -38,6 +38,17 @@ export interface WebcargoRate {
   bookable?: boolean;
   not_bookable_reason?: string;
   /**
+   * Cuenta con la que se obtuvo la tarifa (cache). `ref_id` 0 = sin delegacion
+   * (cuenta directa de TMWE); `fallback_from` = id de la delegacion rechazada
+   * cuya tarifa se obtuvo con la cuenta de TMWE.
+   */
+  account_ref?: {
+    source?: string;
+    ref_id?: number | null;
+    label?: string;
+    fallback_from?: number | null;
+  } | null;
+  /**
    * Cut-off (latest acceptance) de la aerolinea, ISO con offset.
    *
    * En `klm_quote` es el REAL (`routing.latestAcceptanceTs`); en `realtime`

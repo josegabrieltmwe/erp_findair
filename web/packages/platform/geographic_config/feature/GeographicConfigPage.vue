@@ -547,7 +547,7 @@
             :hint="t('geographic_config.form_cap_chip_hint')"
             persistent-hint multiple chips closable-chips clearable
             density="compact" class="mb-3"
-            @update:model-value="capListChips = sanitizeCapChips($event)"
+            @update:model-value="capListChips = sanitizeCapChipsWithNotice($event)"
           />
           <v-combobox
             v-model="capKoChips"
@@ -555,7 +555,7 @@
             :hint="t('geographic_config.form_cap_chip_hint')"
             persistent-hint multiple chips closable-chips clearable
             density="compact" class="mb-3"
-            @update:model-value="capKoChips = sanitizeCapChips($event)"
+            @update:model-value="capKoChips = sanitizeCapChipsWithNotice($event)"
           />
           <div class="cm-grid">
             <v-switch v-model="subzoneForm.bidirezBool" :label="t('geographic_config.form_bidirez')" color="primary" density="compact" hide-details inset />
@@ -1077,6 +1077,23 @@ const CAP_EXACT_RE = /^[A-Za-z0-9][A-Za-z0-9 ]{0,9}$/;   // CAP exacto (incl. UK
 const CAP_PREFIX_RE = /^[0-9]{1,4}\?$/;                  // prefijo comodín NNN?
 
 /** Filtra chips inválidos y normaliza (trim, mayúsculas para CAP alfanuméricos UK). */
+function isValidCap(v: string): boolean {
+  return CAP_EXACT_RE.test(v) || CAP_PREFIX_RE.test(v);
+}
+
+/** Avisa de los chips que `sanitizeCapChips` va a descartar (antes se perdían en silencio). */
+function sanitizeCapChipsWithNotice(chips: unknown): string[] {
+  if (Array.isArray(chips)) {
+    const bad = chips
+      .map((c) => String(c ?? '').trim().toUpperCase())
+      .filter((v) => v !== '' && !isValidCap(v));
+    if (bad.length > 0) {
+      toast.warning(t('geographic_config.cap_discarded', { list: bad.join(', ') }));
+    }
+  }
+  return sanitizeCapChips(chips);
+}
+
 function sanitizeCapChips(chips: unknown): string[] {
   if (!Array.isArray(chips)) return [];
   const seen = new Set<string>();
@@ -1084,7 +1101,7 @@ function sanitizeCapChips(chips: unknown): string[] {
   for (const raw of chips) {
     const v = String(raw ?? '').trim().toUpperCase();
     if (!v || seen.has(v)) continue;
-    if (CAP_EXACT_RE.test(v) || CAP_PREFIX_RE.test(v)) {
+    if (isValidCap(v)) {
       seen.add(v);
       out.push(v);
     }

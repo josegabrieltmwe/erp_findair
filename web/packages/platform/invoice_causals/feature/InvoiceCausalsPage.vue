@@ -170,7 +170,8 @@
                 <v-text-field
                   v-model.number="form.aliquota"
                   :label="t('invoice_causals.aliquota')"
-                  type="number" step="0.01"
+                  type="number" step="0.01" min="0" max="100"
+                  :rules="[aliquotaRule]"
                   :disabled="articleLocked"
                   variant="outlined" density="comfortable"
                 />
@@ -349,6 +350,11 @@ const flagNoIva = ref(false);
 const blocca = ref(false);
 const isoFromTokens = ref<string[]>([]);
 const isoToTokens = ref<string[]>([]);
+// La alícuota vacía es válida (causales sin IVA); si hay valor, 0 a 100.
+const aliquotaRule = (v: unknown) =>
+  v === null || v === undefined || v === '' ||
+  (Number(v) >= 0 && Number(v) <= 100) ||
+  t('invoice_causals.aliquota_range');
 const requiredRule = (v: unknown) => (!!v && String(v).trim() !== '') || t('common.required');
 
 // Fila con ordine<20: sembrada por el sistema, tipo/tipo_cli_base/ordine bloqueados.

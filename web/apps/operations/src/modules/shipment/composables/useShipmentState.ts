@@ -74,6 +74,15 @@ export function useShipmentState(
         case "colli":
         case "peso":
         case "peso_tassato":
+        // Same list the server refuses on an invoiced shipment
+        // (Shipment_Constants::READONLY_FIELDS_INVOICED).
+        case "km_forza":
+        case "peso_fornit":
+        case "volume_cliente":
+        case "peso_fornit_reale":
+        case "acc_fissa_corriere":
+        case "checkforn":
+        case "id_fattura_p":
         case "opz_par_doc":
         case "dogana_imp":
         case "id_valuta_dogana":

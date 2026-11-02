@@ -134,6 +134,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -211,7 +212,7 @@ const notBillableReason = computed<string>(() => reasonText(diagnostics.value));
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
 function today(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocal();
 }
 function money(v: number): string {
   return `${Number(v ?? 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;

@@ -6,6 +6,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@shipment": fileURLToPath(
+        new URL("./src/modules/shipment", import.meta.url),
+      ),
       "@shared": fileURLToPath(
         new URL("../../packages/platform", import.meta.url),
       ),

@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { htmlToPlain, plainToHtml } from "@shared/utils/html";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
@@ -123,21 +124,6 @@ const quoteNotesDisplay = computed<string>({
     localTxt.value = plainToHtml(v);
   },
 });
-
-function htmlToPlain(s: string): string {
-  return s
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&nbsp;/g, " ")
-    .trim();
-}
-
-function plainToHtml(s: string): string {
-  return s.replace(/\r\n|\r|\n/g, "<br>");
-}
 
 async function onCommitQuoteNotes(): Promise<void> {
   if (!id.value) return;

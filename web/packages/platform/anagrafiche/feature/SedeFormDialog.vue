@@ -277,6 +277,11 @@ function onClose(): void {
 }
 
 async function onSave(): Promise<void> {
+  // El campo se deshabilita fuera de Italia pero conservaba el valor anterior:
+  // se limpia para no enviar un código destinatario SDI a una sede extranjera.
+  if (form.value.id_paese_iso !== 'IT' && form.value.cod_destin) {
+    form.value.cod_destin = '';
+  }
   saving.value = true;
   try {
     if (isEdit.value && form.value.id) {

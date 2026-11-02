@@ -99,6 +99,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { paymentsApi } from "../services/payments.service";
@@ -147,7 +148,7 @@ async function load(): Promise<void> {
 function statusOf(p: InvoicePaymentRow): PaymentStatus {
   if (p.status) return p.status;
   if (!isOpenRow(p)) return "paid";
-  return p.scadenza && p.scadenza < new Date().toISOString().slice(0, 10)
+  return p.scadenza && p.scadenza < todayLocal()
     ? "overdue"
     : "pending";
 }

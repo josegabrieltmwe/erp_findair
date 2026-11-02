@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { pickupsService } from "../services/pickups.service";
@@ -8,7 +9,7 @@ import type { CalendarResult, Pickup } from "../types";
 
 const { t } = useI18n();
 
-const date = ref(new Date().toISOString().slice(0, 10));
+const date = ref(todayLocal());
 const loading = ref(false);
 const error = ref<string | null>(null);
 const result = ref<CalendarResult | null>(null);
@@ -35,9 +36,9 @@ async function load(): Promise<void> {
 }
 
 function shiftDay(delta: number): void {
-  const d = new Date(date.value);
+  const d = new Date(`${date.value}T00:00:00`);
   d.setDate(d.getDate() + delta);
-  date.value = d.toISOString().slice(0, 10);
+  date.value = todayLocal(d);
   load();
 }
 

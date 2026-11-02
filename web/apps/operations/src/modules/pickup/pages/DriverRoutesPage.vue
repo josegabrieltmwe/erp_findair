@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { driverService } from "../services/driver.service";
@@ -6,7 +7,7 @@ import type { Driver, DriverRoute, Manifest } from "../types";
 
 const { t } = useI18n();
 
-const date = ref(new Date().toISOString().slice(0, 10));
+const date = ref(todayLocal());
 const drivers = ref<Driver[]>([]);
 const selectedDriver = ref<number | null>(null);
 const route = ref<DriverRoute | null>(null);

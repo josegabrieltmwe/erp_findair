@@ -672,6 +672,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -758,7 +759,7 @@ let supplierTimer: ReturnType<typeof setTimeout> | null = null;
 const emptyNew = () => ({
   id_anagrafica: 0,
   numero_alfanum: "",
-  data_fattura: new Date().toISOString().slice(0, 10),
+  data_fattura: todayLocal(),
   importo_netto: 0,
   importo_iva: 0,
   valuta_sigla: "EUR",

@@ -1,3 +1,6 @@
 
 # Resultados de consultas contra produccion: nunca versionar
 *.local.md
+
+# Salida del MCP de Playwright
+.playwright-mcp/

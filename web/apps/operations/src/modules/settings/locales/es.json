@@ -405,7 +405,8 @@
     "form_cap_list": "CAP incluidos",
     "form_cap_ko": "CAP excluidos",
     "cap_badge": "{n} CAP",
-    "form_cap_chip_hint": "CAP exacto (20100) o prefijo con ? (201? = todos los 201xx). Enter para añadir."
+    "form_cap_chip_hint": "CAP exacto (20100) o prefijo con ? (201? = todos los 201xx). Enter para añadir.",
+    "cap_discarded": "Se descartaron CAP no válidos: {list}"
   },
   "carrier_services": {
     "subtitle": "Definiciones de servicios de courier, zonas y suplementos.",
@@ -656,6 +657,7 @@
     "descr": "Descripción (IT)",
     "descr_en": "Descripción (EN)",
     "aliquota": "Alícuota IVA",
+    "aliquota_range": "La alícuota debe estar entre 0 y 100.",
     "xml_natura": "Natura SDI",
     "xml_rif_norm": "Referencia normativa",
     "route": "Ruta",
@@ -803,7 +805,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Eliminar cuenta",
-    "delete_message": "¿Eliminar la cuenta {name}?"
+    "delete_message": "¿Eliminar la cuenta {name}?",
+    "name_or_iban_required": "Indica al menos el nombre o el IBAN."
   },
   "payment_config": {
     "subtitle": "Gestiona los métodos de pago y los plazos de pago.",
@@ -836,6 +839,7 @@
     "form_type": "Tipo *",
     "form_xml_code": "Código XML (factura electrónica)",
     "form_orderby": "Orden",
+    "term_needs_bracket": "Marca al menos un tramo de días o indica un día del mes: sin ellos el plazo no genera vencimientos.",
     "form_day_of_month": "Día del mes (0 = fin de mes)",
     "form_also_customers": "Usar también para pagos de clientes",
     "brackets_title": "Tramos de cuotas",
@@ -928,7 +932,7 @@
     "form_country": "País de la cuenta",
     "form_metric_system": "Sistema de medida",
     "form_note": "Nota",
-    "form_secret_hint": "Se muestra en claro — paridad con el legacy",
+    "form_secret_hint": "Déjalo vacío para conservar el valor guardado.",
     "metric_m": "Métrico (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credencial creada",
