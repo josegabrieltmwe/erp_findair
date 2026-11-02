@@ -6,6 +6,7 @@ vi.mock("@shipment/services/shipment.service", () => ({
   shipmentService: { update: (...a: unknown[]) => update(...a) },
 }));
 vi.mock("@shipment/services/http", () => ({ http: {} }));
+vi.mock("@shipment/plugins/i18n", () => ({ i18n: { global: { t: (k: string) => k } } }));
 
 import { useShipmentStore } from "./shipment.store";
 import { useToastStore } from "./toast.store";

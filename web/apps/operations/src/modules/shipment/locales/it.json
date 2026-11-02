@@ -1492,6 +1492,24 @@
     "quote_menu": {
       "label": "Comunicazione",
       "pending_hint": "{n} richiesta/e senza risposta"
+    },
+    "validation": {
+      "not_number": "{label}: deve essere un numero",
+      "negative": "{label}: non può essere negativo",
+      "currency_invalid": "{label}: codice valuta non valido (3 lettere, es. EUR)",
+      "fields": {
+        "dogana_imp": "Valore dogana",
+        "assicuraz_imp": "Assicurazione",
+        "contras_imp": "Contrassegno",
+        "peso": "Peso",
+        "peso_tassato": "Peso tassato",
+        "peso_reale": "Peso reale",
+        "peso_fornit": "Peso fornitore",
+        "peso_fornit_reale": "Peso reale fornitore",
+        "id_valuta_dogana": "Valuta dogana",
+        "id_valuta_assic": "Valuta assicurazione",
+        "id_valuta_contras": "Valuta contrassegno"
+      }
     }
   },
   "platform": {

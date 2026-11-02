@@ -18,7 +18,13 @@ import type { Cargo } from "@cargo/services/cargo.types";
 
 export type FieldError = string;
 
-/** A validator returns null when valid, or an error message string. */
+/** Traductor con la forma de `i18n.global.t`: (clave, parametros) -> texto. */
+export type Translate = (key: string, params?: Record<string, unknown>) => string;
+
+/**
+ * A validator returns null when valid, or the i18n KEY of the reason (`cargo.validation.<motivo>`).
+ * The field name comes from `cargo.validation.fields.<campo>`; `validateDraft` resolves the final text.
+ */
 type Validator = (value: unknown) => FieldError | null;
 
 /** Empty / unset values are treated as valid (the field is simply absent). */
@@ -27,35 +33,35 @@ function isBlank(value: unknown): boolean {
 }
 
 /** Numeric, >= 0. Accepts numbers or numeric strings (legacy payloads). */
-function nonNegativeNumber(label: string): Validator {
+function nonNegativeNumber(): Validator {
   return (value) => {
     if (isBlank(value)) return null;
     const n = Number(value);
-    if (!Number.isFinite(n)) return `${label}: valore numerico non valido`;
-    if (n < 0) return `${label}: non puo essere negativo`;
+    if (!Number.isFinite(n)) return "cargo.validation.not_number";
+    if (n < 0) return "cargo.validation.negative";
     return null;
   };
 }
 
 /** Non-negative integer (used for foreign-key ids). */
-function nonNegativeInteger(label: string): Validator {
+function nonNegativeInteger(): Validator {
   return (value) => {
     if (isBlank(value)) return null;
     const n = Number(value);
     if (!Number.isFinite(n) || !Number.isInteger(n))
-      return `${label}: deve essere un intero`;
-    if (n < 0) return `${label}: non puo essere negativo`;
+      return "cargo.validation.not_integer";
+    if (n < 0) return "cargo.validation.negative";
     return null;
   };
 }
 
 /** ISO 4217 currency code — exactly 3 ASCII letters. */
-function isoCurrency(label: string): Validator {
+function isoCurrency(): Validator {
   return (value) => {
     if (isBlank(value)) return null;
     const s = String(value).trim();
     if (!/^[A-Za-z]{3}$/.test(s))
-      return `${label}: codice valuta ISO non valido (3 lettere)`;
+      return "cargo.validation.currency_invalid";
     return null;
   };
 }
@@ -66,29 +72,29 @@ function isoCurrency(label: string): Validator {
  */
 export const cargoRules: Partial<Record<keyof Cargo, Validator>> = {
   // Money / numeric amounts (>= 0)
-  dogana_imp: nonNegativeNumber("Valore in dogana"),
-  assicuraz_imp: nonNegativeNumber("Valore assicurato"),
-  peso: nonNegativeNumber("Peso"),
-  pesor: nonNegativeNumber("Peso reale"),
-  peso_reale: nonNegativeNumber("Peso reale"),
-  peso_fornit_reale: nonNegativeNumber("Peso fornitore"),
-  carico_export: nonNegativeNumber("Carico export"),
-  carico_import: nonNegativeNumber("Carico import"),
-  carico_volo: nonNegativeNumber("Carico volo"),
-  costo_volo_previsto: nonNegativeNumber("Costo volo previsto"),
-  costo_volo_reale: nonNegativeNumber("Costo volo reale"),
+  dogana_imp: nonNegativeNumber(),
+  assicuraz_imp: nonNegativeNumber(),
+  peso: nonNegativeNumber(),
+  pesor: nonNegativeNumber(),
+  peso_reale: nonNegativeNumber(),
+  peso_fornit_reale: nonNegativeNumber(),
+  carico_export: nonNegativeNumber(),
+  carico_import: nonNegativeNumber(),
+  carico_volo: nonNegativeNumber(),
+  costo_volo_previsto: nonNegativeNumber(),
+  costo_volo_reale: nonNegativeNumber(),
 
   // ISO currency codes (3 letters)
-  id_valuta_dogana: isoCurrency("Valuta dogana"),
-  id_valuta_assic: isoCurrency("Valuta assicurazione"),
-  id_valuta_cliente: isoCurrency("Valuta cliente"),
+  id_valuta_dogana: isoCurrency(),
+  id_valuta_assic: isoCurrency(),
+  id_valuta_cliente: isoCurrency(),
 
   // Foreign-key ids (non-negative integers)
-  id_cliente: nonNegativeInteger("Cliente"),
-  id_sede: nonNegativeInteger("Sede"),
-  id_partner: nonNegativeInteger("Partner"),
-  id_ag_export: nonNegativeInteger("Agenzia export"),
-  id_ag_import: nonNegativeInteger("Agenzia import"),
+  id_cliente: nonNegativeInteger(),
+  id_sede: nonNegativeInteger(),
+  id_partner: nonNegativeInteger(),
+  id_ag_export: nonNegativeInteger(),
+  id_ag_import: nonNegativeInteger(),
 };
 
 /**
@@ -102,15 +108,18 @@ export const cargoRules: Partial<Record<keyof Cargo, Validator>> = {
  */
 export function validateDraft(
   patch: Partial<Cargo>,
-  locked?: (field: keyof Cargo) => boolean,
+  locked: ((field: keyof Cargo) => boolean) | undefined,
+  t: Translate,
 ): Record<string, FieldError> {
   const errors: Record<string, FieldError> = {};
   for (const key of Object.keys(patch) as (keyof Cargo)[]) {
     if (locked?.(key)) continue;
     const rule = cargoRules[key];
     if (!rule) continue;
-    const msg = rule(patch[key]);
-    if (msg) errors[key as string] = msg;
+    const reason = rule(patch[key]);
+    if (reason) {
+      errors[key as string] = t(reason, { label: t(`cargo.validation.fields.${String(key)}`) });
+    }
   }
   return errors;
 }

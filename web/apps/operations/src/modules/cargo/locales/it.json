@@ -1937,6 +1937,33 @@
       "ready": "Il cargo è pronto per la generazione LDV.",
       "issues_found": "Sono state rilevate {n} anomalie da risolvere prima di procedere.",
       "run_again": "Esegui di nuovo"
+    },
+    "validation": {
+      "not_number": "{label}: deve essere un numero",
+      "negative": "{label}: non può essere negativo",
+      "currency_invalid": "{label}: codice valuta non valido (3 lettere, es. EUR)",
+      "not_integer": "{label}: deve essere un intero",
+      "fields": {
+        "dogana_imp": "Valore in dogana",
+        "assicuraz_imp": "Valore assicurato",
+        "peso": "Peso",
+        "pesor": "Peso reale",
+        "peso_reale": "Peso reale",
+        "peso_fornit_reale": "Peso fornitore",
+        "carico_export": "Carico export",
+        "carico_import": "Carico import",
+        "carico_volo": "Carico volo",
+        "costo_volo_previsto": "Costo volo previsto",
+        "costo_volo_reale": "Costo volo reale",
+        "id_valuta_dogana": "Valuta dogana",
+        "id_valuta_assic": "Valuta assicurazione",
+        "id_valuta_cliente": "Valuta cliente",
+        "id_cliente": "Cliente",
+        "id_sede": "Sede",
+        "id_partner": "Partner",
+        "id_ag_export": "Agenzia export",
+        "id_ag_import": "Agenzia import"
+      }
     }
   },
   "shell": {

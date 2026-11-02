@@ -1937,6 +1937,33 @@
       "ready": "Die Cargo-Sendung ist bereit für die LDV-Erstellung.",
       "issues_found": "{n} Probleme gefunden, die vor dem Fortfahren behoben werden müssen.",
       "run_again": "Erneut ausführen"
+    },
+    "validation": {
+      "not_number": "{label}: muss eine Zahl sein",
+      "negative": "{label}: darf nicht negativ sein",
+      "currency_invalid": "{label}: ungültiger Währungscode (3 Buchstaben, z. B. EUR)",
+      "not_integer": "{label}: muss eine ganze Zahl sein",
+      "fields": {
+        "dogana_imp": "Wert beim Zoll",
+        "assicuraz_imp": "Versicherter Wert",
+        "peso": "Gewicht",
+        "pesor": "Tatsächliches Gewicht",
+        "peso_reale": "Tatsächliches Gewicht",
+        "peso_fornit_reale": "Lieferantengewicht",
+        "carico_export": "Exportladung",
+        "carico_import": "Importladung",
+        "carico_volo": "Flugladung",
+        "costo_volo_previsto": "Geplante Flugkosten",
+        "costo_volo_reale": "Tatsächliche Flugkosten",
+        "id_valuta_dogana": "Zollwährung",
+        "id_valuta_assic": "Versicherungswährung",
+        "id_valuta_cliente": "Kundenwährung",
+        "id_cliente": "Kunde",
+        "id_sede": "Standort",
+        "id_partner": "Partner",
+        "id_ag_export": "Exportagentur",
+        "id_ag_import": "Importagentur"
+      }
     }
   },
   "shell": {

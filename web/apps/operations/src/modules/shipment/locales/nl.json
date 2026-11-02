@@ -1492,6 +1492,24 @@
     "quote_menu": {
       "label": "Communicatie",
       "pending_hint": "{n} aanvra(a)g(en) zonder antwoord"
+    },
+    "validation": {
+      "not_number": "{label}: moet een getal zijn",
+      "negative": "{label}: mag niet negatief zijn",
+      "currency_invalid": "{label}: ongeldige valutacode (3 letters, bv. EUR)",
+      "fields": {
+        "dogana_imp": "Douanewaarde",
+        "assicuraz_imp": "Verzekering",
+        "contras_imp": "Rembours",
+        "peso": "Gewicht",
+        "peso_tassato": "Taxeerbaar gewicht",
+        "peso_reale": "Werkelijk gewicht",
+        "peso_fornit": "Gewicht leverancier",
+        "peso_fornit_reale": "Werkelijk gewicht leverancier",
+        "id_valuta_dogana": "Douanevaluta",
+        "id_valuta_assic": "Verzekeringsvaluta",
+        "id_valuta_contras": "Remboursvaluta"
+      }
     }
   },
   "platform": {

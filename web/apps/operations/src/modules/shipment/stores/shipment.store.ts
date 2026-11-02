@@ -12,7 +12,11 @@ import { filesService } from "@shipment/services/files.service";
 import { http } from "@shipment/services/http";
 import { useToastStore } from "./toast.store";
 import { createAfterCommitQueue } from "@shipment/utils/afterCommitQueue";
-import { validateShipmentPatch } from "@shipment/validation/shipmentRules";
+import { i18n } from "@shipment/plugins/i18n";
+import {
+  validateShipmentPatch,
+  type Translate,
+} from "@shipment/validation/shipmentRules";
 import type {
   Shipment,
   ShipmentAddress,
@@ -193,7 +197,10 @@ export const useShipmentStore = defineStore("shipment", () => {
    * rather than per-field in every box.
    */
   function validateDraft(): { ok: boolean; errors: string[] } {
-    const errors = validateShipmentPatch(draftPatch.value);
+    const errors = validateShipmentPatch(
+      draftPatch.value,
+      i18n.global.t as unknown as Translate,
+    );
     return { ok: errors.length === 0, errors };
   }
 

@@ -1492,6 +1492,24 @@
     "quote_menu": {
       "label": "Kommunikation",
       "pending_hint": "{n} Anfrage(n) ohne Antwort"
+    },
+    "validation": {
+      "not_number": "{label}: muss eine Zahl sein",
+      "negative": "{label}: darf nicht negativ sein",
+      "currency_invalid": "{label}: ungültiger Währungscode (3 Buchstaben, z. B. EUR)",
+      "fields": {
+        "dogana_imp": "Zollwert",
+        "assicuraz_imp": "Versicherung",
+        "contras_imp": "Nachnahme",
+        "peso": "Gewicht",
+        "peso_tassato": "Frachtpflichtiges Gewicht",
+        "peso_reale": "Tatsächliches Gewicht",
+        "peso_fornit": "Lieferantengewicht",
+        "peso_fornit_reale": "Tatsächliches Lieferantengewicht",
+        "id_valuta_dogana": "Zollwährung",
+        "id_valuta_assic": "Versicherungswährung",
+        "id_valuta_contras": "Nachnahmewährung"
+      }
     }
   },
   "platform": {

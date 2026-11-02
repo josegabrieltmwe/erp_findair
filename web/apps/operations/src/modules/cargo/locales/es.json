@@ -1937,6 +1937,33 @@
       "ready": "El cargo está listo para generar la LDV.",
       "issues_found": "Se han detectado {n} anomalías que hay que resolver antes de continuar.",
       "run_again": "Ejecutar de nuevo"
+    },
+    "validation": {
+      "not_number": "{label}: debe ser un número",
+      "negative": "{label}: no puede ser negativo",
+      "currency_invalid": "{label}: código de moneda no válido (3 letras, p. ej. EUR)",
+      "not_integer": "{label}: debe ser un entero",
+      "fields": {
+        "dogana_imp": "Valor en aduana",
+        "assicuraz_imp": "Valor asegurado",
+        "peso": "Peso",
+        "pesor": "Peso real",
+        "peso_reale": "Peso real",
+        "peso_fornit_reale": "Peso del proveedor",
+        "carico_export": "Carga de exportación",
+        "carico_import": "Carga de importación",
+        "carico_volo": "Carga del vuelo",
+        "costo_volo_previsto": "Coste de vuelo previsto",
+        "costo_volo_reale": "Coste de vuelo real",
+        "id_valuta_dogana": "Moneda de aduana",
+        "id_valuta_assic": "Moneda del seguro",
+        "id_valuta_cliente": "Moneda del cliente",
+        "id_cliente": "Cliente",
+        "id_sede": "Sede",
+        "id_partner": "Partner",
+        "id_ag_export": "Agencia de exportación",
+        "id_ag_import": "Agencia de importación"
+      }
     }
   },
   "shell": {
