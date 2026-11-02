@@ -351,6 +351,33 @@
       "reset_password_done": "Password regenerated · shown once",
       "send_profile": "Send profile by email",
       "send_profile_done": "Profile sent by email",
+      "access_link": {
+        "send": "Send access link",
+        "confirm": "An email with a single-use link will be sent to {mail} so that {name} can set a password. Any earlier pending link will stop working. Send it?",
+        "sent": "Access link sent",
+        "sent_to": "Access link sent to {mail}",
+        "sent_creation": "An access link valid for 24 hours has been sent to {mail} so they can set their password.",
+        "not_sent": "The record was created, but the access link could not be sent to the administrator.",
+        "resend": "Resend access link",
+        "not_found": "The contact no longer exists.",
+        "rate_limited_seconds": "Too many links have been sent to this contact. Wait {n} s before trying again.",
+        "rate_limited_minutes": "Too many links have been sent to this contact. Wait about {n} min before trying again."
+      },
+      "admin_contact": {
+        "title": "Account administrator",
+        "hint": "The person who will administer the partner account. They will receive an email with a link to set their password; the password is never shown.",
+        "nome": "Administrator name",
+        "mail": "Administrator email",
+        "erp_partner": "System partner",
+        "erp_partner_hint": "Has ERP access; requires an administrator.",
+        "result_title": "Account administrator",
+        "open_record": "Open the record",
+        "errors": {
+          "nome_required": "Enter the administrator's name.",
+          "mail_required": "Enter the administrator's email.",
+          "mail_invalid": "The email format is not valid."
+        }
+      },
       "perm": {
         "app_access": "App access",
         "erp_login_app": "ERP login (app)",
