@@ -1305,7 +1305,8 @@
     "disable_title": "MFA deaktivieren",
     "disable_desc": "Gib einen gültigen Code aus deiner Authenticator-App ein, um MFA zu deaktivieren",
     "disable_button": "Deaktivieren",
-    "disable_success": "MFA deaktiviert"
+    "disable_success": "MFA deaktiviert",
+    "code_invalid": "Ungültiger oder abgelaufener Code. Prüfe die Uhrzeit deines Geräts und versuche es erneut."
   },
   "scheduler": {
     "title": "Geplante Aufgaben",

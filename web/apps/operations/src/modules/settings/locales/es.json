@@ -1305,7 +1305,8 @@
     "disable_title": "Desactivar MFA",
     "disable_desc": "Introduce un código válido de tu app autenticadora para desactivar la MFA",
     "disable_button": "Desactivar",
-    "disable_success": "MFA desactivada"
+    "disable_success": "MFA desactivada",
+    "code_invalid": "Código no válido o caducado. Comprueba la hora del dispositivo e inténtalo de nuevo."
   },
   "scheduler": {
     "title": "Tareas programadas",

@@ -1305,7 +1305,8 @@
     "disable_title": "Disattiva MFA",
     "disable_desc": "Inserisci un codice valido dalla tua app di autenticazione per disattivare la MFA",
     "disable_button": "Disattiva",
-    "disable_success": "MFA disattivata"
+    "disable_success": "MFA disattivata",
+    "code_invalid": "Codice non valido o scaduto. Controlla l'ora del dispositivo e riprova."
   },
   "scheduler": {
     "title": "Attività pianificate",

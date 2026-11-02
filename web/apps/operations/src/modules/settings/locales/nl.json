@@ -1305,7 +1305,8 @@
     "disable_title": "MFA uitschakelen",
     "disable_desc": "Voer een geldige code uit je authenticator-app in om MFA uit te schakelen",
     "disable_button": "Uitschakelen",
-    "disable_success": "MFA uitgeschakeld"
+    "disable_success": "MFA uitgeschakeld",
+    "code_invalid": "Ongeldige of verlopen code. Controleer de tijd van je apparaat en probeer het opnieuw."
   },
   "scheduler": {
     "title": "Geplande taken",

@@ -1305,7 +1305,8 @@
     "disable_title": "Disable MFA",
     "disable_desc": "Enter a valid code from your authenticator app to disable MFA",
     "disable_button": "Disable",
-    "disable_success": "MFA disabled"
+    "disable_success": "MFA disabled",
+    "code_invalid": "Invalid or expired code. Check your device clock and try again."
   },
   "scheduler": {
     "title": "Scheduled tasks",
