@@ -1,6 +1,6 @@
 # Contrato con el API (`tmwe_api`)
 
-> **Estado:** vigente · **Generado:** 2026-10-31 · **Clasificación:** automática, pendiente de revisión humana
+> **Estado:** vigente · **Última modificación:** 2026-11-02 · **Clasificación:** automática, pendiente de revisión humana
 
 Lista única de lo que el BFF y la SPA piden a `tmwe_api`, fusión de `peticiones-backend.md` (detalle técnico y evidencia) y `prompt-agente-tmwe-json.md` (lista priorizada, ya obsoleta como prompt). Numeración unificada P01–P41; el detalle de cada una sigue en el `§` indicado de `peticiones-backend.md`.
 
@@ -127,6 +127,27 @@ Verificados leyendo código de `tmwe_api` y la SPA (sin ejecutar). Detalle y pri
 6. T3 pedia conservar el nombre de ruta; la implementacion usa nombres nuevos (`api_*`/`*_compat`): hay que reflejarlo en el contrato.
 7. Recuento de rutas ajax: 23 (pet) vs 24 (prompt, con 23 nombres) vs 6 restantes (plan).
 
+
+## I. Estado de las peticiones P42 a P57 (2026-11-02)
+
+Verificado con `git log` de `tmwe_api` y con tests PHPUnit de la suite Unit (la línea base tiene ~43 problemas previos, sin nuevos). Ninguna se ha probado contra BD ni en sandbox desplegado. Esta sección prevalece sobre la columna «Detalle» de §F cuando difieran.
+
+| ID | Estado | Dónde está | Notas |
+|---|---|---|---|
+| P42 | Resuelta | `sandbox` (`e1dfea11c`) | 403 `ROLE_ROOT_ONLY`. SPA adaptada (mensaje y acciones sobre root deshabilitadas si se sabe que quien actúa no es root) |
+| P43 | Resuelta | `sandbox` (`b0e1c9707`) | 409 si facturado o con reserva viva; `force` solo para el AWB emitido. SPA adaptada: la reserva viva pasa de aviso a bloqueo |
+| P44 | Abierta (opcional) | — | La SPA ya elige la expedición |
+| P45 | Hecha, sin integrar | rama `erp-p45-p56-p57` (`e7beb8c87`) | `atomic:true` en `ajax_shipment_packages` y `PUT api_shipment_packages`. La SPA ya envía `atomic:true`; un API sin P45 lo ignora. Falta confirmar el motor de `spedizioni_colli` (el esquema base dice InnoDB) |
+| P46, P48 | Resueltas | `sandbox` (`dc13b8654`) | |
+| P47 | Ya existía | `Invoice_Service::assert_not_future()` | 422 `INVOICE_DATE_IN_THE_FUTURE`; la petición estaba desactualizada |
+| P49, P50 | Resueltas | `sandbox` (`dc13b8654`) | 422 `CAUSAL_ALIQUOTA_INVALID` y `SCHEDULE_WITHOUT_INSTALLMENTS`. La alícuota usa `is_numeric` y acepta `1e1` |
+| P51 | Resuelta | `sandbox` (`7ea6d43ff`) | Solo valida lo informado y, al editar, lo que cambia |
+| P52 | Parcial | `sandbox` (`7ea6d43ff`) | `has_pw`/`has_chiave` y «vacío = conservar». Sin comprobar consumidores del front legacy ni el bundle antiguo de `web/dist`; la documentación de endpoints sigue diciendo que no se enmascaran |
+| P53 | Resuelta | `sandbox` (`dc13b8654`, `0ee3a33d1`) | |
+| P54 | Resuelta | `sandbox` (`dc13b8654`) | Código `BANK_ACCOUNT_NAME_OR_IBAN_REQUIRED`. Quedan con 200 los mensajes «id requerido» y «Sin cambios» |
+| P55 | Resuelta | `sandbox` (`7ea6d43ff`, `2bb28bcae`) | Saneador basado en DOM al guardar |
+| P56 | Parcial | rama `erp-p45-p56-p57` (`9f34ddd16`) | `random_int` hecho (el método está en `Contatto_Model`). El contacto explícito hereda la sede creada; sin `sedi` en el payload no hay sede que asignar. Los permisos `auth_17` a `auth_20` dependen de P38 |
+| P57 | Hecha, sin integrar | rama `erp-p45-p56-p57` (`2892f8112`) | `readonly_fields` en la carga de la expedición. La SPA ya lo usa además de sus reglas locales |
 
 ## G. Propuesta de cambios en `tmwe_api` (análisis del código, 2026-11-01)
 

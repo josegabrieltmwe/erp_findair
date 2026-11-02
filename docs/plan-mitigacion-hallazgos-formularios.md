@@ -156,7 +156,7 @@ Ramas `fix/ola1-formularios` y `ola3-spa` (sin fusionar). Cada corrección lleva
 | H22a | Hecho | Aviso de los CAP descartados |
 | H14 (SPA) | Hecho | VIES comprueba el número tecleado, `cod_destin` se limpia fuera de IT, `csvCell` neutraliza fórmulas. Faltan PEC, SDI y `pi_cf` en el API (P51) |
 | H3a (SPA) | Hecho | `pw` y `chiave` no se precargan y son `type="password"`. Falta que el API deje de devolverlos (P52) |
-| Ola 2, parte API | Pendiente | P47, P49, P50, P51, P52, P53, P55 |
+| Ola 2, parte API | Hecho en `tmwe_api` | Estado por petición en `contrato-con-api.md` §I. Falta integrar P45, P56 y P57 y probar en sandbox |
 | Puertas (Ola 3) | Hecho | `check:i18n` estaba en 401 frente a 368: eran cognados legítimos (Tipo, Cliente, Peso…) y 36 textos en italiano en `es`, que se tradujeron; baseline recongelado (365, luego 369 al añadir 4 cognados de `es`). `check:raw-text` recongelado en 2. Nuevo gate `check:ts-literals` |
 | H6 | Hecho, con duda | `useAnagraficaContext` lee `__TMWE_OPERATIONS__.isTmwe` después de los dos globales explícitos. **Duda abierta:** con suplantación activa `is_tmwe` sigue siendo el del usuario real; no se cambió |
 | H5 | Hecho | `bootstrapBff` muestra el `auth_error` (5 idiomas, enlace «Reintentar») y no redirige: sin bucle |
