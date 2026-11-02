@@ -156,7 +156,7 @@
       "cargoNoData": "Sin cargos",
       "complete": "Todas las expediciones enlazadas.",
       "incomplete": "{n} expedición(es) pendiente(s).",
-      "shipmentId": "ID spedizione",
+      "shipmentId": "ID envío",
       "result": "Resultado",
       "alreadyLinked": "Ya enlazada",
       "linked": "Enlazada",

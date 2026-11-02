@@ -37,11 +37,11 @@
           "description": "Países, zonas, subzonas y grupos"
         },
         "freschi_import": {
-          "title": "Import Freschi e Schiavoni",
+          "title": "Importación Freschi e Schiavoni",
           "description": "Carga masiva de zonas KO/remotas por archivo, reemplaza el conjunto completo"
         },
         "dhl_import": {
-          "title": "Import DHL",
+          "title": "Importación DHL",
           "description": "Carga masiva de aeropuertos y servicios prioritarios DHL"
         },
         "price_lists": {
@@ -309,9 +309,9 @@
     "tab_zones": "Asignación de zonas",
     "tab_groups": "Grupos de países",
     "tab_remote": "Áreas KO / remotas",
-    "filter_fornitore": "ID fornitore",
+    "filter_fornitore": "ID proveedor",
     "col_type": "Tipo",
-    "col_fornitore": "Fornitore",
+    "col_fornitore": "Proveedor",
     "col_iso": "ISO",
     "col_city": "Ciudad",
     "col_cap": "CAP",
@@ -322,7 +322,7 @@
     "remote_rm": "RM (recargo)",
     "dialog_new_remote": "Nueva área KO/remota",
     "dialog_edit_remote": "Editar área KO/remota",
-    "form_fornitore_id": "ID fornitore",
+    "form_fornitore_id": "ID proveedor",
     "form_city": "Ciudad",
     "form_city_hint": "Se normaliza sin espacios ni puntuación",
     "form_cap": "CAP",
@@ -461,7 +461,7 @@
     "peso_quale_vol": "Volumétrico",
     "f_colli_pall": "Aplica a",
     "colli_pall_both": "Colli y pallets",
-    "colli_pall_colli": "Solo colli",
+    "colli_pall_colli": "Solo bultos",
     "colli_pall_pallet": "Solo pallets",
     "f_lato_sup": "Lado mayor > (cm)",
     "f_num_colli_min": "Nº colli mínimo",
@@ -658,7 +658,7 @@
     "descr_en": "Descripción (EN)",
     "aliquota": "Alícuota IVA",
     "aliquota_range": "La alícuota debe estar entre 0 y 100.",
-    "xml_natura": "Natura SDI",
+    "xml_natura": "Naturaleza SDI",
     "xml_rif_norm": "Referencia normativa",
     "route": "Ruta",
     "route_section_title": "Exención por ruta (países)",
@@ -873,7 +873,7 @@
     "primary": "principal",
     "primary_hint": "Al marcarla como principal, la cuenta principal anterior de ese pais dejara de serlo.",
     "form_country": "Pais (ISO)",
-    "form_agent": "ID anagrafica",
+    "form_agent": "ID ficha",
     "form_key1": "Clave 1",
     "form_key2": "Clave 2",
     "form_key_keep": "(sin cambios)",

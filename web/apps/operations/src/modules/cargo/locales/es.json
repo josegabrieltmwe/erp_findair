@@ -359,7 +359,7 @@
       },
       "group": {
         "origin_term": "Term. origen",
-        "dest_term": "Term. dest."
+        "dest_term": "Term. destino"
       },
       "fields": {
         "cargo_id": "ID cargo",
@@ -1456,7 +1456,7 @@
       "ack_cancel_booking": "Entiendo que se cancelará la reserva activa con la aerolínea",
       "confirm_pre": "Confirmo la asignación de",
       "confirm_at": "a",
-      "confirm_post": "al cargo.",
+      "confirm_post": "a la carga.",
       "back_to_results": "Volver a los resultados",
       "continue": "Continuar",
       "confirm_assign": "Confirmar y asignar",
@@ -1784,7 +1784,7 @@
       "intro_pre": "Estás a punto de cancelar la reserva",
       "intro_mid": "La acción notifica a WebCargo, libera el stock de AWB y",
       "intro_strong": "también elimina la información de vuelo del cargo",
-      "intro_post": "(paridad legacy).",
+      "intro_post": "(paridad con el sistema anterior).",
       "done": "Reserva cancelada",
       "confirm": "Confirmar cancelación",
       "late_warning": "Quedan {hours} h para la aceptación máxima: la aerolínea puede aplicar una penalización. La cancelación se cursará igualmente.",

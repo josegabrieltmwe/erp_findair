@@ -11,7 +11,7 @@
     },
     "weighing": {
       "title": "Pesaje manual",
-      "marker": "Segnacollo",
+      "marker": "Etiqueta de bulto",
       "marker_hint": "Escanea o escribe el segnacollo y pulsa Intro",
       "parcel": "Paquete",
       "document": "Documento",
@@ -91,7 +91,7 @@
     },
     "driver": {
       "title": "Giro del autista",
-      "driver": "Autista",
+      "driver": "Conductor",
       "no_drivers": "Ningún autista con trabajo en esta fecha.",
       "scan_hint": "Escanea cada paquete al cargarlo",
       "not_found": "Paquete {code} no encontrado.",
