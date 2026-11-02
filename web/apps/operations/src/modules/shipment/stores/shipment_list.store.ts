@@ -145,7 +145,8 @@ export function shipmentActiveFilterCount(s: ShipmentListUrlState): number {
   return SHIPMENT_FILTER_KEYS.reduce((count, key) => {
     const value = s[key];
     const defaultValue = SHIPMENT_LIST_DEFAULTS[key];
-    return count + (value !== defaultValue && value !== "" ? 1 : 0);
+    const empty = value === "" || value === null || value === undefined;
+    return count + (value !== defaultValue && !empty ? 1 : 0);
   }, 0);
 }
 
@@ -260,7 +261,9 @@ export function serializeShipmentListQuery(
   ).forEach((k) => {
     const v = s[k];
     const d = SHIPMENT_LIST_DEFAULTS[k];
-    if (v !== d && v !== "" && v !== 0) {
+    // `null`: Vuetify deja el modelo en null al limpiar un campo de fecha con la x; sin esta
+    // guarda se serializaba como `date_from=null` en la URL y en la peticion.
+    if (v !== d && v !== "" && v !== 0 && v !== null && v !== undefined) {
       out[k] = String(v);
     }
   });
