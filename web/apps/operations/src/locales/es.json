@@ -79,7 +79,21 @@
     "load_failed": "No se pudieron cargar los datos.",
     "action_failed": "No se pudo completar la acción.",
     "load": "Error al cargar",
-    "action": "Operación fallida"
+    "action": "Operación fallida",
+    "api": {
+      "COD_STATE_INVALID": "El estado de cobro del contrareembolso no es válido.",
+      "COD_DATE_INVALID": "Indica una fecha de cobro válida.",
+      "COD_DATE_FUTURE": "La fecha de cobro no puede ser futura.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "El plazo necesita al menos un tramo (gg) o un día del mes.",
+      "CAUSAL_ALIQUOTA_INVALID": "La alícuota debe ser un número entre 0 y 100.",
+      "ROLE_ROOT_ONLY": "Solo un usuario root puede actuar sobre una cuenta root o conceder el rol root.",
+      "ROLE_ADMIN_REQUIRED": "Gestionar los permisos de otras personas requiere el rol de administrador de cuenta.",
+      "ROLE_NOT_GRANTABLE": "Un administrador de cuenta no puede conceder este rol.",
+      "ROLE_NOT_FOUND": "El rol no existe o está inactivo.",
+      "CARGO_INVOICED": "El cargo está facturado (cliente o proveedor): no se puede cancelar.",
+      "CARGO_HAS_ACTIVE_BOOKING": "El cargo tiene una reserva activa con la aerolínea: cancela antes la reserva.",
+      "CARGO_HAS_AWB": "El cargo tiene un AWB emitido: solo el personal de TMWE puede cancelarlo, confirmándolo de forma explícita."
+    }
   },
   "platform": {
     "loading": "Cargando…",

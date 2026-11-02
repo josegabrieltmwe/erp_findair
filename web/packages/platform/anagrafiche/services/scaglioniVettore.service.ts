@@ -1,5 +1,6 @@
 import { http } from './http';
 import type { ScaglioniTipo } from './scaglioni.service';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 /**
  * Márgenes de cargo POR VETTORE (aerolínea o proveedor de quote).
@@ -99,7 +100,7 @@ export const scaglioniVettoreService = {
     extra: { ass_perc?: number; ass_min?: number; margin_currency?: string } = {},
     tipo: ScaglioniTipo = 'A',
   ): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: {
         id_anagrafica: idAnagrafica,
@@ -111,15 +112,15 @@ export const scaglioniVettoreService = {
         margin_currency: extra.margin_currency ?? 'EUR',
       },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /** Quita el pacto: ese proveedor vuelve a los escalones generales. */
   async remove(idAnagrafica: number, vettore: string, tipo: ScaglioniTipo = 'A'): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       body: { id_anagrafica: idAnagrafica, vettore, tipo },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 };

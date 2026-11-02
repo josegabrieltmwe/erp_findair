@@ -1,4 +1,5 @@
 import { http } from '../../anagrafiche/services/http';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 /**
  * Payment methods (pagamenti_metodi_new) and payment terms / schedules
@@ -64,12 +65,12 @@ export interface PaymentSchedulePayload {
 interface RawListResponse<T> {
   success?: boolean;
   data?: T[];
-  error?: string;
+  error?: RawApiError;
 }
 
 interface RawWriteResponse {
   success?: boolean;
-  error?: string;
+  error?: RawApiError;
   data?: unknown;
 }
 
@@ -77,7 +78,7 @@ const METHODS_ENDPOINT = '/api_payment_methods';
 const SCHEDULES_ENDPOINT = '/api_payment_schedules';
 
 function asArray<T>(raw: RawListResponse<T> | undefined, fallbackMsg: string): T[] {
-  if (raw?.success === false) throw new Error(raw.error || fallbackMsg);
+  if (raw?.success === false) throw new Error(errorText(raw.error, fallbackMsg));
   return Array.isArray(raw?.data) ? raw!.data! : [];
 }
 
@@ -92,7 +93,7 @@ export const paymentConfigService = {
 
   async createMethod(payload: PaymentMethodPayload): Promise<void> {
     const raw = await http<RawWriteResponse>(METHODS_ENDPOINT, { method: 'POST', body: payload });
-    if (raw?.success === false) throw new Error(raw.error || 'Create failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Create failed'));
   },
 
   async updateMethod(payload: PaymentMethodPayload): Promise<void> {
@@ -102,7 +103,7 @@ export const paymentConfigService = {
       query: { id: String(payload.id) },
       body: payload,
     });
-    if (raw?.success === false) throw new Error(raw.error || 'Update failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Update failed'));
   },
 
   async removeMethod(id: number): Promise<void> {
@@ -111,7 +112,7 @@ export const paymentConfigService = {
       query: { id: String(id) },
       body: { id },
     });
-    if (raw?.success === false) throw new Error(raw.error || 'Delete failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Delete failed'));
   },
 
   // ── Schedules ──
@@ -122,7 +123,7 @@ export const paymentConfigService = {
 
   async createSchedule(payload: PaymentSchedulePayload): Promise<void> {
     const raw = await http<RawWriteResponse>(SCHEDULES_ENDPOINT, { method: 'POST', body: payload });
-    if (raw?.success === false) throw new Error(raw.error || 'Create failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Create failed'));
   },
 
   async updateSchedule(payload: PaymentSchedulePayload): Promise<void> {
@@ -132,7 +133,7 @@ export const paymentConfigService = {
       query: { id: String(payload.id) },
       body: payload,
     });
-    if (raw?.success === false) throw new Error(raw.error || 'Update failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Update failed'));
   },
 
   async removeSchedule(id: number): Promise<void> {
@@ -141,6 +142,6 @@ export const paymentConfigService = {
       query: { id: String(id) },
       body: { id },
     });
-    if (raw?.success === false) throw new Error(raw.error || 'Delete failed');
+    if (raw?.success === false) throw new Error(errorText(raw.error, 'Delete failed'));
   },
 };

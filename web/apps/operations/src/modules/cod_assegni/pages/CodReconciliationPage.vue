@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
+import { localizedErrorText } from "@shared/utils/apiError";
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConfirmDialog from "@shared/ui/ConfirmDialog.vue";
@@ -29,7 +30,7 @@ import {
 import { capabilities } from "../env";
 import type { Carrier } from "../types";
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toasts = useToastStore();
 const caps = capabilities();
 
@@ -204,7 +205,7 @@ async function doCollect(): Promise<void> {
     refreshAll();
   } catch (e) {
     collectConfirm.value = false;
-    toasts.push("error", e instanceof Error ? e.message : String(e));
+    toasts.push("error", localizedErrorText(e, { t, te }));
   } finally {
     saving.value = false;
   }

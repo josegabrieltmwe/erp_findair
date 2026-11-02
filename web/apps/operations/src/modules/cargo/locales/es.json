@@ -1504,7 +1504,11 @@
       "failed": "Error al cancelar",
       "invoiced": "El cargo está facturado: no se puede cancelar.",
       "has_awb": "El cargo tiene un AWB emitido. Cancelarlo no anula el AWB ya emitido.",
-      "active_booking": "El cargo tiene una reserva activa con la aerolínea. Cancela la reserva antes; si no, quedará huérfana."
+      "active_booking": "El cargo tiene una reserva activa con la aerolínea. Cancela la reserva antes; si no, quedará huérfana.",
+      "force_ack": "Entiendo que el cargo tiene un AWB emitido y que cancelarlo no lo anula. Cancelar igualmente (solo personal de TMWE).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "Reserva {carrier}: {id}",
+      "detail_invoiced": "Facturas: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Cambios sin guardar",

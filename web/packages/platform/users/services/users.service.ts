@@ -1,5 +1,7 @@
 import { http } from '../../anagrafiche/services/http';
 import { paginated } from '../../anagrafiche/services/normalizers';
+import { parseRolesDenied, type RoleDenied } from './userRootPolicy';
+import { apiErrorCode, errorText, type RawApiError } from '../../utils/apiError';
 
 /**
  * Usuarios (`contatti` con acceso al ERP) — Fase A2 del plan de deprecación
@@ -57,6 +59,8 @@ export interface UserCredentials {
   password: string;
   /** Nombres de los roles que el servidor concedió en el alta (puede omitir alguno). */
   roles_assigned?: string[];
+  /** Roles pedidos que la política del servidor denegó (P42), con su código (`ROLE_ROOT_ONLY`...). */
+  roles_denied?: RoleDenied[];
 }
 
 export interface UserListFilters {
@@ -146,11 +150,11 @@ export const usersService = {
       role_ids: payload.role_ids ?? [],
       auth_10: payload.api_only ? 'N' : 'S',
     };
-    const raw = await http<{ loginn?: string; password?: string; roles_assigned?: string[]; error?: string }>(
+    const raw = await http<{ loginn?: string; password?: string; roles_assigned?: string[]; roles_denied?: unknown; error?: RawApiError }>(
       ENDPOINT,
       { method: 'POST', body },
     );
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     if (!raw?.loginn || !raw?.password) {
       throw new Error('Server did not return credentials');
     }
@@ -158,37 +162,38 @@ export const usersService = {
       loginn: raw.loginn,
       password: raw.password,
       roles_assigned: Array.isArray(raw.roles_assigned) ? raw.roles_assigned : undefined,
+      roles_denied: parseRolesDenied(raw.roles_denied),
     };
   },
 
   /** Actualiza nombre/email/rol de un usuario existente. */
   async update(id: number, payload: UserUpdatePayload): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'PUT',
       query: { id },
       body: payload,
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /** Reset de contraseña (iniciado por admin). Devuelve la nueva contraseña en claro. */
   async resetPassword(userId: number): Promise<string> {
-    const raw = await http<{ password?: string; error?: string }>(ENDPOINT, {
+    const raw = await http<{ password?: string; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { action: 'reset_password', user_id: userId },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     if (!raw?.password) throw new Error('Server did not return new password');
     return raw.password;
   },
 
   /** Soft-delete (stato='O'). */
   async remove(id: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   // =========================================================================
@@ -197,49 +202,51 @@ export const usersService = {
 
   /** Snapshot completo de seguridad de un usuario. */
   async getSecurityProfile(userId: number): Promise<UserSecurityProfile> {
-    const raw = await http<UserSecurityProfile & { error?: string }>(ROLES_ENDPOINT, {
+    const raw = await http<UserSecurityProfile & { error?: RawApiError }>(ROLES_ENDPOINT, {
       query: { user_id: userId },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw;
   },
 
   /**
    * Concede o retira un rol a varias personas, una a una (api_admin_user_roles).
-   * `skipped` cuenta las que el API rechaza (p. ej. retirar un rol base).
+   * `skipped` cuenta las que el API rechaza (p. ej. retirar un rol base); `rootDenied`, las rechazadas por ser cuentas root (P42).
    */
   async bulkAssignRole(
     userIds: number[],
     roleId: number,
     action: 'grant' | 'revoke',
-  ): Promise<{ processed: number; skipped?: number }> {
+  ): Promise<{ processed: number; skipped?: number; rootDenied?: number }> {
     let processed = 0;
     let skipped = 0;
+    let rootDenied = 0;
     for (const userId of userIds) {
       try {
-        const raw = await http<{ error?: string }>(ROLES_ENDPOINT, {
+        const raw = await http<{ error?: RawApiError }>(ROLES_ENDPOINT, {
           method: action === 'grant' ? 'POST' : 'DELETE',
           query: action === 'grant' ? { user_id: userId } : { user_id: userId, role_id: roleId },
           ...(action === 'grant' ? { body: { role_id: roleId } } : {}),
         });
         if (raw?.error) skipped += 1;
         else processed += 1;
-      } catch {
+      } catch (e) {
         skipped += 1;
+        if (apiErrorCode(e) === 'ROLE_ROOT_ONLY') rootDenied += 1;
       }
     }
-    return { processed, skipped };
+    return { processed, skipped, rootDenied };
   },
 
   /** OAuth clients vinculados a un usuario (resumen de solo lectura). */
   async listOauthClientsForUser(userId: number): Promise<OAuthClientSummary[]> {
     const raw = await http<{
       clients?: OAuthClientSummary[];
-      error?: string;
+      error?: RawApiError;
     }>(EXTERNAL_CLIENTS_ENDPOINT, {
       query: { user_id: userId },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.clients ?? [];
   },
 };

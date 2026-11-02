@@ -79,7 +79,21 @@
     "load_failed": "Kan de gegevens niet laden.",
     "action_failed": "Kan de actie niet voltooien.",
     "load": "Laden mislukt",
-    "action": "Handeling mislukt"
+    "action": "Handeling mislukt",
+    "api": {
+      "COD_STATE_INVALID": "De incassostatus van de rembours is ongeldig.",
+      "COD_DATE_INVALID": "Geef een geldige incassodatum op.",
+      "COD_DATE_FUTURE": "De incassodatum mag niet in de toekomst liggen.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "De betalingstermijn heeft minstens één termijn (gg) of een dag van de maand nodig.",
+      "CAUSAL_ALIQUOTA_INVALID": "Het tarief moet een getal tussen 0 en 100 zijn.",
+      "ROLE_ROOT_ONLY": "Alleen een root-gebruiker kan op een root-account handelen of de root-rol toekennen.",
+      "ROLE_ADMIN_REQUIRED": "Het beheren van de rechten van anderen vereist de rol accountbeheerder.",
+      "ROLE_NOT_GRANTABLE": "Een accountbeheerder kan deze rol niet toekennen.",
+      "ROLE_NOT_FOUND": "De rol bestaat niet of is inactief.",
+      "CARGO_INVOICED": "De cargo is gefactureerd (klant of leverancier): hij kan niet worden geannuleerd.",
+      "CARGO_HAS_ACTIVE_BOOKING": "De cargo heeft een actieve boeking bij de luchtvaartmaatschappij: annuleer eerst de boeking.",
+      "CARGO_HAS_AWB": "De cargo heeft een uitgegeven AWB: alleen TMWE-personeel kan hem annuleren, met uitdrukkelijke bevestiging."
+    }
   },
   "platform": {
     "loading": "Laden…",

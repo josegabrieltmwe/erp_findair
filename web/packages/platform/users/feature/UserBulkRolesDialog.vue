@@ -61,6 +61,7 @@ import { usersService } from '../services/users.service';
 import { bulkRolesToastKind } from '../services/userRoleResults';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useSelectorRules } from '../../anagrafiche/composables/useSelectorRules';
+import { localizedErrorText } from '../../utils/apiError';
 
 interface Props {
   modelValue: boolean;
@@ -74,7 +75,7 @@ const emit = defineEmits<{
   done: [];
 }>();
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const toast = useToastStore();
 const { ruleRequiredId } = useSelectorRules();
 
@@ -95,6 +96,11 @@ watch(
   },
 );
 
+/** P42: aviso de las personas omitidas por ser cuentas root (solo un root actúa sobre ellas). */
+function rootDeniedNote(n: number | undefined): string {
+  return n ? ` ${t('users.bulk.root_denied', { n })}` : '';
+}
+
 async function execute(): Promise<void> {
   const roleId = Array.isArray(selectedRoleId.value)
     ? selectedRoleId.value[0]
@@ -107,14 +113,14 @@ async function execute(): Promise<void> {
     result.value = res;
     const kind = bulkRolesToastKind(res);
     if (kind === 'error') {
-      toast.error(t('users.bulk.none_processed', { n: res.skipped ?? 0 }));
+      toast.error(t('users.bulk.none_processed', { n: res.skipped ?? 0 }) + rootDeniedNote(res.rootDenied));
     } else {
       const msg =
         props.action === 'grant'
           ? t('users.bulk.granted', { n: res.processed })
           : t('users.bulk.revoked', { n: res.processed });
       if (kind === 'warning') {
-        toast.warning(`${msg}. ${t('users.bulk.result', { processed: res.processed, skipped: res.skipped ?? 0 })}`);
+        toast.warning(`${msg}. ${t('users.bulk.result', { processed: res.processed, skipped: res.skipped ?? 0 })}${rootDeniedNote(res.rootDenied)}`);
       } else {
         toast.success(msg);
       }
@@ -123,7 +129,7 @@ async function execute(): Promise<void> {
     // Cerrar automáticamente tras una breve pausa para que se vea el resultado.
     setTimeout(() => onClose(false), 1200);
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : 'Bulk action failed');
+    toast.error(localizedErrorText(e, { t, te }, 'Bulk action failed'));
   } finally {
     processing.value = false;
   }

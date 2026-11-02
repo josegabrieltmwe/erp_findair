@@ -8,13 +8,13 @@
             <v-text-field v-model="form.nome" :label="t('anagrafiche.fields.banca')" density="compact" variant="outlined" />
           </v-col>
           <v-col cols="12" md="4">
-            <v-text-field v-model="form.swift" :label="t('anagrafiche.fields.swift')" maxlength="11" density="compact" variant="outlined" />
+            <v-text-field v-model="form.swift" :error-messages="fieldError('swift')" @update:model-value="clearFieldError('swift')" :label="t('anagrafiche.fields.swift')" maxlength="11" density="compact" variant="outlined" />
           </v-col>
           <v-col cols="12">
             <v-text-field v-model="form.iban" :label="t('anagrafiche.fields.iban')" density="compact" variant="outlined" />
           </v-col>
           <v-col cols="12" md="4">
-            <v-text-field v-model="form.abi" :label="t('anagrafiche.fields.abi')" density="compact" variant="outlined" />
+            <v-text-field v-model="form.abi" :error-messages="fieldError('abi')" @update:model-value="clearFieldError('abi')" :label="t('anagrafiche.fields.abi')" density="compact" variant="outlined" />
           </v-col>
           <v-col cols="12" md="4">
             <v-text-field v-model="form.cab" :label="t('anagrafiche.fields.cab')" density="compact" variant="outlined" />
@@ -50,11 +50,14 @@ import { useI18n } from 'vue-i18n';
 import type { BancaRow } from '../services/anagrafica.service';
 import { bancheService } from '../services/banche.service';
 import { useToast } from '../composables/useToast';
+import { useServerFieldErrors } from '../../composables/useServerFieldErrors';
+import { caughtText } from '../../utils/apiError';
 
 const props = defineProps<{ modelValue: boolean; idAnagrafica: number; banca: BancaRow | null }>();
 const emit = defineEmits<{ 'update:modelValue': [value: boolean]; saved: [] }>();
 const { t } = useI18n();
 const toast = useToast();
+const { setFrom: setFieldErrors, clear: clearFieldError, fieldError } = useServerFieldErrors();
 
 const saving = ref(false);
 const form = ref<Partial<BancaRow>>({});
@@ -68,6 +71,7 @@ function onClose(): void { emit('update:modelValue', false); }
 
 async function onSave(): Promise<void> {
   saving.value = true;
+  clearFieldError();
   try {
     if (isEdit.value && form.value.id) {
       await bancheService.update(form.value.id, form.value);
@@ -78,7 +82,8 @@ async function onSave(): Promise<void> {
     emit('saved');
     onClose();
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    setFieldErrors(e);
+    toast.error(caughtText(e, t('common.error') as string));
   } finally {
     saving.value = false;
   }

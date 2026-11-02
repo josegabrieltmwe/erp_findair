@@ -1504,7 +1504,11 @@
       "failed": "Stornierung fehlgeschlagen",
       "invoiced": "Die Fracht ist fakturiert: Sie kann nicht storniert werden.",
       "has_awb": "Die Fracht hat ein ausgestelltes AWB. Die Stornierung macht das bereits ausgestellte AWB nicht ungültig.",
-      "active_booking": "Die Fracht hat eine aktive Buchung bei der Fluggesellschaft. Storniere zuerst die Buchung, sonst bleibt sie verwaist."
+      "active_booking": "Die Fracht hat eine aktive Buchung bei der Fluggesellschaft. Storniere zuerst die Buchung, sonst bleibt sie verwaist.",
+      "force_ack": "Mir ist bewusst, dass der Cargo ein ausgestelltes AWB hat und das Stornieren es nicht ungültig macht. Trotzdem stornieren (nur TMWE-Personal).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "Buchung {carrier}: {id}",
+      "detail_invoiced": "Rechnungen: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Nicht gespeicherte Änderungen",
