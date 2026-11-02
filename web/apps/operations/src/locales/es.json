@@ -79,7 +79,14 @@
     "load_failed": "No se pudieron cargar los datos.",
     "action_failed": "No se pudo completar la acción.",
     "load": "Error al cargar",
-    "action": "Operación fallida"
+    "action": "Operación fallida",
+    "api": {
+      "COD_STATE_INVALID": "El estado de cobro del contrareembolso no es válido.",
+      "COD_DATE_INVALID": "Indica una fecha de cobro válida.",
+      "COD_DATE_FUTURE": "La fecha de cobro no puede ser futura.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "El plazo necesita al menos un tramo (gg) o un día del mes.",
+      "CAUSAL_ALIQUOTA_INVALID": "La alícuota debe ser un número entre 0 y 100."
+    }
   },
   "platform": {
     "loading": "Cargando…",

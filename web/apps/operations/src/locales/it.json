@@ -79,7 +79,14 @@
     "load_failed": "Impossibile caricare i dati.",
     "action_failed": "Impossibile completare l'azione.",
     "load": "Caricamento fallito",
-    "action": "Operazione fallita"
+    "action": "Operazione fallita",
+    "api": {
+      "COD_STATE_INVALID": "Lo stato di incasso del contrassegno non è valido.",
+      "COD_DATE_INVALID": "Indica una data di incasso valida.",
+      "COD_DATE_FUTURE": "La data di incasso non può essere futura.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "La scadenza richiede almeno una rata (gg) o un giorno del mese.",
+      "CAUSAL_ALIQUOTA_INVALID": "L'aliquota deve essere un numero compreso tra 0 e 100."
+    }
   },
   "platform": {
     "loading": "Caricamento…",

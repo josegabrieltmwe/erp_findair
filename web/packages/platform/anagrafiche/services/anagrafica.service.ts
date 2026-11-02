@@ -1,5 +1,6 @@
 import { http } from './http';
 import { paginated } from './normalizers';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 /* =============================================================================
  * Anagrafica service — wraps /api_anagrafica_crud and exposes the full agregado
@@ -328,31 +329,31 @@ export const anagraficaService = {
 
   async update(id: number, payload: AnagraficaUpdatePayload): Promise<AnagraficaDetail | null> {
     const body = { id, ...payload };
-    const raw = await http<{ success?: boolean; data?: AnagraficaDetail; error?: string }>(ENDPOINT, {
+    const raw = await http<{ success?: boolean; data?: AnagraficaDetail; error?: RawApiError }>(ENDPOINT, {
       method: 'PATCH',
       query: { id, include: 'sedi,banche,contatti,lettint,more' },
       body,
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async create(payload: Record<string, unknown>): Promise<AnagraficaDetail> {
-    const raw = await http<{ success?: boolean; data?: AnagraficaDetail; error?: string }>(ENDPOINT, {
+    const raw = await http<{ success?: boolean; data?: AnagraficaDetail; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: payload,
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     if (!raw?.data) throw new Error('Server did not return created entity');
     return raw.data;
   },
 
   async remove(id: number): Promise<void> {
-    const raw = await http<{ success?: boolean; error?: string }>(ENDPOINT, {
+    const raw = await http<{ success?: boolean; error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /**
@@ -362,11 +363,11 @@ export const anagraficaService = {
    * clon apunta a los mismos listini y por tanto cotiza igual que el origen.
    */
   async clone(payload: AnagraficaCloneRequest): Promise<AnagraficaCloneReport> {
-    const raw = await http<{ data?: AnagraficaCloneReport; error?: string }>(CLONE_ENDPOINT, {
+    const raw = await http<{ data?: AnagraficaCloneReport; error?: RawApiError }>(CLONE_ENDPOINT, {
       method: 'POST',
       body: payload,
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     if (!raw?.data) throw new Error('El servidor no devolvió el reporte de clonación');
     return raw.data;
   },

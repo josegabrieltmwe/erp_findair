@@ -1,4 +1,5 @@
 import { http } from '../../anagrafiche/services/http';
+import { errorText } from '../../utils/apiError';
 
 /**
  * Cuentas bancarias del EMISOR/partner (tabla `banche`, scoped al partner
@@ -60,11 +61,8 @@ interface RawWrite {
   data?: { id: number };
 }
 
-/** Texto legible de un `error` del API (evita «[object Object]»). */
-export function errorText(error: RawError): string {
-  if (typeof error === 'string') return error;
-  return error.message || error.code || 'Error';
-}
+// Texto legible de un `error` del API (evita «[object Object]»): helper común.
+export { errorText };
 
 const ENDPOINT = '/api_issuer_bank_accounts';
 

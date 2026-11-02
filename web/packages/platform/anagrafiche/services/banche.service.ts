@@ -1,5 +1,6 @@
 import { http } from './http';
 import type { BancaRow } from './anagrafica.service';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 const ENDPOINT = '/api_anagrafica_banks';
 
@@ -12,30 +13,30 @@ export const bancheService = {
   },
 
   async create(idAnagrafica: number, payload: Partial<BancaRow>): Promise<BancaRow | null> {
-    const raw = await http<{ data?: BancaRow; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: BancaRow; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { ...payload, id_anagrafica: idAnagrafica },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async update(id: number, payload: Partial<BancaRow>): Promise<BancaRow | null> {
-    const raw = await http<{ data?: BancaRow; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: BancaRow; error?: RawApiError }>(ENDPOINT, {
       method: 'PUT',
       query: { id },
       body: { id, ...payload },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async remove(id: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /**
@@ -43,10 +44,10 @@ export const bancheService = {
    * Paridad legacy "BancaRiBa". Ruta hybrid: api_anagrafica_set_default_bank (PUT).
    */
   async setDefault(idAnagrafica: number, idBanca: number): Promise<void> {
-    const raw = await http<{ error?: string }>('/api_anagrafica_set_default_bank', {
+    const raw = await http<{ error?: RawApiError }>('/api_anagrafica_set_default_bank', {
       method: 'PUT',
       body: { id_anagrafica: idAnagrafica, id_banca: idBanca },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 };

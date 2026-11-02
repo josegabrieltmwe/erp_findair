@@ -79,7 +79,14 @@
     "load_failed": "Daten konnten nicht geladen werden.",
     "action_failed": "Die Aktion konnte nicht abgeschlossen werden.",
     "load": "Laden fehlgeschlagen",
-    "action": "Vorgang fehlgeschlagen"
+    "action": "Vorgang fehlgeschlagen",
+    "api": {
+      "COD_STATE_INVALID": "Der Einzugsstatus der Nachnahme ist ungültig.",
+      "COD_DATE_INVALID": "Geben Sie ein gültiges Einzugsdatum an.",
+      "COD_DATE_FUTURE": "Das Einzugsdatum darf nicht in der Zukunft liegen.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "Die Zahlungsfrist braucht mindestens eine Rate (gg) oder einen Tag des Monats.",
+      "CAUSAL_ALIQUOTA_INVALID": "Der Steuersatz muss eine Zahl zwischen 0 und 100 sein."
+    }
   },
   "platform": {
     "loading": "Wird geladen…",

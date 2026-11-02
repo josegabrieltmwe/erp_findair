@@ -1,4 +1,5 @@
 import { http } from './http';
+import { errorText, type RawApiError } from '../../utils/apiError';
 
 // `fatture_causali_clienti` es un CATÁLOGO GLOBAL de voces de IVA (no por
 // cliente). `predefinita` = 'S' marca la voz asignada al cliente consultado
@@ -31,30 +32,30 @@ export const clientCausalsService = {
   },
 
   async create(idAnagrafica: number, payload: Partial<ClientCausal>): Promise<ClientCausal | null> {
-    const raw = await http<{ data?: ClientCausal; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: ClientCausal; error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { ...payload, id_anagrafica: idAnagrafica },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async update(id: number, payload: Partial<ClientCausal>): Promise<ClientCausal | null> {
-    const raw = await http<{ data?: ClientCausal; error?: string }>(ENDPOINT, {
+    const raw = await http<{ data?: ClientCausal; error?: RawApiError }>(ENDPOINT, {
       method: 'PATCH',
       query: { id },
       body: { id, ...payload },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
     return raw?.data ?? null;
   },
 
   async remove(id: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'DELETE',
       query: { id },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 
   /**
@@ -63,10 +64,10 @@ export const clientCausalsService = {
    * Es la acción que hace útil la sección: elegir la causale IVA por defecto.
    */
   async assign(idAnagrafica: number, idCausale: number): Promise<void> {
-    const raw = await http<{ error?: string }>(ENDPOINT, {
+    const raw = await http<{ error?: RawApiError }>(ENDPOINT, {
       method: 'POST',
       body: { op: 'assign', id_anagrafica: idAnagrafica, id_causale: idCausale },
     });
-    if (raw?.error) throw new Error(raw.error);
+    if (raw?.error) throw new Error(errorText(raw.error));
   },
 };

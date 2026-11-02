@@ -79,7 +79,14 @@
     "load_failed": "Kan de gegevens niet laden.",
     "action_failed": "Kan de actie niet voltooien.",
     "load": "Laden mislukt",
-    "action": "Handeling mislukt"
+    "action": "Handeling mislukt",
+    "api": {
+      "COD_STATE_INVALID": "De incassostatus van de rembours is ongeldig.",
+      "COD_DATE_INVALID": "Geef een geldige incassodatum op.",
+      "COD_DATE_FUTURE": "De incassodatum mag niet in de toekomst liggen.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "De betalingstermijn heeft minstens één termijn (gg) of een dag van de maand nodig.",
+      "CAUSAL_ALIQUOTA_INVALID": "Het tarief moet een getal tussen 0 en 100 zijn."
+    }
   },
   "platform": {
     "loading": "Laden…",

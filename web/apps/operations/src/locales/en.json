@@ -79,7 +79,14 @@
     "load_failed": "Could not load the data.",
     "action_failed": "Could not complete the action.",
     "load": "Failed to load",
-    "action": "Action failed"
+    "action": "Action failed",
+    "api": {
+      "COD_STATE_INVALID": "The cash-on-delivery collection status is not valid.",
+      "COD_DATE_INVALID": "Enter a valid collection date.",
+      "COD_DATE_FUTURE": "The collection date cannot be in the future.",
+      "SCHEDULE_WITHOUT_INSTALLMENTS": "The payment term needs at least one instalment (gg) or a day of the month.",
+      "CAUSAL_ALIQUOTA_INVALID": "The tax rate must be a number between 0 and 100."
+    }
   },
   "platform": {
     "loading": "Loading…",

@@ -127,6 +127,9 @@ function extractMessage(data: unknown): string | null {
   const o = data as { error?: unknown; message?: unknown };
   if (typeof o.error === 'string') return o.error;
   if (typeof o.message === 'string') return o.message;
+  // Forma canónica `error: { code, message }`: nunca devolver el objeto.
+  const e = o.error as { message?: unknown } | null | undefined;
+  if (e && typeof e === 'object' && typeof e.message === 'string') return e.message;
   return null;
 }
 

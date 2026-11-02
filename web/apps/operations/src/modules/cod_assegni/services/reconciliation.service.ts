@@ -8,6 +8,7 @@
  */
 import { http } from "@shared/anagrafiche/services/http";
 import type { ApiEnvelope } from "../types";
+import { errorText } from "@shared/utils/apiError";
 
 export type ReconList = "pending" | "to_report";
 
@@ -110,7 +111,7 @@ export function buildAssignBody(shipmentIds: number[], reportId: number) {
 
 function ensure<T>(res: ApiEnvelope<T>, fallback: string): T {
   if (!res.success || res.data === undefined) {
-    throw new Error(res.error ?? fallback);
+    throw new Error(errorText(res.error, fallback));
   }
   return res.data;
 }
