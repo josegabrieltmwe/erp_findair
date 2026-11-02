@@ -1595,7 +1595,9 @@
       "search_ph": "Search by company name, VAT, or short name...",
       "sede": "Office",
       "client_rif": "Client RIF",
-      "client_num": "Client #{id}"
+      "client_num": "Client #{id}",
+      "change_title": "Change client",
+      "change_confirm": "You are about to assign this cargo to “{name}”. This changes the client, and with it the currency and margins that apply. Continue?"
     },
     "profit": {
       "title": "Profit",
