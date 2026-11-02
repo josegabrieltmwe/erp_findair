@@ -35,6 +35,7 @@
             v-model="dataFattura"
             :label="t('invoicing.invoice.filters.date_from')"
             type="date"
+            :max="today()"
             density="comfortable"
             variant="outlined"
             hide-details
