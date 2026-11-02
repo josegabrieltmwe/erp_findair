@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
@@ -17,7 +18,7 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 
 const filters = ref<PickupFilters>({
-  data_da: new Date().toISOString().slice(0, 10),
+  data_da: todayLocal(),
   data_a: null,
   affidata: null,
   presa_fissa: null,

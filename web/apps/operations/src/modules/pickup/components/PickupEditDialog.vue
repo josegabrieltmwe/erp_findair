@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { nowTimeLocal, todayLocal } from "@shared/utils/date";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { pickupsService } from "../services/pickups.service";
@@ -42,7 +43,7 @@ watch(
       form.value = {
         id_sede: undefined,
         id_contatti: 0,
-        data: new Date().toISOString().slice(0, 16).replace("T", " "),
+        data: `${todayLocal()} ${nowTimeLocal()}`,
         address_sped: "N",
         presa_fissa: "N",
         affidata: "N",

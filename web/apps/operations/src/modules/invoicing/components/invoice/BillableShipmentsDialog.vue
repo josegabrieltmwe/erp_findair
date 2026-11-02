@@ -129,6 +129,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from "@shared/utils/date";
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -199,7 +200,7 @@ function money(v: number): string {
   return `${Number(v ?? 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
 }
 function today(): string {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocal();
 }
 function fmt(y: number, m: number, d: number): string {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
