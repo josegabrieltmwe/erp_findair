@@ -925,12 +925,12 @@
       "supplier_invoice_id": "Leveranciersfactuur-id",
       "opt_none": "— (geen)",
       "opt_v": "V — Geverifieerd",
-      "opt_x": "X — Verschil",
+      "opt_x": "X — Creditnota aan te vragen",
       "title": "Leverancierscontrole",
       "opt_o": "O — Te controleren",
       "opt_k": "K — Controleren met factuur",
-      "opt_r": "R — Naheffing",
-      "opt_a": "A — Geaccepteerd"
+      "opt_r": "R — Creditnota aangevraagd",
+      "opt_a": "A — Creditnota ontvangen"
     },
     "client_header": {
       "client": "Klant",

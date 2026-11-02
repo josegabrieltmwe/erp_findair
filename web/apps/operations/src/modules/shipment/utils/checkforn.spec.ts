@@ -6,10 +6,12 @@ describe("checkforn (H17e)", () => {
     expect(isCheckfornOk("OK")).toBe(false);
   });
 
-  it("V y A se consideran verificados; el resto no", () => {
+  it("solo V se considera verificado; el resto, incluida A (abono recibido), no", () => {
     expect(isCheckfornOk("V")).toBe(true);
-    expect(isCheckfornOk("a")).toBe(true);
-    for (const v of ["O", "K", "X", "R", "", null, undefined]) expect(isCheckfornOk(v)).toBe(false);
+    expect(isCheckfornOk("v")).toBe(true);
+    for (const v of ["O", "K", "X", "R", "A", "a", "", null, undefined, "?"]) {
+      expect(isCheckfornOk(v)).toBe(false);
+    }
   });
 
   it("clave i18n por valor", () => {

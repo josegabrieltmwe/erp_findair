@@ -925,12 +925,12 @@
       "supplier_invoice_id": "Lieferantenrechnungs-ID",
       "opt_none": "— (keine)",
       "opt_v": "V — Geprüft",
-      "opt_x": "X — Abweichung",
+      "opt_x": "X — Gutschrift anzufordern",
       "title": "Lieferantenprüfung",
       "opt_o": "O — Zu prüfen",
       "opt_k": "K — Mit Rechnung prüfen",
-      "opt_r": "R — Nachbelastung",
-      "opt_a": "A — Akzeptiert"
+      "opt_r": "R — Gutschrift angefordert",
+      "opt_a": "A — Gutschrift erhalten"
     },
     "client_header": {
       "client": "Kunde",

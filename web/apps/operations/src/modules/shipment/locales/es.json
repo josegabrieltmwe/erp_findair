@@ -925,12 +925,12 @@
       "supplier_invoice_id": "ID factura proveedor",
       "opt_none": "— (ninguno)",
       "opt_v": "V — Verificado",
-      "opt_x": "X — Discrepancia",
+      "opt_x": "X — Abono por pedir",
       "title": "Control proveedor",
       "opt_o": "O — Por controlar",
       "opt_k": "K — Verificar con factura",
-      "opt_r": "R — Readeudo",
-      "opt_a": "A — Aceptado"
+      "opt_r": "R — Abono pedido",
+      "opt_a": "A — Abono recibido"
     },
     "client_header": {
       "client": "Cliente",

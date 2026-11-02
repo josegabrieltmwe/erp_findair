@@ -1,13 +1,24 @@
 /**
- * Dominio real de `spedizioni.checkforn` (enum O/V/K/X/R/A, ver ShipmentCheckfornBox). Antes la
- * tarjeta de verificaciones comparaba con 'OK', un valor que no existe, y el indicador no se
- * encendia nunca.
+ * Dominio real de `spedizioni.checkforn` (enum O/V/K/X/R/A, valor por defecto O; verificado en el
+ * esquema, en tmwe_api `Billing_Enums` y en el legacy `spedy_ajax_list.php`):
+ *
+ *  - O  por controlar (valor por defecto; NULL o un valor fuera del enum se tratan igual).
+ *  - V  verificado: el coste real esta dentro de la tolerancia (RN-40).
+ *  - K  sobrecoste: coste real > previsto + 0,05.
+ *  - X, R, A  ciclo de abono del proveedor (legacy «storni»): por pedir, pedido, recibido.
+ *
+ * No confundir con `spedizioni.stato` (A activa / O eliminada): son columnas distintas y `O` en
+ * `checkforn` no significa eliminada. Antes la tarjeta comparaba con 'OK', un valor que no existe,
+ * y el indicador no se encendia nunca.
  */
 export const CHECKFORN_VALUES = ["O", "V", "K", "X", "R", "A"] as const;
 export type CheckfornValue = (typeof CHECKFORN_VALUES)[number];
 
-/** Estados en los que la factura del proveedor esta dada por buena: Verificato y Accettato. */
-const CHECKFORN_OK: ReadonlySet<string> = new Set(["V", "A"]);
+/**
+ * Solo V da por buena la factura del proveedor. K, X y R son diferencias abiertas; A es un abono ya
+ * recibido (la diferencia existio y se resolvio), asi que no se muestra como verificada.
+ */
+const CHECKFORN_OK: ReadonlySet<string> = new Set(["V"]);
 
 export function isCheckfornOk(value: string | null | undefined): boolean {
   return CHECKFORN_OK.has(String(value ?? "").trim().toUpperCase());
