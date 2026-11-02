@@ -405,7 +405,8 @@
     "form_cap_list": "Included postal codes",
     "form_cap_ko": "Excluded postal codes",
     "cap_badge": "{n} ZIP",
-    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add."
+    "form_cap_chip_hint": "Exact ZIP (20100) or prefix with ? (201? = all 201xx). Enter to add.",
+    "cap_discarded": "Ongeldige postcodes zijn verwijderd: {list}"
   },
   "carrier_services": {
     "subtitle": "Carrier service definitions, zones and supplements.",
