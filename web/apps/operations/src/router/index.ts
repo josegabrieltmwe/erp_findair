@@ -465,6 +465,26 @@ const routes: RouteRecordRaw[] = [
     props: { scope: "admin" },
     meta: { requiresAdmin: true },
   },
+  // Pasarelas de pago. La del partner NO es requiresAdmin: la autoriza el servidor (el partner sale del token y una
+  // cuenta ajena responde 404). La de TMWE sobre cualquier partner si lo es y es de solo lectura.
+  {
+    path: "/settings/payment-gateways",
+    name: "settings-pay-gateways",
+    component: () => import("@shared/payment_gateways/feature/PayGatewayAccountsPage.vue"),
+    props: { scope: "self" },
+  },
+  {
+    path: "/settings/payment-gateways-admin",
+    name: "settings-pay-gateways-admin",
+    component: () => import("@shared/payment_gateways/feature/PayGatewayAccountsPage.vue"),
+    props: { scope: "admin" },
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/payment-refunds",
+    name: "settings-pay-refunds",
+    component: () => import("@shared/payment_gateways/feature/PayRefundsPage.vue"),
+  },
   {
     path: "/settings/elevenlabs-agent-review",
     redirect: { name: "settings-elevenlabs-agents-admin", query: { tab: "review" } },
