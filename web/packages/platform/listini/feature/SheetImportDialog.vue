@@ -113,6 +113,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from '../../utils/date';
 /**
  * Hoja de gestión del listino (paridad listy_gestnew): se exporta, se edita en
  * Excel, se pega aquí, se valida (CT01-CT17, ZN00, BN01, DP01…) y se confirma.
@@ -154,7 +155,7 @@ const futures = computed(() => props.versions.filter((v) => v.estado === 'futuro
 const tomorrow = computed(() => {
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+  return todayLocal(d);
 });
 
 function day(d: string): string {
@@ -169,7 +170,7 @@ function dates(): { start: string; stop: string } {
     return { start: s.slice(0, 10), stop: e.slice(0, 10) };
   }
   if (current.value) return { start: current.value.data_start.slice(0, 10), stop: current.value.data_stop.slice(0, 10) };
-  return { start: new Date().toISOString().slice(0, 10), stop: '' };
+  return { start: todayLocal(), stop: '' };
 }
 
 const windowText = computed(() => {

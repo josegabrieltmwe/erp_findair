@@ -710,6 +710,7 @@ import SheetImportDialog from './SheetImportDialog.vue';
 import { useListiniAdmin } from '../composables/useListiniAdmin';
 import { useToastStore } from '@shared/anagrafiche/stores/toast.store';
 import { useConfirm } from '@shared/anagrafiche/composables/useConfirm';
+import { todayLocal } from '../../utils/date';
 import type { Paginated } from '@shared/anagrafiche/services/api.types';
 import {
   listiniService,
@@ -1184,7 +1185,7 @@ const effectiveDate = ref<string>('');
 const minEffectiveDate = computed(() => {
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+  return todayLocal(d);
 });
 
 /** Filas de la rejilla listas para enviar: las celdas vaciadas se descartan. */
@@ -1211,6 +1212,19 @@ async function saveMatrix(): Promise<void> {
     toast.error(t('price_lists.matrix_empty_error'));
     return;
   }
+  // Las celdas vaciadas se descartan al enviar: avisar antes de publicar una
+  // matriz con menos precios que la versión que se ve en pantalla.
+  const hadPrice = priceMatrix.value.filter(
+    (p) => p.prezzo !== '' && p.prezzo !== null && p.prezzo !== undefined,
+  ).length;
+  const cleared = hadPrice - prices.length;
+  if (cleared > 0) {
+    const ok = await confirm.askDanger(
+      t('price_lists.matrix_cleared_confirm', { n: cleared }),
+      t('price_lists.matrix_cleared_title'),
+    );
+    if (!ok) return;
+  }
   matrixSaving.value = true;
   try {
     // Siempre por op=new_version (paridad con el legacy, que versiona): el
@@ -1228,7 +1242,7 @@ async function saveMatrix(): Promise<void> {
       start = cur.data_start.slice(0, 10);
       stop = cur.data_stop.slice(0, 10);
     } else {
-      start = new Date().toISOString().slice(0, 10);
+      start = todayLocal();
     }
     const ext = extDirty.value
       ? extDraft.value.filter((r) => r.zona !== '' && r.peso_max !== '' && r.prezzo !== '')

@@ -150,6 +150,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useConfirm } from '@shared/anagrafiche/composables/useConfirm';
 import {
   mdiFileUpload,
   mdiPaperclip,
@@ -174,6 +175,7 @@ const { t } = useI18n();
 const step = ref(1);
 const format = ref('express');
 const file = ref<File | null>(null);
+const confirm = useConfirm();
 const mode = ref<ImportMode>('merge');
 const supplMode = ref<'ACT' | 'NEW'>('NEW');
 const preview = ref<ImportPreview | null>(null);
@@ -241,6 +243,13 @@ async function doPreview(): Promise<void> {
 
 async function doConfirm(): Promise<void> {
   if (!preview.value || !props.packId) return;
+  if (mode.value === 'replace') {
+    const ok = await confirm.askDanger(
+      t('price_lists.import_replace_confirm', { n: preview.value.valid_rows_data.length }),
+      t('price_lists.import_replace_title'),
+    );
+    if (!ok) return;
+  }
   busy.value = true;
   error.value = null;
   try {
