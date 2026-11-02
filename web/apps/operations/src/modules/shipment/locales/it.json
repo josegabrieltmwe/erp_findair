@@ -754,7 +754,8 @@
         "unsaved_title": "Modifiche non salvate",
         "unsaved_body": "Ci sono modifiche non salvate. Scartare?",
         "keep_editing": "No, continua",
-        "discard": "Scarta"
+        "discard": "Scarta",
+        "instant_save": "Gli importi si salvano subito, uscendo da ogni campo: Annulla non li ripristina."
       },
       "pricing": {
         "title": "Dettaglio prezzo",

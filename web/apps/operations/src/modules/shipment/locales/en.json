@@ -754,7 +754,8 @@
         "unsaved_title": "Unsaved changes",
         "unsaved_body": "There are unsaved changes. Discard?",
         "keep_editing": "No, keep editing",
-        "discard": "Discard"
+        "discard": "Discard",
+        "instant_save": "Amounts are saved as soon as you leave each field: Cancel does not undo them."
       },
       "pricing": {
         "title": "Pricing breakdown",

@@ -75,6 +75,7 @@ import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useUiStore } from "@shipment/stores/ui.store";
+import { checkfornLabelKey, isCheckfornOk } from "@shipment/utils/checkforn";
 import InfoRow from "@shipment/components/shell/InfoRow.vue";
 
 const { t } = useI18n();
@@ -90,10 +91,12 @@ function get(field: string): string {
 }
 
 const checkforn = computed(() => get("checkforn"));
-const checkfornOk = computed(() => checkforn.value === "OK");
-const supplierCheckLabel = computed(
-  () => checkforn.value || t("shipment.cards.verifiche.not_verified"),
-);
+const checkfornOk = computed(() => isCheckfornOk(checkforn.value));
+const supplierCheckLabel = computed(() => {
+  const key = checkfornLabelKey(checkforn.value);
+  if (key) return t(key);
+  return checkforn.value || t("shipment.cards.verifiche.not_verified");
+});
 const supplierCheckTitle = computed(() =>
   checkfornOk.value
     ? t("shipment.cards.verifiche.supplier_check_ok")

@@ -754,7 +754,8 @@
         "unsaved_title": "Niet-opgeslagen wijzigingen",
         "unsaved_body": "Er zijn niet-opgeslagen wijzigingen. Verwerpen?",
         "keep_editing": "Nee, doorgaan",
-        "discard": "Verwerpen"
+        "discard": "Verwerpen",
+        "instant_save": "Bedragen worden direct opgeslagen zodra je een veld verlaat: Annuleren maakt ze niet ongedaan."
       },
       "pricing": {
         "title": "Prijsuitsplitsing",

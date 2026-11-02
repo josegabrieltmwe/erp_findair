@@ -754,7 +754,8 @@
         "unsaved_title": "Cambios sin guardar",
         "unsaved_body": "Hay cambios sin guardar. ¿Descartar?",
         "keep_editing": "No, seguir editando",
-        "discard": "Descartar"
+        "discard": "Descartar",
+        "instant_save": "Los importes se guardan al salir de cada campo: Cancelar no los revierte."
       },
       "pricing": {
         "title": "Desglose de precio",

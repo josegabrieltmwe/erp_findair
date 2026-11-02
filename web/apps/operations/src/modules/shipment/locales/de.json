@@ -754,7 +754,8 @@
         "unsaved_title": "Nicht gespeicherte Änderungen",
         "unsaved_body": "Es gibt nicht gespeicherte Änderungen. Verwerfen?",
         "keep_editing": "Nein, weiter bearbeiten",
-        "discard": "Verwerfen"
+        "discard": "Verwerfen",
+        "instant_save": "Beträge werden beim Verlassen jedes Feldes sofort gespeichert: Abbrechen macht sie nicht rückgängig."
       },
       "pricing": {
         "title": "Preisaufschlüsselung",

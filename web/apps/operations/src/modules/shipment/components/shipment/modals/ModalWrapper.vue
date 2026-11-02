@@ -15,6 +15,15 @@
     :discard-label="t('shipment.modals.wrapper.discard')"
     @close="ui.closeModal()"
   >
+    <v-alert
+      v-if="instantSave"
+      type="info"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ t("shipment.modals.wrapper.instant_save") }}
+    </v-alert>
     <slot />
     <template v-if="$slots.actions" #actions>
       <slot name="actions" />
@@ -45,6 +54,8 @@ const props = defineProps<{
   icon?: string;
   size?: "sm" | "md" | "lg" | "xl" | "confirm";
   maxWidth?: number;
+  /** El contenido guarda cada importe al salir del campo: Cancelar no lo revierte (aviso en el modal). */
+  instantSave?: boolean;
 }>();
 
 const { t } = useI18n();
