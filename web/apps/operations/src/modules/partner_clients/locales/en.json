@@ -125,6 +125,7 @@
         "checking": "Checking…",
         "ok": "Verified",
         "ko": "Not verified",
+        "unsaved_number": "Enter the number with its country prefix (for example IT01234567890) or save the record first.",
         "na": "Not applicable"
       },
       "more": {
