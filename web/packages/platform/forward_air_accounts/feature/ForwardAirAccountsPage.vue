@@ -271,6 +271,7 @@
 </template>
 
 <script setup lang="ts">
+import { todayLocal } from '../../utils/date';
 /**
  * Cuentas de Forward Air (LTL) por partner y entorno: alta, edición, cuenta
  * principal, carta de autorización del cliente, verificación y baja. Solo TMWE.
@@ -340,7 +341,7 @@ const authStatusItems = computed(() => [
   { title: t('forward_air_accounts.auth_expired') as string, value: 'expired' },
 ]);
 
-const today = (): string => new Date().toISOString().slice(0, 10);
+const today = (): string => todayLocal();
 
 function authLabel(a: ForwardAirAccount): string {
   if (a.environment !== 'production') return t('forward_air_accounts.auth_not_required') as string;
