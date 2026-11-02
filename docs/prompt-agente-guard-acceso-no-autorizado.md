@@ -1,6 +1,6 @@
 # Tarea: no montar el dashboard ERP para usuarios sin acceso (pantalla de "no autorizado")
 
-> **Estado:** pendiente de ejecutar (prompt de tarea; a 2026-10-31 no existe ningún componente `Unauthorized`/`Forbidden` y `web/apps/operations/src/main.ts` sigue montando la app con solo comprobar la sesión) · **Última modificación:** 2026-10-30 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+> **Estado:** ejecutado en la rama `feat/guard-no-autorizado` (2026-11-02): `sessionHasNoAccess`/`hasErpAccess`/`showNoAccess` en `bff.ts`, pantalla en `noAccess.ts`, bifurcación en `main.ts`, tests en `noAccessGuard.spec.ts`. Cambio respecto al prompt: solo se bloquea si el API declaró las capacidades (`capabilities_source === 'backend'`) y vienen vacías; con la deducción de reserva del BFF (`[]` para todo no-TMWE) o si falla el contexto no se bloquea a nadie. Pendiente: comprobar en navegador con un usuario real sin rol · **Última modificación:** 2026-11-02
 
 ## Contexto
 
