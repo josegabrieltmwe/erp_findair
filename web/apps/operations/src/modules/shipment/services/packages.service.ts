@@ -25,14 +25,28 @@ export type PackageUpsertRow = {
 };
 
 export const packagesService = {
-  /** ajax_shipment_packages POST — replace/merge packages for the shipment. */
+  /**
+   * ajax_shipment_packages POST — sends the FINAL list of packages.
+   *
+   * `atomic: true` (P45): the API applies add/update/delete in ONE transaction
+   * with rollback, so a failure no longer leaves the shipment half-saved. An
+   * older API ignores the flag and keeps the row-by-row behaviour. Weight > 0
+   * is enforced by the server (the form already checks it, H16b); an empty
+   * list is only accepted when the operator really removed every package.
+   */
   upsertAll(
     shipment_id: number,
     packages: PackageUpsertRow[],
   ): Promise<PackagesUpsertResult> {
+    const body: Record<string, unknown> = {
+      shipment_id,
+      packages,
+      atomic: true,
+    };
+    if (packages.length === 0) body.allow_empty = true;
     return http<PackagesUpsertResult>("/ajax_shipment_packages", {
       method: "POST",
-      body: { shipment_id, packages },
+      body,
     });
   },
 

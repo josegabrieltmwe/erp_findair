@@ -110,6 +110,8 @@ export interface Shipment {
   consegna_data?: string;
   consegna_firma?: string;
 
+  /** Campos que el servidor rechaza al guardar (expedición facturada con AWB); P57. */
+  readonly_fields?: string[];
   // Packages
   colli?: string;
   peso?: string;
