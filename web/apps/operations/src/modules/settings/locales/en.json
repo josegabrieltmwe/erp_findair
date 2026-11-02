@@ -815,7 +815,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Delete account",
-    "delete_message": "Delete account {name}?"
+    "delete_message": "Delete account {name}?",
+    "name_or_iban_required": "Enter at least the name or the IBAN."
   },
   "payment_config": {
     "subtitle": "Manage payment methods and payment terms.",
