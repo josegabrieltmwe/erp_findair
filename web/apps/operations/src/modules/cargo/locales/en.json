@@ -1504,7 +1504,11 @@
       "failed": "Cancellation failed",
       "invoiced": "The cargo is invoiced: it cannot be cancelled.",
       "has_awb": "The cargo has an issued AWB. Cancelling does not void the AWB already issued.",
-      "active_booking": "The cargo has an active booking with the airline. Cancel the booking first, otherwise it will be left orphaned."
+      "active_booking": "The cargo has an active booking with the airline. Cancel the booking first, otherwise it will be left orphaned.",
+      "force_ack": "I understand the cargo has an issued AWB and cancelling it does not void the AWB. Cancel anyway (TMWE staff only).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "{carrier} booking: {id}",
+      "detail_invoiced": "Invoices: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Unsaved changes",

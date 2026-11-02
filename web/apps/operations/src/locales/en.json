@@ -89,7 +89,10 @@
       "ROLE_ROOT_ONLY": "Only a root user can act on a root account or grant the root role.",
       "ROLE_ADMIN_REQUIRED": "Managing other people's permissions requires the account administrator role.",
       "ROLE_NOT_GRANTABLE": "An account administrator cannot grant this role.",
-      "ROLE_NOT_FOUND": "The role does not exist or is inactive."
+      "ROLE_NOT_FOUND": "The role does not exist or is inactive.",
+      "CARGO_INVOICED": "The cargo is invoiced (customer or supplier): it cannot be cancelled.",
+      "CARGO_HAS_ACTIVE_BOOKING": "The cargo has an active airline booking: cancel the booking first.",
+      "CARGO_HAS_AWB": "The cargo has an issued AWB: only TMWE staff can cancel it, with explicit confirmation."
     }
   },
   "platform": {

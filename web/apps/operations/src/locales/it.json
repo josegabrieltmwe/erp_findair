@@ -89,7 +89,10 @@
       "ROLE_ROOT_ONLY": "Solo un utente root può agire su un account root o concedere il ruolo root.",
       "ROLE_ADMIN_REQUIRED": "Gestire i permessi di altre persone richiede il ruolo di amministratore dell'account.",
       "ROLE_NOT_GRANTABLE": "Un amministratore dell'account non può concedere questo ruolo.",
-      "ROLE_NOT_FOUND": "Il ruolo non esiste o non è attivo."
+      "ROLE_NOT_FOUND": "Il ruolo non esiste o non è attivo.",
+      "CARGO_INVOICED": "Il cargo è fatturato (cliente o fornitore): non può essere annullato.",
+      "CARGO_HAS_ACTIVE_BOOKING": "Il cargo ha una prenotazione attiva con la compagnia aerea: annulla prima la prenotazione.",
+      "CARGO_HAS_AWB": "Il cargo ha un AWB emesso: solo il personale TMWE può annullarlo, con conferma esplicita."
     }
   },
   "platform": {

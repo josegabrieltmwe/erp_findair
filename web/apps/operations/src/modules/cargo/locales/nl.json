@@ -1504,7 +1504,11 @@
       "failed": "Annulering mislukt",
       "invoiced": "De vracht is gefactureerd: ze kan niet worden geannuleerd.",
       "has_awb": "De vracht heeft een uitgegeven AWB. Annuleren maakt de reeds uitgegeven AWB niet ongeldig.",
-      "active_booking": "De vracht heeft een actieve boeking bij de luchtvaartmaatschappij. Annuleer eerst de boeking, anders blijft die verweesd."
+      "active_booking": "De vracht heeft een actieve boeking bij de luchtvaartmaatschappij. Annuleer eerst de boeking, anders blijft die verweesd.",
+      "force_ack": "Ik begrijp dat de cargo een uitgegeven AWB heeft en dat annuleren het AWB niet ongeldig maakt. Toch annuleren (alleen TMWE-personeel).",
+      "detail_awb": "AWB: {awb}",
+      "detail_booking": "Boeking {carrier}: {id}",
+      "detail_invoiced": "Facturen: {ids}"
     },
     "modalwrap": {
       "unsaved_title": "Niet-opgeslagen wijzigingen",

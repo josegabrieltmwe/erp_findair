@@ -89,7 +89,10 @@
       "ROLE_ROOT_ONLY": "Nur ein Root-Benutzer kann auf ein Root-Konto zugreifen oder die Root-Rolle vergeben.",
       "ROLE_ADMIN_REQUIRED": "Das Verwalten der Berechtigungen anderer Personen erfordert die Rolle Kontoadministrator.",
       "ROLE_NOT_GRANTABLE": "Ein Kontoadministrator kann diese Rolle nicht vergeben.",
-      "ROLE_NOT_FOUND": "Die Rolle existiert nicht oder ist inaktiv."
+      "ROLE_NOT_FOUND": "Die Rolle existiert nicht oder ist inaktiv.",
+      "CARGO_INVOICED": "Der Cargo ist fakturiert (Kunde oder Lieferant): er kann nicht storniert werden.",
+      "CARGO_HAS_ACTIVE_BOOKING": "Der Cargo hat eine aktive Buchung bei der Airline: Stornieren Sie zuerst die Buchung.",
+      "CARGO_HAS_AWB": "Der Cargo hat ein ausgestelltes AWB: nur TMWE-Personal kann ihn mit ausdrücklicher Bestätigung stornieren."
     }
   },
   "platform": {
