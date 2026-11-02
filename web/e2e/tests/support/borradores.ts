@@ -16,7 +16,7 @@ export async function elegirCliente(page: Page): Promise<void> {
   // El menú lateral puede reabrirse al hidratar la página: se cierra y se reintenta si el desplegable no sale.
   for (let intento = 1; intento <= 3; intento++) {
     await cerrarVelo(page);
-    const input = page.locator(".v-autocomplete input").first();
+    const input = page.locator(".v-main .v-autocomplete input").first();
     await input.click();
     await input.fill("");
     const busqueda = page.waitForResponse((r) => /api_anagrafica_crud/.test(r.url()), { timeout: 8000 }).catch(() => null);

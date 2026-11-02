@@ -18,14 +18,14 @@ const make = (s: Partial<Shipment>) =>
 
 describe("useShipmentState.readonly", () => {
   it("bloquea todo lo que el servidor rechaza si está facturada con AWB", () => {
-    const st = make({ id_fattura_a: 5, AWB_forn: "123" } as Partial<Shipment>);
+    const st = make({ id_fattura_a: "5", AWB_forn: "123" });
     for (const f of SERVER_LOCKED) {
       expect(st.readonly(f), f).toBe(true);
     }
   });
 
   it("sin factura no bloquea esos campos", () => {
-    const st = make({ id_fattura_a: 0, AWB_forn: "123" } as Partial<Shipment>);
+    const st = make({ id_fattura_a: "0", AWB_forn: "123" });
     for (const f of ["km_forza", "peso_fornit_reale", "acc_fissa_corriere"]) {
       expect(st.readonly(f), f).toBe(false);
     }

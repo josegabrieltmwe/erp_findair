@@ -77,7 +77,7 @@ test("SHP-09 · en un borrador nuevo, bultos y peso del encabezado coinciden con
   // Borrador propio (no reutiliza el anotado) para no arrastrar filas de otras ejecuciones.
   await page.goto("/shipment/new");
   await cerrarVelo(page);
-  await page.locator(".v-autocomplete input").first().fill(process.env.E2E_PARTNER_CLIENT ?? "");
+  await page.locator(".v-main .v-autocomplete input").first().fill(process.env.E2E_PARTNER_CLIENT ?? "");
   await page.locator(".v-overlay--active .v-list-item").first().click();
   await page.locator("button:has(.mdi-check)").last().click();
   await page.waitForURL(/\/shipment\/\d+/, { timeout: 30_000 });
