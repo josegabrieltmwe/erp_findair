@@ -486,6 +486,11 @@ function toggleBracket(day: number): void {
 }
 
 async function saveSchedule(): Promise<void> {
+  // Sin tramos de días ni día fijo del mes, el plazo no genera vencimientos.
+  if (!GG_BRACKETS.some((d) => scheduleForm['gg' + d] === 'S') && !(Number(scheduleForm.ggmese) > 0)) {
+    toast.error(t('payment_config.term_needs_bracket'));
+    return;
+  }
   savingSchedule.value = true;
   try {
     const payload: PaymentSchedulePayload = {
