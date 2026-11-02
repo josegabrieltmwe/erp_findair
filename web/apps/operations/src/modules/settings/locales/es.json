@@ -803,7 +803,8 @@
     "col_iban": "IBAN",
     "col_swift": "SWIFT",
     "delete_title": "Eliminar cuenta",
-    "delete_message": "¿Eliminar la cuenta {name}?"
+    "delete_message": "¿Eliminar la cuenta {name}?",
+    "name_or_iban_required": "Indica al menos el nombre o el IBAN."
   },
   "payment_config": {
     "subtitle": "Gestiona los métodos de pago y los plazos de pago.",
