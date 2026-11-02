@@ -344,3 +344,57 @@ routes:
     upstream:
       action: api_admin_partner_smtp
     limits: { body: 4k, timeout: 15 }
+
+  # Pasarelas de pago. api_pay_gateway_accounts: cada partner gestiona SUS cuentas (el partner sale del token, nunca del
+  # cliente; una cuenta ajena responde 404). POST puede ser {action:'rotate_secret'|'validate'}: validate llama al
+  # proveedor. secret y webhook_secret son de solo escritura: la API nunca los devuelve (solo secret_hint).
+  # api_admin_pay_gateway_accounts: TMWE, solo lectura. api_pay_refunds: solicitud y aprobacion por una segunda persona
+  # ({action:'approve'|'reject'}); POST llama al proveedor.
+  - id: pay_gateway_accounts.get
+    method: GET
+    path: /api_pay_gateway_accounts
+    upstream:
+      action: api_pay_gateway_accounts
+      forward_query: [id, environment]
+
+  - id: pay_gateway_accounts.post
+    method: POST
+    path: /api_pay_gateway_accounts
+    upstream:
+      action: api_pay_gateway_accounts
+    limits: { body: 16k, timeout: 30 }
+
+  - id: pay_gateway_accounts.put
+    method: PUT
+    path: /api_pay_gateway_accounts
+    upstream:
+      action: api_pay_gateway_accounts
+    limits: { body: 16k, timeout: 15 }
+
+  - id: pay_gateway_accounts.delete
+    method: DELETE
+    path: /api_pay_gateway_accounts
+    upstream:
+      action: api_pay_gateway_accounts
+    limits: { body: 4k, timeout: 15 }
+
+  - id: admin_pay_gateway_accounts.get
+    method: GET
+    path: /api_admin_pay_gateway_accounts
+    upstream:
+      action: api_admin_pay_gateway_accounts
+      forward_query: [partner_id, environment, provider, status]
+
+  - id: pay_refunds.get
+    method: GET
+    path: /api_pay_refunds
+    upstream:
+      action: api_pay_refunds
+      forward_query: [id, view]
+
+  - id: pay_refunds.post
+    method: POST
+    path: /api_pay_refunds
+    upstream:
+      action: api_pay_refunds
+    limits: { body: 4k, timeout: 30 }

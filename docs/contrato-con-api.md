@@ -1,6 +1,6 @@
 # Contrato con el API (`tmwe_api`)
 
-> **Estado:** vigente · **Generado:** 2026-10-31 · **Clasificación:** automática, pendiente de revisión humana
+> **Estado:** vigente · **Generado:** 2026-10-31 · **Última modificación:** 2026-11-02 · **Clasificación:** automática, pendiente de revisión humana
 
 Lista única de lo que el BFF y la SPA piden a `tmwe_api`, fusión de `peticiones-backend.md` (detalle técnico y evidencia) y `prompt-agente-tmwe-json.md` (lista priorizada, ya obsoleta como prompt). Numeración unificada P01–P41; el detalle de cada una sigue en el `§` indicado de `peticiones-backend.md`.
 
@@ -180,3 +180,21 @@ G.1 → G.3 → G.4 (cambios pequeños en la API, sin impacto de permisos) → G
 - **ERP, al reservar (`BookingConfirmDialog.vue`):** aviso si la `account_ref` de la tarifa (que devuelve `api_cargo_webcargo_rate_detail`) indica la cuenta de TMWE: `fallback_from` presente, o `ref_id` 0 en una tarifa realtime. No bloquea la reserva.
 - **tmwe-wueform (clientes):** no muestra ninguna diferencia, por decisión de negocio (2026-11-02).
 - Diseño y riesgos asumidos: `tmwe_api/docs/02-arquitectura/decisiones/respaldo-cuenta-directa-webcargo.md`.
+
+## I. Pasarelas de pago (2026-11-02)
+
+Plan y estado de la implementación: `tmwe_api/docs/03-diseno/pasarelas_pago/README.md` (rama `feat/pasarelas-pago`, sin fusionar). TMWE nunca guarda números de tarjeta: el cliente los escribe en la página del proveedor y la API solo conserva referencias.
+
+| Ruta (BFF `/bff/v1/…`) | Métodos | Quién | Notas |
+|---|---|---|---|
+| `api_pay_gateway_accounts` | GET, POST, PUT, DELETE | Cada partner, solo las suyas | El partner sale del token; una cuenta ajena responde 404. Ids públicos `pga_…`. `POST` admite `{action: "rotate_secret"}` y `{action: "validate"}` (llama al proveedor); `PUT` admite `{action: "set_principal"}`. |
+| `api_admin_pay_gateway_accounts` | GET | TMWE | Solo lectura y sin secretos; filtros `partner_id`, `environment`, `provider`, `status`. |
+| `api_pay_refunds` | GET, POST | Cada partner, solo los suyos | `GET ?view=awaiting_approval` (por defecto), `?id=prf_…`, `?view=installments_review`. `POST` solicita (201 hecho, **202** espera aprobación) o resuelve con `{action: "approve" \| "reject", id}`. |
+
+- **Secretos de solo escritura:** `secret` y `webhook_secret` solo viajan en alta y rotación. La API devuelve `secret_hint` (últimos 4) y `has_webhook_secret`, nunca el valor. La SPA los vacía de memoria tras guardar.
+- **Aprobación de reembolsos:** por encima de 100,00 EUR el reembolso queda `awaiting_approval` y no llega al proveedor hasta que lo aprueba OTRA persona. El aprobador lo decide siempre el servidor (usuario autenticado): la SPA solo envía el `id`.
+- **Cuotas revertidas:** un pago devuelto por completo o perdido en disputa deja sus cuotas cerradas; aparecen en `installments_review` y una persona decide si las reabre. No se reabren solas.
+- **Webhook:** no pasa por el BFF. Stripe llama al ingress aparte `ingress/pay_webhook.php?a=pga_…` de `tmwe_api`.
+- **Permiso provisional:** módulo `pagamenti_config`. Si cambia, hay que cambiar también la visibilidad de las tarjetas de Settings.
+- **SPA (`operations`):** Settings → Pagos y bancos → «Pasarelas de pago», «Pasarelas por partner» (TMWE, `requiresAdmin`) y «Reembolsos». Código en `web/packages/platform/payment_gateways/`.
+- **Pendiente en esta área:** pantalla para iniciar un cobro, disputas, autorización de cobro y recargos (decisiones 2 y 3 del plan) y adaptadores distintos de Stripe.

@@ -341,6 +341,33 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'payments_banking',
         aliases: ['Bank management'],
       },
+      // Pasarelas de pago (Stripe…): cada partner gestiona SUS cuentas y credenciales (de solo escritura); TMWE las
+      // consulta sin secretos. Los reembolsos grandes los aprueba una segunda persona.
+      // Backend: api_pay_gateway_accounts / api_admin_pay_gateway_accounts / api_pay_refunds.
+      {
+        key: 'pay_gateways',
+        i18nKey: 'pay_gateways',
+        icon: 'mdi-credit-card-outline',
+        routeName: 'settings-pay-gateways',
+        subgroup: 'payments_banking',
+        aliases: ['Stripe', 'Payment gateways', 'Pasarelas de pago', 'Gateway di pagamento'],
+      },
+      {
+        key: 'pay_gateways_admin',
+        i18nKey: 'pay_gateways_admin',
+        icon: 'mdi-credit-card-lock-outline',
+        routeName: 'settings-pay-gateways-admin',
+        subgroup: 'payments_banking',
+        aliases: ['Pasarelas por partner', 'Partner gateways'],
+      },
+      {
+        key: 'pay_refunds',
+        i18nKey: 'pay_refunds',
+        icon: 'mdi-cash-refund',
+        routeName: 'settings-pay-refunds',
+        subgroup: 'payments_banking',
+        aliases: ['Reembolsos', 'Refunds', 'Rimborsi'],
+      },
       {
         key: 'payment_config',
         i18nKey: 'payment_config',
