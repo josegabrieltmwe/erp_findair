@@ -155,11 +155,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@shipment/pages/ShipmentNewPage.vue"),
       },
       {
-        path: "from-cargo",
-        name: "shipment-from-cargo",
-        component: () => import("@shipment/pages/ShipmentFromCargoPage.vue"),
-      },
-      {
         path: "recharge",
         name: "recharge-list",
         component: () => import("@shipment/pages/RechargeListPage.vue"),
