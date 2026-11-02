@@ -944,7 +944,7 @@
     "form_country": "Land van account",
     "form_metric_system": "Meetsysteem",
     "form_note": "Notitie",
-    "form_secret_hint": "Wordt onversleuteld getoond — legacy-pariteit",
+    "form_secret_hint": "Leeg laten om de opgeslagen waarde te behouden.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperiaal (Lb/In)",
     "created": "Inloggegevens aangemaakt",

@@ -944,7 +944,7 @@
     "form_country": "Konto-Land",
     "form_metric_system": "Maßsystem",
     "form_note": "Notiz",
-    "form_secret_hint": "Wird im Klartext angezeigt — Legacy-Parität",
+    "form_secret_hint": "Leer lassen, um den gespeicherten Wert zu behalten.",
     "metric_m": "Metrisch (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Zugangsdaten erstellt",

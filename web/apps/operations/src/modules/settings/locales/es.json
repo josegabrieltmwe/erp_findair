@@ -944,7 +944,7 @@
     "form_country": "País de la cuenta",
     "form_metric_system": "Sistema de medida",
     "form_note": "Nota",
-    "form_secret_hint": "Se muestra en claro — paridad con el legacy",
+    "form_secret_hint": "Déjalo vacío para conservar el valor guardado.",
     "metric_m": "Métrico (Kg/Cm)",
     "metric_i": "Imperial (Lb/In)",
     "created": "Credencial creada",
