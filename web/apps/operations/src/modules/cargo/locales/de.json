@@ -1715,6 +1715,7 @@
       "title": "Flug buchen",
       "awb_placeholder": "z. B. 074-45686292",
       "intro": "Sie sind dabei, eine Buchung für den ausgewählten Tarif zu erstellen.",
+      "account_tmwe_warning": "Diese Rate wurde mit dem TMWE-Konto erhalten, nicht mit der Delegation des Partners. Bestätige, dass du sie buchen möchtest.",
       "awb_manual": "AWB-Nummer",
       "not_bookable": "Dieser Tarif ist nicht über die API buchbar:",
       "reason_unspecified": "Grund nicht angegeben",

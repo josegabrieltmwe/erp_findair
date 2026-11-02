@@ -10,6 +10,17 @@
     <p class="mb-3">
       {{ t("cargo.bookingconfirm.intro") }}
     </p>
+    <!-- La tarifa salio de la cuenta de TMWE y no de la delegacion del partner. -->
+    <v-alert
+      v-if="tmweAccount"
+      type="warning"
+      density="compact"
+      variant="tonal"
+      class="mb-3"
+      data-testid="booking-account-tmwe"
+    >
+      {{ t("cargo.bookingconfirm.account_tmwe_warning") }}
+    </v-alert>
     <div v-if="rate" class="mb-3">
       <div class="text-caption text-medium-emphasis">
         {{ t("cargo.servizio.carrier") }}
@@ -139,6 +150,7 @@ import { computed, ref, watch } from "vue";
 import AppDialog from "@shared/ui/AppDialog.vue";
 import type { WebcargoRate } from "@cargo/services/webcargo_rate.service";
 import { useVettoriStore } from "@cargo/stores/vettori.store";
+import { isTmweAccountRef } from "@cargo/services/flight_search.service";
 
 const { t, locale } = useI18n();
 const props = defineProps<{
@@ -211,6 +223,9 @@ watch(awbMode, (mode) => {
     awbFromPool.value = stockItems.value[0].awb;
   }
 });
+
+/** ¿La tarifa a reservar viene de la cuenta de TMWE y no de la delegacion del partner? */
+const tmweAccount = computed(() => isTmweAccountRef(props.rate?.account_ref));
 
 function close(): void {
   emit("update:modelValue", false);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   isTmweAccountRate,
+  isTmweAccountRef,
   normalizeRate,
   type FlightRate,
 } from "./flight_search.service";
@@ -23,5 +24,19 @@ describe("isTmweAccountRate", () => {
     const n = normalizeRate(base({ account_origin: "tmwe", account_fallback: true }));
     expect(isTmweAccountRate(n)).toBe(true);
     expect(n.account_fallback).toBe(true);
+  });
+});
+
+describe("isTmweAccountRef", () => {
+  it("respaldo (fallback_from) y cuenta directa realtime (ref_id 0) son de TMWE", () => {
+    expect(isTmweAccountRef({ source: "webcargo_realtime", ref_id: 0, fallback_from: 3 })).toBe(true);
+    expect(isTmweAccountRef({ source: "webcargo_realtime", ref_id: 0 })).toBe(true);
+  });
+
+  it("una delegacion del partner, o la ausencia de dato, no lo son", () => {
+    expect(isTmweAccountRef({ source: "webcargo_realtime", ref_id: 7 })).toBe(false);
+    expect(isTmweAccountRef({ source: "webcargo_published", ref_id: 0 })).toBe(false);
+    expect(isTmweAccountRef(null)).toBe(false);
+    expect(isTmweAccountRef(undefined)).toBe(false);
   });
 });
