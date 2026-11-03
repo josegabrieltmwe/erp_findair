@@ -26,6 +26,7 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useProfile } from "@shared/composables/useProfile";
+import { useAccess } from "@shared/composables/useAccess";
 import { consolidataService } from "../services/consolidata.service";
 import type { ProjectRef } from "../types";
 
@@ -35,12 +36,13 @@ const items = ref<ProjectRef[]>([]);
 const first = computed(() => items.value[0] ?? null);
 
 const { isAdmin, ensureProfile } = useProfile();
+const { can } = useAccess();
 
 async function load(id: number): Promise<void> {
   try {
-    // Solo staff ve proyectos: a otros el API respondería 403 y el toast global saltaría.
+    // Solo el personal con consolidation:manage (TMWE y partners) ve proyectos: a otros el API respondería 403 y el toast global saltaría.
     await ensureProfile();
-    if (isAdmin.value !== true) return;
+    if (isAdmin.value !== true && !can("consolidation:manage")) return;
     const res = await consolidataService.bySpedizione(id);
     if (Number(props.shipmentId) === id)
       items.value = Array.isArray(res.items) ? res.items : [];

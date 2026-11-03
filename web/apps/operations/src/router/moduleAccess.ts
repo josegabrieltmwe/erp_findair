@@ -6,6 +6,7 @@
  * Correspondencia (`Module_Permission_Service::SCOPE_MODULE_MAP` en tmwe_api):
  *   - COD: el servidor lo autoriza con el módulo `spedizioni` (`shipment:read` o el estrecho `courier:read`).
  *   - Proforma: módulo `proforma` (`invoices:read`).
+ *   - Consolidata: scope transversal `consolidation:manage` (rol aditivo consolidation_manager).
  *
  * Falla ABIERTO cuando el perfil no informa `access` (backend antiguo o perfil no cargado): el servidor
  * responde 403 igualmente y esconder una pantalla por no saber sería peor que mostrarla vacía.
@@ -16,6 +17,11 @@ export const MODULE_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = 
   cod: ["shipment:read", "courier:read"],
   "cod-reconciliation": ["shipment:read", "courier:read"],
   proforma: ["invoices:read"],
+  // Consolidata (2026-11-03): TMWE y partners con el rol consolidation_manager.
+  consolidata: ["consolidation:manage"],
+  "consolidata-list": ["consolidation:manage"],
+  "consolidata-quote": ["consolidation:manage"],
+  "consolidata-detail": ["consolidation:manage"],
 };
 
 export function canOpenModuleRoute(

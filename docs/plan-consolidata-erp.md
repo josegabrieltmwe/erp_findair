@@ -317,7 +317,7 @@ Orden recomendado: **C0 y C1 en paralelo → C2 → C3 → C4 → C5 → C6 → 
 
 | # | Decisión | Afecta a | Propuesta por defecto |
 |---|---|---|---|
-| D-A | ¿Ve el partner los proyectos de sus clientes en el ERP? (D19 del plan del API) | Filtro de partner, permisos, menú | No en esta entrega: solo staff (anagrafica 1) |
+| D-A | ¿Ve el partner los proyectos de sus clientes en el ERP? (D19 del plan del API) | Filtro de partner, permisos, menú | **Decidida (2026-11-03): sí.** Todo el personal de TMWE y de los partners tiene el permiso; ver §11 |
 | D-B | ¿Se activa la reserva real en el vendor desde `operate` (`CONSOLIDATION_ALLOW_BOOKING`)? | C5 | Apagada; el botón explica por qué |
 | D-C | ¿Qué significa `close`: lo hace el cliente al aceptar o también el staff? ¿Puede cerrar el cliente sin respuesta del staff? (D20) | Botones de cierre, mosaicos | Solo con respuesta vigente (P70) |
 | D-D | ¿Quién puede operar? ¿Hace falta un permiso propio para `operate` y reservar? | C0, C5 | Permiso nuevo `consolidation:operate` |
@@ -364,3 +364,21 @@ Pendiente:
 4. Aplicar las migraciones en producción (P78).
 5. **Plugin de WordPress:** debe copiar de nuevo `tests/fixtures/consolidation/catalog_client.json` (API 1.2, acción `log`). Además, ahora recibe 409 si cierra sin respuesta del staff y 403 si envía precio manual o tramos TRANSIT.
 6. El POST de `unified_consolidation_project` en el BFF tiene `timeout: 30`. `operate` con muchas houses o con reserva puede superarlo.
+
+## 11. Permiso de consolidata para TMWE y partners (2026-11-03)
+
+Decisión del negocio: todos los usuarios de las anagraficas de TMWE y de los partners trabajan con la consolidata.
+
+- **Permiso:** scope `consolidation:manage`, que da el rol aditivo nuevo `consolidation_manager`. El scope se añade a los techos de la SPA ERP (`app_internal_erp`, `app_internal_erp_staff`, `app_partner_erp`).
+- **Migración:** `tmwe_api/docs/sql/migrations/20261103_rol_consolidacion.sql` (rollback `_rollback.sql`), reflejada en `config/rbac_seed.yml`.
+  - **Aplicada en `tmwe_sandbox` el 2026-11-03:** 268 asignaciones (99 contactos de TMWE y 169 de 46 partners activos). Es idempotente. Copia previa en `bak_20261103_auth_role_consolidacion`.
+  - **Producción:** pendiente, junto con P78.
+- **Contactos nuevos:** reciben el rol por `Default_Api_Role_Service::default_addon_role_names`.
+- **Alcance:**
+  - TMWE ve y gestiona todos los proyectos.
+  - Un partner ve los suyos y los de sus clientes (`anagrafiche.id_anagr_titolare`): listado, recuentos, búsqueda por cargo o expedición, alta en nombre de un cliente, usuarios a los que asignar.
+  - Un cliente sigue como antes (sus proyectos, sin acciones de staff).
+- **SPA:**
+  - El menú y las rutas `/consolidata*` dejan de ser solo de TMWE: los abre el scope (`navCatalog.ts`, `router/moduleAccess.ts`).
+  - La tarjeta del cargo y el chip de la expedición también se rigen por el scope.
+  - Los usuarios con sesión abierta deben volver a entrar para que su token lleve el permiso nuevo.
