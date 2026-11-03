@@ -5,15 +5,25 @@
         t("consolidata.shipments.help", { criterio: view?.criterio ?? "" })
       }}</span>
       <v-btn
-        v-if="canEdit"
+        v-if="canAdd"
         color="primary"
         size="small"
         prepend-icon="mdi-plus"
+        :disabled="atLimit"
         @click="openAdd"
       >
         {{ t("consolidata.shipments.add") }}
       </v-btn>
     </div>
+    <v-alert
+      v-if="nearLimit"
+      :type="atLimit ? 'error' : 'warning'"
+      variant="tonal"
+      density="compact"
+      class="mb-2"
+    >
+      {{ t("consolidata.shipments.limit", { n: count, max: maxShipments }) }}
+    </v-alert>
     <v-table density="compact">
       <thead>
         <tr>
@@ -33,28 +43,53 @@
         <tr v-for="s in view?.spedizioni ?? []" :key="s.id">
           <td>{{ s.ref }}</td>
           <td>{{ s.orig_paese }} {{ s.orig_cap }} {{ s.orig_citta }}</td>
-          <td class="text-right">{{ s.peso.toFixed(2) }}</td>
-          <td class="text-right">{{ s.peso_tassabile?.toFixed(2) ?? "—" }}</td>
-          <td class="text-right">{{ s.quota_totale.toFixed(2) }}</td>
+          <td class="text-right">{{ num(s.peso) }}</td>
+          <td class="text-right">{{ num(s.peso_tassabile) }}</td>
+          <td class="text-right">{{ money(s.quota_totale, currency) }}</td>
           <td>{{ s.merce || "—" }}</td>
-          <td>{{ s.id_spedizione ?? "—" }}</td>
-          <td class="text-right">
-            <template v-if="canEdit">
-              <v-btn
-                icon="mdi-pencil"
-                size="x-small"
-                variant="text"
-                :aria-label="t('consolidata.common.edit')"
-                @click="openEdit(s)"
-              />
-              <v-btn
-                icon="mdi-delete-outline"
-                size="x-small"
-                variant="text"
-                :aria-label="t('consolidata.common.remove')"
-                @click="remove(s)"
-              />
-            </template>
+          <td>
+            <router-link
+              v-if="s.id_spedizione"
+              :to="{
+                name: 'shipment-detail',
+                params: { id: String(s.id_spedizione) },
+              }"
+              class="cons-link"
+            >
+              {{ s.id_spedizione }}
+            </router-link>
+            <v-chip
+              v-if="s.id_spedizione"
+              size="x-small"
+              variant="tonal"
+              class="ml-1"
+              :color="linkedToCargo ? 'success' : 'default'"
+            >
+              {{
+                linkedToCargo
+                  ? t("consolidata.shipments.linked")
+                  : t("consolidata.shipments.notLinked")
+              }}
+            </v-chip>
+            <span v-if="!s.id_spedizione" class="text-medium-emphasis">—</span>
+          </td>
+          <td class="text-right text-no-wrap">
+            <v-btn
+              v-if="canUpdate"
+              icon="mdi-pencil"
+              size="x-small"
+              variant="text"
+              :aria-label="t('consolidata.common.edit')"
+              @click="openEdit(s)"
+            />
+            <v-btn
+              v-if="canRemove"
+              icon="mdi-delete-outline"
+              size="x-small"
+              variant="text"
+              :aria-label="t('consolidata.common.remove')"
+              @click="remove(s)"
+            />
           </td>
         </tr>
         <tr v-if="!view?.spedizioni.length">
@@ -81,15 +116,33 @@ import { useI18n } from "vue-i18n";
 import ConsolidataShipmentDialog from "./ConsolidataShipmentDialog.vue";
 import { useConsolidataStore } from "../stores/consolidata.store";
 import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
+import { useFormat } from "../composables/useFormat";
+import { useConsolidataConfirm } from "../composables/useConfirm";
 import type { Shipment, ShipmentForm } from "../types";
 
-defineProps<{ canEdit: boolean }>();
+defineProps<{ canAdd: boolean; canUpdate: boolean; canRemove: boolean }>();
 const { t } = useI18n();
+const { money, num } = useFormat();
+const confirm = useConsolidataConfirm();
 const store = useConsolidataStore();
 const toast = useToastStore();
 const view = computed(() => store.shipments);
+const currency = computed(() => store.project?.valuta ?? "EUR");
+const linkedToCargo = computed(() => Boolean(store.project?.id_cargo));
 const dialog = ref(false);
 const editing = ref<Shipment | null>(null);
+
+/** Aviso al acercarse al máximo de houses del API (meta.limits.max_shipments). */
+const count = computed(() => view.value?.spedizioni.length ?? 0);
+const maxShipments = computed(() => store.meta?.limits?.max_shipments ?? 0);
+const nearLimit = computed(
+  () =>
+    maxShipments.value > 0 &&
+    count.value >= Math.floor(maxShipments.value * 0.9),
+);
+const atLimit = computed(
+  () => maxShipments.value > 0 && count.value >= maxShipments.value,
+);
 
 function openAdd(): void {
   store.clearError();
@@ -111,9 +164,24 @@ async function save(form: ShipmentForm): Promise<void> {
 }
 
 async function remove(s: Shipment): Promise<void> {
-  if (!window.confirm(t("consolidata.shipments.confirmRemove", { ref: s.ref })))
+  if (
+    !(await confirm(
+      t("consolidata.shipments.confirmRemove", { ref: s.ref }),
+      true,
+    ))
+  )
     return;
   if (await store.removeShipment(s.id))
     toast.success(t("consolidata.shipments.removed"));
 }
 </script>
+
+<style scoped>
+.cons-link {
+  color: rgb(var(--v-theme-primary));
+  text-decoration: none;
+}
+.cons-link:hover {
+  text-decoration: underline;
+}
+</style>

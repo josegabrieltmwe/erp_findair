@@ -1,14 +1,15 @@
 <template>
   <div>
     <p class="text-body-2 mb-2">{{ t("consolidata.notes.help") }}</p>
-    <ConsolidataApiError :error="store.error" @close="store.clearError()" />
     <v-textarea
+      v-if="canAdd"
       v-model="text"
       :label="t('consolidata.notes.new')"
       rows="2"
       auto-grow
     />
     <v-btn
+      v-if="canAdd"
       color="primary"
       size="small"
       :loading="store.saving"
@@ -21,7 +22,8 @@
       <v-list-item v-for="n in store.notes" :key="n.id">
         <v-list-item-title class="text-wrap">{{ n.nota }}</v-list-item-title>
         <v-list-item-subtitle
-          >#{{ n.user }} · {{ shortDate(n.datetime) }}</v-list-item-subtitle
+          >{{ n.user_nome || `#${n.user}` }} ·
+          {{ shortDate(n.datetime) }}</v-list-item-subtitle
         >
       </v-list-item>
       <p v-if="!store.notes.length" class="text-medium-emphasis">
@@ -34,10 +36,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import ConsolidataApiError from "./ConsolidataApiError.vue";
 import { useConsolidataStore } from "../stores/consolidata.store";
 import { shortDate } from "../logic";
 
+defineProps<{ canAdd: boolean }>();
 const { t } = useI18n();
 const store = useConsolidataStore();
 const text = ref("");

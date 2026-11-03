@@ -7,7 +7,9 @@
       "close": "Schließen",
       "save": "Speichern",
       "edit": "Bearbeiten",
-      "remove": "Entfernen"
+      "remove": "Entfernen",
+      "confirm": "Bestätigen",
+      "retry": "Erneut versuchen"
     },
     "state": {
       "A": "Offen",
@@ -16,35 +18,16 @@
       "X": "Storniert",
       "unknown": "Unbekannt"
     },
-    "queue": {
-      "title": "Konsolidierungsanfragen",
-      "subtitle": "Kundenanfragen, die auf das Team warten. Standard: angefragte Angebote.",
-      "filterState": "Status",
-      "filterAssignee": "Zugewiesen an",
-      "filterClient": "Kunden-ID",
-      "allStates": "Alle Status",
-      "assigneeAll": "Alle",
-      "assigneeMe": "Meine",
-      "assigneeNone": "Nicht zugewiesen",
-      "colTitle": "Titel",
-      "colClient": "Kunde",
-      "colState": "Status",
-      "colTotal": "Summe",
-      "colShipments": "Sendungen",
-      "colAssignee": "Zugewiesen",
-      "colUpdated": "Aktualisiert",
-      "answered": "Beantwortet",
-      "unassigned": "Nicht zugewiesen",
-      "empty": "Keine Anfragen entsprechen den Filtern.",
-      "total": "{n} Projekte"
-    },
     "actions": {
       "take": "Übernehmen",
       "answer": "Angebot beantworten",
       "convert": "In Operativ umwandeln",
       "reopen": "Wieder öffnen",
       "close": "Projekt schließen",
-      "cancel": "Projekt stornieren"
+      "cancel": "Projekt stornieren",
+      "assign": "Zuweisen an…",
+      "operate": "Operativ umsetzen",
+      "requestQuote": "Angebot anfordern"
     },
     "tabs": {
       "shipments": "Sendungen",
@@ -52,15 +35,25 @@
       "allocation": "Aufteilung",
       "readiness": "Compliance",
       "history": "Verlauf",
-      "notes": "Interne Notizen"
+      "notes": "Interne Notizen",
+      "conversion": "Umwandlung"
     },
     "detail": {
-      "back": "Zurück zur Warteschlange",
+      "back": "Zurück zur Liste",
       "client": "Kunde #{id}",
       "assignedTo": "Zugewiesen an #{id}",
-      "answered": "Beantwortet: {price} {cur}",
+      "answered": "Beantwortet: {price}",
       "answerValid": "Gültig bis {date}",
-      "linkedCargo": "Mit Cargo-Master #{id} verknüpft."
+      "answeredBy": "von {name}",
+      "typeLabel": "Typ",
+      "routeLabel": "Hub → Ziel",
+      "eoriLabel": "EORI",
+      "assigneeLabel": "Zugewiesen",
+      "cargoLabel": "Cargo",
+      "createdLabel": "Erstellt",
+      "updatedLabel": "Geändert",
+      "closedLabel": "Geschlossen",
+      "metaFailed": "Der Aktionskatalog der API konnte nicht geladen werden: Aktionsschaltflächen bleiben ausgeblendet, bis er geladen ist."
     },
     "shipments": {
       "help": "Houses der Konsolidierung. Richtlinie für das abrechenbare Gewicht: {criterio}.",
@@ -85,7 +78,10 @@
       "volume": "Volumen (cm³)",
       "value": "Wert",
       "readyDate": "Bereitstellung",
-      "colliInvalid": "Die Anzahl der Packstücke muss eine ganze Zahl größer als 0 sein."
+      "colliInvalid": "Die Anzahl der Packstücke muss eine ganze Zahl größer als 0 sein.",
+      "limit": "{n} von {max} erlaubten Sendungen.",
+      "linked": "Auf dem Cargo",
+      "notLinked": "Nicht verknüpft"
     },
     "legs": {
       "help": "Vom System bepreiste Teilstrecken. Ein manueller Preis erfordert eine Begründung und wird protokolliert.",
@@ -109,7 +105,27 @@
       "note": "Notiz",
       "saved": "Teilstrecke aktualisiert.",
       "priceSaved": "Manueller Preis gespeichert.",
-      "recalculated": "Teilstrecken neu berechnet."
+      "recalculated": "Teilstrecken neu berechnet.",
+      "add": "Teilstrecke hinzufügen",
+      "addTitle": "Neue Teilstrecke",
+      "added": "Teilstrecke hinzugefügt.",
+      "removed": "Teilstrecke entfernt.",
+      "confirmRemove": "Teilstrecke {n} ({tipo}) entfernen?",
+      "origin": "Abgang",
+      "destination": "Ziel",
+      "country": "Land",
+      "zip": "PLZ",
+      "city": "Ort",
+      "terminal": "Terminal",
+      "terminalRequired": "Pflicht für AIR-Teilstrecken",
+      "manualPrice": "Manueller Preis",
+      "useManualPrice": "Manuellen Preis festlegen (Mitarbeiter)",
+      "limit": "{n} von {max} Teilstrecken",
+      "source": {
+        "listino": "Tarif",
+        "realtime": "Echtzeit",
+        "manuale": "Manuell"
+      }
     },
     "allocation": {
       "help": "Kosten jeder Teilstrecke, auf die Sendungen verteilt (Kriterium: {criterio}). Summen stimmen auf den Cent.",
@@ -133,7 +149,33 @@
       "action": "Aktion",
       "user": "Benutzer",
       "detail": "Detail",
-      "empty": "Keine Ereignisse."
+      "empty": "Keine Ereignisse.",
+      "leg": "Teilstrecke #{id}",
+      "actions": {
+        "create": "Erstellt",
+        "create_from_option": "Aus dem Simulator erstellt",
+        "add_leg": "Teilstrecke hinzugefügt",
+        "update_leg": "Teilstrecke geändert",
+        "remove_leg": "Teilstrecke entfernt",
+        "recalc": "Neuberechnung",
+        "request_quote": "Angebot angefordert",
+        "close": "Geschlossen",
+        "reopen": "Wiedereröffnet",
+        "cancel": "Storniert",
+        "set_eori": "EORI geändert",
+        "add_shipment": "Sendung hinzugefügt",
+        "update_shipment": "Sendung geändert",
+        "remove_shipment": "Sendung entfernt",
+        "assign": "Zugewiesen",
+        "take": "Übernommen",
+        "note_internal": "Interne Notiz",
+        "answer_quote": "Angebot beantwortet",
+        "override_price": "Manueller Preis",
+        "convert": "Mit Cargo verknüpft",
+        "operate": "Operative Umsetzung",
+        "waive_warning": "Warnung ignoriert",
+        "stato_auto": "Automatische Statusänderung"
+      }
     },
     "notes": {
       "help": "Nur das Team sieht diese Notizen. Sie werden dem Kunden nie angezeigt.",
@@ -177,7 +219,12 @@
       "conversion_blocked": "Das Projekt ist nicht umwandlungsbereit. Beheben oder ignorieren Sie zuerst diese Hinweise.",
       "METHOD_NOT_ALLOWED": "Methode nicht erlaubt.",
       "INTERNAL_ERROR": "Interner Serverfehler.",
-      "allowedStates": "Zulässige Status: {states}"
+      "allowedStates": "Zulässige Status: {states}",
+      "warning_not_waivable": "Diese Warnung hat Fehlerstufe und kann nicht ignoriert werden.",
+      "quote_not_answered": "Das Angebot ist noch nicht beantwortet.",
+      "quote_expired": "Das Angebot ist abgelaufen: neu berechnen und erneut beantworten.",
+      "operation_in_progress": "Für dieses Projekt läuft bereits eine Operation. Warte und versuche es erneut.",
+      "manual_price_staff_only": "Nur Mitarbeiter können einen manuellen Preis festlegen."
     },
     "messages": {
       "taken": "Projekt übernommen.",
@@ -186,12 +233,22 @@
       "cancel": "Projekt storniert.",
       "answered": "Antwort an den Kunden gesendet.",
       "converted": "Umwandlung abgeschlossen.",
-      "convertedPartial": "Teilweise umgewandelt: einige Sendungen sind offen."
+      "convertedPartial": "Teilweise umgewandelt: einige Sendungen sind offen.",
+      "assigned": "Projekt zugewiesen.",
+      "created": "Projekt erstellt.",
+      "eoriSaved": "EORI gespeichert.",
+      "operated": "Umwandlung abgeschlossen.",
+      "operatedPartial": "Teilweise Umwandlung: prüfe die fehlgeschlagenen Schritte.",
+      "quoteRequested": "Angebot angefordert."
     },
     "confirm": {
       "close": "Dieses Projekt schließen?",
       "reopen": "Dieses Projekt wieder öffnen?",
-      "cancel": "Dieses Projekt stornieren? Das kann nicht rückgängig gemacht werden."
+      "cancel": "Dieses Projekt stornieren? Das kann nicht rückgängig gemacht werden.",
+      "title": "Bestätigen",
+      "requestQuote": "Projekt auf Angebot angefordert setzen?",
+      "operate": "Projekt operativ umsetzen (Cargo, Sendungen und HAWBs)?",
+      "operateBooking": "Projekt operativ umsetzen und beim Frachtführer BUCHEN?"
     },
     "quote": {
       "navLink": "Schnellangebot",
@@ -245,7 +302,202 @@
       "restrictedCountries": "Eingeschränkte Länder: {countries}",
       "warnings": {
         "fixed_costs_not_configured": "Die Fixkosten (Zollabfertigung, Hub-Abfertigung) sind noch nicht konfiguriert — die Summe enthält sie nicht."
+      },
+      "terminal": "Terminal",
+      "ref": "Referenz",
+      "value": "Wert",
+      "readyDate": "Bereit am",
+      "packagesTitle": "Packstücke (gesamt {kg} kg)",
+      "pkgWeight": "Gewicht je Packstück (kg)",
+      "length": "Länge (cm)",
+      "width": "Breite (cm)",
+      "height": "Höhe (cm)",
+      "addPackage": "Packstück hinzufügen",
+      "removePackage": "Packstück entfernen",
+      "createFromOption": "Projekt mit dieser Option erstellen"
+    },
+    "type": {
+      "CONS": "Sammelladung",
+      "XTRADE": "Cross-Trade",
+      "MULTI": "Mehrere Abgangsorte"
+    },
+    "phase": {
+      "abierto": "Offen",
+      "sin_asignar": "Nicht zugewiesen",
+      "pendiente_respuesta": "Antwort ausstehend",
+      "respondido": "Beantwortet",
+      "respuesta_vencida": "Antwort abgelaufen",
+      "por_convertir": "Angenommen, umzuwandeln",
+      "convertido": "Umgewandelt",
+      "cancelado": "Storniert",
+      "unknown": "Unbekannt"
+    },
+    "assign": {
+      "title": "Projekt zuweisen",
+      "user": "Mitarbeiter",
+      "submit": "Zuweisen",
+      "noUsers": "Keine Benutzer",
+      "unavailable": "Die Benutzerliste ist nicht verfügbar."
+    },
+    "conversion": {
+      "blocking": "{n} Warnung(en) blockieren die Umwandlung:",
+      "quoteExpired": "Das Angebot ist abgelaufen. Berechne die Teilstrecken vor der Umwandlung neu.",
+      "operateTitle": "Operativ umsetzen",
+      "recommended": "Empfohlen",
+      "operateHelp": "Erstellt oder verwendet das Cargo (MAWB), die Sendungen, die Verknüpfungen und die HAWBs. Idempotent: ein erneuter Versuch wiederholt nur, was fehlgeschlagen ist.",
+      "existingCargo": "Bestehendes Cargo (optional)",
+      "existingCargoHint": "Leer = ein neues Cargo wird erstellt",
+      "reservar": "Beim Frachtführer buchen",
+      "bookingDisabled": "Echte Buchungen sind in der API deaktiviert (CONSOLIDATION_ALLOW_BOOKING).",
+      "operate": "Operativ umsetzen",
+      "retry": "Erneut versuchen",
+      "notAvailable": "Im Status „{state}“ nicht möglich. Das Projekt muss geschlossen (angenommen) sein.",
+      "steps": "Umwandlungsschritte",
+      "stepsUnavailable": "Die Umwandlungsschritte sind noch nicht verfügbar.",
+      "noSteps": "Noch kein Schritt ausgeführt.",
+      "globalGroup": "MAWB / LKW",
+      "houseGroup": "House {ref}",
+      "attempts": "{n} Versuche",
+      "linkTitle": "Mit bestehendem Cargo verknüpfen",
+      "status": {
+        "no": "Nicht umgewandelt",
+        "parcial": "Teilweise",
+        "completo": "Vollständig"
+      },
+      "step": {
+        "cargo": "Cargo (MAWB)",
+        "spedizione": "Sendung",
+        "collegare": "Verknüpfung mit Cargo",
+        "casa": "HAWB",
+        "prenotare": "Buchung",
+        "camion": "LKW",
+        "prezzo": "Preis"
+      },
+      "stepState": {
+        "OK": "Erledigt",
+        "ERRORE": "Fehler",
+        "SALTATO": "Übersprungen"
       }
+    },
+    "create": {
+      "button": "Neues Projekt",
+      "title": "Neues Projekt",
+      "titolo": "Titel",
+      "tipo": "Typ",
+      "hub": "Hub (Terminal)",
+      "destCountry": "Zielland",
+      "eori": "EORI des Anmelders",
+      "note": "Notiz des Spezialisten",
+      "submit": "Projekt erstellen"
+    },
+    "eori": {
+      "title": "EORI bearbeiten",
+      "label": "EORI des Anmelders",
+      "hint": "Leer = keine EORI"
+    },
+    "fromOption": {
+      "title": "Projekt mit dieser Option erstellen",
+      "help": "Es wird ein Projekt mit der Option „{option}“ und den angebotenen Sendungen erstellt. Der Server kalkuliert neu."
+    },
+    "filters": {
+      "q": "Suche",
+      "stato": "Status",
+      "fase": "Phase",
+      "partner": "Partner",
+      "assegnato": "Zugewiesen an",
+      "assegnatoUser": "Benutzer",
+      "tipo": "Typ",
+      "hub": "Hub",
+      "origPaese": "Abgangsland",
+      "destCountry": "Zielland",
+      "qualeData": "Welches Datum",
+      "risposta": "Antwort",
+      "conversione": "Umwandlung",
+      "idCargo": "Cargo-ID",
+      "totaleMin": "Mindestbetrag",
+      "totaleMax": "Höchstbetrag",
+      "nSpedMin": "Min. Sendungen",
+      "nSpedMax": "Max. Sendungen",
+      "assigneeAll": "Alle",
+      "assigneeMe": "Meine",
+      "assigneeNone": "Nicht zugewiesen",
+      "assigneeUser": "Bestimmter Benutzer",
+      "dateField": {
+        "insert": "Erstellung",
+        "modif": "Letzte Änderung",
+        "chiuso": "Abschluss",
+        "risposta": "Antwort"
+      },
+      "answer": {
+        "no": "Unbeantwortet",
+        "vigente": "Beantwortet, gültig",
+        "vencida": "Beantwortet, abgelaufen"
+      },
+      "tabs": {
+        "basics": "Grunddaten",
+        "ruta": "Route",
+        "ciclo": "Lebenszyklus",
+        "cifras": "Zahlen"
+      }
+    },
+    "integration": {
+      "sourceProject": "Ursprungsprojekt | Ursprungsprojekte",
+      "inProject": "Im Projekt #{id}"
+    },
+    "list": {
+      "title": "Sammelladungsprojekte",
+      "searchPlaceholder": "Id, Titel, Referenz, Kunde…",
+      "exportCsv": "CSV exportieren (aktueller Filter)",
+      "exportTruncated": "{shown} von {total} Zeilen exportiert (Limit erreicht).",
+      "emptyTitle": "Kein Projekt entspricht den Filtern",
+      "unassigned": "Nicht zugewiesen",
+      "days": "{n} Tag | {n} Tage",
+      "bulkAssign": "Zuweisen an… ({count})",
+      "bulkAssignTitle": "{count} Projekt(e) zuweisen",
+      "bulkAssignDone": "{count} Projekt(e) zugewiesen.",
+      "bulkAssignPartial": "{ok} zugewiesen; {failed} fehlgeschlagen: {ids}",
+      "click": {
+        "tipo": "Nach diesem Typ filtern",
+        "hub": "Nach Hub {v} filtern",
+        "assignee": "Nach Zuständigem filtern"
+      },
+      "kpi": {
+        "all": "Alle",
+        "sin_asignar": "Neu, nicht zugewiesen",
+        "pendiente_respuesta": "Antwort ausstehend",
+        "respondido": "Beantwortet",
+        "respuesta_vencida": "Antwort abgelaufen",
+        "por_convertir": "Angenommen, umzuwandeln",
+        "convertido": "Umgewandelt",
+        "cancelado": "Storniert"
+      },
+      "headers": {
+        "id": "ID",
+        "titolo": "Titel",
+        "tipo": "Typ",
+        "ruta": "Hub → Ziel",
+        "n_spedizioni": "Sendungen",
+        "peso": "Frachtpflichtiges Gewicht",
+        "totale": "Gesamt",
+        "valuta": "Währung",
+        "risposta": "Antwort",
+        "stato": "Status / Phase",
+        "assegnato": "Zugewiesen",
+        "antiguedad": "Alter",
+        "cargo": "Cargo",
+        "conversione": "Umwandlung",
+        "insert_datetime": "Erstellt",
+        "modif_datetime": "Geändert"
+      },
+      "work_view": {
+        "standard": "Standard",
+        "gestion": "Verwaltung",
+        "operativa": "Operativ"
+      }
+    },
+    "preview": {
+      "title": "Vorschau",
+      "open": "Projekt öffnen"
     }
   }
 }

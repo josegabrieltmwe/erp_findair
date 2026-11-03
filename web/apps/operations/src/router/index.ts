@@ -188,26 +188,40 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/modules/giacenze/pages/GiacenzeListPage.vue"),
     meta: { title: "Giacenze", icon: "mdi-package-variant-closed" },
   },
+  // Consolidata: solo staff (anagrafica 1). El menú ya lo ocultaba (adminOnly);
+  // `requiresAdmin` cierra también la URL directa (E1). El listado es fullscreen
+  // (trae su DashboardShell, como cargo); detalle y simulador usan el shell común.
   {
     path: "/consolidata",
     name: "consolidata",
-    component: () =>
-      import("@/modules/consolidata/pages/ConsolidataQueuePage.vue"),
-    meta: { title: "Consolidata", icon: "mdi-layers-triple-outline" },
-  },
-  {
-    path: "/consolidata/quote",
-    name: "consolidata-quote",
-    component: () =>
-      import("@/modules/consolidata/pages/ConsolidataQuotePage.vue"),
-    meta: { title: "Consolidata", icon: "mdi-layers-triple-outline" },
-  },
-  {
-    path: "/consolidata/:id(\\d+)",
-    name: "consolidata-detail",
-    component: () =>
-      import("@/modules/consolidata/pages/ConsolidataDetailPage.vue"),
-    meta: { title: "Consolidata", icon: "mdi-layers-triple-outline" },
+    component: () => import("@/modules/consolidata/pages/ConsolidataHost.vue"),
+    meta: {
+      title: "Consolidata",
+      icon: "mdi-layers-triple-outline",
+      requiresAdmin: true,
+    },
+    redirect: { name: "consolidata-list" },
+    children: [
+      {
+        path: "list",
+        name: "consolidata-list",
+        component: () =>
+          import("@/modules/consolidata/pages/ConsolidataListPage.vue"),
+        meta: { fullscreen: true },
+      },
+      {
+        path: "quote",
+        name: "consolidata-quote",
+        component: () =>
+          import("@/modules/consolidata/pages/ConsolidataQuotePage.vue"),
+      },
+      {
+        path: ":id(\\d+)",
+        name: "consolidata-detail",
+        component: () =>
+          import("@/modules/consolidata/pages/ConsolidataDetailPage.vue"),
+      },
+    ],
   },
   {
     path: "/pickup",

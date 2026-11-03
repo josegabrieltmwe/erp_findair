@@ -12,7 +12,6 @@
           : t("consolidata.readiness.notReady", { n: readiness.bloqueantes })
       }}
     </v-alert>
-    <ConsolidataApiError :error="store.error" @close="store.clearError()" />
     <v-list v-if="readiness?.avisos.length" density="compact">
       <v-list-item
         v-for="(a, i) in readiness.avisos"
@@ -37,7 +36,7 @@
         </v-list-item-subtitle>
         <template #append>
           <v-btn
-            v-if="!a.ignorato && canWaive"
+            v-if="!a.ignorato && canWaive && a.severita !== 'error'"
             size="small"
             variant="tonal"
             @click="askWaive(a)"
@@ -88,6 +87,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
 import { useConsolidataStore } from "../stores/consolidata.store";
+import { useDialogErrorScope } from "../composables/useDialogErrorScope";
 import type { Warning } from "../types";
 
 defineProps<{ canWaive: boolean }>();
@@ -97,6 +97,7 @@ const readiness = computed(() => store.readiness);
 const dialog = ref(false);
 const reason = ref("");
 const target = ref<Warning | null>(null);
+useDialogErrorScope(() => dialog.value);
 
 function askWaive(a: Warning): void {
   store.clearError();
@@ -110,7 +111,7 @@ async function confirmWaive(): Promise<void> {
     target.value &&
     (await store.waive(
       target.value.codice,
-      target.value.id_prog_sped ?? 0,
+      target.value.id_prog_sped ?? null,
       reason.value.trim(),
     ))
   ) {

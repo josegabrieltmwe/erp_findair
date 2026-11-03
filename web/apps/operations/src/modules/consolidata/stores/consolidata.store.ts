@@ -1,6 +1,7 @@
 /**
- * Store de consolidata: bandeja del staff, detalle del proyecto abierto y sus
- * vistas (expediciones/reparto, cumplimiento, notas). Todas las mutaciones
+ * Store de consolidata: detalle del proyecto abierto y sus vistas
+ * (expediciones/reparto, cumplimiento, notas, conversión, historial). El
+ * listado vive en consolidata_list.store.ts. Todas las mutaciones
  * pasan por consolidataService; un fallo deja el error normalizado en `error`
  * (la UI lo pinta con ConsolidataApiError) y devuelve `undefined`.
  */
@@ -15,33 +16,40 @@ import {
   type ApiMeta,
   type ConsolidataError,
   type ConversionResult,
+  type ConversionStep,
   type InternalNote,
+  type LegPayload,
+  type LogPage,
+  type OperateResult,
   type PricePayload,
   type ProjectDetail,
-  type QueueFilters,
-  type QueueItem,
   type Readiness,
   type ShipmentForm,
   type ShipmentsView,
-  emptyQueueFilters,
 } from "../types";
 
 export const useConsolidataStore = defineStore("consolidata", () => {
-  // ── Bandeja ───────────────────────────────────────────────
-  const items = ref<QueueItem[]>([]);
-  const count = ref(0);
-  const page = ref(1);
-  const maxPage = ref(1);
-  const filters = ref<QueueFilters>(emptyQueueFilters());
-  const loading = ref(false);
-
   // ── Detalle ───────────────────────────────────────────────
   const project = ref<ProjectDetail | null>(null);
   const shipments = ref<ShipmentsView | null>(null);
   const readiness = ref<Readiness | null>(null);
   const notes = ref<InternalNote[]>([]);
   const conversion = ref<ConversionResult | null>(null);
+  const operateResult = ref<OperateResult | null>(null);
+  const steps = ref<ConversionStep[] | null>(null);
+  /** El API aún no expone view=conversion (o falló): la pestaña lo explica en vez de romperse. */
+  const stepsUnavailable = ref(false);
+  const logPage = ref<LogPage | null>(null);
+  const logLoading = ref(false);
+  const operating = ref(false);
   const meta = ref<ApiMeta | null>(null);
+  /** Fallo al cargar `meta`: sin catálogo no se sabe qué botones mostrar, y la página lo dice. */
+  const metaError = ref<ConsolidataError | null>(null);
+  /**
+   * Diálogos abiertos que pintan el error del store ellos mismos. Mientras haya
+   * alguno, la página no repite el mismo error (E5).
+   */
+  const openDialogs = ref(0);
   const detailLoading = ref(false);
   const saving = ref(false);
 
@@ -76,33 +84,18 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     }
   }
 
-  // ── Bandeja ───────────────────────────────────────────────
-  async function fetchQueue(): Promise<void> {
-    loading.value = true;
-    try {
-      const res = await run(() =>
-        consolidataService.queue(filters.value, page.value),
-      );
-      if (res) {
-        items.value = res.items;
-        count.value = res.count;
-        page.value = res.current_page;
-        maxPage.value = res.max_page;
-      }
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  function setFilters(next: QueueFilters): void {
-    filters.value = next;
-    page.value = 1;
-  }
-
   async function fetchMeta(): Promise<void> {
     if (meta.value) return;
-    const res = await run(() => consolidataService.meta());
-    if (res) meta.value = res;
+    metaError.value = null;
+    try {
+      meta.value = await consolidataService.meta();
+    } catch (err) {
+      if (err instanceof ConsolidataRequestError) {
+        metaError.value = err.info;
+        return;
+      }
+      throw err;
+    }
   }
 
   // ── Detalle ───────────────────────────────────────────────
@@ -113,6 +106,10 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     readiness.value = null;
     notes.value = [];
     conversion.value = null;
+    operateResult.value = null;
+    steps.value = null;
+    stepsUnavailable.value = false;
+    logPage.value = null;
     try {
       const res = await run(() => consolidataService.detail(id));
       if (res) {
@@ -199,7 +196,7 @@ export const useConsolidataStore = defineStore("consolidata", () => {
 
   async function waive(
     codice: string,
-    idProgSped: number,
+    idProgSped: number | null,
     motivo: string,
   ): Promise<boolean> {
     const res = await mutate(() =>
@@ -254,26 +251,94 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     return res;
   }
 
+  const addLeg = async (leg: LegPayload): Promise<boolean> =>
+    adopt(await mutate(() => consolidataService.addLeg(pid(), leg)));
+  const removeLeg = async (idTratta: number): Promise<boolean> =>
+    adopt(await mutate(() => consolidataService.removeLeg(pid(), idTratta)));
+  const setEori = async (eori: string): Promise<boolean> =>
+    adopt(await mutate(() => consolidataService.setEori(pid(), eori)));
+  const requestQuote = async (): Promise<boolean> =>
+    adopt(await mutate(() => consolidataService.requestQuote(pid())));
+
+  /** Pasos de conversión (view=conversion). Un fallo deja `stepsUnavailable` sin tocar `error`. */
+  async function loadSteps(): Promise<void> {
+    if (!project.value) return;
+    try {
+      const res = await consolidataService.conversion(project.value.id);
+      steps.value = Array.isArray(res.passi) ? res.passi : [];
+      stepsUnavailable.value = false;
+    } catch (err) {
+      if (!(err instanceof ConsolidataRequestError)) throw err;
+      steps.value = null;
+      stepsUnavailable.value = true;
+    }
+  }
+
+  /** Historial paginado (view=log). Sin la vista en el API se cae al `log` del detalle. */
+  async function loadLog(pageNo = 1, perPage = 20): Promise<void> {
+    if (!project.value) return;
+    logLoading.value = true;
+    try {
+      logPage.value = await consolidataService.log(
+        project.value.id,
+        pageNo,
+        perPage,
+      );
+    } catch (err) {
+      if (!(err instanceof ConsolidataRequestError)) throw err;
+      const rows = project.value.log ?? [];
+      logPage.value = {
+        items: rows,
+        count: rows.length,
+        current_page: 1,
+        max_page: 1,
+        per_page: rows.length || perPage,
+      };
+    } finally {
+      logLoading.value = false;
+    }
+  }
+
+  /**
+   * `operate`: conversión completa. `operating` bloquea el botón durante la
+   * llamada (evita el doble clic); tras responder se recargan cabecera y pasos.
+   */
+  async function operate(opts: {
+    id_cargo?: number | null;
+    reservar?: boolean;
+  }): Promise<OperateResult | undefined> {
+    if (operating.value) return undefined;
+    operating.value = true;
+    try {
+      const res = await mutate(() => consolidataService.operate(pid(), opts));
+      if (res) operateResult.value = res;
+      await Promise.all([refreshProject(), loadSteps()]);
+      return res;
+    } finally {
+      operating.value = false;
+    }
+  }
+
   return {
-    items,
-    count,
-    page,
-    maxPage,
-    filters,
-    loading,
     project,
     shipments,
     readiness,
     notes,
     conversion,
+    operateResult,
+    steps,
+    stepsUnavailable,
+    logPage,
+    logLoading,
+    operating,
     meta,
+    metaError,
+    openDialogs,
     actions,
     detailLoading,
     saving,
     error,
     clearError,
-    fetchQueue,
-    setFilters,
     fetchMeta,
     openProject,
     loadShipments,
@@ -292,5 +357,12 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     removeShipment,
     convert,
     refreshProject,
+    addLeg,
+    removeLeg,
+    setEori,
+    requestQuote,
+    loadSteps,
+    loadLog,
+    operate,
   };
 });

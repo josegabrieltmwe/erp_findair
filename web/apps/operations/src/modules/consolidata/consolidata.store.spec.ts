@@ -52,30 +52,6 @@ beforeEach(() => {
 });
 
 describe("consolidata store", () => {
-  it("fetchQueue carga items y paginación", async () => {
-    route({
-      "GET:queue": {
-        items: [{ id: 1 }],
-        count: 41,
-        current_page: 2,
-        max_page: 3,
-      },
-    });
-    const s = useConsolidataStore();
-    await s.fetchQueue();
-    expect(s.items).toHaveLength(1);
-    expect(s.count).toBe(41);
-    expect(s.maxPage).toBe(3);
-  });
-
-  it("setFilters vuelve a la página 1", () => {
-    const s = useConsolidataStore();
-    s.page = 4;
-    s.setFilters({ stato: "A", assegnato_a: "me", id_cliente: null });
-    expect(s.page).toBe(1);
-    expect(s.filters.stato).toBe("A");
-  });
-
   it("openProject carga detalle y vistas derivadas", async () => {
     route({
       "GET:detail": project(),
@@ -108,6 +84,129 @@ describe("consolidata store", () => {
     expect(s.readiness?.listo).toBe(true);
     expect(s.notes).toHaveLength(1);
     expect(s.meta?.api_version).toBe("1.1");
+    expect(s.metaError).toBeNull();
+  });
+
+  it("si meta falla queda metaError (la página lo enseña) y no se pisa el error de acciones", async () => {
+    route({
+      "GET:detail": project(),
+      "GET:shipments": {
+        spedizioni: [],
+        riparto: [],
+        criterio: "X",
+        totale_tratte: 0,
+        totale_riparto: 0,
+      },
+      "GET:readiness": {
+        avisos: [],
+        bloqueantes: 0,
+        pendientes: 0,
+        listo: true,
+      },
+      "GET:notes": { note: [] },
+      "GET:meta": Object.assign(new Error("x"), {
+        status: 500,
+        details: { success: false, error: "boom", code: "INTERNAL_ERROR" },
+      }),
+    });
+    const s = useConsolidataStore();
+    await s.openProject(4);
+    expect(s.meta).toBeNull();
+    expect(s.metaError?.code).toBe("INTERNAL_ERROR");
+    expect(s.error).toBeNull();
+  });
+
+  it("operate guarda el resultado y recarga cabecera y pasos; sin la vista conversion marca stepsUnavailable", async () => {
+    route({
+      "GET:detail": project({ stato: "C" }),
+      "GET:shipments": {
+        spedizioni: [],
+        riparto: [],
+        criterio: "X",
+        totale_tratte: 0,
+        totale_riparto: 0,
+      },
+      "GET:readiness": {
+        avisos: [],
+        bloqueantes: 0,
+        pendientes: 0,
+        listo: true,
+      },
+      "GET:notes": { note: [] },
+      "GET:meta": {
+        api_version: "1.1",
+        states: {},
+        actions: {},
+        limits: { max_legs: 20, max_shipments: 200, currency: "EUR" },
+        warning_codes: [],
+      },
+      "POST:operate": {
+        id: 4,
+        id_cargo: 9,
+        houses: [],
+        pendientes: 0,
+        completo: true,
+      },
+      "GET:conversion": Object.assign(new Error("x"), {
+        status: 400,
+        details: { success: false, error: "view", code: "VALIDATION_ERROR" },
+      }),
+    });
+    const s = useConsolidataStore();
+    await s.openProject(4);
+    const res = await s.operate({ reservar: false });
+    expect(res?.completo).toBe(true);
+    expect(s.operateResult?.id_cargo).toBe(9);
+    expect(s.stepsUnavailable).toBe(true);
+    expect(s.operating).toBe(false);
+  });
+
+  it("loadLog cae al log del detalle si el API no tiene view=log", async () => {
+    route({
+      "GET:detail": project({
+        log: [
+          {
+            id: 1,
+            id_tratta: null,
+            azione: "take",
+            prima: null,
+            dopo: null,
+            user: 2,
+            datetime: null,
+          },
+        ],
+      }),
+      "GET:shipments": {
+        spedizioni: [],
+        riparto: [],
+        criterio: "X",
+        totale_tratte: 0,
+        totale_riparto: 0,
+      },
+      "GET:readiness": {
+        avisos: [],
+        bloqueantes: 0,
+        pendientes: 0,
+        listo: true,
+      },
+      "GET:notes": { note: [] },
+      "GET:meta": {
+        api_version: "1.1",
+        states: {},
+        actions: {},
+        limits: { max_legs: 20, max_shipments: 200, currency: "EUR" },
+        warning_codes: [],
+      },
+      "GET:log": Object.assign(new Error("x"), {
+        status: 400,
+        details: { success: false, error: "view", code: "VALIDATION_ERROR" },
+      }),
+    });
+    const s = useConsolidataStore();
+    await s.openProject(4);
+    await s.loadLog(1);
+    expect(s.logPage?.items).toHaveLength(1);
+    expect(s.logPage?.max_page).toBe(1);
   });
 
   it("un fallo de acción deja el error normalizado y devuelve false", async () => {

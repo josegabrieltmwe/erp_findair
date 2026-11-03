@@ -116,12 +116,9 @@
         <v-btn variant="text" @click="emit('update:modelValue', false)">{{
           t("consolidata.common.cancel")
         }}</v-btn>
-        <v-btn
-          color="primary"
-          :loading="saving"
-          @click="submit"
-          >{{ t("consolidata.common.save") }}</v-btn
-        >
+        <v-btn color="primary" :loading="saving" @click="submit">{{
+          t("consolidata.common.save")
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -131,6 +128,7 @@
 import { computed, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
+import { useDialogErrorScope } from "../composables/useDialogErrorScope";
 import { shipmentFormErrors } from "../logic";
 import type { ConsolidataError, Shipment, ShipmentForm } from "../types";
 
@@ -145,6 +143,7 @@ const emit = defineEmits<{
   (e: "submit", form: ShipmentForm): void;
 }>();
 const { t } = useI18n();
+useDialogErrorScope(() => props.modelValue);
 
 const blank = (): ShipmentForm => ({
   ref: "",

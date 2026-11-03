@@ -57,6 +57,7 @@
 import { reactive, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
+import { useDialogErrorScope } from "../composables/useDialogErrorScope";
 import type { ConsolidataError, Leg, PricePayload } from "../types";
 
 const props = defineProps<{
@@ -70,6 +71,7 @@ const emit = defineEmits<{
   (e: "submit", p: PricePayload): void;
 }>();
 const { t } = useI18n();
+useDialogErrorScope(() => props.modelValue);
 const form = reactive<PricePayload>({
   prezzo: 0,
   fuel: 0,

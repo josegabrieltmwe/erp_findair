@@ -1,18 +1,33 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between align-center mb-2">
+    <div class="d-flex justify-space-between align-center flex-wrap ga-2 mb-2">
       <span class="text-body-2">{{ t("consolidata.legs.help") }}</span>
-      <v-btn
-        v-if="canRecalc"
-        size="small"
-        variant="tonal"
-        prepend-icon="mdi-refresh"
-        :loading="store.saving"
-        @click="recalc"
-      >
-        {{ t("consolidata.legs.recalc") }}
-      </v-btn>
+      <div class="d-flex ga-2">
+        <v-btn
+          v-if="gates.addLeg"
+          size="small"
+          color="primary"
+          prepend-icon="mdi-plus"
+          :disabled="atLimit"
+          @click="openAdd"
+        >
+          {{ t("consolidata.legs.add") }}
+        </v-btn>
+        <v-btn
+          v-if="gates.recalc"
+          size="small"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="store.saving"
+          @click="recalc"
+        >
+          {{ t("consolidata.legs.recalc") }}
+        </v-btn>
+      </div>
     </div>
+    <p v-if="maxLegs" class="text-caption text-medium-emphasis mb-2">
+      {{ t("consolidata.legs.limit", { n: legs.length, max: maxLegs }) }}
+    </p>
     <v-table density="compact">
       <thead>
         <tr>
@@ -34,7 +49,7 @@
             {{ place(l.orig_paese, l.orig_terminal || l.orig_cap) }} →
             {{ place(l.dest_paese, l.dest_terminal || l.dest_cap) }}
           </td>
-          <td class="text-right">{{ l.peso.toFixed(2) }}</td>
+          <td class="text-right">{{ num(l.peso) }}</td>
           <td>
             {{ l.servizio_nome || "—" }}
             <v-chip
@@ -42,31 +57,42 @@
               size="x-small"
               class="ml-1"
               variant="tonal"
-              >{{ l.fonte_prezzo }}</v-chip
+              >{{ sourceLabel(l.fonte_prezzo) }}</v-chip
             >
             <div v-if="l.errore_quotazione" class="text-caption text-error">
               {{ l.errore_quotazione }}
             </div>
           </td>
-          <td class="text-right">{{ l.totale.toFixed(2) }} {{ l.valuta }}</td>
+          <td class="text-right">{{ money(l.totale, l.valuta) }}</td>
           <td>{{ shortDate(l.quote_valid_until) || "—" }}</td>
           <td class="text-right text-no-wrap">
-            <template v-if="canEdit">
-              <v-btn
-                icon="mdi-pencil"
-                size="x-small"
-                variant="text"
-                :aria-label="t('consolidata.common.edit')"
-                @click="openEdit(l)"
-              />
-              <v-btn
-                icon="mdi-currency-eur"
-                size="x-small"
-                variant="text"
-                :aria-label="t('consolidata.legs.priceTitle')"
-                @click="openPrice(l)"
-              />
-            </template>
+            <v-btn
+              v-if="gates.updateLeg"
+              icon="mdi-pencil"
+              size="x-small"
+              variant="text"
+              :aria-label="t('consolidata.common.edit')"
+              :title="t('consolidata.common.edit')"
+              @click="openEdit(l)"
+            />
+            <v-btn
+              v-if="gates.overridePrice"
+              icon="mdi-cash-edit"
+              size="x-small"
+              variant="text"
+              :aria-label="t('consolidata.legs.priceTitle')"
+              :title="t('consolidata.legs.priceTitle')"
+              @click="openPrice(l)"
+            />
+            <v-btn
+              v-if="gates.removeLeg"
+              icon="mdi-delete-outline"
+              size="x-small"
+              variant="text"
+              :aria-label="t('consolidata.common.remove')"
+              :title="t('consolidata.common.remove')"
+              @click="remove(l)"
+            />
           </td>
         </tr>
         <tr v-if="!legs.length">
@@ -91,6 +117,14 @@
       :leg="current"
       @submit="savePrice"
     />
+    <ConsolidataLegAddDialog
+      v-model="addDialog"
+      :saving="store.saving"
+      :error="store.error"
+      :can-manual-price="gates.overridePrice"
+      :defaults="addDefaults"
+      @submit="saveAdd"
+    />
   </div>
 </template>
 
@@ -99,22 +133,64 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataLegEditDialog from "./ConsolidataLegEditDialog.vue";
 import ConsolidataPriceDialog from "./ConsolidataPriceDialog.vue";
+import ConsolidataLegAddDialog from "./ConsolidataLegAddDialog.vue";
 import { useConsolidataStore } from "../stores/consolidata.store";
 import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
-import { shortDate } from "../logic";
-import type { Leg, PricePayload } from "../types";
+import { useFormat } from "../composables/useFormat";
+import { useConsolidataConfirm } from "../composables/useConfirm";
+import { shortDate, type LegForm, type projectGates } from "../logic";
+import type { Leg, LegPayload, PricePayload } from "../types";
 
-defineProps<{ canEdit: boolean; canRecalc: boolean }>();
-const { t } = useI18n();
+defineProps<{ gates: ReturnType<typeof projectGates> }>();
+const { t, te } = useI18n();
+const { money, num } = useFormat();
+const confirm = useConsolidataConfirm();
 const store = useConsolidataStore();
 const toast = useToastStore();
 const legs = computed(() => store.project?.tratte ?? []);
 const current = ref<Leg | null>(null);
 const editDialog = ref(false);
 const priceDialog = ref(false);
+const addDialog = ref(false);
+
+const maxLegs = computed(() => store.meta?.limits?.max_legs ?? 0);
+const atLimit = computed(
+  () => maxLegs.value > 0 && legs.value.length >= maxLegs.value,
+);
+
+/** El tramo nuevo parte del hub y destino del proyecto. */
+const addDefaults = computed<Partial<LegForm>>(() => {
+  const p = store.project;
+  const last = legs.value[legs.value.length - 1];
+  return {
+    weight: last?.peso ?? null,
+    destination: {
+      country: p?.dest_country ?? "",
+      zip: "",
+      city: "",
+      terminal: "",
+    },
+    origin: {
+      country: last?.dest_paese ?? "",
+      zip: last?.dest_cap ?? "",
+      city: last?.dest_citta ?? "",
+      terminal: last?.dest_terminal ?? p?.hub_terminal ?? "",
+    },
+  };
+});
 
 const place = (country: string, where: string | null): string =>
   `${country} ${where ?? ""}`.trim();
+
+function sourceLabel(src: string): string {
+  const key = `consolidata.legs.source.${src}`;
+  return te(key) ? t(key) : src;
+}
+
+function openAdd(): void {
+  store.clearError();
+  addDialog.value = true;
+}
 
 function openEdit(l: Leg): void {
   store.clearError();
@@ -126,6 +202,13 @@ function openPrice(l: Leg): void {
   store.clearError();
   current.value = l;
   priceDialog.value = true;
+}
+
+async function saveAdd(leg: LegPayload): Promise<void> {
+  if (await store.addLeg(leg)) {
+    addDialog.value = false;
+    toast.success(t("consolidata.legs.added"));
+  }
 }
 
 async function saveEdit(leg: Record<string, unknown>): Promise<void> {
@@ -140,6 +223,17 @@ async function savePrice(p: PricePayload): Promise<void> {
     priceDialog.value = false;
     toast.success(t("consolidata.legs.priceSaved"));
   }
+}
+
+async function remove(l: Leg): Promise<void> {
+  if (
+    !(await confirm(
+      t("consolidata.legs.confirmRemove", { n: l.ordine, tipo: l.tipo }),
+      true,
+    ))
+  )
+    return;
+  if (await store.removeLeg(l.id)) toast.success(t("consolidata.legs.removed"));
 }
 
 async function recalc(): Promise<void> {

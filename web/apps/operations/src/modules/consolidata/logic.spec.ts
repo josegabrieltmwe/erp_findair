@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   actionAvailable,
+  ageDays,
+  canTakeRow,
+  formatMoney,
+  groupConversionSteps,
+  legPayload,
+  logActionI18nKey,
+  projectGates,
   blockingWarnings,
   errorI18nKey,
   normalizeApiError,
@@ -113,11 +120,142 @@ describe("helpers de presentación", () => {
 describe("shipmentFormErrors (H20)", () => {
   it("rechaza bultos nulos, cero, negativos o decimales", () => {
     for (const colli of [null, 0, -2, 1.5]) {
-      expect(shipmentFormErrors({ colli }).colli).toBe("consolidata.shipments.colliInvalid");
+      expect(shipmentFormErrors({ colli }).colli).toBe(
+        "consolidata.shipments.colliInvalid",
+      );
     }
   });
 
   it("acepta bultos enteros positivos", () => {
     expect(shipmentFormErrors({ colli: 3 })).toEqual({});
+  });
+});
+
+describe("puertas de botones por meta (E2/E3)", () => {
+  const actions = {
+    take: { from: null },
+    assign: { from: null },
+    update_leg: { from: ["A", "P"] },
+    override_price: { from: ["A", "P"] },
+    remove_shipment: { from: ["A", "P"] },
+    add_shipment: { from: ["A", "P"] },
+    note_internal: { from: null },
+    operate: { from: ["C"] },
+    request_quote: { from: ["A"] },
+  };
+
+  it("cada botón por su acción", () => {
+    const g = projectGates(actions, "P", null);
+    expect(g.updateLeg).toBe(true);
+    expect(g.overridePrice).toBe(true);
+    expect(g.removeShipment).toBe(true);
+    expect(g.note).toBe(true);
+    expect(g.operate).toBe(false);
+    expect(g.requestQuote).toBe(false);
+    expect(g.removeLeg).toBe(false); // no está en el catálogo de la prueba
+  });
+
+  it("tomar: solo A/P sin asignar y si el catálogo lo tiene", () => {
+    expect(projectGates(actions, "A", null).take).toBe(true);
+    expect(projectGates(actions, "A", 5).take).toBe(false);
+    expect(projectGates(actions, "C", null).take).toBe(false);
+    expect(projectGates(actions, "X", null).take).toBe(false);
+    expect(projectGates({}, "A", null).take).toBe(false);
+    expect(canTakeRow(actions, { stato: "P", assegnato_a: null })).toBe(true);
+  });
+
+  it("sin meta no hay botones", () => {
+    const g = projectGates(null, "P", null);
+    expect(Object.values(g).some(Boolean)).toBe(false);
+  });
+});
+
+describe("formato y otros", () => {
+  it("formatMoney usa Intl con moneda", () => {
+    expect(formatMoney(1234.5, "EUR", "es")).toBe(
+      new Intl.NumberFormat("es", {
+        style: "currency",
+        currency: "EUR",
+      }).format(1234.5),
+    );
+    expect(formatMoney(null, "EUR")).toBe("—");
+    expect(formatMoney(3, "")).toMatch(/^3/);
+  });
+
+  it("logActionI18nKey solo para acciones conocidas", () => {
+    expect(logActionI18nKey("take")).toBe("consolidata.history.actions.take");
+    expect(logActionI18nKey("raro")).toBeNull();
+  });
+
+  it("groupConversionSteps: primero MAWB/camión, después por house en orden", () => {
+    const g = groupConversionSteps([
+      {
+        passo: "casa",
+        chiave: "H1",
+        stato: "OK",
+        tentativi: 1,
+        risultato_id: 3,
+      },
+      {
+        passo: "cargo",
+        chiave: "4",
+        stato: "OK",
+        tentativi: 1,
+        risultato_id: 77,
+      },
+      {
+        passo: "spedizione",
+        chiave: "H1",
+        stato: "ERRORE",
+        tentativi: 2,
+        risultato_id: null,
+      },
+      {
+        passo: "spedizione",
+        chiave: "H2",
+        stato: "OK",
+        tentativi: 1,
+        risultato_id: 9,
+      },
+    ]);
+    expect(g.map((x) => (x.global ? "*" : x.key))).toEqual(["*", "H1", "H2"]);
+    expect(g[1].steps.map((s) => s.passo)).toEqual(["spedizione", "casa"]);
+  });
+
+  it("legPayload usa claves inglesas y omite vacíos; precio manual solo si se pide", () => {
+    const f = {
+      tipo: "AIR" as const,
+      origin: { country: "it", zip: "", city: "Milano", terminal: "mxp" },
+      destination: { country: "us", zip: "10001", city: "", terminal: "" },
+      weight: 100,
+      value: null,
+      goods: " ",
+      note: "",
+      prezzo: 50,
+      fuel: null,
+      supplementi: null,
+    };
+    expect(legPayload(f, false)).toEqual({
+      tipo: "AIR",
+      origin: { country: "IT", zip: "", city: "Milano", terminal: "MXP" },
+      destination: { country: "US", zip: "10001", city: "" },
+      weight: 100,
+    });
+    expect(legPayload(f, true).manual_price).toEqual({ prezzo: 50 });
+    expect(legPayload(f, true).price_source).toBe("manuale");
+  });
+
+  it("ageDays", () => {
+    expect(
+      ageDays("2026-11-01 10:00:00", new Date("2026-11-03T12:00:00")),
+    ).toBe(2);
+    expect(ageDays(null)).toBeNull();
+  });
+});
+
+describe("navTargets", () => {
+  it("detailHref('consolidata', id) apunta siempre a la SPA operations", async () => {
+    const { detailHref } = await import("@shared/platform/navTargets");
+    expect(detailHref("consolidata", 12)).toBe("/ops/consolidata/12");
   });
 });

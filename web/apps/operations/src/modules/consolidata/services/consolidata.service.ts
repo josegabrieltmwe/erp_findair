@@ -10,17 +10,26 @@ import { normalizeApiError } from "../logic";
 import type {
   AnswerPayload,
   ApiMeta,
+  BulkAssignResult,
   ConversionResult,
+  ConversionStep,
+  CreateFromOptionPayload,
+  CreateProjectPayload,
   InternalNote,
+  LegPayload,
+  LogPage,
+  OperateResult,
   PricePayload,
   ProjectDetail,
-  QueueFilters,
+  ProjectRef,
+  QueueCounts,
   QueuePage,
   QuoteRequest,
   QuoteResult,
   Readiness,
   ShipmentForm,
   ShipmentsView,
+  StaffUser,
 } from "../types";
 
 const PATH = "/unified_consolidation_project";
@@ -59,8 +68,21 @@ async function unwrap<T>(call: Promise<Envelope<T>>): Promise<T> {
   return res.result;
 }
 
-function get<T>(query: Record<string, string | number>): Promise<T> {
-  return unwrap<T>(http<Envelope<T>>(PATH, { method: "GET", query }));
+export type QueryParams = Record<string, string | number>;
+
+interface RequestOpts {
+  signal?: AbortSignal;
+}
+
+function get<T>(query: QueryParams, opts: RequestOpts = {}): Promise<T> {
+  return unwrap<T>(
+    http<Envelope<T>>(
+      PATH,
+      opts.signal
+        ? { method: "GET", query, signal: opts.signal }
+        : { method: "GET", query },
+    ),
+  );
 }
 
 function post<T>(
@@ -70,20 +92,6 @@ function post<T>(
   return unwrap<T>(
     http<Envelope<T>>(PATH, { method: "POST", body: { action, ...body } }),
   );
-}
-
-export function buildQueueQuery(
-  filters: QueueFilters,
-  page: number,
-): Record<string, string | number> {
-  const q: Record<string, string | number> = {
-    view: "queue",
-    page,
-    stato: filters.stato,
-  };
-  if (filters.assegnato_a) q.assegnato_a = filters.assegnato_a;
-  if (filters.id_cliente) q.id_cliente = filters.id_cliente;
-  return q;
 }
 
 /** Quita los campos vacíos del formulario de expedición antes de enviarlo. */
@@ -107,9 +115,48 @@ export function shipmentPayload(form: ShipmentForm): Record<string, unknown> {
   return out;
 }
 
+/** Quita las claves vacías del alta (el API trata "" como ausente, pero así el cuerpo queda limpio). */
+export function createPayload(
+  p: CreateProjectPayload,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {
+    titolo: p.titolo.trim(),
+    tipo: p.tipo,
+    id_cliente: p.id_cliente,
+  };
+  const hub = (p.hub_terminal ?? "").trim().toUpperCase();
+  const dest = (p.dest_country ?? "").trim().toUpperCase();
+  const eori = (p.eori_dichiarante ?? "").trim().toUpperCase();
+  const note = (p.note_specialist ?? "").trim();
+  if (hub) out.hub_terminal = hub;
+  if (dest) out.dest_country = dest;
+  if (eori) out.eori_dichiarante = eori;
+  if (note) out.note_specialist = note;
+  return out;
+}
+
 export const consolidataService = {
-  queue: (filters: QueueFilters, page: number) =>
-    get<QueuePage>(buildQueueQuery(filters, page)),
+  /** view=queue con los parámetros ya construidos (buildConsolidataListQuery). */
+  queue: (params: QueryParams, opts: RequestOpts = {}) =>
+    get<QueuePage>({ ...params, view: "queue" }, opts),
+  /** view=queue_counts: recuentos por fase con los mismos filtros. */
+  queueCounts: (params: QueryParams, opts: RequestOpts = {}) =>
+    get<{ counts: QueueCounts }>({ ...params, view: "queue_counts" }, opts),
+  byCargo: (idCargo: number) =>
+    get<{ items: ProjectRef[] }>({ view: "by_cargo", id_cargo: idCargo }),
+  bySpedizione: (idSpedizione: number) =>
+    get<{ items: ProjectRef[] }>({
+      view: "by_spedizione",
+      id_spedizione: idSpedizione,
+    }),
+  conversion: (id: number) =>
+    get<{ passi: ConversionStep[] }>({ view: "conversion", id }),
+  log: (id: number, page = 1, perPage = 20) =>
+    get<LogPage>({ view: "log", id, page, per_page: perPage }),
+  staffUsers: (q = "") =>
+    get<{ items: StaffUser[] }>(
+      q ? { view: "staff_users", q } : { view: "staff_users" },
+    ),
   detail: (id: number) => get<ProjectDetail>({ id }),
   meta: () => get<ApiMeta>({ view: "meta" }),
   shipments: (id: number) => get<ShipmentsView>({ view: "shipments", id }),
@@ -125,21 +172,49 @@ export const consolidataService = {
     post<ProjectDetail>("answer_quote", { id, ...a }),
   overridePrice: (id: number, id_tratta: number, p: PricePayload) =>
     post<ProjectDetail>("override_price", { id, id_tratta, ...p }),
+  /**
+   * Aviso del proyecto (sin house): `id_prog_sped` se omite. El API lo lee como
+   * entero y una clave ausente o nula vale 0, que es lo que guarda para el proyecto.
+   */
   waiveWarning: (
     id: number,
     codice: string,
-    id_prog_sped: number,
+    id_prog_sped: number | null,
     motivo: string,
   ) =>
     post<{ codice: string; id_prog_sped: number; ignorato: boolean }>(
       "waive_warning",
-      {
-        id,
-        codice,
-        id_prog_sped,
-        motivo,
-      },
+      id_prog_sped !== null && id_prog_sped > 0
+        ? { id, codice, id_prog_sped, motivo }
+        : { id, codice, motivo },
     ),
+  create: (p: CreateProjectPayload) =>
+    post<ProjectDetail>("create", createPayload(p)),
+  createFromOption: (p: CreateFromOptionPayload) =>
+    post<{ progetto: ProjectDetail; spedizioni?: unknown }>(
+      "create_from_option",
+      { ...p },
+    ),
+  addLeg: (id: number, leg: LegPayload) =>
+    post<ProjectDetail>("add_leg", { id, leg }),
+  setEori: (id: number, eori: string) =>
+    post<ProjectDetail>("set_eori", {
+      id,
+      eori_dichiarante: eori.trim().toUpperCase(),
+    }),
+  requestQuote: (id: number) => post<ProjectDetail>("request_quote", { id }),
+  bulkAssign: (ids: number[], user_id: number) =>
+    post<BulkAssignResult>("bulk_assign", { ids, user_id }),
+  /** Conversión completa (idempotente: reintentar solo rehace lo que falló). */
+  operate: (
+    id: number,
+    opts: { id_cargo?: number | null; reservar?: boolean } = {},
+  ) => {
+    const body: Record<string, unknown> = { id };
+    if (opts.id_cargo) body.id_cargo = opts.id_cargo;
+    if (opts.reservar) body.reservar = true;
+    return post<OperateResult>("operate", body);
+  },
   convert: (id: number, id_cargo: number) =>
     post<ConversionResult>("convert", { id, id_cargo }),
 

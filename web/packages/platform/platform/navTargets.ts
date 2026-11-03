@@ -115,13 +115,14 @@ export function moduleHref(mod: NavModule): string {
  * vieja `/cargo/:id` redirige al listado cuando el cutover está activo.
  */
 export function detailHref(
-  kind: "cargo" | "shipment",
+  kind: "cargo" | "shipment" | "consolidata",
   id: string | number | null | undefined,
   query = "",
 ): string {
   const idPart = encodeURIComponent(String(id ?? ""));
   const qs = query ? (query.startsWith("?") ? query : `?${query}`) : "";
-  if (isConsolidated()) {
+  // Consolidata solo existe en la SPA operations (no hay app vieja): siempre `/ops/consolidata/:id`.
+  if (kind === "consolidata" || isConsolidated()) {
     return `${BASE}${OPS}/${kind}/${idPart}${qs}`;
   }
   return `${BASE}/${kind}/${idPart}${qs}`;
