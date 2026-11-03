@@ -99,6 +99,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { NAV_SECTION_DEFS, hasHiddenNavEntries, isNavEntryVisible, reduceNavSections } from "./navCatalog";
 import { useNavRole } from "./useNavRole";
+import { useAccess } from "../composables/useAccess";
 
 const props = withDefaults(
   defineProps<{
@@ -150,9 +151,10 @@ const sections = computed<NavSection[]>(() =>
 
 // Rol compartido con la home (una sola petición a get_my_profile).
 const { isAdmin, load: loadProfile } = useNavRole();
+const { access } = useAccess();
 
 function roleVisible(it: { adminOnly?: boolean; partnerOnly?: boolean }): boolean {
-  return isNavEntryVisible(it, isAdmin.value);
+  return isNavEntryVisible(it, isAdmin.value, access.value);
 }
 
 // Secciones con sus items filtrados por rol; se ocultan las secciones vacías.

@@ -188,8 +188,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/modules/giacenze/pages/GiacenzeListPage.vue"),
     meta: { title: "Giacenze", icon: "mdi-package-variant-closed" },
   },
-  // Consolidata: solo staff (anagrafica 1). El menú ya lo ocultaba (adminOnly);
-  // `requiresAdmin` cierra también la URL directa (E1). El listado es fullscreen
+  // Consolidata: personal de TMWE y de partners con el scope `consolidation:manage`
+  // (rol consolidation_manager). La URL directa la cierra MODULE_ROUTE_SCOPES
+  // (router/moduleAccess.ts); el API acota cada petición. El listado es fullscreen
   // (trae su DashboardShell, como cargo); detalle y simulador usan el shell común.
   {
     path: "/consolidata",
@@ -198,7 +199,6 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: "Consolidata",
       icon: "mdi-layers-triple-outline",
-      requiresAdmin: true,
     },
     redirect: { name: "consolidata-list" },
     children: [

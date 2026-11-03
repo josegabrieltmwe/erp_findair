@@ -8,6 +8,12 @@
  *
  * Es lógica pura (sin Vue) para poder probarla con vitest.
  */
+/** Lo que el menú necesita de los permisos del token (subconjunto de `AccessSnapshot` de useAccess). */
+export interface NavAccess {
+  known: boolean;
+  scopes: readonly string[];
+}
+
 export interface NavEntryDef {
   key: string;
   icon: string;
@@ -17,6 +23,11 @@ export interface NavEntryDef {
   href?: string;
   adminOnly?: boolean;
   partnerOnly?: boolean;
+  /**
+   * Scopes del token que dan acceso (basta uno). TMWE (anagrafica 1) lo ve siempre; sin `access` informado se muestra y
+   * decide el servidor (como `MODULE_ROUTE_SCOPES` en el router).
+   */
+  scopes?: readonly string[];
   /**
    * Acceso del trabajo diario. El usuario de un partner ve solo estos (más el de la pantalla
    * actual) hasta que pulsa «Ver más»; el personal TMWE ve siempre todo.
@@ -45,7 +56,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "gestion",
     items: [
       { key: "giacenze", icon: "mdi-package-variant-closed",  routeName: "giacenze", daily: true, partnerKey: "giacenze_partner" },
-      { key: "consolidata", icon: "mdi-layers-triple-outline", routeName: "consolidata", adminOnly: true },
+      { key: "consolidata", icon: "mdi-layers-triple-outline", routeName: "consolidata", scopes: ["consolidation:manage"] },
       { key: "pickup",   icon: "mdi-truck-check-outline",     routeName: "pickup", daily: true },
       { key: "crm",      icon: "mdi-account-details-outline", routeName: "crm" },
       { key: "tickets",  icon: "mdi-ticket-outline",           routeName: "communication" },
@@ -107,13 +118,15 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
   },
 ];
 
-/** ¿Ve este acceso un usuario con ese rol? (`isAdmin` = anagrafica TMWE, id 1). */
+/** ¿Ve este acceso un usuario con ese rol? (`isAdmin` = anagrafica TMWE, id 1; `access` = scopes del token). */
 export function isNavEntryVisible(
-  it: { adminOnly?: boolean; partnerOnly?: boolean },
+  it: { adminOnly?: boolean; partnerOnly?: boolean; scopes?: readonly string[] },
   isAdmin: boolean,
+  access?: NavAccess,
 ): boolean {
   if (it.adminOnly && !isAdmin) return false;
   if (it.partnerOnly && isAdmin) return false;
+  if (it.scopes && !isAdmin && access?.known && !it.scopes.some((x) => access.scopes.includes(x))) return false;
   return true;
 }
 
@@ -121,9 +134,10 @@ export function isNavEntryVisible(
 export function visibleNavSections(
   defs: readonly NavSectionDef[],
   isAdmin: boolean,
+  access?: NavAccess,
 ): NavSectionDef[] {
   return defs
-    .map((s) => ({ sectionKey: s.sectionKey, items: s.items.filter((it) => isNavEntryVisible(it, isAdmin)) }))
+    .map((s) => ({ sectionKey: s.sectionKey, items: s.items.filter((it) => isNavEntryVisible(it, isAdmin, access)) }))
     .filter((s) => s.items.length > 0);
 }
 
