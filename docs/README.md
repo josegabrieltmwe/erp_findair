@@ -10,6 +10,7 @@ Empezar por `contrato-con-api.md`. Los READMEs de código están junto al códig
 | [contrato-con-api.md](contrato-con-api.md) | Contrato con el API (`tmwe_api`) | vigente |
 | [informe-autenticacion-autorizacion.md](informe-autenticacion-autorizacion.md) | Informe: autenticación, autorización y roles en el ERP (SPA + BFF) tras el cambio del API | vigente (su implementación en la SPA es parcial) |
 | [peticiones-backend.md](peticiones-backend.md) | Peticiones al backend (tmwe_json) | vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en ` |
+| [plan-consolidata-erp.md](plan-consolidata-erp.md) | Plan: gestión completa de los proyectos de consolidata desde el ERP | vigente (C0-C6 hechas sin commit; ver §10) |
 | [plan-migracion.md](plan-migracion.md) | Plan de migración ERP Findair (BFF + SPA) | vigente, parcialmente desfasado (cifras de 2026-10-18/19; el §3 «Pendiente en backend» está en parte resuelto, |
 | [plan-pruebas-ui.md](plan-pruebas-ui.md) | Plan de pruebas de la UI | borrador |
 | [plan-pruebas-formularios.md](plan-pruebas-formularios.md) | Plan de pruebas de formularios de la UI (índice; fichas en `pruebas-formularios/`) | borrador |

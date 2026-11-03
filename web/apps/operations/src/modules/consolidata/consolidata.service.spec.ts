@@ -6,36 +6,15 @@ vi.mock("@shared/anagrafiche/services/http", () => ({
 }));
 
 import {
-  buildQueueQuery,
   consolidataService,
   ConsolidataRequestError,
+  createPayload,
   shipmentPayload,
 } from "./services/consolidata.service";
-import { emptyQueueFilters, type ShipmentForm } from "./types";
+import type { ShipmentForm } from "./types";
 
 beforeEach(() => {
   httpMock.mockReset();
-});
-
-describe("buildQueueQuery", () => {
-  it("por defecto pide la bandeja de P", () => {
-    expect(buildQueueQuery(emptyQueueFilters(), 1)).toEqual({
-      view: "queue",
-      page: 1,
-      stato: "P",
-    });
-  });
-  it("añade asignación y cliente solo si hay valor", () => {
-    expect(
-      buildQueueQuery({ stato: "", assegnato_a: "me", id_cliente: 9 }, 3),
-    ).toEqual({
-      view: "queue",
-      page: 3,
-      stato: "",
-      assegnato_a: "me",
-      id_cliente: 9,
-    });
-  });
 });
 
 describe("shipmentPayload", () => {
@@ -127,5 +106,142 @@ describe("consolidataService", () => {
     } catch (err) {
       expect((err as ConsolidataRequestError).info.code).toBe("NOT_FOUND");
     }
+  });
+});
+
+const PATH = "/unified_consolidation_project";
+const lastBody = () =>
+  (httpMock.mock.calls.at(-1)?.[1] as { body: unknown }).body;
+const lastQuery = () =>
+  (httpMock.mock.calls.at(-1)?.[1] as { query: unknown }).query;
+
+describe("consolidataService — acciones nuevas", () => {
+  beforeEach(() => httpMock.mockResolvedValue({ success: true, result: {} }));
+
+  it("operate manda solo lo que hay: id, id_cargo si se elige y reservar solo si true", async () => {
+    await consolidataService.operate(7);
+    expect(lastBody()).toEqual({ action: "operate", id: 7 });
+    await consolidataService.operate(7, { id_cargo: 55, reservar: false });
+    expect(lastBody()).toEqual({ action: "operate", id: 7, id_cargo: 55 });
+    await consolidataService.operate(7, { id_cargo: null, reservar: true });
+    expect(lastBody()).toEqual({ action: "operate", id: 7, reservar: true });
+  });
+
+  it("create_from_option envía opción, envíos, destino, título y cliente", async () => {
+    const payload = {
+      option: "hub_MXP",
+      shipments: [
+        {
+          ref: "H1",
+          origin: { country: "IT", zip: "20100", city: "Milano" },
+          weight: 10,
+          packages: [
+            { quantity: 1, weight: 10, length: 50, width: 40, height: 30 },
+          ],
+        },
+      ],
+      destination: { country: "US", zip: "10001", city: "New York" },
+      titolo: "T",
+      customer_id: 9,
+    };
+    await consolidataService.createFromOption(payload);
+    expect(lastBody()).toEqual({ action: "create_from_option", ...payload });
+  });
+
+  it("bulk_assign envía ids y user_id", async () => {
+    await consolidataService.bulkAssign([1, 2], 3);
+    expect(lastBody()).toEqual({
+      action: "bulk_assign",
+      ids: [1, 2],
+      user_id: 3,
+    });
+  });
+
+  it("create limpia vacíos y normaliza mayúsculas", () => {
+    expect(
+      createPayload({
+        titolo: " P1 ",
+        tipo: "CONS",
+        id_cliente: 9,
+        hub_terminal: "mxp",
+        dest_country: "",
+        eori_dichiarante: " it123 ",
+        note_specialist: "",
+      }),
+    ).toEqual({
+      titolo: "P1",
+      tipo: "CONS",
+      id_cliente: 9,
+      hub_terminal: "MXP",
+      eori_dichiarante: "IT123",
+    });
+  });
+
+  it("add_leg, remove_leg, set_eori, request_quote y assign", async () => {
+    const leg = {
+      tipo: "AIR" as const,
+      origin: { country: "IT", zip: "", city: "", terminal: "MXP" },
+      destination: { country: "US", zip: "", city: "", terminal: "JFK" },
+      weight: 100,
+    };
+    await consolidataService.addLeg(4, leg);
+    expect(lastBody()).toEqual({ action: "add_leg", id: 4, leg });
+    await consolidataService.removeLeg(4, 8);
+    expect(lastBody()).toEqual({ action: "remove_leg", id: 4, id_tratta: 8 });
+    await consolidataService.setEori(4, " it1 ");
+    expect(lastBody()).toEqual({
+      action: "set_eori",
+      id: 4,
+      eori_dichiarante: "IT1",
+    });
+    await consolidataService.requestQuote(4);
+    expect(lastBody()).toEqual({ action: "request_quote", id: 4 });
+    await consolidataService.assign(4, 12);
+    expect(lastBody()).toEqual({ action: "assign", id: 4, user_id: 12 });
+  });
+
+  it("waive_warning omite id_prog_sped cuando el aviso es del proyecto (E4)", async () => {
+    await consolidataService.waiveWarning(4, "QUOTE_EXPIRED", null, "ok ok");
+    expect(lastBody()).toEqual({
+      action: "waive_warning",
+      id: 4,
+      codice: "QUOTE_EXPIRED",
+      motivo: "ok ok",
+    });
+    await consolidataService.waiveWarning(4, "NO_WEIGHT", 17, "motivo");
+    expect(lastBody()).toEqual({
+      action: "waive_warning",
+      id: 4,
+      codice: "NO_WEIGHT",
+      id_prog_sped: 17,
+      motivo: "motivo",
+    });
+  });
+
+  it("vistas GET: queue, queue_counts, by_cargo, by_spedizione, conversion, log, staff_users", async () => {
+    await consolidataService.queue({ page: 2, stato: "" });
+    expect(httpMock).toHaveBeenLastCalledWith(PATH, {
+      method: "GET",
+      query: { page: 2, stato: "", view: "queue" },
+    });
+    const ctrl = new AbortController();
+    await consolidataService.queueCounts({ q: "x" }, { signal: ctrl.signal });
+    expect(httpMock).toHaveBeenLastCalledWith(PATH, {
+      method: "GET",
+      query: { q: "x", view: "queue_counts" },
+      signal: ctrl.signal,
+    });
+    await consolidataService.byCargo(77);
+    expect(lastQuery()).toEqual({ view: "by_cargo", id_cargo: 77 });
+    await consolidataService.bySpedizione(5);
+    expect(lastQuery()).toEqual({ view: "by_spedizione", id_spedizione: 5 });
+    await consolidataService.conversion(4);
+    expect(lastQuery()).toEqual({ view: "conversion", id: 4 });
+    await consolidataService.log(4, 3, 20);
+    expect(lastQuery()).toEqual({ view: "log", id: 4, page: 3, per_page: 20 });
+    await consolidataService.staffUsers("ana");
+    expect(lastQuery()).toEqual({ view: "staff_users", q: "ana" });
+    await consolidataService.staffUsers();
+    expect(lastQuery()).toEqual({ view: "staff_users" });
   });
 });

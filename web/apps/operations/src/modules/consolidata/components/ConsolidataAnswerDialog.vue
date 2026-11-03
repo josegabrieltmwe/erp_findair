@@ -54,6 +54,7 @@
 import { reactive, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ConsolidataApiError from "./ConsolidataApiError.vue";
+import { useDialogErrorScope } from "../composables/useDialogErrorScope";
 import type { AnswerPayload, ConsolidataError } from "../types";
 
 const props = defineProps<{
@@ -68,6 +69,7 @@ const emit = defineEmits<{
   (e: "submit", payload: AnswerPayload): void;
 }>();
 const { t } = useI18n();
+useDialogErrorScope(() => props.modelValue);
 
 const form = reactive<{
   prezzo: number | null;

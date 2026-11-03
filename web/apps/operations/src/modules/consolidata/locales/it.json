@@ -7,7 +7,9 @@
       "close": "Chiudi",
       "save": "Salva",
       "edit": "Modifica",
-      "remove": "Rimuovi"
+      "remove": "Rimuovi",
+      "confirm": "Conferma",
+      "retry": "Riprova"
     },
     "state": {
       "A": "Aperto",
@@ -16,35 +18,16 @@
       "X": "Annullato",
       "unknown": "Sconosciuto"
     },
-    "queue": {
-      "title": "Richieste di consolidato",
-      "subtitle": "Richieste dei clienti in attesa dello staff. Di default, preventivi richiesti.",
-      "filterState": "Stato",
-      "filterAssignee": "Assegnato a",
-      "filterClient": "ID cliente",
-      "allStates": "Tutti gli stati",
-      "assigneeAll": "Chiunque",
-      "assigneeMe": "Miei",
-      "assigneeNone": "Non assegnati",
-      "colTitle": "Titolo",
-      "colClient": "Cliente",
-      "colState": "Stato",
-      "colTotal": "Totale",
-      "colShipments": "Spedizioni",
-      "colAssignee": "Assegnato",
-      "colUpdated": "Aggiornato",
-      "answered": "Risposta",
-      "unassigned": "Non assegnato",
-      "empty": "Nessuna richiesta corrisponde ai filtri.",
-      "total": "{n} progetti"
-    },
     "actions": {
       "take": "Prendi in carico",
       "answer": "Rispondi al preventivo",
       "convert": "Converti in operativo",
       "reopen": "Riapri",
       "close": "Chiudi progetto",
-      "cancel": "Annulla progetto"
+      "cancel": "Annulla progetto",
+      "assign": "Assegna a…",
+      "operate": "Rendi operativo",
+      "requestQuote": "Richiedi preventivo"
     },
     "tabs": {
       "shipments": "Spedizioni",
@@ -52,15 +35,25 @@
       "allocation": "Ripartizione",
       "readiness": "Conformità",
       "history": "Cronologia",
-      "notes": "Note interne"
+      "notes": "Note interne",
+      "conversion": "Conversione"
     },
     "detail": {
-      "back": "Torna alla coda",
+      "back": "Torna all'elenco",
       "client": "Cliente #{id}",
       "assignedTo": "Assegnato a #{id}",
-      "answered": "Risposta: {price} {cur}",
+      "answered": "Risposto: {price}",
       "answerValid": "Valida fino al {date}",
-      "linkedCargo": "Collegato al master cargo #{id}."
+      "answeredBy": "da {name}",
+      "typeLabel": "Tipologia",
+      "routeLabel": "Hub → destinazione",
+      "eoriLabel": "EORI",
+      "assigneeLabel": "Assegnato",
+      "cargoLabel": "Cargo",
+      "createdLabel": "Creato",
+      "updatedLabel": "Modificato",
+      "closedLabel": "Chiuso",
+      "metaFailed": "Impossibile caricare il catalogo azioni dell'API: i pulsanti di azione restano nascosti finché non si carica."
     },
     "shipments": {
       "help": "House del consolidato. Politica di peso tassabile: {criterio}.",
@@ -85,7 +78,10 @@
       "volume": "Volume (cm³)",
       "value": "Valore",
       "readyDate": "Data pronta",
-      "colliInvalid": "I colli devono essere un numero intero maggiore di 0."
+      "colliInvalid": "I colli devono essere un numero intero maggiore di 0.",
+      "limit": "{n} di {max} spedizioni consentite.",
+      "linked": "Sul cargo",
+      "notLinked": "Non collegata"
     },
     "legs": {
       "help": "Tratte quotate dal motore. Un prezzo manuale richiede un motivo e viene registrato.",
@@ -109,7 +105,27 @@
       "note": "Nota",
       "saved": "Tratta aggiornata.",
       "priceSaved": "Prezzo manuale salvato.",
-      "recalculated": "Tratte ricalcolate."
+      "recalculated": "Tratte ricalcolate.",
+      "add": "Aggiungi tratta",
+      "addTitle": "Nuova tratta",
+      "added": "Tratta aggiunta.",
+      "removed": "Tratta rimossa.",
+      "confirmRemove": "Rimuovere la tratta {n} ({tipo})?",
+      "origin": "Origine",
+      "destination": "Destinazione",
+      "country": "Paese",
+      "zip": "CAP",
+      "city": "Città",
+      "terminal": "Terminal",
+      "terminalRequired": "Obbligatorio per le tratte AIR",
+      "manualPrice": "Prezzo manuale",
+      "useManualPrice": "Imposta un prezzo manuale (staff)",
+      "limit": "{n} di {max} tratte",
+      "source": {
+        "listino": "Listino",
+        "realtime": "Tempo reale",
+        "manuale": "Manuale"
+      }
     },
     "allocation": {
       "help": "Costo di ogni tratta ripartito tra le spedizioni (criterio: {criterio}). Le somme sono esatte al centesimo.",
@@ -133,7 +149,33 @@
       "action": "Azione",
       "user": "Utente",
       "detail": "Dettaglio",
-      "empty": "Nessun evento."
+      "empty": "Nessun evento.",
+      "leg": "tratta #{id}",
+      "actions": {
+        "create": "Creazione",
+        "create_from_option": "Creato dal simulatore",
+        "add_leg": "Tratta aggiunta",
+        "update_leg": "Tratta modificata",
+        "remove_leg": "Tratta rimossa",
+        "recalc": "Ricalcolo",
+        "request_quote": "Preventivo richiesto",
+        "close": "Chiusura",
+        "reopen": "Riapertura",
+        "cancel": "Annullamento",
+        "set_eori": "EORI modificato",
+        "add_shipment": "Spedizione aggiunta",
+        "update_shipment": "Spedizione modificata",
+        "remove_shipment": "Spedizione rimossa",
+        "assign": "Assegnazione",
+        "take": "Preso in carico",
+        "note_internal": "Nota interna aggiunta",
+        "answer_quote": "Preventivo risposto",
+        "override_price": "Prezzo manuale",
+        "convert": "Collegamento al cargo",
+        "operate": "Operazione",
+        "waive_warning": "Avviso ignorato",
+        "stato_auto": "Cambio di stato automatico"
+      }
     },
     "notes": {
       "help": "Solo lo staff vede queste note. Non vengono mai mostrate al cliente.",
@@ -177,7 +219,12 @@
       "conversion_blocked": "Il progetto non è pronto per la conversione. Correggi o ignora prima questi avvisi.",
       "METHOD_NOT_ALLOWED": "Metodo non consentito.",
       "INTERNAL_ERROR": "Errore interno del server.",
-      "allowedStates": "Stati ammessi: {states}"
+      "allowedStates": "Stati ammessi: {states}",
+      "warning_not_waivable": "Questo avviso è di livello errore e non si può ignorare.",
+      "quote_not_answered": "Il preventivo non ha ancora risposta.",
+      "quote_expired": "Il preventivo è scaduto: ricalcola e rispondi di nuovo.",
+      "operation_in_progress": "C'è già un'operazione in corso per questo progetto. Attendi e riprova.",
+      "manual_price_staff_only": "Solo lo staff può impostare un prezzo manuale."
     },
     "messages": {
       "taken": "Progetto preso in carico.",
@@ -186,12 +233,22 @@
       "cancel": "Progetto annullato.",
       "answered": "Risposta inviata al cliente.",
       "converted": "Conversione completata.",
-      "convertedPartial": "Conversione parziale: alcune spedizioni sono in sospeso."
+      "convertedPartial": "Conversione parziale: alcune spedizioni sono in sospeso.",
+      "assigned": "Progetto assegnato.",
+      "created": "Progetto creato.",
+      "eoriSaved": "EORI salvato.",
+      "operated": "Conversione completata.",
+      "operatedPartial": "Conversione parziale: controlla i passi con errore.",
+      "quoteRequested": "Preventivo richiesto."
     },
     "confirm": {
       "close": "Chiudere questo progetto?",
       "reopen": "Riaprire questo progetto?",
-      "cancel": "Annullare questo progetto? L'azione non è reversibile."
+      "cancel": "Annullare questo progetto? L'azione non è reversibile.",
+      "title": "Conferma",
+      "requestQuote": "Portare il progetto a preventivo richiesto?",
+      "operate": "Rendere operativo il progetto (cargo, spedizioni e HAWB)?",
+      "operateBooking": "Rendere operativo il progetto e PRENOTARE con il vettore?"
     },
     "quote": {
       "navLink": "Preventivo rapido",
@@ -245,7 +302,202 @@
       "restrictedCountries": "Paesi soggetti a restrizioni: {countries}",
       "warnings": {
         "fixed_costs_not_configured": "I costi fissi (sdoganamento, gestione hub) non sono ancora configurati — il totale non li include."
+      },
+      "terminal": "Terminal",
+      "ref": "Riferimento",
+      "value": "Valore",
+      "readyDate": "Data pronta",
+      "packagesTitle": "Colli (totale {kg} kg)",
+      "pkgWeight": "Peso per collo (kg)",
+      "length": "Lunghezza (cm)",
+      "width": "Larghezza (cm)",
+      "height": "Altezza (cm)",
+      "addPackage": "Aggiungi collo",
+      "removePackage": "Rimuovi collo",
+      "createFromOption": "Crea progetto con questa opzione"
+    },
+    "type": {
+      "CONS": "Consolidato",
+      "XTRADE": "Cross-trade",
+      "MULTI": "Multiorigine"
+    },
+    "phase": {
+      "abierto": "Aperto",
+      "sin_asignar": "Non assegnato",
+      "pendiente_respuesta": "In attesa di risposta",
+      "respondido": "Risposto",
+      "respuesta_vencida": "Risposta scaduta",
+      "por_convertir": "Accettato, da convertire",
+      "convertido": "Convertito",
+      "cancelado": "Annullato",
+      "unknown": "Sconosciuta"
+    },
+    "assign": {
+      "title": "Assegna il progetto",
+      "user": "Utente dello staff",
+      "submit": "Assegna",
+      "noUsers": "Nessun utente",
+      "unavailable": "L'elenco utenti non è disponibile."
+    },
+    "conversion": {
+      "blocking": "{n} avviso/i bloccano la conversione:",
+      "quoteExpired": "Il preventivo è scaduto. Ricalcola le tratte prima di convertire.",
+      "operateTitle": "Rendi operativo",
+      "recommended": "Consigliato",
+      "operateHelp": "Crea o riusa il cargo (MAWB), le spedizioni, i collegamenti e gli HAWB. È idempotente: riprovare rifà solo ciò che è fallito.",
+      "existingCargo": "Cargo esistente (facoltativo)",
+      "existingCargoHint": "Vuoto = si crea un nuovo cargo",
+      "reservar": "Prenota con il vettore",
+      "bookingDisabled": "La prenotazione reale è disattivata nell'API (CONSOLIDATION_ALLOW_BOOKING).",
+      "operate": "Rendi operativo",
+      "retry": "Riprova",
+      "notAvailable": "Impossibile rendere operativo nello stato «{state}». Il progetto deve essere chiuso (accettato).",
+      "steps": "Passi della conversione",
+      "stepsUnavailable": "I passi di conversione non sono ancora disponibili.",
+      "noSteps": "Nessun passo eseguito finora.",
+      "globalGroup": "MAWB / camion",
+      "houseGroup": "House {ref}",
+      "attempts": "{n} tentativi",
+      "linkTitle": "Collega a un cargo esistente",
+      "status": {
+        "no": "Non convertito",
+        "parcial": "Parziale",
+        "completo": "Completata"
+      },
+      "step": {
+        "cargo": "Cargo (MAWB)",
+        "spedizione": "Spedizione",
+        "collegare": "Collegamento al cargo",
+        "casa": "HAWB",
+        "prenotare": "Prenotazione",
+        "camion": "Camion",
+        "prezzo": "Prezzo"
+      },
+      "stepState": {
+        "OK": "Fatto",
+        "ERRORE": "Errore",
+        "SALTATO": "Saltato"
       }
+    },
+    "create": {
+      "button": "Nuovo progetto",
+      "title": "Nuovo progetto",
+      "titolo": "Titolo",
+      "tipo": "Tipologia",
+      "hub": "Hub (terminal)",
+      "destCountry": "Paese di destinazione",
+      "eori": "EORI del dichiarante",
+      "note": "Nota dello specialista",
+      "submit": "Crea progetto"
+    },
+    "eori": {
+      "title": "Modifica EORI",
+      "label": "EORI del dichiarante",
+      "hint": "Vuoto = nessun EORI"
+    },
+    "fromOption": {
+      "title": "Crea progetto con questa opzione",
+      "help": "Si crea un progetto con l'opzione «{option}» e le spedizioni quotate. Il server ricalcola il preventivo."
+    },
+    "filters": {
+      "q": "Ricerca",
+      "stato": "Stato",
+      "fase": "Fase operativa",
+      "partner": "Partner",
+      "assegnato": "Assegnato a",
+      "assegnatoUser": "Utente",
+      "tipo": "Tipologia",
+      "hub": "Hub",
+      "origPaese": "Paese di origine",
+      "destCountry": "Paese di destinazione",
+      "qualeData": "Quale data",
+      "risposta": "Risposta",
+      "conversione": "Conversione",
+      "idCargo": "ID cargo",
+      "totaleMin": "Importo minimo",
+      "totaleMax": "Importo massimo",
+      "nSpedMin": "Min. spedizioni",
+      "nSpedMax": "Max. spedizioni",
+      "assigneeAll": "Chiunque",
+      "assigneeMe": "Miei",
+      "assigneeNone": "Non assegnati",
+      "assigneeUser": "Utente specifico",
+      "dateField": {
+        "insert": "Creazione",
+        "modif": "Ultima modifica",
+        "chiuso": "Chiusura",
+        "risposta": "Risposta"
+      },
+      "answer": {
+        "no": "Senza risposta",
+        "vigente": "Risposto, valido",
+        "vencida": "Risposto, scaduto"
+      },
+      "tabs": {
+        "basics": "Base",
+        "ruta": "Percorso",
+        "ciclo": "Ciclo di vita",
+        "cifras": "Cifre"
+      }
+    },
+    "integration": {
+      "sourceProject": "Progetto di origine | Progetti di origine",
+      "inProject": "Nel progetto #{id}"
+    },
+    "list": {
+      "title": "Progetti di consolidamento",
+      "searchPlaceholder": "Id, titolo, riferimento, cliente…",
+      "exportCsv": "Esporta CSV (filtro attuale)",
+      "exportTruncated": "Esportate {shown} di {total} righe (limite raggiunto).",
+      "emptyTitle": "Nessun progetto corrisponde ai filtri",
+      "unassigned": "Non assegnato",
+      "days": "{n} giorno | {n} giorni",
+      "bulkAssign": "Assegna a… ({count})",
+      "bulkAssignTitle": "Assegna {count} progetto/i",
+      "bulkAssignDone": "{count} progetto/i assegnato/i.",
+      "bulkAssignPartial": "Assegnati {ok}; {failed} con errore: {ids}",
+      "click": {
+        "tipo": "Filtra per questo tipo",
+        "hub": "Filtra per hub {v}",
+        "assignee": "Filtra per assegnatario"
+      },
+      "kpi": {
+        "all": "Tutti",
+        "sin_asignar": "Nuovi non assegnati",
+        "pendiente_respuesta": "In attesa di risposta",
+        "respondido": "Risposti",
+        "respuesta_vencida": "Risposta scaduta",
+        "por_convertir": "Accettati da convertire",
+        "convertido": "Convertiti",
+        "cancelado": "Annullati"
+      },
+      "headers": {
+        "id": "ID",
+        "titolo": "Titolo",
+        "tipo": "Tipologia",
+        "ruta": "Hub → destinazione",
+        "n_spedizioni": "Spedizioni",
+        "peso": "Peso tassabile",
+        "totale": "Totale",
+        "valuta": "Valuta",
+        "risposta": "Risposta",
+        "stato": "Stato / fase",
+        "assegnato": "Assegnato",
+        "antiguedad": "Anzianità",
+        "cargo": "Cargo",
+        "conversione": "Conversione",
+        "insert_datetime": "Creato",
+        "modif_datetime": "Modificato"
+      },
+      "work_view": {
+        "standard": "Standard",
+        "gestion": "Gestione",
+        "operativa": "Operazioni"
+      }
+    },
+    "preview": {
+      "title": "Anteprima",
+      "open": "Apri progetto"
     }
   }
 }

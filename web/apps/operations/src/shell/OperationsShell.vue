@@ -115,6 +115,7 @@ const KEEP_ALIVE_INCLUDE = [
   "CrmListPage",
   "AnagraficaListPage",
   "TicketsListPage",
+  "ConsolidataListPage",
 ];
 
 interface Domain {

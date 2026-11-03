@@ -36,6 +36,7 @@
         </button>
 
         <ShipmentOwnerChip class="ms-2" />
+        <ConsolidataProjectChip :shipment-id="currentId" class="ms-2" />
         <!-- Mini-estado (barra de progreso + etiqueta de estado) en la barra de
              título, junto al cliente/owner — misma posición que en el detalle
              de cargo (CargoDetailLayoutV2). Antes vivía en una fila de tabs
@@ -142,6 +143,7 @@ import { useChatStore } from "@shipment/stores/chat.store";
 import { useI18n } from "vue-i18n";
 import { useExpressOffersStore } from "@shipment/stores/express_offers.store";
 import { usePartnerOffersStore } from "@shipment/stores/partner_offers.store";
+import ConsolidataProjectChip from "@/modules/consolidata/components/ConsolidataProjectChip.vue";
 import { useRecordNavigator } from "@shipment/composables/useRecordNavigator";
 import MiniStatusBar from "@shipment/components/shell/MiniStatusBar.vue";
 import ShipmentOwnerChip from "@shipment/components/shipment/owner/ShipmentOwnerChip.vue";

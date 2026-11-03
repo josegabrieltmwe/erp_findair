@@ -7,7 +7,9 @@
       "close": "Close",
       "save": "Save",
       "edit": "Edit",
-      "remove": "Remove"
+      "remove": "Remove",
+      "confirm": "Confirm",
+      "retry": "Retry"
     },
     "state": {
       "A": "Open",
@@ -16,35 +18,16 @@
       "X": "Cancelled",
       "unknown": "Unknown"
     },
-    "queue": {
-      "title": "Consolidation requests",
-      "subtitle": "Client requests waiting for staff. By default, quotes requested.",
-      "filterState": "State",
-      "filterAssignee": "Assigned to",
-      "filterClient": "Client ID",
-      "allStates": "All states",
-      "assigneeAll": "Anyone",
-      "assigneeMe": "Mine",
-      "assigneeNone": "Unassigned",
-      "colTitle": "Title",
-      "colClient": "Client",
-      "colState": "State",
-      "colTotal": "Total",
-      "colShipments": "Shipments",
-      "colAssignee": "Assigned",
-      "colUpdated": "Updated",
-      "answered": "Answered",
-      "unassigned": "Unassigned",
-      "empty": "No requests match the filters.",
-      "total": "{n} projects"
-    },
     "actions": {
       "take": "Take",
       "answer": "Answer quote",
       "convert": "Convert to operation",
       "reopen": "Reopen",
       "close": "Close project",
-      "cancel": "Cancel project"
+      "cancel": "Cancel project",
+      "assign": "Assign to…",
+      "operate": "Operate",
+      "requestQuote": "Request quote"
     },
     "tabs": {
       "shipments": "Shipments",
@@ -52,15 +35,25 @@
       "allocation": "Allocation",
       "readiness": "Compliance",
       "history": "History",
-      "notes": "Internal notes"
+      "notes": "Internal notes",
+      "conversion": "Conversion"
     },
     "detail": {
-      "back": "Back to the queue",
+      "back": "Back to list",
       "client": "Client #{id}",
       "assignedTo": "Assigned to #{id}",
-      "answered": "Answered: {price} {cur}",
+      "answered": "Answered: {price}",
       "answerValid": "Valid until {date}",
-      "linkedCargo": "Linked to cargo master #{id}."
+      "answeredBy": "by {name}",
+      "typeLabel": "Type",
+      "routeLabel": "Hub → destination",
+      "eoriLabel": "EORI",
+      "assigneeLabel": "Assignee",
+      "cargoLabel": "Cargo",
+      "createdLabel": "Created",
+      "updatedLabel": "Updated",
+      "closedLabel": "Closed",
+      "metaFailed": "The API action catalogue could not be loaded: action buttons stay hidden until it loads."
     },
     "shipments": {
       "help": "Houses of the consolidation. Chargeable weight policy: {criterio}.",
@@ -85,7 +78,10 @@
       "volume": "Volume (cm³)",
       "value": "Value",
       "readyDate": "Ready date",
-      "colliInvalid": "Pieces must be a whole number greater than 0."
+      "colliInvalid": "Pieces must be a whole number greater than 0.",
+      "limit": "{n} of {max} shipments allowed.",
+      "linked": "On the cargo",
+      "notLinked": "Not linked"
     },
     "legs": {
       "help": "Legs priced by the engine. A manual price needs a reason and is logged.",
@@ -109,7 +105,27 @@
       "note": "Note",
       "saved": "Leg updated.",
       "priceSaved": "Manual price saved.",
-      "recalculated": "Legs recalculated."
+      "recalculated": "Legs recalculated.",
+      "add": "Add leg",
+      "addTitle": "New leg",
+      "added": "Leg added.",
+      "removed": "Leg removed.",
+      "confirmRemove": "Remove leg {n} ({tipo})?",
+      "origin": "Origin",
+      "destination": "Destination",
+      "country": "Country",
+      "zip": "Postcode",
+      "city": "City",
+      "terminal": "Terminal",
+      "terminalRequired": "Required for AIR legs",
+      "manualPrice": "Manual price",
+      "useManualPrice": "Set a manual price (staff)",
+      "limit": "{n} of {max} legs",
+      "source": {
+        "listino": "Rate card",
+        "realtime": "Real time",
+        "manuale": "Manual"
+      }
     },
     "allocation": {
       "help": "Cost of each leg split among the shipments (criterion: {criterio}). Sums are exact to the cent.",
@@ -133,7 +149,33 @@
       "action": "Action",
       "user": "User",
       "detail": "Detail",
-      "empty": "No events."
+      "empty": "No events.",
+      "leg": "leg #{id}",
+      "actions": {
+        "create": "Created",
+        "create_from_option": "Created from simulator",
+        "add_leg": "Leg added",
+        "update_leg": "Leg updated",
+        "remove_leg": "Leg removed",
+        "recalc": "Recalculation",
+        "request_quote": "Quote requested",
+        "close": "Closed",
+        "reopen": "Reopened",
+        "cancel": "Cancelled",
+        "set_eori": "EORI changed",
+        "add_shipment": "Shipment added",
+        "update_shipment": "Shipment updated",
+        "remove_shipment": "Shipment removed",
+        "assign": "Assigned",
+        "take": "Taken",
+        "note_internal": "Internal note",
+        "answer_quote": "Quote answered",
+        "override_price": "Manual price",
+        "convert": "Linked to cargo",
+        "operate": "Operation",
+        "waive_warning": "Warning waived",
+        "stato_auto": "Automatic status change"
+      }
     },
     "notes": {
       "help": "Only staff can see these notes. They are never shown to the client.",
@@ -177,7 +219,12 @@
       "conversion_blocked": "The project is not ready to convert. Fix or waive these warnings first.",
       "METHOD_NOT_ALLOWED": "Method not allowed.",
       "INTERNAL_ERROR": "Internal server error.",
-      "allowedStates": "Allowed states: {states}"
+      "allowedStates": "Allowed states: {states}",
+      "warning_not_waivable": "This warning is error level and cannot be waived.",
+      "quote_not_answered": "The quote has not been answered yet.",
+      "quote_expired": "The quote has expired: recalculate and answer again.",
+      "operation_in_progress": "An operation is already running for this project. Wait and retry.",
+      "manual_price_staff_only": "Only staff can set a manual price."
     },
     "messages": {
       "taken": "Project taken.",
@@ -186,12 +233,22 @@
       "cancel": "Project cancelled.",
       "answered": "Answer sent to the client.",
       "converted": "Conversion completed.",
-      "convertedPartial": "Conversion partially done: some shipments are pending."
+      "convertedPartial": "Conversion partially done: some shipments are pending.",
+      "assigned": "Project assigned.",
+      "created": "Project created.",
+      "eoriSaved": "EORI saved.",
+      "operated": "Conversion completed.",
+      "operatedPartial": "Partial conversion: check the failed steps.",
+      "quoteRequested": "Quote requested."
     },
     "confirm": {
       "close": "Close this project?",
       "reopen": "Reopen this project?",
-      "cancel": "Cancel this project? This cannot be undone."
+      "cancel": "Cancel this project? This cannot be undone.",
+      "title": "Confirm",
+      "requestQuote": "Move the project to quote requested?",
+      "operate": "Convert the project into operations (cargo, shipments and HAWBs)?",
+      "operateBooking": "Convert the project into operations and BOOK with the carrier?"
     },
     "quote": {
       "navLink": "Quick quote",
@@ -245,7 +302,202 @@
       "restrictedCountries": "Restricted countries: {countries}",
       "warnings": {
         "fixed_costs_not_configured": "Fixed costs (customs clearance, hub handling) are not configured yet — the total does not include them."
+      },
+      "terminal": "Terminal",
+      "ref": "Reference",
+      "value": "Value",
+      "readyDate": "Ready date",
+      "packagesTitle": "Packages (total {kg} kg)",
+      "pkgWeight": "Weight per package (kg)",
+      "length": "Length (cm)",
+      "width": "Width (cm)",
+      "height": "Height (cm)",
+      "addPackage": "Add package",
+      "removePackage": "Remove package",
+      "createFromOption": "Create project from this option"
+    },
+    "type": {
+      "CONS": "Consolidation",
+      "XTRADE": "Cross-trade",
+      "MULTI": "Multi-origin"
+    },
+    "phase": {
+      "abierto": "Open",
+      "sin_asignar": "Unassigned",
+      "pendiente_respuesta": "Awaiting answer",
+      "respondido": "Answered",
+      "respuesta_vencida": "Answer expired",
+      "por_convertir": "Accepted, to convert",
+      "convertido": "Converted",
+      "cancelado": "Cancelled",
+      "unknown": "Unknown"
+    },
+    "assign": {
+      "title": "Assign the project",
+      "user": "Staff user",
+      "submit": "Assign",
+      "noUsers": "No users",
+      "unavailable": "The user list is not available."
+    },
+    "conversion": {
+      "blocking": "{n} warning(s) block the conversion:",
+      "quoteExpired": "The quote has expired. Recalculate the legs before converting.",
+      "operateTitle": "Operate",
+      "recommended": "Recommended",
+      "operateHelp": "Creates or reuses the cargo (MAWB), the shipments, the links and the HAWBs. It is idempotent: retrying only redoes what failed.",
+      "existingCargo": "Existing cargo (optional)",
+      "existingCargoHint": "Empty = a new cargo is created",
+      "reservar": "Book with the carrier",
+      "bookingDisabled": "Real booking is disabled in the API (CONSOLIDATION_ALLOW_BOOKING).",
+      "operate": "Operate",
+      "retry": "Retry",
+      "notAvailable": "Cannot operate in state “{state}”. The project must be closed (accepted).",
+      "steps": "Conversion steps",
+      "stepsUnavailable": "Conversion steps are not available yet.",
+      "noSteps": "No step has run yet.",
+      "globalGroup": "MAWB / truck",
+      "houseGroup": "House {ref}",
+      "attempts": "{n} attempts",
+      "linkTitle": "Link to an existing cargo",
+      "status": {
+        "no": "Not converted",
+        "parcial": "Partial",
+        "completo": "Complete"
+      },
+      "step": {
+        "cargo": "Cargo (MAWB)",
+        "spedizione": "Shipment",
+        "collegare": "Link to cargo",
+        "casa": "HAWB",
+        "prenotare": "Booking",
+        "camion": "Truck",
+        "prezzo": "Price"
+      },
+      "stepState": {
+        "OK": "Done",
+        "ERRORE": "Error",
+        "SALTATO": "Skipped"
       }
+    },
+    "create": {
+      "button": "New project",
+      "title": "New project",
+      "titolo": "Title",
+      "tipo": "Type",
+      "hub": "Hub (terminal)",
+      "destCountry": "Destination country",
+      "eori": "Declarant EORI",
+      "note": "Specialist note",
+      "submit": "Create project"
+    },
+    "eori": {
+      "title": "Edit EORI",
+      "label": "Declarant EORI",
+      "hint": "Empty = no EORI"
+    },
+    "fromOption": {
+      "title": "Create project from this option",
+      "help": "A project is created with option “{option}” and the quoted shipments. The server quotes again."
+    },
+    "filters": {
+      "q": "Search",
+      "stato": "Status",
+      "fase": "Phase",
+      "partner": "Partner",
+      "assegnato": "Assigned to",
+      "assegnatoUser": "User",
+      "tipo": "Type",
+      "hub": "Hub",
+      "origPaese": "Origin country",
+      "destCountry": "Destination country",
+      "qualeData": "Which date",
+      "risposta": "Answer",
+      "conversione": "Conversion",
+      "idCargo": "Cargo ID",
+      "totaleMin": "Minimum amount",
+      "totaleMax": "Maximum amount",
+      "nSpedMin": "Min. shipments",
+      "nSpedMax": "Max. shipments",
+      "assigneeAll": "Anyone",
+      "assigneeMe": "Mine",
+      "assigneeNone": "Unassigned",
+      "assigneeUser": "Specific user",
+      "dateField": {
+        "insert": "Created",
+        "modif": "Last update",
+        "chiuso": "Closed",
+        "risposta": "Answered"
+      },
+      "answer": {
+        "no": "Not answered",
+        "vigente": "Answered, valid",
+        "vencida": "Answered, expired"
+      },
+      "tabs": {
+        "basics": "Basics",
+        "ruta": "Route",
+        "ciclo": "Lifecycle",
+        "cifras": "Figures"
+      }
+    },
+    "integration": {
+      "sourceProject": "Source project | Source projects",
+      "inProject": "In project #{id}"
+    },
+    "list": {
+      "title": "Consolidation projects",
+      "searchPlaceholder": "Id, title, reference, client…",
+      "exportCsv": "Export CSV (current filter)",
+      "exportTruncated": "Exported {shown} of {total} rows (limit reached).",
+      "emptyTitle": "No project matches the filters",
+      "unassigned": "Unassigned",
+      "days": "{n} day | {n} days",
+      "bulkAssign": "Assign to… ({count})",
+      "bulkAssignTitle": "Assign {count} project(s)",
+      "bulkAssignDone": "{count} project(s) assigned.",
+      "bulkAssignPartial": "Assigned {ok}; {failed} failed: {ids}",
+      "click": {
+        "tipo": "Filter by this type",
+        "hub": "Filter by hub {v}",
+        "assignee": "Filter by assignee"
+      },
+      "kpi": {
+        "all": "All",
+        "sin_asignar": "New, unassigned",
+        "pendiente_respuesta": "Awaiting answer",
+        "respondido": "Answered",
+        "respuesta_vencida": "Answer expired",
+        "por_convertir": "Accepted, to convert",
+        "convertido": "Converted",
+        "cancelado": "Cancelled"
+      },
+      "headers": {
+        "id": "ID",
+        "titolo": "Title",
+        "tipo": "Type",
+        "ruta": "Hub → destination",
+        "n_spedizioni": "Shipments",
+        "peso": "Chargeable weight",
+        "totale": "Total",
+        "valuta": "Currency",
+        "risposta": "Answer",
+        "stato": "Status / phase",
+        "assegnato": "Assignee",
+        "antiguedad": "Age",
+        "cargo": "Cargo",
+        "conversione": "Conversion",
+        "insert_datetime": "Created",
+        "modif_datetime": "Updated"
+      },
+      "work_view": {
+        "standard": "Standard",
+        "gestion": "Management",
+        "operativa": "Operations"
+      }
+    },
+    "preview": {
+      "title": "Preview",
+      "open": "Open project"
     }
   }
 }

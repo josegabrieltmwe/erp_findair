@@ -7,7 +7,9 @@
       "close": "Sluiten",
       "save": "Opslaan",
       "edit": "Bewerken",
-      "remove": "Verwijderen"
+      "remove": "Verwijderen",
+      "confirm": "Bevestigen",
+      "retry": "Opnieuw proberen"
     },
     "state": {
       "A": "Open",
@@ -16,35 +18,16 @@
       "X": "Geannuleerd",
       "unknown": "Onbekend"
     },
-    "queue": {
-      "title": "Consolidatieaanvragen",
-      "subtitle": "Klantaanvragen die op de staf wachten. Standaard: aangevraagde offertes.",
-      "filterState": "Status",
-      "filterAssignee": "Toegewezen aan",
-      "filterClient": "Klant-ID",
-      "allStates": "Alle statussen",
-      "assigneeAll": "Iedereen",
-      "assigneeMe": "Mijn",
-      "assigneeNone": "Niet toegewezen",
-      "colTitle": "Titel",
-      "colClient": "Klant",
-      "colState": "Status",
-      "colTotal": "Totaal",
-      "colShipments": "Zendingen",
-      "colAssignee": "Toegewezen",
-      "colUpdated": "Bijgewerkt",
-      "answered": "Beantwoord",
-      "unassigned": "Niet toegewezen",
-      "empty": "Geen aanvragen voldoen aan de filters.",
-      "total": "{n} projecten"
-    },
     "actions": {
       "take": "Oppakken",
       "answer": "Offerte beantwoorden",
       "convert": "Omzetten naar operationeel",
       "reopen": "Heropenen",
       "close": "Project sluiten",
-      "cancel": "Project annuleren"
+      "cancel": "Project annuleren",
+      "assign": "Toewijzen aan…",
+      "operate": "Operationeel maken",
+      "requestQuote": "Offerte aanvragen"
     },
     "tabs": {
       "shipments": "Zendingen",
@@ -52,15 +35,25 @@
       "allocation": "Verdeling",
       "readiness": "Compliance",
       "history": "Geschiedenis",
-      "notes": "Interne notities"
+      "notes": "Interne notities",
+      "conversion": "Conversie"
     },
     "detail": {
-      "back": "Terug naar de wachtrij",
+      "back": "Terug naar de lijst",
       "client": "Klant #{id}",
       "assignedTo": "Toegewezen aan #{id}",
-      "answered": "Beantwoord: {price} {cur}",
+      "answered": "Beantwoord: {price}",
       "answerValid": "Geldig tot {date}",
-      "linkedCargo": "Gekoppeld aan cargo-master #{id}."
+      "answeredBy": "door {name}",
+      "typeLabel": "Type",
+      "routeLabel": "Hub → bestemming",
+      "eoriLabel": "EORI",
+      "assigneeLabel": "Toegewezen aan",
+      "cargoLabel": "Cargo",
+      "createdLabel": "Aangemaakt",
+      "updatedLabel": "Gewijzigd",
+      "closedLabel": "Gesloten",
+      "metaFailed": "De actiecatalogus van de API kon niet worden geladen: actieknoppen blijven verborgen tot hij geladen is."
     },
     "shipments": {
       "help": "Houses van de consolidatie. Beleid taxeerbaar gewicht: {criterio}.",
@@ -85,7 +78,10 @@
       "volume": "Volume (cm³)",
       "value": "Waarde",
       "readyDate": "Gereed op",
-      "colliInvalid": "Het aantal colli moet een geheel getal groter dan 0 zijn."
+      "colliInvalid": "Het aantal colli moet een geheel getal groter dan 0 zijn.",
+      "limit": "{n} van {max} toegestane zendingen.",
+      "linked": "Op de cargo",
+      "notLinked": "Niet gekoppeld"
     },
     "legs": {
       "help": "Trajecten geprijsd door de engine. Een handmatige prijs vereist een reden en wordt gelogd.",
@@ -109,7 +105,27 @@
       "note": "Notitie",
       "saved": "Traject bijgewerkt.",
       "priceSaved": "Handmatige prijs opgeslagen.",
-      "recalculated": "Trajecten herberekend."
+      "recalculated": "Trajecten herberekend.",
+      "add": "Traject toevoegen",
+      "addTitle": "Nieuw traject",
+      "added": "Traject toegevoegd.",
+      "removed": "Traject verwijderd.",
+      "confirmRemove": "Traject {n} ({tipo}) verwijderen?",
+      "origin": "Herkomst",
+      "destination": "Bestemming",
+      "country": "Land",
+      "zip": "Postcode",
+      "city": "Plaats",
+      "terminal": "Terminal",
+      "terminalRequired": "Verplicht voor AIR-trajecten",
+      "manualPrice": "Handmatige prijs",
+      "useManualPrice": "Handmatige prijs instellen (staf)",
+      "limit": "{n} van {max} trajecten",
+      "source": {
+        "listino": "Tarief",
+        "realtime": "Realtime",
+        "manuale": "Handmatig"
+      }
     },
     "allocation": {
       "help": "Kosten van elk traject verdeeld over de zendingen (criterium: {criterio}). Sommen kloppen op de cent.",
@@ -133,7 +149,33 @@
       "action": "Actie",
       "user": "Gebruiker",
       "detail": "Detail",
-      "empty": "Geen gebeurtenissen."
+      "empty": "Geen gebeurtenissen.",
+      "leg": "traject #{id}",
+      "actions": {
+        "create": "Aangemaakt",
+        "create_from_option": "Aangemaakt vanuit simulator",
+        "add_leg": "Traject toegevoegd",
+        "update_leg": "Traject gewijzigd",
+        "remove_leg": "Traject verwijderd",
+        "recalc": "Herberekening",
+        "request_quote": "Offerte aangevraagd",
+        "close": "Gesloten",
+        "reopen": "Heropend",
+        "cancel": "Geannuleerd",
+        "set_eori": "EORI gewijzigd",
+        "add_shipment": "Zending toegevoegd",
+        "update_shipment": "Zending gewijzigd",
+        "remove_shipment": "Zending verwijderd",
+        "assign": "Toegewezen",
+        "take": "Opgepakt",
+        "note_internal": "Interne notitie",
+        "answer_quote": "Offerte beantwoord",
+        "override_price": "Handmatige prijs",
+        "convert": "Gekoppeld aan cargo",
+        "operate": "Operatie",
+        "waive_warning": "Waarschuwing genegeerd",
+        "stato_auto": "Automatische statuswijziging"
+      }
     },
     "notes": {
       "help": "Alleen de staf ziet deze notities. Ze worden nooit aan de klant getoond.",
@@ -177,7 +219,12 @@
       "conversion_blocked": "Het project is niet klaar om om te zetten. Los deze waarschuwingen eerst op of negeer ze.",
       "METHOD_NOT_ALLOWED": "Methode niet toegestaan.",
       "INTERNAL_ERROR": "Interne serverfout.",
-      "allowedStates": "Toegestane statussen: {states}"
+      "allowedStates": "Toegestane statussen: {states}",
+      "warning_not_waivable": "Deze waarschuwing is van foutniveau en kan niet worden genegeerd.",
+      "quote_not_answered": "De offerte is nog niet beantwoord.",
+      "quote_expired": "De offerte is verlopen: herbereken en beantwoord opnieuw.",
+      "operation_in_progress": "Er loopt al een operatie voor dit project. Wacht en probeer opnieuw.",
+      "manual_price_staff_only": "Alleen staf kan een handmatige prijs instellen."
     },
     "messages": {
       "taken": "Project opgepakt.",
@@ -186,12 +233,22 @@
       "cancel": "Project geannuleerd.",
       "answered": "Antwoord naar de klant verstuurd.",
       "converted": "Omzetting voltooid.",
-      "convertedPartial": "Gedeeltelijke omzetting: sommige zendingen zijn in behandeling."
+      "convertedPartial": "Gedeeltelijke omzetting: sommige zendingen zijn in behandeling.",
+      "assigned": "Project toegewezen.",
+      "created": "Project aangemaakt.",
+      "eoriSaved": "EORI opgeslagen.",
+      "operated": "Conversie voltooid.",
+      "operatedPartial": "Gedeeltelijke conversie: controleer de mislukte stappen.",
+      "quoteRequested": "Offerte aangevraagd."
     },
     "confirm": {
       "close": "Dit project sluiten?",
       "reopen": "Dit project heropenen?",
-      "cancel": "Dit project annuleren? Dit kan niet ongedaan worden gemaakt."
+      "cancel": "Dit project annuleren? Dit kan niet ongedaan worden gemaakt.",
+      "title": "Bevestigen",
+      "requestQuote": "Project naar offerte aangevraagd zetten?",
+      "operate": "Project operationeel maken (cargo, zendingen en HAWB's)?",
+      "operateBooking": "Project operationeel maken en BOEKEN bij de vervoerder?"
     },
     "quote": {
       "navLink": "Snelle offerte",
@@ -245,7 +302,202 @@
       "restrictedCountries": "Beperkte landen: {countries}",
       "warnings": {
         "fixed_costs_not_configured": "De vaste kosten (inklaring, hub-afhandeling) zijn nog niet geconfigureerd — het totaal bevat ze niet."
+      },
+      "terminal": "Terminal",
+      "ref": "Referentie",
+      "value": "Waarde",
+      "readyDate": "Klaar op",
+      "packagesTitle": "Colli (totaal {kg} kg)",
+      "pkgWeight": "Gewicht per collo (kg)",
+      "length": "Lengte (cm)",
+      "width": "Breedte (cm)",
+      "height": "Hoogte (cm)",
+      "addPackage": "Collo toevoegen",
+      "removePackage": "Collo verwijderen",
+      "createFromOption": "Project aanmaken met deze optie"
+    },
+    "type": {
+      "CONS": "Consolidatie",
+      "XTRADE": "Cross-trade",
+      "MULTI": "Meerdere herkomsten"
+    },
+    "phase": {
+      "abierto": "Open",
+      "sin_asignar": "Niet toegewezen",
+      "pendiente_respuesta": "Wacht op antwoord",
+      "respondido": "Beantwoord",
+      "respuesta_vencida": "Antwoord verlopen",
+      "por_convertir": "Geaccepteerd, te converteren",
+      "convertido": "Geconverteerd",
+      "cancelado": "Geannuleerd",
+      "unknown": "Onbekend"
+    },
+    "assign": {
+      "title": "Project toewijzen",
+      "user": "Medewerker",
+      "submit": "Toewijzen",
+      "noUsers": "Geen gebruikers",
+      "unavailable": "De gebruikerslijst is niet beschikbaar."
+    },
+    "conversion": {
+      "blocking": "{n} waarschuwing(en) blokkeren de conversie:",
+      "quoteExpired": "De offerte is verlopen. Herbereken de trajecten voordat je converteert.",
+      "operateTitle": "Operationeel maken",
+      "recommended": "Aanbevolen",
+      "operateHelp": "Maakt of hergebruikt de cargo (MAWB), de zendingen, de koppelingen en de HAWB's. Idempotent: opnieuw proberen herhaalt alleen wat mislukte.",
+      "existingCargo": "Bestaande cargo (optioneel)",
+      "existingCargoHint": "Leeg = er wordt een nieuwe cargo aangemaakt",
+      "reservar": "Boeken bij de vervoerder",
+      "bookingDisabled": "Echte boekingen zijn uitgeschakeld in de API (CONSOLIDATION_ALLOW_BOOKING).",
+      "operate": "Operationeel maken",
+      "retry": "Opnieuw proberen",
+      "notAvailable": "Kan niet operationeel maken in status „{state}”. Het project moet gesloten (geaccepteerd) zijn.",
+      "steps": "Conversiestappen",
+      "stepsUnavailable": "De conversiestappen zijn nog niet beschikbaar.",
+      "noSteps": "Er is nog geen stap uitgevoerd.",
+      "globalGroup": "MAWB / vrachtwagen",
+      "houseGroup": "House {ref}",
+      "attempts": "{n} pogingen",
+      "linkTitle": "Koppelen aan een bestaande cargo",
+      "status": {
+        "no": "Niet geconverteerd",
+        "parcial": "Gedeeltelijk",
+        "completo": "Volledig"
+      },
+      "step": {
+        "cargo": "Cargo (MAWB)",
+        "spedizione": "Zending",
+        "collegare": "Koppeling aan cargo",
+        "casa": "HAWB",
+        "prenotare": "Boeking",
+        "camion": "Vrachtwagen",
+        "prezzo": "Prijs"
+      },
+      "stepState": {
+        "OK": "Klaar",
+        "ERRORE": "Fout",
+        "SALTATO": "Overgeslagen"
       }
+    },
+    "create": {
+      "button": "Nieuw project",
+      "title": "Nieuw project",
+      "titolo": "Titel",
+      "tipo": "Type",
+      "hub": "Hub (terminal)",
+      "destCountry": "Land van bestemming",
+      "eori": "EORI van de aangever",
+      "note": "Notitie van de specialist",
+      "submit": "Project aanmaken"
+    },
+    "eori": {
+      "title": "EORI bewerken",
+      "label": "EORI van de aangever",
+      "hint": "Leeg = geen EORI"
+    },
+    "fromOption": {
+      "title": "Project aanmaken met deze optie",
+      "help": "Er wordt een project aangemaakt met optie „{option}” en de geoffreerde zendingen. De server offreert opnieuw."
+    },
+    "filters": {
+      "q": "Zoeken",
+      "stato": "Status",
+      "fase": "Fase",
+      "partner": "Partner",
+      "assegnato": "Toegewezen aan",
+      "assegnatoUser": "Gebruiker",
+      "tipo": "Type",
+      "hub": "Hub",
+      "origPaese": "Land van herkomst",
+      "destCountry": "Land van bestemming",
+      "qualeData": "Welke datum",
+      "risposta": "Antwoord",
+      "conversione": "Conversie",
+      "idCargo": "Cargo-ID",
+      "totaleMin": "Minimumbedrag",
+      "totaleMax": "Maximumbedrag",
+      "nSpedMin": "Min. zendingen",
+      "nSpedMax": "Max. zendingen",
+      "assigneeAll": "Iedereen",
+      "assigneeMe": "Van mij",
+      "assigneeNone": "Niet toegewezen",
+      "assigneeUser": "Specifieke gebruiker",
+      "dateField": {
+        "insert": "Aangemaakt",
+        "modif": "Laatste wijziging",
+        "chiuso": "Gesloten",
+        "risposta": "Beantwoord"
+      },
+      "answer": {
+        "no": "Niet beantwoord",
+        "vigente": "Beantwoord, geldig",
+        "vencida": "Beantwoord, verlopen"
+      },
+      "tabs": {
+        "basics": "Basis",
+        "ruta": "Route",
+        "ciclo": "Levenscyclus",
+        "cifras": "Cijfers"
+      }
+    },
+    "integration": {
+      "sourceProject": "Bronproject | Bronprojecten",
+      "inProject": "In project #{id}"
+    },
+    "list": {
+      "title": "Consolidatieprojecten",
+      "searchPlaceholder": "Id, titel, referentie, klant…",
+      "exportCsv": "CSV exporteren (huidig filter)",
+      "exportTruncated": "{shown} van {total} rijen geëxporteerd (limiet bereikt).",
+      "emptyTitle": "Geen project voldoet aan de filters",
+      "unassigned": "Niet toegewezen",
+      "days": "{n} dag | {n} dagen",
+      "bulkAssign": "Toewijzen aan… ({count})",
+      "bulkAssignTitle": "{count} project(en) toewijzen",
+      "bulkAssignDone": "{count} project(en) toegewezen.",
+      "bulkAssignPartial": "{ok} toegewezen; {failed} mislukt: {ids}",
+      "click": {
+        "tipo": "Filteren op dit type",
+        "hub": "Filteren op hub {v}",
+        "assignee": "Filteren op toegewezene"
+      },
+      "kpi": {
+        "all": "Alle",
+        "sin_asignar": "Nieuw, niet toegewezen",
+        "pendiente_respuesta": "Wacht op antwoord",
+        "respondido": "Beantwoord",
+        "respuesta_vencida": "Antwoord verlopen",
+        "por_convertir": "Geaccepteerd, te converteren",
+        "convertido": "Geconverteerd",
+        "cancelado": "Geannuleerd"
+      },
+      "headers": {
+        "id": "ID",
+        "titolo": "Titel",
+        "tipo": "Type",
+        "ruta": "Hub → bestemming",
+        "n_spedizioni": "Zendingen",
+        "peso": "Belastbaar gewicht",
+        "totale": "Totaal",
+        "valuta": "Munteenheid",
+        "risposta": "Antwoord",
+        "stato": "Status / fase",
+        "assegnato": "Toegewezen aan",
+        "antiguedad": "Leeftijd",
+        "cargo": "Cargo",
+        "conversione": "Conversie",
+        "insert_datetime": "Aangemaakt",
+        "modif_datetime": "Gewijzigd"
+      },
+      "work_view": {
+        "standard": "Standaard",
+        "gestion": "Beheer",
+        "operativa": "Operationeel"
+      }
+    },
+    "preview": {
+      "title": "Voorbeeld",
+      "open": "Project openen"
     }
   }
 }

@@ -19,14 +19,14 @@
           <td v-for="s in view.spedizioni" :key="s.id" class="text-right">
             {{ cell(l.id, s.id) }}
           </td>
-          <td class="text-right">{{ l.totale.toFixed(2) }}</td>
+          <td class="text-right">{{ money(l.totale, l.valuta) }}</td>
         </tr>
         <tr class="font-weight-bold">
           <td>{{ t("consolidata.allocation.total") }}</td>
           <td v-for="s in view.spedizioni" :key="s.id" class="text-right">
-            {{ s.quota_totale.toFixed(2) }}
+            {{ money(s.quota_totale, cur) }}
           </td>
-          <td class="text-right">{{ view.totale_riparto.toFixed(2) }}</td>
+          <td class="text-right">{{ money(view.totale_riparto, cur) }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -36,8 +36,8 @@
     <p v-if="view" class="text-caption mt-2">
       {{
         t("consolidata.allocation.check", {
-          legs: view.totale_tratte.toFixed(2),
-          alloc: view.totale_riparto.toFixed(2),
+          legs: money(view.totale_tratte, cur),
+          alloc: money(view.totale_riparto, cur),
         })
       }}
     </p>
@@ -48,9 +48,12 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useConsolidataStore } from "../stores/consolidata.store";
+import { useFormat } from "../composables/useFormat";
 
 const { t } = useI18n();
+const { money } = useFormat();
 const store = useConsolidataStore();
+const cur = computed(() => store.project?.valuta ?? "EUR");
 const view = computed(() => store.shipments);
 const legs = computed(() => store.project?.tratte ?? []);
 
@@ -58,6 +61,6 @@ function cell(idTratta: number, idSped: number): string {
   const row = view.value?.riparto.find(
     (r) => r.id_tratta === idTratta && r.id_prog_sped === idSped,
   );
-  return row ? row.quota.toFixed(2) : "—";
+  return row ? money(row.quota, row.valuta || cur.value) : "—";
 }
 </script>
