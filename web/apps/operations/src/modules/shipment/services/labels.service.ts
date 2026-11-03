@@ -110,6 +110,18 @@ export interface TmweLabelResponse {
 }
 
 export const labelsService = {
+  /**
+   * `api_label_tmwe_bundle` — todas las LDV internas de la expedición en un
+   * solo binario, generado server-side (bundle=pdf: una etiqueta por página;
+   * bundle=zip: una JPG por bulto). Mismo endpoint que usa cargo.
+   */
+  tmweBundleUrl(shipment_id: number, bundle: "pdf" | "zip"): string {
+    const base =
+      (typeof window !== "undefined" && window.__TMWE_SHIPMENT__?.basePath) ||
+      "/bff/v1";
+    return `${base}/api_label_tmwe_bundle?shipment_id=${shipment_id}&bundle=${bundle}`;
+  },
+
   /** `ajax_validate_before_ldv` — pre-flight check before printing. */
   validate(shipment_id: number): Promise<ValidateBeforeLdvResponse> {
     return http<ValidateBeforeLdvResponse>("/ajax_validate_before_ldv", {
