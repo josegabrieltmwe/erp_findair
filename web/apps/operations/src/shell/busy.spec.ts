@@ -35,7 +35,9 @@ async function load() {
   return bff;
 }
 
-describe("indicador global de procesando", () => {
+// El import dinámico tras vi.resetModules() transforma el paquete http entero: con la máquina cargada pasa de los 5 s
+// por defecto, el primer test caduca con un fetch pendiente y arrastra el estado "procesando" al siguiente.
+describe("indicador global de procesando", { timeout: 30_000 }, () => {
   it("se activa con un POST al BFF y se apaga al terminar", async () => {
     const bff = await load();
     const p = (window.fetch as typeof fetch)("/bff/v1/api_x", { method: "POST" });
