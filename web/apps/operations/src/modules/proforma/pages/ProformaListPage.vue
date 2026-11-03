@@ -323,7 +323,15 @@ async function runDuplicate(): Promise<void> {
     return;
   }
   if (!dupSource.value) return;
-  await store.duplicate(dupSource.value, dupTarget.value);
+  try {
+    await store.duplicate(dupSource.value, dupTarget.value);
+  } catch (e) {
+    // P. ej. 409 PROFORMA_DUPLICATE (el destino ya tiene proforma): antes el
+    // error se perdía y el diálogo se quedaba abierto sin decir nada.
+    const detail = (e as { data?: { detail?: string } }).data?.detail;
+    dupError.value = [detail ?? (e as Error).message];
+    return;
+  }
   dupOpen.value = false;
   toast.success(t("proforma.proforma.messages.duplicated"));
 }

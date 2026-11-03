@@ -27,6 +27,8 @@
             <v-autocomplete
               v-model="header.motivo"
               :items="motiviItems"
+              item-title="title"
+              item-value="value"
               :label="t('shipment.modals.proforma.export_reason')"
               density="compact"
               variant="outlined"
@@ -281,7 +283,7 @@ const header = ref<ProformaHeader>({
 });
 const items = ref<ProformaItem[]>([]);
 
-const motivi = ref<Array<{ id: number; descr: string }>>([]);
+const motivi = ref<Array<{ id: string; descr: string }>>([]);
 const units = ref<string[]>([]);
 
 // Currency picker fed from the valute master table (/api_master_currencies),
@@ -309,7 +311,10 @@ const currencyItems = computed<CurrencyItem[]>(() => {
   return list;
 });
 
-const motiviItems = computed(() => motivi.value.map((m) => m.descr));
+// `motivo` guarda el código (sigla_dhl, p. ej. "S"); se muestra la descripción.
+const motiviItems = computed(() =>
+  motivi.value.map((m) => ({ value: m.id, title: m.descr })),
+);
 
 const totalLabel = computed<string>(() => {
   const sum = items.value.reduce(
@@ -415,7 +420,7 @@ async function generatePdf(): Promise<void> {
     if (r.success && r.url) {
       window.open(r.url, "_blank");
     } else {
-      toasts.push("error", t("shipment.modals.proforma.pdf_failed"));
+      toasts.push("error", r.error ?? t("shipment.modals.proforma.pdf_failed"));
     }
   } finally {
     pdfLoading.value = false;

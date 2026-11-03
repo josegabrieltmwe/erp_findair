@@ -53,20 +53,30 @@ export function useTmweLabels(shipmentId: () => number) {
       // PDF flow: generate, then open the blob in a new tab (data: URIs are
       // blocked by some browsers for top-level navigation, so we use a Blob
       // URL). It can take a few seconds — show a spinner on the menu entry.
+      // Un solo PDF con TODOS los bultos (api_label_tmwe_bundle), como cargo.
+      // Antes se abría solo labels[0] y se perdían los demás bultos.
       if (pdfLoading.value) return;
       pdfLoading.value = true;
       try {
-        const r = await labelsService.tmweLabel(sid, { output_format: "pdf" });
-        if (!r.success || !r.shipment?.labels?.length) {
+        const res = await fetch(labelsService.tmweBundleUrl(sid, "pdf"), {
+          credentials: "same-origin",
+        });
+        const type = res.headers.get("content-type") ?? "";
+        if (!res.ok || !type.includes("pdf")) {
+          const body = (await res.json().catch(() => null)) as {
+            detail?: string;
+            error?: string | { message?: string };
+          } | null;
           const msg =
-            typeof r.error === "string"
-              ? r.error
-              : (r.error?.message ?? t("shipment.awb.toast_generate_failed"));
+            body?.detail ??
+            (typeof body?.error === "string"
+              ? body.error
+              : body?.error?.message) ??
+            t("shipment.awb.toast_generate_failed");
           toasts.push("error", msg);
           return;
         }
-        const first = r.shipment.labels[0];
-        const blob = base64ToBlob(first.base64, "application/pdf");
+        const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank", "noopener,noreferrer");
         setTimeout(() => URL.revokeObjectURL(url), 60_000);

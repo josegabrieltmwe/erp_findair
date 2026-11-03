@@ -1,6 +1,6 @@
 # Formularios de Expediciones, seguimiento y retenciones: casos de prueba
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
+> **Estado:** borrador · **Última modificación:** 2026-11-03 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
 
 ## SHIPMENT: expediciones (shipment), tracking y giacenze (prefijo SHP)
 
@@ -484,14 +484,14 @@ Convenciones de este documento:
 ---
 
 ### SHP-16 · Proforma (factura proforma de aduana)
-- **Ruta/pantalla:** detalle V2, modal `proforma`  **Componente:** `modals/ProformaModal.vue` (V1: `ShipmentProformaDialog.vue`)  **Envia:** `GET /api_proforma_crud?id_spedizione=`, `POST /api_proforma_crud {id_spedizione, ...cabecera, items}`, `POST /api_proforma_file {shipment_id}` (PDF), `POST /api_proforma_duplicate`.
+- **Ruta/pantalla:** detalle V2, modal `proforma`  **Componente:** `modals/ProformaModal.vue` (V1: `ShipmentProformaDialog.vue`)  **Envia:** `GET /api_proforma_crud?id_spedizione=` (listado `{data, pagination}`) y despues `GET /api_proforma_crud?id=` (ficha con `items`); guardar = `PUT /api_proforma_crud {id, ...cabecera, items}` si ya existe o `POST {id_spedizione, ...}` si no (la API admite una sola proforma por expedicion: 409 `PROFORMA_DUPLICATE`); `POST /api_proforma_file {shipment_id}` devuelve el PDF binario, que se abre como blob; `POST /api_proforma_duplicate`. Corregido el 2026-11-03: antes se leia `{success, proforma}`, que la API no devuelve, y el modal salia siempre vacio.
 - **Permisos:** no determinado en cliente.
 - **Campos:**
 
 | Campo | Control | Obligatorio | Reglas detectadas (fuente) |
 |---|---|---|---|
 | Pais de origen (`iso_paese_origine`) | `v-text-field` libre | No | sin formato ISO en cliente |
-| Motivo de exportacion | `v-autocomplete` de textos (`descr`) | No | catalogo de `api_proforma_crud?type=motivi` |
+| Motivo de exportacion | `v-autocomplete`: muestra `descriz`, guarda el codigo `sigla_dhl` | No | catalogo de `api_proforma_lookup?type=motivi` |
 | Divisa (`id_valuta`) | `v-autocomplete` por id numerico | No | FK `valute.id` |
 | Fecha | `type=date`, hoy por defecto | No | |
 | Lineas: descripcion, voce doganale, cantidad, unidad, peso neto, peso bruto, unidad de peso (K/L), valor | texto/numeros `min=0` | No | total mostrado = suma(valor x cantidad) |
