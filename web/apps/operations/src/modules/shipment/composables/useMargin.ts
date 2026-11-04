@@ -38,18 +38,17 @@ export function useMargin(): {
 
   // Cost: supplier-side total. Legacy uses `costo` (current cost) and
   // `costor` (real cost after supplier invoice). Prefer real when set.
+  // Previsto = costo + fuel_surc_cst (el fuel del proveedor va aparte, como en el cliente).
   const cost = computed<number>(() => {
     const real = num("costor");
     if (real > 0) return real;
-    return num("costo");
+    return num("costo") + num("fuel_surc_cst");
   });
 
-  // Charged: client-side total. `carico` is the canonical billed amount;
-  // we add the fuel surcharge when surfaced separately.
-  const charged = computed<number>(() => {
-    const base = num("carico");
-    return base; // fuel/etc already baked in via carico_lk recalc upstream
-  });
+  // Charged: total cliente = carico + fuel_surc. La API guarda el fuel en su
+  // columna, NO dentro de carico: sin sumarlo, «Total cargo» mostraba 16,34 €
+  // para un servicio de 22,88 € (paridad legacy spedy_form: carico + fuel).
+  const charged = computed<number>(() => num("carico") + num("fuel_surc"));
 
   const margin = computed<number>(() =>
     Number((charged.value - cost.value).toFixed(2)),

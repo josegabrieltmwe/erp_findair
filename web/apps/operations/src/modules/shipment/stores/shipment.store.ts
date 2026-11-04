@@ -238,6 +238,11 @@ export const useShipmentStore = defineStore("shipment", () => {
         );
         shipment.value = { ...shipment.value, ...applied };
       }
+      // El backend recalcula el precio al cambiar seguro, COD, bultos…: la
+      // tarjeta de costes seguía con los importes anteriores hasta recargar.
+      if ((res.data?.recalculated as { priced?: boolean } | null)?.priced) {
+        void refreshPricing();
+      }
       const notSaved = Object.keys(patch).filter((k) => refusedKeys.has(k));
       if (notSaved.length > 0) {
         // The server answers 200 but did not store these fields (locked on an
@@ -284,6 +289,36 @@ export const useShipmentStore = defineStore("shipment", () => {
     // Persist failed: re-open the draft so the user can retry / cancel.
     draftActive.value = true;
     return { ok: false, errors: [] };
+  }
+
+  /** Relee la expedición sin spinner y actualiza solo importes y pesos (lo que cambia un recálculo). */
+  const PRICING_FIELDS = [
+    "carico",
+    "fuel_surc",
+    "costo",
+    "fuel_surc_cst",
+    "costor",
+    "peso_tassato",
+    "carico_lk",
+    "costo_previsto_lk",
+  ] as const;
+  async function refreshPricing(): Promise<void> {
+    const sid = id.value;
+    if (!sid) return;
+    try {
+      const res = await shipmentService.load(sid, {});
+      if (!res.success || !res.data || id.value !== sid || !shipment.value) return;
+      const fresh = res.data as unknown as Record<string, unknown>;
+      const picked = Object.fromEntries(
+        PRICING_FIELDS.filter((k) => k in fresh).map((k) => [k, fresh[k]]),
+      );
+      shipment.value = { ...shipment.value, ...picked } as Shipment;
+      if (draftActive.value && draftSnapshot.value) {
+        draftSnapshot.value = { ...draftSnapshot.value, ...picked } as Shipment;
+      }
+    } catch {
+      // Best effort: la próxima carga trae los importes.
+    }
   }
 
   async function load(shipmentId: number): Promise<void> {

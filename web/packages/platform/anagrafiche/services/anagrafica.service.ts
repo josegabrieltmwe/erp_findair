@@ -280,6 +280,14 @@ export const anagraficaService = {
       query: q ? { search: q, per_page: perPage } : { per_page: perPage },
     });
     const page = paginated<AnagraficaLite>(raw);
+    // Un número puede ser el ID: la coincidencia exacta va primero (si no, salían antes
+    // las partite IVA que contienen esas cifras).
+    if (/^\d+$/.test(q)) {
+      const exact = page.items.filter((it) => String(it.id) === q);
+      if (exact.length) {
+        return [...exact, ...page.items.filter((it) => String(it.id) !== q)];
+      }
+    }
     return page.items;
   },
 

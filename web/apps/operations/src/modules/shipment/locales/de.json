@@ -1721,6 +1721,7 @@
     "toast": {
       "archived": "{count} Sendung archiviert | {count} Sendungen archiviert",
       "archive_failed": "Massenarchivierung fehlgeschlagen",
+      "archive_skipped": "{archived} archiviert; {skipped} nicht archiviert, da kontrolliert oder storniert",
       "marked_controlled": "{count} Sendung als kontrolliert markiert | {count} Sendungen als kontrolliert markiert",
       "control_failed": "Massenkontrolle fehlgeschlagen",
       "tracking_ok": "Tracking gestartet",

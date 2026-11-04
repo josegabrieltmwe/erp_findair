@@ -1721,6 +1721,7 @@
     "toast": {
       "archived": "Archivada {count} expedición | Archivadas {count} expediciones",
       "archive_failed": "Fallo al archivar en masa",
+      "archive_skipped": "{archived} archivada(s); {skipped} no se archivan porque están controladas o anuladas",
       "marked_controlled": "Marcada {count} expedición como controlada | Marcadas {count} expediciones como controladas",
       "control_failed": "Fallo al controlar en masa",
       "tracking_ok": "Tracking lanzado",

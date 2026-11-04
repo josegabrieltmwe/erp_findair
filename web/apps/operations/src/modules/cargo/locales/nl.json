@@ -260,6 +260,7 @@
     "toast": {
       "archived": "{count} zending gearchiveerd | {count} zendingen gearchiveerd",
       "archive_failed": "Bulk archiveren mislukt",
+      "archive_skipped": "{archived} gearchiveerd; {skipped} niet gearchiveerd omdat ze gecontroleerd of geannuleerd zijn",
       "marked_controlled": "{count} zending als gecontroleerd gemarkeerd | {count} zendingen als gecontroleerd gemarkeerd",
       "control_failed": "Bulk controle mislukt"
     },

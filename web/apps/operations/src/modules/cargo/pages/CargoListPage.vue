@@ -1029,17 +1029,38 @@ async function onBulkArchive(): Promise<void> {
   try {
     const r = await cargoListService.bulkArchive(selectedIds.value);
     if (r.success) {
-      toasts.push(
-        "success",
-        t("listing.toast.archived", selectedIds.value.length),
-      );
+      // Las controladas o anuladas no se archivan: el API las devuelve en `skipped`.
+      const skipped = r.skipped?.length ?? 0;
+      if (skipped > 0) {
+        toasts.push(
+          "warning",
+          t("listing.toast.archive_skipped", {
+            archived: r.applied?.length ?? selectedIds.value.length - skipped,
+            skipped,
+          }),
+        );
+      } else {
+        toasts.push(
+          "success",
+          t("listing.toast.archived", selectedIds.value.length),
+        );
+      }
       selected.value = [];
       void store.fetchPage();
     } else {
       toasts.push("error", r.error || t("listing.toast.archive_failed"));
     }
   } catch (err) {
-    toasts.push("error", (err as Error).message);
+    // 409 NOT_APPLICABLE: ninguna se podía archivar (todas controladas o anuladas).
+    // ApiError lleva el cuerpo en `payload`: {error: {details: {skipped: [...]}}}.
+    const e = err as { payload?: { error?: { details?: { skipped?: unknown[] } } } };
+    const skipped = e.payload?.error?.details?.skipped?.length ?? 0;
+    toasts.push(
+      skipped > 0 ? "warning" : "error",
+      skipped > 0
+        ? t("listing.toast.archive_skipped", { archived: 0, skipped })
+        : (err as Error).message,
+    );
   } finally {
     bulkBusy.value = false;
   }

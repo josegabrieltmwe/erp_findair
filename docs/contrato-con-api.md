@@ -1,6 +1,6 @@
 # Contrato con el API (`tmwe_api`)
 
-> **Estado:** vigente · **Generado:** 2026-10-31 · **Última modificación:** 2026-11-02 · **Clasificación:** automática, pendiente de revisión humana
+> **Estado:** vigente · **Generado:** 2026-10-31 · **Última modificación:** 2026-11-04 · **Clasificación:** automática, pendiente de revisión humana
 
 Lista única de lo que el BFF y la SPA piden a `tmwe_api`, fusión de `peticiones-backend.md` (detalle técnico y evidencia) y `prompt-agente-tmwe-json.md` (lista priorizada, ya obsoleta como prompt). Numeración unificada P01–P41; el detalle de cada una sigue en el `§` indicado de `peticiones-backend.md`.
 
@@ -243,3 +243,17 @@ Peticiones que salen de [plan-consolidata-erp.md](plan-consolidata-erp.md). Toda
 | P76 | Asignación en lote | `assign` con lista de ids (o `bulk_assign`), con resultado por proyecto | Baja |
 | P77 | Duplicar proyecto | `duplicate`: copia tramos y expediciones sin enlaces ni respuesta. Opcional; la SPA puede hacerlo con `create` + `add_leg` + `add_shipment` | Baja |
 | P78 | Migraciones de consolidata en producción | `20261014_consolidation_membership.sql`, `20261016_consolidation_shipment_profile.sql` y siguientes están en dev y sandbox, no en producción (`PLAN_PORTA_A_PORTA.md` §28). Sin ellas fallan bandeja, reparto, cumplimiento, `operate` y `answer_quote` | Alta (antes de publicar) |
+
+## L. Listados, avisos, archivado y exportación (prueba con `jose`, 2026-11-03)
+
+Encontrado al probar listados, filtros, alta y gestión de expediciones courier y cargo. Todo resuelto y verificado en sandbox el mismo día.
+
+| ID | Problema | Resolución |
+|---|---|---|
+| P79 | El listado courier daba 504 intermitentes: la API tarda más de 15 s en frío o con filtro de ciudad y el BFF corta a los 15 s | **Resuelta.** `get.api_courier_shipments` y `get.api_cargo_shipments` en `bff/config/routes.bff.yaml` con `timeout: 60`. Orden por defecto `sp.id DESC` en SPA (`*_list.store.ts`) y API (listado courier/cargo): 0,09 s frente a 3 s con `data_sped1`, y los cargos nuevos (sin `data_sped1`) ya salen arriba. Pendiente en la API: el filtro de ciudad (~20 s, subconsulta `MAX(id)` sobre direcciones) |
+| P80 | Archivar una expedición controlada respondía `success:true` sin archivar | **Resuelta en la API.** `api_shipment_archive` / `api_cargo_archive` devuelven `applied` + `skipped[{id, reason}]` (CONTROLLED, NOT_ACTIVE) y 409 `NOT_APPLICABLE` si no se puede archivar ninguna; la SPA lo avisa (`listing.toast.archive_skipped`) |
+| P81 | Diálogo «Estado y actividad»: `get-tracking-status-list` 404 en el BFF (nombre con guiones) y firma `/firme_delivery` 404 | **Resuelta en BFF/SPA.** Ruta manual `get.get-tracking-status-list`; la firma solo se pide con el ERP legado |
+| P82 | Selector «ID cliente»: buscar por número no encontraba el cliente | **Resuelta.** `Anagrafica_Service` añade `a.id` al OR de `search` cuando es numérico; la SPA pone primero la coincidencia exacta |
+| P83 | Exportar a Excel: 403 a todo el personal | **Resuelta.** `Shipment_Export_Controller` heredaba `admin_only` (ahora `['module' => 'shipment_export']`); el client del BFF del sandbox tenía techo `app_partner_erp` por un id copiado de otra BD; `shipment:export` añadido a `partner_staff`/`partner_staff_ai_admin`; la selección explícita se comprueba contra el llamante (antes un partner podría exportar ids ajenos). Migración `20261103_staff_roles_export.sql` (aplicada en sandbox) |
+| P84 | Personal sin rol base: 76 de TMWE solo con aditivos y 168 de partners con `findair_basic` | **Resuelta en sandbox** con la misma migración (`tmwe_staff_portal` / `partner_staff`). `bin/contatti_oauth_role_reconcile.php` no los cubre (solo actúa sin ninguna fila). Revisar en producción antes de aplicarla |
+| P85 | La cola `job_queue` no se drenaba en sandbox desde 2026-10-18 (sin cron): las exportaciones se quedaban `pending` | **Resuelta 2026-11-04.** Antes de activarlo, todo el correo del sandbox se redirige a un buzón de pruebas (API `MAIL_DEV_REDIRECT` y worker `email_sender`). Instalado el drenador único con `bin/install_job_drain_cron.sh` (una sola línea de crontab). La limpieza de ficheros exportados (`cache_cleanup_shipment_export`, cada 6 h) y `package_profiles_refresh` corren como tareas del planificador |

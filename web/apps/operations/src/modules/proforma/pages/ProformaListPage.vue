@@ -328,8 +328,8 @@ async function runDuplicate(): Promise<void> {
   } catch (e) {
     // P. ej. 409 PROFORMA_DUPLICATE (el destino ya tiene proforma): antes el
     // error se perdía y el diálogo se quedaba abierto sin decir nada.
-    const detail = (e as { data?: { detail?: string } }).data?.detail;
-    dupError.value = [detail ?? (e as Error).message];
+    // ApiError: el mensaje ya trae el detalle del API (p. ej. «La expedición ya tiene una proforma»).
+    dupError.value = [(e as Error).message];
     return;
   }
   dupOpen.value = false;

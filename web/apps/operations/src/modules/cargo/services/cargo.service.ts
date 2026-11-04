@@ -542,7 +542,12 @@ export const cargoListService = {
    * Bulk archive cargo shipments. Routes to /api_cargo_archive
    * (Set_Archiviata_Cargo_Controller) which accepts `id` as an array.
    */
-  bulkArchive(ids: number[]): Promise<{ success: boolean; error?: string }> {
+  bulkArchive(ids: number[]): Promise<{
+    success: boolean;
+    error?: string;
+    applied?: number[];
+    skipped?: Array<{ id: number; reason: string }>;
+  }> {
     return http("/api_cargo_archive", {
       method: "POST",
       body: { id: ids },

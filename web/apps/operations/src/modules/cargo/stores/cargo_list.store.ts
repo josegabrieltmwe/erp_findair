@@ -111,7 +111,7 @@ export const CARGO_LIST_DEFAULTS: CargoListUrlState = {
   terminal_dest: "",
   paesex: "",
   cerca_pd: "",
-  sort: "sp.data_sped1",
+  sort: "sp.id",
   sort_dir: "DESC",
   // W3 extended filters defaults.
   id: "",

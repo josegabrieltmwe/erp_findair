@@ -1721,6 +1721,7 @@
     "toast": {
       "archived": "Archiviata {count} spedizione | Archiviate {count} spedizioni",
       "archive_failed": "Archiviazione massiva fallita",
+      "archive_skipped": "{archived} archiviata/e; {skipped} non archiviabili perché controllate o annullate",
       "marked_controlled": "Segnata {count} spedizione come controllata | Segnate {count} spedizioni come controllate",
       "control_failed": "Controllo massivo fallito",
       "tracking_ok": "Tracking avviato",

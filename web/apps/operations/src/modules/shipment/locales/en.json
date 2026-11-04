@@ -1721,6 +1721,7 @@
     "toast": {
       "archived": "Archived {count} shipment | Archived {count} shipments",
       "archive_failed": "Bulk archive failed",
+      "archive_skipped": "{archived} archived; {skipped} not archived because they are controlled or cancelled",
       "marked_controlled": "Marked {count} shipment as controlled | Marked {count} shipments as controlled",
       "control_failed": "Bulk control failed",
       "tracking_ok": "Tracking launched",

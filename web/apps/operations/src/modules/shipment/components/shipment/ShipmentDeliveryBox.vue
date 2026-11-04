@@ -29,7 +29,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-text-field
-            v-model="consegnaData.local"
+            v-model="consegnaDataView"
             :label="t('shipment.modals.delivery.delivered')"
             @blur="onConsegnaCommit(consegnaData)"
           />
@@ -137,6 +137,14 @@ const deliveryStateItems = computed(() =>
   })),
 );
 const consegnaData = useFieldBinding("consegna_data", "");
+// La BD guarda «sin entregar» como 0000-00-00 00:00:00: se muestra vacío. Mientras no se escriba nada el valor
+// guardado no cambia, así que el blur no dispara ningún guardado.
+const consegnaDataView = computed<string>({
+  get: () => (String(consegnaData.local ?? "").startsWith("0000-00-00") ? "" : String(consegnaData.local ?? "")),
+  set: (v) => {
+    consegnaData.local = v as typeof consegnaData.local;
+  },
+});
 const consegnaFirma = useFieldBinding("consegna_firma", "");
 const dataSped1 = useFieldBinding("data_sped1", "");
 
@@ -193,6 +201,8 @@ const signatureImageUrl = computed<string>(() => {
   const base =
     (typeof window !== "undefined" && window.__TMWE_SHIPMENT__?.basePath) ||
     "/bff/v1";
+  // Detrás del BFF no hay ruta que sirva /firme_delivery: la petición daba 404 siempre. Solo se pide con el ERP legado.
+  if (base.startsWith("/bff")) return "";
   const erpRoot = base.replace(/\/tmwe_json\/?$/, "") || "/erp";
   return `${erpRoot}/firme_delivery/${id.value}_d.png`;
 });

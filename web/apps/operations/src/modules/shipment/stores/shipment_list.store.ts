@@ -111,7 +111,7 @@ export const SHIPMENT_LIST_DEFAULTS: ShipmentListUrlState = {
   country_iso: "",
   location_type: "",
   city: "",
-  sort: "sp.data_sped1",
+  sort: "sp.id",
   sort_dir: "DESC",
   // W2.D3 extended filters defaults — all empty (no filter).
   id: "",

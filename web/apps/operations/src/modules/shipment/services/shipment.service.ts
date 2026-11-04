@@ -14,6 +14,9 @@ export interface LoadShipmentOptions {
 export interface SetFlagResult {
   success: boolean;
   error?: string;
+  /** Archivar: ids archivados y los omitidos (controladas/anuladas) con su motivo. */
+  applied?: number[];
+  skipped?: Array<{ id: number; reason: string }>;
 }
 
 /**

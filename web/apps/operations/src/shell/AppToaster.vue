@@ -1,22 +1,25 @@
 <template>
-  <v-snackbar-queue
-    v-model="queue"
-    location="bottom right"
-    multi-line
-    :timeout="-1"
-  >
-    <template #default="{ item }">
+  <!--
+    Pila fija abajo a la derecha. Antes era un v-snackbar-queue con slot #default: en Vuetify 3.12 ese slot
+    sustituye al VSnackbar, así que el v-alert se pintaba en el flujo de la página (debajo del área visible) y la
+    cola se quedaba atascada tras el primero: ningún aviso de la SPA llegaba a verse. La caducidad la lleva el store.
+  -->
+  <div class="app-toaster" role="status" aria-live="polite">
+    <TransitionGroup name="app-toast">
       <v-alert
-        :type="(item as Toast).kind"
-        variant="tonal"
+        v-for="item in queue"
+        :key="item.id"
+        :type="item.kind"
+        variant="elevated"
         density="compact"
         closable
-        @click:close="toastStore.dismiss((item as Toast).id)"
+        class="app-toast"
+        @click:close="toastStore.dismiss(item.id)"
       >
-        {{ (item as Toast).message }}
+        {{ item.message }}
       </v-alert>
-    </template>
-  </v-snackbar-queue>
+    </TransitionGroup>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -31,14 +34,8 @@ import { useI18n } from "vue-i18n";
 const toastStore = useToastStore();
 const { t } = useI18n();
 
-// Vuetify's v-snackbar-queue uses v-model for the queue array directly.
-// Declared as a writable computed to satisfy its expected interface.
-const queue = computed<Toast[]>({
-  get: () => toastStore.toasts,
-  set: () => {
-    /* mutations come exclusively through toastStore actions */
-  },
-});
+// Los más recientes al final (abajo); como mucho 5 a la vez.
+const queue = computed<Toast[]>(() => toastStore.toasts.slice(-5));
 
 // Bridge HTTP layer events → toasts.
 onMounted(() => {
@@ -65,3 +62,29 @@ function extract(payload: unknown): string | null {
   return null;
 }
 </script>
+
+<style scoped>
+.app-toaster {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+}
+.app-toast {
+  pointer-events: auto;
+}
+.app-toast-enter-active,
+.app-toast-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.app-toast-enter-from,
+.app-toast-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+</style>

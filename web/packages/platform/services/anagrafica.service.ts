@@ -35,7 +35,14 @@ export const anagraficaService = {
     const params: Record<string, string | number> = { per_page: perPage };
     if (q) params.search = q;
     const r = await http<AnagraficaListResponse>('/api_anagrafica_crud', { query: params });
-    return r.data ?? [];
+    const items = r.data ?? [];
+    // Un número puede ser el ID (selector «ID cliente»): la coincidencia exacta va primero; si no,
+    // salían antes las partite IVA que contienen esas cifras.
+    if (/^\d+$/.test(q)) {
+      const exact = items.filter((it) => String(it.id) === q);
+      if (exact.length) return [...exact, ...items.filter((it) => String(it.id) !== q)];
+    }
+    return items;
   },
 
   /** Fetch a single anagrafica by id. */
