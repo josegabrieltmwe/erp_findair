@@ -133,7 +133,7 @@ Tipo: *Auto* se automatiza con Playwright; *Manual* necesita criterio humano o u
 | CM-06 | Acciones de navegación del Copilot | Solo las 7 rutas permitidas. Un path obsoleto se ignora. Navega con router, sin recargar. | STAFF, PARTNER | P1 | Auto |  |
 | CM-07 | Variable de firma sin configurar | 503 proposal_secret_not_configured con mensaje de «servicio no disponible», sin detalle interno. | STAFF | P2 | Auto | P27 |
 | CM-08 | CRM: listado y ficha de pratica | Navegación listado ↔ ficha. El ámbito respeta el perfil. | STAFF, PARTNER | P1 | Auto |  |
-| CM-09 | Tickets: listado, detalle y flujo en directo | El stream se abre una vez, se cierra al salir y se reconecta si se corta. api_communication_stream_token con 5xx muestra aviso. | STAFF, PARTNER | P1 | Manual | P25 |
+| CM-09 | Tickets: listado, detalle y flujo en directo | El stream se abre una vez, se cierra al salir y se reconecta si se corta. api_communication_stream_token con 5xx muestra aviso. Con 501 (sin tiempo real en el servidor) no hay aviso ni reintentos: un solo token y la lista se refresca cada 30 s (verificado 2026-11-04). | STAFF, PARTNER | P1 | Manual | P25, P64 |
 | CM-10 | Plantillas de email | Disponible según useIsTmwe. Previsualiza sin enviar nada. | STAFF, PARTNER | P2 | Auto |  |
 
 ### Facturación y cobros

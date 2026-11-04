@@ -32,8 +32,9 @@ export const useCommunicationStore = defineStore("communication", () => {
   const loadingThread = ref(false);
   const sending = ref(false);
 
-  async function fetchList(): Promise<void> {
-    loadingList.value = true;
+  /** `silent`: refresco de fondo (polling sin tiempo real), sin spinner. */
+  async function fetchList(opts: { silent?: boolean } = {}): Promise<void> {
+    if (!opts.silent) loadingList.value = true;
     try {
       const res = await communicationService.listConversations(
         filters.value,
@@ -44,7 +45,7 @@ export const useCommunicationStore = defineStore("communication", () => {
       total.value = res.pagination?.total ?? 0;
       unreadTotal.value = res.unread_total ?? 0;
     } finally {
-      loadingList.value = false;
+      if (!opts.silent) loadingList.value = false;
     }
   }
 
@@ -107,6 +108,25 @@ export const useCommunicationStore = defineStore("communication", () => {
     } finally {
       if (currentId.value === conversationId) loadingThread.value = false;
     }
+  }
+
+  /**
+   * Refresco de fondo del hilo abierto (polling sin tiempo real): sin vaciar la lista ni spinner. Añade los mensajes
+   * nuevos y marca leído el último ajeno, como haría el evento `message.created`.
+   */
+  async function refreshThread(): Promise<void> {
+    const conversationId = currentId.value;
+    if (!conversationId || loadingThread.value) return;
+    const res = await communicationService.listMessages(conversationId);
+    if (currentId.value !== conversationId) return;
+    const known = new Set(messages.value.map((m) => m.id));
+    const fresh = (res.items ?? []).filter((m) => !known.has(m.id));
+    if (fresh.length > 0) messages.value.push(...fresh);
+    if (currentConversation.value && res.conversation?.is_open !== undefined) {
+      currentConversation.value = { ...currentConversation.value, is_open: res.conversation.is_open };
+    }
+    const lastOthers = [...fresh].reverse().find((m) => m.from === "others");
+    if (lastOthers) await communicationService.markRead(conversationId, lastOthers.id).catch(() => {});
   }
 
   function leaveThread(): void {
@@ -196,6 +216,7 @@ export const useCommunicationStore = defineStore("communication", () => {
     setPage,
     openTicket,
     fetchThread,
+    refreshThread,
     leaveThread,
     sendMessage,
     closeCurrentTicket,

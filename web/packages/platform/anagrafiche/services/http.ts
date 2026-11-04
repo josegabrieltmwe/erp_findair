@@ -101,6 +101,16 @@ export const http = ofetch.create({
         response?._data,
       );
     }
+    // 501 = función sin activar en este servidor (p. ej. COMM_NOT_IMPLEMENTED del tiempo real): no es una avería, así
+    // que no se avisa en global; quien llama recibe el código y usa su alternativa.
+    if (status === 501) {
+      throw new ApiError(
+        extractMessage(response?._data) || 'Not implemented',
+        501,
+        (response?._data as { error_code?: string })?.error_code ?? 'NOT_IMPLEMENTED',
+        response?._data,
+      );
+    }
     if (status >= 500) {
       emit('server-error', response?._data);
       throw new ApiError(

@@ -12,6 +12,10 @@
  * propio reintento (ver MDN: `close()` dentro de `onerror` cancela esa reconexión
  * nativa) y se abre uno nuevo con backoff exponencial, pasando `last_event_id`
  * para no perder eventos (el daemon los repone desde `comm_event`).
+ *
+ * Sin tiempo real en el servidor (`communication.realtime.public_url` sin configurar, el token responde 501
+ * COMM_NOT_IMPLEMENTED) no se reintenta: no es una caída y no se va a arreglar sola. Se pasa a `poll` cada
+ * POLL_FALLBACK_MS con la pestaña visible, para que lleguen mensajes y no leídos igualmente.
  */
 import { onUnmounted, ref } from "vue";
 
@@ -26,19 +30,43 @@ export interface CommStreamHandlers {
   onMessageCreated?: (event: CommMessageCreatedEvent) => void;
   onUnreadChanged?: (event: CommUnreadChangedEvent) => void;
   onConversationClosed?: (event: CommConversationClosedEvent) => void;
+  /** Refresco silencioso cuando el servidor no tiene tiempo real (501). Sin él solo se deja de reintentar. */
+  poll?: () => unknown;
 }
 
 const INITIAL_RECONNECT_MS = 2000;
 const MAX_RECONNECT_MS = 30000;
+export const POLL_FALLBACK_MS = 30000;
+
+/** ¿El servidor dice que el tiempo real no existe (501), en vez de un fallo pasajero? */
+export function isRealtimeUnavailable(e: unknown): boolean {
+  // Por el estado, no por la clase: el http de @shared/anagrafiche tiene su propio ApiError.
+  return typeof e === "object" && e !== null && (e as { status?: unknown }).status === 501;
+}
 
 export function useCommStream(handlers: CommStreamHandlers) {
   const connected = ref(false);
+  /** false cuando el servidor no tiene tiempo real: la página funciona con `poll`. */
+  const realtimeAvailable = ref(true);
 
   let source: EventSource | null = null;
   let lastEventId: string | null = null;
   let reconnectDelay = INITIAL_RECONNECT_MS;
   let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   let stopped = false;
+  let pollTimer: ReturnType<typeof setInterval> | null = null;
+
+  function startPolling(): void {
+    if (pollTimer !== null || !handlers.poll) return;
+    pollTimer = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+      try {
+        void Promise.resolve(handlers.poll?.()).catch(() => {});
+      } catch {
+        // un refresco fallido no para el siguiente
+      }
+    }, POLL_FALLBACK_MS);
+  }
 
   function clearReconnectTimer(): void {
     if (reconnectTimer !== null) {
@@ -78,7 +106,12 @@ export function useCommStream(handlers: CommStreamHandlers) {
     try {
       const issued = await communicationService.issueStreamToken("all");
       streamUrl = issued.stream_url;
-    } catch {
+    } catch (e) {
+      if (isRealtimeUnavailable(e)) {
+        realtimeAvailable.value = false;
+        startPolling();
+        return;
+      }
       scheduleReconnect();
       return;
     }
@@ -128,10 +161,14 @@ export function useCommStream(handlers: CommStreamHandlers) {
   function stop(): void {
     stopped = true;
     clearReconnectTimer();
+    if (pollTimer !== null) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
     closeCurrent();
   }
 
   onUnmounted(stop);
 
-  return { connected, start: open, stop };
+  return { connected, realtimeAvailable, start: open, stop };
 }

@@ -101,6 +101,15 @@ final class ResponseAdapter
             return $courier;
         }
 
+        // 501: la función no está activa en este servidor (p. ej. el tiempo real de comunicación sin configurar,
+        // COMM_NOT_IMPLEMENTED). No es una avería: se conserva el estado y el código para que la SPA use su alternativa
+        // (polling) en vez de reintentar. Texto fijo; el del backend no sale.
+        if ($status === 501) {
+            $notImplemented = is_string($code) && preg_match('/^[A-Za-z0-9_]{1,64}$/', $code) === 1 ? $code : 'not_implemented';
+
+            return ProblemDetails::response(501, $notImplemented, 'No disponible', 'Esta función no está activa en este servidor.', $requestId, ['error_code' => $notImplemented]);
+        }
+
         if ($status >= 500) {
             // Nunca se filtra el detalle interno del backend.
             return ProblemDetails::response(502, 'upstream_error', 'Error del servicio', 'El servicio no pudo completar la operación.', $requestId);

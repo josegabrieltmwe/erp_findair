@@ -28,6 +28,8 @@ const { start, stop } = useCommStream({
   onMessageCreated: store.applyMessageCreated,
   onUnreadChanged: store.applyUnreadChanged,
   onConversationClosed: store.applyConversationClosed,
+  // Sin tiempo real en el servidor (501) la página se refresca sola cada 30 s.
+  poll: () => store.refreshThread(),
 });
 
 async function scrollToBottom(): Promise<void> {

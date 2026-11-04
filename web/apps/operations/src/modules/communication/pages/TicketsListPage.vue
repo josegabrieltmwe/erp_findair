@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onActivated, onMounted, onUnmounted, ref } from "vue";
+import { computed, onActivated, onDeactivated, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
@@ -55,9 +55,16 @@ const { start, stop } = useCommStream({
   onMessageCreated: store.applyMessageCreated,
   onUnreadChanged: store.applyUnreadChanged,
   onConversationClosed: store.applyConversationClosed,
+  // Sin tiempo real en el servidor (501) la página se refresca sola cada 30 s.
+  poll: () => (isActive ? store.fetchList({ silent: true }) : undefined),
 });
 
 let hasMountedOnce = false;
+// KeepAlive: fuera de la pantalla no se refresca la lista.
+let isActive = true;
+onDeactivated(() => {
+  isActive = false;
+});
 
 onMounted(() => {
   hasMountedOnce = true;
@@ -68,6 +75,7 @@ onMounted(() => {
 // KeepAlive (ver OperationsShell.vue KEEP_ALIVE_INCLUDE): volver del hilo no
 // remonta esta página — igual que CrmListPage.
 onActivated(() => {
+  isActive = true;
   if (!hasMountedOnce) return;
   void store.fetchList();
 });
