@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 // Ruta relativa: el symlink de node_modules de @tmwe/shared-frontend puede apuntar a otra copia del repo.
-import { bootstrapBff, hasErpAccess, sessionHasNoAccess } from "../../../packages/shared-frontend/src/http/bff";
+import { bootstrapBff, effectivePartnerId, hasErpAccess, sessionHasNoAccess } from "../../../packages/shared-frontend/src/http/bff";
 import { noAccessMessage } from "../../../packages/shared-frontend/src/http/noAccess";
 
 const staff = { user: { is_tmwe: true, capabilities_source: "backend" }, capabilities: ["tmwe", "clients"] };
@@ -75,5 +75,18 @@ describe("textos de la pantalla", () => {
     for (const l of ["es", "en", "it", "nl", "de"]) {
       expect(noAccessMessage(l).message).not.toMatch(/scope|api_|capabilit/i);
     }
+  });
+});
+
+describe("effectivePartnerId", () => {
+  it("sin suplantacion es el partner del usuario", () => {
+    expect(effectivePartnerId({ user: { partner_id: 9069 } })).toBe(9069);
+    expect(effectivePartnerId({ user: { partner_id: 1 }, impersonation: null })).toBe(1);
+  });
+  it("suplantando es el partner suplantado (Mi organizacion abre su ficha, no la de TMWE)", () => {
+    expect(effectivePartnerId({ user: { partner_id: 1, is_tmwe: true }, impersonation: { id: 7740, rag_soc: "Asia Bridge" } })).toBe(7740);
+  });
+  it("sin dato de partner devuelve 0", () => {
+    expect(effectivePartnerId({})).toBe(0);
   });
 });

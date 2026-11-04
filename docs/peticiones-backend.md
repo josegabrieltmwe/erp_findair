@@ -1,6 +1,6 @@
 # Peticiones al backend (tmwe_json)
 
-> **Estado:** vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en `tmwe_api`). Lista única y verificada: `contrato-con-api.md` · **Última modificación:** 2026-10-30 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+> **Estado:** vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en `tmwe_api`). Lista única y verificada: `contrato-con-api.md` · **Última modificación:** 2026-11-04 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
 
 > **Estado 2026-10-18.** Este documento es el detalle técnico y su historia. La lista vigente y ordenada
 > está en `prompt-agente-tmwe-json.md`; el plan, en `plan-migracion.md`. Ya resuelto en el backend:
@@ -166,6 +166,7 @@ Peticiones (ruta, síntoma, cambio esperado):
    emite, pero el BFF ahora **exige** la cabecera (y que coincida) cuando envía `X-Impersonate-Partner-Id`; si falta, descarta la
    respuesta con 502 `effective_partner_mismatch`. Solo se comprueba en respuestas JSON 2xx (no 204, 3xx, errores, binarias ni stream); una ruta cuyo controlador no lo emita se marca con `check_effective_partner: false` en `routes.bff.yaml`. Confirmar que lo emiten todos los controladores que se alcanzan con Bearer
    (también los que no heredan de `Abstract_Api_Controller`); si alguno no lo emite, la suplantación fallará en esa ruta.
+   Comprobado 2026-11-04 recorriendo la UI suplantando un partner: solo fallaba `get-api-countries` (`Country_Controller`, público con `is_secured() = false`, no autentica ni emite la cabecera). Al ser un catálogo global se marcó `check_effective_partner: false`; el resto de rutas visitadas sí la emiten.
 6. **`navigateTo`: filtros.** La SPA traduce `period` (`today|yesterday|this_week|this_month`) a `date_from/date_to` locales
    con semana de lunes a hoy y mes natural hasta hoy. Los listados de la SPA no leen `status` de la URL, así que no se reenvía.
    Petición: que el backend envíe ya `date_from/date_to` resueltos (misma definición que usan `listShipments/countShipments`)

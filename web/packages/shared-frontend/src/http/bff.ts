@@ -194,6 +194,19 @@ export interface BffSession {
   user?: BffUser;
   /** Qué puede ver la SPA (`tmwe`, `clients`, `my_org`…); lo calcula el BFF al autenticar. */
   capabilities?: string[];
+  /** Partner suplantado por el personal TMWE (`/bff/impersonation`), o null si no hay suplantación. */
+  impersonation?: { id: number; rag_soc?: string } | null;
+}
+
+/**
+ * Partner con el que trabaja la sesión: el suplantado si lo hay, si no el del usuario. Es el mismo que usa el
+ * backend para filtrar (X-Effective-Partner-Id), así que «Mi organización» abre la ficha de ese partner. Antes
+ * se usaba siempre el del usuario: suplantando, /my-org llevaba a la ficha de TMWE (anagrafica 1) y el API,
+ * que ya filtraba por el partner suplantado, respondía 404.
+ */
+export function effectivePartnerId(session: Pick<BffSession, 'user' | 'impersonation'>): number {
+  const impersonated = Number(session.impersonation?.id ?? 0);
+  return impersonated > 1 ? impersonated : (session.user?.partner_id ?? 0);
 }
 
 /**
@@ -292,7 +305,7 @@ export async function bootstrapBff(): Promise<boolean> {
     language,
     csrf: session.csrf_token,
     isTmwe: session.user?.is_tmwe === true,
-    partnerId: session.user?.partner_id ?? 0,
+    partnerId: effectivePartnerId(session),
     capabilities: session.capabilities ?? [],
     noAccess: sessionHasNoAccess(session),
   };

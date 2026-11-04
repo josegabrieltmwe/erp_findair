@@ -22,6 +22,15 @@ final class PublicCatalogRoutesTest extends AppTestCase
         }
     }
 
+    public function testSoloElCatalogoPublicoDePaisesNoExigeElPartnerEfectivo(): void
+    {
+        // Country_Controller no autentica (no emite X-Effective-Partner-Id): suplantando daba 502 en /clients.
+        // Monedas sí autentica y lo emite, así que conserva la comprobación.
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        self::assertFalse($manifest->match('GET', '/get-api-countries')['route']->checkEffectivePartner);
+        self::assertTrue($manifest->match('GET', '/get-api-currencies')['route']->checkEffectivePartner);
+    }
+
     public function testActionAllowsHyphensButNothingElse(): void
     {
         $base = ['id' => 'x', 'method' => 'GET', 'path' => '/x'];

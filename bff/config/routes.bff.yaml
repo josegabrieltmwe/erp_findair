@@ -99,6 +99,10 @@ routes:
     upstream:
       action: get-api-countries
       forward_query: '*'
+    # Country_Controller es público (is_secured() = false): no autentica, así que no emite X-Effective-Partner-Id y,
+    # suplantando, la comprobación daba 502 effective_partner_mismatch en /clients. El catálogo de países es global,
+    # el mismo para todos los partners: no hay datos de otro partner que proteger.
+    check_effective_partner: false
 
   - id: get.get-api-currencies
     method: GET
