@@ -169,4 +169,38 @@ final class AuthFlowTest extends AppTestCase
         self::assertTrue($info['authenticated']);
         self::assertSame([], $info['capabilities']);
     }
+
+    public function testErpAccessDeniedIsReportedAsNoAccess(): void
+    {
+        // Cliente sin erp_operator: el API declara 403 ERP_ACCESS_DENIED. La SPA debe recibir un contexto del backend
+        // sin capacidades (pantalla «sin acceso»), no la reserva vacía de un fallo, con la que montaba el ERP.
+        $this->boot([
+            $this->upstreamOk('{"access_token":"AT","refresh_token":"RT","expires_in":3600}'),
+            new UpstreamResponse(403, [], '{"success":false,"error":{"code":"ERP_ACCESS_DENIED","message":"This account has no access to the ERP."},"error_code":"ERP_ACCESS_DENIED"}'),
+        ]);
+        $login = $this->startLogin();
+        $callback = $this->send($this->request('GET', '/bff/auth/callback?code=abc&state=' . $login['state'], $login['sid']));
+
+        self::assertSame(self::ORIGIN . '/shipments', $callback->getHeaderLine('Location'));
+        $info = $this->json($this->send($this->request('GET', '/bff/auth/session', $this->cookieId($callback))));
+        self::assertTrue($info['authenticated']);
+        self::assertSame([], $info['capabilities']);
+        self::assertSame('backend', $info['user']['capabilities_source']);
+        self::assertFalse($info['user']['is_tmwe']);
+    }
+
+    public function testOtherForbiddenContextKeepsTheFallback(): void
+    {
+        // Un 403 sin ese código sigue siendo un fallo de carga: reserva vacía, sin declarar «sin acceso».
+        $this->boot([
+            $this->upstreamOk('{"access_token":"AT","refresh_token":"RT","expires_in":3600}'),
+            new UpstreamResponse(403, [], '{"error_code":"forbidden"}'),
+        ]);
+        $login = $this->startLogin();
+        $callback = $this->send($this->request('GET', '/bff/auth/callback?code=abc&state=' . $login['state'], $login['sid']));
+
+        $info = $this->json($this->send($this->request('GET', '/bff/auth/session', $this->cookieId($callback))));
+        self::assertSame([], $info['capabilities']);
+        self::assertArrayNotHasKey('capabilities_source', $info['user']);
+    }
 }

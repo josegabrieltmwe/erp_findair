@@ -18,6 +18,14 @@ describe("sessionHasNoAccess", () => {
   it("solo bloquea cuando el API declara capacidades vacias", () => {
     expect(sessionHasNoAccess(sinAcceso)).toBe(true);
   });
+  it("bloquea la sesion que arma el BFF cuando el API responde ERP_ACCESS_DENIED", () => {
+    // UserContextProvider::fromBackendContext([]): cliente sin erp_operator (antes llegaba user {} y entraba).
+    const denegado = {
+      user: { username: "", partner_id: 0, is_admin: false, is_tmwe: false, capabilities_source: "backend" },
+      capabilities: [],
+    };
+    expect(sessionHasNoAccess(denegado)).toBe(true);
+  });
   it("no bloquea a un partner con la deduccion de reserva ni ante un fallo de contexto", () => {
     expect(sessionHasNoAccess(reservaPartner)).toBe(false);
     expect(sessionHasNoAccess(contextoFallido)).toBe(false);

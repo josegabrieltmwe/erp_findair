@@ -10,11 +10,14 @@ test("la sesión trae las capacidades del perfil", async ({ request }, info) => 
   expect(body.capabilities).toEqual(EXPECTED_CAPABILITIES[p]);
 });
 
-// AC-08: hasta que exista la vista «No autorizado» este caso falla por diseño (ver docs/plan-pruebas-ui.md §6).
-test.fixme("SINACC ve «No tienes acceso» y no dispara los KPI del dashboard", async ({ page }, info) => {
+// AC-08: un cliente sin erp_operator (el API responde 403 ERP_ACCESS_DENIED al contexto) ve «sin acceso»
+// y la SPA no lanza ninguna llamada de negocio.
+test("SINACC ve «No tienes acceso» y no dispara los KPI del dashboard", async ({ page }, info) => {
   test.skip(info.project.name !== "sinacc" || !credentials("sinacc"));
-  const kpis: string[] = [];
-  page.on("request", (r) => /api_(courier_kpis|cargo_kpis|home_box_indicators)/.test(r.url()) && kpis.push(r.url()));
+  const negocio: string[] = [];
+  page.on("request", (r) => /\/bff\/v1\//.test(r.url()) && negocio.push(r.url()));
   await page.goto("/");
-  expect(kpis).toEqual([]);
+  await expect(page.getByText(/do not have access|no tienes acceso|non hai accesso/i).first()).toBeVisible();
+  await page.waitForTimeout(3000);
+  expect(negocio).toEqual([]);
 });

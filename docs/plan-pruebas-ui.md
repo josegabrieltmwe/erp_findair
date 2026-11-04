@@ -1,6 +1,6 @@
 # Plan de pruebas de la UI
 
-> **Estado:** borrador · **Última modificación:** 2026-11-02
+> **Estado:** borrador · **Última modificación:** 2026-11-04
 
 Cómo comprobar, perfil por perfil y pantalla por pantalla, que la SPA (`web/apps/operations`) funciona sobre el BFF y respeta los permisos del API. Sale de la lectura de `docs/`, del router y de los tests existentes. **No se arrancó la aplicación ni se ejecutó ninguna prueba al redactarlo.**
 ## 1. Punto de partida
@@ -68,7 +68,7 @@ Tipo: *Auto* se automatiza con Playwright; *Manual* necesita criterio humano o u
 | AC-05 | Ruta con 401 del backend a un token válido (api_bancali_*, api_supplier_*) | El BFF responde 403 upstream_unauthorized, la sesión sigue viva y la UI muestra un aviso de permiso. | STAFF, PARTNER | P1 | Auto | P10 |
 | AC-06 | POST sin X-CSRF-Token, con Origin ajeno o Sec-Fetch-Site cross-site | Rechazado por el BFF. La UI no ofrece ninguna escritura sin token. | STAFF | P0 | Auto |  |
 | AC-07 | Sesión que supera las 24 h: el token se renueva | La sesión continúa sin pedir login. Se fuerza caducando el access token en el entorno de pruebas. | STAFF, PARTNER | P1 | Manual | P01 |
-| AC-08 | Entrar con capabilities vacías | Aparece «No tienes acceso» al instante, sin parpadeo del dashboard. No se dispara api_courier_kpis, api_cargo_kpis ni api_home_box_indicators. El botón cierra sesión y lleva al login. | SINACC | P0 | Auto | Guard (hoy falla) |
+| AC-08 | Entrar con capabilities vacías | Aparece «No tienes acceso» al instante, sin parpadeo del dashboard. No se dispara api_courier_kpis, api_cargo_kpis ni api_home_box_indicators. El botón cierra sesión y lleva al login. | SINACC | P0 | Auto | Guard (implementado; verificado 2026-11-04, también con 403 `ERP_ACCESS_DENIED` del contexto) |
 | AC-09 | Entrar con STAFF y con PARTNER tras el guard | El dashboard se monta igual que antes, sin cambio perceptible de tiempo. | STAFF, PARTNER | P0 | Auto | Guard |
 
 ### Shell y navegación
@@ -199,7 +199,7 @@ Peticiones de `contrato-con-api.md` que cambian lo que se puede probar hoy (esta
 
 | Petición | Efecto en las pruebas | Qué hacer |
 |---|---|---|
-| Guard | No existe el componente «No autorizado». AC-08 falla hoy por diseño | Implementarlo antes de la fase 2 o registrar AC-08 como fallo conocido |
+| Guard | Resuelto: pantalla «sin acceso» en la SPA y, desde 2026-11-04, el BFF trata el 403 `ERP_ACCESS_DENIED` del contexto como «sin acceso» y no como fallo | — |
 | P03 | Sin `me/access` completo la SPA no distingue ACCT ni ROOT. El informe de autenticación (§8) da la fase 1 por hecha en código, sin desplegar | Pruebas de ACCT y ROOT manuales hasta que el API sirva roles y permisos efectivos |
 | P23, P29 | Resueltas (P23 en el BFF, P29 en `tmwe_api`), sin probar en sandbox | SH-02 y CM-04 son su prueba de aceptación. Mantener `body_enum` del BFF como segunda barrera |
 | P10 | Controladores que devuelven 401 a un token válido (`api_bancali_*`, `api_supplier_*`) | AC-05 comprueba que la sesión no se cierra mientras se corrige |
@@ -264,7 +264,7 @@ npm run test:anon                # sin credenciales: sesión anónima, PKCE, coo
 npm run test:smoke               # humo de todas las rutas sin parámetros, por perfil (staff, partner, sinacc)
 ```
 
-Un perfil sin `E2E_<PERFIL>_USER` y `E2E_<PERFIL>_PASS` se omite. El humo lee las rutas de `apps/operations/src/router/index.ts`, así que una ruta nueva entra sola. El caso AC-08 está marcado `fixme` hasta que exista el guard.
+Un perfil sin `E2E_<PERFIL>_USER` y `E2E_<PERFIL>_PASS` se omite. El humo lee las rutas de `apps/operations/src/router/index.ts`, así que una ruta nueva entra sola. El caso AC-08 se ejecuta con el perfil `sinacc` (cliente sin `erp_operator`).
 
 Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El humo por perfil no se ha ejecutado porque no hay credenciales de prueba cargadas.
 

@@ -1,6 +1,6 @@
 # Tarea: no montar el dashboard ERP para usuarios sin acceso (pantalla de "no autorizado")
 
-> **Estado:** ejecutado en la rama `feat/guard-no-autorizado` (2026-11-02): `sessionHasNoAccess`/`hasErpAccess`/`showNoAccess` en `bff.ts`, pantalla en `noAccess.ts`, bifurcación en `main.ts`, tests en `noAccessGuard.spec.ts`. Cambio respecto al prompt: solo se bloquea si el API declaró las capacidades (`capabilities_source === 'backend'`) y vienen vacías; con la deducción de reserva del BFF (`[]` para todo no-TMWE) o si falla el contexto no se bloquea a nadie. Pendiente: comprobar en navegador con un usuario real sin rol · **Última modificación:** 2026-11-02
+> **Estado:** ejecutado en la rama `feat/guard-no-autorizado` (2026-11-02): `sessionHasNoAccess`/`hasErpAccess`/`showNoAccess` en `bff.ts`, pantalla en `noAccess.ts`, bifurcación en `main.ts`, tests en `noAccessGuard.spec.ts`. Cambio respecto al prompt: solo se bloquea si el API declaró las capacidades (`capabilities_source === 'backend'`) y vienen vacías; con la deducción de reserva del BFF (`[]` para todo no-TMWE) o si falla el contexto no se bloquea a nadie. Comprobado en navegador el 2026-11-04 con un cliente real sin `erp_operator`: el API responde 403 `ERP_ACCESS_DENIED` al contexto y el BFF lo dejaba en la reserva vacía, así que el guard no saltaba; ahora `UserContextProvider` lo convierte en contexto del backend sin capacidades (`ErpAccessDenied`) y las 97 rutas muestran «sin acceso» sin llamadas de negocio · **Última modificación:** 2026-11-04
 
 ## Contexto
 

@@ -53,6 +53,14 @@ final class UserContextProvider
             }
 
             return self::fromProfile($this->fetch('get_my_profile', $accessToken, $requestId, $impersonate));
+        } catch (ErpAccessDenied $e) {
+            // El API DECLARA que la persona no entra al ERP (le falta erp:view): no es un fallo de carga. Antes caía en
+            // la reserva vacía de load(), la SPA la leía como «contexto desconocido» y montaba el ERP igualmente
+            // (dashboard, 403 en cada llamada y pantallas de Settings abiertas). Con el contexto declarado por el
+            // backend y sin capacidades, la SPA muestra «sin acceso». Suplantando, sigue siendo un rechazo (null).
+            $this->logger->info('user_context_erp_access_denied', ['request_id' => $requestId]);
+
+            return $impersonate === null ? self::fromBackendContext([]) : null;
         } catch (\Throwable $e) {
             $this->logger->warning('user_context_failed', ['error' => $e::class, 'request_id' => $requestId]);
 
@@ -135,6 +143,9 @@ final class UserContextProvider
             'allow_redirects' => false,
             'timeout' => 5,
         ]);
+        if ($response->getStatusCode() === 403 && ErpAccessDenied::matches((string) $response->getBody())) {
+            throw new ErpAccessDenied();
+        }
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException('contexto: HTTP ' . $response->getStatusCode());
         }
