@@ -1,7 +1,12 @@
 <template>
   <!-- Logo/cola de la aerolínea por su código IATA. Las imágenes son estáticas
-       en /erp/tmwe_client_aircargo/images/{IATA}.jpg (46 aerolíneas), servidas
-       por HTTP — no hay llamada a servicio externo.
+       en apps/operations/public/airline-tails/{IATA}.jpg (43 aerolíneas más la
+       genérica tmwe.jpg); Vite las copia al build y se sirven en
+       /airline-tails/ — no hay llamada a servicio externo.
+
+       Antes se pedían a /erp/tmwe_client_aircargo/images/ (ERP legado), que el
+       dominio del SPA no sirve: su fallback devolvía index.html, la imagen
+       fallaba y siempre salía el avión genérico.
 
        Si el archivo no existe o falla la carga se muestra la cola genérica de
        TMWE (tmwe.jpg), no un hueco: una fila sin imagen se lee como "falta un
@@ -55,7 +60,7 @@
 import { computed, ref, watch } from "vue";
 
 /** Cola genérica: la que se usa cuando la aerolínea no tiene la suya. */
-const DEFAULT_FALLBACK = "/erp/tmwe_client_aircargo/images/tmwe.jpg";
+const DEFAULT_FALLBACK = "/airline-tails/tmwe.jpg";
 
 const props = withDefaults(
   defineProps<{
@@ -116,7 +121,7 @@ const src = computed(() => {
   if (!c || failed.value) {
     return fallback;
   }
-  return `/erp/tmwe_client_aircargo/images/${c}.jpg`;
+  return `/airline-tails/${c}.jpg`;
 });
 </script>
 

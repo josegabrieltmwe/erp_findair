@@ -164,6 +164,24 @@
       flat
       last
     >
+      <!--
+        Una sola casilla maestra para marcar/desmarcar todas: no se repite
+        ninguna fuente de la lista. Solo actua sobre las utilizables; una fuente
+        delegada (cuenta de otro partner) nunca se marca en bloque, porque
+        aceptarla autoriza cotizar con esa cuenta y debe hacerse a proposito.
+      -->
+      <div v-if="bulkSourceFlags.length > 1" class="fsp-source fsp-source--all">
+        <v-checkbox
+          :model-value="selectAll.checked"
+          :indeterminate="selectAll.indeterminate"
+          :disabled="searching"
+          :label="t('common.all')"
+          density="compact"
+          hide-details
+          color="primary"
+          @update:model-value="setAllSources($event === true)"
+        />
+      </div>
       <div
         v-for="it in sourceItems"
         :key="it.value"
@@ -272,6 +290,12 @@ import {
   type QuoteDataValidation,
   type QuoteDataIssue,
 } from "@cargo/services/rate_sources.service";
+import {
+  applySelectAll,
+  bulkSelectableFlags,
+  selectAllState,
+  type SourceState,
+} from "./sourceSelection";
 import { translateQuoteIssue } from "@cargo/utils/quoteValidation";
 
 // props/emits ANTES de cualquier uso: `watch(..., {immediate:true})`
@@ -552,7 +576,11 @@ function isSourceAvailable(flag: string): boolean {
  * es lo que autoriza al backend a cotizar con la cuenta de otro partner.
  */
 function toggleSource(flag: SourceKey, on: boolean): void {
-  const next = { ...props.modelValue, [flag]: on };
+  emitSources({ ...props.modelValue, [flag]: on });
+}
+
+/** Emite el modelo recalculando `via_partner` a partir de las fuentes marcadas. */
+function emitSources(next: ParamsModel): void {
   const accepted = sourcesMeta.value.find(
     (src) =>
       src.account?.mode === "delegated" &&
@@ -561,6 +589,31 @@ function toggleSource(flag: SourceKey, on: boolean): void {
   );
   next.via_partner = accepted?.account?.ref_id ?? undefined;
   emit("update:modelValue", next);
+}
+
+/** Estado de cada fuente para la casilla "Todas" (logica en sourceSelection.ts). */
+const sourceStates = computed<SourceState[]>(() =>
+  sourceItems.value.map((it) => ({
+    flag: it.value,
+    available: isSourceAvailable(it.value),
+    delegated: sourceMeta(it.value)?.account?.mode === "delegated",
+  })),
+);
+
+const bulkSourceFlags = computed(() => bulkSelectableFlags(sourceStates.value));
+
+const selectAll = computed(() =>
+  selectAllState(
+    sourceStates.value,
+    props.modelValue as unknown as Record<string, boolean | undefined>,
+  ),
+);
+
+function setAllSources(on: boolean): void {
+  emitSources({
+    ...props.modelValue,
+    ...applySelectAll(sourceStates.value, on),
+  });
 }
 
 /** Ninguna fuente marcada: buscar no puede devolver nada. */
@@ -638,6 +691,10 @@ function toggleCredential(c: RateCredentialOption, on: boolean): void {
 }
 .fsp-source--off {
   opacity: 0.6;
+}
+.fsp-source--all {
+  border-bottom: 1px solid rgb(var(--v-theme-surface-light));
+  margin-bottom: 2px;
 }
 .fsp-creds {
   margin-top: 8px;

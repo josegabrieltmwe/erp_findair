@@ -1,7 +1,9 @@
 <template>
   <!-- Cola de la aerolínea por su código IATA. Las imágenes son estáticas en
-       /erp/tmwe_client_aircargo/images/{IATA}.jpg (46 aerolíneas), servidas por
-       HTTP: no hay llamada a ningún servicio externo.
+       apps/operations/public/airline-tails/{IATA}.jpg (43 aerolíneas más la
+       genérica tmwe.jpg), servidas en /airline-tails/ con el build del SPA: no
+       hay llamada a ningún servicio externo. (Antes /erp/tmwe_client_aircargo/
+       images/, que el dominio del SPA no sirve.)
 
        Cuando la aerolínea no tiene cola propia se muestra la de TMWE, nunca un
        hueco: un espacio vacío se lee como "falta un dato" cuando lo que ocurre
@@ -40,7 +42,7 @@
 import { computed, ref, watch } from 'vue';
 
 /** Cola genérica de TMWE: la que se usa cuando la aerolínea no tiene la suya. */
-const TMWE_TAIL = '/erp/tmwe_client_aircargo/images/tmwe.jpg';
+const TMWE_TAIL = '/airline-tails/tmwe.jpg';
 
 const props = withDefaults(
   defineProps<{
@@ -79,7 +81,7 @@ const src = computed(() => {
   const c = (props.code ?? '').trim().toUpperCase();
   if (fallbackFailed.value) return '';
   if (!c || failed.value) return TMWE_TAIL;
-  return `/erp/tmwe_client_aircargo/images/${c}.jpg`;
+  return `/airline-tails/${c}.jpg`;
 });
 </script>
 
