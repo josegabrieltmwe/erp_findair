@@ -10,9 +10,10 @@ const keys = (s: { items: { key: string }[] }[]): string[] => s.flatMap((x) => x
 const partner = visibleNavSections(NAV_SECTION_DEFS, false);
 
 describe("menú reducido del partner", () => {
+  // Tracking es solo TMWE (admin_tracking_api es admin_only): no sale en el menú del partner.
   it("por defecto solo deja los accesos del trabajo diario", () => {
     const reduced = reduceNavSections(partner, false);
-    expect(keys(reduced)).toEqual(["home", "cargo", "shipment", "tracking", "giacenze", "pickup", "clients", "invoicing", "price_lists"]);
+    expect(keys(reduced)).toEqual(["home", "cargo", "shipment", "giacenze", "pickup", "clients", "invoicing", "price_lists"]);
   });
 
   it("«Ver más» devuelve todos los accesos que el partner puede ver", () => {

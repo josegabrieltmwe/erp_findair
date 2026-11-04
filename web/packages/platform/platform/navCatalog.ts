@@ -49,7 +49,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
       { key: "home",     icon: "mdi-home-outline",           routeName: "home", daily: true },
       { key: "cargo",    icon: "mdi-airplane",               routeName: "cargo-list", daily: true, partnerKey: "cargo_partner" },
       { key: "shipment", icon: "mdi-truck-fast-outline",     routeName: "shipment-list", daily: true },
-      { key: "tracking", icon: "mdi-radar",                  routeName: "tracking", daily: true },
+      { key: "tracking", icon: "mdi-radar",                  routeName: "tracking", daily: true, adminOnly: true },
     ],
   },
   {
@@ -75,7 +75,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "facturacion",
     items: [
       { key: "invoicing", icon: "mdi-file-document-outline", routeName: "invoicing", daily: true },
-      { key: "payments",  icon: "mdi-cash-multiple",         routeName: "payments" },
+      { key: "payments",  icon: "mdi-cash-multiple",         routeName: "payments", scopes: ["payments:read"] },
       { key: "warehouse", icon: "mdi-warehouse",             routeName: "warehouse-weighing" },
       { key: "proforma",  icon: "mdi-file-percent-outline",  routeName: "proforma" },
       { key: "cod",       icon: "mdi-cash-multiple",         routeName: "cod" },
@@ -84,7 +84,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
   {
     sectionKey: "herramientas",
     items: [
-      { key: "bulk",         icon: "mdi-upload-multiple", routeName: "bulk" },
+      { key: "bulk",         icon: "mdi-upload-multiple", routeName: "bulk", scopes: ["import:read", "import:write"] },
       { key: "import",       icon: "mdi-upload",          href: "/erp/winbody.php?pp=spedy_import&ti=new" },
       { key: "import_v2",    icon: "mdi-upload-outline",  href: "/erp/winbody.php?pp=spedy_import2&ti=new" },
       // Tarifas: ruta INTERNA (la feature vive en @shared/listini). Antes
@@ -92,7 +92,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
       // partners — justo el público de este item (`partnerOnly`).
       { key: "price_lists",  icon: "mdi-cash-register",   routeName: "price-lists", partnerOnly: true, daily: true },
       { key: "send_message", icon: "mdi-message-plus",    href: "/erp/winbody.php?pp=docsstory&ti=new" },
-      { key: "email_templates", icon: "mdi-email-multiple-outline", routeName: "email_templates" },
+      { key: "email_templates", icon: "mdi-email-multiple-outline", routeName: "email_templates", scopes: ["config:read", "partner:manage"] },
       { key: "api_portal",   icon: "mdi-api",             href: "/erp/tmwe_json/api_doc", adminOnly: true },
     ],
   },
@@ -106,7 +106,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
       { key: "my_org_sites", icon: "mdi-office-building-marker-outline", routeName: "my-org-sites", partnerOnly: true },
       // Plantillas de correo del partner: el controlador PHP ya tiene gate de
       // partner (master_data:read), solo faltaba el acceso desde el menú.
-      { key: "my_org_email", icon: "mdi-email-edit-outline", routeName: "email_templates", partnerOnly: true },
+      { key: "my_org_email", icon: "mdi-email-edit-outline", routeName: "email_templates", partnerOnly: true, scopes: ["partner:manage"] },
     ],
   },
   {

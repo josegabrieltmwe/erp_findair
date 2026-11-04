@@ -55,4 +55,39 @@ describe("canOpenModuleRoute (H15)", () => {
       expect(isNavEntryVisible(it, true, partnerAdmin)).toBe(true);
     }
   });
+
+  // Operador de partner sin administración (recorrido 2026-11-04) frente al administrador con cobros y SMTP.
+  const partnerOperator = known(["contacts:read", "crm:read", "invoices:read", "shipment:read", "tracking:read", "erp:view"]);
+  const partnerAdminFull = known([...partnerOperator.scopes, "payments:read", "smtp:read", "partner:manage"]);
+
+  it("cobros, pasarelas, reembolsos y SMTP: el operador no entra, el administrador sí", () => {
+    for (const name of ["payments", "payments-aging", "payments-reminders", "settings-pay-gateways", "settings-pay-refunds", "settings-partner-smtp"]) {
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerOperator })).toBe(false);
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerAdminFull })).toBe(true);
+    }
+  });
+
+  it("la importación masiva exige import:* (ningún rol de partner lo lleva)", () => {
+    expect(canOpenModuleRoute("bulk", { isAdmin: false, access: partnerAdminFull })).toBe(false);
+    expect(canOpenModuleRoute("bulk", { isAdmin: false, access: known(["import:write"]) })).toBe(true);
+    expect(canOpenModuleRoute("bulk", { isAdmin: true, access: partnerAdminFull })).toBe(true);
+  });
+
+  it("el menú: tracking solo TMWE, cobros con payments:read, importación con import:*", () => {
+    const items = NAV_SECTION_DEFS.flatMap((s) => s.items);
+    const find = (key: string) => items.find((i) => i.key === key)!;
+    expect(isNavEntryVisible(find("tracking"), false, partnerAdminFull)).toBe(false);
+    expect(isNavEntryVisible(find("tracking"), true, partnerOperator)).toBe(true);
+    expect(isNavEntryVisible(find("payments"), false, partnerOperator)).toBe(false);
+    expect(isNavEntryVisible(find("payments"), false, partnerAdminFull)).toBe(true);
+    expect(isNavEntryVisible(find("bulk"), false, partnerAdminFull)).toBe(false);
+  });
+
+  it("firmas de entrega exigen el módulo driver; plantillas, config:read o partner:manage", () => {
+    expect(canOpenModuleRoute("warehouse-deliveries", { isAdmin: false, access: partnerAdminFull })).toBe(false);
+    expect(canOpenModuleRoute("warehouse-deliveries", { isAdmin: false, access: known(["driver:read"]) })).toBe(true);
+    expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: partnerOperator })).toBe(false);
+    expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: partnerAdminFull })).toBe(true);
+    expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: known(["config:read"]) })).toBe(true);
+  });
 });

@@ -180,7 +180,8 @@ const routes: RouteRecordRaw[] = [
     path: "/tracking",
     name: "tracking",
     component: () => import("@/modules/tracking/pages/TrackingManagerPage.vue"),
-    meta: { title: "Tracking", icon: "mdi-radar" },
+    // Solo TMWE: admin_tracking_api es admin_only (anagrafica 1) y ningún scope lo sustituye.
+    meta: { title: "Tracking", icon: "mdi-radar", requiresAdmin: true },
   },
   {
     path: "/giacenze",
