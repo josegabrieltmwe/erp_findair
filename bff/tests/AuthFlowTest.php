@@ -187,6 +187,7 @@ final class AuthFlowTest extends AppTestCase
         self::assertSame([], $info['capabilities']);
         self::assertSame('backend', $info['user']['capabilities_source']);
         self::assertFalse($info['user']['is_tmwe']);
+        self::assertFalse($info['user']['erp_access']);
     }
 
     public function testOtherForbiddenContextKeepsTheFallback(): void
@@ -202,5 +203,6 @@ final class AuthFlowTest extends AppTestCase
         $info = $this->json($this->send($this->request('GET', '/bff/auth/session', $this->cookieId($callback))));
         self::assertSame([], $info['capabilities']);
         self::assertArrayNotHasKey('capabilities_source', $info['user']);
+        self::assertArrayNotHasKey('erp_access', $info['user']);
     }
 }

@@ -176,6 +176,8 @@ export interface BffUser {
   is_tmwe?: boolean;
   /** `backend` cuando las capacidades las calculó el contexto del API (no la deducción conservadora del BFF). */
   capabilities_source?: string;
+  /** `false` solo cuando el API denegó la entrada al ERP (ERP_ACCESS_DENIED, sin erp_operator). */
+  erp_access?: boolean;
   /** Capacidades de facturación/almacén/cobros/COD que calcula el backend (solo booleanos). */
   invoicing?: {
     can_read?: boolean;
@@ -247,17 +249,13 @@ function safeLocale(): string | null {
 }
 
 /**
- * ¿La sesión carece, de forma fiable, de todo acceso al ERP? Solo es cierto si el API declaró las
- * capacidades (`capabilities_source === 'backend'`) y vinieron vacías y el usuario no es TMWE. Con la
- * deducción de reserva del BFF (`get_my_profile`: vacío para todo no-TMWE) o ante un fallo al cargar el
- * contexto, `[]` no significa «sin acceso» y no se bloquea a nadie: cada pantalla sigue autorizando en el API.
+ * ¿La sesión carece, de forma fiable, de todo acceso al ERP? Solo si el BFF lo marcó (`erp_access === false`,
+ * cuando el API respondió ERP_ACCESS_DENIED) y el usuario no es TMWE. Unas capacidades vacías NO significan
+ * «sin acceso»: el API las da vacías a todo operador de partner que no administra su organización, y la reserva
+ * del BFF o un fallo al cargar el contexto también las dejan vacías. Cada pantalla sigue autorizando en el API.
  */
 export function sessionHasNoAccess(session: Pick<BffSession, 'user' | 'capabilities'>): boolean {
-  return (
-    session.user?.is_tmwe !== true &&
-    session.user?.capabilities_source === 'backend' &&
-    (session.capabilities ?? []).length === 0
-  );
+  return session.user?.is_tmwe !== true && session.user?.erp_access === false;
 }
 
 /** Lo contrario de {@link sessionHasNoAccess} sobre la sesión ya cargada por `bootstrapBff`. */

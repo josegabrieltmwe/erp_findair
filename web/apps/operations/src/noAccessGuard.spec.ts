@@ -5,7 +5,9 @@ import { noAccessMessage } from "../../../packages/shared-frontend/src/http/noAc
 
 const staff = { user: { is_tmwe: true, capabilities_source: "backend" }, capabilities: ["tmwe", "clients"] };
 const partner = { user: { is_tmwe: false, capabilities_source: "backend" }, capabilities: ["clients", "my_org"] };
-const sinAcceso = { user: { is_tmwe: false, capabilities_source: "backend" }, capabilities: [] };
+const sinAcceso = { user: { is_tmwe: false, capabilities_source: "backend", erp_access: false }, capabilities: [] };
+// Operador de partner con erp_operator que no administra su organización: el API le da capacidades vacías.
+const operadorPartner = { user: { is_tmwe: false, capabilities_source: "backend" }, capabilities: [] };
 // Reserva del BFF (get_my_profile) o fallo al cargar el contexto: [] no significa «sin acceso».
 const reservaPartner = { user: { is_tmwe: false }, capabilities: [] };
 const contextoFallido = { user: {}, capabilities: [] };
@@ -15,13 +17,16 @@ describe("sessionHasNoAccess", () => {
     expect(sessionHasNoAccess(staff)).toBe(false);
     expect(sessionHasNoAccess(partner)).toBe(false);
   });
-  it("solo bloquea cuando el API declara capacidades vacias", () => {
+  it("solo bloquea cuando el BFF marca erp_access false", () => {
     expect(sessionHasNoAccess(sinAcceso)).toBe(true);
+  });
+  it("no bloquea al operador de partner con capacidades vacías (recorrido UI 2026-11-04)", () => {
+    expect(sessionHasNoAccess(operadorPartner)).toBe(false);
   });
   it("bloquea la sesion que arma el BFF cuando el API responde ERP_ACCESS_DENIED", () => {
     // UserContextProvider::fromBackendContext([]): cliente sin erp_operator (antes llegaba user {} y entraba).
     const denegado = {
-      user: { username: "", partner_id: 0, is_admin: false, is_tmwe: false, capabilities_source: "backend" },
+      user: { username: "", partner_id: 0, is_admin: false, is_tmwe: false, capabilities_source: "backend", erp_access: false },
       capabilities: [],
     };
     expect(sessionHasNoAccess(denegado)).toBe(true);
@@ -31,7 +36,7 @@ describe("sessionHasNoAccess", () => {
     expect(sessionHasNoAccess(contextoFallido)).toBe(false);
   });
   it("nunca bloquea a TMWE aunque vengan vacias", () => {
-    expect(sessionHasNoAccess({ user: { is_tmwe: true, capabilities_source: "backend" }, capabilities: [] })).toBe(false);
+    expect(sessionHasNoAccess({ user: { is_tmwe: true, capabilities_source: "backend", erp_access: false }, capabilities: [] })).toBe(false);
   });
   it("sin sesion informada no bloquea", () => {
     expect(sessionHasNoAccess({})).toBe(false);
@@ -63,6 +68,8 @@ describe("bootstrapBff + hasErpAccess", () => {
     await boot(staff);
     expect(hasErpAccess()).toBe(true);
     await boot(partner);
+    expect(hasErpAccess()).toBe(true);
+    await boot(operadorPartner);
     expect(hasErpAccess()).toBe(true);
   });
 });
