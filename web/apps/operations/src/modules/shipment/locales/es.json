@@ -210,6 +210,18 @@
       }
     },
     "awb": {
+      "booking_error": {
+        "title_rejected": "{courier} ha rechazado el envío",
+        "title_unavailable": "{courier} no contesta",
+        "title_validation": "El envío todavía no se puede reservar",
+        "title_internal": "No se ha podido generar la AWB",
+        "edit_packages": "Editar bultos",
+        "retry": "Reintentar",
+        "copy_details": "Copiar detalle",
+        "copied": "Detalle copiado",
+        "copy_failed": "No se ha podido copiar el detalle",
+        "reference": "Referencia: {id}"
+      },
       "client_service": "Servicio cliente",
       "fornitore": "Proveedor",
       "awb_tracking": "AWB · Tracking",
@@ -996,7 +1008,12 @@
     "header": {
       "from": "DESDE",
       "to": "HASTA",
-      "service": "SERVICIO"
+      "service": "SERVICIO",
+      "shipped_on": "enviado el {date}",
+      "set_dates": "Fijar fechas",
+      "set_dates_title": "Fijar fechas del envío",
+      "edit_dates": "Modificar fechas del envío",
+      "chat_unread": "Chat partner · {n} nuevo | Chat partner · {n} nuevos"
     },
     "ldv": {
       "pre_validation": "Validación pre-LDV",

@@ -98,7 +98,19 @@
       "ROLE_NOT_FOUND": "De rol bestaat niet of is inactief.",
       "CARGO_INVOICED": "De cargo is gefactureerd (klant of leverancier): hij kan niet worden geannuleerd.",
       "CARGO_HAS_ACTIVE_BOOKING": "De cargo heeft een actieve boeking bij de luchtvaartmaatschappij: annuleer eerst de boeking.",
-      "CARGO_HAS_AWB": "De cargo heeft een uitgegeven AWB: alleen TMWE-personeel kan hem annuleren, met uitdrukkelijke bevestiging."
+      "CARGO_HAS_AWB": "De cargo heeft een uitgegeven AWB: alleen TMWE-personeel kan hem annuleren, met uitdrukkelijke bevestiging.",
+      "COURIER_PACKAGE_OVERWEIGHT": "Collo {package} overschrijdt de limiet van {limit} {unit} per collo van {courier}.",
+      "COURIER_INVALID_WEIGHT": "{courier} heeft voor elk collo een geldig gewicht nodig.",
+      "COURIER_INVALID_DIMENSIONS": "{courier} heeft voor elk collo geldige afmetingen nodig.",
+      "COURIER_INVALID_POSTAL_CODE": "{courier} accepteert de postcode van een van de adressen niet.",
+      "COURIER_INVALID_PHONE": "{courier} heeft een geldig telefoonnummer van afzender en ontvanger nodig.",
+      "COURIER_UNAVAILABLE": "{courier} heeft niet op tijd geantwoord. Er is niets geboekt."
+    },
+    "hint": {
+      "COURIER_PACKAGE_OVERWEIGHT": "Verdeel het over meer colli of kies een vrachtdienst.",
+      "COURIER_REJECTED": "Corrigeer het gegeven dat de koerier aangeeft en probeer opnieuw.",
+      "COURIER_UNAVAILABLE": "Probeer het over een paar minuten opnieuw.",
+      "category_internal": "Gebeurt het opnieuw, kopieer de details en stuur ze naar support."
     }
   },
   "platform": {

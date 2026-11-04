@@ -122,3 +122,94 @@ export function localizedErrorText(
   }
   return caughtText(e, fallback);
 }
+
+/** Nombre del courier para el texto (`details.courier` llega en minúsculas: fedex, dhl, ups...). */
+const COURIER_NAMES: Record<string, string> = { fedex: 'FedEx', dhl: 'DHL', ups: 'UPS', tnt: 'TNT', mytnt: 'TNT' };
+
+/** Lo que la interfaz necesita para presentar un error: qué pasó, qué hacer y qué copiar para soporte. */
+export interface UserError {
+  /** Código de negocio (`COURIER_PACKAGE_OVERWEIGHT`...), o null. */
+  code: string | null;
+  /** `validation` | `courier_rejected` | `courier_unavailable` | `internal` | `unknown`. */
+  category: string;
+  /** Texto para el usuario, traducido si `errors.api.<CODE>` existe (con los datos de `details`). */
+  message: string;
+  /** Qué hacer, si hay consejo para el código (`errors.hint.<CODE>`) o la categoría (`errors.hint.category_<cat>`). */
+  hint: string | null;
+  details: Record<string, unknown>;
+  requestId: string | null;
+  /** Reintentar tiene sentido (el servicio no contestó). */
+  retryable: boolean;
+  status: number;
+  /** Texto técnico para «Copiar detalle»: código, código del courier, mensaje original, request_id. */
+  technical: string;
+}
+
+type Translator = {
+  t: (key: string, named?: Record<string, unknown>) => string;
+  te: (key: string) => boolean;
+};
+
+/**
+ * Normaliza cualquier fallo (excepción del cliente http, o respuesta `success:false` devuelta con 200) a un
+ * {@link UserError}. Es la única lectura que deben hacer los diálogos que muestran un error en línea.
+ */
+export function userError(e: unknown, i18n: Translator, fallback = 'Error'): UserError {
+  const body = bodyOf(e) ?? (isRecord(e) && e.success === false ? e : null);
+  // El cuerpo viene dentro de la excepcion (ApiError.payload) o es la propia respuesta success:false.
+  const code = (body ? apiErrorCode({ details: body }) : null) ?? apiErrorCode(e);
+  const details = body ? apiErrorDetails({ details: body }) : apiErrorDetails(e);
+  const status = apiErrorStatus(e);
+
+  const categoryRaw = details.category ?? body?.error_category;
+  const category =
+    typeof categoryRaw === 'string' && categoryRaw
+      ? categoryRaw
+      : status === 503
+        ? 'courier_unavailable'
+        : status >= 500
+          ? 'internal'
+          : status >= 400
+            ? 'validation'
+            : 'unknown';
+
+  const courierKey = typeof details.courier === 'string' ? details.courier.toLowerCase() : '';
+  const params: Record<string, unknown> = {
+    ...details,
+    courier: COURIER_NAMES[courierKey] ?? (courierKey ? courierKey.toUpperCase() : ''),
+  };
+
+  const serverText = body ? errorText(body.error as RawApiError, '') || (typeof body.message === 'string' ? body.message : '') : '';
+  let message = serverText || caughtText(e, fallback);
+  if (code && i18n.te(`errors.api.${code}`)) message = i18n.t(`errors.api.${code}`, params);
+
+  let hint: string | null = null;
+  if (code && i18n.te(`errors.hint.${code}`)) hint = i18n.t(`errors.hint.${code}`, params);
+  else if (i18n.te(`errors.hint.category_${category}`)) hint = i18n.t(`errors.hint.category_${category}`, params);
+
+  const rid = body?.request_id ?? (isRecord(body?.error) ? (body!.error as Record<string, unknown>).request_id : undefined) ?? details.request_id;
+  const requestId = typeof rid === 'string' && rid ? rid : null;
+
+  const technical = [
+    code ? `code: ${code}` : '',
+    status ? `http: ${status}` : '',
+    typeof details.courier_code === 'string' ? `courier_code: ${details.courier_code}` : '',
+    typeof details.field === 'string' ? `field: ${details.field}` : '',
+    typeof details.courier_message === 'string' ? `courier: ${details.courier_message}` : serverText ? `message: ${serverText}` : '',
+    requestId ? `request_id: ${requestId}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return {
+    code,
+    category,
+    message,
+    hint,
+    details,
+    requestId,
+    retryable: details.retryable === true || status === 503,
+    status,
+    technical,
+  };
+}

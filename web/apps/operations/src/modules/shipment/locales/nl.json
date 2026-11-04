@@ -210,6 +210,18 @@
       }
     },
     "awb": {
+      "booking_error": {
+        "title_rejected": "{courier} heeft de zending geweigerd",
+        "title_unavailable": "{courier} antwoordt niet",
+        "title_validation": "De zending kan nog niet worden geboekt",
+        "title_internal": "De AWB kon niet worden aangemaakt",
+        "edit_packages": "Colli bewerken",
+        "retry": "Opnieuw proberen",
+        "copy_details": "Details kopiëren",
+        "copied": "Details gekopieerd",
+        "copy_failed": "Details konden niet worden gekopieerd",
+        "reference": "Referentie: {id}"
+      },
       "client_service": "Klantdienst",
       "fornitore": "Leverancier",
       "awb_tracking": "AWB · Tracking",
@@ -996,7 +1008,12 @@
     "header": {
       "from": "VAN",
       "to": "NAAR",
-      "service": "DIENST"
+      "service": "DIENST",
+      "shipped_on": "verzonden op {date}",
+      "set_dates": "Datums instellen",
+      "set_dates_title": "Verzenddatums instellen",
+      "edit_dates": "Verzenddatums wijzigen",
+      "chat_unread": "Partnerchat · {n} nieuw | Partnerchat · {n} nieuw"
     },
     "ldv": {
       "pre_validation": "Pre-LDV-validatie",

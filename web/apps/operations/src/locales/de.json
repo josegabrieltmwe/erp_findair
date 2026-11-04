@@ -98,7 +98,19 @@
       "ROLE_NOT_FOUND": "Die Rolle existiert nicht oder ist inaktiv.",
       "CARGO_INVOICED": "Der Cargo ist fakturiert (Kunde oder Lieferant): er kann nicht storniert werden.",
       "CARGO_HAS_ACTIVE_BOOKING": "Der Cargo hat eine aktive Buchung bei der Airline: Stornieren Sie zuerst die Buchung.",
-      "CARGO_HAS_AWB": "Der Cargo hat ein ausgestelltes AWB: nur TMWE-Personal kann ihn mit ausdrücklicher Bestätigung stornieren."
+      "CARGO_HAS_AWB": "Der Cargo hat ein ausgestelltes AWB: nur TMWE-Personal kann ihn mit ausdrücklicher Bestätigung stornieren.",
+      "COURIER_PACKAGE_OVERWEIGHT": "Packstück {package} überschreitet das Limit von {limit} {unit} pro Packstück bei {courier}.",
+      "COURIER_INVALID_WEIGHT": "{courier} benötigt für jedes Packstück ein gültiges Gewicht.",
+      "COURIER_INVALID_DIMENSIONS": "{courier} benötigt für jedes Packstück gültige Maße.",
+      "COURIER_INVALID_POSTAL_CODE": "{courier} akzeptiert die Postleitzahl einer der Adressen nicht.",
+      "COURIER_INVALID_PHONE": "{courier} benötigt eine gültige Telefonnummer von Absender und Empfänger.",
+      "COURIER_UNAVAILABLE": "{courier} hat nicht rechtzeitig geantwortet. Es wurde nichts gebucht."
+    },
+    "hint": {
+      "COURIER_PACKAGE_OVERWEIGHT": "Teile es auf mehrere Packstücke auf oder wähle einen Frachtservice.",
+      "COURIER_REJECTED": "Korrigiere die vom Kurier genannte Angabe und versuche es erneut.",
+      "COURIER_UNAVAILABLE": "Versuche es in ein paar Minuten erneut.",
+      "category_internal": "Wenn es wieder passiert, kopiere die Details und sende sie an den Support."
     }
   },
   "platform": {

@@ -98,7 +98,19 @@
       "ROLE_NOT_FOUND": "The role does not exist or is inactive.",
       "CARGO_INVOICED": "The cargo is invoiced (customer or supplier): it cannot be cancelled.",
       "CARGO_HAS_ACTIVE_BOOKING": "The cargo has an active airline booking: cancel the booking first.",
-      "CARGO_HAS_AWB": "The cargo has an issued AWB: only TMWE staff can cancel it, with explicit confirmation."
+      "CARGO_HAS_AWB": "The cargo has an issued AWB: only TMWE staff can cancel it, with explicit confirmation.",
+      "COURIER_PACKAGE_OVERWEIGHT": "Package {package} exceeds the {limit} {unit} per-package limit of {courier}.",
+      "COURIER_INVALID_WEIGHT": "{courier} needs a valid weight for every package.",
+      "COURIER_INVALID_DIMENSIONS": "{courier} needs valid dimensions for every package.",
+      "COURIER_INVALID_POSTAL_CODE": "{courier} does not accept the postal code of one of the addresses.",
+      "COURIER_INVALID_PHONE": "{courier} needs a valid phone number for sender and recipient.",
+      "COURIER_UNAVAILABLE": "{courier} did not answer in time. Nothing has been booked."
+    },
+    "hint": {
+      "COURIER_PACKAGE_OVERWEIGHT": "Split it into more packages or choose a freight service.",
+      "COURIER_REJECTED": "Fix the data the courier points out and try again.",
+      "COURIER_UNAVAILABLE": "Try again in a few minutes.",
+      "category_internal": "If it happens again, copy the details and send them to support."
     }
   },
   "platform": {

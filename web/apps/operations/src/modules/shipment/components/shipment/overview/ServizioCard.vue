@@ -351,7 +351,10 @@
         :has-blocking-errors="awbGen.hasBlockingErrors.value"
         :ship-date-label="awbGen.shipDateLabel.value"
         :ship-date-adjusted="awbGen.shipDateAdjusted.value"
+        :booking-error="awbGen.bookingError.value"
         @generate="awbGen.generate"
+        @copy-error="awbGen.copyBookingErrorDetails"
+        @edit-packages="openPackagesFromAwb"
       />
 
       <!-- AWB generated — success dialog with inline preview + one-click print.
@@ -470,6 +473,7 @@ import { storeToRefs } from "pinia";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useShipmentState } from "@shipment/composables/useShipmentState";
 import { useToastStore } from "@shipment/stores/toast.store";
+import { useUiStore } from "@shipment/stores/ui.store";
 import CardHeader from "@shipment/components/shell/CardHeader.vue";
 import CourierLogo from "@shipment/components/shipment/CourierLogo.vue";
 import ShipmentServiceClienteModal from "@shipment/components/shipment/service/ShipmentServiceClienteModal.vue";
@@ -804,6 +808,13 @@ const awbGen = useAwbGeneration(
     labels.openSuccess(Number(shipment.value?.id ?? 0));
   },
 );
+
+/** «Editar bultos» desde el error de la reserva (peso o medidas): cierra el dialogo y abre la ventana de bultos. */
+const ui = useUiStore();
+function openPackagesFromAwb(): void {
+  awbGen.dialogOpen.value = false;
+  ui.openModal("colli");
+}
 
 const sendingLdvMail = ref(false);
 

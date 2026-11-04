@@ -98,7 +98,19 @@
       "ROLE_NOT_FOUND": "El rol no existe o está inactivo.",
       "CARGO_INVOICED": "El cargo está facturado (cliente o proveedor): no se puede cancelar.",
       "CARGO_HAS_ACTIVE_BOOKING": "El cargo tiene una reserva activa con la aerolínea: cancela antes la reserva.",
-      "CARGO_HAS_AWB": "El cargo tiene un AWB emitido: solo el personal de TMWE puede cancelarlo, confirmándolo de forma explícita."
+      "CARGO_HAS_AWB": "El cargo tiene un AWB emitido: solo el personal de TMWE puede cancelarlo, confirmándolo de forma explícita.",
+      "COURIER_PACKAGE_OVERWEIGHT": "El bulto {package} supera el límite de {limit} {unit} por bulto de {courier}.",
+      "COURIER_INVALID_WEIGHT": "{courier} necesita un peso válido para cada bulto.",
+      "COURIER_INVALID_DIMENSIONS": "{courier} necesita medidas válidas para cada bulto.",
+      "COURIER_INVALID_POSTAL_CODE": "{courier} no acepta el código postal de una de las direcciones.",
+      "COURIER_INVALID_PHONE": "{courier} necesita un teléfono válido del remitente y del destinatario.",
+      "COURIER_UNAVAILABLE": "{courier} no ha contestado a tiempo. No se ha reservado nada."
+    },
+    "hint": {
+      "COURIER_PACKAGE_OVERWEIGHT": "Divídelo en más bultos o elige un servicio de carga.",
+      "COURIER_REJECTED": "Corrige el dato que indica el courier y vuelve a intentarlo.",
+      "COURIER_UNAVAILABLE": "Vuelve a intentarlo en unos minutos.",
+      "category_internal": "Si se repite, copia el detalle y envíalo a soporte."
     }
   },
   "platform": {

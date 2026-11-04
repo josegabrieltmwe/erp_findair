@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToastStore } from "@shipment/stores/toast.store";
+import { userError, type UserError } from "@shared/utils/apiError";
 import {
   labelsService,
   type ValidationIssue,
@@ -21,8 +22,12 @@ export function useAwbGeneration(
   shipDateRaw: () => string,
   onGenerated: (tracking: string) => void,
 ) {
-  const { t } = useI18n();
+  const { t, te } = useI18n();
   const toasts = useToastStore();
+  const i18n = {
+    t: (key: string, named?: Record<string, unknown>) => (named ? t(key, named) : t(key)),
+    te: (key: string) => te(key),
+  };
 
   const dialogOpen = ref(false);
   const generating = ref(false);
@@ -32,6 +37,19 @@ export function useAwbGeneration(
   const errors = ref<ValidationIssue[]>([]);
   const warnings = ref<ValidationIssue[]>([]);
   const hasBlockingErrors = computed<boolean>(() => errors.value.length > 0);
+
+  // Fallo de la RESERVA (el courier la rechazo o no contesto). Se muestra dentro del dialogo, donde mira el operador,
+  // con el motivo, que hacer y el detalle para soporte; antes era un toast de 4 s en una esquina que se perdia.
+  const bookingError = ref<UserError | null>(null);
+
+  /** Aviso con codigo (p. ej. peso por bulto): texto traducido con sus datos; si no, el del servidor. */
+  function issueText(issue: ValidationIssue): string {
+    const key = issue.code ? `errors.api.${issue.code}` : "";
+    return key && te(key) ? t(key, issue.params ?? {}) : issue.message;
+  }
+  function localize(list: ValidationIssue[] | undefined): ValidationIssue[] {
+    return (list ?? []).map((i) => ({ ...i, message: issueText(i) }));
+  }
 
   // Re-implements the backend's `validate_and_adjust_shipment_date` heuristic
   // in JS so the operator sees up-front whether the date will be adjusted.
@@ -64,6 +82,7 @@ export function useAwbGeneration(
       toasts.push("warning", t("shipment.awb.toast_assign_fornitore_first"));
       return;
     }
+    bookingError.value = null;
     dialogOpen.value = true;
     void runValidation();
   }
@@ -87,8 +106,8 @@ export function useAwbGeneration(
         ];
         return;
       }
-      errors.value = r.errors ?? [];
-      warnings.value = r.warnings ?? [];
+      errors.value = localize(r.errors);
+      warnings.value = localize(r.warnings);
     } catch (e) {
       errors.value = [
         {
@@ -106,6 +125,7 @@ export function useAwbGeneration(
     const sid = shipmentId();
     if (!sid) return;
     generating.value = true;
+    bookingError.value = null;
     try {
       // Note: test/prod is NOT chosen here. The backend derives it from the
       // courier account's `testing` flag (set by the system admin); the operator
@@ -116,14 +136,8 @@ export function useAwbGeneration(
       });
 
       if (!r.success) {
-        const msg =
-          typeof r.error === "string"
-            ? r.error
-            : (r.error?.message ?? t("shipment.awb.toast_generate_failed"));
-        toasts.push(
-          "error",
-          t("shipment.awb.toast_awb_not_generated", { msg }),
-        );
+        // Respuesta 200 con success:false (contrato antiguo del endpoint).
+        bookingError.value = userError(r, i18n, t("shipment.awb.toast_generate_failed"));
         return;
       }
 
@@ -145,9 +159,22 @@ export function useAwbGeneration(
       dialogOpen.value = false;
       onGenerated(data.master_tracking_number);
     } catch (e) {
-      toasts.push("error", (e as Error).message);
+      // 422 rechazo del courier, 503 sin respuesta, 500 fallo interno: el mismo bloque en el dialogo.
+      bookingError.value = userError(e, i18n, t("shipment.awb.toast_generate_failed"));
     } finally {
       generating.value = false;
+    }
+  }
+
+  /** Copia el detalle tecnico (codigo, mensaje del courier, request_id) para pasarlo a soporte. */
+  async function copyBookingErrorDetails(): Promise<void> {
+    const text = bookingError.value?.technical;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      toasts.push("success", t("shipment.awb.booking_error.copied"));
+    } catch {
+      toasts.push("warning", t("shipment.awb.booking_error.copy_failed"));
     }
   }
 
@@ -158,6 +185,8 @@ export function useAwbGeneration(
     errors,
     warnings,
     hasBlockingErrors,
+    bookingError,
+    copyBookingErrorDetails,
     shipDateAdjusted,
     shipDateLabel,
     confirm,

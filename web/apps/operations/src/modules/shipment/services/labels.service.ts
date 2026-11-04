@@ -21,12 +21,17 @@
  *   (b) inspect the underlying label metadata via `ajax_get_label_*`.
  */
 import { http } from "./http";
+import type { FetchOptions } from "ofetch";
 
 export interface ValidationIssue {
   category: string;
   field_id?: string;
   severity: "error" | "warning";
   message: string;
+  /** Codigo estable para traducir el aviso (`errors.api.<code>`), p. ej. COURIER_PACKAGE_OVERWEIGHT. */
+  code?: string;
+  /** Datos del aviso para el texto traducido (bulto, peso, limite...). */
+  params?: Record<string, unknown>;
 }
 
 export interface ValidateBeforeLdvResponse {
@@ -107,6 +112,30 @@ export interface TmweLabelResponse {
     labels: TmweLabelItem[];
   };
   error?: { message: string; code?: string } | string;
+}
+
+/** Respuesta de `full_shipment_label_generator`. */
+export interface CourierLabelResult {
+  success: boolean;
+  data?: {
+    shipment_id: number;
+    label_type: "tmwe" | "courier";
+    decision_reason?: string;
+    courier?: string;
+    master_tracking_number: string | null;
+    labels: Array<{
+      package_number: number;
+      master_tracking?: string;
+      package_tracking?: string;
+      format: string;
+      content?: string;
+      base64?: string;
+    }>;
+    packages_count: number;
+    execution_time_ms?: number;
+    fornitore_selected?: boolean;
+  };
+  error?: string | { message: string; code?: string };
 }
 
 export const labelsService = {
@@ -212,30 +241,11 @@ export const labelsService = {
       convert_to_jpg?: boolean;
       auto_select_fornitore?: boolean;
     } = {},
-  ): Promise<{
-    success: boolean;
-    data?: {
-      shipment_id: number;
-      label_type: "tmwe" | "courier";
-      decision_reason?: string;
-      courier?: string;
-      master_tracking_number: string | null;
-      labels: Array<{
-        package_number: number;
-        master_tracking?: string;
-        package_tracking?: string;
-        format: string;
-        content?: string;
-        base64?: string;
-      }>;
-      packages_count: number;
-      execution_time_ms?: number;
-      fornitore_selected?: boolean;
-    };
-    error?: string | { message: string; code?: string };
-  }> {
-    return http("/full_shipment_label_generator", {
+  ): Promise<CourierLabelResult> {
+    return http<CourierLabelResult>("/full_shipment_label_generator", {
       method: "POST",
+      // El fallo se pinta dentro del dialogo de la AWB (useAwbGeneration): sin toast global duplicado.
+      inlineErrors: true,
       body: {
         shipment_id,
         options: {
@@ -245,6 +255,7 @@ export const labelsService = {
           auto_select_fornitore: opts.auto_select_fornitore ?? false,
         },
       },
-    });
+      // `inlineErrors` lo lee el cliente http compartido (onResponseError); ofetch no lo tipa.
+    } as FetchOptions<"json">);
   },
 };

@@ -58,6 +58,12 @@ routes:
     upstream:
       action: download_file
     response: binary
+  - id: post.full_shipment_label_generator
+    method: POST
+    path: /full_shipment_label_generator
+    upstream:
+      action: full_shipment_label_generator
+    limits: { body: 1k }
 include:
   - routes.extra.yaml
 exclude:

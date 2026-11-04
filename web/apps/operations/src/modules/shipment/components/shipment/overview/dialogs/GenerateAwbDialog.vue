@@ -23,6 +23,56 @@
       </div>
     </v-alert>
 
+    <!-- Fallo de la reserva: aqui, donde mira el operador, y hasta que lo corrija o cierre. Dice que paso (texto
+         traducido por codigo, con los datos del courier), que hacer y deja copiar el detalle para soporte. -->
+    <v-alert
+      v-if="bookingError"
+      type="error"
+      variant="tonal"
+      density="compact"
+      class="mb-3 awb-booking-error"
+      :icon="bookingError.retryable ? 'mdi-cloud-off-outline' : 'mdi-truck-alert-outline'"
+    >
+      <div class="font-weight-medium mb-1">{{ bookingErrorTitle }}</div>
+      <div>{{ bookingError.message }}</div>
+      <div v-if="bookingError.hint" class="text-caption mt-1">{{ bookingError.hint }}</div>
+      <div class="d-flex flex-wrap ga-2 mt-2">
+        <v-btn
+          v-if="isPackagesError"
+          size="small"
+          variant="flat"
+          color="error"
+          prepend-icon="mdi-package-variant-closed"
+          @click="emit('edit-packages')"
+        >
+          {{ t("shipment.awb.booking_error.edit_packages") }}
+        </v-btn>
+        <v-btn
+          v-if="bookingError.retryable"
+          size="small"
+          variant="flat"
+          color="error"
+          prepend-icon="mdi-refresh"
+          :loading="generating"
+          @click="emit('generate')"
+        >
+          {{ t("shipment.awb.booking_error.retry") }}
+        </v-btn>
+        <v-btn
+          v-if="bookingError.technical"
+          size="small"
+          variant="text"
+          prepend-icon="mdi-content-copy"
+          @click="emit('copy-error')"
+        >
+          {{ t("shipment.awb.booking_error.copy_details") }}
+        </v-btn>
+      </div>
+      <div v-if="bookingError.requestId" class="text-caption text-medium-emphasis mt-1">
+        {{ t("shipment.awb.booking_error.reference", { id: bookingError.requestId }) }}
+      </div>
+    </v-alert>
+
     <!-- Pre-flight validation (auto, replaces the standalone "Verifica
              pre-stampa" menu entry). Errors block the booking; warnings advise. -->
     <div
@@ -61,7 +111,7 @@
       </ul>
     </v-alert>
     <v-alert
-      v-else
+      v-else-if="!bookingError"
       type="success"
       variant="tonal"
       density="compact"
@@ -146,10 +196,12 @@
  * ServizioCard unchanged.
  */
 import type { ValidationIssue } from "@shipment/services/labels.service";
+import type { UserError } from "@shared/utils/apiError";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import AppDialog from "@shared/ui/AppDialog.vue";
 
-defineProps<{
+const props = defineProps<{
   modelValue: boolean;
   courierLabel: string | null;
   supplierServiceName: string | null;
@@ -161,14 +213,43 @@ defineProps<{
   hasBlockingErrors: boolean;
   shipDateLabel: string;
   shipDateAdjusted: boolean;
+  /** Fallo de la reserva (useAwbGeneration.bookingError), o null. */
+  bookingError?: UserError | null;
 }>();
 
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   generate: [];
+  "edit-packages": [];
+  "copy-error": [];
 }>();
 
 const { t } = useI18n();
+
+/** Codigos que se arreglan en la ventana de bultos (peso, medidas). */
+const PACKAGE_CODES = new Set([
+  "COURIER_PACKAGE_OVERWEIGHT",
+  "COURIER_INVALID_WEIGHT",
+  "COURIER_INVALID_DIMENSIONS",
+]);
+const isPackagesError = computed<boolean>(() => PACKAGE_CODES.has(props.bookingError?.code ?? ""));
+
+/** Titulo segun la categoria: rechazo del courier, sin respuesta, datos o fallo interno. */
+const bookingErrorTitle = computed<string>(() => {
+  const e = props.bookingError;
+  if (!e) return "";
+  const courier = props.courierLabel || "";
+  switch (e.category) {
+    case "courier_rejected":
+      return t("shipment.awb.booking_error.title_rejected", { courier });
+    case "courier_unavailable":
+      return t("shipment.awb.booking_error.title_unavailable", { courier });
+    case "validation":
+      return t("shipment.awb.booking_error.title_validation");
+    default:
+      return t("shipment.awb.booking_error.title_internal");
+  }
+});
 </script>
 
 <style scoped>

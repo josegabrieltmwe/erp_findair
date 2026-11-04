@@ -33,6 +33,17 @@ final class ResponseAdapter
         'AI_PROTOCOL_UNSUPPORTED' => 'El servicio de IA no es compatible.',
     ];
 
+    /**
+     * Fallos del courier que tmwe_api publica al generar la AWB y que la SPA debe distinguir de un error interno
+     * (el operador puede reintentar). Lista cerrada, texto FIJO y solo los campos seguros de `error.details`.
+     */
+    private const COURIER_ERRORS = [
+        'COURIER_UNAVAILABLE' => 'El courier no ha contestado a tiempo. No se ha reservado nada.',
+    ];
+
+    /** Campos de `error.details` de un fallo del courier que pueden llegar al navegador. */
+    private const COURIER_SAFE_DETAILS = ['category', 'retryable', 'courier'];
+
     public function __construct(private readonly LoggerInterface $logger)
     {
     }
@@ -84,6 +95,12 @@ final class ResponseAdapter
             return $ai;
         }
 
+        // Courier sin respuesta (503): se conserva el codigo para que la SPA ofrezca reintentar.
+        $courier = $this->courierProblem($payload, $upstream, $status, $requestId);
+        if ($courier !== null) {
+            return $courier;
+        }
+
         if ($status >= 500) {
             // Nunca se filtra el detalle interno del backend.
             return ProblemDetails::response(502, 'upstream_error', 'Error del servicio', 'El servicio no pudo completar la operación.', $requestId);
@@ -131,6 +148,32 @@ final class ResponseAdapter
         $title = $status === 429 ? 'Límite de IA' : 'Servicio de IA';
 
         return ProblemDetails::response($out, $aiCode, $title, self::AI_ERRORS[$aiCode], $requestId, ['error_code' => $aiCode], $headers);
+    }
+
+    private function courierProblem(array $payload, ResponseInterface $upstream, int $status, string $requestId): ?ResponseInterface
+    {
+        if ($status !== 503) {
+            return null;
+        }
+        $error = is_array($payload['error'] ?? null) ? $payload['error'] : [];
+        $code = $payload['error_code'] ?? ($error['code'] ?? null);
+        if (!is_string($code) || !isset(self::COURIER_ERRORS[$code])) {
+            return null;
+        }
+        $details = is_array($error['details'] ?? null) ? $error['details'] : [];
+        $safe = array_intersect_key($details, array_flip(self::COURIER_SAFE_DETAILS));
+
+        $headers = [];
+        if ($upstream->hasHeader('Retry-After')) {
+            $headers['Retry-After'] = mb_substr($upstream->getHeaderLine('Retry-After'), 0, 40);
+        }
+        $text = self::COURIER_ERRORS[$code];
+
+        return ProblemDetails::response(503, $code, 'Courier no disponible', $text, $requestId, [
+            'success' => false,
+            'error_code' => $code,
+            'error' => ['code' => $code, 'message' => $text, 'details' => $safe],
+        ], $headers);
     }
 
     /**

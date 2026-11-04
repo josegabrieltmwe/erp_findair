@@ -210,6 +210,18 @@
       }
     },
     "awb": {
+      "booking_error": {
+        "title_rejected": "{courier} rejected the shipment",
+        "title_unavailable": "{courier} is not answering",
+        "title_validation": "The shipment cannot be booked yet",
+        "title_internal": "The AWB could not be generated",
+        "edit_packages": "Edit packages",
+        "retry": "Retry",
+        "copy_details": "Copy details",
+        "copied": "Details copied",
+        "copy_failed": "Could not copy the details",
+        "reference": "Reference: {id}"
+      },
       "client_service": "Client service",
       "fornitore": "Supplier",
       "awb_tracking": "AWB · Tracking",
@@ -1019,7 +1031,12 @@
     "header": {
       "from": "FROM",
       "to": "TO",
-      "service": "SERVICE"
+      "service": "SERVICE",
+      "shipped_on": "shipped on {date}",
+      "set_dates": "Set dates",
+      "set_dates_title": "Set shipment dates",
+      "edit_dates": "Edit shipment dates",
+      "chat_unread": "Partner chat · {n} new | Partner chat · {n} new"
     },
     "ldv": {
       "pre_validation": "Pre-LDV validation",

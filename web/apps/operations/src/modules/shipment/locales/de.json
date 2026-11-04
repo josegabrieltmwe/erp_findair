@@ -210,6 +210,18 @@
       }
     },
     "awb": {
+      "booking_error": {
+        "title_rejected": "{courier} hat die Sendung abgelehnt",
+        "title_unavailable": "{courier} antwortet nicht",
+        "title_validation": "Die Sendung kann noch nicht gebucht werden",
+        "title_internal": "Die AWB konnte nicht erstellt werden",
+        "edit_packages": "Packstücke bearbeiten",
+        "retry": "Erneut versuchen",
+        "copy_details": "Details kopieren",
+        "copied": "Details kopiert",
+        "copy_failed": "Details konnten nicht kopiert werden",
+        "reference": "Referenz: {id}"
+      },
       "client_service": "Kundenservice",
       "fornitore": "Lieferant",
       "awb_tracking": "AWB · Tracking",
@@ -996,7 +1008,12 @@
     "header": {
       "from": "VON",
       "to": "NACH",
-      "service": "DIENST"
+      "service": "DIENST",
+      "shipped_on": "versendet am {date}",
+      "set_dates": "Daten festlegen",
+      "set_dates_title": "Versanddaten festlegen",
+      "edit_dates": "Versanddaten ändern",
+      "chat_unread": "Partner-Chat · {n} neu | Partner-Chat · {n} neu"
     },
     "ldv": {
       "pre_validation": "Pre-LDV-Prüfung",

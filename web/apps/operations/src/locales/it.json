@@ -98,7 +98,19 @@
       "ROLE_NOT_FOUND": "Il ruolo non esiste o non è attivo.",
       "CARGO_INVOICED": "Il cargo è fatturato (cliente o fornitore): non può essere annullato.",
       "CARGO_HAS_ACTIVE_BOOKING": "Il cargo ha una prenotazione attiva con la compagnia aerea: annulla prima la prenotazione.",
-      "CARGO_HAS_AWB": "Il cargo ha un AWB emesso: solo il personale TMWE può annullarlo, con conferma esplicita."
+      "CARGO_HAS_AWB": "Il cargo ha un AWB emesso: solo il personale TMWE può annullarlo, con conferma esplicita.",
+      "COURIER_PACKAGE_OVERWEIGHT": "Il collo {package} supera il limite di {limit} {unit} per collo di {courier}.",
+      "COURIER_INVALID_WEIGHT": "{courier} richiede un peso valido per ogni collo.",
+      "COURIER_INVALID_DIMENSIONS": "{courier} richiede misure valide per ogni collo.",
+      "COURIER_INVALID_POSTAL_CODE": "{courier} non accetta il CAP di uno degli indirizzi.",
+      "COURIER_INVALID_PHONE": "{courier} richiede un telefono valido per mittente e destinatario.",
+      "COURIER_UNAVAILABLE": "{courier} non ha risposto in tempo. Non è stato prenotato nulla."
+    },
+    "hint": {
+      "COURIER_PACKAGE_OVERWEIGHT": "Dividilo in più colli o scegli un servizio cargo.",
+      "COURIER_REJECTED": "Correggi il dato indicato dal corriere e riprova.",
+      "COURIER_UNAVAILABLE": "Riprova tra qualche minuto.",
+      "category_internal": "Se si ripete, copia il dettaglio e invialo al supporto."
     }
   },
   "platform": {

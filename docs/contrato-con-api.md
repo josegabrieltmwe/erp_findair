@@ -221,6 +221,21 @@ Plan y estado de la implementación: `tmwe_api/docs/03-diseno/pasarelas_pago/REA
 - **SPA (`operations`):** Settings → Pagos y bancos → «Pasarelas de pago», «Pasarelas por partner» (TMWE, `requiresAdmin`) y «Reembolsos». Código en `web/packages/platform/payment_gateways/`.
 - **Pendiente en esta área:** pantalla para iniciar un cobro, disputas, autorización de cobro y recargos (decisiones 2 y 3 del plan) y adaptadores distintos de Stripe.
 
+## J. Errores al generar la AWB del courier (2026-11-03)
+
+`POST full_shipment_label_generator` ya no devuelve todo fallo como `200` + `INTERNAL_ERROR` con la frase del courier dentro. El fallo sale con su código HTTP y los datos estructurados en `error.details` (forma `Api_Error`):
+
+| HTTP | `error.details.category` | Códigos | Qué hace la SPA |
+|---|---|---|---|
+| 422 | `courier_rejected` / `validation` | `COURIER_PACKAGE_OVERWEIGHT`, `COURIER_INVALID_WEIGHT`, `COURIER_INVALID_DIMENSIONS`, `COURIER_INVALID_POSTAL_CODE`, `COURIER_INVALID_PHONE`, `COURIER_REJECTED` (resto) | Bloque de error dentro del diálogo de la AWB, texto de `errors.api.<code>` con `package`, `limit`, `unit`, `courier`; «Editar bultos» para peso y medidas |
+| 503 | `courier_unavailable` | `COURIER_UNAVAILABLE` (`retryable: true`) | Mismo bloque con «Reintentar» |
+| 400 / 404 / 500 | `error_category` de primer nivel | `NO_COURIER_ASSIGNED`, `SHIPMENT_NOT_FOUND`, `INTERNAL_ERROR`... | Mismo bloque; «Copiar detalle» con código, mensaje del courier y `request_id` |
+
+- **Datos del courier:** `details` lleva `courier`, `courier_code` (p. ej. `PACKAGINGTYPE.LIMIT.EXCEEDED`), `field` y el texto original en `courier_message`. Catálogo en `tmwe_api/service/courier/Courier_Error_Catalog.php`.
+- **Aviso previo:** `web_validate_before_ldv` devuelve un error (FedEx, 68 kg) o un aviso (UPS, DHL, TNT, 70 kg) por cada bulto que supera el límite, con `code` y `params`, antes de llamar al courier.
+- **SPA:** `userError()` en `web/packages/platform/utils/apiError.ts` normaliza cualquier fallo; la llamada usa `inlineErrors: true` para que el cliente http no repita el aviso con el toast global. Los toasts tienen un solo store (antes dos con el mismo id de Pinia) y los de error no se cierran solos.
+- **Compatibilidad:** los clientes que leían `success:false` siguen recibiendo ese cuerpo; lo nuevo es el código HTTP. `External_Label_Courier_Controller` (partners) hereda los mismos códigos, que ya documentaba su OpenAPI (`400 NO_COURIER_ASSIGNED`).
+
 ## K. Gestión de proyectos de consolidata desde el ERP (2026-11-03)
 
 Peticiones que salen de [plan-consolidata-erp.md](plan-consolidata-erp.md). Todas sobre `unified_consolidation_project` (`tmwe_api/service/consolidation/*`) salvo indicación. Verificadas leyendo código de `tmwe_api` en `/var/www/sandbox/api` (sin ejecutar); P70 y P71 re-verificadas a mano.

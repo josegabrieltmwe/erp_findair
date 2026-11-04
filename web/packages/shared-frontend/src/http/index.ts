@@ -198,8 +198,11 @@ export function createHttpClient(opts: HttpClientOptions): $Fetch {
         emit('network-error', error);
       }
     },
-    onResponseError({ response }) {
+    onResponseError({ response, options }) {
       const status = response?.status ?? 0;
+      // `inlineErrors: true` en la llamada: quien la hace pinta el error en su propio dialogo, asi que no se avisa
+      // ademas con el toast global (el mismo fallo saldria dos veces). El ApiError se lanza igual.
+      const inline = (options as { inlineErrors?: boolean }).inlineErrors === true;
       if (status === 401) {
         const body = response?._data as { error?: string; error_code?: string } | undefined;
         const looksLikeBearerOnly =
@@ -233,7 +236,7 @@ export function createHttpClient(opts: HttpClientOptions): $Fetch {
         );
       }
       if (status >= 500) {
-        emit('server-error', response?._data);
+        if (!inline) emit('server-error', response?._data);
         throw new ApiError(
           extractMessage(response?._data) || 'Server error',
           status,
