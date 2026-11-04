@@ -22,7 +22,7 @@ Documentos relacionados:
 
 Estados del proyecto: **A** abierto, **P** presupuesto pedido, **C** cerrado (aceptado), **X** cancelado. No existe un estado «convertido»: hoy solo se nota por `id_cargo` (aéreo) o por `progetti_tratte.id_spedizione` (carretera).
 
-Quién crea proyectos hoy: el cliente, desde el plugin de WordPress `tmwe-findair-consolidata`. El ERP no puede crearlos.
+Quién crea proyectos: hasta ahora el cliente, desde el plugin de WordPress `tmwe-findair-consolidata`, **deprecado desde el 2026-11-03**. Con este plan los crea el staff desde el ERP.
 
 ## 2. Estado actual
 
@@ -326,7 +326,7 @@ Orden recomendado: **C0 y C1 en paralelo → C2 → C3 → C4 → C5 → C6 → 
 
 ## 9. Riesgos
 
-- **Plugin de WordPress:** comparte el endpoint con el ERP. Los cambios de C0 (precio manual, `reopen`) pueden romper flujos del plugin que hoy usan precio manual. Antes de desplegar, revisar el plugin (repo aparte) y avisar a su responsable (D17 del plan del API).
+- **Plugin de WordPress:** deprecado (2026-11-03). No hay que mantener su compatibilidad; el catálogo de cliente (`catalog_client.json`) sigue existiendo para quien llame al API como cliente.
 - **Datos de prueba:** sandbox no tiene proyectos utilizables y la BD es compartida. Las pruebas que crean cargos o expediciones deben seguir la regla de recogida desactivada y nota `[TEST]`, y no pueden reservar.
 - **Migraciones:** sin las migraciones 20261014 y 20261016 en producción, la bandeja, el reparto, el cumplimiento, `operate` y `answer_quote` fallan allí.
 - **Rendimiento:** `create_from_option` hace unas 15 consultas por house y no es atómico (hasta 200 houses). Aceptable con los volúmenes actuales; vigilarlo si se usa desde el simulador con muchas expediciones.
@@ -362,7 +362,7 @@ Pendiente:
 2. Compilar el bundle cuando el árbol no tenga cambios ajenos.
 3. Crear datos de prueba y recorrer en navegador la lista del §7.
 4. Aplicar las migraciones en producción (P78).
-5. **Plugin de WordPress:** debe copiar de nuevo `tests/fixtures/consolidation/catalog_client.json` (API 1.2, acción `log`). Además, ahora recibe 409 si cierra sin respuesta del staff y 403 si envía precio manual o tramos TRANSIT.
+5. ~~Plugin de WordPress~~: deprecado (2026-11-03); no requiere cambios.
 6. El POST de `unified_consolidation_project` en el BFF tiene `timeout: 30`. `operate` con muchas houses o con reserva puede superarlo.
 
 ## 11. Permiso de consolidata para TMWE y partners (2026-11-03)
