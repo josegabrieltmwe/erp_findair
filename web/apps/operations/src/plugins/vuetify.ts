@@ -4,11 +4,13 @@ import { createVuetify } from "vuetify";
 // Shared hybrid MDI iconset (fixes empty v-switch/checkbox thumbs) — single
 // source of truth in packages/platform/vuetify/hybrid_icons.ts.
 import { sharedIcons } from "@shared/vuetify/hybrid_icons";
+import { themeNameFor } from "@shared/platform/themeMode";
 
 export const vuetify = createVuetify({
   icons: sharedIcons,
   theme: {
-    defaultTheme: "tmweShipment",
+    // Arranca con el modo que eligió el usuario (claro si no eligió ninguno).
+    defaultTheme: themeNameFor("base"),
     themes: {
       tmweShipment: {
         dark: false,

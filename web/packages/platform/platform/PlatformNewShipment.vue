@@ -91,6 +91,9 @@ function go(type: NewType): void {
   font-weight: 600;
   cursor: pointer;
   border: none;
+  /* La barra alta va en una sola linea: el tasto no se parte ni se encoge. */
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: filter 0.15s ease;
 
   &:hover {
@@ -98,8 +101,9 @@ function go(type: NewType): void {
   }
 }
 
-/* En pantallas estrechas se muestra solo el icono (+). */
-@media (max-width: 700px) {
+/* Por debajo de 1200 px se muestra solo el icono (+): a 1030 px el texto partia el tasto en dos lineas. El titulo
+   del boton sigue diciendo que hace. */
+@media (max-width: 1199px) {
   .ptb-newbtn__label {
     display: none;
   }

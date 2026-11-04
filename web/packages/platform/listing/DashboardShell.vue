@@ -174,7 +174,9 @@ function onSidebarClick(ev: MouseEvent): void {
 ============================================================ */
 .dsh {
   display: grid;
-  grid-template-columns: var(--dsh-sidebar-w, 220px) 1fr;
+  /* minmax(0, 1fr): un `1fr` a secas no baja del ancho minimo de su contenido, y la topbar o la ficha empujaban la
+     columna principal fuera de la pantalla (a 1030 px media 1026 px con solo 974 libres y se cortaba la derecha). */
+  grid-template-columns: var(--dsh-sidebar-w, 220px) minmax(0, 1fr);
   grid-template-rows: var(--dsh-topbar-h, 96px) 1fr;
   /* El rail ocupa las DOS filas: llega hasta el borde superior en lugar de
      empezar bajo la topbar, como en el mockup de referencia (`.nav` con
@@ -367,7 +369,7 @@ function onSidebarClick(ev: MouseEvent): void {
 
 @media (max-width: 720px) {
   .dsh {
-    grid-template-columns: 0 1fr;
+    grid-template-columns: 0 minmax(0, 1fr);
   }
   .dsh-sidebar {
     position: fixed;

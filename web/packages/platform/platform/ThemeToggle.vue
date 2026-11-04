@@ -13,21 +13,17 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
+import { applyThemeMode, themeMode, toggleThemeMode } from './themeMode';
 
 const { t } = useI18n();
 const theme = useTheme();
-const isDark = computed(() => Boolean(theme.global.current.value.dark));
+const isDark = computed(() => themeMode.value === 'dark');
 
+// Única vía para cambiar el tema: guarda la preferencia (themeMode.ts) y la aplica a la paleta de la pantalla
+// actual. Las demás pantallas la leen al montarse, así que cambiar de página no cambia el tema.
 function toggle(): void {
-  const current = theme.global.name.value;
-  const candidates = isDark.value
-    ? [current.replace(/Dark$/, 'Light'), current.replace(/Dark$/, '')]
-    : [current.replace(/Light$/, '') + 'Dark', current + 'Dark'];
-  const next = candidates.find((name) => Boolean(theme.themes.value[name]));
-
-  if (next) {
-    theme.global.name.value = next;
-  }
+  toggleThemeMode();
+  applyThemeMode(theme);
 }
 </script>
 

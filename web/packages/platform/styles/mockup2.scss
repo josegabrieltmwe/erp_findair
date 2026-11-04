@@ -277,6 +277,44 @@ $col-gap: 12px !default;           // shipment: 8px
   font-weight: 500;
 }
 
+/* Cabecera de la ficha en dos filas fijas: numero/fecha, cliente y estado nunca se parten en otra linea (a 1030 px
+   «spedita il», el nombre del cliente y «in progress» bajaban a una segunda linea y la cabecera crecia). Si no cabe,
+   primero se recoge la fecha del estado y, solo como ultimo recurso, el nombre del cliente muestra «…» (el nombre
+   entero queda en el title). */
+.shipment-v2 .topbar-shipnum,
+.shipment-v2 .topbar-hmeta,
+.shipment-v2 .ministatus-text,
+.shipment-v2 .ministatus-date {
+  white-space: nowrap;
+}
+.shipment-v2 .ministatus {
+  flex-shrink: 0;
+}
+.shipment-v2 .hclient {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.shipment-v2 .hclient-txt {
+  min-width: 0;
+}
+.shipment-v2 .hclient-name,
+.shipment-v2 .hclient-sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* El chip del propietario (numero de personas) no se recorta. */
+.shipment-v2 .dsh-topbar-title > .v-chip {
+  flex-shrink: 0;
+}
+@media (max-width: 1199px) {
+  /* Por debajo de 1200 px el estado queda en texto (sin barrita ni fecha): asi el nombre del cliente cabe entero. */
+  .shipment-v2 .ministatus-date,
+  .shipment-v2 .ministatus .mbar {
+    display: none;
+  }
+}
+
 /* ===== splitter ===================================================== */
 .shipment-v2 .cols {
   display: grid;

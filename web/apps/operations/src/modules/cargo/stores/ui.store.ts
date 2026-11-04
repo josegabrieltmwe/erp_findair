@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
+import {
+  setThemeMode,
+  themeMode as sharedThemeMode,
+  toggleThemeMode,
+} from "@shared/platform/themeMode";
 
-const STORAGE_KEY = "cargo_express.theme";
 const V2_STORAGE_KEY = "cargo_express.ui_v2";
 
 /**
@@ -9,15 +13,6 @@ const V2_STORAGE_KEY = "cargo_express.ui_v2";
  * v2 = Mockup 2 redesign, ported from shipment_express.
  */
 type ThemeVariant = "v1-light" | "v1-dark" | "v2-light" | "v2-dark";
-
-function resolveInitialThemeMode(): "light" | "dark" {
-  if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  if (window.matchMedia?.("(prefers-color-scheme: dark)").matches)
-    return "dark";
-  return "light";
-}
 
 function resolveInitialV2(): {
   variant: "v2-light" | "v2-dark";
@@ -97,7 +92,8 @@ export const useUiStore = defineStore("cargo_ui", () => {
   // ─── Legacy v1 surface (preserved for backwards compat) ────
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const themeMode = ref<"light" | "dark">(resolveInitialThemeMode());
+  // Tema: una sola preferencia para toda la SPA (@shared/platform/themeMode). Solo la cambia el usuario.
+  const themeMode = computed(() => sharedThemeMode.value);
 
   // v2 themes are the canonical surface palette; expose via the legacy
   // `vuetifyThemeName` key so existing bindings keep working.
@@ -116,10 +112,7 @@ export const useUiStore = defineStore("cargo_ui", () => {
   }
 
   function toggleTheme(): void {
-    themeMode.value = themeMode.value === "dark" ? "light" : "dark";
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, themeMode.value);
-    }
+    toggleThemeMode();
   }
 
   // Persist a theme chosen via the shared PlatformTopBar toggle, which drives
@@ -133,15 +126,14 @@ export const useUiStore = defineStore("cargo_ui", () => {
           ? "light"
           : null;
     if (mode === null) return;
-    themeMode.value = mode;
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, mode);
-    }
+    setThemeMode(mode);
   }
 
   // ─── v2 (Mockup 2) state ──────────────────────────────────
   const initialV2 = resolveInitialV2();
-  const v2Theme = ref<"v2-light" | "v2-dark">(initialV2.variant);
+  const v2Theme = computed<"v2-light" | "v2-dark">(() =>
+    themeMode.value === "dark" ? "v2-dark" : "v2-light",
+  );
   const splitterPct = ref<number>(initialV2.splitterPct);
 
   const v2VuetifyThemeName = computed(() =>
@@ -236,7 +228,7 @@ export const useUiStore = defineStore("cargo_ui", () => {
   }
 
   function toggleV2Theme(): void {
-    v2Theme.value = v2Theme.value === "v2-dark" ? "v2-light" : "v2-dark";
+    toggleThemeMode();
   }
 
   function setSplitterPct(pct: number): void {
@@ -276,13 +268,12 @@ export const useUiStore = defineStore("cargo_ui", () => {
     auditOpen.value = false;
   }
 
-  watch([v2Theme, splitterPct], () => {
+  watch(splitterPct, () => {
     if (typeof window === "undefined") return;
     try {
       localStorage.setItem(
         V2_STORAGE_KEY,
         JSON.stringify({
-          variant: v2Theme.value,
           splitterPct: splitterPct.value,
         }),
       );

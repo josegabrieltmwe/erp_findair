@@ -50,9 +50,9 @@
           <span v-else-if="n.binding.local" class="note-preview">{{
             n.binding.local
           }}</span>
-          <span v-else class="note-empty">{{
-            t("shipment.cards.note.empty")
-          }}</span>
+          <!-- Vacio es vacio (estandar de mascaras, regla 5): sin «No notes»; la fila conserva su alto y se edita
+               con un clic igual que con texto. -->
+          <span v-else class="note-empty" aria-hidden="true" />
         </span>
       </button>
     </div>
@@ -178,8 +178,8 @@ async function commitEdit(binding: {
   word-break: break-word;
 }
 .note-empty {
-  font-size: 13px;
-  color: rgba(var(--v-theme-on-surface), 0.4);
+  display: block;
+  min-height: calc(13px * 1.35);
 }
 .note-edit {
   margin-top: 4px;

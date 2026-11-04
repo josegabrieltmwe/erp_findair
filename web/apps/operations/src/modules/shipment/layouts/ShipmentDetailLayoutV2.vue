@@ -9,11 +9,13 @@
             type="button"
             class="topbar-hmeta topbar-hmeta--editable"
             :title="
-              subtitle ? 'Modifica date spedizione' : 'Imposta date spedizione'
+              subtitle
+                ? t('shipment.header.edit_dates')
+                : t('shipment.header.set_dates_title')
             "
             @click="ui.openModal('dates')"
           >
-            <span>{{ subtitle || "Imposta date" }}</span>
+            <span>{{ subtitle || t("shipment.header.set_dates") }}</span>
             <v-icon
               icon="mdi-pencil-outline"
               size="12"
@@ -29,7 +31,7 @@
             <v-icon icon="mdi-account-outline" size="18" />
           </span>
           <span class="hclient-txt">
-            <span class="hclient-name">{{ clientName }}</span>
+            <span class="hclient-name" :title="clientName">{{ clientName }}</span>
             <span class="hclient-sub">{{ clientSubtitle }}</span>
           </span>
           <v-icon icon="mdi-pencil-outline" class="hclient-edit" />
@@ -133,20 +135,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { useTheme } from "vuetify";
+import { applyThemeMode } from "@shared/platform/themeMode";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useUiStore } from "@shipment/stores/ui.store";
 import { useChatStore } from "@shipment/stores/chat.store";
 import { useI18n } from "vue-i18n";
 import { useExpressOffersStore } from "@shipment/stores/express_offers.store";
 import { usePartnerOffersStore } from "@shipment/stores/partner_offers.store";
-import ConsolidataProjectChip from "@/modules/consolidata/components/ConsolidataProjectChip.vue";
 import { useRecordNavigator } from "@shipment/composables/useRecordNavigator";
 import MiniStatusBar from "@shipment/components/shell/MiniStatusBar.vue";
 import ShipmentOwnerChip from "@shipment/components/shipment/owner/ShipmentOwnerChip.vue";
+import ConsolidataProjectChip from "@/modules/consolidata/components/ConsolidataProjectChip.vue";
 import DetailShell from "@shared/detail/DetailShell.vue";
 import OperationsNav from "@shared/platform/OperationsNav.vue";
 import RecordsSidebarContent from "@shared/detail/RecordsSidebarContent.vue";
@@ -197,13 +200,13 @@ const navigator = useRecordNavigator(currentId);
 const route = useRoute();
 
 const chatButtonTitle = computed<string>(() => {
-  if (!chat.hasUnread) return "Chat partner";
+  if (!chat.hasUnread) return t("shipment.chat.partner_title");
   const total = chat.counter?.total ?? 0;
-  return `Chat partner · ${total} ${total === 1 ? "nuovo" : "nuovi"}`;
+  return t("shipment.header.chat_unread", { n: total }, total);
 });
 
 const clientName = computed<string>(
-  () => (shipment.value?.cliente as string | undefined) || "Cliente —",
+  () => (shipment.value?.cliente as string | undefined) || `${t("shipment.client_header.client")} —`,
 );
 
 const clientSubtitle = computed<string>(() => {
@@ -214,7 +217,8 @@ const clientSubtitle = computed<string>(() => {
   const city = (shipment.value as { city_cliente?: string } | null)
     ?.city_cliente;
   if (city) parts.push(city);
-  return parts.length ? `Cliente · ${parts.join(" ")}` : "Cliente";
+  const label = t("shipment.client_header.client");
+  return parts.length ? `${label} · ${parts.join(" ")}` : label;
 });
 
 const subtitle = computed<string>(() => {
@@ -224,14 +228,12 @@ const subtitle = computed<string>(() => {
   if (!date) return "";
   const m = date.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (!m) return "";
-  return `spedita il ${m[3]}/${m[2]}/${m[1]}`;
+  return t("shipment.header.shipped_on", { date: `${m[3]}/${m[2]}/${m[1]}` });
 });
 
 onMounted(() => {
-  // `<v-app :theme="ui.vuetifyThemeName">` already drives the global
-  // theme; this just nudges Vuetify in case the prop hasn't propagated
-  // yet on first mount (e.g. SSR-style hydration timing).
-  theme.global.name.value = ui.vuetifyThemeName;
+  // Paleta de la ficha con el modo que eligió el usuario: entrar en la ficha no cambia claro/oscuro.
+  applyThemeMode(theme, "shipmentV2");
   // Eagerly load the navigator since the sidebar is always mounted now
   // (previously deferred until the user opened the off-canvas drawer).
   // `ensureLoaded` requires the current route query to parse list filters —
@@ -239,6 +241,9 @@ onMounted(() => {
   // through Vue's onMounted, leaving the whole tree in a skeleton state.
   void navigator.ensureLoaded(route.query);
 });
+
+// Al salir se vuelve a la paleta base con el mismo modo.
+onBeforeUnmount(() => applyThemeMode(theme, "base"));
 </script>
 
 <style scoped lang="scss">

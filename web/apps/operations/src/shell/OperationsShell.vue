@@ -86,10 +86,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useTheme } from "vuetify";
+import { applyThemeMode, themeMode } from "@shared/platform/themeMode";
 import DashboardShell from "@shared/listing/DashboardShell.vue";
 import { resolveSpaTarget } from "@shared/platform/navTargets";
 import OperationsNav from "@shared/platform/OperationsNav.vue";
@@ -103,6 +104,8 @@ const route = useRoute();
 const { t, te } = useI18n();
 const theme = useTheme();
 const themeName = computed(() => theme.global.name.value);
+// Si el modo cambia fuera de esta pestaña (otra pestaña lo cambió), se aplica a la paleta de la pantalla actual.
+watch(themeMode, () => applyThemeMode(theme));
 
 const isFullscreen = computed<boolean>(() => route.meta?.fullscreen === true);
 // La landing y las actividades del día llevan su propia cabecera: sin barra de página.

@@ -15,7 +15,7 @@
             <v-icon icon="mdi-account-outline" size="18" />
           </span>
           <span class="hclient-txt">
-            <span class="hclient-name">{{ clientName }}</span>
+            <span class="hclient-name" :title="clientName">{{ clientName }}</span>
             <span class="hclient-sub">{{ clientSubtitle }}</span>
           </span>
           <v-icon icon="mdi-pencil-outline" class="hclient-edit" />
@@ -118,6 +118,7 @@ import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { useTheme } from "vuetify";
+import { applyThemeMode } from "@shared/platform/themeMode";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useUiStore } from "@cargo/stores/ui.store";
 import { useChatStore } from "@cargo/stores/chat.store";
@@ -278,13 +279,16 @@ const subtitle = computed<string>(() => {
 });
 
 onMounted(() => {
-  theme.global.name.value = ui.v2VuetifyThemeName;
+  // Paleta de la ficha con el modo que eligió el usuario: entrar en la ficha no cambia claro/oscuro.
+  applyThemeMode(theme, "shipmentV2");
   void navigator.ensureLoaded(route.query);
   document.addEventListener("keydown", onKey);
 });
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", onKey);
   clearChord();
+  // Al salir se vuelve a la paleta base con el mismo modo.
+  applyThemeMode(theme, "base");
 });
 </script>
 

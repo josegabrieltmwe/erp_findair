@@ -213,7 +213,9 @@ function toggleSidebar(): void {
 ============================================================ */
 .dsh {
   display: grid;
-  grid-template-columns: var(--dsh-sidebar-w, 220px) 1fr;
+  /* minmax(0, 1fr): un `1fr` a secas no baja del ancho minimo del contenido (cabecera, tarjetas) y la ficha se
+     salia por la derecha a 1030 px. Igual que en DashboardShell. */
+  grid-template-columns: var(--dsh-sidebar-w, 220px) minmax(0, 1fr);
   grid-template-rows: var(--dsh-topbar-h, 96px) auto 1fr;
   /* El rail ocupa las TRES filas: banda vertical continua de borde a borde,
      como en el mockup de referencia. Simétrico a DashboardShell. */
@@ -231,7 +233,7 @@ function toggleSidebar(): void {
 }
 
 .dsh--sidebar-hidden {
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 0 minmax(0, 1fr);
 }
 
 /* Top bar — sticky, two-row layout shared with DashboardShell. */
@@ -364,7 +366,7 @@ function toggleSidebar(): void {
 
 @media (max-width: 720px) {
   .dsh {
-    grid-template-columns: 0 1fr;
+    grid-template-columns: 0 minmax(0, 1fr);
   }
   .dsh-sidebar {
     position: fixed;
