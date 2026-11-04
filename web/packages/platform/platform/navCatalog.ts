@@ -55,9 +55,9 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
   {
     sectionKey: "gestion",
     items: [
-      { key: "giacenze", icon: "mdi-package-variant-closed",  routeName: "giacenze", daily: true, partnerKey: "giacenze_partner" },
+      { key: "giacenze", icon: "mdi-package-variant-closed",  routeName: "giacenze", daily: true, partnerKey: "giacenze_partner", scopes: ["inventory:read"] },
       { key: "consolidata", icon: "mdi-layers-triple-outline", routeName: "consolidata", scopes: ["consolidation:manage"] },
-      { key: "pickup",   icon: "mdi-truck-check-outline",     routeName: "pickup", daily: true },
+      { key: "pickup",   icon: "mdi-truck-check-outline",     routeName: "pickup", daily: true, scopes: ["pickups:read"] },
       { key: "crm",      icon: "mdi-account-details-outline", routeName: "crm" },
       { key: "tickets",  icon: "mdi-ticket-outline",           routeName: "communication" },
       // OJO con el nombre: la ruta se llama `anagrafiche`, NO `clients`. El
