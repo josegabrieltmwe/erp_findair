@@ -51,13 +51,36 @@ export const MODULE_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = 
   email_templates: ["config:read", "partner:manage"],
 };
 
+/**
+ * Rutas que exigen TODOS los scopes de su lista (semántica AND), a diferencia de `MODULE_ROUTE_SCOPES` (basta uno).
+ * Existe porque algunas rutas cruzan dos módulos del API y este rechaza con 403 si falta cualquiera de los dos; con
+ * «cualquiera» la pantalla se abriría para quien solo tiene uno y todas sus llamadas fallarían.
+ *   - `payments-pending-invoices`: `GET api_pay_pending_invoices` exige `invoices:read` (qué facturas se ven) Y
+ *     `payment_gateways:read` (la fila indica si hay un cobro en curso). No se crea ningún scope ni se amplía ningún rol.
+ */
+export const MODULE_ROUTE_ALL_SCOPES: Readonly<Record<string, readonly string[]>> = {
+  "payments-pending-invoices": ["invoices:read", "payment_gateways:read"],
+};
+
+/** ¿La ruta tiene guard de módulo (de cualquiera de los dos mapas)? El router lo usa para decidir si resuelve el perfil. */
+export function isModuleGuardedRoute(routeName: string): boolean {
+  return routeName in MODULE_ROUTE_SCOPES || routeName in MODULE_ROUTE_ALL_SCOPES;
+}
+
+/**
+ * ¿Puede la persona abrir la ruta de módulo? TMWE siempre; con perfil sin `access` falla abierto (el API decide);
+ * si no, se comprueba «alguno» (`MODULE_ROUTE_SCOPES`) o «todos» (`MODULE_ROUTE_ALL_SCOPES`). Sin entrada: libre.
+ */
 export function canOpenModuleRoute(
   routeName: string,
   ctx: { isAdmin: boolean | null; access: AccessSnapshot },
 ): boolean {
-  const scopes = MODULE_ROUTE_SCOPES[routeName];
-  if (!scopes) return true;
+  const anyScopes = MODULE_ROUTE_SCOPES[routeName];
+  const allScopes = MODULE_ROUTE_ALL_SCOPES[routeName];
+  if (!anyScopes && !allScopes) return true;
   if (ctx.isAdmin === true) return true; // TMWE (anagrafica 1): el servidor lo deja pasar siempre
   if (!ctx.access.known) return true;
-  return hasScope(ctx.access, scopes, "any");
+  if (anyScopes && !hasScope(ctx.access, anyScopes, "any")) return false;
+  if (allScopes && !hasScope(ctx.access, allScopes, "all")) return false;
+  return true;
 }

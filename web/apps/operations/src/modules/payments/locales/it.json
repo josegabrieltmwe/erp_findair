@@ -3,7 +3,8 @@
     "nav": {
       "aging": "Anzianità dei saldi",
       "reconciliation": "Riconciliazione bancaria",
-      "reminders": "Solleciti di pagamento"
+      "reminders": "Solleciti di pagamento",
+      "pending_invoices": "Fatture da incassare"
     },
     "list": {
       "view_credit": "Da incassare",
@@ -202,6 +203,38 @@
         "failed": "Il pagamento non è stato completato.",
         "canceled": "Il pagamento è stato annullato.",
         "expired": "La sessione di pagamento è scaduta."
+      }
+    },
+    "pending": {
+      "back": "Incassi",
+      "title": "Fatture da incassare",
+      "refresh": "Aggiorna",
+      "intro": "Fatture emesse con importo residuo, in ordine di scadenza. Incassa online con carta da ogni riga.",
+      "empty": "Non ci sono fatture da incassare.",
+      "no_due": "Senza data",
+      "col": {
+        "number": "N.",
+        "invoice_date": "Data",
+        "due": "Scadenza",
+        "status": "Stato",
+        "total": "Totale",
+        "pending": "Residuo"
+      },
+      "status": {
+        "overdue": "Scaduta",
+        "in_progress": "Pagamento in corso",
+        "pending": "Da incassare"
+      },
+      "in_progress_hint": "C'è un pagamento in corso di {amount}.",
+      "reason": {
+        "currency": "L'incasso online è disponibile solo in EUR.",
+        "in_progress": "Pagamento in corso: attendi la conferma.",
+        "unknown": "Al momento non è possibile incassare online."
+      },
+      "error": {
+        "forbidden": "Non hai il permesso di vedere le fatture da incassare.",
+        "unavailable": "Impossibile consultare le fatture da incassare. Riprova tra qualche minuto.",
+        "other": "Impossibile caricare l'elenco. Riprova."
       }
     }
   }

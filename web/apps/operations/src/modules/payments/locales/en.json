@@ -3,7 +3,8 @@
     "nav": {
       "aging": "Aging of balances",
       "reconciliation": "Bank reconciliation",
-      "reminders": "Payment reminders"
+      "reminders": "Payment reminders",
+      "pending_invoices": "Invoices awaiting payment"
     },
     "list": {
       "view_credit": "To collect",
@@ -202,6 +203,38 @@
         "failed": "The payment was not completed.",
         "canceled": "The payment was canceled.",
         "expired": "The payment session has expired."
+      }
+    },
+    "pending": {
+      "back": "Payments",
+      "title": "Invoices awaiting payment",
+      "refresh": "Refresh",
+      "intro": "Issued invoices with an outstanding amount, sorted by due date. Collect by card online from each row.",
+      "empty": "There are no invoices awaiting payment.",
+      "no_due": "No date",
+      "col": {
+        "number": "No.",
+        "invoice_date": "Date",
+        "due": "Due date",
+        "status": "Status",
+        "total": "Total",
+        "pending": "Outstanding"
+      },
+      "status": {
+        "overdue": "Overdue",
+        "in_progress": "Payment in progress",
+        "pending": "Pending"
+      },
+      "in_progress_hint": "A payment of {amount} is in progress.",
+      "reason": {
+        "currency": "Online collection is only available in EUR.",
+        "in_progress": "Payment in progress: wait for it to be confirmed.",
+        "unknown": "This invoice cannot be collected online right now."
+      },
+      "error": {
+        "forbidden": "You do not have permission to view invoices awaiting payment.",
+        "unavailable": "The pending invoices could not be retrieved. Please try again in a few minutes.",
+        "other": "The list could not be loaded. Please try again."
       }
     }
   }

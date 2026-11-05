@@ -3,7 +3,8 @@
     "nav": {
       "aging": "Ouderdom van openstaande bedragen",
       "reconciliation": "Bankafstemming",
-      "reminders": "Betalingsherinneringen"
+      "reminders": "Betalingsherinneringen",
+      "pending_invoices": "Openstaande facturen"
     },
     "list": {
       "view_credit": "Te ontvangen",
@@ -202,6 +203,38 @@
         "failed": "De betaling is niet voltooid.",
         "canceled": "De betaling is geannuleerd.",
         "expired": "De betaalsessie is verlopen."
+      }
+    },
+    "pending": {
+      "back": "Betalingen",
+      "title": "Openstaande facturen",
+      "refresh": "Vernieuwen",
+      "intro": "Uitgegeven facturen met een openstaand bedrag, gesorteerd op vervaldatum. Incasseer online met kaart vanuit elke rij.",
+      "empty": "Er zijn geen openstaande facturen.",
+      "no_due": "Geen datum",
+      "col": {
+        "number": "Nr.",
+        "invoice_date": "Datum",
+        "due": "Vervaldatum",
+        "status": "Status",
+        "total": "Totaal",
+        "pending": "Openstaand"
+      },
+      "status": {
+        "overdue": "Achterstallig",
+        "in_progress": "Betaling bezig",
+        "pending": "Openstaand"
+      },
+      "in_progress_hint": "Er is een betaling van {amount} bezig.",
+      "reason": {
+        "currency": "Online incasseren kan alleen in EUR.",
+        "in_progress": "Betaling bezig: wacht op bevestiging.",
+        "unknown": "Online incasseren is nu niet mogelijk."
+      },
+      "error": {
+        "forbidden": "U hebt geen toestemming om de openstaande facturen te bekijken.",
+        "unavailable": "De openstaande facturen konden niet worden opgehaald. Probeer het over enkele minuten opnieuw.",
+        "other": "De lijst kon niet worden geladen. Probeer het opnieuw."
       }
     }
   }

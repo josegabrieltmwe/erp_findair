@@ -3,7 +3,8 @@
     "nav": {
       "aging": "Antigüedad de saldos",
       "reconciliation": "Conciliación bancaria",
-      "reminders": "Recordatorios de cobro"
+      "reminders": "Recordatorios de cobro",
+      "pending_invoices": "Facturas pendientes de cobro"
     },
     "list": {
       "view_credit": "Por cobrar",
@@ -202,6 +203,38 @@
         "failed": "El pago no se ha completado.",
         "canceled": "El pago se ha cancelado.",
         "expired": "La sesión de pago ha caducado."
+      }
+    },
+    "pending": {
+      "back": "Cobros",
+      "title": "Facturas pendientes de cobro",
+      "refresh": "Actualizar",
+      "intro": "Facturas emitidas con importe pendiente, ordenadas por vencimiento. Cobre online con tarjeta desde cada fila.",
+      "empty": "No hay facturas pendientes de cobro.",
+      "no_due": "Sin fecha",
+      "col": {
+        "number": "Nº",
+        "invoice_date": "Fecha",
+        "due": "Vencimiento",
+        "status": "Estado",
+        "total": "Total",
+        "pending": "Pendiente"
+      },
+      "status": {
+        "overdue": "Vencida",
+        "in_progress": "Pago en curso",
+        "pending": "Pendiente"
+      },
+      "in_progress_hint": "Hay un pago en curso por {amount}.",
+      "reason": {
+        "currency": "Solo se cobra online en EUR.",
+        "in_progress": "Pago en curso: espere a que se confirme.",
+        "unknown": "No se puede cobrar online ahora."
+      },
+      "error": {
+        "forbidden": "No tiene permiso para ver las facturas pendientes de cobro.",
+        "unavailable": "No se pudieron consultar las facturas pendientes. Inténtelo de nuevo en unos minutos.",
+        "other": "No se pudo cargar la lista. Inténtelo de nuevo."
       }
     }
   }

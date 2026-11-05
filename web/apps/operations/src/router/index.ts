@@ -11,7 +11,7 @@ import { canEnterSettingsHub, canOpenAdminRoute } from "@/modules/settings/setti
 import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
-import { canOpenModuleRoute, MODULE_ROUTE_SCOPES } from "./moduleAccess";
+import { canOpenModuleRoute, isModuleGuardedRoute } from "./moduleAccess";
 import { can as warehouseCan } from "@/modules/warehouse/env";
 import { can as invoicingCan } from "@/modules/invoicing/services/http";
 
@@ -1008,6 +1008,16 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
   },
   {
+    // Facturas pendientes de cobro (api_pay_pending_invoices): personal y partner con invoices:read + payment_gateways:read
+    // (guard en moduleAccess.ts, semántica «todos»). Cuelga de Cobros porque es la cola de trabajo de cobro online.
+    path: "/payments/pending-invoices",
+    name: "payments-pending-invoices",
+    component: () =>
+      import("@/modules/payments/pages/PendingInvoicesPage.vue"),
+    meta: { title: "Facturas pendientes de cobro", icon: "mdi-file-clock-outline" },
+    beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
+  },
+  {
     // Solo quien puede conciliar (el partner es de solo lectura).
     path: "/payments/reconciliation",
     name: "payments-reconciliation",
@@ -1230,7 +1240,7 @@ export const router = createRouter({
  */
 router.beforeEach(async (to) => {
   const moduleName = String(to.name ?? "");
-  const moduleGuarded = moduleName in MODULE_ROUTE_SCOPES;
+  const moduleGuarded = isModuleGuardedRoute(moduleName);
   if (!to.meta.requiresAdmin && !to.meta.aiScope && !moduleGuarded) return true;
 
   const { isAdmin, profile, ensureProfile } = useProfile();

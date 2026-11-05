@@ -2,13 +2,15 @@ import { http } from '../../anagrafiche/services/http';
 import { ApiError } from '../../anagrafiche/services/api.types';
 
 /**
- * Pasarelas de pago. Cuatro puertas de `tmwe_api`:
+ * Pasarelas de pago. Cinco puertas de `tmwe_api`:
  *  - `payGatewayAccounts`: el partner gestiona SUS cuentas (/api_pay_gateway_accounts). El partner sale del token;
  *    el cliente nunca envía su id y una cuenta ajena responde 404.
  *  - `payGatewayAccountsAdmin`: TMWE consulta las de cualquier partner (/api_admin_pay_gateway_accounts), solo lectura.
  *  - `payRefunds`: solicitud y aprobación de reembolsos (/api_pay_refunds).
  *  - `payPayments`: cobro de facturas con Checkout alojado de Stripe (/api_pay_payments). Nunca hay `client_secret`:
  *    el pago se completa en la página de la pasarela (`checkout_url`) y la autoridad del estado es el webhook.
+ *  - `payPendingInvoices`: lista de facturas pendientes de cobro (/api_pay_pending_invoices), solo lectura. Punto de
+ *    partida de la pantalla «Facturas pendientes de cobro»; el pago de cada fila reutiliza `payPayments.create`.
  * `secret` y `webhook_secret` son de solo escritura: la API devuelve `secret_hint` (últimos 4) y `has_webhook_secret`,
  * nunca el valor. Los ids son públicos (`pga_…`, `prf_…`).
  */
@@ -150,6 +152,44 @@ export interface PayPaymentFilters {
   status?: string;
 }
 
+/** Motivo por el que una factura pendiente no se puede cobrar online ahora (`not_payable_reason`). */
+export type PayNotPayableReason = 'CURRENCY_NOT_SUPPORTED' | 'PAYMENT_IN_PROGRESS' | (string & {});
+
+/**
+ * Fila de `GET api_pay_pending_invoices`. Los importes (`total`, `pending`, `in_progress_amount`) llegan como TEXTO
+ * decimal con 2 decimales, nunca como número JSON: se conservan así y solo se convierten para mostrar o comparar.
+ * Las fechas son `AAAA-MM-DD`. No hay sede ni datos internos del partner.
+ */
+export interface PendingInvoice {
+  /** Id de la factura: es el `invoice_id` del alta de cobro (`payPayments.create`). */
+  invoice_id: number;
+  number: number | string;
+  invoice_date: string | null;
+  /** Primer vencimiento abierto; `null` si ninguna cuota tiene fecha. */
+  due_date: string | null;
+  /** `due_date` anterior a hoy según la fecha del servidor. */
+  overdue: boolean;
+  currency: string;
+  total: string;
+  /** Suma de las cuotas de cobro abiertas. */
+  pending: string;
+  /** Hay un pago en vuelo o cobrado aún sin repartir entre las cuotas. */
+  in_progress: boolean;
+  in_progress_amount: string;
+  /** Se puede iniciar un cobro con tarjeta ahora. */
+  payable: boolean;
+  /** `null` si `payable`; si no, el motivo. */
+  not_payable_reason: PayNotPayableReason | null;
+}
+
+/** Página de facturas pendientes con la paginación que devuelve la API. */
+export interface PendingInvoicesPage {
+  rows: PendingInvoice[];
+  total: number;
+  page: number;
+  perPage: number;
+}
+
 interface Envelope<T> {
   success?: boolean;
   data?: T;
@@ -157,6 +197,10 @@ interface Envelope<T> {
   message?: string;
   awaiting_approval?: boolean;
   replayed?: boolean;
+  /** Paginación (solo en los listados que la devuelven, p. ej. `api_pay_pending_invoices`). */
+  total?: number;
+  page?: number;
+  per_page?: number;
 }
 
 function errorText(raw: Envelope<unknown> | undefined, fallback: string): string {
@@ -201,6 +245,7 @@ const ACCOUNTS = '/api_pay_gateway_accounts';
 const ADMIN_ACCOUNTS = '/api_admin_pay_gateway_accounts';
 const REFUNDS = '/api_pay_refunds';
 const PAYMENTS = '/api_pay_payments';
+const PENDING_INVOICES = '/api_pay_pending_invoices';
 
 export const payGatewayAccounts = {
   async list(environment?: PayEnvironment): Promise<PayGatewayAccount[]> {
@@ -334,5 +379,40 @@ export const payPayments = {
     const raw = await http<Envelope<PayPayment>>(PAYMENTS, { method: 'POST', body });
     const payment = unwrap(raw, 'No se pudo iniciar el cobro');
     return { payment, replayed: raw?.replayed === true, alreadyPaid: !payment.checkout_url && payment.status === 'succeeded' };
+  },
+};
+
+/** Tipo de fallo de la lista de facturas pendientes, para elegir el mensaje de la pantalla. */
+export type PendingInvoicesErrorKind = 'forbidden' | 'unavailable' | 'other';
+
+/**
+ * Agrupa los errores de `api_pay_pending_invoices`: 403 (falta `invoices:read` o `payment_gateways:read`, o el token no
+ * identifica al partner) y 503 `PAYMENT_PENDING_UNAVAILABLE` (fallo de lectura). Que el 503 sea un error y no una lista
+ * vacía es lo que impide decirle a la persona «no hay nada pendiente» cuando en realidad no se pudo consultar.
+ * Cualquier otro caso (red, 5xx genérico, no-ApiError) es `other`.
+ */
+export function classifyPendingInvoicesError(err: unknown): PendingInvoicesErrorKind {
+  if (!(err instanceof ApiError)) return 'other';
+  if (err.status === 403) return 'forbidden';
+  if (err.status === 503) return 'unavailable';
+  return 'other';
+}
+
+/**
+ * Facturas pendientes de cobro (scopes `invoices:read` + `payment_gateways:read` para personal y partner; sin scopes
+ * nuevos). Solo lectura. El cliente/partner sale del token: la petición no admite ningún filtro por cliente, partner o
+ * factura, por eso no se envía ninguno. Errores 403 y 503: ver `classifyPendingInvoicesError`.
+ */
+export const payPendingInvoices = {
+  /**
+   * Una página de facturas pendientes, ordenadas por vencimiento (la más próxima primero; sin fecha, al final).
+   *
+   * @param page    número de página (desde 1); la API vuelve a 1 si no es válido
+   * @param perPage filas por página (máximo 100 en la API)
+   */
+  async list(page = 1, perPage = 25): Promise<PendingInvoicesPage> {
+    const raw = await http<Envelope<PendingInvoice[]>>(PENDING_INVOICES, { query: { page, per_page: perPage } });
+    const rows = unwrap(raw, 'No se pudieron cargar las facturas pendientes') ?? [];
+    return { rows, total: Number(raw?.total ?? rows.length), page: Number(raw?.page ?? page), perPage: Number(raw?.per_page ?? perPage) };
   },
 };

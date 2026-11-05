@@ -18,6 +18,16 @@
         }}</v-tab>
       </v-tabs>
       <v-spacer />
+      <!-- Cola de cobro online (api_pay_pending_invoices): solo con invoices:read + payment_gateways:read. -->
+      <v-btn
+        v-if="canSeePending"
+        variant="tonal"
+        color="primary"
+        prepend-icon="mdi-file-clock-outline"
+        :to="{ name: 'payments-pending-invoices' }"
+      >
+        {{ t("payments.nav.pending_invoices") }}
+      </v-btn>
       <v-btn
         variant="tonal"
         prepend-icon="mdi-chart-bar"
@@ -306,6 +316,8 @@ import {
 import { useToastStore } from "../stores/toast.store";
 import { paymentsApi, toCsv, downloadCsv } from "../services/payments.service";
 import { capabilities } from "../env";
+import { useAccess } from "@shared/composables/useAccess";
+import { canListPendingInvoices } from "../components/pendingInvoicesModel";
 import CustomerPicker from "../components/CustomerPicker.vue";
 import CollectDialog from "../components/CollectDialog.vue";
 import BulkCollectDialog from "../components/BulkCollectDialog.vue";
@@ -322,6 +334,9 @@ const router = useRouter();
 const store = usePaymentsStore();
 const toasts = useToastStore();
 const caps = capabilities();
+// Acceso a la cola «Facturas pendientes de cobro»: ambos scopes de lectura (el API responde 403 si falta alguno).
+const { access } = useAccess();
+const canSeePending = computed(() => canListPendingInvoices(access.value));
 
 const collectOpen = ref(false);
 const collectTarget = ref<PaymentRow | null>(null);
