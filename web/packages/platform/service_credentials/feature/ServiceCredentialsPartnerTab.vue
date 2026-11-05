@@ -85,57 +85,83 @@
               :items="envOptions"
               :rules="[(v) => !!v || t('common.required')]"
             />
-            <v-text-field
-              v-model="form.account_number"
-              :label="t('service_credentials.form_account_number')"
-            />
-            <v-text-field
-              v-model="form.auth_username"
-              :label="t('service_credentials.form_auth_username')"
-            />
-            <v-text-field
-              v-model="form.auth_password"
-              :label="t('service_credentials.form_auth_password')"
-              type="password"
-              :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
-              autocomplete="new-password"
-            />
-            <v-text-field
-              v-model="form.oauth_client_id"
-              :label="t('service_credentials.form_oauth_client_id')"
-            />
-            <v-text-field
-              v-model="form.oauth_client_secret"
-              :label="t('service_credentials.form_oauth_client_secret')"
-              type="password"
-              :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
-              autocomplete="new-password"
-            />
-            <v-text-field
-              v-model="form.api_key"
-              :label="t('service_credentials.form_api_key')"
-              type="password"
-              :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
-              autocomplete="new-password"
-            />
-            <v-text-field
-              v-model="form.customer_code"
-              :label="t('service_credentials.form_customer_code')"
-            />
-            <v-text-field
-              v-model="form.country_iso"
-              :label="t('service_credentials.form_country_iso')"
-              maxlength="2"
-            />
-            <v-text-field
-              v-model="form.postal_code"
-              :label="t('service_credentials.form_postal_code')"
-            />
-            <v-text-field
-              v-model="form.currency"
-              :label="t('service_credentials.form_currency')"
-              maxlength="3"
-            />
+            <template v-if="isAsl">
+              <v-text-field
+                v-model="form.customer_code"
+                :label="t('service_credentials.form_asl_company')"
+                :rules="[(v) => !!v || t('common.required')]"
+              />
+              <v-text-field
+                v-model="form.oauth_client_id"
+                :label="t('service_credentials.form_asl_username')"
+                :rules="[(v) => !!v || t('common.required')]"
+                autocomplete="off"
+              />
+              <v-text-field
+                v-model="form.oauth_client_secret"
+                :label="t('service_credentials.form_asl_password')"
+                type="password"
+                :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
+                :rules="formMode === 'edit' ? [] : [(v) => !!v || t('common.required')]"
+                autocomplete="new-password"
+              />
+              <v-alert type="info" variant="tonal" density="compact" class="cm-asl-hint" style="grid-column: 1 / -1">
+                {{ t('service_credentials.asl_hint') }}
+              </v-alert>
+            </template>
+            <template v-else>
+              <v-text-field
+                v-model="form.account_number"
+                :label="t('service_credentials.form_account_number')"
+              />
+              <v-text-field
+                v-model="form.auth_username"
+                :label="t('service_credentials.form_auth_username')"
+              />
+              <v-text-field
+                v-model="form.auth_password"
+                :label="t('service_credentials.form_auth_password')"
+                type="password"
+                :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
+                autocomplete="new-password"
+              />
+              <v-text-field
+                v-model="form.oauth_client_id"
+                :label="t('service_credentials.form_oauth_client_id')"
+              />
+              <v-text-field
+                v-model="form.oauth_client_secret"
+                :label="t('service_credentials.form_oauth_client_secret')"
+                type="password"
+                :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
+                autocomplete="new-password"
+              />
+              <v-text-field
+                v-model="form.api_key"
+                :label="t('service_credentials.form_api_key')"
+                type="password"
+                :placeholder="formMode === 'edit' ? t('service_credentials.placeholder_unchanged') : ''"
+                autocomplete="new-password"
+              />
+              <v-text-field
+                v-model="form.customer_code"
+                :label="t('service_credentials.form_customer_code')"
+              />
+              <v-text-field
+                v-model="form.country_iso"
+                :label="t('service_credentials.form_country_iso')"
+                maxlength="2"
+              />
+              <v-text-field
+                v-model="form.postal_code"
+                :label="t('service_credentials.form_postal_code')"
+              />
+              <v-text-field
+                v-model="form.currency"
+                :label="t('service_credentials.form_currency')"
+                maxlength="3"
+              />
+            </template>
           </div>
           <v-textarea
             v-model="form.description"
@@ -161,7 +187,7 @@
 <script setup lang="ts">
 /**
  * Tab de credenciales de courier genérico (DHL, TNT, UPS, FedEx, Agora,
- * TACT) dentro de la ficha de anagrafica. Variante embebida y fijada al
+ * TACT, ASL) dentro de la ficha de anagrafica. Variante embebida y fijada al
  * partner del CRUD admin de admin_config (CredentialsPage.vue, V1): mismo
  * backend (api_admin_service_credentials), lista solo lo propio de este
  * partner (`id_partner`) y crea/edita siempre con ese id fijo — sin
@@ -216,11 +242,16 @@ const sortKeyMap: Record<string, string> = {
 };
 
 // KLM/WebCargo excluidos a propósito — ver docblock arriba.
-const courierOptions = ['dhl', 'dpd', 'tnt', 'ups', 'fedex', 'agora', 'tact'];
-const envOptions = [
+const courierOptions = ['dhl', 'dpd', 'tnt', 'ups', 'fedex', 'agora', 'tact', 'asl'];
+const allEnvOptions = [
   { title: 'production', value: 'production' },
   { title: 'sandbox', value: 'sandbox' },
 ];
+
+// ASL (publicación de tarifas marítimas) no tiene entorno de pruebas y guarda empresa, usuario y
+// contraseña en customer_code, oauth_client_id y oauth_client_secret (el backend lo exige: Asl_Credential_Rules).
+const isAsl = computed(() => form.courier_code === 'asl');
+const envOptions = computed(() => (isAsl.value ? allEnvOptions.filter((o) => o.value === 'production') : allEnvOptions));
 
 const formDialog = ref(false);
 const formMode = ref<'create' | 'edit'>('create');
@@ -240,7 +271,17 @@ const form = reactive<ServiceCredentialPayload>({
   description: '',
 });
 
-const formValid = computed(() => !!form.courier_code && !!form.environment);
+const formValid = computed(() => {
+  if (!form.courier_code || !form.environment) return false;
+  if (!isAsl.value) return true;
+  const hasSecret = formMode.value === 'edit' || !!form.oauth_client_secret;
+  return form.environment === 'production' && !!form.customer_code?.trim() && !!form.oauth_client_id?.trim() && hasSecret;
+});
+
+// Al elegir ASL el entorno pasa a production (no existe otro).
+watch(isAsl, (asl) => {
+  if (asl) form.environment = 'production';
+});
 
 async function load(): Promise<void> {
   loading.value = true;
