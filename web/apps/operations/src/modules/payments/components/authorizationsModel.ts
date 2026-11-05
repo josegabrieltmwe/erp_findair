@@ -71,9 +71,14 @@ export function authorizationStatusColor(status: PayAuthorizationStatus | string
  * Medio de pago guardado para mostrar, sin datos sensibles: «VISA ····4242 (12/2028)» o «SEPA ····1234». Solo marca,
  * últimos 4 y caducidad, que son los únicos campos que publica el API. Sin últimos 4 (aún `pending`): «—».
  */
-export function describeMethod(row: Pick<PayAuthorization, "method_type" | "brand" | "last4" | "exp_month" | "exp_year">): string {
+export function describeMethod(
+  row: Pick<PayAuthorization, "method_type" | "brand" | "last4" | "exp_month" | "exp_year">,
+  cardLabel = "Card",
+): string {
   if (!row.last4) return "—";
-  const label = row.method_type === "sepa_debit" ? "SEPA" : (row.brand || "").toUpperCase() || "Tarjeta";
+  // `cardLabel` lo pone la pantalla ya traducido (`payments.authorizations.method.card`): antes el texto «Tarjeta» estaba
+  // fijo aquí y salía en español también con la interfaz en inglés o italiano (hallado en el navegador).
+  const label = row.method_type === "sepa_debit" ? "SEPA" : (row.brand || "").toUpperCase() || cardLabel;
   const exp =
     row.exp_month && row.exp_year ? ` (${String(row.exp_month).padStart(2, "0")}/${row.exp_year})` : "";
   return `${label} ····${row.last4}${exp}`;

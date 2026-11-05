@@ -182,13 +182,26 @@ export type SurchargeErrorKind =
   | "conflict" // 409 resto (incluida la clave de idempotencia repetida)
   | "other";
 
-/** Código de negocio del error: `ApiError.code` o, si no, el del cuerpo problem+json. */
+/**
+ * Códigos genéricos que el cliente http de la SPA pone en `ApiError.code` según el ESTADO (no son de negocio): un 503 llega
+ * como `SERVER_ERROR`, un 403 como `FORBIDDEN`, etc. Si se dejaran pasar como «el código», taparían el código real del
+ * cuerpo (p. ej. `PAYMENT_NOT_ACTIVE`) y el 503 de «pasarela apagada» se mostraría como una avería genérica.
+ * Defecto hallado al probar en un navegador real (los tests unitarios construían el `ApiError` con el código ya puesto).
+ */
+const TRANSPORT_CODES: ReadonlySet<string> = new Set(["SERVER_ERROR", "FORBIDDEN", "UNAUTHORIZED", "RATE_LIMIT", "NOT_IMPLEMENTED"]);
+
+/**
+ * Código de negocio del error. Prioridad: el del CUERPO de la respuesta (`error_code`, `error.code`, `code`: lo trae el
+ * API y lo conserva el BFF para estas rutas) y, solo si el cuerpo no trae ninguno, `ApiError.code` siempre que no sea uno
+ * de los genéricos de transporte.
+ */
 function codeOf(err: ApiError): string | undefined {
   const body = err.details as { error_code?: unknown; code?: unknown; error?: { code?: unknown } } | undefined;
-  for (const c of [err.code, body?.error_code, body?.error?.code, body?.code]) {
+  for (const c of [body?.error_code, body?.error?.code, body?.code]) {
     if (typeof c === "string" && c) return c;
   }
-  return undefined;
+  const own = err.code;
+  return typeof own === "string" && own && !TRANSPORT_CODES.has(own) ? own : undefined;
 }
 
 /**

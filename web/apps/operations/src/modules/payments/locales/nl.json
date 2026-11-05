@@ -329,9 +329,9 @@
         "unknown": "Bewerking uitgevoerd."
       },
       "errors": {
-        "not_active": "Toeslagen via de betaalprovider zijn niet actief in deze omgeving.",
+        "not_active": "Toeslagen en machtigingen via de betalingsgateway zijn in deze omgeving niet actief.",
         "return_url": "Het retouradres voor de aanmelding is niet geconfigureerd op de server.",
-        "forbidden": "Je hebt hiervoor geen toestemming. Kwijtschelden, betwistingen afwijzen en incasseren vereisen dat je betalingsbeheerder van je bedrijf bent.",
+        "forbidden": "Je hebt hiervoor geen toestemming. Toeslagen en machtigingen bekijken vereist rechten voor betalingsgateways; kwijtschelden, betwistingen afwijzen en incasseren vereisen bovendien dat je betalingsbeheerder van je bedrijf bent.",
         "not_found": "Niet gevonden: bestaat niet of hoort niet bij je bedrijf.",
         "cap_exceeded": "Het bedrag overschrijdt het toegestane maximum per incasso of per maand, of wat de klant heeft geaccepteerd.",
         "currency": "Alleen toeslagen in euro worden ondersteund.",

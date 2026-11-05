@@ -74,7 +74,7 @@
           <tr v-for="r in rows" :key="r.public_id" :data-testid="`authorization-row-${r.public_id}`">
             <td class="aut-mono">{{ r.public_id }}</td>
             <td>{{ r.customer_name || '' }} <span class="text-medium-emphasis">#{{ r.customer_id }}</span></td>
-            <td>{{ describeMethod(r) }}</td>
+            <td>{{ describeMethod(r, t("payments.authorizations.method.card")) }}</td>
             <td>
               <v-chip :color="authorizationStatusColor(r.status)" size="small" label variant="tonal">
                 {{ t(`payments.authorizations.status.${r.status}`) }}
@@ -287,8 +287,15 @@ onMounted(() => void load());
 }
 .aut-filters {
   display: grid;
-  grid-template-columns: minmax(180px, 260px) minmax(220px, 420px);
+  /* `minmax(0, …)`: sin el 0 las pistas no encogen por debajo del contenido y en móvil (390 px) los filtros desbordaban. */
+  grid-template-columns: minmax(0, 260px) minmax(0, 420px);
   gap: 12px;
+}
+/* En pantallas estrechas los dos filtros se apilan a todo el ancho. */
+@media (max-width: 640px) {
+  .aut-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .aut-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;

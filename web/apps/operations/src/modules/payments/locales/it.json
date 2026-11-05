@@ -329,9 +329,9 @@
         "unknown": "Operazione eseguita."
       },
       "errors": {
-        "not_active": "I supplementi tramite gateway non sono attivi in questo ambiente.",
+        "not_active": "Gli addebiti e le autorizzazioni tramite gateway non sono attivi in questo ambiente.",
         "return_url": "L'indirizzo di ritorno dell'attivazione non è configurato sul server.",
-        "forbidden": "Non hai il permesso. Condonare, respingere contestazioni e addebitare richiedono di essere amministratore dei pagamenti della tua azienda.",
+        "forbidden": "Non hai il permesso per questa operazione. Vedere addebiti e autorizzazioni richiede i permessi dei gateway di pagamento; condonare, respingere contestazioni e addebitare richiedono anche di essere amministratore dei pagamenti della tua azienda.",
         "not_found": "Non trovato: non esiste o non appartiene alla tua azienda.",
         "cap_exceeded": "L'importo supera il massimale consentito per addebito o per mese, o quanto accettato dal cliente.",
         "currency": "Sono ammessi solo supplementi in euro.",
