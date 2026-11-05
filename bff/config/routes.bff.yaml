@@ -392,7 +392,10 @@ routes:
   # cliente; una cuenta ajena responde 404). POST puede ser {action:'rotate_secret'|'validate'}: validate llama al
   # proveedor. secret y webhook_secret son de solo escritura: la API nunca los devuelve (solo secret_hint).
   # api_admin_pay_gateway_accounts: TMWE, solo lectura. api_pay_refunds: solicitud y aprobacion por una segunda persona
-  # ({action:'approve'|'reject'}); POST llama al proveedor.
+  # ({action:'approve'|'reject'}); POST llama al proveedor. api_pay_payments: cobro de facturas con Checkout alojado de
+  # Stripe. GET = detalle (?id=) o listado paginado (?invoice_id=, ?status=); POST crea la sesion y responde 202 con
+  # checkout_url (201 si ya estaba cobrado). Nunca hay client_secret en modo hosted; los errores 402/409/422/503 (incl.
+  # PAYMENT_GATEWAYS_NOT_ACTIVE) pasan intactos. La autoridad del estado es el webhook, no el retorno del navegador.
   - id: pay_gateway_accounts.get
     method: GET
     path: /api_pay_gateway_accounts
@@ -440,4 +443,18 @@ routes:
     path: /api_pay_refunds
     upstream:
       action: api_pay_refunds
+    limits: { body: 4k, timeout: 30 }
+
+  - id: pay_payments.get
+    method: GET
+    path: /api_pay_payments
+    upstream:
+      action: api_pay_payments
+      forward_query: [id, invoice_id, status]
+
+  - id: pay_payments.post
+    method: POST
+    path: /api_pay_payments
+    upstream:
+      action: api_pay_payments
     limits: { body: 4k, timeout: 30 }

@@ -106,6 +106,22 @@ final class UnitTest extends TestCase
         }
     }
 
+    // Escenario: api_pay_payments expone exactamente GET (detalle/listado) y POST (iniciar cobro); POST exige CSRF.
+    public function testPayPaymentsExposesExactlyGetAndPost(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        foreach (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as $method) {
+            $route = $manifest->match($method, '/api_pay_payments');
+            if ($method === 'GET' || $method === 'POST') {
+                self::assertNotNull($route, "{$method} /api_pay_payments debe estar en el manifiesto");
+                self::assertSame($method === 'POST', $route['route']->csrf);
+            } else {
+                self::assertNull($route, "{$method} /api_pay_payments no debe estar en el manifiesto");
+            }
+        }
+    }
+
     public function testManifestRejectsBadAction(): void
     {
         $this->expectException(\InvalidArgumentException::class);

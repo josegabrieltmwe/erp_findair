@@ -2,11 +2,13 @@ import { http } from '../../anagrafiche/services/http';
 import { ApiError } from '../../anagrafiche/services/api.types';
 
 /**
- * Pasarelas de pago. Tres puertas de `tmwe_api`:
+ * Pasarelas de pago. Cuatro puertas de `tmwe_api`:
  *  - `payGatewayAccounts`: el partner gestiona SUS cuentas (/api_pay_gateway_accounts). El partner sale del token;
  *    el cliente nunca envía su id y una cuenta ajena responde 404.
  *  - `payGatewayAccountsAdmin`: TMWE consulta las de cualquier partner (/api_admin_pay_gateway_accounts), solo lectura.
  *  - `payRefunds`: solicitud y aprobación de reembolsos (/api_pay_refunds).
+ *  - `payPayments`: cobro de facturas con Checkout alojado de Stripe (/api_pay_payments). Nunca hay `client_secret`:
+ *    el pago se completa en la página de la pasarela (`checkout_url`) y la autoridad del estado es el webhook.
  * `secret` y `webhook_secret` son de solo escritura: la API devuelve `secret_hint` (últimos 4) y `has_webhook_secret`,
  * nunca el valor. Los ids son públicos (`pga_…`, `prf_…`).
  */
@@ -102,6 +104,52 @@ export interface PayInstallmentReview {
   payment_status: string;
 }
 
+/**
+ * Estado de un cobro online. Lista abierta (`string`) a propósito: el contrato fija los estados terminales que la SPA
+ * necesita distinguir, pero la API puede añadir intermedios sin romper la pantalla.
+ */
+export type PayPaymentStatus = 'pending' | 'requires_action' | 'processing' | 'succeeded' | 'failed' | 'canceled' | 'expired' | (string & {});
+
+/** Cobro online (`pay_…`). Solo `id` y `status` están garantizados; el resto depende del estado. */
+export interface PayPayment {
+  /** Id público `pay_…`. */
+  id: string;
+  status: PayPaymentStatus;
+  /** Página de pago alojada de Stripe; solo en el alta (202) y mientras la sesión sigue abierta. */
+  checkout_url?: string | null;
+  /** Caducidad de la sesión de Checkout (ISO 8601). */
+  expires_at?: string | null;
+  invoice_id?: number | string | null;
+  amount_minor?: number | null;
+  currency?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+/** Alta de un cobro con tarjeta en modo alojado. `return_to` y `flow` los fija el servicio, no la pantalla. */
+export interface PayPaymentCreate {
+  invoice_id: number;
+  /** Texto decimal con 2 decimales ("12.50"). Sin importe = todo lo pendiente de la factura. */
+  amount?: string;
+  currency?: string;
+  /** Una por intento: repetir la misma petición con la misma clave devuelve el mismo cobro (`replayed`). */
+  idempotency_key: string;
+}
+
+export interface PayPaymentCreated {
+  payment: PayPayment;
+  /** true = la clave ya se había usado con esta misma petición y se devuelve el cobro existente. */
+  replayed: boolean;
+  /** true = HTTP 201: la factura ya estaba cobrada y no hay página de pago que abrir. */
+  alreadyPaid: boolean;
+}
+
+/** Filtros del listado paginado de cobros. */
+export interface PayPaymentFilters {
+  invoiceId?: number;
+  status?: string;
+}
+
 interface Envelope<T> {
   success?: boolean;
   data?: T;
@@ -152,6 +200,7 @@ export function truthy(v: unknown): boolean {
 const ACCOUNTS = '/api_pay_gateway_accounts';
 const ADMIN_ACCOUNTS = '/api_admin_pay_gateway_accounts';
 const REFUNDS = '/api_pay_refunds';
+const PAYMENTS = '/api_pay_payments';
 
 export const payGatewayAccounts = {
   async list(environment?: PayEnvironment): Promise<PayGatewayAccount[]> {
@@ -244,5 +293,46 @@ export const payRefunds = {
   async reject(id: string): Promise<PayRefund> {
     const raw = await http<Envelope<PayRefund>>(REFUNDS, { method: 'POST', body: { action: 'reject', id } });
     return unwrap(raw, 'No se pudo rechazar el reembolso');
+  },
+};
+
+/**
+ * Cobro de facturas con Checkout alojado (scopes `payment_gateways:read` / `:write`).
+ * Errores: 402 rechazo, 409 (clave repetida con otra petición / nada pendiente / factura ocupada), 422 validación y
+ * 503 `PAYMENT_GATEWAYS_NOT_ACTIVE` llegan como `ApiError` con su estado; `classifyPayError` (payOnlineModel) los agrupa.
+ */
+export const payPayments = {
+  /** Listado paginado de cobros, por factura y/o estado. */
+  async list(filters: PayPaymentFilters = {}): Promise<PayPayment[]> {
+    const query: Record<string, string | number> = {};
+    if (filters.invoiceId) query.invoice_id = filters.invoiceId;
+    if (filters.status) query.status = filters.status;
+    const raw = await http<Envelope<PayPayment[]>>(PAYMENTS, { query });
+    return unwrap(raw, 'No se pudieron cargar los cobros') ?? [];
+  },
+
+  /** Detalle por id público (`?id=pay_…`). Es lo que se consulta para refrescar el estado tras abrir Checkout. */
+  async get(id: string): Promise<PayPayment> {
+    const raw = await http<Envelope<PayPayment>>(PAYMENTS, { query: { id } });
+    return unwrap(raw, 'No se pudo cargar el cobro');
+  },
+
+  /**
+   * Inicia el cobro: 202 con `checkout_url`, o 201 si ya estaba cobrado (`alreadyPaid`). El servicio fija
+   * `method: 'card'`, `return_to: 'erp'` y `flow: 'hosted'`; el cliente nunca elige el partner (sale del token).
+   */
+  async create(payload: PayPaymentCreate): Promise<PayPaymentCreated> {
+    const body: Record<string, unknown> = {
+      invoice_id: payload.invoice_id,
+      method: 'card',
+      idempotency_key: payload.idempotency_key,
+      return_to: 'erp',
+      flow: 'hosted',
+    };
+    if (payload.amount) body.amount = payload.amount;
+    if (payload.currency) body.currency = payload.currency;
+    const raw = await http<Envelope<PayPayment>>(PAYMENTS, { method: 'POST', body });
+    const payment = unwrap(raw, 'No se pudo iniciar el cobro');
+    return { payment, replayed: raw?.replayed === true, alreadyPaid: !payment.checkout_url && payment.status === 'succeeded' };
   },
 };

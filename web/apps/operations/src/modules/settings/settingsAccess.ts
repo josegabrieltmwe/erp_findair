@@ -9,7 +9,7 @@
  *   - Rutas cuyo endpoint declara una política por módulo en el API. Las `admin_only` exigen anagrafica 1 en el
  *     propio API (ningún scope las sustituye) y las `public_oauth` no distinguen a nadie: ambas siguen siendo TMWE.
  *   - Solo scopes que tienen únicamente roles de personal (STAFF_ONLY_SCOPES). `shipment:read`, `contacts:read`,
- *     `crm:read`, `invoices:read` o `payments:read` los tienen también clientes (findair_basic, accounting_viewer):
+ *     `crm:read`, `invoices:read`, `payments:read` o `payment_gateways:*` los tienen también clientes (findair_basic, accounting_viewer):
  *     mapearlos abriría a un cliente pantallas como márgenes de beneficio. Tampoco `driver:read`: el conductor
  *     ve solo lo suyo y las zonas son de despacho.
  * Al añadir una ruta aquí, el spec comprueba que su scope esté en STAFF_ONLY_SCOPES.

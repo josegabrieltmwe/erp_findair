@@ -9,8 +9,8 @@
  *   - Consolidata: scope transversal `consolidation:manage` (rol aditivo consolidation_manager).
  *   - Giacenze: módulo `giacenze` (`inventory:read`); pickups: módulo `pickups` (`pickups:read`); POD y giro del
  *     autista: módulo `driver` (`driver:write` / `driver:read`).
- *   - Importación masiva: `shipment_import` (`import:*`); cobros, pasarelas y reembolsos: `pagamenti(_config)`
- *     (`payments:read`); SMTP del partner: `partner_smtp` (`smtp:read`).
+ *   - Importación masiva: `shipment_import` (`import:*`); cobros: `pagamenti` (`payments:read`);
+ *     pasarelas, reembolsos y cobro online: módulo `payment_gateways` (`payment_gateways:read|write|admin`); SMTP del partner: `partner_smtp` (`smtp:read`).
  *
  * Falla ABIERTO cuando el perfil no informa `access` (backend antiguo o perfil no cargado): el servidor
  * responde 403 igualmente y esconder una pantalla por no saber sería peor que mostrarla vacía.
@@ -40,8 +40,10 @@ export const MODULE_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = 
   "payments-aging": ["payments:read"], // api_payment_aging
   "payments-reminders": ["payments:read"], // api_dunning
   "payments-reconciliation": ["payments:read"],
-  "settings-pay-gateways": ["payments:read"], // api_pay_gateway_accounts → módulo pagamenti_config
-  "settings-pay-refunds": ["payments:read"], // api_pay_refunds → módulo pagamenti_config
+  "settings-pay-gateways": ["payment_gateways:read"], // api_pay_gateway_accounts → módulo payment_gateways
+  "settings-pay-refunds": ["payment_gateways:read"], // api_pay_refunds → módulo payment_gateways
+  // La vista admin (settings-pay-gateways-admin) no se mapea: es `requiresAdmin` (solo TMWE; payment_gateways:admin lo
+  // exige el API en api_admin_pay_gateway_accounts) y TMWE pasa siempre este guard.
   "settings-partner-smtp": ["smtp:read"], // api_partner_smtp → módulo partner_smtp
   // Firmas de entrega: la búsqueda (api_driver_delivery) y la firma (api_driver_pod) son del módulo driver.
   "warehouse-deliveries": ["driver:read", "driver:write"],

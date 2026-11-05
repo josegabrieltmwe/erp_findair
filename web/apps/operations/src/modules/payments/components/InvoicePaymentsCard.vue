@@ -85,8 +85,28 @@
           >{{ t("payments.invoice.balance") }}:
           <strong>{{ money(data.balance) }}</strong></span
         >
+        <v-spacer />
+        <v-btn
+          v-if="showPayOnline"
+          size="small"
+          color="primary"
+          variant="flat"
+          prepend-icon="mdi-credit-card-outline"
+          @click="payOnlineOpen = true"
+        >
+          {{ t("payments.actions.pay_online") }}
+        </v-btn>
       </div>
     </template>
+
+    <PayOnlineDialog
+      v-if="data"
+      v-model="payOnlineOpen"
+      :invoice-id="invoiceId"
+      :pending="Number(data.total_pending)"
+      :currency="data.currency"
+      @paid="load"
+    />
 
     <CollectDialog
       v-model="collectOpen"
@@ -100,12 +120,15 @@
 
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useAccess } from "@shared/composables/useAccess";
 import { useI18n } from "vue-i18n";
 import { paymentsApi } from "../services/payments.service";
 import { useToastStore } from "../stores/toast.store";
 import { isOpenRow } from "../stores/payments.store";
 import CollectDialog from "./CollectDialog.vue";
+import PayOnlineDialog from "./PayOnlineDialog.vue";
+import { canPayOnline } from "./payOnlineModel";
 import type {
   InvoicePaymentRow,
   InvoicePayments,
@@ -117,7 +140,15 @@ const props = defineProps<{ invoiceId: number; canCollect: boolean }>();
 const { t } = useI18n();
 const toasts = useToastStore();
 
+// Cobro online con tarjeta (Checkout alojado): capacidad derivada del scope payment_gateways:write, independiente
+// de `canCollect` (que gobierna el registro contable manual). Solo se ofrece si queda algo pendiente.
+const { access } = useAccess();
+const payOnlineOpen = ref(false);
+
 const data = ref<InvoicePayments | null>(null);
+const showPayOnline = computed(
+  () => canPayOnline(access.value) && Number(data.value?.total_pending ?? 0) > 0,
+);
 const methods = ref<PaymentMethod[]>([]);
 const loading = ref(false);
 const failed = ref(false);
