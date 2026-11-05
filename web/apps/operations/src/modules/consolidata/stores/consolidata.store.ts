@@ -311,8 +311,11 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     operating.value = true;
     try {
       const res = await mutate(() => consolidataService.operate(pid(), opts));
+      // El refresco limpia `error` (run): se guarda el de operate para que se vea (409, timeout del BFF…).
+      const failed = error.value;
       if (res) operateResult.value = res;
       await Promise.all([refreshProject(), loadSteps()]);
+      if (failed) error.value = failed;
       return res;
     } finally {
       operating.value = false;

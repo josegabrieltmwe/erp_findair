@@ -122,13 +122,11 @@
             store.operateResult.completo
               ? t("consolidata.convert.complete")
               : t("consolidata.convert.incomplete", {
-                  n: store.operateResult.pendientes,
+                  n: pending.length,
                 })
           }}
-          <ul v-if="houseErrors.length" class="pl-4 mt-1">
-            <li v-for="h in houseErrors" :key="h.ref">
-              <strong>{{ h.ref }}</strong> — {{ h.error }}
-            </li>
+          <ul v-if="pending.length" class="pl-4 mt-1">
+            <li v-for="(p, i) in pending" :key="i">{{ p }}</li>
           </ul>
         </v-alert>
       </v-card-text>
@@ -211,8 +209,16 @@
                     }}
                   </span>
                 </div>
-                <div v-if="s.errore" class="text-caption text-error">
-                  {{ s.errore }}
+                <div
+                  v-if="s.dettaglio"
+                  class="text-caption"
+                  :class="
+                    s.stato?.toUpperCase() === 'ERRORE'
+                      ? 'text-error'
+                      : 'text-medium-emphasis'
+                  "
+                >
+                  {{ s.dettaglio }}
                 </div>
               </v-timeline-item>
             </v-timeline>
@@ -271,9 +277,11 @@ const blocking = computed(() =>
 const bookingAllowed = computed(() => store.meta?.booking_allowed === true);
 const groups = computed(() => groupConversionSteps(store.steps ?? []));
 const hasSteps = computed(() => (store.steps?.length ?? 0) > 0);
-const houseErrors = computed(() =>
-  (store.operateResult?.houses ?? []).filter((h) => h.error),
-);
+/** Todo lo pendiente de operate: houses, MAWB, camión y reserva (las houses ya vienen como "ref: error"). */
+const pending = computed<string[]>(() => {
+  const p = store.operateResult?.pendientes;
+  return Array.isArray(p) ? p.map(String) : [];
+});
 
 /** Cotización respondida y ya vencida, o algún tramo con tarifa caducada. */
 const quoteExpired = computed(() => {
