@@ -696,7 +696,7 @@ async function createFromOption(v: {
   createError.value = null;
   try {
     const res = await consolidataService.createFromOption({
-      option: chosen.value.key,
+      option: chosen.value,
       shipments: lastRequest.value.shipments,
       destination: lastRequest.value.destination,
       titolo: v.titolo,

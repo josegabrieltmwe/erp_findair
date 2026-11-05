@@ -1,6 +1,6 @@
 # Plan: gestión completa de los proyectos de consolidata desde el ERP
 
-> **Estado:** vigente (C0-C6 implementadas sin commit; pendiente C7 y la prueba en navegador, ver §10) · **Última modificación:** 2026-11-03
+> **Estado:** vigente (C0-C6 implementadas sin commit; pendiente C7 y la prueba en navegador, ver §10) · **Última modificación:** 2026-11-05
 
 Objetivo: que el staff gestione en el ERP (SPA `operations` + BFF) todo el ciclo de un proyecto de consolidata (alta, cotización, respuesta, aceptación, conversión a operativo y seguimiento), con un listado de proyectos con los mismos filtros, columnas, vistas y acciones que los listados de cargo y courier.
 
@@ -329,7 +329,7 @@ Orden recomendado: **C0 y C1 en paralelo → C2 → C3 → C4 → C5 → C6 → 
 - **Plugin de WordPress:** deprecado (2026-11-03). No hay que mantener su compatibilidad; el catálogo de cliente (`catalog_client.json`) sigue existiendo para quien llame al API como cliente.
 - **Datos de prueba:** sandbox no tiene proyectos utilizables y la BD es compartida. Las pruebas que crean cargos o expediciones deben seguir la regla de recogida desactivada y nota `[TEST]`, y no pueden reservar.
 - **Migraciones:** sin las migraciones 20261014 y 20261016 en producción, la bandeja, el reparto, el cumplimiento, `operate` y `answer_quote` fallan allí.
-- **Rendimiento:** `create_from_option` hace unas 15 consultas por house y no es atómico (hasta 200 houses). Aceptable con los volúmenes actuales; vigilarlo si se usa desde el simulador con muchas expediciones.
+- **Rendimiento:** `create_from_option` hace unas 15 consultas por house (hasta 200 houses). Desde el 2026-11-05 es atómico (una transacción). Aceptable con los volúmenes actuales; vigilarlo si se usa desde el simulador con muchas expediciones.
 
 ## 10. Ejecución (2026-11-03)
 

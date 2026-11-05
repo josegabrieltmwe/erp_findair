@@ -297,7 +297,8 @@ export interface ConversionStep {
   stato: string;
   tentativi: number;
   risultato_id: number | null;
-  errore?: string | null;
+  /** Motivo del paso (Progetti_Conversione_Passi.dettaglio): el error si `stato` es ERRORE, una nota si no. */
+  dettaglio?: string | null;
   insert_datetime?: string | null;
   modif_datetime?: string | null;
   [k: string]: unknown;
@@ -318,7 +319,8 @@ export interface OperateResult {
   id_cargo: number | null;
   houses: OperateHouse[];
   reserva?: unknown;
-  pendientes: number;
+  /** Lo que quedó sin hacer, en texto ("H2: spedizione: …", "cargo: …", "reserva: …"). En `convert` es un número. */
+  pendientes: string[];
   completo: boolean;
   modo?: string;
   camion?: unknown;
@@ -370,7 +372,8 @@ export interface LegPayload {
 }
 
 export interface CreateFromOptionPayload {
-  option: string;
+  /** Opción completa tal como la devolvió `quote` (el API exige `legs`). */
+  option: QuoteOption;
   shipments: QuoteShipmentInput[];
   destination: QuoteAddress;
   titolo: string;

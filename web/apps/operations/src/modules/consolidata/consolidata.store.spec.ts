@@ -144,7 +144,7 @@ describe("consolidata store", () => {
         id: 4,
         id_cargo: 9,
         houses: [],
-        pendientes: 0,
+        pendientes: [],
         completo: true,
       },
       "GET:conversion": Object.assign(new Error("x"), {
@@ -158,6 +158,43 @@ describe("consolidata store", () => {
     expect(res?.completo).toBe(true);
     expect(s.operateResult?.id_cargo).toBe(9);
     expect(s.stepsUnavailable).toBe(true);
+    expect(s.operating).toBe(false);
+  });
+
+  it("operate que falla deja el error visible aunque se recarguen cabecera y pasos", async () => {
+    route({
+      "GET:detail": project({ stato: "C" }),
+      "GET:shipments": {
+        spedizioni: [],
+        riparto: [],
+        criterio: "X",
+        totale_tratte: 0,
+        totale_riparto: 0,
+      },
+      "GET:readiness": { avisos: [], bloqueantes: 0, pendientes: 0, listo: true },
+      "GET:notes": { note: [] },
+      "GET:meta": {
+        api_version: "1.1",
+        states: {},
+        actions: {},
+        limits: { max_legs: 20, max_shipments: 200, currency: "EUR" },
+        warning_codes: [],
+      },
+      "POST:operate": Object.assign(new Error("x"), {
+        status: 409,
+        details: {
+          success: false,
+          error: "il progetto e gia in fase di conversione",
+          code: "operation_in_progress",
+        },
+      }),
+      "GET:conversion": { passi: [] },
+    });
+    const s = useConsolidataStore();
+    await s.openProject(4);
+    const res = await s.operate({ reservar: false });
+    expect(res).toBeUndefined();
+    expect(s.error?.code).toBe("operation_in_progress");
     expect(s.operating).toBe(false);
   });
 
