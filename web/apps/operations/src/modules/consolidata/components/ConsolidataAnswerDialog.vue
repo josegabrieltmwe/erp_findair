@@ -17,6 +17,7 @@
           readonly
           :hint="t('consolidata.answer.priceHint')"
           persistent-hint
+          class="mb-4"
           :error-messages="error?.fields.prezzo"
         />
         <v-text-field

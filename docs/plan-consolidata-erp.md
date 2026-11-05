@@ -363,7 +363,7 @@ Pendiente:
 3. Crear datos de prueba y recorrer en navegador la lista del §7.
 4. Aplicar las migraciones en producción (P78).
 5. ~~Plugin de WordPress~~: deprecado (2026-11-03); no requiere cambios.
-6. El POST de `unified_consolidation_project` en el BFF tiene `timeout: 30`. `operate` con muchas houses o con reserva puede superarlo.
+6. ~~El POST de `unified_consolidation_project` en el BFF tiene `timeout: 30`~~: resuelto el 2026-11-05. Los POST de `unified_consolidation_project` y `unified_consolidation_quote` tienen 300 s en `bff/config/routes.bff.yaml`; con 30 s el simulador daba 504 (la comparación tardó 40 s en la prueba).
 
 ## 11. Permiso de consolidata para TMWE y partners (2026-11-03)
 

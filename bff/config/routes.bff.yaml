@@ -81,6 +81,30 @@ routes:
     limits:
       timeout: 60
 
+  # Consolidata: la comparación de hubs (simulador) y las acciones que cotizan en vivo (create, recalc,
+  # create_from_option) u operan muchas houses (operate) tardan más de 30 s; con el límite generado daban 504
+  # upstream_unreachable a los 30 s (prueba del 2026-11-05). findair les da 300 s; Apache (Timeout 300) no corta antes.
+  # Sustituyen a las rutas generadas (misma id).
+  - id: post.unified_consolidation_quote
+    method: POST
+    path: /unified_consolidation_quote
+    upstream:
+      action: unified_consolidation_quote
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 300
+
+  - id: post.unified_consolidation_project
+    method: POST
+    path: /unified_consolidation_project
+    upstream:
+      action: unified_consolidation_project
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 300
+
   # Estados de tracking para el diálogo «Estado y actividad» del detalle courier (antes 404: el generador no ve
   # nombres con guiones y el desplegable mostraba el código en crudo).
   - id: get.get-tracking-status-list
