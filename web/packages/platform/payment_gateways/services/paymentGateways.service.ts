@@ -471,6 +471,8 @@ export interface PayAuthorization {
   created_at: string | null;
   /** Solo personal. */
   customer_id?: number;
+  /** Nombre del cliente (nome_breve o razón social); vacío si no se resolvió. Solo en vistas del personal. */
+  customer_name?: string;
   /** Solo personal. */
   failure_code?: string | null;
   /** Solo personal: `partner` (cuenta propia) o `tmwe_fallback`. */
@@ -564,6 +566,8 @@ export interface PaySurcharge {
   created_at: string | null;
   partner_id?: number;
   customer_id?: number;
+  /** Nombre del cliente (nome_breve o razón social); vacío si no se resolvió. Solo en vistas del personal. */
+  customer_name?: string;
   /** Cuenta que cobra: solo personal; nunca se muestra al cliente. */
   gateway_account_id?: number | null;
   account_source?: string | null;

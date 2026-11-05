@@ -13,7 +13,7 @@
           <tbody>
             <tr>
               <th>{{ t("payments.list.customer") }}</th>
-              <td>#{{ surcharge.customer_id }}</td>
+              <td>{{ surcharge.customer_name || '' }} <span class="text-medium-emphasis">#{{ surcharge.customer_id }}</span></td>
             </tr>
             <tr>
               <th>{{ t("payments.surcharges.col.type") }}</th>

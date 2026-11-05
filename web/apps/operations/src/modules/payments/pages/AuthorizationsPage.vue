@@ -73,7 +73,7 @@
         <tbody>
           <tr v-for="r in rows" :key="r.public_id" :data-testid="`authorization-row-${r.public_id}`">
             <td class="aut-mono">{{ r.public_id }}</td>
-            <td>#{{ r.customer_id }}</td>
+            <td>{{ r.customer_name || '' }} <span class="text-medium-emphasis">#{{ r.customer_id }}</span></td>
             <td>{{ describeMethod(r) }}</td>
             <td>
               <v-chip :color="authorizationStatusColor(r.status)" size="small" label variant="tonal">

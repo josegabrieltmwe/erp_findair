@@ -79,7 +79,7 @@
         <tbody>
           <tr v-for="r in rows" :key="r.public_id" :data-testid="`surcharge-row-${r.public_id}`">
             <td class="sur-mono">{{ r.public_id }}</td>
-            <td>#{{ r.customer_id }}</td>
+            <td>{{ r.customer_name || '' }} <span class="text-medium-emphasis">#{{ r.customer_id }}</span></td>
             <td>{{ t(`payments.surcharges.type.${r.surcharge_type}`) }}</td>
             <td class="text-end">
               <strong>{{ formatMinor(r.amount_minor, r.currency) }}</strong>
