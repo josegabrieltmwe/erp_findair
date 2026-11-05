@@ -43,7 +43,7 @@ El permiso efectivo de un token es **techo del rol del cliente ∩ rol del usuar
 
 1. Grant `refresh_token` roto (busca con el id numérico del cliente): las sesiones no pasan de 24 h.
 2. Scopes o RBAC para los módulos que hoy dan 403 a todo el que no sea admin TMWE: `driver` (5 rutas),
-   `fornitori_servizi` (≈8), `docpack` (3), `pagamenti_config` (2), `proforma` (2), `docsstory`,
+   `fornitori_servizi` (≈8), `docpack` (3), `pagamenti_config` (2, resuelto: pasarelas y reembolsos pasan a `payment_gateways:*`), `proforma` (2), `docsstory`,
    `shipment_ops`, `anagrafiche_banks`, `b2b_config` y `invoices:write` (`api_invoice_recalculate`).
 3. Controllers que responden **401** a un token válido cuando falta permiso (`api_bancali_*`,
    `api_supplier_*`): deben responder 403.
