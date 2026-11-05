@@ -4,6 +4,48 @@
       {{ t('service_credentials.partner_tab_hint') }}
     </v-alert>
 
+    <v-btn-toggle
+      v-if="isAdmin"
+      v-model="scope"
+      mandatory
+      density="compact"
+      color="primary"
+      variant="outlined"
+      divided
+      class="mb-3"
+    >
+      <v-btn value="partner">{{ t('service_credentials.scope_partner') }}</v-btn>
+      <v-btn value="house">{{ t('service_credentials.scope_house') }}</v-btn>
+    </v-btn-toggle>
+    <v-alert v-if="scope === 'house'" type="warning" variant="tonal" density="compact" class="mb-4">
+      {{ t('service_credentials.house_hint') }}
+    </v-alert>
+
+    <v-card v-if="scope === 'partner'" variant="outlined" class="mb-4">
+      <v-card-text class="d-flex align-center flex-wrap ga-3">
+        <div class="flex-grow-1">
+          <div class="text-subtitle-2">{{ t('service_credentials.agora_env_title') }}</div>
+          <div class="text-caption">{{ t('service_credentials.agora_env_hint') }}</div>
+        </div>
+        <v-chip :color="agoraEnv === 'production' ? 'warning' : 'info'" variant="flat" size="small">
+          {{ agoraEnv === 'production' ? t('service_credentials.agora_env_production') : t('service_credentials.agora_env_sandbox') }}
+        </v-chip>
+        <v-btn
+          v-if="agoraEnv !== 'production'"
+          size="small"
+          color="warning"
+          variant="tonal"
+          :loading="agoraEnvSaving"
+          @click="setAgoraEnv('production')"
+        >
+          {{ t('service_credentials.agora_env_to_production') }}
+        </v-btn>
+        <v-btn v-else size="small" variant="tonal" :loading="agoraEnvSaving" @click="setAgoraEnv('sandbox')">
+          {{ t('service_credentials.agora_env_to_sandbox') }}
+        </v-btn>
+      </v-card-text>
+    </v-card>
+
     <div class="d-flex justify-end mb-3">
       <v-btn color="primary" :prepend-icon="mdiPlus" @click="openCreate">
         {{ t('service_credentials.new_credential') }}
@@ -207,6 +249,11 @@ import { useClientSideListSource } from '../../listing/useClientSideListSource';
 import type { DataTableHeader } from '../../listing/types';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
+import { useListiniAdmin } from '../../listini/composables/useListiniAdmin';
+import {
+  partnerCarrierEnvironmentService,
+  type PartnerCarrierEnvironment,
+} from '../../air_carrier_credentials/services/partnerCarrierEnvironment.service';
 import {
   serviceCredentialsService,
   type ServiceCredential,
@@ -221,6 +268,12 @@ const emit = defineEmits<{ refresh: [] }>();
 const { t } = useI18n();
 const toast = useToastStore();
 const confirm = useConfirm();
+const { isAdmin } = useListiniAdmin();
+
+// 'house' = credenciales compartidas sin titular (id_partner 0), solo TMWE. El resto de la pestaña
+// trabaja siempre sobre la anagrafica abierta.
+const scope = ref<'partner' | 'house'>('partner');
+const ownerId = computed(() => (scope.value === 'house' ? 0 : props.idAnagrafica));
 
 const items = ref<ServiceCredential[]>([]);
 const loading = ref(false);
@@ -283,11 +336,51 @@ watch(isAsl, (asl) => {
   if (asl) form.environment = 'production';
 });
 
+// Entorno de Agora de este partner (partner_carrier_environment, carrier 'agora'); sin fila = sandbox.
+// El backend solo deja pasar a production si existe una credencial de producción utilizable
+// (propia, de la casa o global) y devuelve el motivo si no.
+const AGORA_CARRIER = 'agora';
+const agoraEnvRow = ref<PartnerCarrierEnvironment | null>(null);
+const agoraEnvSaving = ref(false);
+const agoraEnv = computed(() => agoraEnvRow.value?.environment ?? 'sandbox');
+
+async function loadAgoraEnv(): Promise<void> {
+  try {
+    const rows = await partnerCarrierEnvironmentService.list({ partner_id: props.idAnagrafica, carrier_code: AGORA_CARRIER });
+    agoraEnvRow.value = rows[0] ?? null;
+  } catch (e) {
+    // No bloquea la pestaña: se muestra el valor por defecto y el error sale al intentar guardar.
+    agoraEnvRow.value = null;
+  }
+}
+
+async function setAgoraEnv(next: 'production' | 'sandbox'): Promise<void> {
+  agoraEnvSaving.value = true;
+  try {
+    const payload = { partner_id: props.idAnagrafica, carrier_code: AGORA_CARRIER, environment: next };
+    if (agoraEnvRow.value) {
+      await partnerCarrierEnvironmentService.update({ id: agoraEnvRow.value.id, ...payload });
+    } else {
+      await partnerCarrierEnvironmentService.create(payload);
+    }
+    toast.success(next === 'production' ? t('service_credentials.agora_env_switched_production') : t('service_credentials.agora_env_switched_sandbox'));
+    await loadAgoraEnv();
+  } catch (e) {
+    toast.error(e instanceof Error ? e.message : String(e));
+  } finally {
+    agoraEnvSaving.value = false;
+  }
+}
+
+watch(scope, () => {
+  void load();
+});
+
 async function load(): Promise<void> {
   loading.value = true;
   error.value = null;
   try {
-    items.value = await serviceCredentialsService.list({ id_partner: props.idAnagrafica });
+    items.value = await serviceCredentialsService.list(scope.value === 'house' ? { house: true } : { id_partner: props.idAnagrafica });
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
   } finally {
@@ -340,7 +433,7 @@ function openEdit(item: ServiceCredential): void {
 async function save(): Promise<void> {
   saving.value = true;
   try {
-    const payload: ServiceCredentialPayload = { ...form, id_partner: props.idAnagrafica };
+    const payload: ServiceCredentialPayload = { ...form, id_partner: ownerId.value };
     if (formMode.value === 'edit') {
       if (!payload.auth_password) delete payload.auth_password;
       if (!payload.oauth_client_secret) delete payload.oauth_client_secret;
@@ -377,8 +470,12 @@ async function openDelete(item: ServiceCredential): Promise<void> {
   }
 }
 
-watch(() => props.idAnagrafica, load);
+watch(() => props.idAnagrafica, () => {
+  void load();
+  void loadAgoraEnv();
+});
 onMounted(() => {
   void load();
+  void loadAgoraEnv();
 });
 </script>
