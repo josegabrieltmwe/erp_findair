@@ -52,7 +52,8 @@
     },
     "actions": {
       "collect": "Incassa",
-      "reopen": "Riapri"
+      "reopen": "Riapri",
+      "pay_online": "Incassa online"
     },
     "collect": {
       "title": "Incassa rata",
@@ -165,6 +166,43 @@
       "action_compensated": "compensato con credito",
       "action_no_recipient": "senza destinatario",
       "action_no_template": "senza modello di messaggio"
+    },
+    "online": {
+      "title": "Incassa con carta",
+      "pending": "Residuo della fattura: {amount}",
+      "full": "Importo residuo",
+      "partial": "Importo parziale",
+      "amount": "Importo da incassare",
+      "hint": "Si aprirà la pagina di pagamento sicura di Stripe in una nuova finestra. L'incasso è confermato quando Stripe lo notifica, non alla chiusura della finestra.",
+      "submit": "Vai al pagamento",
+      "close": "Chiudi",
+      "retry": "Riprova",
+      "processing": "In attesa della conferma del pagamento…",
+      "processing_hint": "Completa il pagamento nella finestra aperta. Questa schermata si aggiornerà da sola alla conferma.",
+      "popup_blocked": "Il browser ha bloccato la finestra di pagamento. Aprila con il pulsante.",
+      "expired": "La sessione di pagamento è scaduta. Chiudi e avvia un nuovo incasso.",
+      "gave_up": "Abbiamo smesso di controllare in automatico. Premi Aggiorna per verificare di nuovo.",
+      "open_again": "Apri la pagina di pagamento",
+      "refresh": "Aggiorna stato",
+      "errors": {
+        "not_positive": "L'importo deve essere maggiore di zero.",
+        "exceeds": "L'importo non può superare {max}.",
+        "invalid": "Inserisci un importo con al massimo 2 decimali."
+      },
+      "error": {
+        "declined": "Il pagamento è stato rifiutato. Prova con un'altra carta.",
+        "conflict": "Impossibile avviare l'incasso: ce n'è già uno in corso per questa fattura, non c'è nulla da incassare o la richiesta è stata ripetuta con dati diversi.",
+        "invalid": "I dati dell'incasso non sono validi. Controlla l'importo.",
+        "not_active": "L'incasso online non è attivo per questo account. Configura un gateway nelle Impostazioni.",
+        "forbidden": "Non hai il permesso di incassare online.",
+        "other": "Impossibile avviare l'incasso. Riprova."
+      },
+      "result": {
+        "succeeded": "Pagamento ricevuto. La fattura verrà aggiornata.",
+        "failed": "Il pagamento non è stato completato.",
+        "canceled": "Il pagamento è stato annullato.",
+        "expired": "La sessione di pagamento è scaduta."
+      }
     }
   }
 }

@@ -58,12 +58,21 @@ describe("canOpenModuleRoute (H15)", () => {
 
   // Operador de partner sin administración (recorrido 2026-11-04) frente al administrador con cobros y SMTP.
   const partnerOperator = known(["contacts:read", "crm:read", "invoices:read", "shipment:read", "tracking:read", "erp:view"]);
-  const partnerAdminFull = known([...partnerOperator.scopes, "payments:read", "smtp:read", "partner:manage"]);
+  const partnerAdminFull = known([...partnerOperator.scopes, "payments:read", "payment_gateways:read", "smtp:read", "partner:manage"]);
 
   it("cobros, pasarelas, reembolsos y SMTP: el operador no entra, el administrador sí", () => {
     for (const name of ["payments", "payments-aging", "payments-reminders", "settings-pay-gateways", "settings-pay-refunds", "settings-partner-smtp"]) {
       expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerOperator })).toBe(false);
       expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerAdminFull })).toBe(true);
+    }
+  });
+
+  // Escenario: pasarelas y reembolsos se autorizan con payment_gateways:read; payments:read (cobros) ya no basta.
+  it("pasarelas y reembolsos exigen payment_gateways:read y no payments:read", () => {
+    for (const name of ["settings-pay-gateways", "settings-pay-refunds"]) {
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payments:read"]) })).toBe(false);
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payment_gateways:read"]) })).toBe(true);
+      expect(canOpenModuleRoute(name, { isAdmin: true, access: known([]) })).toBe(true);
     }
   });
 

@@ -52,7 +52,8 @@
     },
     "actions": {
       "collect": "Innen",
-      "reopen": "Heropenen"
+      "reopen": "Heropenen",
+      "pay_online": "Online incasseren"
     },
     "collect": {
       "title": "Termijn innen",
@@ -165,6 +166,43 @@
       "action_compensated": "verrekend met tegoed",
       "action_no_recipient": "geen ontvanger",
       "action_no_template": "geen berichtsjabloon"
+    },
+    "online": {
+      "title": "Met kaart incasseren",
+      "pending": "Openstaand op de factuur: {amount}",
+      "full": "Openstaand bedrag",
+      "partial": "Deelbedrag",
+      "amount": "Te incasseren bedrag",
+      "hint": "De beveiligde betaalpagina van Stripe opent in een nieuw venster. De betaling is bevestigd wanneer Stripe dit meldt, niet bij het sluiten van dat venster.",
+      "submit": "Naar betaling",
+      "close": "Sluiten",
+      "retry": "Opnieuw proberen",
+      "processing": "Wachten op bevestiging van de betaling…",
+      "processing_hint": "Rond de betaling af in het geopende venster. Dit scherm wordt vanzelf bijgewerkt na bevestiging.",
+      "popup_blocked": "De browser heeft het betaalvenster geblokkeerd. Open het met de knop.",
+      "expired": "De betaalsessie is verlopen. Sluit en start een nieuwe incasso.",
+      "gave_up": "We controleren niet meer automatisch. Klik op Vernieuwen om opnieuw te controleren.",
+      "open_again": "Betaalpagina openen",
+      "refresh": "Status vernieuwen",
+      "errors": {
+        "not_positive": "Het bedrag moet groter zijn dan nul.",
+        "exceeds": "Het bedrag mag niet hoger zijn dan {max}.",
+        "invalid": "Voer een bedrag in met maximaal 2 decimalen."
+      },
+      "error": {
+        "declined": "De betaling is geweigerd. Probeer een andere kaart.",
+        "conflict": "De incasso kan niet worden gestart: er loopt al een incasso voor deze factuur, er staat niets open of het verzoek is herhaald met andere gegevens.",
+        "invalid": "De incassogegevens zijn ongeldig. Controleer het bedrag.",
+        "not_active": "Online incasseren is niet actief voor dit account. Stel een gateway in bij Instellingen.",
+        "forbidden": "U mag niet online incasseren.",
+        "other": "De incasso kon niet worden gestart. Probeer het opnieuw."
+      },
+      "result": {
+        "succeeded": "Betaling ontvangen. De factuur wordt bijgewerkt.",
+        "failed": "De betaling is niet voltooid.",
+        "canceled": "De betaling is geannuleerd.",
+        "expired": "De betaalsessie is verlopen."
+      }
     }
   }
 }

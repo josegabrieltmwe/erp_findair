@@ -52,7 +52,8 @@
     },
     "actions": {
       "collect": "Collect",
-      "reopen": "Reopen"
+      "reopen": "Reopen",
+      "pay_online": "Collect online"
     },
     "collect": {
       "title": "Collect installment",
@@ -165,6 +166,43 @@
       "action_compensated": "offset by a credit balance",
       "action_no_recipient": "no recipient",
       "action_no_template": "no message template"
+    },
+    "online": {
+      "title": "Collect by card",
+      "pending": "Invoice balance due: {amount}",
+      "full": "Pending amount",
+      "partial": "Partial amount",
+      "amount": "Amount to collect",
+      "hint": "Stripe's secure payment page will open in a new window. The payment is confirmed when Stripe notifies it, not when that window is closed.",
+      "submit": "Go to payment",
+      "close": "Close",
+      "retry": "Try again",
+      "processing": "Waiting for payment confirmation…",
+      "processing_hint": "Complete the payment in the open window. This screen will update by itself once it is confirmed.",
+      "popup_blocked": "The browser blocked the payment window. Open it with the button.",
+      "expired": "The payment session has expired. Close and start a new collection.",
+      "gave_up": "We stopped checking automatically. Press Refresh to check again.",
+      "open_again": "Open the payment page",
+      "refresh": "Refresh status",
+      "errors": {
+        "not_positive": "The amount must be greater than zero.",
+        "exceeds": "The amount cannot exceed {max}.",
+        "invalid": "Enter an amount with up to 2 decimals."
+      },
+      "error": {
+        "declined": "The payment was declined. Try another card.",
+        "conflict": "The collection cannot be started: one is already in progress for this invoice, nothing is pending, or the request was repeated with different data.",
+        "invalid": "The collection data is not valid. Check the amount.",
+        "not_active": "Online collection is not active for this account. Set up a gateway in Settings.",
+        "forbidden": "You are not allowed to collect online.",
+        "other": "The collection could not be started. Please try again."
+      },
+      "result": {
+        "succeeded": "Payment received. The invoice will be updated.",
+        "failed": "The payment was not completed.",
+        "canceled": "The payment was canceled.",
+        "expired": "The payment session has expired."
+      }
     }
   }
 }

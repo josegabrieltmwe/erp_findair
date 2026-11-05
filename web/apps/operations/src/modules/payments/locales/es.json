@@ -52,7 +52,8 @@
     },
     "actions": {
       "collect": "Cobrar",
-      "reopen": "Reabrir"
+      "reopen": "Reabrir",
+      "pay_online": "Cobrar online"
     },
     "collect": {
       "title": "Cobrar cuota",
@@ -165,6 +166,43 @@
       "action_compensated": "compensado con saldo a favor",
       "action_no_recipient": "sin destinatario",
       "action_no_template": "sin plantilla de mensaje"
+    },
+    "online": {
+      "title": "Cobrar con tarjeta",
+      "pending": "Pendiente de la factura: {amount}",
+      "full": "Importe pendiente",
+      "partial": "Importe parcial",
+      "amount": "Importe a cobrar",
+      "hint": "Se abrirá la página de pago segura de Stripe en una ventana nueva. El cobro se confirma cuando Stripe lo notifica, no al cerrar esa ventana.",
+      "submit": "Ir a pagar",
+      "close": "Cerrar",
+      "retry": "Reintentar",
+      "processing": "Esperando la confirmación del pago…",
+      "processing_hint": "Complete el pago en la ventana abierta. Esta pantalla se actualizará sola cuando se confirme.",
+      "popup_blocked": "El navegador ha bloqueado la ventana de pago. Ábrala con el botón.",
+      "expired": "La sesión de pago ha caducado. Cierre y empiece un cobro nuevo.",
+      "gave_up": "Dejamos de consultar automáticamente. Pulse Actualizar para comprobarlo de nuevo.",
+      "open_again": "Abrir la página de pago",
+      "refresh": "Actualizar estado",
+      "errors": {
+        "not_positive": "El importe debe ser mayor que cero.",
+        "exceeds": "El importe no puede superar {max}.",
+        "invalid": "Escriba un importe con hasta 2 decimales."
+      },
+      "error": {
+        "declined": "El pago ha sido rechazado. Pruebe con otra tarjeta.",
+        "conflict": "No se puede iniciar el cobro: ya hay uno en curso para esta factura, no queda nada pendiente o la petición se ha repetido con otros datos.",
+        "invalid": "Los datos del cobro no son válidos. Revise el importe.",
+        "not_active": "El cobro online no está activo para esta cuenta. Configure una pasarela en Ajustes.",
+        "forbidden": "No tiene permiso para cobrar online.",
+        "other": "No se pudo iniciar el cobro. Inténtelo de nuevo."
+      },
+      "result": {
+        "succeeded": "Pago recibido. La factura se actualizará.",
+        "failed": "El pago no se ha completado.",
+        "canceled": "El pago se ha cancelado.",
+        "expired": "La sesión de pago ha caducado."
+      }
     }
   }
 }

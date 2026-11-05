@@ -52,7 +52,8 @@
     },
     "actions": {
       "collect": "Einziehen",
-      "reopen": "Wieder öffnen"
+      "reopen": "Wieder öffnen",
+      "pay_online": "Online einziehen"
     },
     "collect": {
       "title": "Rate einziehen",
@@ -165,6 +166,43 @@
       "action_compensated": "mit Guthaben verrechnet",
       "action_no_recipient": "kein Empfänger",
       "action_no_template": "keine Nachrichtenvorlage"
+    },
+    "online": {
+      "title": "Per Karte einziehen",
+      "pending": "Offener Rechnungsbetrag: {amount}",
+      "full": "Offener Betrag",
+      "partial": "Teilbetrag",
+      "amount": "Einzuziehender Betrag",
+      "hint": "Die sichere Zahlungsseite von Stripe öffnet sich in einem neuen Fenster. Die Zahlung gilt als bestätigt, wenn Stripe sie meldet, nicht beim Schließen des Fensters.",
+      "submit": "Zur Zahlung",
+      "close": "Schließen",
+      "retry": "Erneut versuchen",
+      "processing": "Warten auf die Zahlungsbestätigung…",
+      "processing_hint": "Schließen Sie die Zahlung im geöffneten Fenster ab. Diese Ansicht aktualisiert sich nach der Bestätigung von selbst.",
+      "popup_blocked": "Der Browser hat das Zahlungsfenster blockiert. Öffnen Sie es mit der Schaltfläche.",
+      "expired": "Die Zahlungssitzung ist abgelaufen. Schließen Sie und starten Sie einen neuen Einzug.",
+      "gave_up": "Die automatische Abfrage wurde beendet. Klicken Sie auf Aktualisieren, um erneut zu prüfen.",
+      "open_again": "Zahlungsseite öffnen",
+      "refresh": "Status aktualisieren",
+      "errors": {
+        "not_positive": "Der Betrag muss größer als null sein.",
+        "exceeds": "Der Betrag darf {max} nicht überschreiten.",
+        "invalid": "Geben Sie einen Betrag mit höchstens 2 Nachkommastellen ein."
+      },
+      "error": {
+        "declined": "Die Zahlung wurde abgelehnt. Versuchen Sie eine andere Karte.",
+        "conflict": "Der Einzug kann nicht gestartet werden: Für diese Rechnung läuft bereits einer, es ist nichts offen oder die Anfrage wurde mit anderen Daten wiederholt.",
+        "invalid": "Die Einzugsdaten sind ungültig. Prüfen Sie den Betrag.",
+        "not_active": "Der Online-Einzug ist für dieses Konto nicht aktiv. Richten Sie in den Einstellungen ein Gateway ein.",
+        "forbidden": "Sie dürfen nicht online einziehen.",
+        "other": "Der Einzug konnte nicht gestartet werden. Bitte erneut versuchen."
+      },
+      "result": {
+        "succeeded": "Zahlung eingegangen. Die Rechnung wird aktualisiert.",
+        "failed": "Die Zahlung wurde nicht abgeschlossen.",
+        "canceled": "Die Zahlung wurde abgebrochen.",
+        "expired": "Die Zahlungssitzung ist abgelaufen."
+      }
     }
   }
 }

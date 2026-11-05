@@ -20,7 +20,7 @@ describe('SETTINGS_ROUTE_SCOPES', () => {
   });
 
   it('no incluye scopes que también tienen clientes', () => {
-    for (const s of ['shipment:read', 'contacts:read', 'crm:read', 'invoices:read', 'payments:read', 'driver:read']) {
+    for (const s of ['shipment:read', 'contacts:read', 'crm:read', 'invoices:read', 'payments:read', 'payment_gateways:read', 'payment_gateways:write', 'driver:read']) {
       expect(STAFF_ONLY_SCOPES.has(s)).toBe(false);
     }
   });

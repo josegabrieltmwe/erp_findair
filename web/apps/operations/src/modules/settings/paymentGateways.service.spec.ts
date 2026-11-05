@@ -15,6 +15,7 @@ import {
   payFieldErrors,
   payGatewayAccounts,
   payGatewayAccountsAdmin,
+  payPayments,
   payRefunds,
   truthy,
 } from "@shared/payment_gateways/services/paymentGateways.service";
@@ -99,6 +100,53 @@ describe("payRefunds", () => {
     await payRefunds.listAwaitingApproval();
     await payRefunds.installmentsReview();
     expect(calls.map((c) => c.opts.query)).toEqual([{ view: "awaiting_approval" }, { view: "installments_review" }]);
+  });
+});
+
+describe("payPayments", () => {
+  // Escenario: el alta fija método, retorno y flujo alojado; sin importe no se envía amount; nunca partner_id.
+  it("crea el cobro en modo alojado con la clave de idempotencia", async () => {
+    reply = { success: true, data: { id: "pay_1", status: "pending", checkout_url: "https://checkout.stripe.com/x", expires_at: "2026-11-05T12:00:00Z" } };
+    const res = await payPayments.create({ invoice_id: 7, idempotency_key: "k1" });
+    expect(calls[0].url).toBe("/api_pay_payments");
+    expect(calls[0].opts).toMatchObject({
+      method: "POST",
+      body: { invoice_id: 7, method: "card", idempotency_key: "k1", return_to: "erp", flow: "hosted" },
+    });
+    expect(calls[0].opts.body).not.toHaveProperty("amount");
+    expect(JSON.stringify(calls[0].opts)).not.toMatch(/partner_id|client_secret/);
+    expect(res).toMatchObject({ replayed: false, alreadyPaid: false });
+    expect(res.payment.checkout_url).toContain("https://");
+  });
+
+  // Escenario: cobro parcial con divisa y repetición de la misma clave (replayed).
+  it("envía amount/currency si se indican y respeta replayed", async () => {
+    reply = { success: true, replayed: true, data: { id: "pay_1", status: "pending", checkout_url: "https://c.test/x" } };
+    const res = await payPayments.create({ invoice_id: 7, amount: "40.50", currency: "EUR", idempotency_key: "k1" });
+    expect(calls[0].opts.body).toMatchObject({ amount: "40.50", currency: "EUR" });
+    expect(res.replayed).toBe(true);
+  });
+
+  // Escenario: factura ya cobrada (201) llega sin checkout_url y con estado succeeded.
+  it("marca alreadyPaid cuando no hay página de pago y el cobro ya está hecho", async () => {
+    reply = { success: true, data: { id: "pay_2", status: "succeeded" } };
+    expect((await payPayments.create({ invoice_id: 7, idempotency_key: "k2" })).alreadyPaid).toBe(true);
+  });
+
+  // Escenario: detalle por id y listado por factura/estado usan solo parámetros de la lista blanca del BFF.
+  it("consulta el detalle por id y lista por factura y estado", async () => {
+    reply = { success: true, data: { id: "pay_1", status: "processing" } };
+    expect((await payPayments.get("pay_1")).status).toBe("processing");
+    expect(calls[0].opts).toEqual({ query: { id: "pay_1" } });
+    reply = { success: true, data: [] };
+    await payPayments.list({ invoiceId: 7, status: "succeeded" });
+    expect(calls[1].opts).toEqual({ query: { invoice_id: 7, status: "succeeded" } });
+  });
+
+  // Escenario: una respuesta success:false se convierte en Error con el mensaje de la API.
+  it("propaga el mensaje cuando success es false", async () => {
+    reply = { success: false, error: { code: "X", message: "Rechazado" } };
+    await expect(payPayments.create({ invoice_id: 7, idempotency_key: "k" })).rejects.toThrow("Rechazado");
   });
 });
 
