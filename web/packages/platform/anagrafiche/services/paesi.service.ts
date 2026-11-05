@@ -23,6 +23,10 @@ export interface PaeseOption {
   ISO2?: string | null; // poblado solo en subentidades provinciales
   nome?: string;
   nomeEN?: string;
+  /** usa_cap del catálogo público: 'N' = sin código postal (resto: lo usa). */
+  cap_enabled?: string;
+  /** usa_prov: 'S' obligatoria · 'F' opcional con catálogo · 'N' sin provincias. */
+  prov_enabled?: string;
   [k: string]: unknown;
 }
 

@@ -293,6 +293,7 @@ import {
 import {
   applySelectAll,
   bulkSelectableFlags,
+  offeredFlags,
   selectAllState,
   type SourceState,
 } from "./sourceSelection";
@@ -465,12 +466,36 @@ async function refreshSources(): Promise<void> {
     // Solo la primera vez que se ve la ruta: si se reaplicara en cada refresco,
     // desmarcaria la delegada justo despues de que el operador la marcase —la
     // casilla parecia no responder— porque marcarla dispara este mismo camino.
+    // Una fuente que el servidor no anuncia (p. ej. realtime_direct para un
+    // partner) queda apagada siempre: no se muestra y no debe enviarse.
+    const serverKeys = sourcesMeta.value.map((src) => src.key);
+    const hidden =
+      serverKeys.length === 0
+        ? []
+        : (Object.keys(SOURCE_BY_FLAG) as SourceKey[]).filter(
+            (flag) => !serverKeys.includes(SOURCE_BY_FLAG[flag]),
+          );
+
     const routeKey = `${o}|${d}`;
-    if (seededRoute.value === routeKey) return;
+    if (seededRoute.value === routeKey) {
+      const pending = hidden.filter((flag) => props.modelValue[flag] === true);
+      if (pending.length > 0) {
+        const off = { ...props.modelValue };
+        for (const flag of pending) off[flag] = false;
+        emit("update:modelValue", off);
+      }
+      return;
+    }
     seededRoute.value = routeKey;
 
     const next = { ...props.modelValue };
     let changed = false;
+    for (const flag of hidden) {
+      if (next[flag] !== false) {
+        next[flag] = false;
+        changed = true;
+      }
+    }
     for (const src of sourcesMeta.value) {
       const flag = FLAG_BY_SOURCE[src.key];
       if (!flag) continue;
@@ -528,7 +553,7 @@ function airportSubtitle(a: AirportItem): string {
  * Keys mirror the API flags one-to-one; `undefined` means "on", the same
  * default the server applies, so an untouched form behaves exactly as before.
  */
-const sourceItems = computed(() => [
+const allSourceItems = computed(() => [
   {
     value: "include_published" as const,
     title: t("cargo.flight.src_wc_rates"),
@@ -544,6 +569,20 @@ const sourceItems = computed(() => [
     title: t("cargo.flight.src_klm_quote"),
   },
 ]);
+
+/**
+ * Las que el servidor anuncia para esta ruta y este usuario: `realtime_direct`
+ * no viene para un partner real (solo TMWE puede cotizar con la cuenta directa
+ * de la casa), y entonces no se muestra.
+ */
+const sourceItems = computed(() => {
+  const offered = offeredFlags(
+    allSourceItems.value.map((it) => it.value),
+    (flag) => SOURCE_BY_FLAG[flag],
+    sourcesMeta.value.map((src) => src.key),
+  );
+  return allSourceItems.value.filter((it) => offered.includes(it.value));
+});
 
 type SourceKey =
   | "include_published"

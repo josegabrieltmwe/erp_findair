@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { listViewMode } from "@shared/platform/tmweSession";
 import { ref, computed } from "vue";
 import { isAbortLikeError, toUserMessage } from "@tmwe/shared-frontend/http";
 import {
@@ -281,6 +282,8 @@ export function buildShipmentListQuery(
   s: ShipmentListUrlState,
 ): ShipmentListQuery {
   return {
+    // Personal TMWE: toda su red (ver listViewMode).
+    view_mode: listViewMode(),
     page: s.page,
     per_page: s.per_page,
     type: s.type,
@@ -292,11 +295,13 @@ export function buildShipmentListQuery(
     date_field: s.date_field,
     id_fornitore: s.id_fornitore ? Number(s.id_fornitore) : undefined,
     id_servizio: s.id_servizio ? Number(s.id_servizio) : undefined,
-    // country_iso only filters when paired with location_type (P/D);
-    // send both or neither so the backend never gets a dangling country.
-    country_iso: s.country_iso && s.location_type ? s.country_iso : undefined,
+    // country_iso y city se aplican por sí solos: sin `location_type` el
+    // backend busca en origen Y destino (Shipments_List_Request_Handler, TAB 2).
+    // El lado, en cambio, solo viaja con un campo de dirección: sin él no
+    // filtra nada (era el location_type=D fantasma del panel).
+    country_iso: s.country_iso || undefined,
     location_type:
-      s.country_iso && s.location_type ? s.location_type : undefined,
+      s.location_type && (s.country_iso || s.city) ? s.location_type : undefined,
     city: s.city || undefined,
     // W2.D3 — extended filters (legacy parity).
     id: s.id ? Number(s.id) : undefined,

@@ -94,6 +94,9 @@
             auto-select-first
             :custom-filter="() => true"
             :readonly="readonly('terminal_part')"
+            :no-data-text="
+              isoFor('part') ? undefined : t('cargo.vettori.origin_no_country')
+            "
             @update:search="(q: string) => loadTerminals('part', q)"
             @update:model-value="terminalPart.commit"
             @blur="terminalPart.commit"
@@ -110,6 +113,9 @@
             auto-select-first
             :custom-filter="() => true"
             :readonly="readonly('terminal_dest')"
+            :no-data-text="
+              isoFor('dest') ? undefined : t('cargo.vettori.dest_no_country')
+            "
             @update:search="(q: string) => loadTerminals('dest', q)"
             @update:model-value="terminalDest.commit"
             @blur="terminalDest.commit"
@@ -225,31 +231,42 @@ const terminalDest = useFieldBinding("terminal_dest", "");
 
 // Terminal autocomplete (legacy parity: terminal_ajax_terminal.php). Lists
 // airports/ports of the relevant country from api_cargo_terminals. Origin ISO
-// comes from the pickup address (fallback cargo.paese_part); dest from the
-// destination address (fallback cargo.paese_dest).
+// comes from the pickup address, dest from the destination (consignee) address.
+// cargo.paese_part/paese_dest are country NAMES, not ISO codes: they are only
+// used if they happen to look like an ISO2. Without a country the user can
+// still type ≥2 chars (sigla/city) and the API searches all countries.
 const originTerminals = ref<TerminalOption[]>([]);
 const destTerminals = ref<TerminalOption[]>([]);
 const loadingPart = ref(false);
 const loadingDest = ref(false);
 
+function asIso2(v: unknown): string {
+  const s = String(v ?? "").trim();
+  return /^[A-Za-z]{2}$/.test(s) ? s.toUpperCase() : "";
+}
+
 function isoFor(side: "part" | "dest"): string {
   if (side === "part") {
-    return String(pickup.value?.id_paese_iso ?? cargo.value?.paese_part ?? "");
+    return (
+      asIso2(pickup.value?.id_paese_iso) || asIso2(cargo.value?.paese_part)
+    );
   }
-  return String(
-    destination.value?.id_paese_iso ?? cargo.value?.paese_dest ?? "",
+  return (
+    asIso2(destination.value?.id_paese_iso) || asIso2(cargo.value?.paese_dest)
   );
 }
 
 async function loadTerminals(side: "part" | "dest", q = ""): Promise<void> {
   const iso = isoFor(side);
-  if (!iso) return;
+  const query = (q ?? "").trim();
+  // Sin país: solo búsqueda global con ≥2 caracteres (sigla o ciudad).
+  if (!iso && query.length < 2) return;
   const loading = side === "part" ? loadingPart : loadingDest;
   const target = side === "part" ? originTerminals : destTerminals;
   const current = side === "part" ? terminalPart.local : terminalDest.local;
   loading.value = true;
   try {
-    const list = await terminalsService.list(iso, "", q);
+    const list = await terminalsService.list(iso, "", query);
     // Keep the current value selectable even if it is not in the catalog
     // (legacy cargos may carry a non-listed sigla) so the field never blanks.
     if (current && !list.some((tt) => tt.sigla === current)) {

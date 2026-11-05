@@ -21,13 +21,17 @@ import { useShipmentStore } from "@shipment/stores/shipment.store";
  * Skip rules (paridad locks legacy):
  *   - Both `carico_lk='S'` AND `costo_previsto_lk='S'` → no recalc to fetch.
  *   - Already in-flight (avoid stampede).
+ *   - The change arrived through `store.load()` (server state). Saving an
+ *     address (saveAddress → load) used to flip cap/paese here and queue a
+ *     SECOND `/ajax_shipment_crud` one second later. Only local edits
+ *     (update/mergeLocal) schedule the recalc reload.
  */
 
 const DEBOUNCE_MS = 1000;
 
 export function usePricingRecalc() {
   const store = useShipmentStore();
-  const { shipment, id, draftActive } = storeToRefs(store);
+  const { shipment, id, draftActive, loading } = storeToRefs(store);
 
   const inFlight = ref(false);
   let timer: number | null = null;
@@ -38,6 +42,28 @@ export function usePricingRecalc() {
   // second `/ajax_shipment_crud` call right after the first one
   // returns.
   let armed = false;
+
+  // ¿El cambio llega con una recarga (`store.load()`)? load() pone
+  // `loading=true`, asigna `shipment` (los watchers de abajo se encolan para la
+  // siguiente microtarea) y vuelve a `loading=false` en el mismo tick. El
+  // watcher síncrono marca la ventana y la cierra con un setTimeout(0), que
+  // corre después de esa microtarea: así los watchers ven `fromLoad=true` y no
+  // reprograman otra recarga. Vale también para las llamadas internas del
+  // store (saveAddress → load), que no pasan por $onAction.
+  let fromLoad = false;
+  watch(
+    loading,
+    (isLoading) => {
+      if (isLoading) {
+        fromLoad = true;
+        return;
+      }
+      window.setTimeout(() => {
+        fromLoad = loading.value;
+      }, 0);
+    },
+    { flush: "sync" },
+  );
 
   function shouldSkip(): boolean {
     const s = shipment.value;
@@ -58,6 +84,9 @@ export function usePricingRecalc() {
 
   function schedule(): void {
     if (!armed) return;
+    // Cambio llegado con una recarga (p. ej. tras guardar una dirección): ya es
+    // el estado del servidor; recargar otra vez sería redundante.
+    if (fromLoad) return;
     if (shouldSkip()) return;
     if (timer !== null) clearTimeout(timer);
     timer = window.setTimeout(() => {

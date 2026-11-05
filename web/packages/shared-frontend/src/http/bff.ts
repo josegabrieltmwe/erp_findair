@@ -303,6 +303,8 @@ export async function bootstrapBff(): Promise<boolean> {
     language,
     csrf: session.csrf_token,
     isTmwe: session.user?.is_tmwe === true,
+    // isTmwe es el del usuario REAL: el BFF no lo cambia al suplantar.
+    impersonating: Number(session.impersonation?.id ?? 0) > 1,
     partnerId: effectivePartnerId(session),
     capabilities: session.capabilities ?? [],
     noAccess: sessionHasNoAccess(session),

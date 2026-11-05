@@ -1,30 +1,20 @@
 <template>
   <div>
-    <!-- Loading skeleton -->
-    <template v-if="store.loading">
-      <v-skeleton-loader
-        type="card-avatar, list-item-three-line, table-tbody"
-      />
-    </template>
-
-    <!-- Error -->
-    <v-alert
-      v-else-if="store.error"
-      type="error"
-      prominent
-      class="ma-4"
-      icon="mdi-alert-circle"
-    >
-      <div class="text-subtitle-2 mb-1">
-        {{ t("shipment.detail.load_error") }}
-      </div>
-      <div class="text-body-2">{{ store.error }}</div>
-      <template #append>
-        <v-btn variant="text" color="error" @click="reload">{{
-          t("common.retry")
-        }}</v-btn>
-      </template>
-    </v-alert>
+    <!-- Carga y error dentro del mismo shell que el detalle: la ruta es
+         fullscreen y un aviso suelto dejaba la página sin navegación. -->
+    <DetailLoadState
+      v-if="store.loading || (store.error && !store.shipment)"
+      :loading="store.loading"
+      :heading="routeIdLabel"
+      :title="loadErrorTitle"
+      :message="loadErrorMessage"
+      :detail="loadErrorDetail"
+      :permanent="loadErrorPermanent"
+      :retry-label="t('common.retry')"
+      :back-label="t('platform.records.back_to_list')"
+      :back-to="{ name: 'shipment-list' }"
+      @retry="reload"
+    />
 
     <!-- Loaded — v2 layout -->
     <template v-else-if="store.shipment">
@@ -68,6 +58,11 @@ import { useChatRealtime } from "@shipment/composables/useChatRealtime";
 import { usePricingRecalc } from "@shipment/composables/usePricingRecalc";
 
 import ShipmentDetailLayoutV2 from "@shipment/layouts/ShipmentDetailLayoutV2.vue";
+import DetailLoadState from "@shared/detail/DetailLoadState.vue";
+import {
+  classifyDetailLoadError,
+  isPermanentDetailLoadError,
+} from "@shared/detail/detailLoadError";
 import ShipmentOverviewV2 from "@shipment/components/shipment/overview/ShipmentOverviewV2.vue";
 // `ShipmentSidebar` (off-canvas records drawer) was inlined into
 // ShipmentDetailLayoutV2 as a persistent DetailShell sidebar — the
@@ -137,6 +132,40 @@ async function load(): Promise<void> {
 async function reload(): Promise<void> {
   await load();
 }
+
+/**
+ * Texto del fallo de carga, por CÓDIGO y no por el mensaje del backend (que
+ * llega en italiano). Sin acceso / no existe son permanentes: sin «Reintentar».
+ */
+const loadErrorKind = computed(() => classifyDetailLoadError(store.errorCode));
+const loadErrorPermanent = computed(() =>
+  isPermanentDetailLoadError(loadErrorKind.value),
+);
+const loadErrorTitle = computed(() => {
+  switch (loadErrorKind.value) {
+    case "access_denied":
+      return t("shipment.detail.access_denied");
+    case "not_found":
+      return t("shipment.detail.not_found");
+    default:
+      return t("shipment.detail.load_error");
+  }
+});
+const loadErrorMessage = computed(() => {
+  switch (loadErrorKind.value) {
+    case "access_denied":
+      return t("shipment.detail.access_denied_text", { id: route.params.id });
+    case "not_found":
+      return t("shipment.detail.not_found_text", { id: route.params.id });
+    default:
+      return t("shipment.detail.load_error_text");
+  }
+});
+/** El mensaje crudo solo como detalle técnico de un fallo transitorio. */
+const loadErrorDetail = computed(() =>
+  loadErrorPermanent.value ? "" : String(store.error ?? ""),
+);
+const routeIdLabel = computed(() => `#${String(route.params.id ?? "")}`);
 
 onMounted(load);
 watch(() => route.params.id, load);

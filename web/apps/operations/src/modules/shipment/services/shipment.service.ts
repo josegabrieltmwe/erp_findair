@@ -119,14 +119,31 @@ export const shipmentService = {
     });
   },
 
-  fromCargo(
+  /**
+   * Crea una express vinculada al cargo. El API devuelve el id en
+   * `data.shipment_id` (antes en la raíz): se normaliza y el éxito exige id > 0.
+   */
+  async fromCargo(
     cargo_id: number,
     tpc: "P" | "D" | "H" | "Q",
-  ): Promise<{ success: boolean; shipment_id?: number; error?: string }> {
-    return http("/ajax_shipment_from_cargo", {
+  ): Promise<{ success: boolean; shipment_id: number; error?: string }> {
+    const r = await http<{
+      success?: boolean;
+      data?: { shipment_id?: number | string | null } | null;
+      shipment_id?: number | string | null;
+      error?: unknown;
+    }>("/ajax_shipment_from_cargo", {
       method: "POST",
       body: { cargo_id, tpc },
     });
+    const n = Number(r?.data?.shipment_id ?? r?.shipment_id ?? 0);
+    const id = Number.isFinite(n) && n > 0 ? Math.trunc(n) : 0;
+    const success = r?.success === true && id > 0;
+    return {
+      success,
+      shipment_id: id,
+      error: success || typeof r?.error !== "string" ? undefined : r.error,
+    };
   },
 
   /**

@@ -1,44 +1,20 @@
 <template>
   <div>
-    <!-- Loading skeleton -->
-    <template v-if="store.loading">
-      <v-skeleton-loader
-        type="card-avatar, list-item-three-line, table-tbody"
-      />
-    </template>
-
-    <!-- Not found / deleted (stato='O') / no access — permanent, no retry -->
-    <v-alert
-      v-else-if="store.error && isPermanentLoadError"
-      type="warning"
-      prominent
-      class="ma-4"
-      icon="mdi-file-remove-outline"
-    >
-      <div class="text-subtitle-2 mb-1">
-        {{ t("cargo.page.not_found") }}
-      </div>
-      <div class="text-body-2">
-        {{ t("cargo.page.not_found_text", { id: routeId }) }}
-      </div>
-    </v-alert>
-
-    <!-- Transient load error — offer retry -->
-    <v-alert
-      v-else-if="store.error"
-      type="error"
-      prominent
-      class="ma-4"
-      icon="mdi-alert-circle"
-    >
-      <div class="text-subtitle-2 mb-1">{{ t("cargo.page.load_error") }}</div>
-      <div class="text-body-2">{{ store.error }}</div>
-      <template #append>
-        <v-btn variant="text" color="error" @click="reload">{{
-          t("common.retry")
-        }}</v-btn>
-      </template>
-    </v-alert>
+    <!-- Carga y error dentro del mismo shell que el detalle: la ruta es
+         fullscreen y un aviso suelto dejaba la página sin navegación. -->
+    <DetailLoadState
+      v-if="store.loading || (store.error && !store.cargo)"
+      :loading="store.loading"
+      :heading="`#${routeId || ''}`"
+      :title="loadErrorTitle"
+      :message="loadErrorMessage"
+      :detail="loadErrorDetail"
+      :permanent="isPermanentLoadError"
+      :retry-label="t('common.retry')"
+      :back-label="t('platform.records.back_to_list')"
+      :back-to="{ name: 'cargo-list' }"
+      @retry="reload"
+    />
 
     <!-- Loaded — V2 layout -->
     <template v-else-if="store.cargo">
@@ -106,6 +82,11 @@ import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useChatRealtime } from "@cargo/composables/useChatRealtime";
 import { usePricingRecalc } from "@cargo/composables/usePricingRecalc";
 
+import DetailLoadState from "@shared/detail/DetailLoadState.vue";
+import {
+  classifyDetailLoadError,
+  isPermanentDetailLoadError,
+} from "@shared/detail/detailLoadError";
 import CargoDetailLayoutV2 from "@cargo/layouts/CargoDetailLayoutV2.vue";
 import CargoOverviewV2 from "@cargo/components/cargo/overview/CargoOverviewV2.vue";
 // Flight legs, MAWB, HAWB list and consolidation are no longer embedded as a
@@ -157,19 +138,38 @@ const routeId = computed(() =>
   Number(route.params.id ?? window.__TMWE_CARGO__?.cargoId ?? 0),
 );
 
-// Permanent load failures — cargo missing, soft-deleted (stato='O'), or no
-// access. All map to a "cannot open this cargo" state where a retry is
-// pointless. Everything else (network blip, 5xx) keeps the retry button.
-// The shared http client collapses every 403 to errorCode 'FORBIDDEN'
-// (it does not forward the backend's SHIPMENT_ACCESS_DENIED), so match
-// that too — a 403 on a cargo detail is always permanent.
-const PERMANENT_ERROR_CODES = new Set([
-  "NOT_FOUND",
-  "FORBIDDEN",
-  "SHIPMENT_ACCESS_DENIED",
-]);
-const isPermanentLoadError = computed(
-  () => store.errorCode != null && PERMANENT_ERROR_CODES.has(store.errorCode),
+// Fallos permanentes — el cargo no existe, está borrado (stato='O') o no hay
+// acceso: reintentar no sirve. El resto (red, 5xx) mantiene «Reintentar».
+// El cliente http común colapsa todo 403 en FORBIDDEN; el backend puede mandar
+// además ACCESS_DENIED / SHIPMENT_ACCESS_DENIED (ver detailLoadError.ts).
+// El texto sale del CÓDIGO, no del mensaje del backend (que llega en italiano).
+const loadErrorKind = computed(() => classifyDetailLoadError(store.errorCode));
+const isPermanentLoadError = computed(() =>
+  isPermanentDetailLoadError(loadErrorKind.value),
+);
+const loadErrorTitle = computed(() => {
+  switch (loadErrorKind.value) {
+    case "access_denied":
+      return t("cargo.page.access_denied");
+    case "not_found":
+      return t("cargo.page.not_found");
+    default:
+      return t("cargo.page.load_error");
+  }
+});
+const loadErrorMessage = computed(() => {
+  switch (loadErrorKind.value) {
+    case "access_denied":
+      return t("cargo.page.access_denied_text", { id: routeId.value });
+    case "not_found":
+      return t("cargo.page.not_found_text", { id: routeId.value });
+    default:
+      return t("cargo.page.load_error_text");
+  }
+});
+/** El mensaje crudo solo como detalle técnico de un fallo transitorio. */
+const loadErrorDetail = computed(() =>
+  isPermanentLoadError.value ? "" : String(store.error ?? ""),
 );
 
 async function load(): Promise<void> {

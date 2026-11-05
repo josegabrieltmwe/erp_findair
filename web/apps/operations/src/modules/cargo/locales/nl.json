@@ -317,6 +317,7 @@
       "search": "Zoeken",
       "rif": "RIF",
       "carrier": "Vervoerder",
+      "country": "Land",
       "origin_country": "Herkomstland",
       "dest_country": "Bestemmingsland",
       "date": "Datum",
@@ -382,6 +383,7 @@
       }
     },
     "value": {
+      "any_side": "Herkomst of bestemming",
       "origin": "Herkomst",
       "destination": "Bestemming",
       "chat_unread_yes": "Ja",
@@ -992,7 +994,16 @@
       "role_delivery": "Aflevering",
       "none": "Nog geen gekoppelde express-zendingen.",
       "create_error": "Kan de express-zending niet aanmaken.",
-      "open_express": "Zending #{id} openen"
+      "open_express": "Zending #{id} openen",
+      "create_pickup": "+ Ophaal-express aanmaken",
+      "create_delivery": "+ Bezorg-express aanmaken",
+      "create_handler": "+ Handler-express aanmaken",
+      "role_name_pickup": "ophaal",
+      "role_name_delivery": "bezorg",
+      "role_name_handler": "handler",
+      "create_confirm": "Er wordt een gekoppelde {role}-expresszending aangemaakt met de gegevens van deze cargo. Doorgaan?",
+      "create_confirm_ok": "Express aanmaken",
+      "created": "Expresszending #{id} aangemaakt"
     },
     "offerte": {
       "title": "Offerte aan klant",
@@ -1053,7 +1064,9 @@
       "awbs_available": "{count} AWB('s) beschikbaar",
       "no_carriers": "Geen vervoerders met beschikbare AWB-voorraad voor deze route.",
       "cargo_type": "Vrachttype",
-      "incoterm": "Incoterm"
+      "incoterm": "Incoterm",
+      "dest_no_country": "Geen geadresseerde: typ code of stad (zoekt in alle landen)",
+      "origin_no_country": "Geen ophaaladres: typ code of stad (zoekt in alle landen)"
     },
     "overview": {
       "client": "Klant",
@@ -1768,6 +1781,9 @@
     },
     "layout": {},
     "page": {
+      "access_denied": "Je hebt geen toegang tot deze zending",
+      "access_denied_text": "Vracht {id} hoort bij een andere organisatie of je gebruiker mag deze niet zien.",
+      "load_error_text": "De verbinding met de server is mislukt. Probeer het over enkele seconden opnieuw.",
       "load_error": "Kan vracht niet laden",
       "not_found": "Vracht niet gevonden",
       "not_found_text": "Geen vrachtzending met id {id}",

@@ -613,7 +613,13 @@
         "use_other_address": "Usar otra dirección",
         "use_sede_address": "Usar la dirección de la sede",
         "view_registered": "Ver dirección registrada",
-        "no_registered": "Sin dirección registrada"
+        "no_registered": "Sin dirección registrada",
+        "err_required": "Campo obligatorio",
+        "err_cap_required": "Este país requiere código postal",
+        "err_prov_required": "Este país requiere provincia",
+        "err_validation": "Revisa los campos marcados de la dirección.",
+        "saved": "Dirección guardada",
+        "save_error": "No se pudo guardar la dirección."
       },
       "insurance": {
         "title": "Seguro",
@@ -1258,6 +1264,11 @@
       }
     },
     "detail": {
+      "access_denied": "No tienes acceso a esta expedición",
+      "access_denied_text": "La expedición {id} pertenece a otra organización o tu usuario no tiene permiso para verla.",
+      "not_found": "La expedición no existe",
+      "not_found_text": "No hay ninguna expedición con id {id}, o se ha eliminado.",
+      "load_error_text": "Ha fallado la conexión con el servidor. Vuelve a intentarlo en unos segundos.",
       "load_error": "Error al cargar la expedición",
       "readonly_title": "Solo lectura",
       "readonly_body": "Esta expedición es de solo lectura y no se puede modificar.",
@@ -1812,6 +1823,7 @@
       "search": "Búsqueda",
       "carrier": "Transportista",
       "rif": "RIF",
+      "country": "País",
       "origin_country": "País origen",
       "dest_country": "País dest.",
       "date": "Fecha",
@@ -1845,6 +1857,7 @@
       "has_insurance": "Con seguro"
     },
     "value": {
+      "any_side": "Origen o destino",
       "origin": "Origen",
       "destination": "Destino",
       "chat_unread_yes": "Sí",

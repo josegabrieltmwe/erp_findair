@@ -32,12 +32,20 @@ export const terminalsService = {
   /**
    * List terminals for a country. `type` 'A'=airport, 'P'=port, 'R'=road;
    * omitted → A+P (legacy vtp=AIR semantics). `q` optional substring filter.
+   * Without a valid ISO, a `q` of ≥2 chars searches ALL countries (the API
+   * accepts an empty iso with q, LIMIT 30); otherwise nothing is requested.
    */
   async list(iso: string, type = "", q = ""): Promise<TerminalOption[]> {
     const code = (iso ?? "").trim().toUpperCase();
-    if (!/^[A-Z]{2,3}$/.test(code)) return [];
+    const query = (q ?? "").trim();
+    const hasIso = /^[A-Z]{2,3}$/.test(code);
+    if (!hasIso && query.length < 2) return [];
     const res = await http<TerminalsEnvelope>("/api_cargo_terminals", {
-      query: { iso: code, ...(type ? { type } : {}), ...(q ? { q } : {}) },
+      query: {
+        ...(hasIso ? { iso: code } : {}),
+        ...(type ? { type } : {}),
+        ...(query ? { q: query } : {}),
+      },
     });
     return res?.data?.terminals ?? [];
   },

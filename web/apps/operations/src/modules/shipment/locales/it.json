@@ -613,7 +613,13 @@
         "use_other_address": "Usa altro indirizzo",
         "use_sede_address": "Usa l'indirizzo della sede",
         "view_registered": "Vedi indirizzo registrato",
-        "no_registered": "Nessun indirizzo registrato"
+        "no_registered": "Nessun indirizzo registrato",
+        "err_required": "Campo obbligatorio",
+        "err_cap_required": "Questo paese richiede il CAP",
+        "err_prov_required": "Questo paese richiede la provincia",
+        "err_validation": "Controlla i campi evidenziati dell’indirizzo.",
+        "saved": "Indirizzo salvato",
+        "save_error": "Impossibile salvare l’indirizzo."
       },
       "insurance": {
         "title": "Assicurazione",
@@ -1281,6 +1287,11 @@
       }
     },
     "detail": {
+      "access_denied": "Non hai accesso a questa spedizione",
+      "access_denied_text": "La spedizione {id} appartiene a un'altra organizzazione o il tuo utente non ha il permesso di vederla.",
+      "not_found": "La spedizione non esiste",
+      "not_found_text": "Nessuna spedizione con id {id}, oppure è stata eliminata.",
+      "load_error_text": "La connessione con il server non è riuscita. Riprova tra qualche secondo.",
       "load_error": "Errore nel caricamento della spedizione",
       "readonly_title": "Sola lettura",
       "readonly_body": "Questa spedizione è in sola lettura e non può essere modificata.",
@@ -1812,6 +1823,7 @@
       "search": "Ricerca",
       "carrier": "Vettore",
       "rif": "RIF",
+      "country": "Paese",
       "origin_country": "Paese origine",
       "dest_country": "Paese dest.",
       "date": "Data",
@@ -1845,6 +1857,7 @@
       "has_insurance": "Con assicurazione"
     },
     "value": {
+      "any_side": "Origine o destinazione",
       "origin": "Origine",
       "destination": "Destinazione",
       "chat_unread_yes": "Sì",

@@ -21,6 +21,12 @@ describe("catálogo público de países", () => {
     expect(countriesFromPublic({ error: "x" })).toEqual([]);
   });
 
+  it("conserva usa_cap/usa_prov (cap_enabled/prov_enabled) para validar direcciones", () => {
+    const [c] = countriesFromPublic([{ iso: "it", nome: "Italia", name: "Italy", cap_enabled: "S", prov_enabled: "s" }]);
+    expect(c).toMatchObject({ ISO: "IT", cap_enabled: "S", prov_enabled: "S" });
+    expect(countriesFromPublic([{ iso: "IE", nome: "Irlanda" }])[0]).not.toHaveProperty("cap_enabled");
+  });
+
   it("si falta el nombre local usa el inglés", () => {
     expect(countriesFromPublic([{ iso: "de", name: "Germany" }])[0]).toMatchObject({ ISO: "DE", nome: "Germany" });
   });

@@ -76,6 +76,7 @@ import AddressRow from "@cargo/components/shell/AddressRow.vue";
 import CargoLegExpress from "@cargo/components/cargo/CargoLegExpress.vue";
 import { cargoService, type CargoAddress } from "@cargo/services/cargo.service";
 import { countryFlagEmoji } from "@cargo/utils/country";
+import { cleanAirport } from "@cargo/utils/airport";
 
 const { t } = useI18n();
 const store = useCargoStore();
@@ -140,7 +141,7 @@ const pickupSub2 = computed(() => {
       .join(" · ");
   }
   const base = compose(pickup.value).sub2;
-  const airport = pickup.value?.dhl_airport || "";
+  const airport = cleanAirport(pickup.value?.dhl_airport);
   return airport
     ? [base, t("cargo.indirizzi.airport", { code: airport })]
         .filter(Boolean)
@@ -153,7 +154,7 @@ const destSub = computed(() => compose(destination.value).sub);
 const destSub2 = computed(() => {
   const base = compose(destination.value).sub2;
   const d = destination.value;
-  const airport = d?.dhl_airport || "";
+  const airport = cleanAirport(d?.dhl_airport);
   const attn = d?.attenzione || "";
   const tel = d?.tel || d?.cell || "";
   const extras = [

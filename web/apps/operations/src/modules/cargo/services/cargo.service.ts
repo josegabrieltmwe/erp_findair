@@ -525,6 +525,17 @@ export interface CargoListQuery {
   acc_bancale?: "S";
   /** '1' = only shipments having unread chat messages. */
   chat_unread?: "1";
+  /**
+   * `erp` = el personal TMWE ve toda su red (mismo contrato que
+   * api_courier_shipments). Sin él, `b2b`: filtra por la anagrafica.
+   */
+  view_mode?: "b2b" | "erp";
+  /**
+   * 1 = solo recuento: el API devuelve `pagination.total`/`meta` sin filas ni
+   * la consulta de ids. Un API que aún no lo conoce lo ignora (devuelve la
+   * página de `per_page` filas), por eso se envía siempre con `per_page=1`.
+   */
+  count_only?: 1;
 }
 
 export const cargoListService = {

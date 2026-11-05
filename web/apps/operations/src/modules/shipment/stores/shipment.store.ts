@@ -10,6 +10,7 @@ import {
 import { supplementsService } from "@shipment/services/supplements.service";
 import { filesService } from "@shipment/services/files.service";
 import { http } from "@shipment/services/http";
+import { errorCodeFromThrown } from "@shared/detail/detailLoadError";
 import { useToastStore } from "./toast.store";
 import { createAfterCommitQueue } from "@shipment/utils/afterCommitQueue";
 import { i18n } from "@shipment/plugins/i18n";
@@ -51,6 +52,11 @@ export const useShipmentStore = defineStore("shipment", () => {
   const loading = ref(false);
   const saving = ref(false);
   const error = ref<string | null>(null);
+  /**
+   * Código del último fallo de `load` (NOT_FOUND, FORBIDDEN, ACCESS_DENIED…).
+   * La página de detalle lo traduce y decide si ofrece «Reintentar».
+   */
+  const errorCode = ref<string | null>(null);
 
   const id = computed(() => {
     const s = shipment.value;
@@ -324,6 +330,7 @@ export const useShipmentStore = defineStore("shipment", () => {
   async function load(shipmentId: number): Promise<void> {
     loading.value = true;
     error.value = null;
+    errorCode.value = null;
     try {
       const res = await shipmentService.load(shipmentId, {
         withPackages: true,
@@ -332,6 +339,7 @@ export const useShipmentStore = defineStore("shipment", () => {
       });
       if (!res.success || !res.data) {
         error.value = res.error ?? "Failed to load shipment";
+        errorCode.value = res.error_code ?? null;
         shipment.value = null;
         return;
       }
@@ -348,6 +356,7 @@ export const useShipmentStore = defineStore("shipment", () => {
       }
     } catch (err) {
       error.value = (err as Error).message;
+      errorCode.value = errorCodeFromThrown(err);
       shipment.value = null;
     } finally {
       loading.value = false;
@@ -522,6 +531,7 @@ export const useShipmentStore = defineStore("shipment", () => {
   }
 
   return {
+    errorCode,
     shipment,
     loading,
     saving,

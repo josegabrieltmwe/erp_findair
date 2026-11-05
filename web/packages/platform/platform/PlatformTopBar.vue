@@ -94,7 +94,8 @@
 
     <!-- Platform-owned actions -->
     <PlatformNewShipment />
-    <PlatformPartnerSwitch />
+    <!-- Solo para el personal TMWE (el BFF da 403 al resto). -->
+    <PlatformPartnerSwitch v-if="canImpersonate" />
     <PlatformSearch v-if="showSearch" />
     <PlatformChatBadge />
     <PlatformNotificationBell />
@@ -115,6 +116,7 @@ import { useProfile } from '../composables/useProfile';
 import PlatformSearch from './PlatformSearch.vue';
 import PlatformNewShipment from './PlatformNewShipment.vue';
 import PlatformPartnerSwitch from './PlatformPartnerSwitch.vue';
+import { isRealTmweUser } from './tmweSession';
 import PlatformChatBadge from './PlatformChatBadge.vue';
 import PlatformNotificationBell from './PlatformNotificationBell.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
@@ -132,6 +134,9 @@ withDefaults(
 );
 
 const emit = defineEmits<{ 'toggle-sidebar': [] }>();
+
+/** El bootstrap de sesión no cambia sin recargar: basta leerlo una vez. */
+const canImpersonate = isRealTmweUser();
 
 const { t } = useI18n();
 const { breadcrumb } = usePlatformContext();

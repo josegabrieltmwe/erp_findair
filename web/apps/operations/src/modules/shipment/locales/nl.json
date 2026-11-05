@@ -613,7 +613,13 @@
         "use_other_address": "Ander adres gebruiken",
         "use_sede_address": "Vestigingsadres gebruiken",
         "view_registered": "Geregistreerd adres bekijken",
-        "no_registered": "Geen geregistreerd adres"
+        "no_registered": "Geen geregistreerd adres",
+        "err_required": "Verplicht veld",
+        "err_cap_required": "Dit land vereist een postcode",
+        "err_prov_required": "Dit land vereist een provincie/staat",
+        "err_validation": "Controleer de gemarkeerde adresvelden.",
+        "saved": "Adres opgeslagen",
+        "save_error": "Het adres kon niet worden opgeslagen."
       },
       "insurance": {
         "title": "Verzekering",
@@ -1258,6 +1264,11 @@
       }
     },
     "detail": {
+      "access_denied": "Je hebt geen toegang tot deze zending",
+      "access_denied_text": "Zending {id} hoort bij een andere organisatie of je gebruiker mag deze niet zien.",
+      "not_found": "De zending bestaat niet",
+      "not_found_text": "Er is geen zending met id {id}, of ze is verwijderd.",
+      "load_error_text": "De verbinding met de server is mislukt. Probeer het over enkele seconden opnieuw.",
       "load_error": "Fout bij het laden van de zending",
       "readonly_title": "Alleen-lezen",
       "readonly_body": "Deze zending is alleen-lezen en kan niet worden gewijzigd.",
@@ -1812,6 +1823,7 @@
       "search": "Zoeken",
       "carrier": "Vervoerder",
       "rif": "RIF",
+      "country": "Land",
       "origin_country": "Herkomstland",
       "dest_country": "Bestemmingsland",
       "date": "Datum",
@@ -1845,6 +1857,7 @@
       "has_insurance": "Heeft verzekering"
     },
     "value": {
+      "any_side": "Herkomst of bestemming",
       "origin": "Herkomst",
       "destination": "Bestemming",
       "chat_unread_yes": "Ja",

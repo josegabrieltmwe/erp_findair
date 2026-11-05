@@ -317,6 +317,7 @@
       "search": "Búsqueda",
       "rif": "RIF",
       "carrier": "Transportista",
+      "country": "País",
       "origin_country": "País origen",
       "dest_country": "País dest.",
       "date": "Fecha",
@@ -382,6 +383,7 @@
       }
     },
     "value": {
+      "any_side": "Origen o destino",
       "origin": "Origen",
       "destination": "Destino",
       "chat_unread_yes": "Sí",
@@ -992,7 +994,16 @@
       "role_delivery": "Entrega",
       "none": "No hay envíos express vinculados todavía.",
       "create_error": "No se pudo crear la expedición express.",
-      "open_express": "Abrir expedición #{id}"
+      "open_express": "Abrir expedición #{id}",
+      "create_pickup": "+ Crear express de recogida",
+      "create_delivery": "+ Crear express de entrega",
+      "create_handler": "+ Crear express de handler",
+      "role_name_pickup": "recogida",
+      "role_name_delivery": "entrega",
+      "role_name_handler": "handler",
+      "create_confirm": "Se creará una expedición express vinculada de {role} con los datos de este cargo. ¿Continuar?",
+      "create_confirm_ok": "Crear express",
+      "created": "Expedición express #{id} creada"
     },
     "offerte": {
       "title": "Oferta al cliente",
@@ -1053,7 +1064,9 @@
       "awbs_available": "{count} AWB disponibles",
       "no_carriers": "No hay transportistas con stock de AWB disponible para esta ruta.",
       "cargo_type": "Tipo mercancía",
-      "incoterm": "Incoterm"
+      "incoterm": "Incoterm",
+      "dest_no_country": "Sin consignatario: escribe sigla o ciudad (busca en todos los países)",
+      "origin_no_country": "Sin dirección de recogida: escribe sigla o ciudad (busca en todos los países)"
     },
     "overview": {
       "client": "Cliente",
@@ -1768,6 +1781,9 @@
     },
     "layout": {},
     "page": {
+      "access_denied": "No tienes acceso a esta expedición",
+      "access_denied_text": "El cargo {id} pertenece a otra organización o tu usuario no tiene permiso para verlo.",
+      "load_error_text": "Ha fallado la conexión con el servidor. Vuelve a intentarlo en unos segundos.",
       "load_error": "No se pudo cargar el cargo",
       "not_found": "Cargo no encontrado",
       "not_found_text": "No hay envío cargo con id {id}",

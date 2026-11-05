@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { listViewMode } from "@shared/platform/tmweSession";
 import { ref, computed } from "vue";
 import { isAbortLikeError, toUserMessage } from "@tmwe/shared-frontend/http";
 import {
@@ -296,6 +297,8 @@ export function serializeCargoListQuery(
  */
 export function buildCargoListQuery(s: CargoListUrlState): CargoListQuery {
   return {
+    // Personal TMWE: toda su red (ver listViewMode).
+    view_mode: listViewMode(),
     page: s.page,
     per_page: s.per_page,
     type: s.type,
@@ -314,9 +317,10 @@ export function buildCargoListQuery(s: CargoListUrlState): CargoListQuery {
     airline_code: s.airline_code || undefined,
     terminal_part: s.terminal_part || undefined,
     terminal_dest: s.terminal_dest || undefined,
-    // paesex only filters when paired with cerca_pd (P/D); send both or
-    // neither so the backend never gets a dangling country.
-    paesex: s.paesex && s.cerca_pd ? s.paesex : undefined,
+    // El país se aplica solo: sin `cerca_pd` el backend busca en origen Y
+    // destino (Filter_Analyzer::get_address_joins_for_cerca_pd). El lado, en
+    // cambio, solo viaja con un país: sin él no filtra nada y era ruido.
+    paesex: s.paesex || undefined,
     cerca_pd: s.paesex && s.cerca_pd ? s.cerca_pd : undefined,
     // W3 — cargo lifecycle filters.
     id: s.id ? Number(s.id) : undefined,

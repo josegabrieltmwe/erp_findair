@@ -374,13 +374,7 @@
         </template>
         <template #cell.weight="{ item }">
           <span class="text-body-2"
-            >{{
-              Number(
-                (item as ShipmentListRow).weight.charged ??
-                  (item as ShipmentListRow).weight.real ??
-                  0,
-              ).toFixed(1)
-            }}
+            >{{ rowWeight(item as ShipmentListRow).toFixed(1) }}
             kg</span
           >
         </template>
@@ -427,7 +421,7 @@
 <script setup lang="ts">
 import { detailHref as spaDetailHref } from "@shared/platform/navTargets";
 import EmptyState from "@shared/ui/EmptyState.vue";
-import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onDeactivated, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -435,7 +429,12 @@ import {
   shipmentService,
   shipmentListService,
   type ShipmentListRow,
+  type ShipmentListQuery,
 } from "@shipment/services/shipment.service";
+import { createKpiCounter } from "@shared/listing/kpiCounter";
+import { useListEntry } from "@shared/listing/useListEntry";
+import { filterOptionLabel } from "@shared/listing/filterOptions";
+import { SHIPMENT_FILTER_OPTIONS } from "@shipment/listing/shipment-filter-options";
 import {
   useShipmentListStore,
   parseShipmentListQuery,
@@ -523,36 +522,55 @@ function onTitleClick(): void {
  */
 /**
  * Contadores de los KPI que NO son el activo. Antes mostraban siempre "—"
- * (un rail donde 3 de 4 cifras son em-dash no informa). El backend los
- * resuelve barato — medido 0,13-0,7 s por tipo — así que se piden en
- * paralelo con `per_page=1`: solo interesa `pagination.total`.
+ * (un rail donde 3 de 4 cifras son em-dash no informa). Se piden en paralelo
+ * con `count_only=1` (sin filas ni consulta de ids; un API que aún no lo
+ * conoce lo ignora y `per_page=1` mantiene la respuesta mínima): solo
+ * interesa `pagination.total`.
  *
  * Deliberadamente NO pasa por el store: éste comparte un único
  * AbortController con el listado, y pedir los KPIs por ahí cancelaría la
- * página que el operador está viendo.
+ * página que el operador está viendo. `createKpiCounter` lleva el suyo y
+ * deduplica por clave de filtro.
  */
-const kpiCounts = ref<Record<string, number>>({});
-
 const KPI_KEYS = ["in_transit", "cod_pending", "pickup_status"] as const;
 
-async function refreshKpiCounts(): Promise<void> {
-  const base = buildShipmentListQuery(state.value);
-  await Promise.all(
-    KPI_KEYS.map(async (key) => {
-      try {
-        const r = await shipmentListService.fetch({
-          ...base,
-          type: key,
-          page: 1,
-          per_page: 1,
-        });
-        kpiCounts.value[key] = r.pagination?.total ?? 0;
-      } catch {
-        // Un KPI que no responde vuelve a "—"; nunca rompe el listado.
-        delete kpiCounts.value[key];
-      }
-    }),
-  );
+const kpi = createKpiCounter({
+  keys: KPI_KEYS,
+  fetchTotal: async (key, signal) => {
+    const query: ShipmentListQuery & { count_only: 1 } = {
+      ...buildShipmentListQuery(state.value),
+      type: key,
+      page: 1,
+      per_page: 1,
+      count_only: 1,
+    };
+    const r = await shipmentListService.fetch(query, { signal });
+    return r.pagination?.total ?? 0;
+  },
+});
+const kpiCounts = kpi.counts;
+
+/** Filtro que cuentan los KPI: sin paginación, orden ni tile (`type`). */
+function kpiFilterKey(): string {
+  const { page, per_page, sort, sort_dir, type, ...filters } =
+    buildShipmentListQuery(state.value);
+  return JSON.stringify(filters);
+}
+
+function refreshKpiCounts(): Promise<void> {
+  return kpi.refresh(kpiFilterKey());
+}
+
+/**
+ * Peso de la fila: tasado, si no real, si no declarado. Con `||` y no `??`:
+ * el API manda 0 (no null) cuando falta un peso, y `??` no saltaba al
+ * siguiente. `weight.declared` lo añade el API; el tipo de
+ * ShipmentListRow aún no lo recoge.
+ */
+function rowWeight(row: ShipmentListRow): number {
+  const w = row.weight as ShipmentListRow["weight"] & { declared?: number };
+  // Number() por campo: si llegara como cadena ("0.00") sería truthy.
+  return Number(w?.charged) || Number(w?.real) || Number(w?.declared) || 0;
 }
 
 /** Cifra del tile: la del listado si es el tipo activo, si no la cacheada. */
@@ -817,13 +835,16 @@ const activeFilters = computed<ActiveFilter[]>(() => {
   }
   // Country (country_iso + location_type). One chip, labelled by side
   // (origin/destination), with the flag rendered from the ISO.
-  if (state.value.country_iso && state.value.location_type) {
+  if (state.value.country_iso) {
     out.push({
       field: "country_iso",
+      // Sin lado el backend busca en origen Y destino: el chip dice «País».
       group:
         state.value.location_type === "P"
           ? t("filters.group.origin_country")
-          : t("filters.group.dest_country"),
+          : state.value.location_type === "D"
+            ? t("filters.group.dest_country")
+            : t("filters.group.country"),
       value: state.value.country_iso,
       iso: state.value.country_iso,
     });
@@ -867,7 +888,10 @@ const activeFilters = computed<ActiveFilter[]>(() => {
     out.push({
       field: def.field,
       group: t(def.label),
-      value: def.yesNo ? t("common.yes") : value,
+      // Texto de la opción del panel («Sí», «En curso»…), no el valor crudo.
+      value: def.yesNo
+        ? t("common.yes")
+        : filterOptionLabel(SHIPMENT_FILTER_OPTIONS[def.field], value, t),
     });
   }
   return out;
@@ -1320,20 +1344,24 @@ watch(() => {
  * cuando cambia el filtro — pero no al paginar, reordenar o cambiar de tile
  * (`type`), que no alteran el conjunto contado y solo añadirían tráfico.
  */
-watch(
-  () => {
-    const { page, per_page, sort, sort_dir, type, ...filters } =
-      buildShipmentListQuery(state.value);
-    return JSON.stringify(filters);
-  },
-  () => {
-    void refreshKpiCounts();
-  },
-);
+/** true mientras `enterList` carga la página (ver watcher de los KPI). */
+let entering = false;
+
+watch(kpiFilterKey, () => {
+  // Durante la entrada al listado el propio `enterList` los pide DESPUÉS de
+  // la página; aquí solo se atienden los cambios de filtro posteriores.
+  if (entering) return;
+  void refreshKpiCounts();
+});
 
 async function enterList(): Promise<void> {
-  syncUrlToState();
-  await store.fetchPage();
+  entering = true;
+  try {
+    syncUrlToState();
+    await store.fetchPage();
+  } finally {
+    entering = false;
+  }
   // Después del listado, nunca antes: los KPI son secundarios y no deben
   // competir por conexiones con la página que el operador espera ver.
   void refreshKpiCounts();
@@ -1356,25 +1384,12 @@ async function enterList(): Promise<void> {
 }
 
 // ME1: bajo <KeepAlive> (ver OperationsShell.vue), volver de un detalle ya
-// NO remonta la página — reactiva la instancia existente. `onMounted` sigue
-// cubriendo la primera carga real (y deja al componente funcionar standalone
-// fuera de un KeepAlive, p.ej. en un test); `onActivated` repite la carga en
-// cada reactivación para no mostrar datos obsoletos si algo cambió en el
-// detalle (p.ej. un estado editado). `hasMountedOnce` evita duplicar el
-// fetch en la activación inicial: Vue dispara `activated` también la
-// primera vez que un componente se inserta dentro de un KeepAlive, justo
-// después de `mounted`.
-let hasMountedOnce = false;
-
-onMounted(async () => {
-  hasMountedOnce = true;
-  await enterList();
-});
-
-onActivated(() => {
-  if (!hasMountedOnce) return;
-  void enterList();
-});
+// NO remonta la página — la reactiva. `useListEntry` carga en `onMounted` y
+// recarga solo en las reactivaciones POSTERIORES: la primera activación, que
+// Vue dispara justo después de `mounted`, se ignora (antes repetía la carga y
+// los 3 recuentos de KPI). Al reactivar se invalidan los KPI para que se
+// vuelvan a contar aunque el filtro no haya cambiado.
+useListEntry(enterList, { onReenter: kpi.invalidate });
 
 // Leaving the listing: cancel the in-flight page and clear any stale error.
 // Without this the request keeps running against a page nobody is looking at,
@@ -1384,10 +1399,12 @@ onActivated(() => {
 // desmontaje real (fuera de KeepAlive, o si se saca del include).
 onBeforeUnmount(() => {
   store.cancelInFlight();
+  kpi.abort();
 });
 
 onDeactivated(() => {
   store.cancelInFlight();
+  kpi.abort();
 });
 </script>
 

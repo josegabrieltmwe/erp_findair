@@ -317,6 +317,7 @@
       "search": "Ricerca",
       "rif": "RIF",
       "carrier": "Vettore",
+      "country": "Paese",
       "origin_country": "Paese origine",
       "dest_country": "Paese dest.",
       "date": "Data",
@@ -382,6 +383,7 @@
       }
     },
     "value": {
+      "any_side": "Origine o destinazione",
       "origin": "Origine",
       "destination": "Destinazione",
       "chat_unread_yes": "Sì",
@@ -992,7 +994,16 @@
       "role_delivery": "Consegna",
       "none": "Nessuna spedizione express collegata.",
       "create_error": "Impossibile creare la spedizione express.",
-      "open_express": "Apri spedizione #{id}"
+      "open_express": "Apri spedizione #{id}",
+      "create_pickup": "+ Crea express di ritiro",
+      "create_delivery": "+ Crea express di consegna",
+      "create_handler": "+ Crea express handler",
+      "role_name_pickup": "ritiro",
+      "role_name_delivery": "consegna",
+      "role_name_handler": "handler",
+      "create_confirm": "Verrà creata una spedizione express collegata di {role} con i dati di questo cargo. Continuare?",
+      "create_confirm_ok": "Crea express",
+      "created": "Spedizione express #{id} creata"
     },
     "offerte": {
       "title": "Offerta al cliente",
@@ -1053,7 +1064,9 @@
       "awbs_available": "{count} AWB disponibili",
       "no_carriers": "Nessun vettore con AWB disponibili per questa rotta.",
       "cargo_type": "Tipo merce",
-      "incoterm": "Incoterm"
+      "incoterm": "Incoterm",
+      "dest_no_country": "Nessun destinatario: scrivi sigla o città (cerca in tutti i paesi)",
+      "origin_no_country": "Nessun indirizzo di ritiro: scrivi sigla o città (cerca in tutti i paesi)"
     },
     "overview": {
       "client": "Cliente",
@@ -1768,6 +1781,9 @@
     },
     "layout": {},
     "page": {
+      "access_denied": "Non hai accesso a questa spedizione",
+      "access_denied_text": "Il cargo {id} appartiene a un'altra organizzazione o il tuo utente non ha il permesso di vederlo.",
+      "load_error_text": "La connessione con il server non è riuscita. Riprova tra qualche secondo.",
       "load_error": "Impossibile caricare il cargo",
       "not_found": "Cargo non trovato",
       "not_found_text": "Nessuna spedizione cargo con id {id}",

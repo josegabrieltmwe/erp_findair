@@ -300,6 +300,17 @@ import {
 import FilterDrawer, {
   type FilterGroup,
 } from "@shared/listing/FilterDrawer.vue";
+import { toSelectItems } from "@shared/listing/filterOptions";
+import {
+  ARCHIVIATA_OPTIONS,
+  CONSEGNA_FIRMA_OPTIONS,
+  CONTROLLATA_OPTIONS,
+  GESTIONE_OPTIONS,
+  LOCATION_SCOPE_OPTIONS,
+  OFFERTA_OPTIONS,
+  TIPO_MERCE_OPTIONS,
+  VETTORE_TIPO_OPTIONS,
+} from "@cargo/listing/cargo-filter-options";
 import { cargoListService } from "@cargo/services/cargo.service";
 
 const { t } = useI18n();
@@ -359,7 +370,8 @@ function snapshotLocal(): LocalState {
     terminal_part: state.value.terminal_part,
     terminal_dest: state.value.terminal_dest,
     paesex: state.value.paesex,
-    cerca_pd: state.value.cerca_pd || "D",
+    // Sin lado por defecto ('' = origen o destino); antes se forzaba 'D'.
+    cerca_pd: state.value.cerca_pd || "",
     airline_code: state.value.airline_code,
     flight_num1: state.value.flight_num1,
     gestione: state.value.gestione,
@@ -532,53 +544,22 @@ const dateFieldOptions = computed(() => [
   },
 ]);
 
-const locationScopeOptions = computed(() => [
-  { title: t("filters.value.origin"), value: "P" },
-  { title: t("filters.value.destination"), value: "D" },
-]);
-
-const gestioneOptions = computed(() => [
-  { title: t("enums.gestione.to_quote"), value: "N" },
-  { title: t("enums.gestione.quoting"), value: "F" },
-  { title: t("enums.gestione.sent"), value: "O" },
-]);
-
-const offertaOptions = computed(() => [
-  { title: t("enums.offerta.accepted"), value: "A" },
-  { title: t("enums.offerta.rejected"), value: "R" },
-]);
-
-// Cargo `controllata` is binary (S/N) — there is no 'O' value as in
-// express (the offerta workflow lives on its own `offerta` column).
-const controllataOptions = computed(() => [
-  { title: t("common.yes"), value: "S" },
-  { title: t("common.no"), value: "N" },
-]);
-
-const consegnaFirmaOptions = computed(() => [
-  { title: t("enums.delivered.yes"), value: "S" },
-  { title: t("enums.delivered.no"), value: "N" },
-]);
-
-const archivedOptions = computed(() => [
-  { title: t("enums.archived.yes"), value: "S" },
-  { title: t("enums.archived.no"), value: "N" },
-]);
-
-// Legacy `$cargoct` enum — first values from spedyc_form. Conservative
-// list; can be extended as needed.
-const tipoMerceOptions = computed(() => [
-  { title: t("enums.cargo_type.documents"), value: "DOC" },
-  { title: t("enums.cargo_type.non_doc"), value: "NDC" },
-  { title: t("enums.cargo_type.special"), value: "SPL" },
-]);
-
-// Legacy `$cargovtERPsrc` enum.
-const vettoreTipoOptions = computed(() => [
-  { title: t("enums.carrier_type.international"), value: "intl" },
-  { title: t("enums.carrier_type.domestic"), value: "dom" },
-  { title: t("enums.carrier_type.express"), value: "express" },
-]);
+// Las listas viven en cargo-filter-options.ts: la página del listado las usa
+// también para etiquetar los chips de filtro activo.
+const locationScopeOptions = computed(() =>
+  toSelectItems(LOCATION_SCOPE_OPTIONS, t),
+);
+const gestioneOptions = computed(() => toSelectItems(GESTIONE_OPTIONS, t));
+const offertaOptions = computed(() => toSelectItems(OFFERTA_OPTIONS, t));
+const controllataOptions = computed(() => toSelectItems(CONTROLLATA_OPTIONS, t));
+const consegnaFirmaOptions = computed(() =>
+  toSelectItems(CONSEGNA_FIRMA_OPTIONS, t),
+);
+const archivedOptions = computed(() => toSelectItems(ARCHIVIATA_OPTIONS, t));
+const tipoMerceOptions = computed(() => toSelectItems(TIPO_MERCE_OPTIONS, t));
+const vettoreTipoOptions = computed(() =>
+  toSelectItems(VETTORE_TIPO_OPTIONS, t),
+);
 
 watch(
   () => props.modelValue,
@@ -681,6 +662,8 @@ function schedulePreview(): void {
         }),
         page: 1,
         per_page: 1,
+        // Solo el total: sin filas ni consulta de ids (ver CargoListQuery).
+        count_only: 1 as const,
       };
       const r = await cargoListService.fetch(q, { signal: ctrl.signal });
       if (!ctrl.signal.aborted)

@@ -317,6 +317,7 @@
       "search": "Search",
       "rif": "RIF",
       "carrier": "Carrier",
+      "country": "Country",
       "origin_country": "Origin country",
       "dest_country": "Dest country",
       "date": "Date",
@@ -382,6 +383,7 @@
       }
     },
     "value": {
+      "any_side": "Origin or destination",
       "origin": "Origin",
       "destination": "Destination",
       "chat_unread_yes": "Yes",
@@ -992,7 +994,16 @@
       "role_delivery": "Delivery",
       "none": "No linked express shipments yet.",
       "create_error": "Could not create the express shipment.",
-      "open_express": "Open shipment #{id}"
+      "open_express": "Open shipment #{id}",
+      "create_pickup": "+ Create pickup express",
+      "create_delivery": "+ Create delivery express",
+      "create_handler": "+ Create handler express",
+      "role_name_pickup": "pickup",
+      "role_name_delivery": "delivery",
+      "role_name_handler": "handler",
+      "create_confirm": "A linked {role} express shipment will be created from this cargo's data. Continue?",
+      "create_confirm_ok": "Create express",
+      "created": "Express shipment #{id} created"
     },
     "offerte": {
       "title": "Offer to client",
@@ -1053,7 +1064,9 @@
       "awbs_available": "{count} AWB(s) available",
       "no_carriers": "No carriers with available AWB stock for this route.",
       "cargo_type": "Cargo type",
-      "incoterm": "Incoterm"
+      "incoterm": "Incoterm",
+      "dest_no_country": "No consignee: type a code or city (searches all countries)",
+      "origin_no_country": "No pickup address: type a code or city (searches all countries)"
     },
     "overview": {
       "client": "Client",
@@ -1768,6 +1781,9 @@
     },
     "layout": {},
     "page": {
+      "access_denied": "You do not have access to this shipment",
+      "access_denied_text": "Cargo {id} belongs to another organisation or your user is not allowed to see it.",
+      "load_error_text": "The connection to the server failed. Try again in a few seconds.",
       "load_error": "Unable to load cargo",
       "not_found": "Cargo not found",
       "not_found_text": "No cargo shipment with id {id}",

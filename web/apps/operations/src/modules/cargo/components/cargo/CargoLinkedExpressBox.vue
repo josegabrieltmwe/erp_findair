@@ -91,6 +91,7 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useToastStore } from "@cargo/stores/toast.store";
+import { useConfirm } from "@shared/anagrafiche/composables/useConfirm";
 import {
   linkedExpressService,
   type LinkedExpressTpc,
@@ -108,6 +109,7 @@ const { t } = useI18n();
 const router = useRouter();
 const store = useCargoStore();
 const toasts = useToastStore();
+const confirmDialog = useConfirm();
 const { cargo } = storeToRefs(store);
 
 interface LinkItem {
@@ -167,20 +169,20 @@ const missingRoles = computed(() => {
   }> = [
     {
       tpc: "P",
-      label: t("cargo.linked.role_pickup"),
-      icon: "mdi-arrow-up-right",
+      label: t("cargo.linked.create_pickup"),
+      icon: "mdi-truck-plus-outline",
       has: Number(s.id_spediz_part) > 0,
     },
     {
       tpc: "D",
-      label: t("cargo.linked.role_delivery"),
-      icon: "mdi-arrow-down-right",
+      label: t("cargo.linked.create_delivery"),
+      icon: "mdi-truck-plus-outline",
       has: Number(s.id_spediz_dest) > 0,
     },
     {
       tpc: "H",
-      label: t("cargo.indirizzi.handler"),
-      icon: "mdi-warehouse",
+      label: t("cargo.linked.create_handler"),
+      icon: "mdi-truck-plus-outline",
       has: Number(s.id_spediz_handl) > 0,
     },
   ];
@@ -202,23 +204,30 @@ function openShipment(id: number): void {
 async function createLeg(tpc: LinkedExpressTpc): Promise<void> {
   const cargoId = currentCargoId.value;
   if (!cargoId || creating.value !== null) return;
+  const role = tpc === "P" ? "pickup" : tpc === "D" ? "delivery" : "handler";
+  const ok = await confirmDialog.ask({
+    title: t(`cargo.linked.create_${role}`) as string,
+    message: t("cargo.linked.create_confirm", {
+      role: t(`cargo.linked.role_name_${role}`),
+    }) as string,
+    confirmLabel: t("cargo.linked.create_confirm_ok") as string,
+  });
+  if (!ok) return;
   creating.value = tpc;
   try {
     const res = await linkedExpressService.createFromCargo(cargoId, tpc);
-    if (res.success && res.shipment_id) {
+    if (res.success && res.shipment_id > 0) {
+      toasts.push(
+        "success",
+        t("cargo.linked.created", { id: res.shipment_id }) as string,
+      );
       // Crear y abrir el detalle de la nueva expedición (paridad legacy).
       openShipment(res.shipment_id);
     } else {
-      toasts.push(
-        "error",
-        res.error || res.message || t("cargo.linked.create_error"),
-      );
+      toasts.push("error", t("cargo.linked.create_error") as string);
     }
-  } catch (err) {
-    toasts.push(
-      "error",
-      (err as Error).message || t("cargo.linked.create_error"),
-    );
+  } catch {
+    toasts.push("error", t("cargo.linked.create_error") as string);
   } finally {
     creating.value = null;
   }

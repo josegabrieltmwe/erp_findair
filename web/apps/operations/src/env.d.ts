@@ -15,6 +15,11 @@ export interface TmweOperationsBootstrap {
    *  (usado por el módulo giacenze para columnas/acciones internas). */
   isTmwe?: boolean;
   /**
+   * true mientras el personal TMWE suplanta a un partner (`/bff/impersonation`).
+   * `isTmwe` sigue siendo el del usuario REAL (true) durante la suplantación.
+   */
+  impersonating?: boolean;
+  /**
    * Anagrafica de la sesión. La usa "Mi organización" para abrir la ficha del
    * PROPIO partner (sus usuarios y sedes) sin que tenga que buscarse a sí mismo
    * en el listado de clientes. 0 = no resuelta.

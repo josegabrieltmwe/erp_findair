@@ -41,3 +41,24 @@ export function applySelectAll(
   for (const f of flags) out[f] = on;
   return out;
 }
+
+/**
+ * Fuentes que se ofrecen en el formulario.
+ *
+ * El servidor puede omitir una fuente que este usuario no puede pedir: hoy
+ * `realtime_direct` (la cuenta directa de TMWE IT), que a un partner real ya no
+ * se le devuelve. Si la lista del servidor ha llegado y no trae una fuente, esa
+ * fuente no se muestra (y no se envia). Sin lista —sin ruta todavia o fallo de
+ * la consulta— se ofrecen todas, como antes.
+ */
+export function offeredFlags<F extends string>(
+  flags: readonly F[],
+  serverKeyOf: (flag: F) => string | undefined,
+  serverKeys: readonly string[],
+): F[] {
+  if (serverKeys.length === 0) return [...flags];
+  return flags.filter((f) => {
+    const key = serverKeyOf(f);
+    return key !== undefined && serverKeys.includes(key);
+  });
+}

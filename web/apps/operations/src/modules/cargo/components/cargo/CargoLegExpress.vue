@@ -2,7 +2,7 @@
   <!--
     Leg express de un cargo (recogida/entrega/handler) alineada BAJO su dirección
     en la card Direcciones. Si existe → chip "Abrir #id" (abre el detalle de la
-    expedición en NUEVA pestaña). Si no → botón "+ Crear" (POST from_cargo →
+    expedición en NUEVA pestaña). Si no → botón "+ Crear express de …" (confirmación → POST →
     abre la nueva en pestaña nueva).
   -->
   <div class="leg-express">
@@ -26,7 +26,7 @@
       @click="createLeg"
     >
       <v-icon
-        :icon="creating ? 'mdi-loading mdi-spin' : 'mdi-plus'"
+        :icon="creating ? 'mdi-loading mdi-spin' : 'mdi-truck-plus-outline'"
         size="14"
       />
       <span>{{ t(createLabelKey) }}</span>
@@ -40,6 +40,7 @@ import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useToastStore } from "@cargo/stores/toast.store";
+import { useConfirm } from "@shared/anagrafiche/composables/useConfirm";
 import {
   linkedExpressService,
   type LinkedExpressTpc,
@@ -51,6 +52,7 @@ const props = defineProps<{ role: "pickup" | "delivery" | "handler" }>();
 const { t } = useI18n();
 const store = useCargoStore();
 const toasts = useToastStore();
+const confirmDialog = useConfirm();
 const { cargo } = storeToRefs(store);
 
 const ROLE = {
@@ -58,19 +60,19 @@ const ROLE = {
     field: "id_spediz_part",
     tpc: "P" as LinkedExpressTpc,
     open: "cargo.linked.pickup_express",
-    create: "cargo.linked.role_pickup",
+    create: "cargo.linked.create_pickup",
   },
   delivery: {
     field: "id_spediz_dest",
     tpc: "D" as LinkedExpressTpc,
     open: "cargo.linked.delivery_express",
-    create: "cargo.linked.role_delivery",
+    create: "cargo.linked.create_delivery",
   },
   handler: {
     field: "id_spediz_handl",
     tpc: "H" as LinkedExpressTpc,
     open: "cargo.linked.handler_express",
-    create: "cargo.indirizzi.handler",
+    create: "cargo.linked.create_handler",
   },
 } as const;
 
@@ -93,28 +95,37 @@ function openInNewTab(id: number): void {
 async function createLeg(): Promise<void> {
   const cargoId = Number(cargo.value?.id ?? store.id ?? 0);
   if (!cargoId || creating.value) return;
+  // Crear una express es una acción con efecto (nueva expedición + enlace en
+  // el cargo): se confirma antes del POST.
+  const ok = await confirmDialog.ask({
+    title: t(createLabelKey.value) as string,
+    message: t("cargo.linked.create_confirm", {
+      role: t(`cargo.linked.role_name_${props.role}`),
+    }) as string,
+    confirmLabel: t("cargo.linked.create_confirm_ok") as string,
+  });
+  if (!ok) return;
   creating.value = true;
   try {
     const res = await linkedExpressService.createFromCargo(
       cargoId,
       cfg.value.tpc,
     );
-    if (res.success && res.shipment_id) {
-      // Crea y abre la nueva expedición en pestaña nueva.
+    if (res.success && res.shipment_id > 0) {
+      toasts.push(
+        "success",
+        t("cargo.linked.created", { id: res.shipment_id }) as string,
+      );
+      // Abre la nueva expedición en pestaña nueva.
       openInNewTab(res.shipment_id);
       // Refresca el cargo para que aparezca el enlace (id_spediz_*).
       await store.load(cargoId);
     } else {
-      toasts.push(
-        "error",
-        res.error || res.message || t("cargo.linked.create_error"),
-      );
+      // No se muestra el `message` del API (llega en italiano).
+      toasts.push("error", t("cargo.linked.create_error") as string);
     }
-  } catch (err) {
-    toasts.push(
-      "error",
-      (err as Error).message || t("cargo.linked.create_error"),
-    );
+  } catch {
+    toasts.push("error", t("cargo.linked.create_error") as string);
   } finally {
     creating.value = false;
   }

@@ -613,7 +613,13 @@
         "use_other_address": "Andere Adresse verwenden",
         "use_sede_address": "Standortadresse verwenden",
         "view_registered": "Registrierte Adresse anzeigen",
-        "no_registered": "Keine registrierte Adresse"
+        "no_registered": "Keine registrierte Adresse",
+        "err_required": "Pflichtfeld",
+        "err_cap_required": "Dieses Land erfordert eine Postleitzahl",
+        "err_prov_required": "Dieses Land erfordert eine Provinz/einen Bundesstaat",
+        "err_validation": "Bitte die markierten Adressfelder prüfen.",
+        "saved": "Adresse gespeichert",
+        "save_error": "Die Adresse konnte nicht gespeichert werden."
       },
       "insurance": {
         "title": "Versicherung",
@@ -1258,6 +1264,11 @@
       }
     },
     "detail": {
+      "access_denied": "Sie haben keinen Zugriff auf diese Sendung",
+      "access_denied_text": "Sendung {id} gehört zu einer anderen Organisation oder Ihr Benutzer darf sie nicht sehen.",
+      "not_found": "Die Sendung existiert nicht",
+      "not_found_text": "Es gibt keine Sendung mit ID {id}, oder sie wurde gelöscht.",
+      "load_error_text": "Die Verbindung zum Server ist fehlgeschlagen. Versuchen Sie es in einigen Sekunden erneut.",
       "load_error": "Fehler beim Laden der Sendung",
       "readonly_title": "Nur Lesen",
       "readonly_body": "Diese Sendung ist schreibgeschützt und kann nicht geändert werden.",
@@ -1812,6 +1823,7 @@
       "search": "Suche",
       "carrier": "Frachtführer",
       "rif": "RIF",
+      "country": "Land",
       "origin_country": "Ursprungsland",
       "dest_country": "Zielland",
       "date": "Datum",
@@ -1845,6 +1857,7 @@
       "has_insurance": "Mit Versicherung"
     },
     "value": {
+      "any_side": "Herkunft oder Ziel",
       "origin": "Ursprung",
       "destination": "Ziel",
       "chat_unread_yes": "Ja",

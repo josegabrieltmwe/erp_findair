@@ -11,6 +11,10 @@ interface RawCountry {
   iso?: unknown;
   nome?: unknown;
   name?: unknown;
+  /** usa_cap: 'N' = el país no usa código postal. */
+  cap_enabled?: unknown;
+  /** usa_prov: 'S' obligatoria, 'F' con catálogo pero opcional, 'N' sin provincias. */
+  prov_enabled?: unknown;
 }
 
 interface RawCurrency {
@@ -28,10 +32,19 @@ function asList<T>(raw: unknown): T[] {
   return [];
 }
 
-/** El catálogo ya trae solo países soberanos activos; se exige un `iso` de 2 letras y se ordena por nombre. */
+/**
+ * El catálogo ya trae solo países soberanos activos; se exige un `iso` de 2 letras y se ordena por nombre
+ * (italiano). Los selectores reordenan en el idioma de la UI (CmCountrySelect → rankCountries).
+ */
 export function countriesFromPublic(raw: unknown): PaeseOption[] {
   return asList<RawCountry>(raw)
-    .map((c) => ({ iso: String(c.iso ?? '').trim(), nome: String(c.nome ?? ''), name: String(c.name ?? '') }))
+    .map((c) => ({
+      iso: String(c.iso ?? '').trim(),
+      nome: String(c.nome ?? ''),
+      name: String(c.name ?? ''),
+      cap: c.cap_enabled == null ? undefined : String(c.cap_enabled).toUpperCase(),
+      prov: c.prov_enabled == null ? undefined : String(c.prov_enabled).toUpperCase(),
+    }))
     .filter((c) => /^[A-Za-z]{2}$/.test(c.iso))
     .map((c, i) => ({
       id: i + 1, // el catálogo público no publica el id; ningún selector lo usa (el valor es ISO)
@@ -39,6 +52,8 @@ export function countriesFromPublic(raw: unknown): PaeseOption[] {
       ISO2: null,
       nome: c.nome || c.name,
       nomeEN: c.name || c.nome,
+      ...(c.cap !== undefined ? { cap_enabled: c.cap } : {}),
+      ...(c.prov !== undefined ? { prov_enabled: c.prov } : {}),
     }))
     .sort((a, b) => String(a.nome).localeCompare(String(b.nome)));
 }

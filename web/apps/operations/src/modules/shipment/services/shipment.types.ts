@@ -372,6 +372,8 @@ export interface ShipmentCrudResponse {
   success: boolean;
   data?: Shipment;
   error?: string;
+  /** Código estable del fallo (NOT_FOUND, ACCESS_DENIED, SHIPMENT_ACCESS_DENIED…). */
+  error_code?: string;
   error_id?: string;
 }
 

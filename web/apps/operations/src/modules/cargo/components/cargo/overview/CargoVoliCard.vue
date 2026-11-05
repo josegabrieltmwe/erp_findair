@@ -175,6 +175,7 @@ import CargoFlightLegList from "@cargo/components/cargo/CargoFlightLegList.vue";
 import CargoFlightManagerCard from "@cargo/components/cargo/flight-manager/CargoFlightManagerCard.vue";
 import { countryFlagEmoji, iataFlagEmoji } from "@cargo/utils/country";
 import { stripCarrierMarkup } from "@cargo/utils/carrierName";
+import { cleanAirport } from "@cargo/utils/airport";
 
 const { t } = useI18n();
 const store = useCargoStore();
@@ -207,7 +208,9 @@ const vettoreSubtitle = computed<string>(() => {
 });
 
 const originLabel = computed<string>(() => {
-  const iata = cargo.value?.terminal_part || pickup.value?.dhl_airport || "";
+  const iata =
+    cleanAirport(cargo.value?.terminal_part) ||
+    cleanAirport(pickup.value?.dhl_airport);
   if (!iata) return "—";
   const flag =
     iataFlagEmoji(iata) || countryFlagEmoji(pickup.value?.id_paese_iso);
@@ -219,7 +222,8 @@ const originSubtitle = computed<string>(() => {
 
 const destLabel = computed<string>(() => {
   const iata =
-    cargo.value?.terminal_dest || destination.value?.dhl_airport || "";
+    cleanAirport(cargo.value?.terminal_dest) ||
+    cleanAirport(destination.value?.dhl_airport);
   if (!iata) return "—";
   const flag =
     iataFlagEmoji(iata) || countryFlagEmoji(destination.value?.id_paese_iso);

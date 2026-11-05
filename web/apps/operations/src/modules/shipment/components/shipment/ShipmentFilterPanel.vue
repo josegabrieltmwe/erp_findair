@@ -276,6 +276,15 @@ import CmCountrySelect from "@shared/anagrafiche/components/CmCountrySelect.vue"
 import FilterDrawer, {
   type FilterGroup,
 } from "@shared/listing/FilterDrawer.vue";
+import { toSelectItems } from "@shared/listing/filterOptions";
+import {
+  ARCHIVIATA_OPTIONS,
+  CONSEGNA_FIRMA_OPTIONS,
+  CONTROLLATA_OPTIONS,
+  LOCATION_SCOPE_OPTIONS,
+  PRESA_STATO_OPTIONS,
+  STATO_GIAC_OPTIONS,
+} from "@shipment/listing/shipment-filter-options";
 import { shipmentListService } from "@shipment/services/shipment.service";
 import {
   anagraficaService,
@@ -429,7 +438,10 @@ function snapshotLocal(): LocalState {
     date_from: state.value.date_from,
     date_to: state.value.date_to,
     country_iso: state.value.country_iso,
-    location_type: state.value.location_type || "D",
+    // Sin lado por defecto ('' = origen o destino). Antes se inicializaba a
+    // 'D' y, al aplicar cualquier otro filtro, viajaba un location_type=D
+    // fantasma sin país ni ciudad.
+    location_type: state.value.location_type || "",
     city: state.value.city,
     id: state.value.id,
     id_cliente: state.value.id_cliente,
@@ -512,41 +524,18 @@ const dateFieldOptions = computed(() => [
   { title: t("enums.shipment_date_field.delivered"), value: "consegna_data" },
 ]);
 
-const locationScopeOptions = computed(() => [
-  { title: t("filters.value.origin"), value: "P" },
-  { title: t("filters.value.destination"), value: "D" },
-]);
-
-const controllataOptions = computed(() => [
-  { title: t("common.yes"), value: "S" },
-  { title: t("common.no"), value: "N" },
-  { title: t("enums.controllata.offer"), value: "O" },
-]);
-
-const consegnaFirmaOptions = computed(() => [
-  { title: t("enums.delivered.yes"), value: "S" },
-  { title: t("enums.delivered.no"), value: "N" },
-]);
-
-const presaStatoOptions = computed(() => [
-  { title: t("enums.presa_stato.new"), value: "N" },
-  { title: t("enums.presa_stato.in_progress"), value: "W" },
-  { title: t("enums.presa_stato.finished"), value: "F" },
-  { title: t("enums.presa_stato.cancelled"), value: "C" },
-  { title: t("enums.presa_stato.transferred"), value: "T" },
-]);
-
-const archivedOptions = computed(() => [
-  { title: t("enums.archived.yes"), value: "S" },
-  { title: t("enums.archived.no"), value: "N" },
-]);
-
-const statoGiacOptions = computed(() => [
-  { title: t("enums.stato_giac.has_any"), value: "S" },
-  { title: t("enums.stato_giac.open"), value: "A" },
-  { title: t("enums.stato_giac.closed_only"), value: "X" },
-  { title: t("enums.stato_giac.none"), value: "N" },
-]);
+// Las listas viven en shipment-filter-options.ts: la página del listado las
+// usa también para etiquetar los chips de filtro activo.
+const locationScopeOptions = computed(() =>
+  toSelectItems(LOCATION_SCOPE_OPTIONS, t),
+);
+const controllataOptions = computed(() => toSelectItems(CONTROLLATA_OPTIONS, t));
+const consegnaFirmaOptions = computed(() =>
+  toSelectItems(CONSEGNA_FIRMA_OPTIONS, t),
+);
+const presaStatoOptions = computed(() => toSelectItems(PRESA_STATO_OPTIONS, t));
+const archivedOptions = computed(() => toSelectItems(ARCHIVIATA_OPTIONS, t));
+const statoGiacOptions = computed(() => toSelectItems(STATO_GIAC_OPTIONS, t));
 
 watch(
   () => props.modelValue,
@@ -575,7 +564,11 @@ function localAsState(): Record<string, unknown> {
     // city por separado desde que se corrigió el guard que los descartaba en
     // silencio. Forzar 'D' aquí volteaba sin avisar un filtro de origen puesto
     // desde la tabla. Sin lado, el backend busca en origen Y destino.
-    location_type: local.value.location_type || "",
+    // El lado solo tiene sentido con un campo de dirección puesto.
+    location_type:
+      local.value.country_iso || local.value.city
+        ? local.value.location_type || ""
+        : "",
     city: local.value.city,
     id: local.value.id ? String(local.value.id) : "",
     id_cliente: local.value.id_cliente ? String(local.value.id_cliente) : "",
@@ -652,6 +645,9 @@ function previewQuery(): Record<string, unknown> {
     }),
     page: 1,
     per_page: 1,
+    // Solo el total: sin filas ni consulta de ids (el API lo ignora si no
+    // lo conoce todavía; per_page=1 mantiene la respuesta mínima).
+    count_only: 1,
   };
 }
 

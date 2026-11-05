@@ -134,6 +134,7 @@
               :label="t('shipment.modals.address.country')"
               :disabled="isReadonly"
               :clearable="false"
+              :error-messages="errorFor('country')"
               @update:model-value="onCountryChange"
             />
           </v-col>
@@ -142,6 +143,7 @@
               v-model="local.name"
               :label="t('shipment.modals.address.name')"
               :readonly="isReadonly"
+              :error-messages="errorFor('name')"
               density="compact"
             />
           </v-col>
@@ -160,6 +162,7 @@
               v-model="addressLine"
               :label="t('shipment.modals.address.address')"
               :readonly="isReadonly"
+              :error-messages="errorFor('address')"
               density="compact"
             />
           </v-col>
@@ -169,6 +172,7 @@
               :label="t('shipment.modals.address.cap')"
               :readonly="isReadonly"
               :loading="capLoading"
+              :error-messages="errorFor('cap')"
               density="compact"
               @blur="onCapBlur"
             />
@@ -181,6 +185,7 @@
               :readonly="isReadonly"
               hide-no-data
               auto-select-first
+              :error-messages="errorFor('city')"
               density="compact"
               @update:model-value="onCityChange"
             />
@@ -192,6 +197,7 @@
               mode="auto"
               :disabled="isReadonly"
               :label="t('shipment.modals.address.province')"
+              :error-messages="errorFor('prov')"
               density="compact"
             />
           </v-col>
@@ -318,6 +324,18 @@ import {
   type RubricaRow,
 } from "@shipment/services/rubrica.service";
 import { terminalsService } from "@shared/anagrafiche/services/terminals.service";
+import {
+  paesiService,
+  type PaeseOption,
+} from "@shared/anagrafiche/services/paesi.service";
+import { addressesService } from "@shipment/services/addresses.service";
+import { useToastStore } from "@shipment/stores/toast.store";
+import {
+  validateAddress,
+  serverFieldErrors,
+  type AddressErrors,
+  type AddressField,
+} from "@shipment/utils/addressValidation";
 import RouteStatsPanel from "@shipment/components/shipment/RouteStatsPanel.vue";
 import CmProvinciaSelect from "@shared/anagrafiche/components/CmProvinciaSelect.vue";
 import CmCountrySelect from "@shared/anagrafiche/components/CmCountrySelect.vue";
@@ -329,6 +347,7 @@ const props = defineProps<{ tipo: "P" | "D"; title: string }>();
 
 const { t } = useI18n();
 const store = useShipmentStore();
+const toasts = useToastStore();
 const { shipment } = storeToRefs(store);
 const { readonly: ro, isAddressLocked } = useShipmentState(shipment);
 const { remote: isRemote, check } = useRemoteAreaCheck();
@@ -503,17 +522,119 @@ function markDirty(): void {
   dirty.value = true;
 }
 
-/** Persist the buffered address. Returns false on failure. */
+// ─── Validación ──────────────────────────────────────────────────────────
+// Reglas por país (usa_cap / usa_prov) del catálogo público get-api-countries
+// (cacheado en paesiService). Sin catálogo no se exige CAP/provincia.
+const countryRules = ref<Map<string, PaeseOption>>(new Map());
+void paesiService
+  .list()
+  .then((rows) => {
+    countryRules.value = new Map(
+      rows.map((c) => [String(c.ISO ?? "").toUpperCase(), c]),
+    );
+  })
+  .catch(() => {
+    /* sin catálogo: valida el API */
+  });
+
+const fieldErrors = ref<AddressErrors>({});
+// Tras un intento de guardar, los errores se recalculan al editar (y se
+// borran los del servidor del campo tocado).
+const submitted = ref(false);
+
+function clientErrors(): AddressErrors {
+  const iso = String(local.value.country ?? "").toUpperCase();
+  return validateAddress(
+    {
+      name: local.value.name ?? local.value.nome,
+      address: local.value.address ?? local.value.adress,
+      country: local.value.country ?? local.value.id_paese_iso,
+      city: local.value.city ?? local.value.citta,
+      cap: local.value.cap,
+      prov: local.value.prov,
+    },
+    countryRules.value.get(iso) ?? null,
+  );
+}
+
+function errorFor(f: AddressField): string[] {
+  const v = fieldErrors.value[f];
+  if (!v) return [];
+  return [v.startsWith("err_") ? t(`shipment.modals.address.${v}`) : v];
+}
+
+watch(
+  local,
+  () => {
+    if (submitted.value) fieldErrors.value = clientErrors();
+  },
+  { deep: true },
+);
+
+/**
+ * Persist the buffered address. Returns false on failure (the modal stays
+ * open). Validates first — no POST with missing required fields — and maps a
+ * server `VALIDATION_ERROR` (details.fields) onto the fields.
+ *
+ * Calls addressesService directly (instead of store.saveAddress, which only
+ * toasts the error) so the field errors can be shown; the success path is the
+ * same: reload the shipment and toast.
+ */
 async function save(): Promise<boolean> {
   if (isReadonly.value) return true;
-  const ok = await store.saveAddress(props.tipo, toLegacyPayload(local.value));
-  if (ok) {
+  submitted.value = true;
+  const errs = clientErrors();
+  fieldErrors.value = errs;
+  if (Object.keys(errs).length > 0) {
+    toasts.push("warning", t("shipment.modals.address.err_validation"));
+    return false;
+  }
+  const sid = Number(store.id ?? shipment.value?.id ?? 0);
+  if (!sid) return false;
+  store.saving = true;
+  try {
+    let res: { success?: boolean; error?: unknown } | null = null;
+    try {
+      res = await addressesService.upsert(
+        sid,
+        props.tipo,
+        toLegacyPayload(local.value),
+      );
+    } catch (err) {
+      const payload = (err as { payload?: unknown }).payload;
+      const fe = serverFieldErrors(payload);
+      if (Object.keys(fe).length > 0) {
+        fieldErrors.value = fe;
+        toasts.push("warning", t("shipment.modals.address.err_validation"));
+      } else {
+        toasts.push("error", t("shipment.modals.address.save_error"));
+      }
+      return false;
+    }
+    if (!res?.success) {
+      const fe = serverFieldErrors(res);
+      if (Object.keys(fe).length > 0) {
+        fieldErrors.value = fe;
+        toasts.push("warning", t("shipment.modals.address.err_validation"));
+      } else {
+        const detail = typeof res?.error === "string" ? `: ${res.error}` : "";
+        toasts.push("error", t("shipment.modals.address.save_error") + detail);
+      }
+      return false;
+    }
+    // Refresh the shipment to pull back the flattened address fields.
+    await store.load(sid);
+    toasts.push("success", t("shipment.modals.address.saved"));
     dirty.value = false;
+    submitted.value = false;
+    fieldErrors.value = {};
     // Al guardar una dirección custom de pickup, el backend ya puso
     // presa_tipo='T'; salimos del modo local.
     customMode.value = false;
+    return true;
+  } finally {
+    store.saving = false;
   }
-  return ok;
 }
 
 // -- Origen sede ↔ custom (solo pickup) ------------------------------------
@@ -535,13 +656,29 @@ async function switchToSede(): Promise<void> {
 
 defineExpose({ save, dirty });
 
+// Una sola petición cap_city_prov por (país, CAP): el blur del CAP y el cambio
+// de ciudad pedían lo mismo en paralelo. Se cachea la promesa (también la que
+// está en vuelo); si falla se olvida para poder reintentar.
+type CapLookup = Awaited<ReturnType<typeof geoService.lookupCap>>;
+const capCache = new Map<string, Promise<CapLookup>>();
+function cachedCapLookup(country: string, cap: string): Promise<CapLookup> {
+  const key = `${country}|${cap.toUpperCase()}`;
+  let p = capCache.get(key);
+  if (!p) {
+    p = geoService.lookupCap({ country, cap });
+    capCache.set(key, p);
+    p.catch(() => capCache.delete(key));
+  }
+  return p;
+}
+
 async function lookupCap(): Promise<void> {
   const country = (local.value.country ?? "").toUpperCase();
   const cap = (local.value.cap ?? "").trim();
   if (!country || cap.length < 3) return;
   capLoading.value = true;
   try {
-    const r = await geoService.lookupCap({ country, cap });
+    const r = await cachedCapLookup(country, cap);
     citySuggestions.value = r.cities ?? [];
     // Legacy checkCapExe deriva SIEMPRE la provincia del CAP (inyecta el select
     // provcmd, sobrescribiendo lo previo). Replicamos: el CAP manda sobre la
@@ -641,7 +778,7 @@ async function lookupAirportByCity(): Promise<void> {
   // Only derive when there is no airport yet and we have a CAP to resolve from.
   if (!country || cap.length < 3 || (cur && cur !== "0")) return;
   try {
-    const r = await geoService.lookupCap({ country, cap });
+    const r = await cachedCapLookup(country, cap);
     if (r.closer_airports && r.closer_airports.length > 0) {
       airportItems.value = r.closer_airports.map((a) => ({
         value: a.sigla,

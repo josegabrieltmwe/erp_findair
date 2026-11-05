@@ -1,4 +1,5 @@
 import { ref, computed, type ComputedRef } from "vue";
+import { listViewMode } from "@shared/platform/tmweSession";
 import { useRouter, type LocationQuery } from "vue-router";
 import { http } from "@cargo/services/http";
 import {
@@ -66,6 +67,9 @@ function stateToNavigatorQuery(
     sort_dir: s.sort_dir,
     type: s.type,
   };
+  // Mismo alcance que el listado: el personal TMWE ve toda su red.
+  const viewMode = listViewMode();
+  if (viewMode) q.view_mode = viewMode;
   if (s.search) q.search = s.search;
   if (s.date_from) q.date_from = s.date_from;
   if (s.date_to) q.date_to = s.date_to;

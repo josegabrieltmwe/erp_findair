@@ -317,6 +317,7 @@
       "search": "Suche",
       "rif": "RIF",
       "carrier": "Transporteur",
+      "country": "Land",
       "origin_country": "Herkunftsland",
       "dest_country": "Zielland",
       "date": "Datum",
@@ -382,6 +383,7 @@
       }
     },
     "value": {
+      "any_side": "Herkunft oder Ziel",
       "origin": "Ursprung",
       "destination": "Ziel",
       "chat_unread_yes": "Ja",
@@ -992,7 +994,16 @@
       "role_delivery": "Zustellung",
       "none": "Noch keine verknüpften Express-Sendungen.",
       "create_error": "Express-Sendung konnte nicht erstellt werden.",
-      "open_express": "Sendung #{id} öffnen"
+      "open_express": "Sendung #{id} öffnen",
+      "create_pickup": "+ Abhol-Express anlegen",
+      "create_delivery": "+ Zustell-Express anlegen",
+      "create_handler": "+ Handler-Express anlegen",
+      "role_name_pickup": "Abhol",
+      "role_name_delivery": "Zustell",
+      "role_name_handler": "Handler",
+      "create_confirm": "Es wird eine verknüpfte {role}-Expresssendung mit den Daten dieses Cargos angelegt. Fortfahren?",
+      "create_confirm_ok": "Express anlegen",
+      "created": "Expresssendung #{id} angelegt"
     },
     "offerte": {
       "title": "Angebot an Kunden",
@@ -1053,7 +1064,9 @@
       "awbs_available": "{count} AWB(s) verfügbar",
       "no_carriers": "Keine Frachtführer mit verfügbarem AWB-Bestand für diese Route.",
       "cargo_type": "Frachtart",
-      "incoterm": "Incoterm"
+      "incoterm": "Incoterm",
+      "dest_no_country": "Kein Empfänger: Kürzel oder Stadt eingeben (sucht in allen Ländern)",
+      "origin_no_country": "Keine Abholadresse: Kürzel oder Stadt eingeben (sucht in allen Ländern)"
     },
     "overview": {
       "client": "Kunde",
@@ -1768,6 +1781,9 @@
     },
     "layout": {},
     "page": {
+      "access_denied": "Sie haben keinen Zugriff auf diese Sendung",
+      "access_denied_text": "Fracht {id} gehört zu einer anderen Organisation oder Ihr Benutzer darf sie nicht sehen.",
+      "load_error_text": "Die Verbindung zum Server ist fehlgeschlagen. Versuchen Sie es in einigen Sekunden erneut.",
       "load_error": "Fracht konnte nicht geladen werden",
       "not_found": "Fracht nicht gefunden",
       "not_found_text": "Keine Frachtsendung mit ID {id}",

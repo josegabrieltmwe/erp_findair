@@ -613,7 +613,13 @@
         "use_other_address": "Use another address",
         "use_sede_address": "Use the site address",
         "view_registered": "View registered address",
-        "no_registered": "No registered address"
+        "no_registered": "No registered address",
+        "err_required": "Required field",
+        "err_cap_required": "This country requires a postal code",
+        "err_prov_required": "This country requires a province/state",
+        "err_validation": "Check the highlighted address fields.",
+        "saved": "Address saved",
+        "save_error": "The address could not be saved."
       },
       "insurance": {
         "title": "Insurance",
@@ -1281,6 +1287,11 @@
       }
     },
     "detail": {
+      "access_denied": "You do not have access to this shipment",
+      "access_denied_text": "Shipment {id} belongs to another organisation or your user is not allowed to see it.",
+      "not_found": "The shipment does not exist",
+      "not_found_text": "There is no shipment with id {id}, or it has been deleted.",
+      "load_error_text": "The connection to the server failed. Try again in a few seconds.",
       "load_error": "Error loading shipment",
       "readonly_title": "Read-only",
       "readonly_body": "This shipment is read-only and cannot be modified.",
@@ -1812,6 +1823,7 @@
       "search": "Search",
       "carrier": "Carrier",
       "rif": "RIF",
+      "country": "Country",
       "origin_country": "Origin country",
       "dest_country": "Dest country",
       "date": "Date",
@@ -1845,6 +1857,7 @@
       "has_insurance": "Has insurance"
     },
     "value": {
+      "any_side": "Origin or destination",
       "origin": "Origin",
       "destination": "Destination",
       "chat_unread_yes": "Yes",

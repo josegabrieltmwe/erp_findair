@@ -35,6 +35,7 @@
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToastStore } from '../anagrafiche/stores/toast.store';
+import { isRealTmweUser } from './tmweSession';
 
 interface Partner {
   id: number;
@@ -54,6 +55,11 @@ const switching = ref(false);
 const ENDPOINT = '/bff/impersonation';
 
 onMounted(async () => {
+  // Solo el personal TMWE puede suplantar: para el resto el BFF responde 403
+  // y la petición solo ensuciaba la consola. `isTmwe` es el del usuario REAL
+  // y sigue a true durante la suplantación (el selector debe seguir ahí para
+  // volver a TMWE).
+  if (!isRealTmweUser()) return;
   try {
     const r = await fetch(ENDPOINT, {
       credentials: 'include',
