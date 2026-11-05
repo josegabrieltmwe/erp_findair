@@ -382,3 +382,11 @@ Decisión del negocio: todos los usuarios de las anagraficas de TMWE y de los pa
   - El menú y las rutas `/consolidata*` dejan de ser solo de TMWE: los abre el scope (`navCatalog.ts`, `router/moduleAccess.ts`).
   - La tarjeta del cargo y el chip de la expedición también se rigen por el scope.
   - Los usuarios con sesión abierta deben volver a entrar para que su token lleve el permiso nuevo.
+
+## 12. Facturación de la consolidata (2026-11-05)
+
+Resultado de la prueba de facturación en el sandbox (detalle en `tmwe_api/docs/07-gestion/consolidata_octubre/EXECUTION_LOG.md`):
+
+- El API ya traslada a lo facturable el precio del proyecto al operar: el MAWB lleva el aéreo y la entrega, y las houses y el camión su tramo, con el combustible incluido cuando el tramo no tiene servicio.
+- **Pendiente en la SPA:** la acción de staff `update_profile` (completar el perfil de una house sin spedizione en un proyecto aceptado o con la operación a medias). Sin ella, un `operate` que falla por faltar datos solo se puede reintentar por API. Encaja en la pestaña «Conversión», junto a «Reintentar».
+- Los costes fijos de la opción del simulador no se guardan en el proyecto y no se facturan: decisión pendiente del negocio.
