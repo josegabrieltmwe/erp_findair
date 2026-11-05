@@ -11,6 +11,11 @@ import { ApiError } from '../../anagrafiche/services/api.types';
  *    el pago se completa en la página de la pasarela (`checkout_url`) y la autoridad del estado es el webhook.
  *  - `payPendingInvoices`: lista de facturas pendientes de cobro (/api_pay_pending_invoices), solo lectura. Punto de
  *    partida de la pantalla «Facturas pendientes de cobro»; el pago de cada fila reutiliza `payPayments.create`.
+ *  - `payAuthorizations`: autorizaciones de cobro de los clientes (/api_pay_authorizations): el permiso que firma el
+ *    cliente una vez para que el vendedor le cobre después recargos. Alta por Checkout `setup` alojado, consulta y
+ *    revocación. Al final del fichero, junto con sus tipos.
+ *  - `paySurcharges`: recargos por sobrepeso, oversize u otros (/api_pay_surcharges): listar, proponer, avisar,
+ *    impugnar en nombre del cliente y, solo con `payment_gateways:admin`, perdonar, rechazar una impugnación y cobrar.
  * `secret` y `webhook_secret` son de solo escritura: la API devuelve `secret_hint` (últimos 4) y `has_webhook_secret`,
  * nunca el valor. Los ids son públicos (`pga_…`, `prf_…`).
  */
@@ -197,6 +202,10 @@ interface Envelope<T> {
   message?: string;
   awaiting_approval?: boolean;
   replayed?: boolean;
+  /** Resultado del cobro de un recargo (`charge` y `reject_dispute`). */
+  result?: string;
+  /** `waive`: true si el recargo ya estaba cobrado y se ha solicitado el reembolso. */
+  refund_requested?: boolean;
   /** Paginación (solo en los listados que la devuelven, p. ej. `api_pay_pending_invoices`). */
   total?: number;
   page?: number;
@@ -416,3 +425,336 @@ export const payPendingInvoices = {
     return { rows, total: Number(raw?.total ?? rows.length), page: Number(raw?.page ?? page), perPage: Number(raw?.per_page ?? perPage) };
   },
 };
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Autorizaciones de cobro y recargos (Ola 3 / F-C). Contrato: docs/contrato-con-api.md y, en tmwe_api,
+// docs/06-api/pasarelas_pago/README.md. TODO está apagado por defecto en el servidor (503 `PAYMENT_NOT_ACTIVE`): esta capa
+// no activa nada, solo habla con la API. El partner y la persona salen SIEMPRE del token: ninguna llamada envía
+// `partner_id`, y un recargo de otro partner responde 404 incluso a TMWE, por lo que no existe «vista cruzada».
+// ---------------------------------------------------------------------------------------------------------------------
+
+const AUTHORIZATIONS = '/api_pay_authorizations';
+const SURCHARGES = '/api_pay_surcharges';
+
+/** Estados de una autorización. `active` solo lo fija el webhook de la pasarela, nunca la SPA. */
+export const PAY_AUTHORIZATION_STATUSES = ['pending', 'active', 'failed', 'revoked', 'expired'] as const;
+export type PayAuthorizationStatus = (typeof PAY_AUTHORIZATION_STATUSES)[number];
+
+/** Métodos de la autorización (D5): tarjeta por defecto o adeudo SEPA. Distinto de `PayMethod` (cuentas de pasarela). */
+export const PAY_AUTHORIZATION_METHODS = ['card', 'sepa_debit'] as const;
+export type PayAuthorizationMethod = (typeof PAY_AUTHORIZATION_METHODS)[number];
+
+/**
+ * Autorización de cobro (`pau_…`) tal como la ve el PERSONAL: la lista blanca del cliente más `customer_id`,
+ * `failure_code` y `account_source`. Nunca llegan referencias del proveedor, cuenta de pasarela, IP ni user agent.
+ * `checkout_url` y `expires_at` solo vienen en la respuesta del alta (`checkout_url` es `null` en un reintento).
+ */
+export interface PayAuthorization {
+  /** Id público `pau_…`. */
+  public_id: string;
+  method_type: PayAuthorizationMethod;
+  brand: string | null;
+  last4: string | null;
+  exp_month: number | null;
+  exp_year: number | null;
+  currency: string;
+  /** Tope por cobro que el cliente aceptó, en céntimos. */
+  max_charge_minor: number;
+  /** Tope mensual que el cliente aceptó, en céntimos. */
+  max_month_minor: number;
+  notice_days: number;
+  dispute_days: number;
+  status: PayAuthorizationStatus;
+  consent_text_version: string;
+  consent_at: string | null;
+  revoked_at: string | null;
+  created_at: string | null;
+  /** Solo personal. */
+  customer_id?: number;
+  /** Solo personal. */
+  failure_code?: string | null;
+  /** Solo personal: `partner` (cuenta propia) o `tmwe_fallback`. */
+  account_source?: 'partner' | 'tmwe_fallback' | string;
+  /** Solo en la respuesta del alta, primer intento. */
+  checkout_url?: string | null;
+  expires_at?: string | null;
+}
+
+/** Texto de consentimiento vigente con las cifras del vendedor (D4) que la persona debe leer antes de aceptar. */
+export interface PayConsentText {
+  /** Versión del texto: el alta debe devolverla tal cual o responde 409 `CONSENT_TEXT_NOT_CURRENT`. */
+  version: string;
+  locale: string;
+  body_hash: string;
+  body: string;
+  terms: {
+    max_charge_minor: number;
+    max_month_minor: number;
+    notice_days: number;
+    dispute_days: number;
+    currency: string;
+  };
+}
+
+/** Alta de una autorización en nombre de un cliente del partner (consentimiento presencial documentado). */
+export interface PayAuthorizationCreate {
+  customer_id: number;
+  method: PayAuthorizationMethod;
+  /** Versión del texto mostrado y su idioma (`es-ES`). `accepted` lo fija el servicio a `true` literal. */
+  consentTextVersion: string;
+  consentLocale: string;
+  /** Una por intento (8-64 caracteres `A-Za-z0-9_-:`). */
+  idempotency_key: string;
+}
+
+export interface PayAuthorizationCreated {
+  authorization: PayAuthorization;
+  /** true = 200: la clave ya se usó; el reintento NO trae `checkout_url`. */
+  replayed: boolean;
+}
+
+/** Filtros del listado de autorizaciones (`customer_id` solo estrecha la cartera del propio partner). */
+export interface PayAuthorizationFilters {
+  status?: PayAuthorizationStatus;
+  customerId?: number;
+  page?: number;
+  perPage?: number;
+}
+
+/** Página de resultados con la paginación que devuelve la API. */
+export interface PayPage<T> {
+  rows: T[];
+  total: number;
+  page: number;
+  perPage: number;
+}
+
+/** Tipos de recargo. */
+export const PAY_SURCHARGE_TYPES = ['overweight', 'oversize', 'other'] as const;
+export type PaySurchargeType = (typeof PAY_SURCHARGE_TYPES)[number];
+
+/** Estados de un recargo. `disputed` = impugnado por el cliente (no se cobra hasta resolverlo). */
+export const PAY_SURCHARGE_STATUSES = ['pending_notice', 'notified', 'charged', 'failed', 'disputed', 'waived', 'invoiced'] as const;
+export type PaySurchargeStatus = (typeof PAY_SURCHARGE_STATUSES)[number];
+
+/**
+ * Recargo (`psu_…`) tal como lo ve el PERSONAL: la lista blanca del cliente más los datos del vendedor (sin ids
+ * internos, versión ni huella de evidencia). Los campos de liquidación son internos del vendedor.
+ */
+export interface PaySurcharge {
+  /** Id público `psu_…`. */
+  public_id: string;
+  surcharge_type: PaySurchargeType;
+  declared_value: string | null;
+  measured_value: string | null;
+  carrier_ref: string | null;
+  evidence: string;
+  /** Importe en CÉNTIMOS (entero). */
+  amount_minor: number;
+  currency: string;
+  status: PaySurchargeStatus;
+  notified_at: string | null;
+  /** Primer momento en que se puede cobrar (aviso + días de preaviso). */
+  notice_due_at: string | null;
+  /** Fin del plazo de impugnación. */
+  dispute_until: string | null;
+  disputed_at: string | null;
+  disputed_reason: string | null;
+  waived_reason: string | null;
+  created_at: string | null;
+  partner_id?: number;
+  customer_id?: number;
+  /** Cuenta que cobra: solo personal; nunca se muestra al cliente. */
+  gateway_account_id?: number | null;
+  account_source?: string | null;
+  creditor_partner_id?: number;
+  /** 1 si TMWE cobró como respaldo y debe transferir al partner. */
+  settlement_required?: number | boolean;
+  settled_at?: string | null;
+}
+
+/** Propuesta de recargo. El importe es un ENTERO en céntimos (un decimal se rechaza con 422). */
+export interface PaySurchargePropose {
+  customer_id: number;
+  surcharge_type: PaySurchargeType;
+  amount_minor: number;
+  /** Obligatorios en `overweight` y `oversize`. */
+  declared_value?: string;
+  measured_value?: string;
+  evidence: string;
+  shipment_id?: number;
+  carrier_ref?: string;
+  /** `pau_…` opcional; por defecto, la autorización activa del cliente. */
+  authorization?: string;
+}
+
+export interface PaySurchargeProposed {
+  surcharge: PaySurcharge;
+  /** true = 200: el mismo hecho (envío + tipo + evidencia) ya existía. */
+  replayed: boolean;
+}
+
+/** Resultado del cobro de un recargo (`charge`) o de rechazar una impugnación (`reject_dispute`). */
+export type PaySurchargeChargeResult = 'charged' | 'pending' | 'failed' | 'requires_invoice' | 'waiting' | (string & {});
+
+export interface PaySurchargeActionResult {
+  surcharge: PaySurcharge;
+  /** Solo `charge` y `reject_dispute`. */
+  result?: PaySurchargeChargeResult;
+  /** Solo `waive`: se solicitó el reembolso porque ya estaba cobrado. */
+  refundRequested?: boolean;
+  replayed: boolean;
+}
+
+/** Filtros del listado de recargos. */
+export interface PaySurchargeFilters {
+  status?: PaySurchargeStatus;
+  customerId?: number;
+  page?: number;
+  perPage?: number;
+}
+
+/** Acciones de un recargo que admiten motivo. */
+export type PaySurchargeReasonAction = 'dispute' | 'waive';
+
+function pageOf<T>(raw: Envelope<T[]> | undefined, rows: T[], page: number, perPage: number): PayPage<T> {
+  return { rows, total: Number(raw?.total ?? rows.length), page: Number(raw?.page ?? page), perPage: Number(raw?.per_page ?? perPage) };
+}
+
+/**
+ * Autorizaciones de cobro (scopes `payment_gateways:read` para leer y `:write` para dar de alta o revocar, sin scopes
+ * nuevos). Errores relevantes (ver `classifySurchargeError`): 503 `PAYMENT_NOT_ACTIVE` (interruptor apagado),
+ * 409 `CONSENT_TEXT_NOT_CURRENT` / `AUTHORIZATION_ALREADY_ACTIVE` / `PAYMENT_METHOD_NOT_AVAILABLE`, 404 cliente ajeno.
+ * Revocar y leer funcionan siempre, aunque el interruptor esté apagado.
+ */
+export const payAuthorizations = {
+  /** Texto de consentimiento vigente y cifras del vendedor. Idioma `es-ES` por defecto (formato `xx-XX`). */
+  async consentText(locale = 'es-ES'): Promise<PayConsentText> {
+    const raw = await http<Envelope<PayConsentText>>(AUTHORIZATIONS, { query: { view: 'consent_text', locale } });
+    return unwrap(raw, 'No se pudo cargar el texto de consentimiento');
+  },
+
+  /** Listado paginado de las autorizaciones de la cartera del partner del token. */
+  async list(filters: PayAuthorizationFilters = {}): Promise<PayPage<PayAuthorization>> {
+    const page = filters.page ?? 1;
+    const perPage = filters.perPage ?? 25;
+    const query: Record<string, string | number> = { page, per_page: perPage };
+    if (filters.status) query.status = filters.status;
+    if (filters.customerId) query.customer_id = filters.customerId;
+    const raw = await http<Envelope<PayAuthorization[]>>(AUTHORIZATIONS, { query });
+    return pageOf(raw, unwrap(raw, 'No se pudieron cargar las autorizaciones') ?? [], page, perPage);
+  },
+
+  /** Detalle por id público `pau_…`; es lo que se sondea tras abrir el Checkout hasta ver `active`. */
+  async get(id: string): Promise<PayAuthorization> {
+    const raw = await http<Envelope<PayAuthorization>>(AUTHORIZATIONS, { query: { id } });
+    return unwrap(raw, 'No se pudo cargar la autorización');
+  },
+
+  /**
+   * Alta en nombre de un cliente del partner (consentimiento presencial). Responde con `checkout_url` (página alojada
+   * donde el cliente teclea la tarjeta o el IBAN: nada de eso toca el ERP ni TMWE). `return_to` lo fija el servicio a
+   * `erp`; la IP/user agent/persona de la prueba del consentimiento los pone el servidor.
+   */
+  async create(payload: PayAuthorizationCreate): Promise<PayAuthorizationCreated> {
+    const body = {
+      customer_id: payload.customer_id,
+      method: payload.method,
+      consent: { text_version: payload.consentTextVersion, locale: payload.consentLocale, accepted: true },
+      return_to: 'erp',
+      idempotency_key: payload.idempotency_key,
+    };
+    const raw = await http<Envelope<PayAuthorization>>(AUTHORIZATIONS, { method: 'POST', body });
+    return { authorization: unwrap(raw, 'No se pudo crear la autorización'), replayed: raw?.replayed === true };
+  },
+
+  /** Revoca una autorización (el cliente tiene derecho a retirarla; no mueve dinero). 409 si ya caducó o falló. */
+  async revoke(id: string): Promise<PayAuthorization> {
+    const raw = await http<Envelope<PayAuthorization>>(AUTHORIZATIONS, { method: 'POST', body: { action: 'revoke', id } });
+    return unwrap(raw, 'No se pudo revocar la autorización');
+  },
+};
+
+/**
+ * Recargos. Lectura: `payment_gateways:read`. Proponer, avisar e impugnar en nombre del cliente: `:write`. Perdonar,
+ * rechazar una impugnación y cobrar: `payment_gateways:admin` Y ser TMWE o `partner:manage` (la SPA solo decide si
+ * muestra el botón; el API autoriza y responde 403 `PAYMENT_FORBIDDEN`). Un recargo de otro partner responde 404 incluso a
+ * TMWE: no hay vista cruzada y esta capa nunca envía `partner_id`.
+ */
+export const paySurcharges = {
+  /** Listado paginado de los recargos del partner del token, con filtros de estado y de cliente. */
+  async list(filters: PaySurchargeFilters = {}): Promise<PayPage<PaySurcharge>> {
+    const page = filters.page ?? 1;
+    const perPage = filters.perPage ?? 25;
+    const query: Record<string, string | number> = { page, per_page: perPage };
+    if (filters.status) query.status = filters.status;
+    if (filters.customerId) query.customer_id = filters.customerId;
+    const raw = await http<Envelope<PaySurcharge[]>>(SURCHARGES, { query });
+    return pageOf(raw, unwrap(raw, 'No se pudieron cargar los recargos') ?? [], page, perPage);
+  },
+
+  /** Recargos cobrados por TMWE como respaldo a favor del partner y aún sin transferir (máx. 100, sin paginar; solo datos). */
+  async pendingTransfer(): Promise<PaySurcharge[]> {
+    const raw = await http<Envelope<PaySurcharge[]>>(SURCHARGES, { query: { view: 'pending_transfer' } });
+    return unwrap(raw, 'No se pudieron cargar los recargos pendientes de transferir') ?? [];
+  },
+
+  /** Detalle por id público `psu_…`. */
+  async get(id: string): Promise<PaySurcharge> {
+    const raw = await http<Envelope<PaySurcharge>>(SURCHARGES, { query: { id } });
+    return unwrap(raw, 'No se pudo cargar el recargo');
+  },
+
+  /** Propone un recargo (`pending_notice`: aún no se avisa ni se cobra). 201 nuevo, 200 `replayed` si ya existía. */
+  async propose(payload: PaySurchargePropose): Promise<PaySurchargeProposed> {
+    const body: Record<string, unknown> = {
+      customer_id: payload.customer_id,
+      surcharge_type: payload.surcharge_type,
+      amount: { amount_minor: payload.amount_minor, currency: 'EUR' },
+      evidence: payload.evidence,
+    };
+    if (payload.declared_value) body.declared_value = payload.declared_value;
+    if (payload.measured_value) body.measured_value = payload.measured_value;
+    if (payload.shipment_id) body.shipment_id = payload.shipment_id;
+    if (payload.carrier_ref) body.carrier_ref = payload.carrier_ref;
+    if (payload.authorization) body.authorization = payload.authorization;
+    const raw = await http<Envelope<PaySurcharge>>(SURCHARGES, { method: 'POST', body });
+    return { surcharge: unwrap(raw, 'No se pudo proponer el recargo'), replayed: raw?.replayed === true };
+  },
+
+  /** Avisa al cliente: fija `notice_due_at` y `dispute_until`. Repetirlo no reinicia los plazos. */
+  async notify(id: string): Promise<PaySurchargeActionResult> {
+    return paySurchargeAction({ action: 'notify', id }, 'No se pudo avisar al cliente');
+  },
+
+  /** Impugna en nombre del cliente (con motivo) dentro de `dispute_until`. */
+  async dispute(id: string, reason: string): Promise<PaySurchargeActionResult> {
+    return paySurchargeAction({ action: 'dispute', id, reason }, 'No se pudo registrar la impugnación');
+  },
+
+  /** ADMIN. Perdona el recargo con motivo; si ya estaba cobrado se solicita el reembolso (`refundRequested`). */
+  async waive(id: string, reason: string): Promise<PaySurchargeActionResult> {
+    return paySurchargeAction({ action: 'waive', id, reason }, 'No se pudo perdonar el recargo');
+  },
+
+  /** ADMIN. Rechaza la impugnación: el recargo es válido; vuelve a `charged` sin cobrar dos veces, o se cobra si nunca se cobró. */
+  async rejectDispute(id: string): Promise<PaySurchargeActionResult> {
+    return paySurchargeAction({ action: 'reject_dispute', id }, 'No se pudo rechazar la impugnación');
+  },
+
+  /** ADMIN. Cobro manual (además del job). 409 si no venció el preaviso; 503 si PASARELAS_MODO o RECARGOS_MODO no son ACTIVO. */
+  async charge(id: string): Promise<PaySurchargeActionResult> {
+    return paySurchargeAction({ action: 'charge', id }, 'No se pudo cobrar el recargo');
+  },
+};
+
+/** POST común de las acciones de un recargo. */
+async function paySurchargeAction(body: { action: string; id: string; reason?: string }, fallback: string): Promise<PaySurchargeActionResult> {
+  const raw = await http<Envelope<PaySurcharge>>(SURCHARGES, { method: 'POST', body });
+  return {
+    surcharge: unwrap(raw, fallback),
+    result: raw?.result,
+    refundRequested: raw?.refund_requested === true ? true : raw?.refund_requested === false ? false : undefined,
+    replayed: raw?.replayed === true,
+  };
+}

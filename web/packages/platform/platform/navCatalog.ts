@@ -76,6 +76,10 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     items: [
       { key: "invoicing", icon: "mdi-file-document-outline", routeName: "invoicing", daily: true },
       { key: "payments",  icon: "mdi-cash-multiple",         routeName: "payments", scopes: ["payments:read"] },
+      // Recargos por sobrepeso/oversize y las autorizaciones de cobro que los respaldan (módulo payment_gateways).
+      // Leer exige payment_gateways:read; las acciones de escritura y de administrador se esconden en cada pantalla.
+      { key: "surcharges", icon: "mdi-scale-balance",        routeName: "payments-surcharges", scopes: ["payment_gateways:read"] },
+      { key: "charge_authorizations", icon: "mdi-credit-card-check-outline", routeName: "payments-authorizations", scopes: ["payment_gateways:read"] },
       { key: "warehouse", icon: "mdi-warehouse",             routeName: "warehouse-weighing" },
       { key: "proforma",  icon: "mdi-file-percent-outline",  routeName: "proforma" },
       { key: "cod",       icon: "mdi-cash-multiple",         routeName: "cod" },

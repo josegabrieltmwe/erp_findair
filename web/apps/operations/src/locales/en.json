@@ -306,7 +306,9 @@
       "show_less": "Show less",
       "cargo_partner": "Air freight",
       "giacenze_partner": "Held parcels",
-      "clients_partner": "My customers"
+      "clients_partner": "My customers",
+      "surcharges": "Surcharges",
+      "charge_authorizations": "Charge authorizations"
     },
     "email": {
       "recipients": "Recipients",

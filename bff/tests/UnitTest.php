@@ -139,6 +139,25 @@ final class UnitTest extends TestCase
         }
     }
 
+    // Escenario: api_pay_authorizations y api_pay_surcharges exponen exactamente GET (lectura, sin CSRF) y POST (alta/proponer
+    // y acciones, con CSRF). PUT/PATCH/DELETE no existen: revocar y las acciones de recargo viajan como POST {action}.
+    public function testPayAuthorizationsAndSurchargesExposeExactlyGetAndPost(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        foreach (['/api_pay_authorizations', '/api_pay_surcharges'] as $path) {
+            foreach (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as $method) {
+                $route = $manifest->match($method, $path);
+                if ($method === 'GET' || $method === 'POST') {
+                    self::assertNotNull($route, "{$method} {$path} debe estar en el manifiesto");
+                    self::assertSame($method === 'POST', $route['route']->csrf, "{$method} {$path}: CSRF solo en POST");
+                } else {
+                    self::assertNull($route, "{$method} {$path} no debe estar en el manifiesto");
+                }
+            }
+        }
+    }
+
     public function testManifestRejectsBadAction(): void
     {
         $this->expectException(\InvalidArgumentException::class);

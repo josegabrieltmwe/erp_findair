@@ -1018,6 +1018,26 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
   },
   {
+    // Autorizaciones de cobro de los clientes (api_pay_authorizations): permiso que firma el cliente para que el vendedor le
+    // cobre recargos. Ver exige payment_gateways:read (guard en moduleAccess.ts); alta y revocación, payment_gateways:write
+    // (los botones lo comprueban). Apagado por defecto en el servidor: el alta responde 503 PAYMENT_NOT_ACTIVE.
+    path: "/payments/authorizations",
+    name: "payments-authorizations",
+    component: () => import("@/modules/payments/pages/AuthorizationsPage.vue"),
+    meta: { title: "Autorizaciones de cobro", icon: "mdi-credit-card-check-outline" },
+    beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
+  },
+  {
+    // Recargos (api_pay_surcharges): listar, proponer, avisar, perdonar, rechazar impugnación y cobrar. Ver exige
+    // payment_gateways:read (guard en moduleAccess.ts); las acciones de administrador, payment_gateways:admin (botones).
+    // Cada partner ve solo los suyos: no hay vista cruzada ni para TMWE (el API responde 404 a un recargo ajeno).
+    path: "/payments/surcharges",
+    name: "payments-surcharges",
+    component: () => import("@/modules/payments/pages/SurchargesPage.vue"),
+    meta: { title: "Recargos", icon: "mdi-scale-balance" },
+    beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
+  },
+  {
     // Solo quien puede conciliar (el partner es de solo lectura).
     path: "/payments/reconciliation",
     name: "payments-reconciliation",

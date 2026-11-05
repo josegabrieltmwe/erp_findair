@@ -306,7 +306,9 @@
       "show_less": "Minder tonen",
       "cargo_partner": "Luchtvracht",
       "giacenze_partner": "Vastgehouden pakketten",
-      "clients_partner": "Mijn klanten"
+      "clients_partner": "Mijn klanten",
+      "surcharges": "Toeslagen",
+      "charge_authorizations": "Incassomachtigingen"
     },
     "email": {
       "recipients": "Geadresseerden",

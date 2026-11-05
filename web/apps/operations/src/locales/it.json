@@ -306,7 +306,9 @@
       "show_less": "Mostra meno",
       "cargo_partner": "Merci in aereo",
       "giacenze_partner": "Pacchi fermi",
-      "clients_partner": "I miei clienti"
+      "clients_partner": "I miei clienti",
+      "surcharges": "Supplementi",
+      "charge_authorizations": "Autorizzazioni di addebito"
     },
     "email": {
       "recipients": "Destinatari",

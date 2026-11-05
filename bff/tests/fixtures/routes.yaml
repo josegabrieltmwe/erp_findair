@@ -76,6 +76,30 @@ routes:
     upstream:
       action: api_pay_pending_invoices
       forward_query: [page, per_page]
+  - id: pay_authorizations.get
+    method: GET
+    path: /api_pay_authorizations
+    upstream:
+      action: api_pay_authorizations
+      forward_query: [id, view, locale, status, customer_id, page, per_page]
+  - id: pay_authorizations.post
+    method: POST
+    path: /api_pay_authorizations
+    upstream:
+      action: api_pay_authorizations
+    limits: { body: 4k, timeout: 30 }
+  - id: pay_surcharges.get
+    method: GET
+    path: /api_pay_surcharges
+    upstream:
+      action: api_pay_surcharges
+      forward_query: [id, view, status, customer_id, page, per_page]
+  - id: pay_surcharges.post
+    method: POST
+    path: /api_pay_surcharges
+    upstream:
+      action: api_pay_surcharges
+    limits: { body: 16k, timeout: 30 }
 include:
   - routes.extra.yaml
 exclude:

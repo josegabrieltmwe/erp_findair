@@ -4,7 +4,9 @@
       "aging": "Altersstruktur der Forderungen",
       "reconciliation": "Bankabstimmung",
       "reminders": "Zahlungserinnerungen",
-      "pending_invoices": "Offene Rechnungen zum Einzug"
+      "pending_invoices": "Offene Rechnungen zum Einzug",
+      "surcharges": "Zuschläge",
+      "authorizations": "Einzugsermächtigungen"
     },
     "list": {
       "view_credit": "Zu erhalten",
@@ -235,6 +237,204 @@
         "forbidden": "Sie haben keine Berechtigung, die offenen Rechnungen zu sehen.",
         "unavailable": "Die offenen Rechnungen konnten nicht abgerufen werden. Bitte in einigen Minuten erneut versuchen.",
         "other": "Die Liste konnte nicht geladen werden. Bitte erneut versuchen."
+      }
+    },
+    "surcharges": {
+      "back": "Zahlungen",
+      "title": "Zuschläge",
+      "refresh": "Aktualisieren",
+      "intro": "Zusätzliche Belastungen Ihrer Kunden, wenn der Frachtführer mehr Gewicht oder Volumen misst als angegeben. Sie werden mit Grund und Nachweis vorgeschlagen, der Kunde wird benachrichtigt und nach Ablauf der Frist mit der von ihm unterschriebenen Ermächtigung eingezogen. Sie sehen nur die Ihres Unternehmens.",
+      "customer_filter": "Nach Kunde filtern",
+      "transfer_hint": "Zuschläge, die TMWE als Ersatz zu Ihren Gunsten eingezogen und noch nicht an Sie überwiesen hat. Nur Information: hier wird kein Geld bewegt.",
+      "empty": "Keine Zuschläge vorhanden.",
+      "admin_hint": "Erlassen, einen Widerspruch ablehnen und einziehen erfordern die Administratorberechtigung für Zahlungen.",
+      "reason": "Grund (erforderlich)",
+      "tabs": {
+        "all": "Alle",
+        "pending_notice": "Zu benachrichtigen",
+        "notified": "Benachrichtigt",
+        "disputed": "Beanstandet",
+        "charged": "Eingezogen",
+        "failed": "Fehlgeschlagen",
+        "waived": "Erlassen",
+        "invoiced": "Fakturiert",
+        "pending_transfer": "Zu überweisen"
+      },
+      "col": {
+        "id": "Zuschlag",
+        "type": "Art",
+        "amount": "Betrag",
+        "status": "Status",
+        "notice_due": "Einziehbar ab",
+        "dispute_until": "Anfechtbar bis",
+        "actions": "Aktionen"
+      },
+      "type": {
+        "overweight": "Übergewicht",
+        "oversize": "Übergröße",
+        "other": "Sonstiges"
+      },
+      "status": {
+        "pending_notice": "Zu benachrichtigen",
+        "notified": "Benachrichtigt",
+        "charged": "Eingezogen",
+        "failed": "Einzug fehlgeschlagen",
+        "disputed": "Beanstandet",
+        "waived": "Erlassen",
+        "invoiced": "Fakturiert"
+      },
+      "action": {
+        "notify": "Benachrichtigen",
+        "dispute": "Beanstanden",
+        "waive": "Erlassen",
+        "reject_dispute": "Widerspruch ablehnen",
+        "charge": "Einziehen"
+      },
+      "confirm": {
+        "notify": {
+          "title": "Kunden benachrichtigen",
+          "body": "Der Kunde wird benachrichtigt. Ab diesem Moment laufen Vorankündigungs- und Widerspruchsfrist; nach der Vorankündigung können Sie einziehen. Eine erneute Benachrichtigung startet die Fristen nicht neu."
+        },
+        "dispute": {
+          "title": "Im Namen des Kunden beanstanden",
+          "body": "Erfasst den Widerspruch des Kunden. Ein beanstandeter Zuschlag wird erst eingezogen, wenn der Administrator ihn klärt."
+        },
+        "waive": {
+          "title": "Zuschlag erlassen",
+          "body": "Der Zuschlag ist nicht mehr fällig. Wurde er bereits eingezogen, wird die Erstattung an den Kunden beantragt. Die Entscheidung wird mit dem Grund protokolliert."
+        },
+        "reject_dispute": {
+          "title": "Widerspruch ablehnen",
+          "body": "Der Zuschlag gilt als berechtigt: er wird wieder auf eingezogen gesetzt, ohne doppelt einzuziehen, oder jetzt eingezogen, falls das nie geschah."
+        },
+        "charge": {
+          "title": "Zuschlag einziehen",
+          "body": "Der Kunde wird jetzt mit der von ihm unterschriebenen Ermächtigung belastet, ohne anwesend zu sein. Nur nach der Vorankündigung und bei aktivem automatischem Einzug auf dem Server möglich."
+        }
+      },
+      "done": {
+        "notify": "Kunde benachrichtigt.",
+        "dispute": "Widerspruch erfasst.",
+        "waive": "Zuschlag erlassen.",
+        "waive_refund": "Zuschlag erlassen; die Erstattung wurde beantragt.",
+        "propose": "Zuschlag vorgeschlagen. Der Kunde wurde noch nicht benachrichtigt.",
+        "propose_replayed": "Dieser Zuschlag existierte bereits; es wurde kein neuer angelegt."
+      },
+      "result": {
+        "charged": "Zuschlag eingezogen.",
+        "pending": "Einzug läuft: wird in Kürze bestätigt.",
+        "failed": "Der Einzug ist fehlgeschlagen.",
+        "requires_invoice": "Einzug mit der Ermächtigung nicht möglich: wird per Rechnung gefordert.",
+        "waiting": "Wartet auf den nächsten Einzugsversuch.",
+        "unknown": "Vorgang ausgeführt."
+      },
+      "errors": {
+        "not_active": "Zuschläge über das Zahlungsgateway sind in dieser Umgebung nicht aktiv.",
+        "return_url": "Die Rücksprungadresse für die Anlage ist auf dem Server nicht konfiguriert.",
+        "forbidden": "Dafür fehlt die Berechtigung. Erlassen, Widersprüche ablehnen und einziehen erfordern, Zahlungsadministrator Ihres Unternehmens zu sein.",
+        "not_found": "Nicht gefunden: existiert nicht oder gehört nicht zu Ihrem Unternehmen.",
+        "cap_exceeded": "Der Betrag überschreitet die zulässige Obergrenze je Einzug oder Monat bzw. das vom Kunden Akzeptierte.",
+        "currency": "Es werden nur Zuschläge in Euro unterstützt.",
+        "invalid": "Die Angaben sind ungültig. Prüfen Sie das Formular.",
+        "notice_not_elapsed": "Die Vorankündigungsfrist für den Kunden ist noch nicht abgelaufen.",
+        "dispute_closed": "Die Widerspruchsfrist ist abgelaufen.",
+        "in_flight": "Für diesen Zuschlag läuft bereits ein Einzug. Warten Sie, bis er abgeschlossen ist.",
+        "invalid_state": "Der aktuelle Status erlaubt diesen Vorgang nicht (z. B. der Kunde hat keine aktive Ermächtigung). Aktualisieren Sie die Liste.",
+        "authorization_exists": "Der Kunde hat für diese Methode bereits eine aktive Ermächtigung.",
+        "consent_stale": "Der Einwilligungstext hat sich geändert. Lesen Sie ihn erneut und stimmen Sie erneut zu.",
+        "method_unavailable": "Diese Zahlungsmethode ist für Ihr Gateway-Konto nicht verfügbar.",
+        "conflict": "Der Vorgang steht im Konflikt mit dem aktuellen Status. Aktualisieren und erneut versuchen.",
+        "other": "Der Vorgang konnte nicht abgeschlossen werden. Bitte erneut versuchen."
+      },
+      "propose": {
+        "open": "Zuschlag vorschlagen",
+        "title": "Einen Zuschlag vorschlagen",
+        "hint": "Der Zuschlag bleibt «zu benachrichtigen»: nichts wird mitgeteilt oder eingezogen, bis Sie benachrichtigen. Sie können ihn nur Kunden Ihres Unternehmens vorschlagen.",
+        "type": "Art des Zuschlags",
+        "amount": "Betrag",
+        "amount_hint": "In Euro, bis zu 2 Dezimalstellen (z. B. 42,50).",
+        "declared": "Angegebener Wert",
+        "measured": "Gemessener Wert",
+        "carrier_ref": "Referenz des Frachtführers (optional)",
+        "evidence": "Grund und Nachweis des Frachtführers",
+        "submit": "Vorschlagen",
+        "errors": {
+          "customer": "Wählen Sie einen Kunden.",
+          "amount": "Geben Sie einen Betrag größer als null mit höchstens 2 Dezimalstellen ein.",
+          "declared": "Erforderlich bei Übergewicht und Übergröße.",
+          "measured": "Erforderlich bei Übergewicht und Übergröße.",
+          "evidence": "Beschreiben Sie Grund und Nachweis."
+        }
+      },
+      "detail": {
+        "open": "Details anzeigen",
+        "measures": "Angegeben → gemessen",
+        "carrier_ref": "Referenz des Frachtführers",
+        "evidence": "Nachweis",
+        "created_at": "Erstellt",
+        "notified_at": "Benachrichtigt",
+        "dispute": "Widerspruch",
+        "waived_reason": "Grund des Erlasses",
+        "account_source": "Einziehendes Konto",
+        "source": {
+          "partner": "Eigenes Konto",
+          "tmwe_fallback": "TMWE-Ersatz"
+        },
+        "settlement": "Abrechnung",
+        "settlement_pending": "Überweisung an den Partner ausstehend"
+      }
+    },
+    "authorizations": {
+      "back": "Zahlungen",
+      "title": "Einzugsermächtigungen",
+      "refresh": "Aktualisieren",
+      "intro": "Berechtigung, die jeder Kunde einmalig unterschreibt, damit Sie ihm Zuschläge mit der gespeicherten Methode (Karte oder SEPA-Lastschrift) ohne sein Beisein belasten können. Die Zahlungsdaten gibt der Kunde auf der Seite des Gateways ein: hier sehen Sie nur Marke und die letzten 4 Ziffern.",
+      "empty": "Keine Ermächtigungen vorhanden.",
+      "per_month": "{amount} pro Monat",
+      "terms_days": "Vorankündigung {notice} T · Widerspruch {dispute} T",
+      "revoke": "Widerrufen",
+      "revoke_title": "Ermächtigung widerrufen",
+      "revoke_body": "Mit dieser Ermächtigung können diesem Kunden keine neuen Zuschläge mehr belastet werden. Das Zurückziehen ist ein Recht des Kunden und bewegt kein Geld.",
+      "revoked_done": "Ermächtigung widerrufen.",
+      "col": {
+        "id": "Ermächtigung",
+        "method": "Zahlungsmittel",
+        "status": "Status",
+        "caps": "Akzeptierte Obergrenzen",
+        "terms": "Fristen",
+        "consent": "Einwilligung",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "pending": "Unterschrift ausstehend",
+        "active": "Aktiv",
+        "failed": "Fehlgeschlagen",
+        "revoked": "Widerrufen",
+        "expired": "Abgelaufen"
+      },
+      "method": {
+        "card": "Karte",
+        "sepa_debit": "SEPA-Lastschrift"
+      },
+      "create": {
+        "open": "Neue Ermächtigung",
+        "title": "Einzugsermächtigung anlegen",
+        "hint": "Nur verwenden, wenn der Kunde persönlich einwilligt und dies dokumentiert ist. Der Kunde gibt Karte oder IBAN auf der Seite des Gateways ein, die in einem neuen Fenster öffnet.",
+        "consent_title": "Einwilligungstext",
+        "version": "Version {version}",
+        "terms": "Aktuelle Bedingungen: bis zu {charge} je Einzug und {month} pro Monat; {notice} Tage Vorankündigung vor dem Einzug und {dispute} Tage für Widerspruch.",
+        "accept": "Der Kunde hat den Text gelesen und stimmt zu (dokumentierte persönliche Einwilligung).",
+        "submit": "Gateway-Seite öffnen",
+        "processing": "Warten, bis der Kunde die Anlage abschließt…",
+        "processing_hint": "Sobald das Gateway bestätigt, wird die Ermächtigung aktiv. Sie können dieses Fenster schließen: der Endstatus erscheint in der Liste.",
+        "replayed": "Diese Anfrage wurde bereits gesendet: es gibt keinen neuen Link. Warten Sie, bis der Kunde fertig ist, oder legen Sie neu an.",
+        "expired": "Die Gateway-Sitzung ist abgelaufen. Legen Sie neu an.",
+        "result": {
+          "active": "Ermächtigung aktiv. Zuschläge können diesem Kunden jetzt belastet werden.",
+          "failed": "Die Anlage ist fehlgeschlagen. Bitte erneut versuchen.",
+          "revoked": "Die Ermächtigung wurde widerrufen.",
+          "expired": "Die Ermächtigung ist abgelaufen, ohne abgeschlossen zu werden."
+        }
       }
     }
   }
