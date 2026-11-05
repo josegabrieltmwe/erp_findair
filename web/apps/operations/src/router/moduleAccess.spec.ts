@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NAV_SECTION_DEFS, isNavEntryVisible } from "@shared/platform/navCatalog";
-import { canOpenModuleRoute } from "./moduleAccess";
+import { canOpenModuleRoute, isModuleGuardedRoute } from "./moduleAccess";
 
 const known = (scopes: string[]) => ({ roles: [], scopes, isRoot: false, known: true });
 const unknown = { roles: [], scopes: [], isRoot: false, known: false };
@@ -98,5 +98,18 @@ describe("canOpenModuleRoute (H15)", () => {
     expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: partnerOperator })).toBe(false);
     expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: partnerAdminFull })).toBe(true);
     expect(canOpenModuleRoute("email_templates", { isAdmin: false, access: known(["config:read"]) })).toBe(true);
+  });
+
+  // Escenario: la lista de facturas pendientes exige invoices:read Y payment_gateways:read (semántica «todos»); con solo
+  // uno el API respondería 403, así que la ruta no se abre. TMWE entra siempre; sin perfil informado falla abierto.
+  it("facturas pendientes de cobro exigen invoices:read y payment_gateways:read a la vez", () => {
+    const name = "payments-pending-invoices";
+    expect(isModuleGuardedRoute(name)).toBe(true);
+    expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["invoices:read"]) })).toBe(false);
+    expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payment_gateways:read"]) })).toBe(false);
+    expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payments:read", "payment_gateways:write"]) })).toBe(false);
+    expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["invoices:read", "payment_gateways:read"]) })).toBe(true);
+    expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerAdminFull })).toBe(true);
+    expect(canOpenModuleRoute(name, { isAdmin: true, access: known([]) })).toBe(true);
   });
 });

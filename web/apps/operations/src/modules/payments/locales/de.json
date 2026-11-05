@@ -3,7 +3,8 @@
     "nav": {
       "aging": "Altersstruktur der Forderungen",
       "reconciliation": "Bankabstimmung",
-      "reminders": "Zahlungserinnerungen"
+      "reminders": "Zahlungserinnerungen",
+      "pending_invoices": "Offene Rechnungen zum Einzug"
     },
     "list": {
       "view_credit": "Zu erhalten",
@@ -202,6 +203,38 @@
         "failed": "Die Zahlung wurde nicht abgeschlossen.",
         "canceled": "Die Zahlung wurde abgebrochen.",
         "expired": "Die Zahlungssitzung ist abgelaufen."
+      }
+    },
+    "pending": {
+      "back": "Zahlungen",
+      "title": "Offene Rechnungen zum Einzug",
+      "refresh": "Aktualisieren",
+      "intro": "Ausgestellte Rechnungen mit offenem Betrag, nach Fälligkeit sortiert. Aus jeder Zeile online per Karte einziehen.",
+      "empty": "Es gibt keine offenen Rechnungen zum Einzug.",
+      "no_due": "Ohne Datum",
+      "col": {
+        "number": "Nr.",
+        "invoice_date": "Datum",
+        "due": "Fälligkeit",
+        "status": "Status",
+        "total": "Gesamt",
+        "pending": "Offen"
+      },
+      "status": {
+        "overdue": "Überfällig",
+        "in_progress": "Zahlung läuft",
+        "pending": "Offen"
+      },
+      "in_progress_hint": "Eine Zahlung über {amount} läuft.",
+      "reason": {
+        "currency": "Der Online-Einzug ist nur in EUR möglich.",
+        "in_progress": "Zahlung läuft: Bestätigung abwarten.",
+        "unknown": "Online-Einzug ist derzeit nicht möglich."
+      },
+      "error": {
+        "forbidden": "Sie haben keine Berechtigung, die offenen Rechnungen zu sehen.",
+        "unavailable": "Die offenen Rechnungen konnten nicht abgerufen werden. Bitte in einigen Minuten erneut versuchen.",
+        "other": "Die Liste konnte nicht geladen werden. Bitte erneut versuchen."
       }
     }
   }
