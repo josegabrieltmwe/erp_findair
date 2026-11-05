@@ -329,9 +329,9 @@
         "unknown": "Operation completed."
       },
       "errors": {
-        "not_active": "Gateway surcharges are not active in this environment.",
+        "not_active": "Gateway surcharges and authorizations are not active in this environment.",
         "return_url": "The return address for sign-up is not configured on the server.",
-        "forbidden": "You do not have permission for this. Waiving, rejecting disputes and charging require being your company's payments administrator.",
+        "forbidden": "You do not have permission for this operation. Viewing surcharges and authorizations requires payment gateway permissions; waiving, rejecting disputes and charging also require being your company's payments administrator.",
         "not_found": "Not found: it does not exist or does not belong to your company.",
         "cap_exceeded": "The amount exceeds the allowed cap per charge or per month, or what the customer accepted.",
         "currency": "Only surcharges in euros are supported.",

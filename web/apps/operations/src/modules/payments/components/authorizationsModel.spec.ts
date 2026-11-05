@@ -45,6 +45,9 @@ describe("describeMethod", () => {
     expect(describeMethod({ method_type: "card", brand: "visa", last4: "4242", exp_month: 3, exp_year: 2028 })).toBe("VISA ····4242 (03/2028)");
     expect(describeMethod({ method_type: "sepa_debit", brand: null, last4: "1234", exp_month: null, exp_year: null })).toBe("SEPA ····1234");
     expect(describeMethod({ method_type: "card", brand: null, last4: null, exp_month: null, exp_year: null })).toBe("—");
+    // Sin marca se usa la etiqueta traducida que pasa la pantalla (no un texto español fijo).
+    expect(describeMethod({ method_type: "card", brand: null, last4: "0001", exp_month: 3, exp_year: 2027 }, "Card")).toBe("Card ····0001 (03/2027)");
+    expect(describeMethod({ method_type: "card", brand: null, last4: "0001", exp_month: null, exp_year: null }, "Carta")).toBe("Carta ····0001");
   });
 });
 

@@ -329,9 +329,9 @@
         "unknown": "Vorgang ausgeführt."
       },
       "errors": {
-        "not_active": "Zuschläge über das Zahlungsgateway sind in dieser Umgebung nicht aktiv.",
+        "not_active": "Zuschläge und Autorisierungen über das Zahlungs-Gateway sind in dieser Umgebung nicht aktiv.",
         "return_url": "Die Rücksprungadresse für die Anlage ist auf dem Server nicht konfiguriert.",
-        "forbidden": "Dafür fehlt die Berechtigung. Erlassen, Widersprüche ablehnen und einziehen erfordern, Zahlungsadministrator Ihres Unternehmens zu sein.",
+        "forbidden": "Für diesen Vorgang fehlt die Berechtigung. Zuschläge und Autorisierungen anzusehen erfordert Berechtigungen für Zahlungs-Gateways; Erlassen, Widersprüche ablehnen und einziehen erfordern zusätzlich, Zahlungsadministrator Ihres Unternehmens zu sein.",
         "not_found": "Nicht gefunden: existiert nicht oder gehört nicht zu Ihrem Unternehmen.",
         "cap_exceeded": "Der Betrag überschreitet die zulässige Obergrenze je Einzug oder Monat bzw. das vom Kunden Akzeptierte.",
         "currency": "Es werden nur Zuschläge in Euro unterstützt.",

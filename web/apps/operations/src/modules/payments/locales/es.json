@@ -329,9 +329,9 @@
         "unknown": "Operación realizada."
       },
       "errors": {
-        "not_active": "Los recargos por pasarela no están activos en este entorno.",
+        "not_active": "Los recargos y las autorizaciones por pasarela no están activos en este entorno.",
         "return_url": "La dirección de retorno del alta no está configurada en el servidor.",
-        "forbidden": "No tienes permiso para esto. Perdonar, rechazar impugnaciones y cobrar requieren ser administrador de pagos de tu empresa.",
+        "forbidden": "No tienes permiso para esta operación. Ver recargos y autorizaciones exige permisos de pasarelas de pago; perdonar, rechazar impugnaciones y cobrar exigen además ser administrador de pagos de tu empresa.",
         "not_found": "No se encuentra: no existe o no pertenece a tu empresa.",
         "cap_exceeded": "El importe supera el tope permitido por cobro o por mes, o lo que el cliente aceptó.",
         "currency": "Solo se admiten recargos en euros.",

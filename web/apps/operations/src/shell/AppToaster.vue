@@ -30,6 +30,7 @@ import {
 } from "@shared/anagrafiche/stores/toast.store";
 import { onHttpEvent } from "@shared/anagrafiche/services/http";
 import { useI18n } from "vue-i18n";
+import { isExpectedUnavailable } from "./expectedUnavailable";
 
 const toastStore = useToastStore();
 const { t } = useI18n();
@@ -43,8 +44,11 @@ onMounted(() => {
     if (ev === "rate-limit") toastStore.warning(t("errors.rateLimit"));
     else if (ev === "forbidden")
       toastStore.error(humanMessage(extract(payload)) || t("errors.forbidden"));
-    else if (ev === "server-error")
+    else if (ev === "server-error") {
+      // 503 de pasarela apagada (PAYMENT_NOT_ACTIVE...): estado esperado que la propia pantalla explica; sin toast rojo.
+      if (isExpectedUnavailable(payload)) return;
       toastStore.error(extract(payload) || t("errors.server"));
+    }
   });
 });
 

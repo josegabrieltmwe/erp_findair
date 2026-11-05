@@ -158,6 +158,17 @@ describe("classifySurchargeError", () => {
     expect(classifySurchargeError(err(500))).toBe("other");
     expect(classifySurchargeError(new Error("red"))).toBe("other");
   });
+  // Escenario (hallado en el navegador): el cliente http pone `SERVER_ERROR` en ApiError.code de todo 5xx y el código de
+  // negocio solo viaja en el cuerpo problem+json del BFF; el genérico NO puede tapar al del cuerpo.
+  it("el código del cuerpo manda sobre el genérico SERVER_ERROR del cliente http", () => {
+    const body = { code: "PAYMENT_NOT_ACTIVE", error_code: "PAYMENT_NOT_ACTIVE", error: { code: "PAYMENT_NOT_ACTIVE", message: "apagado" } };
+    expect(classifySurchargeError(new ApiError("x", 503, "SERVER_ERROR", body))).toBe("not_active");
+    expect(classifySurchargeError(new ApiError("x", 503, "SERVER_ERROR", { ...body, code: "PAYMENT_RETURN_URL_NOT_CONFIGURED", error_code: "PAYMENT_RETURN_URL_NOT_CONFIGURED", error: { code: "PAYMENT_RETURN_URL_NOT_CONFIGURED" } }))).toBe("return_url");
+    // Un 503 sin código de negocio sigue siendo una avería genérica.
+    expect(classifySurchargeError(new ApiError("x", 503, "SERVER_ERROR", { code: "upstream_error" }))).toBe("other");
+    expect(classifySurchargeError(new ApiError("x", 503, "SERVER_ERROR"))).toBe("other");
+  });
+
   // Escenario: el BFF devuelve el code en el cuerpo problem+json (details) y no en ApiError.code.
   it("lee el code del cuerpo cuando ApiError.code no viene", () => {
     expect(classifySurchargeError(new ApiError("x", 503, undefined, { error_code: "PAYMENT_NOT_ACTIVE" }))).toBe("not_active");
