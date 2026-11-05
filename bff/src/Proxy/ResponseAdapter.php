@@ -47,9 +47,12 @@ final class ResponseAdapter
     /**
      * Cobro con Checkout alojado (api_pay_payments): la pasarela no esta activa para el partner (503). Es un estado
      * funcional, no una averia: se conserva el 503 y el codigo para que la SPA lo explique. Lista cerrada, texto FIJO.
+     * PAYMENT_PENDING_UNAVAILABLE (api_pay_pending_invoices): fallo de lectura de la lista de facturas pendientes. Se conserva
+     * para que la pantalla muestre "no se pudo consultar" y nunca una lista vacia, que significaria "no debes nada".
      */
     private const PAYMENT_ERRORS = [
         'PAYMENT_GATEWAYS_NOT_ACTIVE' => 'El cobro online no está activo para esta cuenta.',
+        'PAYMENT_PENDING_UNAVAILABLE' => 'No se pudieron consultar las facturas pendientes.',
     ];
 
     public function __construct(private readonly LoggerInterface $logger)
@@ -174,13 +177,14 @@ final class ResponseAdapter
     }
 
     /**
-     * 503 PAYMENT_GATEWAYS_NOT_ACTIVE de las rutas pay_payments.*: mantiene estado y codigo con texto fijo.
+     * 503 PAYMENT_GATEWAYS_NOT_ACTIVE (rutas pay_payments.*) y PAYMENT_PENDING_UNAVAILABLE (pay_pending_invoices.*):
+     * mantiene estado y codigo con texto fijo.
      *
      * @param array<string, mixed> $payload
      */
     private function paymentProblem(array $payload, int $status, Route $route, string $requestId): ?ResponseInterface
     {
-        if ($status !== 503 || !str_starts_with($route->id, 'pay_payments.')) {
+        if ($status !== 503 || !(str_starts_with($route->id, 'pay_payments.') || str_starts_with($route->id, 'pay_pending_invoices.'))) {
             return null;
         }
         $error = is_array($payload['error'] ?? null) ? $payload['error'] : [];

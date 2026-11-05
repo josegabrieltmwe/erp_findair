@@ -122,6 +122,23 @@ final class UnitTest extends TestCase
         }
     }
 
+    // Escenario: api_pay_pending_invoices es solo lectura; el manifiesto expone exactamente GET y, al no cambiar estado,
+    // sin CSRF. POST/PUT/PATCH/DELETE no deben existir (la API responde 405 y el BFF ni siquiera lo enruta).
+    public function testPayPendingInvoicesExposesExactlyGet(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+
+        foreach (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as $method) {
+            $route = $manifest->match($method, '/api_pay_pending_invoices');
+            if ($method === 'GET') {
+                self::assertNotNull($route, 'GET /api_pay_pending_invoices debe estar en el manifiesto');
+                self::assertFalse($route['route']->csrf, 'un GET no exige CSRF');
+            } else {
+                self::assertNull($route, "{$method} /api_pay_pending_invoices no debe estar en el manifiesto");
+            }
+        }
+    }
+
     public function testManifestRejectsBadAction(): void
     {
         $this->expectException(\InvalidArgumentException::class);

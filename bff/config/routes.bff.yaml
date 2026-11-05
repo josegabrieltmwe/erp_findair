@@ -396,6 +396,10 @@ routes:
   # Stripe. GET = detalle (?id=) o listado paginado (?invoice_id=, ?status=); POST crea la sesion y responde 202 con
   # checkout_url (201 si ya estaba cobrado). Nunca hay client_secret en modo hosted; los errores 402/409/422/503 (incl.
   # PAYMENT_GATEWAYS_NOT_ACTIVE) pasan intactos. La autoridad del estado es el webhook, no el retorno del navegador.
+  # api_pay_pending_invoices: facturas pendientes de cobro (solo lectura, paginadas por vencimiento). Personal y partner
+  # necesitan invoices:read + payment_gateways:read; sin permiso responde 403 y ante un fallo de lectura 503
+  # PAYMENT_PENDING_UNAVAILABLE (nunca una lista vacia): ambos pasan intactos con su code. Solo GET, sin cuerpo ni CSRF; el
+  # cliente/partner sale del token, por eso solo se reenvian page y per_page (nada de partner_id, customer_id, etc.).
   - id: pay_gateway_accounts.get
     method: GET
     path: /api_pay_gateway_accounts
@@ -458,3 +462,10 @@ routes:
     upstream:
       action: api_pay_payments
     limits: { body: 4k, timeout: 30 }
+
+  - id: pay_pending_invoices.get
+    method: GET
+    path: /api_pay_pending_invoices
+    upstream:
+      action: api_pay_pending_invoices
+      forward_query: [page, per_page]

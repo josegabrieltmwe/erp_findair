@@ -70,6 +70,12 @@ routes:
     upstream:
       action: api_pay_payments
     limits: { body: 4k, timeout: 30 }
+  - id: pay_pending_invoices.get
+    method: GET
+    path: /api_pay_pending_invoices
+    upstream:
+      action: api_pay_pending_invoices
+      forward_query: [page, per_page]
 include:
   - routes.extra.yaml
 exclude:
