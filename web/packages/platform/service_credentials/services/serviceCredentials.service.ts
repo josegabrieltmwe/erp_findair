@@ -42,6 +42,8 @@ export interface ServiceCredentialFilters {
   environment?: string;
   /** Filtra a las credenciales propias de ese partner (tab en la ficha de anagrafica). */
   id_partner?: number;
+  /** Solo las credenciales compartidas "de la casa" (sin titular). Solo TMWE. */
+  house?: boolean;
 }
 
 export interface ServiceCredentialPayload {
@@ -87,6 +89,7 @@ export const serviceCredentialsService = {
     if (filters.courier_code) query.courier_code = filters.courier_code;
     if (filters.environment) query.environment = filters.environment;
     if (filters.id_partner) query.id_partner = String(filters.id_partner);
+    if (filters.house) query.house = '1';
     const raw = await http<RawListResponse>(ENDPOINT, { query });
     if (raw?.success === false) throw new Error(raw.error || 'Failed to load credentials');
     return Array.isArray(raw?.data) ? raw!.data : [];
