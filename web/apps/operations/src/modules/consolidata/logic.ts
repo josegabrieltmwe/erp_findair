@@ -58,8 +58,17 @@ export function normalizeApiError(err: unknown): ConsolidataError {
       fields[k] = String(v);
     }
   }
+  // Un código más concreto en details.code (p. ej. ACCESS_DENIED + manual_price_staff_only) manda si lo conocemos.
+  const detailCode =
+    typeof (details as { code?: unknown }).code === "string"
+      ? String((details as { code?: unknown }).code)
+      : "";
+  const baseCode =
+    typeof body.code === "string" ? body.code : e.code || "UNKNOWN";
   return {
-    code: typeof body.code === "string" ? body.code : e.code || "UNKNOWN",
+    code: (KNOWN_ERROR_CODES as readonly string[]).includes(detailCode)
+      ? detailCode
+      : baseCode,
     message: typeof body.error === "string" ? body.error : e.message || "",
     status: typeof e.status === "number" ? e.status : 0,
     fields,
@@ -254,12 +263,15 @@ type ActionDefs = Record<string, { from: string[] | null }> | null | undefined;
 /**
  * Puertas de los botones del detalle: cada botón por SU acción del catálogo del
  * API (`meta.actions[x].from`), sin reglas propias del front. `take` además
- * exige que el proyecto no esté ya asignado (el API respondería already_assigned).
+ * exige que el proyecto no esté ya asignado (el API respondería already_assigned), y `reopen` que
+ * no esté convertido (already_converted).
  */
 export function projectGates(
   actions: ActionDefs,
   stato: string,
   assignedTo: number | null | undefined,
+  /** `conversione` del detalle: con conversión parcial o completa el API rechaza reopen (409 already_converted). */
+  conversione?: string | null,
 ): Record<
   | "take"
   | "assign"
@@ -292,7 +304,7 @@ export function projectGates(
     answer: can("answer_quote"),
     requestQuote: can("request_quote"),
     close: can("close"),
-    reopen: can("reopen"),
+    reopen: can("reopen") && (conversione ?? "no") === "no",
     cancel: can("cancel"),
     convert: can("convert"),
     operate: can("operate"),
@@ -343,6 +355,7 @@ export const KNOWN_LOG_ACTIONS = [
   "operate",
   "waive_warning",
   "stato_auto",
+  "house_detached",
 ] as const;
 
 export function logActionI18nKey(code: string): string | null {

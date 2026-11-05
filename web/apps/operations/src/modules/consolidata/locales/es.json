@@ -174,7 +174,8 @@
         "convert": "Enlace a cargo",
         "operate": "Operación",
         "waive_warning": "Aviso ignorado",
-        "stato_auto": "Cambio de estado automático"
+        "stato_auto": "Cambio de estado automático",
+        "house_detached": "Expedición desenganchada del cargo"
       }
     },
     "notes": {

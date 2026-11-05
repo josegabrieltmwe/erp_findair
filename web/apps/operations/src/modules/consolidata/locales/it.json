@@ -174,7 +174,8 @@
         "convert": "Collegamento al cargo",
         "operate": "Operazione",
         "waive_warning": "Avviso ignorato",
-        "stato_auto": "Cambio di stato automatico"
+        "stato_auto": "Cambio di stato automatico",
+        "house_detached": "Spedizione staccata dal cargo"
       }
     },
     "notes": {

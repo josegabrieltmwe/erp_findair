@@ -16,13 +16,18 @@ export interface CsvColumn<T> {
   value: (row: T) => string | number | null | undefined;
 }
 
-/** Celda CSV: se entrecomilla si lleva separador, comillas o saltos de línea. */
+/**
+ * Celda CSV: se entrecomilla si lleva separador, comillas o saltos de línea. Un texto que empieza por
+ * `= + - @`, tabulador o retorno de carro lleva delante un apóstrofo: Excel lo trataría como fórmula
+ * (inyección CSV; el título del proyecto lo escribe el cliente). Los números no se tocan.
+ */
 export function csvEscape(
   v: string | number | null | undefined,
   sep = ";",
 ): string {
   if (v === null || v === undefined) return "";
-  const s = String(v);
+  let s = String(v);
+  if (typeof v === "string" && /^[=+\-@\t\r]/.test(s)) s = "'" + s;
   if (
     s.includes(sep) ||
     s.includes('"') ||

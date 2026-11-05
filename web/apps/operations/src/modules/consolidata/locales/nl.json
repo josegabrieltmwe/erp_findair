@@ -174,7 +174,8 @@
         "convert": "Gekoppeld aan cargo",
         "operate": "Operatie",
         "waive_warning": "Waarschuwing genegeerd",
-        "stato_auto": "Automatische statuswijziging"
+        "stato_auto": "Automatische statuswijziging",
+        "house_detached": "Zending losgekoppeld van de cargo"
       }
     },
     "notes": {

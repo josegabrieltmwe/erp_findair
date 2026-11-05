@@ -22,6 +22,15 @@ describe("CSV", () => {
     expect(lines[2]).toBe("2;Ñandú;");
   });
 
+  it("csvEscape neutraliza fórmulas en textos y deja los números", () => {
+    expect(csvEscape("=HYPERLINK(\"http://x\")")).toBe('"\'=HYPERLINK(""http://x"")"');
+    expect(csvEscape("+34 600")).toBe("'+34 600");
+    expect(csvEscape("-x")).toBe("'-x");
+    expect(csvEscape("@SUM(A1)")).toBe("'@SUM(A1)");
+    expect(csvEscape(-12.5)).toBe("-12.5");
+    expect(csvEscape("Normal")).toBe("Normal");
+  });
+
   it("csvEscape con saltos de línea", () => {
     expect(csvEscape("a\nb")).toBe('"a\nb"');
     expect(csvEscape(undefined)).toBe("");

@@ -174,7 +174,8 @@
         "convert": "Linked to cargo",
         "operate": "Operation",
         "waive_warning": "Warning waived",
-        "stato_auto": "Automatic status change"
+        "stato_auto": "Automatic status change",
+        "house_detached": "Shipment detached from the cargo"
       }
     },
     "notes": {

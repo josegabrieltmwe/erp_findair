@@ -174,7 +174,8 @@
         "convert": "Mit Cargo verknüpft",
         "operate": "Operative Umsetzung",
         "waive_warning": "Warnung ignoriert",
-        "stato_auto": "Automatische Statusänderung"
+        "stato_auto": "Automatische Statusänderung",
+        "house_detached": "Sendung vom Cargo getrennt"
       }
     },
     "notes": {

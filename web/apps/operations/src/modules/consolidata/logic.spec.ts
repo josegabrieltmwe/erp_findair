@@ -33,6 +33,24 @@ describe("normalizeApiError", () => {
     expect(e.fields["spedizione.peso"]).toBe("deve essere > 0");
   });
 
+  it("un código conocido en details.code manda (ACCESS_DENIED + manual_price_staff_only)", () => {
+    const e = normalizeApiError({
+      status: 403,
+      details: {
+        success: false,
+        error: "x",
+        code: "ACCESS_DENIED",
+        details: { code: "manual_price_staff_only" },
+      },
+    });
+    expect(e.code).toBe("manual_price_staff_only");
+    const other = normalizeApiError({
+      status: 403,
+      details: { code: "ACCESS_DENIED", details: { code: "algo_raro" } },
+    });
+    expect(other.code).toBe("ACCESS_DENIED");
+  });
+
   it("conversion_blocked trae los avisos", () => {
     const avisos = [
       {
@@ -153,6 +171,14 @@ describe("puertas de botones por meta (E2/E3)", () => {
     expect(g.operate).toBe(false);
     expect(g.requestQuote).toBe(false);
     expect(g.removeLeg).toBe(false); // no está en el catálogo de la prueba
+  });
+
+  it("reabrir: no se ofrece si el proyecto ya está convertido", () => {
+    const acts = { reopen: { from: ["P", "C"] } };
+    expect(projectGates(acts, "C", null).reopen).toBe(true);
+    expect(projectGates(acts, "C", null, "no").reopen).toBe(true);
+    expect(projectGates(acts, "C", null, "parcial").reopen).toBe(false);
+    expect(projectGates(acts, "C", null, "completo").reopen).toBe(false);
   });
 
   it("tomar: solo A/P sin asignar y si el catálogo lo tiene", () => {

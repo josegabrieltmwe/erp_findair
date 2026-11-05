@@ -390,6 +390,7 @@ const gates = computed(() =>
     store.actions,
     p.value?.stato ?? "",
     p.value?.assegnato_a ?? null,
+    p.value?.conversione ?? null,
   ),
 );
 
