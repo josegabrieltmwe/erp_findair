@@ -11,7 +11,7 @@ import {
   createPayload,
   shipmentPayload,
 } from "./services/consolidata.service";
-import type { ShipmentForm } from "./types";
+import type { QuoteOption, ShipmentForm } from "./types";
 
 beforeEach(() => {
   httpMock.mockReset();
@@ -127,9 +127,26 @@ describe("consolidataService — acciones nuevas", () => {
     expect(lastBody()).toEqual({ action: "operate", id: 7, reservar: true });
   });
 
-  it("create_from_option envía opción, envíos, destino, título y cliente", async () => {
+  it("create_from_option envía la opción completa (con legs), envíos, destino, título y cliente", async () => {
+    const option: QuoteOption = {
+      key: "hub_MXP",
+      label: "Hub MXP",
+      hub_terminal: "MXP",
+      legs: [],
+      totale_tratte: 100,
+      costi_fissi: {} as QuoteOption["costi_fissi"],
+      totale: 120,
+      valuta: "EUR",
+      note: [],
+      incomplete: false,
+      dominated: false,
+      dominated_by: null,
+      giorni_totali: 3,
+      eta: null,
+    };
+    option.legs = [{ tipo: "AIR" } as unknown as QuoteOption["legs"][number]];
     const payload = {
-      option: "hub_MXP",
+      option,
       shipments: [
         {
           ref: "H1",

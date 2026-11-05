@@ -370,7 +370,8 @@ export interface LegPayload {
 }
 
 export interface CreateFromOptionPayload {
-  option: string;
+  /** Opción completa tal como la devolvió `quote` (el API exige `legs`). */
+  option: QuoteOption;
   shipments: QuoteShipmentInput[];
   destination: QuoteAddress;
   titolo: string;
