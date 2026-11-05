@@ -1,7 +1,7 @@
 import { http } from '../../anagrafiche/services/http';
 
 /**
- * Credenciales de courier genérico (DHL, DPD, UPS, FedEx, TNT, TACT, Agora
+ * Credenciales de courier genérico (DHL, DPD, UPS, FedEx, TNT, TACT, Agora, ASL
  * — KLM/WebCargo tienen su propio sistema, ver air_carrier_credentials/
  * webcargo_key). Backend: /api_admin_service_credentials
  * (Service_Credential_Admin_Controller), admin-only (TMWE).
@@ -11,7 +11,7 @@ import { http } from '../../anagrafiche/services/http';
  * significa "no cambiar".
  */
 
-export const SUPPORTED_COURIERS = ['dhl', 'dpd', 'ups', 'fedex', 'tnt', 'klm', 'webcargo', 'agora', 'tact'] as const;
+export const SUPPORTED_COURIERS = ['dhl', 'dpd', 'ups', 'fedex', 'tnt', 'klm', 'webcargo', 'agora', 'tact', 'asl'] as const;
 export type SupportedCourier = (typeof SUPPORTED_COURIERS)[number];
 
 export interface ServiceCredential {
