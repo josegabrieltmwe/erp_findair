@@ -308,7 +308,7 @@
         :saving="store.saving"
         :error="store.error"
         :currency="p.valuta"
-        :initial-price="p.risposta_prezzo ?? p.totale"
+        :initial-price="p.totale"
         @submit="onAnswer"
       />
       <ConsolidataConvertDialog

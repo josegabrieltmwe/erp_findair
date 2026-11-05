@@ -186,6 +186,7 @@
     "answer": {
       "title": "Rispondi alla richiesta di preventivo",
       "price": "Prezzo finale ({cur})",
+      "priceHint": "È il totale delle tratte. Per cambiarlo, imposta prima un prezzo manuale su una tratta.",
       "validUntil": "Valida fino al",
       "validUntilHint": "Vuoto = 7 giorni da oggi",
       "note": "Nota per il cliente",
@@ -224,7 +225,8 @@
       "quote_not_answered": "Il preventivo non ha ancora risposta.",
       "quote_expired": "Il preventivo è scaduto: ricalcola e rispondi di nuovo.",
       "operation_in_progress": "C'è già un'operazione in corso per questo progetto. Attendi e riprova.",
-      "manual_price_staff_only": "Solo lo staff può impostare un prezzo manuale."
+      "manual_price_staff_only": "Solo lo staff può impostare un prezzo manuale.",
+      "answer_price_mismatch": "Il prezzo della risposta deve essere il totale delle tratte. Per offrirne un altro, cambia prima il prezzo di una tratta (prezzo manuale)."
     },
     "messages": {
       "taken": "Progetto preso in carico.",

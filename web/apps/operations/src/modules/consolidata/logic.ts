@@ -85,6 +85,7 @@ export const KNOWN_ERROR_CODES = [
   "quote_expired",
   "operation_in_progress",
   "manual_price_staff_only",
+  "answer_price_mismatch",
   "METHOD_NOT_ALLOWED",
   "INTERNAL_ERROR",
 ] as const;

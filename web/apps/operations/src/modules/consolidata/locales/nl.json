@@ -186,6 +186,7 @@
     "answer": {
       "title": "De offerteaanvraag beantwoorden",
       "price": "Eindprijs ({cur})",
+      "priceHint": "Dit is het totaal van de trajecten. Om het te wijzigen, stel eerst een handmatige prijs in op een traject.",
       "validUntil": "Geldig tot",
       "validUntilHint": "Leeg = 7 dagen vanaf nu",
       "note": "Notitie voor de klant",
@@ -224,7 +225,8 @@
       "quote_not_answered": "De offerte is nog niet beantwoord.",
       "quote_expired": "De offerte is verlopen: herbereken en beantwoord opnieuw.",
       "operation_in_progress": "Er loopt al een operatie voor dit project. Wacht en probeer opnieuw.",
-      "manual_price_staff_only": "Alleen staf kan een handmatige prijs instellen."
+      "manual_price_staff_only": "Alleen staf kan een handmatige prijs instellen.",
+      "answer_price_mismatch": "De prijs van het antwoord moet het totaal van de trajecten zijn. Wil je een andere prijs, wijzig dan eerst de prijs van een traject (handmatige prijs)."
     },
     "messages": {
       "taken": "Project opgepakt.",

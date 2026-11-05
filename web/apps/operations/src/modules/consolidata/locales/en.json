@@ -186,6 +186,7 @@
     "answer": {
       "title": "Answer the quote request",
       "price": "Final price ({cur})",
+      "priceHint": "This is the total of the legs. To change it, first set a manual price on a leg.",
       "validUntil": "Valid until",
       "validUntilHint": "Empty = 7 days from now",
       "note": "Note for the client",
@@ -224,7 +225,8 @@
       "quote_not_answered": "The quote has not been answered yet.",
       "quote_expired": "The quote has expired: recalculate and answer again.",
       "operation_in_progress": "An operation is already running for this project. Wait and retry.",
-      "manual_price_staff_only": "Only staff can set a manual price."
+      "manual_price_staff_only": "Only staff can set a manual price.",
+      "answer_price_mismatch": "The answer price must be the total of the legs. To offer a different one, first change a leg's price (manual price)."
     },
     "messages": {
       "taken": "Project taken.",

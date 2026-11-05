@@ -186,6 +186,7 @@
     "answer": {
       "title": "Angebotsanfrage beantworten",
       "price": "Endpreis ({cur})",
+      "priceHint": "Das ist die Summe der Teilstrecken. Um ihn zu ändern, zuerst einen manuellen Preis für eine Teilstrecke festlegen.",
       "validUntil": "Gültig bis",
       "validUntilHint": "Leer = 7 Tage ab heute",
       "note": "Notiz für den Kunden",
@@ -224,7 +225,8 @@
       "quote_not_answered": "Das Angebot ist noch nicht beantwortet.",
       "quote_expired": "Das Angebot ist abgelaufen: neu berechnen und erneut beantworten.",
       "operation_in_progress": "Für dieses Projekt läuft bereits eine Operation. Warte und versuche es erneut.",
-      "manual_price_staff_only": "Nur Mitarbeiter können einen manuellen Preis festlegen."
+      "manual_price_staff_only": "Nur Mitarbeiter können einen manuellen Preis festlegen.",
+      "answer_price_mismatch": "Der Antwortpreis muss der Summe der Teilstrecken entsprechen. Für einen anderen Preis zuerst den Preis einer Teilstrecke ändern (manueller Preis)."
     },
     "messages": {
       "taken": "Projekt übernommen.",

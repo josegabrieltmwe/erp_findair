@@ -186,6 +186,7 @@
     "answer": {
       "title": "Responder la solicitud de cotización",
       "price": "Precio final ({cur})",
+      "priceHint": "Es el total de los tramos. Para cambiarlo, fija antes un precio manual en un tramo.",
       "validUntil": "Válida hasta",
       "validUntilHint": "Vacío = 7 días desde hoy",
       "note": "Nota para el cliente",
@@ -224,7 +225,8 @@
       "quote_not_answered": "La cotización aún no está respondida.",
       "quote_expired": "La cotización está vencida: recalcula y vuelve a responder.",
       "operation_in_progress": "Ya hay una operación en curso para este proyecto. Espera y reintenta.",
-      "manual_price_staff_only": "Solo el staff puede fijar un precio manual."
+      "manual_price_staff_only": "Solo el staff puede fijar un precio manual.",
+      "answer_price_mismatch": "El precio de la respuesta debe ser el total de los tramos. Para ofrecer otro, cambia antes el precio de un tramo (precio manual)."
     },
     "messages": {
       "taken": "Proyecto tomado.",

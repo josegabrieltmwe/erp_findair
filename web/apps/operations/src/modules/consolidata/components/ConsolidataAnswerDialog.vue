@@ -9,12 +9,14 @@
       <v-card-title>{{ t("consolidata.answer.title") }}</v-card-title>
       <v-card-text>
         <ConsolidataApiError :error="error" />
+        <!-- El API solo acepta el total de los tramos (answer_price_mismatch): se muestra, no se edita. -->
         <v-text-field
           v-model.number="form.prezzo"
           :label="t('consolidata.answer.price', { cur: currency })"
           type="number"
-          min="0"
-          step="0.01"
+          readonly
+          :hint="t('consolidata.answer.priceHint')"
+          persistent-hint
           :error-messages="error?.fields.prezzo"
         />
         <v-text-field
@@ -62,6 +64,7 @@ const props = defineProps<{
   saving: boolean;
   error: ConsolidataError | null;
   currency: string;
+  /** Total de los tramos: el precio que se responde. */
   initialPrice?: number | null;
 }>();
 const emit = defineEmits<{
