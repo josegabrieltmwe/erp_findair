@@ -44,6 +44,14 @@ final class ResponseAdapter
     /** Campos de `error.details` de un fallo del courier que pueden llegar al navegador. */
     private const COURIER_SAFE_DETAILS = ['category', 'retryable', 'courier'];
 
+    /**
+     * Cobro con Checkout alojado (api_pay_payments): la pasarela no esta activa para el partner (503). Es un estado
+     * funcional, no una averia: se conserva el 503 y el codigo para que la SPA lo explique. Lista cerrada, texto FIJO.
+     */
+    private const PAYMENT_ERRORS = [
+        'PAYMENT_GATEWAYS_NOT_ACTIVE' => 'El cobro online no está activo para esta cuenta.',
+    ];
+
     public function __construct(private readonly LoggerInterface $logger)
     {
     }
@@ -99,6 +107,12 @@ final class ResponseAdapter
         $courier = $this->courierProblem($payload, $upstream, $status, $requestId);
         if ($courier !== null) {
             return $courier;
+        }
+
+        // Cobro online sin pasarela activa (503): se conserva el codigo; el resto de 402/409/422 ya lo conserva el camino normal.
+        $payment = $this->paymentProblem($payload, $status, $route, $requestId);
+        if ($payment !== null) {
+            return $payment;
         }
 
         // 501: la función no está activa en este servidor (p. ej. el tiempo real de comunicación sin configurar,
@@ -157,6 +171,30 @@ final class ResponseAdapter
         $title = $status === 429 ? 'Límite de IA' : 'Servicio de IA';
 
         return ProblemDetails::response($out, $aiCode, $title, self::AI_ERRORS[$aiCode], $requestId, ['error_code' => $aiCode], $headers);
+    }
+
+    /**
+     * 503 PAYMENT_GATEWAYS_NOT_ACTIVE de las rutas pay_payments.*: mantiene estado y codigo con texto fijo.
+     *
+     * @param array<string, mixed> $payload
+     */
+    private function paymentProblem(array $payload, int $status, Route $route, string $requestId): ?ResponseInterface
+    {
+        if ($status !== 503 || !str_starts_with($route->id, 'pay_payments.')) {
+            return null;
+        }
+        $error = is_array($payload['error'] ?? null) ? $payload['error'] : [];
+        $code = $payload['error_code'] ?? ($error['code'] ?? null);
+        if (!is_string($code) || !isset(self::PAYMENT_ERRORS[$code])) {
+            return null;
+        }
+        $text = self::PAYMENT_ERRORS[$code];
+
+        return ProblemDetails::response(503, $code, 'Cobro no disponible', $text, $requestId, [
+            'success' => false,
+            'error_code' => $code,
+            'error' => ['code' => $code, 'message' => $text],
+        ]);
     }
 
     private function courierProblem(array $payload, ResponseInterface $upstream, int $status, string $requestId): ?ResponseInterface

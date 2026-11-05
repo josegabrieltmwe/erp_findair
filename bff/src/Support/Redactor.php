@@ -9,6 +9,7 @@ use Monolog\Processor\ProcessorInterface;
 
 /**
  * Censura campos sensibles antes de que un registro llegue al log.
+ * `client_secret` y `checkout_url` (Checkout alojado de Stripe: la URL lleva la sesion de pago) nunca deben quedar en logs.
  */
 final class Redactor implements ProcessorInterface
 {
@@ -16,7 +17,7 @@ final class Redactor implements ProcessorInterface
         'authorization', 'cookie', 'set-cookie', 'password', 'client_secret', 'access_token',
         'refresh_token', 'code', 'code_verifier', 'token', 'user_token', 'x-csrf-token', 'app_key',
         'api_key', 'apikey', 'api-key', 'x-api-key', 'x-auth-token', 'api_secret', 'secret', 'private_key',
-        'payload_override',
+        'payload_override', 'checkout_url',
     ];
 
     public function __invoke(LogRecord $record): LogRecord

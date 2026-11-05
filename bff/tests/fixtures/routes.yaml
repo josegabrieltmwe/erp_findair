@@ -64,6 +64,12 @@ routes:
     upstream:
       action: full_shipment_label_generator
     limits: { body: 1k }
+  - id: pay_payments.post
+    method: POST
+    path: /api_pay_payments
+    upstream:
+      action: api_pay_payments
+    limits: { body: 4k, timeout: 30 }
 include:
   - routes.extra.yaml
 exclude:

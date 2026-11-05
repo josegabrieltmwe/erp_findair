@@ -15,11 +15,12 @@ final class RedactorTest extends TestCase
     /** @return array<string, array{string}> */
     public static function sensitiveKeys(): array
     {
-        $keys = ['authorization', 'cookie', 'token', 'refresh_token', 'api_key', 'apikey', 'api-key', 'x-api-key', 'X-API-KEY', 'API_KEY', 'ApiKey', 'x-auth-token', 'secret', 'api_secret', 'payload_override'];
+        $keys = ['authorization', 'cookie', 'token', 'refresh_token', 'api_key', 'apikey', 'api-key', 'x-api-key', 'X-API-KEY', 'API_KEY', 'ApiKey', 'x-auth-token', 'secret', 'api_secret', 'payload_override', 'client_secret', 'checkout_url', 'CHECKOUT_URL'];
 
         return array_combine($keys, array_map(static fn (string $k): array => [$k], $keys));
     }
 
+    // Escenario: claves de cobro (client_secret, checkout_url) en cualquier profundidad y mayuscula quedan censuradas.
     #[DataProvider('sensitiveKeys')]
     public function testRedactsKeyAtAnyDepth(string $key): void
     {
