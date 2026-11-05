@@ -493,3 +493,45 @@ routes:
     upstream:
       action: api_pay_pending_invoices
       forward_query: [page, per_page]
+
+  # Autorizaciones de cobro del cliente y recargos (Ola 3 / F-C de pagos). Contrato en docs/contrato-con-api.md.
+  # api_pay_authorizations: permiso que firma el cliente (una vez) para que el vendedor le cobre despues recargos.
+  # GET = texto de consentimiento (?view=consent_text&locale=), detalle (?id=pau_...) o listado paginado (?status=,
+  # ?customer_id=, ?page=, ?per_page=). POST sin action = alta (Checkout `setup` alojado: 201 con checkout_url, o 200
+  # replayed:true sin checkout_url); POST {action:'revoke', id} = revocar. La IP, el user agent y la persona de la
+  # prueba del consentimiento los pone el servidor, nunca el cuerpo. El estado pasa a `active` solo por webhook: la SPA
+  # sondea el GET. 503 PAYMENT_NOT_ACTIVE (interruptor apagado) y PAYMENT_RETURN_URL_NOT_CONFIGURED pasan intactos.
+  # api_pay_surcharges: recargos por sobrepeso/oversize/otros. GET = detalle (?id=psu_...), listado paginado (?status=,
+  # ?customer_id=, ?page=, ?per_page=) o ?view=pending_transfer (cobrados por TMWE como respaldo a favor del partner y
+  # aun sin transferir; solo datos). POST sin action = proponer; POST {action: notify|dispute|waive|reject_dispute|charge,
+  # id, reason?}. waive/reject_dispute/charge exigen payment_gateways:admin + (TMWE o partner:manage); un recargo de otro
+  # partner responde 404 incluso a TMWE (independencia del partner): el BFF no ofrece vista cruzada ni reenvia partner_id.
+  # El partner y el actor salen SIEMPRE del token. Los errores 4xx (404/409/422/403) conservan estado y code por el camino
+  # normal; los 503 PAYMENT_NOT_ACTIVE se tratan en ResponseAdapter::paymentProblem.
+  - id: pay_authorizations.get
+    method: GET
+    path: /api_pay_authorizations
+    upstream:
+      action: api_pay_authorizations
+      forward_query: [id, view, locale, status, customer_id, page, per_page]
+
+  - id: pay_authorizations.post
+    method: POST
+    path: /api_pay_authorizations
+    upstream:
+      action: api_pay_authorizations
+    limits: { body: 4k, timeout: 30 }
+
+  - id: pay_surcharges.get
+    method: GET
+    path: /api_pay_surcharges
+    upstream:
+      action: api_pay_surcharges
+      forward_query: [id, view, status, customer_id, page, per_page]
+
+  - id: pay_surcharges.post
+    method: POST
+    path: /api_pay_surcharges
+    upstream:
+      action: api_pay_surcharges
+    limits: { body: 16k, timeout: 30 }

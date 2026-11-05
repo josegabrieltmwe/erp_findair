@@ -53,6 +53,20 @@ final class ResponseAdapter
     private const PAYMENT_ERRORS = [
         'PAYMENT_GATEWAYS_NOT_ACTIVE' => 'El cobro online no está activo para esta cuenta.',
         'PAYMENT_PENDING_UNAVAILABLE' => 'No se pudieron consultar las facturas pendientes.',
+        'PAYMENT_NOT_ACTIVE' => 'Los recargos y autorizaciones por pasarela no están activos en este entorno.',
+        'PAYMENT_RETURN_URL_NOT_CONFIGURED' => 'La dirección de retorno del alta de autorización no está configurada.',
+    ];
+
+    /**
+     * Prefijos de id de ruta (manifiesto) a los que se aplica cada tabla de PAYMENT_ERRORS: sin esto un 503 funcional
+     * de cobro se disfrazaria de averia (502). `PAYMENT_NOT_ACTIVE` y `PAYMENT_RETURN_URL_NOT_CONFIGURED` solo aplican a
+     * autorizaciones y recargos (interruptores PASARELAS_MODO / RECARGOS_MODO de tmwe_api): es un estado, no un fallo.
+     */
+    private const PAYMENT_ROUTE_PREFIXES = [
+        'pay_payments.' => ['PAYMENT_GATEWAYS_NOT_ACTIVE'],
+        'pay_pending_invoices.' => ['PAYMENT_PENDING_UNAVAILABLE'],
+        'pay_authorizations.' => ['PAYMENT_NOT_ACTIVE', 'PAYMENT_RETURN_URL_NOT_CONFIGURED'],
+        'pay_surcharges.' => ['PAYMENT_NOT_ACTIVE'],
     ];
 
     public function __construct(private readonly LoggerInterface $logger)
@@ -177,19 +191,31 @@ final class ResponseAdapter
     }
 
     /**
-     * 503 PAYMENT_GATEWAYS_NOT_ACTIVE (rutas pay_payments.*) y PAYMENT_PENDING_UNAVAILABLE (pay_pending_invoices.*):
-     * mantiene estado y codigo con texto fijo.
+     * 503 funcionales de cobro: PAYMENT_GATEWAYS_NOT_ACTIVE (pay_payments.*), PAYMENT_PENDING_UNAVAILABLE
+     * (pay_pending_invoices.*), PAYMENT_NOT_ACTIVE y PAYMENT_RETURN_URL_NOT_CONFIGURED (pay_authorizations.*) y
+     * PAYMENT_NOT_ACTIVE (pay_surcharges.*, incluido el cobro manual cuando RECARGOS_MODO no es ACTIVO). Cada codigo solo
+     * se acepta en las rutas de su prefijo (PAYMENT_ROUTE_PREFIXES). Mantiene estado y codigo con texto fijo.
      *
      * @param array<string, mixed> $payload
      */
     private function paymentProblem(array $payload, int $status, Route $route, string $requestId): ?ResponseInterface
     {
-        if ($status !== 503 || !(str_starts_with($route->id, 'pay_payments.') || str_starts_with($route->id, 'pay_pending_invoices.'))) {
+        if ($status !== 503) {
+            return null;
+        }
+        $allowed = null;
+        foreach (self::PAYMENT_ROUTE_PREFIXES as $prefix => $codes) {
+            if (str_starts_with($route->id, $prefix)) {
+                $allowed = $codes;
+                break;
+            }
+        }
+        if ($allowed === null) {
             return null;
         }
         $error = is_array($payload['error'] ?? null) ? $payload['error'] : [];
         $code = $payload['error_code'] ?? ($error['code'] ?? null);
-        if (!is_string($code) || !isset(self::PAYMENT_ERRORS[$code])) {
+        if (!is_string($code) || !in_array($code, $allowed, true)) {
             return null;
         }
         $text = self::PAYMENT_ERRORS[$code];
