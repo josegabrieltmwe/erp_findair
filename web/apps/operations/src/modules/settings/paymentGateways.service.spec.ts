@@ -16,6 +16,8 @@ import {
   payGatewayAccounts,
   payGatewayAccountsAdmin,
   payPayments,
+  payPendingInvoices,
+  classifyPendingInvoicesError,
   payRefunds,
   truthy,
 } from "@shared/payment_gateways/services/paymentGateways.service";
@@ -162,5 +164,48 @@ describe("utilidades", () => {
     expect(payFieldErrors(new Error("x"))).toEqual({});
     const err = new ApiError("x", 422, undefined, { error: { details: { fields: { secret: ["Obligatorio"], account_alias: "Repetido" } } } });
     expect(payFieldErrors(err)).toEqual({ secret: "Obligatorio", account_alias: "Repetido" });
+  });
+});
+
+describe("payPendingInvoices", () => {
+  // Escenario: la lista llama a la ruta de solo lectura con page/per_page y sin ningún filtro por cliente/partner
+  // (salen del token); devuelve filas y paginación, con los importes como texto.
+  it("pide la página sin filtros de identidad y devuelve filas y paginación", async () => {
+    reply = {
+      success: true,
+      data: [{ invoice_id: 5, number: 187, pending: "122.00", payable: true }],
+      total: 51,
+      page: 2,
+      per_page: 25,
+    };
+    const res = await payPendingInvoices.list(2, 25);
+    expect(calls[0].url).toBe("/api_pay_pending_invoices");
+    expect(calls[0].opts.query).toEqual({ page: 2, per_page: 25 });
+    expect(calls[0].opts.method).toBeUndefined();
+    expect(JSON.stringify(calls[0].opts)).not.toMatch(/partner_id|customer_id|id_cliente/);
+    expect(res).toMatchObject({ total: 51, page: 2, perPage: 25 });
+    expect(res.rows[0].pending).toBe("122.00");
+  });
+
+  // Escenario: respuesta sin total/page (backend antiguo): se rellena con lo pedido y la longitud de la página.
+  it("completa la paginación cuando la API no la trae", async () => {
+    reply = { success: true, data: [{ invoice_id: 1 }, { invoice_id: 2 }] };
+    expect(await payPendingInvoices.list()).toMatchObject({ total: 2, page: 1, perPage: 25 });
+  });
+
+  // Escenario: success=false del envelope se convierte en Error (no en lista vacía).
+  it("un success=false lanza error y no devuelve lista vacía", async () => {
+    reply = { success: false, error: { message: "boom" } };
+    await expect(payPendingInvoices.list()).rejects.toThrow("boom");
+  });
+});
+
+describe("classifyPendingInvoicesError", () => {
+  // Escenario: 403 sin permiso, 503 lectura no disponible, y cualquier otro error (red, 500, no-ApiError).
+  it("distingue 403, 503 y el resto", () => {
+    expect(classifyPendingInvoicesError(new ApiError("x", 403, "FORBIDDEN"))).toBe("forbidden");
+    expect(classifyPendingInvoicesError(new ApiError("x", 503, "PAYMENT_PENDING_UNAVAILABLE"))).toBe("unavailable");
+    expect(classifyPendingInvoicesError(new ApiError("x", 500))).toBe("other");
+    expect(classifyPendingInvoicesError(new Error("red"))).toBe("other");
   });
 });
