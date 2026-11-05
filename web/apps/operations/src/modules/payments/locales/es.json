@@ -4,7 +4,9 @@
       "aging": "Antigüedad de saldos",
       "reconciliation": "Conciliación bancaria",
       "reminders": "Recordatorios de cobro",
-      "pending_invoices": "Facturas pendientes de cobro"
+      "pending_invoices": "Facturas pendientes de cobro",
+      "surcharges": "Recargos",
+      "authorizations": "Autorizaciones de cobro"
     },
     "list": {
       "view_credit": "Por cobrar",
@@ -235,6 +237,204 @@
         "forbidden": "No tiene permiso para ver las facturas pendientes de cobro.",
         "unavailable": "No se pudieron consultar las facturas pendientes. Inténtelo de nuevo en unos minutos.",
         "other": "No se pudo cargar la lista. Inténtelo de nuevo."
+      }
+    },
+    "surcharges": {
+      "back": "Cobros",
+      "title": "Recargos",
+      "refresh": "Actualizar",
+      "intro": "Cobros adicionales a tus clientes cuando el transportista mide más peso o volumen del declarado. Se proponen con motivo y evidencia, se avisa al cliente y, pasado el preaviso, se cobran con la autorización que él firmó. Solo ves los de tu empresa.",
+      "customer_filter": "Filtrar por cliente",
+      "transfer_hint": "Recargos que TMWE ha cobrado como respaldo a tu favor y que aún no te ha transferido. Es solo información: aquí no se mueve dinero.",
+      "empty": "No hay recargos que mostrar.",
+      "admin_hint": "Perdonar, rechazar una impugnación y cobrar requieren el permiso de administrador de pagos.",
+      "reason": "Motivo (obligatorio)",
+      "tabs": {
+        "all": "Todos",
+        "pending_notice": "Por avisar",
+        "notified": "Avisados",
+        "disputed": "Impugnados",
+        "charged": "Cobrados",
+        "failed": "Fallidos",
+        "waived": "Perdonados",
+        "invoiced": "Facturados",
+        "pending_transfer": "Por transferir"
+      },
+      "col": {
+        "id": "Recargo",
+        "type": "Tipo",
+        "amount": "Importe",
+        "status": "Estado",
+        "notice_due": "Cobrable desde",
+        "dispute_until": "Impugnable hasta",
+        "actions": "Acciones"
+      },
+      "type": {
+        "overweight": "Sobrepeso",
+        "oversize": "Exceso de volumen",
+        "other": "Otro"
+      },
+      "status": {
+        "pending_notice": "Por avisar",
+        "notified": "Avisado",
+        "charged": "Cobrado",
+        "failed": "Cobro fallido",
+        "disputed": "Impugnado",
+        "waived": "Perdonado",
+        "invoiced": "Facturado"
+      },
+      "action": {
+        "notify": "Avisar",
+        "dispute": "Impugnar",
+        "waive": "Perdonar",
+        "reject_dispute": "Rechazar impugnación",
+        "charge": "Cobrar"
+      },
+      "confirm": {
+        "notify": {
+          "title": "Avisar al cliente",
+          "body": "Se avisará al cliente. Desde ese momento corre el preaviso y el plazo para impugnar; pasado el preaviso podrás cobrarlo. Repetir el aviso no reinicia los plazos."
+        },
+        "dispute": {
+          "title": "Impugnar en nombre del cliente",
+          "body": "Registra la impugnación del cliente. Un recargo impugnado no se cobra hasta que el administrador la resuelva."
+        },
+        "waive": {
+          "title": "Perdonar el recargo",
+          "body": "El recargo deja de ser exigible. Si ya estaba cobrado, se solicita el reembolso al cliente. Esta decisión queda registrada con el motivo."
+        },
+        "reject_dispute": {
+          "title": "Rechazar la impugnación",
+          "body": "El recargo se considera válido: vuelve a cobrado sin cobrarse dos veces, o se cobra ahora si nunca se cobró."
+        },
+        "charge": {
+          "title": "Cobrar el recargo",
+          "body": "Se cobrará ahora al cliente con la autorización que firmó, sin que esté presente. Solo es posible pasado el preaviso y si el cobro automático está activo en el servidor."
+        }
+      },
+      "done": {
+        "notify": "Cliente avisado.",
+        "dispute": "Impugnación registrada.",
+        "waive": "Recargo perdonado.",
+        "waive_refund": "Recargo perdonado; se ha solicitado el reembolso.",
+        "propose": "Recargo propuesto. Aún no se ha avisado al cliente.",
+        "propose_replayed": "Ese recargo ya existía; no se ha creado otro."
+      },
+      "result": {
+        "charged": "Recargo cobrado.",
+        "pending": "Cobro en curso: se confirmará en breve.",
+        "failed": "El cobro ha fallado.",
+        "requires_invoice": "No se pudo cobrar con la autorización: se reclamará por factura.",
+        "waiting": "A la espera del siguiente intento de cobro.",
+        "unknown": "Operación realizada."
+      },
+      "errors": {
+        "not_active": "Los recargos por pasarela no están activos en este entorno.",
+        "return_url": "La dirección de retorno del alta no está configurada en el servidor.",
+        "forbidden": "No tienes permiso para esto. Perdonar, rechazar impugnaciones y cobrar requieren ser administrador de pagos de tu empresa.",
+        "not_found": "No se encuentra: no existe o no pertenece a tu empresa.",
+        "cap_exceeded": "El importe supera el tope permitido por cobro o por mes, o lo que el cliente aceptó.",
+        "currency": "Solo se admiten recargos en euros.",
+        "invalid": "Los datos no son válidos. Revisa el formulario.",
+        "notice_not_elapsed": "Aún no ha pasado el preaviso al cliente.",
+        "dispute_closed": "El plazo para impugnar ya ha terminado.",
+        "in_flight": "Ya hay un cobro de este recargo en curso. Espera a que termine.",
+        "invalid_state": "El estado actual no permite esta operación (por ejemplo, el cliente no tiene una autorización activa). Actualiza la lista.",
+        "authorization_exists": "El cliente ya tiene una autorización activa para ese método.",
+        "consent_stale": "El texto de consentimiento ha cambiado. Léelo de nuevo y vuelve a aceptarlo.",
+        "method_unavailable": "Ese método de pago no está disponible para tu cuenta de pasarela.",
+        "conflict": "La operación choca con el estado actual. Actualiza e inténtalo de nuevo.",
+        "other": "No se pudo completar la operación. Inténtalo de nuevo."
+      },
+      "propose": {
+        "open": "Proponer recargo",
+        "title": "Proponer un recargo",
+        "hint": "El recargo queda «por avisar»: no se avisa ni se cobra nada hasta que lo avises. Solo puedes proponerlo a clientes de tu empresa.",
+        "type": "Tipo de recargo",
+        "amount": "Importe",
+        "amount_hint": "En euros, con hasta 2 decimales (p. ej. 42,50).",
+        "declared": "Valor declarado",
+        "measured": "Valor medido",
+        "carrier_ref": "Referencia del transportista (opcional)",
+        "evidence": "Motivo y evidencia del transportista",
+        "submit": "Proponer",
+        "errors": {
+          "customer": "Elige un cliente.",
+          "amount": "Indica un importe mayor que cero con hasta 2 decimales.",
+          "declared": "Obligatorio en sobrepeso y exceso de volumen.",
+          "measured": "Obligatorio en sobrepeso y exceso de volumen.",
+          "evidence": "Describe el motivo y la evidencia."
+        }
+      },
+      "detail": {
+        "open": "Ver detalle",
+        "measures": "Declarado → medido",
+        "carrier_ref": "Referencia del transportista",
+        "evidence": "Evidencia",
+        "created_at": "Creado",
+        "notified_at": "Avisado",
+        "dispute": "Impugnación",
+        "waived_reason": "Motivo del perdón",
+        "account_source": "Cuenta que cobra",
+        "source": {
+          "partner": "Cuenta propia",
+          "tmwe_fallback": "Respaldo de TMWE"
+        },
+        "settlement": "Liquidación",
+        "settlement_pending": "Pendiente de transferir al partner"
+      }
+    },
+    "authorizations": {
+      "back": "Cobros",
+      "title": "Autorizaciones de cobro",
+      "refresh": "Actualizar",
+      "intro": "Permiso que firma cada cliente, una sola vez, para que le cobres recargos con el método guardado (tarjeta o adeudo SEPA) sin que esté presente. Los datos de pago los teclea el cliente en la página de la pasarela: aquí solo se ven la marca y los últimos 4.",
+      "empty": "No hay autorizaciones que mostrar.",
+      "per_month": "{amount} al mes",
+      "terms_days": "Aviso {notice} d · Impugnar {dispute} d",
+      "revoke": "Revocar",
+      "revoke_title": "Revocar la autorización",
+      "revoke_body": "No se podrán cobrar nuevos recargos a este cliente con esta autorización. Retirar el permiso es un derecho del cliente y no mueve dinero.",
+      "revoked_done": "Autorización revocada.",
+      "col": {
+        "id": "Autorización",
+        "method": "Medio de pago",
+        "status": "Estado",
+        "caps": "Topes aceptados",
+        "terms": "Plazos",
+        "consent": "Consentimiento",
+        "actions": "Acciones"
+      },
+      "status": {
+        "pending": "Pendiente de firma",
+        "active": "Activa",
+        "failed": "Fallida",
+        "revoked": "Revocada",
+        "expired": "Caducada"
+      },
+      "method": {
+        "card": "Tarjeta",
+        "sepa_debit": "Adeudo SEPA"
+      },
+      "create": {
+        "open": "Nueva autorización",
+        "title": "Alta de autorización de cobro",
+        "hint": "Úsalo solo si el cliente da su consentimiento de forma presencial y queda documentado. El cliente introducirá su tarjeta o IBAN en la página de la pasarela, que se abrirá en otra ventana.",
+        "consent_title": "Texto de consentimiento",
+        "version": "Versión {version}",
+        "terms": "Condiciones vigentes: hasta {charge} por cobro y {month} al mes; aviso {notice} días antes de cobrar y {dispute} días para impugnar.",
+        "accept": "El cliente ha leído el texto y lo acepta (consentimiento presencial documentado).",
+        "submit": "Abrir página de la pasarela",
+        "processing": "Esperando a que el cliente complete el alta…",
+        "processing_hint": "Cuando la pasarela lo confirme, la autorización pasará a activa. Puedes cerrar este diálogo: el estado final se verá en el listado.",
+        "replayed": "Esta solicitud ya se había enviado: no hay un enlace nuevo. Espera a que el cliente termine o repite el alta.",
+        "expired": "La sesión de la pasarela ha caducado. Repite el alta.",
+        "result": {
+          "active": "Autorización activa. Ya se pueden cobrar recargos a este cliente.",
+          "failed": "El alta ha fallado. Repítela.",
+          "revoked": "La autorización fue revocada.",
+          "expired": "La autorización caducó sin completarse."
+        }
       }
     }
   }

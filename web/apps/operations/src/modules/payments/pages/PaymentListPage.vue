@@ -28,6 +28,23 @@
       >
         {{ t("payments.nav.pending_invoices") }}
       </v-btn>
+      <!-- Recargos y autorizaciones de cobro (módulo payment_gateways): solo con payment_gateways:read. -->
+      <v-btn
+        v-if="canSeeSurcharges"
+        variant="tonal"
+        prepend-icon="mdi-scale-balance"
+        :to="{ name: 'payments-surcharges' }"
+      >
+        {{ t("payments.nav.surcharges") }}
+      </v-btn>
+      <v-btn
+        v-if="canSeeSurcharges"
+        variant="tonal"
+        prepend-icon="mdi-credit-card-check-outline"
+        :to="{ name: 'payments-authorizations' }"
+      >
+        {{ t("payments.nav.authorizations") }}
+      </v-btn>
       <v-btn
         variant="tonal"
         prepend-icon="mdi-chart-bar"
@@ -318,6 +335,7 @@ import { paymentsApi, toCsv, downloadCsv } from "../services/payments.service";
 import { capabilities } from "../env";
 import { useAccess } from "@shared/composables/useAccess";
 import { canListPendingInvoices } from "../components/pendingInvoicesModel";
+import { canViewSurcharges } from "../components/surchargesModel";
 import CustomerPicker from "../components/CustomerPicker.vue";
 import CollectDialog from "../components/CollectDialog.vue";
 import BulkCollectDialog from "../components/BulkCollectDialog.vue";
@@ -337,6 +355,8 @@ const caps = capabilities();
 // Acceso a la cola «Facturas pendientes de cobro»: ambos scopes de lectura (el API responde 403 si falta alguno).
 const { access } = useAccess();
 const canSeePending = computed(() => canListPendingInvoices(access.value));
+/** Recargos y autorizaciones de cobro: payment_gateways:read. */
+const canSeeSurcharges = computed(() => canViewSurcharges(access.value));
 
 const collectOpen = ref(false);
 const collectTarget = ref<PaymentRow | null>(null);

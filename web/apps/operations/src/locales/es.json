@@ -306,7 +306,9 @@
       "show_less": "Ver menos",
       "cargo_partner": "Carga aérea",
       "giacenze_partner": "Paquetes retenidos",
-      "clients_partner": "Mis clientes"
+      "clients_partner": "Mis clientes",
+      "surcharges": "Recargos",
+      "charge_authorizations": "Autorizaciones de cobro"
     },
     "email": {
       "recipients": "Destinatarios",

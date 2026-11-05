@@ -112,4 +112,28 @@ describe("canOpenModuleRoute (H15)", () => {
     expect(canOpenModuleRoute(name, { isAdmin: false, access: partnerAdminFull })).toBe(true);
     expect(canOpenModuleRoute(name, { isAdmin: true, access: known([]) })).toBe(true);
   });
+
+  // Escenario: recargos y autorizaciones de cobro se abren con payment_gateways:read (módulo payment_gateways); payments:read
+  // no basta. El resto de scopes (:write, :admin) no cierran la ruta: solo esconden botones dentro de la pantalla.
+  it("recargos y autorizaciones de cobro exigen payment_gateways:read", () => {
+    for (const name of ["payments-surcharges", "payments-authorizations"]) {
+      expect(isModuleGuardedRoute(name)).toBe(true);
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payments:read"]) })).toBe(false);
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: known(["payment_gateways:read"]) })).toBe(true);
+      expect(canOpenModuleRoute(name, { isAdmin: true, access: known([]) })).toBe(true);
+      expect(canOpenModuleRoute(name, { isAdmin: false, access: unknown })).toBe(true); // falla abierto: decide el API
+    }
+  });
+
+  // Escenario: el menú muestra Recargos y Autorizaciones de cobro solo con payment_gateways:read (TMWE siempre).
+  it("el menú esconde recargos y autorizaciones sin payment_gateways:read", () => {
+    const items = NAV_SECTION_DEFS.flatMap((s) => s.items);
+    for (const key of ["surcharges", "charge_authorizations"]) {
+      const entry = items.find((i) => i.key === key)!;
+      expect(entry, key).toBeDefined();
+      expect(isNavEntryVisible(entry, false, known(["payments:read"]))).toBe(false);
+      expect(isNavEntryVisible(entry, false, known(["payment_gateways:read"]))).toBe(true);
+      expect(isNavEntryVisible(entry, true, known([]))).toBe(true);
+    }
+  });
 });

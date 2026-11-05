@@ -4,7 +4,9 @@
       "aging": "Aging of balances",
       "reconciliation": "Bank reconciliation",
       "reminders": "Payment reminders",
-      "pending_invoices": "Invoices awaiting payment"
+      "pending_invoices": "Invoices awaiting payment",
+      "surcharges": "Surcharges",
+      "authorizations": "Charge authorizations"
     },
     "list": {
       "view_credit": "To collect",
@@ -235,6 +237,204 @@
         "forbidden": "You do not have permission to view invoices awaiting payment.",
         "unavailable": "The pending invoices could not be retrieved. Please try again in a few minutes.",
         "other": "The list could not be loaded. Please try again."
+      }
+    },
+    "surcharges": {
+      "back": "Payments",
+      "title": "Surcharges",
+      "refresh": "Refresh",
+      "intro": "Additional charges to your customers when the carrier measures more weight or volume than declared. They are proposed with a reason and evidence, the customer is notified and, once the notice period has passed, they are charged with the authorization the customer signed. You only see your own company's.",
+      "customer_filter": "Filter by customer",
+      "transfer_hint": "Surcharges TMWE collected as a fallback in your favour and has not yet transferred to you. Information only: no money moves here.",
+      "empty": "There are no surcharges to show.",
+      "admin_hint": "Waiving, rejecting a dispute and charging require the payments administrator permission.",
+      "reason": "Reason (required)",
+      "tabs": {
+        "all": "All",
+        "pending_notice": "To notify",
+        "notified": "Notified",
+        "disputed": "Disputed",
+        "charged": "Charged",
+        "failed": "Failed",
+        "waived": "Waived",
+        "invoiced": "Invoiced",
+        "pending_transfer": "To transfer"
+      },
+      "col": {
+        "id": "Surcharge",
+        "type": "Type",
+        "amount": "Amount",
+        "status": "Status",
+        "notice_due": "Chargeable from",
+        "dispute_until": "Disputable until",
+        "actions": "Actions"
+      },
+      "type": {
+        "overweight": "Overweight",
+        "oversize": "Oversize",
+        "other": "Other"
+      },
+      "status": {
+        "pending_notice": "To notify",
+        "notified": "Notified",
+        "charged": "Charged",
+        "failed": "Charge failed",
+        "disputed": "Disputed",
+        "waived": "Waived",
+        "invoiced": "Invoiced"
+      },
+      "action": {
+        "notify": "Notify",
+        "dispute": "Dispute",
+        "waive": "Waive",
+        "reject_dispute": "Reject dispute",
+        "charge": "Charge"
+      },
+      "confirm": {
+        "notify": {
+          "title": "Notify the customer",
+          "body": "The customer will be notified. From then on the notice period and the dispute period start running; once the notice has passed you can charge it. Repeating the notice does not restart the periods."
+        },
+        "dispute": {
+          "title": "Dispute on behalf of the customer",
+          "body": "Records the customer's dispute. A disputed surcharge is not charged until the administrator resolves it."
+        },
+        "waive": {
+          "title": "Waive the surcharge",
+          "body": "The surcharge is no longer payable. If it was already collected, a refund to the customer is requested. This decision is recorded with the reason."
+        },
+        "reject_dispute": {
+          "title": "Reject the dispute",
+          "body": "The surcharge is considered valid: it goes back to charged without being charged twice, or it is charged now if it never was."
+        },
+        "charge": {
+          "title": "Charge the surcharge",
+          "body": "The customer will be charged now with the authorization they signed, without being present. It is only possible once the notice period has passed and if automatic charging is active on the server."
+        }
+      },
+      "done": {
+        "notify": "Customer notified.",
+        "dispute": "Dispute recorded.",
+        "waive": "Surcharge waived.",
+        "waive_refund": "Surcharge waived; a refund has been requested.",
+        "propose": "Surcharge proposed. The customer has not been notified yet.",
+        "propose_replayed": "That surcharge already existed; no new one was created."
+      },
+      "result": {
+        "charged": "Surcharge charged.",
+        "pending": "Charge in progress: it will be confirmed shortly.",
+        "failed": "The charge failed.",
+        "requires_invoice": "It could not be charged with the authorization: it will be claimed by invoice.",
+        "waiting": "Waiting for the next charge attempt.",
+        "unknown": "Operation completed."
+      },
+      "errors": {
+        "not_active": "Gateway surcharges are not active in this environment.",
+        "return_url": "The return address for sign-up is not configured on the server.",
+        "forbidden": "You do not have permission for this. Waiving, rejecting disputes and charging require being your company's payments administrator.",
+        "not_found": "Not found: it does not exist or does not belong to your company.",
+        "cap_exceeded": "The amount exceeds the allowed cap per charge or per month, or what the customer accepted.",
+        "currency": "Only surcharges in euros are supported.",
+        "invalid": "The data is not valid. Check the form.",
+        "notice_not_elapsed": "The notice period to the customer has not elapsed yet.",
+        "dispute_closed": "The dispute period has ended.",
+        "in_flight": "A charge for this surcharge is already in progress. Wait for it to finish.",
+        "invalid_state": "The current status does not allow this operation (for example, the customer has no active authorization). Refresh the list.",
+        "authorization_exists": "The customer already has an active authorization for that method.",
+        "consent_stale": "The consent text has changed. Read it again and accept it again.",
+        "method_unavailable": "That payment method is not available for your gateway account.",
+        "conflict": "The operation conflicts with the current state. Refresh and try again.",
+        "other": "The operation could not be completed. Try again."
+      },
+      "propose": {
+        "open": "Propose surcharge",
+        "title": "Propose a surcharge",
+        "hint": "The surcharge stays \"to notify\": nothing is notified or charged until you notify it. You can only propose it to your own company's customers.",
+        "type": "Surcharge type",
+        "amount": "Amount",
+        "amount_hint": "In euros, up to 2 decimals (e.g. 42.50).",
+        "declared": "Declared value",
+        "measured": "Measured value",
+        "carrier_ref": "Carrier reference (optional)",
+        "evidence": "Reason and carrier evidence",
+        "submit": "Propose",
+        "errors": {
+          "customer": "Choose a customer.",
+          "amount": "Enter an amount greater than zero with up to 2 decimals.",
+          "declared": "Required for overweight and oversize.",
+          "measured": "Required for overweight and oversize.",
+          "evidence": "Describe the reason and evidence."
+        }
+      },
+      "detail": {
+        "open": "View details",
+        "measures": "Declared → measured",
+        "carrier_ref": "Carrier reference",
+        "evidence": "Evidence",
+        "created_at": "Created",
+        "notified_at": "Notified",
+        "dispute": "Dispute",
+        "waived_reason": "Waiver reason",
+        "account_source": "Collecting account",
+        "source": {
+          "partner": "Own account",
+          "tmwe_fallback": "TMWE fallback"
+        },
+        "settlement": "Settlement",
+        "settlement_pending": "Pending transfer to the partner"
+      }
+    },
+    "authorizations": {
+      "back": "Payments",
+      "title": "Charge authorizations",
+      "refresh": "Refresh",
+      "intro": "Permission each customer signs once so you can charge them surcharges with the saved method (card or SEPA debit) without them being present. The customer types the payment details on the gateway page: here you only see the brand and last 4.",
+      "empty": "There are no authorizations to show.",
+      "per_month": "{amount} per month",
+      "terms_days": "Notice {notice} d · Dispute {dispute} d",
+      "revoke": "Revoke",
+      "revoke_title": "Revoke the authorization",
+      "revoke_body": "No new surcharges can be charged to this customer with this authorization. Withdrawing permission is the customer's right and no money moves.",
+      "revoked_done": "Authorization revoked.",
+      "col": {
+        "id": "Authorization",
+        "method": "Payment method",
+        "status": "Status",
+        "caps": "Accepted caps",
+        "terms": "Periods",
+        "consent": "Consent",
+        "actions": "Actions"
+      },
+      "status": {
+        "pending": "Awaiting signature",
+        "active": "Active",
+        "failed": "Failed",
+        "revoked": "Revoked",
+        "expired": "Expired"
+      },
+      "method": {
+        "card": "Card",
+        "sepa_debit": "SEPA direct debit"
+      },
+      "create": {
+        "open": "New authorization",
+        "title": "Register a charge authorization",
+        "hint": "Use this only if the customer gives consent in person and it is documented. The customer will enter their card or IBAN on the gateway page, which opens in another window.",
+        "consent_title": "Consent text",
+        "version": "Version {version}",
+        "terms": "Current terms: up to {charge} per charge and {month} per month; {notice} days' notice before charging and {dispute} days to dispute.",
+        "accept": "The customer has read the text and accepts it (documented in-person consent).",
+        "submit": "Open gateway page",
+        "processing": "Waiting for the customer to complete sign-up…",
+        "processing_hint": "When the gateway confirms it, the authorization becomes active. You can close this dialog: the final status will show in the list.",
+        "replayed": "This request had already been sent: there is no new link. Wait for the customer to finish or register again.",
+        "expired": "The gateway session has expired. Register again.",
+        "result": {
+          "active": "Authorization active. Surcharges can now be charged to this customer.",
+          "failed": "Sign-up failed. Try again.",
+          "revoked": "The authorization was revoked.",
+          "expired": "The authorization expired without being completed."
+        }
       }
     }
   }

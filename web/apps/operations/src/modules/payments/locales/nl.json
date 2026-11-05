@@ -4,7 +4,9 @@
       "aging": "Ouderdom van openstaande bedragen",
       "reconciliation": "Bankafstemming",
       "reminders": "Betalingsherinneringen",
-      "pending_invoices": "Openstaande facturen"
+      "pending_invoices": "Openstaande facturen",
+      "surcharges": "Toeslagen",
+      "authorizations": "Incassomachtigingen"
     },
     "list": {
       "view_credit": "Te ontvangen",
@@ -235,6 +237,204 @@
         "forbidden": "U hebt geen toestemming om de openstaande facturen te bekijken.",
         "unavailable": "De openstaande facturen konden niet worden opgehaald. Probeer het over enkele minuten opnieuw.",
         "other": "De lijst kon niet worden geladen. Probeer het opnieuw."
+      }
+    },
+    "surcharges": {
+      "back": "Betalingen",
+      "title": "Toeslagen",
+      "refresh": "Vernieuwen",
+      "intro": "Extra kosten voor je klanten wanneer de vervoerder meer gewicht of volume meet dan opgegeven. Ze worden voorgesteld met reden en bewijs, de klant wordt op de hoogte gebracht en na de opzegtermijn worden ze geïncasseerd met de machtiging die de klant heeft getekend. Je ziet alleen die van je eigen bedrijf.",
+      "customer_filter": "Filteren op klant",
+      "transfer_hint": "Toeslagen die TMWE als terugvaloptie in jouw voordeel heeft geïnd en nog niet aan jou heeft overgemaakt. Alleen informatie: hier wordt geen geld verplaatst.",
+      "empty": "Er zijn geen toeslagen om te tonen.",
+      "admin_hint": "Kwijtschelden, een betwisting afwijzen en incasseren vereisen de beheerdersrechten voor betalingen.",
+      "reason": "Reden (verplicht)",
+      "tabs": {
+        "all": "Alle",
+        "pending_notice": "Te melden",
+        "notified": "Gemeld",
+        "disputed": "Betwist",
+        "charged": "Geïncasseerd",
+        "failed": "Mislukt",
+        "waived": "Kwijtgescholden",
+        "invoiced": "Gefactureerd",
+        "pending_transfer": "Over te maken"
+      },
+      "col": {
+        "id": "Toeslag",
+        "type": "Type",
+        "amount": "Bedrag",
+        "status": "Status",
+        "notice_due": "Inbaar vanaf",
+        "dispute_until": "Betwistbaar tot",
+        "actions": "Acties"
+      },
+      "type": {
+        "overweight": "Overgewicht",
+        "oversize": "Overmaat",
+        "other": "Overig"
+      },
+      "status": {
+        "pending_notice": "Te melden",
+        "notified": "Gemeld",
+        "charged": "Geïncasseerd",
+        "failed": "Incasso mislukt",
+        "disputed": "Betwist",
+        "waived": "Kwijtgescholden",
+        "invoiced": "Gefactureerd"
+      },
+      "action": {
+        "notify": "Melden",
+        "dispute": "Betwisten",
+        "waive": "Kwijtschelden",
+        "reject_dispute": "Betwisting afwijzen",
+        "charge": "Incasseren"
+      },
+      "confirm": {
+        "notify": {
+          "title": "Klant op de hoogte brengen",
+          "body": "De klant wordt op de hoogte gebracht. Vanaf dat moment lopen de opzegtermijn en de betwistingstermijn; na de opzegtermijn kun je incasseren. Opnieuw melden start de termijnen niet opnieuw."
+        },
+        "dispute": {
+          "title": "Betwisten namens de klant",
+          "body": "Registreert de betwisting van de klant. Een betwiste toeslag wordt niet geïncasseerd totdat de beheerder deze afhandelt."
+        },
+        "waive": {
+          "title": "Toeslag kwijtschelden",
+          "body": "De toeslag is niet langer verschuldigd. Als deze al was geïncasseerd, wordt een terugbetaling aan de klant aangevraagd. Deze beslissing wordt met de reden vastgelegd."
+        },
+        "reject_dispute": {
+          "title": "Betwisting afwijzen",
+          "body": "De toeslag wordt als geldig beschouwd: hij gaat terug naar geïncasseerd zonder dubbel te incasseren, of wordt nu geïncasseerd als dat nog nooit is gebeurd."
+        },
+        "charge": {
+          "title": "Toeslag incasseren",
+          "body": "De klant wordt nu geïncasseerd met de machtiging die hij heeft getekend, zonder aanwezig te zijn. Dit kan pas na de opzegtermijn en als automatisch incasseren op de server actief is."
+        }
+      },
+      "done": {
+        "notify": "Klant op de hoogte gebracht.",
+        "dispute": "Betwisting geregistreerd.",
+        "waive": "Toeslag kwijtgescholden.",
+        "waive_refund": "Toeslag kwijtgescholden; er is een terugbetaling aangevraagd.",
+        "propose": "Toeslag voorgesteld. De klant is nog niet op de hoogte gebracht.",
+        "propose_replayed": "Die toeslag bestond al; er is geen nieuwe aangemaakt."
+      },
+      "result": {
+        "charged": "Toeslag geïncasseerd.",
+        "pending": "Incasso in uitvoering: wordt binnenkort bevestigd.",
+        "failed": "De incasso is mislukt.",
+        "requires_invoice": "Incasso met de machtiging niet mogelijk: het wordt per factuur gevorderd.",
+        "waiting": "Wacht op de volgende incassopoging.",
+        "unknown": "Bewerking uitgevoerd."
+      },
+      "errors": {
+        "not_active": "Toeslagen via de betaalprovider zijn niet actief in deze omgeving.",
+        "return_url": "Het retouradres voor de aanmelding is niet geconfigureerd op de server.",
+        "forbidden": "Je hebt hiervoor geen toestemming. Kwijtschelden, betwistingen afwijzen en incasseren vereisen dat je betalingsbeheerder van je bedrijf bent.",
+        "not_found": "Niet gevonden: bestaat niet of hoort niet bij je bedrijf.",
+        "cap_exceeded": "Het bedrag overschrijdt het toegestane maximum per incasso of per maand, of wat de klant heeft geaccepteerd.",
+        "currency": "Alleen toeslagen in euro worden ondersteund.",
+        "invalid": "De gegevens zijn ongeldig. Controleer het formulier.",
+        "notice_not_elapsed": "De opzegtermijn voor de klant is nog niet verstreken.",
+        "dispute_closed": "De betwistingstermijn is verstreken.",
+        "in_flight": "Er loopt al een incasso voor deze toeslag. Wacht tot het klaar is.",
+        "invalid_state": "De huidige status staat deze bewerking niet toe (bijvoorbeeld: de klant heeft geen actieve machtiging). Vernieuw de lijst.",
+        "authorization_exists": "De klant heeft al een actieve machtiging voor die methode.",
+        "consent_stale": "De toestemmingstekst is gewijzigd. Lees hem opnieuw en accepteer opnieuw.",
+        "method_unavailable": "Die betaalmethode is niet beschikbaar voor je gatewayaccount.",
+        "conflict": "De bewerking botst met de huidige status. Vernieuw en probeer opnieuw.",
+        "other": "De bewerking kon niet worden voltooid. Probeer het opnieuw."
+      },
+      "propose": {
+        "open": "Toeslag voorstellen",
+        "title": "Een toeslag voorstellen",
+        "hint": "De toeslag blijft «te melden»: er wordt niets gemeld of geïncasseerd totdat je het meldt. Je kunt hem alleen voorstellen aan klanten van je eigen bedrijf.",
+        "type": "Type toeslag",
+        "amount": "Bedrag",
+        "amount_hint": "In euro, tot 2 decimalen (bijv. 42,50).",
+        "declared": "Opgegeven waarde",
+        "measured": "Gemeten waarde",
+        "carrier_ref": "Referentie van de vervoerder (optioneel)",
+        "evidence": "Reden en bewijs van de vervoerder",
+        "submit": "Voorstellen",
+        "errors": {
+          "customer": "Kies een klant.",
+          "amount": "Voer een bedrag groter dan nul in met maximaal 2 decimalen.",
+          "declared": "Verplicht bij overgewicht en overmaat.",
+          "measured": "Verplicht bij overgewicht en overmaat.",
+          "evidence": "Beschrijf de reden en het bewijs."
+        }
+      },
+      "detail": {
+        "open": "Details bekijken",
+        "measures": "Opgegeven → gemeten",
+        "carrier_ref": "Referentie vervoerder",
+        "evidence": "Bewijs",
+        "created_at": "Aangemaakt",
+        "notified_at": "Gemeld",
+        "dispute": "Betwisting",
+        "waived_reason": "Reden van kwijtschelding",
+        "account_source": "Incasserend account",
+        "source": {
+          "partner": "Eigen account",
+          "tmwe_fallback": "TMWE-terugvaloptie"
+        },
+        "settlement": "Afrekening",
+        "settlement_pending": "Overmaking aan de partner in afwachting"
+      }
+    },
+    "authorizations": {
+      "back": "Betalingen",
+      "title": "Incassomachtigingen",
+      "refresh": "Vernieuwen",
+      "intro": "Toestemming die elke klant één keer tekent zodat je toeslagen kunt incasseren met de opgeslagen methode (kaart of SEPA-incasso) zonder dat hij aanwezig is. De klant voert de betaalgegevens in op de pagina van de provider: hier zie je alleen het merk en de laatste 4 cijfers.",
+      "empty": "Er zijn geen machtigingen om te tonen.",
+      "per_month": "{amount} per maand",
+      "terms_days": "Opzegging {notice} d · Betwisten {dispute} d",
+      "revoke": "Intrekken",
+      "revoke_title": "Machtiging intrekken",
+      "revoke_body": "Met deze machtiging kunnen geen nieuwe toeslagen meer bij deze klant worden geïncasseerd. Toestemming intrekken is een recht van de klant en er wordt geen geld verplaatst.",
+      "revoked_done": "Machtiging ingetrokken.",
+      "col": {
+        "id": "Machtiging",
+        "method": "Betaalmiddel",
+        "status": "Status",
+        "caps": "Geaccepteerde maxima",
+        "terms": "Termijnen",
+        "consent": "Toestemming",
+        "actions": "Acties"
+      },
+      "status": {
+        "pending": "Wacht op ondertekening",
+        "active": "Actief",
+        "failed": "Mislukt",
+        "revoked": "Ingetrokken",
+        "expired": "Verlopen"
+      },
+      "method": {
+        "card": "Kaart",
+        "sepa_debit": "SEPA-incasso"
+      },
+      "create": {
+        "open": "Nieuwe machtiging",
+        "title": "Incassomachtiging registreren",
+        "hint": "Gebruik dit alleen als de klant persoonlijk toestemming geeft en dit gedocumenteerd is. De klant voert zijn kaart of IBAN in op de pagina van de provider, die in een ander venster opent.",
+        "consent_title": "Toestemmingstekst",
+        "version": "Versie {version}",
+        "terms": "Huidige voorwaarden: tot {charge} per incasso en {month} per maand; {notice} dagen opzegtermijn vóór het incasseren en {dispute} dagen om te betwisten.",
+        "accept": "De klant heeft de tekst gelezen en accepteert deze (gedocumenteerde persoonlijke toestemming).",
+        "submit": "Providerpagina openen",
+        "processing": "Wachten tot de klant de aanmelding voltooit…",
+        "processing_hint": "Zodra de provider het bevestigt, wordt de machtiging actief. Je kunt dit venster sluiten: de eindstatus zie je in de lijst.",
+        "replayed": "Dit verzoek was al verstuurd: er is geen nieuwe link. Wacht tot de klant klaar is of registreer opnieuw.",
+        "expired": "De sessie van de provider is verlopen. Registreer opnieuw.",
+        "result": {
+          "active": "Machtiging actief. Er kunnen nu toeslagen bij deze klant worden geïncasseerd.",
+          "failed": "De aanmelding is mislukt. Probeer opnieuw.",
+          "revoked": "De machtiging is ingetrokken.",
+          "expired": "De machtiging is verlopen zonder te zijn voltooid."
+        }
       }
     }
   }

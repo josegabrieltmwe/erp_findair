@@ -42,6 +42,11 @@ export const MODULE_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = 
   "payments-reconciliation": ["payments:read"],
   "settings-pay-gateways": ["payment_gateways:read"], // api_pay_gateway_accounts → módulo payment_gateways
   "settings-pay-refunds": ["payment_gateways:read"], // api_pay_refunds → módulo payment_gateways
+  // Recargos y autorizaciones de cobro (Ola 3 / F-C): leer exige payment_gateways:read (api_pay_surcharges y
+  // api_pay_authorizations → módulo payment_gateways). Proponer/avisar/alta/revocar (:write) y perdonar/rechazar/cobrar
+  // (:admin) NO cierran la ruta: se ocultan sus botones, porque quien solo lee sigue pudiendo ver el estado.
+  "payments-surcharges": ["payment_gateways:read"],
+  "payments-authorizations": ["payment_gateways:read"],
   // La vista admin (settings-pay-gateways-admin) no se mapea: es `requiresAdmin` (solo TMWE; payment_gateways:admin lo
   // exige el API en api_admin_pay_gateway_accounts) y TMWE pasa siempre este guard.
   "settings-partner-smtp": ["smtp:read"], // api_partner_smtp → módulo partner_smtp

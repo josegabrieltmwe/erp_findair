@@ -4,7 +4,9 @@
       "aging": "Anzianità dei saldi",
       "reconciliation": "Riconciliazione bancaria",
       "reminders": "Solleciti di pagamento",
-      "pending_invoices": "Fatture da incassare"
+      "pending_invoices": "Fatture da incassare",
+      "surcharges": "Supplementi",
+      "authorizations": "Autorizzazioni di addebito"
     },
     "list": {
       "view_credit": "Da incassare",
@@ -235,6 +237,204 @@
         "forbidden": "Non hai il permesso di vedere le fatture da incassare.",
         "unavailable": "Impossibile consultare le fatture da incassare. Riprova tra qualche minuto.",
         "other": "Impossibile caricare l'elenco. Riprova."
+      }
+    },
+    "surcharges": {
+      "back": "Incassi",
+      "title": "Supplementi",
+      "refresh": "Aggiorna",
+      "intro": "Addebiti aggiuntivi ai tuoi clienti quando il corriere misura più peso o volume del dichiarato. Si propongono con motivo e prova, si avvisa il cliente e, trascorso il preavviso, si addebitano con l'autorizzazione che ha firmato. Vedi solo quelli della tua azienda.",
+      "customer_filter": "Filtra per cliente",
+      "transfer_hint": "Supplementi che TMWE ha incassato come riserva a tuo favore e non ti ha ancora trasferito. Solo informazione: qui non si muove denaro.",
+      "empty": "Nessun supplemento da mostrare.",
+      "admin_hint": "Condonare, respingere una contestazione e addebitare richiedono il permesso di amministratore dei pagamenti.",
+      "reason": "Motivo (obbligatorio)",
+      "tabs": {
+        "all": "Tutti",
+        "pending_notice": "Da avvisare",
+        "notified": "Avvisati",
+        "disputed": "Contestati",
+        "charged": "Addebitati",
+        "failed": "Falliti",
+        "waived": "Condonati",
+        "invoiced": "Fatturati",
+        "pending_transfer": "Da trasferire"
+      },
+      "col": {
+        "id": "Supplemento",
+        "type": "Tipo",
+        "amount": "Importo",
+        "status": "Stato",
+        "notice_due": "Addebitabile da",
+        "dispute_until": "Contestabile fino a",
+        "actions": "Azioni"
+      },
+      "type": {
+        "overweight": "Sovrappeso",
+        "oversize": "Eccesso di volume",
+        "other": "Altro"
+      },
+      "status": {
+        "pending_notice": "Da avvisare",
+        "notified": "Avvisato",
+        "charged": "Addebitato",
+        "failed": "Addebito fallito",
+        "disputed": "Contestato",
+        "waived": "Condonato",
+        "invoiced": "Fatturato"
+      },
+      "action": {
+        "notify": "Avvisa",
+        "dispute": "Contesta",
+        "waive": "Condona",
+        "reject_dispute": "Respingi contestazione",
+        "charge": "Addebita"
+      },
+      "confirm": {
+        "notify": {
+          "title": "Avvisa il cliente",
+          "body": "Il cliente verrà avvisato. Da quel momento decorrono il preavviso e il termine per contestare; trascorso il preavviso potrai addebitarlo. Ripetere l'avviso non riavvia i termini."
+        },
+        "dispute": {
+          "title": "Contesta a nome del cliente",
+          "body": "Registra la contestazione del cliente. Un supplemento contestato non viene addebitato finché l'amministratore non lo risolve."
+        },
+        "waive": {
+          "title": "Condona il supplemento",
+          "body": "Il supplemento non è più dovuto. Se era già stato incassato, si richiede il rimborso al cliente. La decisione viene registrata con il motivo."
+        },
+        "reject_dispute": {
+          "title": "Respingi la contestazione",
+          "body": "Il supplemento è considerato valido: torna a addebitato senza addebitarlo due volte, oppure viene addebitato ora se non lo era mai stato."
+        },
+        "charge": {
+          "title": "Addebita il supplemento",
+          "body": "Il cliente verrà addebitato ora con l'autorizzazione che ha firmato, senza essere presente. È possibile solo dopo il preavviso e se l'addebito automatico è attivo sul server."
+        }
+      },
+      "done": {
+        "notify": "Cliente avvisato.",
+        "dispute": "Contestazione registrata.",
+        "waive": "Supplemento condonato.",
+        "waive_refund": "Supplemento condonato; è stato richiesto il rimborso.",
+        "propose": "Supplemento proposto. Il cliente non è ancora stato avvisato.",
+        "propose_replayed": "Quel supplemento esisteva già; non ne è stato creato un altro."
+      },
+      "result": {
+        "charged": "Supplemento addebitato.",
+        "pending": "Addebito in corso: sarà confermato a breve.",
+        "failed": "L'addebito non è riuscito.",
+        "requires_invoice": "Non è stato possibile addebitarlo con l'autorizzazione: verrà richiesto con fattura.",
+        "waiting": "In attesa del prossimo tentativo di addebito.",
+        "unknown": "Operazione eseguita."
+      },
+      "errors": {
+        "not_active": "I supplementi tramite gateway non sono attivi in questo ambiente.",
+        "return_url": "L'indirizzo di ritorno dell'attivazione non è configurato sul server.",
+        "forbidden": "Non hai il permesso. Condonare, respingere contestazioni e addebitare richiedono di essere amministratore dei pagamenti della tua azienda.",
+        "not_found": "Non trovato: non esiste o non appartiene alla tua azienda.",
+        "cap_exceeded": "L'importo supera il massimale consentito per addebito o per mese, o quanto accettato dal cliente.",
+        "currency": "Sono ammessi solo supplementi in euro.",
+        "invalid": "I dati non sono validi. Controlla il modulo.",
+        "notice_not_elapsed": "Il preavviso al cliente non è ancora trascorso.",
+        "dispute_closed": "Il termine per contestare è terminato.",
+        "in_flight": "C'è già un addebito di questo supplemento in corso. Attendi che termini.",
+        "invalid_state": "Lo stato attuale non consente questa operazione (ad esempio, il cliente non ha un'autorizzazione attiva). Aggiorna l'elenco.",
+        "authorization_exists": "Il cliente ha già un'autorizzazione attiva per quel metodo.",
+        "consent_stale": "Il testo del consenso è cambiato. Leggilo di nuovo e accettalo ancora.",
+        "method_unavailable": "Quel metodo di pagamento non è disponibile per il tuo account gateway.",
+        "conflict": "L'operazione è in conflitto con lo stato attuale. Aggiorna e riprova.",
+        "other": "Impossibile completare l'operazione. Riprova."
+      },
+      "propose": {
+        "open": "Proponi supplemento",
+        "title": "Proponi un supplemento",
+        "hint": "Il supplemento resta «da avvisare»: nulla viene avvisato né addebitato finché non lo avvisi. Puoi proporlo solo a clienti della tua azienda.",
+        "type": "Tipo di supplemento",
+        "amount": "Importo",
+        "amount_hint": "In euro, fino a 2 decimali (es. 42,50).",
+        "declared": "Valore dichiarato",
+        "measured": "Valore misurato",
+        "carrier_ref": "Riferimento del corriere (facoltativo)",
+        "evidence": "Motivo e prova del corriere",
+        "submit": "Proponi",
+        "errors": {
+          "customer": "Scegli un cliente.",
+          "amount": "Indica un importo maggiore di zero con al massimo 2 decimali.",
+          "declared": "Obbligatorio per sovrappeso ed eccesso di volume.",
+          "measured": "Obbligatorio per sovrappeso ed eccesso di volume.",
+          "evidence": "Descrivi il motivo e la prova."
+        }
+      },
+      "detail": {
+        "open": "Vedi dettaglio",
+        "measures": "Dichiarato → misurato",
+        "carrier_ref": "Riferimento del corriere",
+        "evidence": "Prova",
+        "created_at": "Creato",
+        "notified_at": "Avvisato",
+        "dispute": "Contestazione",
+        "waived_reason": "Motivo della condonazione",
+        "account_source": "Conto che incassa",
+        "source": {
+          "partner": "Conto proprio",
+          "tmwe_fallback": "Riserva TMWE"
+        },
+        "settlement": "Liquidazione",
+        "settlement_pending": "Trasferimento al partner in sospeso"
+      }
+    },
+    "authorizations": {
+      "back": "Incassi",
+      "title": "Autorizzazioni di addebito",
+      "refresh": "Aggiorna",
+      "intro": "Permesso che ogni cliente firma una sola volta affinché tu possa addebitargli supplementi con il metodo salvato (carta o addebito SEPA) senza che sia presente. I dati di pagamento li digita il cliente sulla pagina del gateway: qui vedi solo marca e ultime 4 cifre.",
+      "empty": "Nessuna autorizzazione da mostrare.",
+      "per_month": "{amount} al mese",
+      "terms_days": "Preavviso {notice} g · Contestare {dispute} g",
+      "revoke": "Revoca",
+      "revoke_title": "Revoca l'autorizzazione",
+      "revoke_body": "Non sarà più possibile addebitare nuovi supplementi a questo cliente con questa autorizzazione. Ritirare il permesso è un diritto del cliente e non muove denaro.",
+      "revoked_done": "Autorizzazione revocata.",
+      "col": {
+        "id": "Autorizzazione",
+        "method": "Mezzo di pagamento",
+        "status": "Stato",
+        "caps": "Massimali accettati",
+        "terms": "Termini",
+        "consent": "Consenso",
+        "actions": "Azioni"
+      },
+      "status": {
+        "pending": "In attesa di firma",
+        "active": "Attiva",
+        "failed": "Fallita",
+        "revoked": "Revocata",
+        "expired": "Scaduta"
+      },
+      "method": {
+        "card": "Carta",
+        "sepa_debit": "Addebito SEPA"
+      },
+      "create": {
+        "open": "Nuova autorizzazione",
+        "title": "Registra un'autorizzazione di addebito",
+        "hint": "Usalo solo se il cliente dà il consenso di persona e viene documentato. Il cliente inserirà carta o IBAN sulla pagina del gateway, che si aprirà in un'altra finestra.",
+        "consent_title": "Testo del consenso",
+        "version": "Versione {version}",
+        "terms": "Condizioni vigenti: fino a {charge} per addebito e {month} al mese; preavviso di {notice} giorni prima di addebitare e {dispute} giorni per contestare.",
+        "accept": "Il cliente ha letto il testo e lo accetta (consenso di persona documentato).",
+        "submit": "Apri la pagina del gateway",
+        "processing": "In attesa che il cliente completi l'attivazione…",
+        "processing_hint": "Quando il gateway lo conferma, l'autorizzazione diventa attiva. Puoi chiudere questa finestra: lo stato finale sarà visibile nell'elenco.",
+        "replayed": "Questa richiesta era già stata inviata: non c'è un nuovo link. Attendi che il cliente finisca o ripeti l'attivazione.",
+        "expired": "La sessione del gateway è scaduta. Ripeti l'attivazione.",
+        "result": {
+          "active": "Autorizzazione attiva. Ora è possibile addebitare supplementi a questo cliente.",
+          "failed": "L'attivazione è fallita. Riprova.",
+          "revoked": "L'autorizzazione è stata revocata.",
+          "expired": "L'autorizzazione è scaduta senza essere completata."
+        }
       }
     }
   }
