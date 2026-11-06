@@ -168,6 +168,29 @@ export const cargoOffersService = {
     });
   },
 
+  /**
+   * POST /api_cargo_offers with `action=resend` — vuelve a enviar la solicitud con los datos actualizados
+   * (asunto « - UPDATE», mismo enlace y OTP). La oferta pasa a «sin revisar».
+   */
+  resend(offer_id: number): Promise<{
+    success: boolean;
+    data?: { id: number; to: string; carrier_name: string };
+    error?: string;
+  }> {
+    return http(BASE, {
+      method: "POST",
+      body: {
+        action: "resend",
+        id: offer_id,
+        callback_url: mailCallbackUrl("cargoCarrierOffer"),
+      },
+    }) as Promise<{
+      success: boolean;
+      data?: { id: number; to: string; carrier_name: string };
+      error?: string;
+    }>;
+  },
+
   /** PUT /api_cargo_offers — body carries `{id, ...patch}`. */
   update(
     body: OfferPatch,
@@ -187,3 +210,17 @@ export const cargoOffersService = {
     }) as Promise<{ success: boolean; error?: string }>;
   },
 };
+
+/** La aerolínea contestó (fecha de respuesta válida). */
+export function offerHasReply(o: { data_risp?: string | null }): boolean {
+  const s = String(o.data_risp ?? "");
+  return !!s && s !== "0000-00-00 00:00:00";
+}
+
+/** Respuesta de la aerolínea que el operador aún no ha revisado (`ofstat` del legado). */
+export function offerNeedsReview(o: {
+  data_risp?: string | null;
+  controllata?: string | null;
+}): boolean {
+  return offerHasReply(o) && o.controllata === "N";
+}

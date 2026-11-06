@@ -439,6 +439,17 @@
         </template>
         <template #cell.status="{ item }">
           <v-chip
+            v-if="(item as CargoListRow).offers?.to_review"
+            color="error"
+            size="x-small"
+            variant="flat"
+            class="me-1 filterable"
+            prepend-icon="mdi-email-alert-outline"
+            @click.stop="filterPendingOffers"
+          >
+            {{ t("cargo.offers.to_review_badge", { n: (item as CargoListRow).offers?.to_review }) }}
+          </v-chip>
+          <v-chip
             v-for="b in statusBadges(item as CargoListRow)"
             :key="b.label"
             :color="b.color"
@@ -933,6 +944,13 @@ const activeFilters = computed<ActiveFilter[]>(() => {
       value: t("filters.value.chat_unread_yes"),
     });
   }
+  if (state.value.has_pending_offers) {
+    out.push({
+      field: "has_pending_offers",
+      group: t("filters.group.pending_offers"),
+      value: t("filters.value.pending_offers_yes"),
+    });
+  }
   // Home-tile deep-link (e.g. ?type=clwt) appears as a chip too, so the
   // operator can drop it the same way as a column filter.
   if (activeHomeKpi.value) {
@@ -990,6 +1008,12 @@ const CARGO_ADVANCED_CHIPS: Array<{
   { field: "acc_danggoods", label: "filters.cargo.fields.dangerous_goods", yesNo: true },
   { field: "acc_bancale", label: "filters.cargo.fields.palletised", yesNo: true },
 ];
+
+/** Filtra el listado por los cargos con respuestas de aerolínea sin revisar. */
+function filterPendingOffers(): void {
+  store.applyState({ has_pending_offers: "1", page: 1 });
+  void store.fetchPage();
+}
 
 function removeFilter(field: string): void {
   if (field === "type") {

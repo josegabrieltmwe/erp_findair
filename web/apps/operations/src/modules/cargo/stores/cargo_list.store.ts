@@ -96,6 +96,8 @@ export interface CargoListUrlState {
    * `/cargo/list?chat_unread=1`. Backend: Cargo_Filter_Analyzer 'chat_unread'.
    */
   chat_unread: string;
+  /** '1' = solo cargos con respuestas de aerolínea sin revisar. Backend: filtro `has_pending_offers`. */
+  has_pending_offers: string;
 }
 
 export const CARGO_LIST_DEFAULTS: CargoListUrlState = {
@@ -137,6 +139,7 @@ export const CARGO_LIST_DEFAULTS: CargoListUrlState = {
   acc_danggoods: "",
   acc_bancale: "",
   chat_unread: "",
+  has_pending_offers: "",
 };
 
 /** All semantic filters. Presentation state (page size/sort) is excluded. */
@@ -146,7 +149,7 @@ export const CARGO_FILTER_KEYS: ReadonlyArray<keyof CargoListUrlState> = [
   "note", "gestione", "offerta", "tipo_merce", "vettore_tipo", "flight_num1",
   "cargo_dazi", "controllata", "archiviata", "consegna_firma", "peso_da",
   "peso_a", "pesor", "has_assicurazione", "acc_dryice", "acc_danggoods",
-  "acc_bancale", "chat_unread",
+  "acc_bancale", "chat_unread", "has_pending_offers",
 ];
 
 export function cargoActiveFilterCount(s: CargoListUrlState): number {
@@ -253,6 +256,7 @@ export function parseCargoListQuery(
     acc_danggoods: asString(q.acc_danggoods),
     acc_bancale: asString(q.acc_bancale),
     chat_unread: asString(q.chat_unread),
+    has_pending_offers: asString(q.has_pending_offers),
   };
 }
 
@@ -348,6 +352,7 @@ export function buildCargoListQuery(s: CargoListUrlState): CargoListQuery {
       undefined) as CargoListQuery["acc_danggoods"],
     acc_bancale: (s.acc_bancale || undefined) as CargoListQuery["acc_bancale"],
     chat_unread: s.chat_unread ? "1" : undefined,
+    has_pending_offers: s.has_pending_offers ? "1" : undefined,
   };
 }
 

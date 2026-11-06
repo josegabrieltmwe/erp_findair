@@ -171,6 +171,12 @@
                 />
                 <v-list-item
                   v-if="(item as CargoOffer).accettata !== 'S'"
+                  prepend-icon="mdi-email-sync-outline"
+                  :title="t('cargo.offers.resend')"
+                  @click="confirmResend(item as CargoOffer)"
+                />
+                <v-list-item
+                  v-if="(item as CargoOffer).accettata !== 'S'"
                   prepend-icon="mdi-check-circle-outline"
                   :title="t('cargo.offers.accept_as_winner')"
                   base-color="success"
@@ -321,6 +327,37 @@
       </v-card>
     </v-dialog>
 
+    <!-- Reenviar la solicitud (« - UPDATE») -->
+    <v-dialog v-model="resendOpen" max-width="460">
+      <v-card>
+        <v-card-title>{{ t("cargo.offers.resend_dialog_title") }}</v-card-title>
+        <v-card-text>
+          <p class="mb-2">
+            {{ t("cargo.offers.resend_dialog_body") }}
+            <strong>{{ resendTarget ? carrierLabel(resendTarget) : "" }}</strong>
+          </p>
+          <p class="text-caption text-medium-emphasis">
+            {{ t("cargo.offers.resend_dialog_hint") }}
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" size="small" @click="resendOpen = false">{{
+            t("common.cancel")
+          }}</v-btn>
+          <v-btn
+            variant="flat"
+            color="primary"
+            rounded="lg"
+            :loading="resending"
+            @click="submitResend"
+          >
+            {{ t("cargo.offers.resend_confirm") }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- Record carrier reply -->
     <v-dialog v-model="replyOpen" max-width="560">
       <v-card>
@@ -414,9 +451,10 @@ import {
   type VettoreOption,
 } from "@cargo/services/vettori.service";
 import { filesService, type CargoFile } from "@cargo/services/files.service";
-import type {
-  CargoOffer,
-  OfferPatch,
+import {
+  offerNeedsReview,
+  type CargoOffer,
+  type OfferPatch,
 } from "@cargo/services/cargo_offers.service";
 
 withDefaults(defineProps<{ embedded?: boolean }>(), { embedded: false });
@@ -497,6 +535,7 @@ function repliedLabel(o: CargoOffer): string {
 function statusColor(o: CargoOffer): string {
   if (o.accettata === "S") return "success";
   if (o.controllata === "X") return "grey";
+  if (offerNeedsReview(o)) return "error";
   if (o.data_risp && o.data_risp !== "0000-00-00 00:00:00") return "primary";
   return "warning";
 }
@@ -504,6 +543,7 @@ function statusColor(o: CargoOffer): string {
 function statusLabel(o: CargoOffer): string {
   if (o.accettata === "S") return t("cargo.offers.status_winner");
   if (o.controllata === "X") return t("cargo.offers.status_locked");
+  if (offerNeedsReview(o)) return t("cargo.offers.status_to_review");
   if (o.data_risp && o.data_risp !== "0000-00-00 00:00:00")
     return t("cargo.offers.status_replied");
   return t("cargo.offers.status_pending");
@@ -532,6 +572,26 @@ async function confirmRemove(o: CargoOffer): Promise<void> {
 }
 
 // --- Accept winner ---
+const resendOpen = ref(false);
+const resendTarget = ref<CargoOffer | null>(null);
+const resending = ref(false);
+
+function confirmResend(o: CargoOffer): void {
+  resendTarget.value = o;
+  resendOpen.value = true;
+}
+
+async function submitResend(): Promise<void> {
+  if (!resendTarget.value || !id.value) return;
+  resending.value = true;
+  try {
+    const ok = await store.resend(Number(id.value), Number(resendTarget.value.id));
+    if (ok) resendOpen.value = false;
+  } finally {
+    resending.value = false;
+  }
+}
+
 const acceptOpen = ref(false);
 const acceptTarget = ref<CargoOffer | null>(null);
 const accepting = ref(false);

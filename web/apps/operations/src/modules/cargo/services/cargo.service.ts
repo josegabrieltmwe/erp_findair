@@ -416,6 +416,8 @@ export interface CargoListRow {
   };
   archived: boolean;
   controlled: boolean;
+  /** Respuestas de aerolínea sin revisar (`ofstat` del legado). Ausente en APIs antiguas. */
+  offers?: { to_review: number };
   days_in_transit: number | null;
   tipo_cons: string;
   labels: {

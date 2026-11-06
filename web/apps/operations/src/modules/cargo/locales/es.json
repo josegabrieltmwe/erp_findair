@@ -322,7 +322,8 @@
       "dest_country": "País dest.",
       "date": "Fecha",
       "chat_unread": "Mensajes sin leer",
-      "client": "Cliente"
+      "client": "Cliente",
+      "pending_offers": "Respuestas por revisar"
     },
     "click": {
       "by_client": "Filtrar por este cliente",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Sí",
       "date_from": "Desde {date}",
       "date_until": "Hasta {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Sí"
     },
     "search_placeholder": "Buscar filtro…",
     "search_no_match": "Ningún filtro coincide con «{q}»",
@@ -821,7 +823,15 @@
       "status_replied": "Respondido",
       "status_pending": "Pendiente",
       "remove_confirm": "¿Eliminar la oferta de {carrier}?",
-      "summary_awaiting": "A la espera de {n} respuesta(s)"
+      "summary_awaiting": "A la espera de {n} respuesta(s)",
+      "status_to_review": "Respuesta por revisar",
+      "resend": "Reenviar solicitud",
+      "resend_dialog_title": "Reenviar la solicitud",
+      "resend_dialog_body": "Se volverá a enviar por correo una solicitud actualizada (asunto «… - UPDATE») a",
+      "resend_dialog_hint": "La aerolínea podrá responder de nuevo y la respuesta vuelve a «por revisar».",
+      "resend_confirm": "Reenviar",
+      "to_review_badge": "{n} por revisar",
+      "summary_to_review": "{n} por revisar"
     },
     "charges": {
       "title": "Detalle de cargos",
@@ -1936,7 +1946,9 @@
       "hawb_removed": "HAWB eliminado",
       "origin_sede": "Origen establecido en la sede",
       "ignored_fields": "Campos no guardados: {fields}",
-      "blocked_by_lock": "Bloqueado por el candado: {fields}"
+      "blocked_by_lock": "Bloqueado por el candado: {fields}",
+      "rfq_resent": "Solicitud reenviada a {carrier}",
+      "rfq_resend_failed": "No se pudo reenviar: {reason}"
     },
     "consolidation": {
       "title": "Consolidado",

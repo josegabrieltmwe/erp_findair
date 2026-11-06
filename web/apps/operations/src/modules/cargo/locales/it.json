@@ -322,7 +322,8 @@
       "dest_country": "Paese dest.",
       "date": "Data",
       "chat_unread": "Messaggi non letti",
-      "client": "Cliente"
+      "client": "Cliente",
+      "pending_offers": "Risposte da controllare"
     },
     "click": {
       "by_client": "Filtra per questo cliente",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Sì",
       "date_from": "Dal {date}",
       "date_until": "Fino al {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Sì"
     },
     "search_placeholder": "Cerca filtro…",
     "search_no_match": "Nessun filtro corrisponde a «{q}»",
@@ -821,7 +823,15 @@
       "status_replied": "Risposto",
       "status_pending": "In attesa",
       "remove_confirm": "Rimuovere l'offerta da {carrier}?",
-      "summary_awaiting": "In attesa di {n} risposta/e"
+      "summary_awaiting": "In attesa di {n} risposta/e",
+      "status_to_review": "Risposta da controllare",
+      "resend": "Reinvia richiesta",
+      "resend_dialog_title": "Reinvia la richiesta",
+      "resend_dialog_body": "Verrà inviata di nuovo per e-mail una richiesta aggiornata (oggetto «… - UPDATE») a",
+      "resend_dialog_hint": "La compagnia potrà rispondere di nuovo e la risposta torna «da controllare».",
+      "resend_confirm": "Reinvia",
+      "to_review_badge": "{n} da controllare",
+      "summary_to_review": "{n} da controllare"
     },
     "charges": {
       "title": "Dettaglio costi",
@@ -1936,7 +1946,9 @@
       "hawb_removed": "HAWB rimosso",
       "origin_sede": "Origine impostata sulla sede",
       "ignored_fields": "Campi non salvati: {fields}",
-      "blocked_by_lock": "Bloccato dal lucchetto: {fields}"
+      "blocked_by_lock": "Bloccato dal lucchetto: {fields}",
+      "rfq_resent": "Richiesta reinviata a {carrier}",
+      "rfq_resend_failed": "Impossibile reinviare: {reason}"
     },
     "consolidation": {
       "title": "Consolidato",
