@@ -89,9 +89,18 @@ final class ProxyController
         if ($body === null) {
             return ProblemDetails::response(413, 'payload_too_large', 'Cuerpo demasiado grande', null, $requestId);
         }
-        if ($grant !== null && $body !== '') {
+        if ($grant !== null && $route->multipart) {
+            // Una subida. PHP ya consumió el cuerpo `multipart/form-data` (php://input queda vacío): el fichero llega parseado y se
+            // reconstruye con SOLO el campo `file`. Los demás campos del formulario se descartan: el recurso va en la query.
+            $upload = $this->rebuildUpload($request, $body, $route->maxBody, $requestId);
+            if ($upload instanceof ResponseInterface) {
+                return $upload;
+            }
+            [$body, $contentType] = $upload;
+            $request = $request->withHeader('Content-Type', $contentType);
+        } elseif ($grant !== null && $body !== '') {
             // Sesión de OTP: el navegador no decide a qué recurso accede. El API ya lee id y otp solo de la query, pero aquí se
-            // quitan también del cuerpo (defensa en profundidad) y solo se admite JSON.
+            // quitan también del cuerpo JSON (defensa en profundidad) y solo se admite JSON.
             $clean = $this->withoutGrantKeys($body, $request->getHeaderLine('Content-Type'));
             if ($clean === null) {
                 return ProblemDetails::response(415, 'unsupported_media_type', 'Formato no admitido', 'Se espera un objeto JSON.', $requestId);
@@ -305,6 +314,44 @@ final class ProxyController
         }
 
         return $query;
+    }
+
+    /**
+     * Cuerpo de una subida de una sesión de OTP.
+     *
+     * Con ficheros ya parseados por PHP (lo normal en FPM) se vuelve a codificar solo `file`, con su nombre y tipo; sin ellos (entornos que
+     * no parsean el multipart, pruebas) se acepta el cuerpo crudo si es `multipart/form-data`.
+     *
+     * @return array{0: string, 1: string}|ResponseInterface cuerpo y Content-Type, o el rechazo
+     */
+    private function rebuildUpload(Request $request, string $rawBody, int $max, string $requestId): array|ResponseInterface
+    {
+        $files = $request->getUploadedFiles();
+        if ($files === []) {
+            if ($rawBody === '' || !str_starts_with(strtolower($request->getHeaderLine('Content-Type')), 'multipart/form-data')) {
+                return ProblemDetails::response(415, 'unsupported_media_type', 'Formato no admitido', 'Se espera un fichero (multipart/form-data).', $requestId);
+            }
+
+            return [$rawBody, $request->getHeaderLine('Content-Type')];
+        }
+        $file = $files['file'] ?? null;
+        if (!$file instanceof \Psr\Http\Message\UploadedFileInterface) {
+            return ProblemDetails::response(400, 'invalid_upload', 'Subida no válida', 'Falta el campo «file».', $requestId);
+        }
+        if ($file->getError() === UPLOAD_ERR_INI_SIZE || $file->getError() === UPLOAD_ERR_FORM_SIZE || ($file->getSize() ?? 0) > $max) {
+            return ProblemDetails::response(413, 'payload_too_large', 'Cuerpo demasiado grande', null, $requestId);
+        }
+        if ($file->getError() !== UPLOAD_ERR_OK) {
+            return ProblemDetails::response(400, 'invalid_upload', 'Subida no válida', null, $requestId);
+        }
+        $multipart = new \GuzzleHttp\Psr7\MultipartStream([[
+            'name' => 'file',
+            'contents' => $file->getStream(),
+            'filename' => $file->getClientFilename() ?? 'file',
+            'headers' => ['Content-Type' => $file->getClientMediaType() ?? 'application/octet-stream'],
+        ]]);
+
+        return [(string) $multipart, 'multipart/form-data; boundary=' . $multipart->getBoundary()];
     }
 
     /** Cuerpo JSON de una sesión de OTP sin las claves que identifican el recurso; null si no es un objeto JSON. */

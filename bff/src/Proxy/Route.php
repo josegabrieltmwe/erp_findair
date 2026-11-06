@@ -39,6 +39,8 @@ final class Route
         public readonly bool $checkEffectivePartner = true,
         /** Tipo de recurso OTP (`cargo_offer`…): la ruta solo la atiende una sesión abierta con ese OTP, nunca una de usuario. */
         public readonly ?string $otp = null,
+        /** Solo con `otp`: el cuerpo es `multipart/form-data` (subida de un fichero) y se reenvía sin tocar; si no, solo JSON. */
+        public readonly bool $multipart = false,
     ) {
     }
 

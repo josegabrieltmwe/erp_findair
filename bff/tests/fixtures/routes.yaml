@@ -1,4 +1,23 @@
 routes:
+  - id: otp.offer.upload
+    method: POST
+    path: /otp_upload
+    upstream:
+      action: api_carrier_offer_file
+    otp: cargo_offer
+    multipart: true
+    check_effective_partner: false
+    limits: { body: 4k }
+    throttle: otp_upload
+  - id: otp.offer.file
+    method: GET
+    path: /otp_file
+    upstream:
+      action: api_carrier_offer_file
+      forward_query: [idf, n]
+    response: binary
+    otp: cargo_offer
+    check_effective_partner: false
   - id: otp.offer.submit
     method: POST
     path: /otp_offer

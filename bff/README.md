@@ -71,6 +71,10 @@ recurso (`tipo:id`, exista o no) y por IP, en Redis; una autorización correcta 
 | `OTP_FAILURE_WINDOW` | `900` | Ventana de los contadores de fallos (s) |
 | `OTP_SUBMIT_RATE_PER_MIN` | `10` | Envíos de respuesta por minuto y sesión OTP |
 | `OTP_SUBMIT_RATE_PER_IP_MIN` | `30` | Envíos de respuesta por minuto e IP |
+| `OTP_UPLOAD_RATE_PER_MIN` | `8` | Subidas de fichero por minuto y sesión OTP (concurrencia 1) |
+| `OTP_UPLOAD_RATE_PER_IP_MIN` | `20` | Subidas por minuto e IP |
+| `OTP_MAIL_RATE_PER_MIN` | `3` | Copias por correo por minuto y sesión OTP |
+| `OTP_MAIL_RATE_PER_IP_MIN` | `10` | Copias por minuto e IP |
 
 Añadir un tipo de recurso: darlo de alta en `OtpGate::TYPES` (y en el API, `Otp_Resource_Authorizer`) y marcar sus rutas con `otp: <tipo>`.
 

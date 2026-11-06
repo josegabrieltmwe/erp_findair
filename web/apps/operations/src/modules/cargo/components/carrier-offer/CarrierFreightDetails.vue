@@ -29,6 +29,9 @@
           <dt>{{ t("cargo.carrierOffer.pallets") }}</dt><dd>{{ freight.pallets ? t("cargo.carrierOffer.yes") : t("cargo.carrierOffer.no") }}</dd>
           <dt>{{ t("cargo.carrierOffer.goods") }}</dt><dd>{{ freight.goods || "—" }}</dd>
         </dl>
+        <a :href="packagesUrl" download class="carrier-csv" data-testid="carrier-packages-csv">
+          <v-icon icon="mdi-file-delimited-outline" size="16" /> {{ t("cargo.carrierOffer.download_parcels") }}
+        </a>
       </section>
     </v-card-text>
   </v-card>
@@ -37,11 +40,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { CarrierOfferView } from "@cargo/services/carrier_offer.service";
+import { carrierOfferLinks, type CarrierOfferView } from "@cargo/services/carrier_offer.service";
 
 const props = defineProps<{ freight: CarrierOfferView["freight"]; parcels: CarrierOfferView["parcels"] }>();
 const { t } = useI18n();
 
+const packagesUrl = carrierOfferLinks.packages();
 const hasRestrictions = computed(() => props.parcels.some((p) => !p.turnable || !p.stackable));
 
 function weight(n: number): string {
@@ -59,5 +63,6 @@ function weight(n: number): string {
 .carrier-legend { margin: 12px 0 0; font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 4px 16px; }
 .carrier-facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
 .carrier-facts dt { opacity: 0.7; }
+.carrier-csv { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 0.85rem; }
 .carrier-facts dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 </style>
