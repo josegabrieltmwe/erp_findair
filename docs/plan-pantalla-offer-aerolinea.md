@@ -1,6 +1,6 @@
 # Plan: pantalla de respuesta de la aerolínea a la cotización cargo (`/offer`)
 
-> **Estado:** borrador · **Última modificación:** 2026-11-06 · **Revisión 2:** sin app nueva ni rutas anónimas nuevas (sustituye al diseño de la revisión 1)
+> **Estado:** borrador · **Última modificación:** 2026-11-06 · **Revisión 3:** el token es el Bearer OAuth de la aplicación (sustituye a las revisiones 1 y 2)
 
 Plan para construir en `erp_findair` la pantalla donde una aerolínea responde a una solicitud de cotización cargo (RFQ), y las
 piezas del BFF y del API que necesita. Sustituye en el ERP moderno a `vttoff.php` del legado. Es la petición **P94** de
@@ -71,8 +71,9 @@ oferta como revisada (`controllata='S'`); entonces todo queda en solo lectura.
 ## 4. Diseño (revisión 2)
 
 Premisas: el API no recibe interfaz; **no se crea ninguna aplicación nueva**; el flujo va entre el API y `erp_findair` (SPA + BFF);
-el OTP del correo hace de login para esa vista; las llamadas al API las firma solo la aplicación (su token OAuth
-`client_credentials`), que nunca llega al navegador de la aerolínea. Explicado con diagramas en el artifact «Respuesta de
+el OTP del correo hace de login para esa vista; **el token es el Bearer OAuth de la aplicación** (`client_credentials`): lo
+emite el API, solo lo guarda el BFF y va en cada llamada al API; nunca llega al navegador de la aerolínea, que solo tiene una
+cookie de sesión opaca. Explicado con diagramas en el artifact «Respuesta de
 aerolínea al RFQ».
 
 ### 4.1 Cómo entra la aerolínea
@@ -134,17 +135,21 @@ No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en �
 
 | # | Decisión | Propuesta |
 |---|---|---|
-| D1 | Qué es «el token»: `client_credentials` del API guardado solo en el BFF, o un token propio firmado por el BFF | `client_credentials` del API (lo que pide el runbook de OAuth) |
+| D1 | Qué es «el token» | **Cerrada:** el Bearer OAuth de la aplicación (`client_credentials`), solo en el BFF |
 | D2 | Caducidad de la sesión OTP y de la solicitud | inactividad corta; solicitud 30 días o hasta la revisión (el legado no caducaba) |
 | D3 | Reenvío de la respuesta | permitido hasta la revisión (como el legado) |
 | D4 | Idioma | inglés, claves en los cinco idiomas |
 | D5 | Enlace `?id&otp` o token opaco `t` (el de los couriers) | `id`+`otp` ahora; `t` en una fase posterior |
 | D6 | PDF y `CRGO2` en el alcance inicial | fase 3 |
 
-**[verificar]** antes de empezar: grant `client_credentials` del cliente del BFF; columnas de confirmación en `spedizioni_cargo_off`
-(`confirmed`, `confirm_datetime`, `confirm_IP`, como `spedizioni_off`; si no, migración o `insert_IP`); extensiones y tamaño de subida
-(`b2bfileext`, `b2bfilemaxmb`); que la plantilla `CRGO` de la BD use `!#OFFERURL#!`; que el proxy reenvíe bien un cuerpo `multipart`
-con el límite de la ruta.
+**Comprobado el 2026-11-06 (BD de desarrollo):** `spedizioni_cargo_off` **no tiene** `confirmed`, `confirm_datetime` ni `confirm_IP`
+(solo `owner_user`, `insert_datetime`, `insert_user`, `insert_IP`, `data_risp`, `file_name1..4`, `otp`…). Para no añadir una migración, la
+respuesta se audita como en el legado (`data_risp` + `insert_IP`) y la doble confirmación (precio y términos) se exige en el servidor sin
+persistirla; IP, oferta e importe van además al log. (`oauth_client` no existe en esa BD: ver abajo.)
+
+**[verificar en el sandbox]** (no se puede desde desarrollo): que el cliente del BFF tiene secreto y admite `client_credentials`; las
+extensiones y el tamaño de subida (`b2bfileext`, `b2bfilemaxmb`); que la plantilla `CRGO` de la BD use `!#OFFERURL#!`; que el proxy reenvíe
+bien un cuerpo `multipart` con el límite de la ruta (se prueba en local al construir).
 
 ## 7. Riesgos
 
