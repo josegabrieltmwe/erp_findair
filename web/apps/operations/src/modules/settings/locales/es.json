@@ -124,6 +124,10 @@
           "title": "Presets de rentabilidad",
           "description": "Plantillas de escalones de margen para aplicar a clientes"
         },
+        "margins_missing": {
+          "title": "Clientes sin margen",
+          "description": "Clientes sin escalones de margen: sus tarifas salen a coste y no se pueden seleccionar"
+        },
         "extracharges": {
           "title": "Suplementos",
           "description": "Catálogo de recargos usados en tarifas de courier y cargo"
@@ -758,6 +762,28 @@
     "total": "{n} presets",
     "delete_title": "Eliminar preset",
     "delete_confirm": "¿Eliminar el preset «{nome}»?"
+  },
+  "margins_missing": {
+    "title": "Clientes sin margen",
+    "subtitle": "Clientes activos sin escalones de margen ni pactos por aerolínea para el tipo elegido. Sin margen, sus tarifas salen a coste y no se pueden seleccionar. Ordenados por expediciones cargo de los últimos 12 meses.",
+    "tipo": "Modalidad",
+    "tipo_a": "Cargo",
+    "tipo_e": "Express",
+    "tipo_s": "Marítimo",
+    "search": "Buscar por razón social o ID",
+    "refresh": "Actualizar",
+    "col": {
+      "client": "Razón social",
+      "titolare": "Titular",
+      "alta": "Fecha de alta",
+      "shipments": "Exp. cargo 12 meses",
+      "shipments_hint": "Expediciones cargo de los últimos 12 meses"
+    },
+    "configure": "Configurar margen",
+    "empty": "Todos los clientes tienen margen configurado para este tipo",
+    "total": "{n} clientes",
+    "error": "No se pudo cargar el listado",
+    "error_forbidden": "No tienes permiso para ver los márgenes de los clientes"
   },
   "extracharges": {
     "subtitle": "Catálogo de suplementos y recargos usados en tarifas de courier y cargo",

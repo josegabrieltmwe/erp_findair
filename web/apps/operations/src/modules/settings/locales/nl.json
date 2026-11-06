@@ -124,6 +124,10 @@
           "title": "Winstpresets",
           "description": "Margeschijf-sjablonen om toe te passen op klanten"
         },
+        "margins_missing": {
+          "title": "Klanten zonder marge",
+          "description": "Klanten zonder margestaffels: hun tarieven komen tegen kostprijs en kunnen niet worden geselecteerd"
+        },
         "extracharges": {
           "title": "Toeslagen",
           "description": "Toeslagcatalogus gebruikt in koerier- en vrachttarieven"
@@ -758,6 +762,28 @@
     "total": "{n} presets",
     "delete_title": "Preset verwijderen",
     "delete_confirm": "Preset \"{nome}\" verwijderen?"
+  },
+  "margins_missing": {
+    "title": "Klanten zonder marge",
+    "subtitle": "Actieve klanten zonder margestaffels of afspraken per luchtvaartmaatschappij voor het gekozen type. Zonder marge komen hun tarieven tegen kostprijs en kunnen ze niet worden geselecteerd. Gesorteerd op cargozendingen van de laatste 12 maanden.",
+    "tipo": "Modaliteit",
+    "tipo_a": "Cargo",
+    "tipo_e": "Express",
+    "tipo_s": "Zee",
+    "search": "Zoeken op bedrijfsnaam of ID",
+    "refresh": "Vernieuwen",
+    "col": {
+      "client": "Bedrijfsnaam",
+      "titolare": "Eigenaar",
+      "alta": "Aangemaakt",
+      "shipments": "Cargozend. 12 maanden",
+      "shipments_hint": "Cargozendingen van de laatste 12 maanden"
+    },
+    "configure": "Marge instellen",
+    "empty": "Alle klanten hebben een marge ingesteld voor dit type",
+    "total": "{n} klanten",
+    "error": "De lijst kon niet worden geladen",
+    "error_forbidden": "Je hebt geen toestemming om klantmarges te bekijken"
   },
   "extracharges": {
     "subtitle": "Toeslagcatalogus gebruikt in koerier- en vrachttarieven",

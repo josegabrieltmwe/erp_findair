@@ -92,6 +92,18 @@ export interface QuoteDataValidation {
   };
 }
 
+/**
+ * Margen de cargo del cliente de la expedición. Solo viene cuando hay cliente (y con un API que ya lo conoce):
+ * ausente = no se sabe, y la SPA no avisa de nada.
+ */
+export interface RateSourcesMargin {
+  client_id: number;
+  /** false = sin escalones tipo A ni pactos por aerolínea: las tarifas saldrán a coste y no seleccionables. */
+  cargo_configured: boolean;
+  /** La persona puede editar los márgenes de ese cliente (módulo `margenes_clientes`). */
+  can_configure: boolean;
+}
+
 export interface RateSourcesResponse {
   success: boolean;
   route: {
@@ -104,6 +116,7 @@ export interface RateSourcesResponse {
   sources: RateSource[];
   /** null when the search is not bound to a shipment. */
   validation?: QuoteDataValidation | null;
+  margin?: RateSourcesMargin | null;
 }
 
 export interface AirportItem {

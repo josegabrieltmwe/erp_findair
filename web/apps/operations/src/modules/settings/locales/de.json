@@ -124,6 +124,10 @@
           "title": "Gewinn-Voreinstellungen",
           "description": "Margenstufen-Vorlagen zur Anwendung auf Kunden"
         },
+        "margins_missing": {
+          "title": "Kunden ohne Marge",
+          "description": "Kunden ohne Margenstaffeln: Ihre Tarife erscheinen zum Einkaufspreis und sind nicht auswählbar"
+        },
         "extracharges": {
           "title": "Zuschläge",
           "description": "Zuschlagskatalog für Kurier- und Frachttarife"
@@ -758,6 +762,28 @@
     "total": "{n} Presets",
     "delete_title": "Preset löschen",
     "delete_confirm": "Preset „{nome}“ löschen?"
+  },
+  "margins_missing": {
+    "title": "Kunden ohne Marge",
+    "subtitle": "Aktive Kunden ohne Margenstaffeln oder Vereinbarungen pro Fluggesellschaft für den gewählten Typ. Ohne Marge erscheinen ihre Tarife zum Einkaufspreis und sind nicht auswählbar. Sortiert nach Cargo-Sendungen der letzten 12 Monate.",
+    "tipo": "Modalität",
+    "tipo_a": "Cargo",
+    "tipo_e": "Express",
+    "tipo_s": "See",
+    "search": "Nach Firmenname oder ID suchen",
+    "refresh": "Aktualisieren",
+    "col": {
+      "client": "Firmenname",
+      "titolare": "Inhaber",
+      "alta": "Angelegt",
+      "shipments": "Cargo-Send. 12 Monate",
+      "shipments_hint": "Cargo-Sendungen der letzten 12 Monate"
+    },
+    "configure": "Marge konfigurieren",
+    "empty": "Alle Kunden haben für diesen Typ eine Marge konfiguriert",
+    "total": "{n} Kunden",
+    "error": "Die Liste konnte nicht geladen werden",
+    "error_forbidden": "Sie dürfen die Kundenmargen nicht sehen"
   },
   "extracharges": {
     "subtitle": "Zuschlagskatalog für Kurier- und Frachttarife",

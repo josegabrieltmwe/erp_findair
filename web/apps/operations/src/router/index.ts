@@ -666,6 +666,17 @@ const routes: RouteRecordRaw[] = [
       import("@shared/profit_presets/feature/ProfitPresetsPage.vue"),
     meta: { requiresAdmin: true },
   },
+  // Clientes sin margen (escalones ni pactos por aerolínea): sin margen la
+  // búsqueda de vuelos devuelve tarifas a coste y no seleccionables. Módulo
+  // `margenes_clientes` (`margins:read`, ver SETTINGS_ROUTE_SCOPES): TMWE ve
+  // todos los clientes, un partner con el permiso solo los suyos.
+  {
+    path: "/settings/customers-without-margin",
+    name: "settings-customers-without-margin",
+    component: () =>
+      import("@shared/customers_without_margin/feature/CustomersWithoutMarginPage.vue"),
+    meta: { requiresAdmin: true },
+  },
   // Fase 4 / L08: catálogo de suplementos/recargos (supplementi). CRUD ya
   // existía en backend; se añadió `auto_applied` a la respuesta para que la
   // UI advierta antes de editar filas que el motor de pricing aplica solo.

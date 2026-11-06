@@ -318,6 +318,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import {
   mdiRefresh,
   mdiSwapHorizontal,
@@ -349,6 +350,7 @@ import CmAirlineTail from '../components/CmAirlineTail.vue';
 import AnagraficaVettoreMarginDialog from './AnagraficaVettoreMarginDialog.vue';
 
 const props = defineProps<{ idAnagrafica: number }>();
+const route = useRoute();
 const { t } = useI18n();
 const toast = useToast();
 
@@ -361,7 +363,16 @@ const unit = ref<ScaglioniUnit>('metric');
  * la sección de márgenes por aerolínea — que no es un modo de transporte,
  * pero sí una entrada más del mismo menú lateral.
  */
-const tipo = ref<ScaglioniTipo | 'VETTORI'>('A');
+const tipo = ref<ScaglioniTipo | 'VETTORI'>(initialTipo());
+
+/**
+ * Pestaña inicial desde `?tipo=E|S` (enlace «Configurar margen» del listado de clientes sin margen). Sin router
+ * (otra app que monte la sección) o sin parámetro válido, la de siempre: aéreo.
+ */
+function initialTipo(): ScaglioniTipo {
+  const q = route?.query?.tipo;
+  return q === 'E' || q === 'S' ? q : 'A';
+}
 
 // --- Márgenes por vettore (aerolínea / proveedor de quote) -----------------
 // Solo aplican al modo aéreo: son el nivel 1 de la cascada de márgenes y

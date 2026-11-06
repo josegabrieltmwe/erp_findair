@@ -1,6 +1,6 @@
 # Contrato con el API (`tmwe_api`)
 
-> **Estado:** vigente · **Generado:** 2026-10-31 · **Última modificación:** 2026-11-05 · **Clasificación:** automática, pendiente de revisión humana
+> **Estado:** vigente · **Generado:** 2026-10-31 · **Última modificación:** 2026-11-06 · **Clasificación:** automática, pendiente de revisión humana
 
 Lista única de lo que el BFF y la SPA piden a `tmwe_api`, fusión de `peticiones-backend.md` (detalle técnico y evidencia) y `prompt-agente-tmwe-json.md` (lista priorizada, ya obsoleta como prompt). Numeración unificada P01–P41; el detalle de cada una sigue en el `§` indicado de `peticiones-backend.md`.
 
@@ -307,3 +307,11 @@ Notas de la SPA en el mismo cambio, sin petición al API:
 - El panel de filtros ya no fuerza `location_type=D` / `cerca_pd=D`: el lado por defecto es «Origen o destino» (`''`) y solo viaja con un país (o ciudad en courier). El país sin lado se envía solo (los dos backends hacen OR origen/destino) y su chip dice «País».
 - Detalle express y cargo: el error se traduce por `error_code` (`ACCESS_DENIED`/`SHIPMENT_ACCESS_DENIED`/`FORBIDDEN` → sin acceso; `NOT_FOUND` → no existe; resto → genérico con «Reintentar»). Conviene que `ajax_shipment_crud` mande `error_code` cuando responde `success:false` (la SPA ya lo lee: `ShipmentCrudResponse.error_code`).
 - `GET /bff/impersonation` solo se pide si el usuario real es TMWE (`is_tmwe` de la sesión del BFF, que no cambia al suplantar); antes todo partner recibía un 403.
+
+## N. Clientes sin margen de cargo (2026-11-06)
+
+Un cliente sin margen (sin escalones `anagrafiche_scaglioni` del tipo ni pactos por aerolínea) recibía en la búsqueda de vuelos las tarifas a coste y no seleccionables (`not_selectable_reason: 'pricing_incomplete:no_margin_configured'`), o ninguna, sin que el operador supiera por qué.
+
+| ID | Petición | Contrato | Estado |
+|---|---|---|---|
+| P91 | `margin` en `web_cargo_rate_sources` / `api_cargo_rate_sources` (`Rate_Sources_Controller`) y nuevo `GET api_customers_without_margin` | **1)** Con cliente, la respuesta de fuentes añade `margin: { client_id, cargo_configured: bool, can_configure: bool }`. Con `cargo_configured === false` el modal de búsqueda avisa antes de buscar (v-alert) y, con `can_configure`, enlaza a la pestaña «Márgenes cargo» de la ficha (`/anagrafica/:id/margini_cargo`, en otra pestaña). Sin `margin` (API antiguo) no se avisa. Si todas las tarifas llegan con `not_selectable_reason` que empieza por `pricing_incomplete:no_margin_configured`, el listado lo dice una vez y el texto de «no asignable» lo explica sin invitar a relanzar. **2)** `GET api_customers_without_margin?tipo=A\|E\|S&q=&page=&per_page=&id_titolare=` (tipo `A` por defecto; `per_page` 50, máx. 200; `id_titolare` solo TMWE) → `{ success, data: { items: [{ id, ragione_sociale, id_titolare, titolare, alta: 'YYYY-MM-DD'\|null, cargo_shipments_12m }], total, page, per_page, tipo } }`, orden `cargo_shipments_12m` desc. Módulo `margenes_clientes` (`margins:read`): TMWE ve todos los clientes activos, un partner solo los suyos. Ruta manual `get.api_customers_without_margin` en `bff/config/routes.bff.yaml` (`forward_query` cerrado) | **Abierta en la API** (en curso). SPA lista: aviso en `FlightSearchParams.vue` y lógica en `flight-search/marginNotice.ts`; vista «Clientes sin margen» en Ajustes → Tarifas y capacidad (`/settings/customers-without-margin`, `packages/platform/customers_without_margin/`), guard `SETTINGS_ROUTE_SCOPES` con `margins:read`. La pestaña de márgenes admite `?tipo=E\|S` para abrir el tipo elegido |

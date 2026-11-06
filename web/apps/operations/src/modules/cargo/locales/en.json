@@ -1457,7 +1457,11 @@
       "quote_manual_load_check": "The carrier requires a manual load check before quoting. Request it on demand.",
       "quoted_with": "Quoted with",
       "account_house": "Own account (TMWE)",
-      "account_delegated": "{partner} (delegated)"
+      "account_delegated": "{partner} (delegated)",
+      "no_margin_warning": "This customer has no cargo margin configured: rates will be shown at cost and cannot be selected.",
+      "no_margin_configure": "Configure margin",
+      "no_margin_not_selectable": "This rate cannot be selected: the customer has no cargo margin configured and the price shown is the cost. Configure the margin in the customer record (Cargo margins); running the search again will not change the result.",
+      "no_margin_results": "No rate can be selected: this customer has no cargo margin configured and the prices shown are at cost."
     },
     "wizard": {
       "title": "Assign flight to shipment",

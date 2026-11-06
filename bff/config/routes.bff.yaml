@@ -535,3 +535,14 @@ routes:
     upstream:
       action: api_pay_surcharges
     limits: { body: 16k, timeout: 30 }
+
+  # Clientes sin margen configurado (P91). Añadida a mano: no regenerar el manifiesto (quita rutas en uso).
+  # Mismo modelo que get.api_anagrafica_scaglioni (routes.spa.yaml): el BFF solo deja pasar; el API autoriza con el
+  # módulo margenes_clientes (margins:read) y acota por partner (TMWE todos; partner solo id_anagr_titolare = el suyo).
+  # id_titolare solo lo atiende el API para TMWE.
+  - id: get.api_customers_without_margin
+    method: GET
+    path: /api_customers_without_margin
+    upstream:
+      action: api_customers_without_margin
+      forward_query: [tipo, q, page, per_page, id_titolare]

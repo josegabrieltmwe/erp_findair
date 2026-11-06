@@ -1457,7 +1457,11 @@
       "quote_manual_load_check": "Der Carrier verlangt vor der Tarifierung eine manuelle Ladungsprüfung. Auf Anfrage anfordern.",
       "quoted_with": "Angefragt mit",
       "account_house": "Eigenes Konto (TMWE)",
-      "account_delegated": "{partner} (Delegation)"
+      "account_delegated": "{partner} (Delegation)",
+      "no_margin_warning": "Für diesen Kunden ist keine Cargo-Marge konfiguriert: Die Tarife werden zum Einkaufspreis angezeigt und können nicht ausgewählt werden.",
+      "no_margin_configure": "Marge konfigurieren",
+      "no_margin_not_selectable": "Dieser Tarif kann nicht ausgewählt werden: Für den Kunden ist keine Cargo-Marge konfiguriert, der angezeigte Preis ist der Einkaufspreis. Konfigurieren Sie die Marge im Kundendatensatz (Cargomargen); eine erneute Suche ändert das Ergebnis nicht.",
+      "no_margin_results": "Kein Tarif kann ausgewählt werden: Für diesen Kunden ist keine Cargo-Marge konfiguriert, die angezeigten Preise sind Einkaufspreise."
     },
     "wizard": {
       "title": "Flug der Sendung zuweisen",

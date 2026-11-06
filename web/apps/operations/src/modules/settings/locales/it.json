@@ -124,6 +124,10 @@
           "title": "Preset di profitto",
           "description": "Modelli di scaglioni di margine da applicare ai clienti"
         },
+        "margins_missing": {
+          "title": "Clienti senza margine",
+          "description": "Clienti senza scaglioni di margine: le loro tariffe escono a costo e non si possono selezionare"
+        },
         "extracharges": {
           "title": "Supplementi",
           "description": "Catalogo dei supplementi usati nelle tariffe courier e cargo"
@@ -758,6 +762,28 @@
     "total": "{n} preset",
     "delete_title": "Elimina preset",
     "delete_confirm": "Eliminare il preset «{nome}»?"
+  },
+  "margins_missing": {
+    "title": "Clienti senza margine",
+    "subtitle": "Clienti attivi senza scaglioni di margine né accordi per compagnia aerea per il tipo scelto. Senza margine, le tariffe escono a costo e non si possono selezionare. Ordinati per spedizioni cargo degli ultimi 12 mesi.",
+    "tipo": "Modalità",
+    "tipo_a": "Cargo",
+    "tipo_e": "Express",
+    "tipo_s": "Marittimo",
+    "search": "Cerca per ragione sociale o ID",
+    "refresh": "Aggiorna",
+    "col": {
+      "client": "Ragione sociale",
+      "titolare": "Titolare",
+      "alta": "Data alta",
+      "shipments": "Sped. cargo 12 mesi",
+      "shipments_hint": "Spedizioni cargo degli ultimi 12 mesi"
+    },
+    "configure": "Configura margine",
+    "empty": "Tutti i clienti hanno un margine configurato per questo tipo",
+    "total": "{n} clienti",
+    "error": "Impossibile caricare l'elenco",
+    "error_forbidden": "Non hai il permesso di vedere i margini dei clienti"
   },
   "extracharges": {
     "subtitle": "Catalogo dei supplementi usati nelle tariffe courier e cargo",

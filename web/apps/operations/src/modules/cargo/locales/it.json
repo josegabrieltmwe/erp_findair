@@ -1457,7 +1457,11 @@
       "quote_manual_load_check": "Il vettore richiede una verifica manuale del carico prima di quotare. Richiedila su richiesta.",
       "quoted_with": "Quotato con",
       "account_house": "Account proprio (TMWE)",
-      "account_delegated": "{partner} (delega)"
+      "account_delegated": "{partner} (delega)",
+      "no_margin_warning": "Questo cliente non ha un margine cargo configurato: le tariffe usciranno a costo e non si potranno selezionare.",
+      "no_margin_configure": "Configura margine",
+      "no_margin_not_selectable": "Questa tariffa non si può selezionare: il cliente non ha un margine cargo configurato e il prezzo mostrato è il costo. Configura il margine nella scheda del cliente (Margini cargo); rilanciare la ricerca non cambierà il risultato.",
+      "no_margin_results": "Nessuna tariffa è selezionabile: questo cliente non ha un margine cargo configurato e i prezzi mostrati sono di costo."
     },
     "wizard": {
       "title": "Assegna volo alla spedizione",

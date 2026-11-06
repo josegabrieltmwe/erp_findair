@@ -1457,7 +1457,11 @@
       "quote_manual_load_check": "De vervoerder vereist een handmatige ladingcontrole voordat er getarifeerd wordt. Vraag hem op aanvraag aan.",
       "quoted_with": "Getarifeerd met",
       "account_house": "Eigen account (TMWE)",
-      "account_delegated": "{partner} (delegatie)"
+      "account_delegated": "{partner} (delegatie)",
+      "no_margin_warning": "Voor deze klant is geen cargomarge ingesteld: de tarieven worden tegen kostprijs getoond en kunnen niet worden geselecteerd.",
+      "no_margin_configure": "Marge instellen",
+      "no_margin_not_selectable": "Dit tarief kan niet worden geselecteerd: voor de klant is geen cargomarge ingesteld en de getoonde prijs is de kostprijs. Stel de marge in op de klantkaart (Cargomarges); opnieuw zoeken verandert het resultaat niet.",
+      "no_margin_results": "Geen enkel tarief kan worden geselecteerd: voor deze klant is geen cargomarge ingesteld en de getoonde prijzen zijn kostprijzen."
     },
     "wizard": {
       "title": "Vlucht aan zending toewijzen",

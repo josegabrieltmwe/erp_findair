@@ -1457,7 +1457,11 @@
       "quote_manual_load_check": "El transportista requiere una comprobación manual de la carga antes de cotizar. Solicítala bajo petición.",
       "quoted_with": "Cotizado con",
       "account_house": "Cuenta propia (TMWE)",
-      "account_delegated": "{partner} (delegación)"
+      "account_delegated": "{partner} (delegación)",
+      "no_margin_warning": "Este cliente no tiene margen de cargo configurado: las tarifas saldrán a coste y no se podrán seleccionar.",
+      "no_margin_configure": "Configurar margen",
+      "no_margin_not_selectable": "Esta tarifa no se puede seleccionar: el cliente no tiene margen de cargo configurado y el precio que se ve es el coste. Configura el margen en la ficha del cliente (Márgenes cargo); relanzar la búsqueda no cambiará el resultado.",
+      "no_margin_results": "Ninguna tarifa se puede seleccionar: este cliente no tiene margen de cargo configurado y los precios mostrados son de coste."
     },
     "wizard": {
       "title": "Asignar vuelo al envío",

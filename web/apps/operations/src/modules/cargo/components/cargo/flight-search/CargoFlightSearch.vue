@@ -439,6 +439,18 @@
             {{ t("cargo.flight.search_cancelled") }}
           </v-alert>
 
+          <!-- Todas bloqueadas por falta de margen del cliente: se dice una vez
+               arriba, en vez de dejar que el operador lo descubra fila a fila. -->
+          <v-alert
+            v-if="allNoMargin"
+            type="warning"
+            variant="tonal"
+            density="compact"
+            class="mb-3"
+          >
+            {{ t("cargo.flight.no_margin_results") }}
+          </v-alert>
+
           <!-- Filters (visible as soon as anything arrives) -->
           <FlightFilters
             v-if="rates.length > 0"
@@ -558,6 +570,7 @@ import FlightSearchResultsTable from "./FlightSearchResultsTable.vue";
 import FlightFilters from "./FlightFilters.vue";
 import FlightDetailDialog from "./FlightDetailDialog.vue";
 import FlightSelectionWizard from "./FlightSelectionWizard.vue";
+import { allRatesWithoutMargin } from "./marginNotice";
 
 const { t } = useI18n();
 const ui = useUiStore();
@@ -611,6 +624,15 @@ const {
  * deliberate choice mid-search.
  */
 const rateTypeTab = ref<"direct_booking" | "published" | "all">("published");
+
+/** Todas las tarifas recibidas llegan no seleccionables por falta de margen (`marginNotice.ts`). */
+const allNoMargin = computed(
+  () =>
+    !searching.value &&
+    allRatesWithoutMargin(
+      rates.value as unknown as Parameters<typeof allRatesWithoutMargin>[0],
+    ),
+);
 
 const directBookingCount = computed(
   () => filteredRates.value.filter((r) => isDirectBooking(r.source)).length,

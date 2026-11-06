@@ -50,6 +50,11 @@ describe('canOpenAdminRoute', () => {
     expect(canOpenAdminRoute('settings-users', ctx(false, ['config:read', 'suppliers:read', 'profile:write']))).toBe(false);
   });
 
+  it('clientes sin margen: entra quien tiene margins:read (margenes_clientes), no quien solo tiene config:read', () => {
+    expect(canOpenAdminRoute('settings-customers-without-margin', ctx(false, ['margins:read']))).toBe(true);
+    expect(canOpenAdminRoute('settings-customers-without-margin', ctx(false, ['config:read']))).toBe(false);
+  });
+
   it('falla cerrado: perfil desconocido o backend sin access', () => {
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(null))).toBe(false);
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(false))).toBe(false);

@@ -222,6 +222,16 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'rates_capacity',
         aliases: ['Profit presets', 'profit_preset'],
       },
+      // Clientes sin margen de cargo/express/marítimo: lista de trabajo para
+      // configurar escalones antes de que la cotización salga a coste.
+      {
+        key: 'margins_missing',
+        i18nKey: 'margins_missing',
+        icon: 'mdi-account-alert-outline',
+        routeName: 'settings-customers-without-margin',
+        subgroup: 'rates_capacity',
+        aliases: ['Clientes sin margen', 'Clienti senza margine', 'scaglioni', 'margini'],
+      },
       // Fase 4 / L08: catálogo de suplementos, CRUD sobre backend ya
       // existente (Supplementi_Controller) con advertencia auto_applied.
       {

@@ -58,6 +58,38 @@
     </v-alert>
 
     <!--
+      Cliente sin margen de cargo (`margin.cargo_configured === false` de
+      web_cargo_rate_sources): se avisa ANTES de buscar, porque el motor
+      devolverá las tarifas a coste y no seleccionables —o ninguna— y el
+      operador no tenía forma de saber por qué. El enlace abre la pestaña de
+      márgenes del cliente en otra pestaña, para no perder esta búsqueda.
+    -->
+    <v-alert
+      v-if="noMargin"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+      data-test="no-margin-alert"
+    >
+      <div>{{ t("cargo.flight.no_margin_warning") }}</div>
+      <v-btn
+        v-if="noMargin.canConfigure"
+        class="mt-2"
+        size="small"
+        variant="tonal"
+        color="warning"
+        prepend-icon="mdi-tune-variant"
+        append-icon="mdi-open-in-new"
+        :href="marginConfigHref"
+        target="_blank"
+        rel="noopener"
+      >
+        {{ t("cargo.flight.no_margin_configure") }}
+      </v-btn>
+    </v-alert>
+
+    <!--
       Secciones apiladas (FormSection), no v-row sueltas: es el primitivo que el
       proyecto usa para agrupar campos en modales, y a 720px un campo por linea
       se lee mejor que parejas con etiquetas largas ("Destination (IATA)").
@@ -279,6 +311,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, type Ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import FormSection from "@shared/ui/FormSection.vue";
 
 import {
@@ -289,6 +322,7 @@ import {
   type RateSourceKey,
   type QuoteDataValidation,
   type QuoteDataIssue,
+  type RateSourcesMargin,
 } from "@cargo/services/rate_sources.service";
 import {
   applySelectAll,
@@ -298,6 +332,8 @@ import {
   type SourceState,
 } from "./sourceSelection";
 import { translateQuoteIssue } from "@cargo/utils/quoteValidation";
+import { marginConfigRoute } from "@shared/customers_without_margin/services/customersWithoutMargin.service";
+import { marginNotice } from "./marginNotice";
 
 // props/emits ANTES de cualquier uso: `watch(..., {immediate:true})`
 // corre durante el setup, y si estas declaraciones quedan más abajo el
@@ -420,6 +456,17 @@ const hasDataIssues = computed(
 /** Detalle abierto/cerrado del panel de problemas. */
 const issuesOpen = ref(false);
 
+// ── Margen de cargo del cliente ─────────────────────────────────────────────
+/** `margin` de web_cargo_rate_sources; null = API antiguo, sin cliente o lookup fallido (no se avisa). */
+const marginInfo = ref<RateSourcesMargin | null>(null);
+const noMargin = computed(() => marginNotice(marginInfo.value));
+const router = useRouter();
+const marginConfigHref = computed<string | undefined>(() =>
+  noMargin.value?.canConfigure
+    ? router.resolve(marginConfigRoute(noMargin.value.clientId, "A")).href
+    : undefined,
+);
+
 /**
  * Metadatos de credencial de una fuente, a partir de su FLAG de formulario.
  *
@@ -458,6 +505,7 @@ async function refreshSources(): Promise<void> {
     // Problemas en los datos del envío (peso, bultos, dimensiones). Se conocen
     // aquí, al abrir el modal, así que el operador los ve antes de lanzar nada.
     dataValidation.value = res.validation ?? null;
+    marginInfo.value = res.margin ?? null;
 
     // Estado INICIAL de las casillas para esta ruta: lo no disponible queda
     // apagado (no puede responderse) y lo delegado tambien (usar la cuenta de
@@ -511,6 +559,7 @@ async function refreshSources(): Promise<void> {
     // behaviour of offering everything.
     sourcesMeta.value = [];
     dataValidation.value = null;
+    marginInfo.value = null;
   }
 }
 

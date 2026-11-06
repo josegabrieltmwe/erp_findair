@@ -124,6 +124,10 @@
           "title": "Profit presets",
           "description": "Margin bracket templates to apply to clients"
         },
+        "margins_missing": {
+          "title": "Customers without margin",
+          "description": "Customers without margin tiers: their rates come out at cost and cannot be selected"
+        },
         "extracharges": {
           "title": "Extracharges",
           "description": "Surcharge catalogue used in courier and cargo rates"
@@ -758,6 +762,28 @@
     "total": "{n} presets",
     "delete_title": "Delete preset",
     "delete_confirm": "Delete preset \"{nome}\"?"
+  },
+  "margins_missing": {
+    "title": "Customers without margin",
+    "subtitle": "Active customers with no margin tiers or per-airline agreements for the chosen type. Without a margin, their rates come out at cost and cannot be selected. Sorted by cargo shipments in the last 12 months.",
+    "tipo": "Mode",
+    "tipo_a": "Cargo",
+    "tipo_e": "Express",
+    "tipo_s": "Sea",
+    "search": "Search by company name or ID",
+    "refresh": "Refresh",
+    "col": {
+      "client": "Company name",
+      "titolare": "Owner",
+      "alta": "Created",
+      "shipments": "Cargo shipm. 12 months",
+      "shipments_hint": "Cargo shipments in the last 12 months"
+    },
+    "configure": "Configure margin",
+    "empty": "All customers have a margin configured for this type",
+    "total": "{n} customers",
+    "error": "The list could not be loaded",
+    "error_forbidden": "You are not allowed to see customer margins"
   },
   "extracharges": {
     "subtitle": "Catalogue of surcharges used in courier and cargo rates",

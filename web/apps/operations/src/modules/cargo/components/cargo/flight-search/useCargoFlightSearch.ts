@@ -31,6 +31,7 @@ import {
 
 import { stripCarrierMarkup } from "@cargo/utils/carrierName";
 import { isPastDate, serverToday } from "@cargo/utils/serverTime";
+import { notSelectableMessage } from "./marginNotice";
 
 export function useCargoFlightSearch() {
   const cargoStore = useCargoStore();
@@ -510,24 +511,12 @@ export function useCargoFlightSearch() {
       const reason =
         (rate as { not_selectable_reason?: string }).not_selectable_reason ??
         "";
-      // El motivo manda sobre el mensaje. `quote_on_request` NO es un fallo
-      // recuperable: el carrier no tarifa esa ruta automáticamente, así que
-      // invitar a relanzar la búsqueda —lo que hacía el texto único— hace
-      // perder el tiempo al operador. Se conserva el genérico para los fallos
-      // técnicos de verdad.
-      if (reason.startsWith("quote_on_request")) {
-        const detail = reason.split(":")[1] ?? "";
-        persistError.value =
-          detail === "MANUAL_LOAD_CHECK"
-            ? t("cargo.flight.quote_manual_load_check")
-            : t("cargo.flight.quote_on_request");
-      } else {
-        persistError.value =
-          t("cargo.flight.rate_not_assignable") +
-          (reason ? ` (${reason})` : "") +
-          ". " +
-          t("cargo.flight.relaunch_search");
-      }
+      // El motivo manda sobre el mensaje (`marginNotice.ts::notSelectableMessage`).
+      // `quote_on_request` y la falta de margen del cliente NO son fallos
+      // recuperables: invitar a relanzar la búsqueda —lo que hacía el texto
+      // único— hace perder el tiempo al operador. El genérico queda para los
+      // fallos técnicos de verdad.
+      persistError.value = notSelectableMessage(reason, (k) => t(k));
       return;
     }
 
