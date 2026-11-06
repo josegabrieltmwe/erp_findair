@@ -1,4 +1,11 @@
 routes:
+  - id: otp.offer
+    method: GET
+    path: /otp_offer
+    upstream:
+      action: api_carrier_offer
+    otp: cargo_offer
+    check_effective_partner: false
   - id: thing.show
     method: GET
     path: /things/{id}

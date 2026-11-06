@@ -35,6 +35,18 @@ final class ArrayCounterStore implements CounterStore
         return $this->counters[$key][0];
     }
 
+    public function get(string $key): int
+    {
+        $this->expire($key);
+
+        return $this->counters[$key][0] ?? 0;
+    }
+
+    public function delete(string $key): void
+    {
+        unset($this->counters[$key]);
+    }
+
     public function ttl(string $key): int
     {
         $this->expire($key);

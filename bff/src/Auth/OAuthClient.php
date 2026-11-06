@@ -56,6 +56,21 @@ final class OAuthClient
         ], $now);
     }
 
+    /**
+     * Bearer de la propia aplicación (sin usuario). Lo usan las sesiones abiertas con un OTP: la persona externa se
+     * autoriza con el OTP, pero ante el API quien se autentica es la aplicación. No trae refresh token: al caducar se
+     * vuelve a negociar (TokenRefresher).
+     */
+    public function clientCredentials(int $now): TokenSet
+    {
+        $params = ['grant_type' => 'client_credentials'];
+        if ($this->settings->oauthScope !== '') {
+            $params['scope'] = $this->settings->oauthScope;
+        }
+
+        return $this->tokenRequest($params, $now);
+    }
+
     public function refresh(string $refreshToken, int $now): TokenSet
     {
         $tokens = $this->tokenRequest(['grant_type' => 'refresh_token', 'refresh_token' => $refreshToken], $now);

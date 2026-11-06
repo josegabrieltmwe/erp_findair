@@ -86,6 +86,8 @@ final class AppFactory
             $bff->get('/auth/callback', [AuthController::class, 'callback']);
             $bff->get('/auth/session', [AuthController::class, 'sessionInfo']);
             $bff->post('/auth/logout', [AuthController::class, 'logout']);
+            // Punto de autorización por OTP (sin usuario): ver AuthController::otp().
+            $bff->post('/auth/otp', [AuthController::class, 'otp']);
 
             $bff->get('/impersonation', [ImpersonationController::class, 'show'])->add(AuthMiddleware::class);
             $bff->post('/impersonation', [ImpersonationController::class, 'switch'])->add(AuthMiddleware::class);

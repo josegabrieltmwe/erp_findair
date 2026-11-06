@@ -37,6 +37,8 @@ final class Route
         public readonly array $bodyEnum = [],
         /** Con suplantación, exige X-Effective-Partner-Id en respuestas JSON 2xx; `false` solo para rutas cuyo controlador no lo sella. */
         public readonly bool $checkEffectivePartner = true,
+        /** Tipo de recurso OTP (`cargo_offer`…): la ruta solo la atiende una sesión abierta con ese OTP, nunca una de usuario. */
+        public readonly ?string $otp = null,
     ) {
     }
 

@@ -13,6 +13,12 @@ interface CounterStore
     /** INCR atómico; la caducidad se fija al crear la clave (ventana fija). Devuelve el valor tras incrementar. */
     public function increment(string $key, int $ttlSeconds): int;
 
+    /** Valor actual de un contador sin incrementarlo; 0 si no existe o caducó. */
+    public function get(string $key): int;
+
+    /** Borra un contador (p. ej. los fallos de un recurso tras una autorización correcta). */
+    public function delete(string $key): void;
+
     /** Segundos que le quedan a la clave (para Retry-After); 0 si no existe. */
     public function ttl(string $key): int;
 

@@ -188,7 +188,22 @@ final class RouteManifest
             throttle: self::throttle($i),
             bodyEnum: self::bodyEnum($i),
             checkEffectivePartner: (bool) ($i['check_effective_partner'] ?? true),
+            otp: self::otp($i),
         );
+    }
+
+    /** @param array<mixed> $i */
+    /** @param array<mixed> $i */
+    private static function otp(array $i): ?string
+    {
+        if (!isset($i['otp'])) {
+            return null;
+        }
+        if (!is_string($i['otp']) || preg_match('/^[a-z][a-z_]{0,31}$/', $i['otp']) !== 1) {
+            throw new \InvalidArgumentException("otp inválido en '{$i['id']}'.");
+        }
+
+        return $i['otp'];
     }
 
     /** @param array<mixed> $i */
