@@ -1,4 +1,5 @@
 import { http } from "./http";
+import { mailCallbackUrl } from "@shared/platform/appPageUrl";
 
 /**
  * Carrier offer row stored in `spedizioni_cargo_off`. Backend column
@@ -89,6 +90,12 @@ export interface DistributeRfqRequest {
   rfq_text?: string;
   /** Shipment file ids to attach to every RFQ email (G4). */
   file_ids?: number[];
+  /**
+   * URL base (GET) de la pantalla de ESTA aplicación donde la aerolínea abre su solicitud; el API le añade `id` y
+   * `otp` y la pone en el correo. Si no se informa, el servicio usa la pantalla declarada en `MAIL_LANDING_PATHS`.
+   * El API la rechaza (400 CALLBACK_URL_INVALID) si su origen no es uno de los registrados de esta aplicación.
+   */
+  callback_url?: string;
 }
 
 /**
@@ -153,7 +160,11 @@ export const cargoOffersService = {
   distribute(body: DistributeRfqRequest): Promise<DistributeRfqResponse> {
     return http<DistributeRfqResponse>(BASE, {
       method: "POST",
-      body: { ...body, action: "distribute" },
+      body: {
+        ...body,
+        action: "distribute",
+        callback_url: body.callback_url ?? mailCallbackUrl("cargoCarrierOffer"),
+      },
     });
   },
 
