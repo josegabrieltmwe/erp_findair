@@ -229,6 +229,18 @@ routes:
     check_effective_partner: false
     limits: { timeout: 20 }
 
+  # La aerolínea envía su respuesta (precio por línea, peso tasable, notas, horario, referencia y la confirmación). Cuerpo JSON
+  # pequeño; el total lo calcula el API. Límite propio por sesión e IP. El CSRF es el de la sesión de OTP.
+  - id: otp.cargo_offer.submit
+    method: POST
+    path: /api_carrier_offer
+    upstream:
+      action: api_carrier_offer
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { body: 32k, timeout: 20 }
+    throttle: otp_submit
+
   # Copilot del ERP: la SPA usa postJson() (método dinámico), que el generador no detecta.
   - id: copilot.chat
     method: POST

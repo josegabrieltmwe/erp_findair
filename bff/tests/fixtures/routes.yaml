@@ -1,4 +1,13 @@
 routes:
+  - id: otp.offer.submit
+    method: POST
+    path: /otp_offer
+    upstream:
+      action: api_carrier_offer
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { body: 1k }
+    throttle: otp_submit
   - id: otp.offer
     method: GET
     path: /otp_offer

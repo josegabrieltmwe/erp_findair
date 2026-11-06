@@ -67,9 +67,35 @@ export interface CarrierOfferResponse {
   data?: CarrierOfferView;
 }
 
+export interface CarrierQuoteResponse {
+  success: boolean;
+  state?: "submitted";
+  /** El total que calculó el SERVIDOR (puede diferir del que mostraba la pantalla). */
+  total?: number;
+  currency?: string;
+  answered_at?: string;
+}
+
+export interface CarrierQuoteBody {
+  lines: Array<{ id: number; costo_unitV: number; costo_minV: number; costo_maxV: number }>;
+  chargeable_weight: number;
+  note: string;
+  schedule: string;
+  reference: string;
+  confirm: { price: boolean; terms: boolean };
+}
+
 export const carrierOfferService = {
   /** GET /api_carrier_offer — `found: false` si el enlace ya no sirve (caducado o retirado). */
   get(): Promise<CarrierOfferResponse> {
     return http<CarrierOfferResponse>("/api_carrier_offer");
+  },
+
+  /**
+   * POST /api_carrier_offer — la aerolínea responde. Sin `id` ni `otp` (los pone el BFF desde la sesión) y sin total (lo calcula
+   * el servidor). Errores: 400 VALIDATION_ERROR (`error.details.fields`) / CONFIRMATION_REQUIRED, 409 OFFER_LOCKED.
+   */
+  submit(body: CarrierQuoteBody): Promise<CarrierQuoteResponse> {
+    return http<CarrierQuoteResponse>("/api_carrier_offer", { method: "POST", body });
   },
 };

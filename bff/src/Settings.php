@@ -100,6 +100,12 @@ final class Settings
                     concurrencyPerUser: (int) $get('COPILOT_CHAT_MAX_PER_USER', '1'),
                     concurrencyGlobal: (int) $get('COPILOT_CHAT_MAX_GLOBAL', '30'),
                 ),
+                // Respuesta de una aerolínea (sesión de OTP, sin usuario): la clave del «usuario» es la sesión. Un envío legítimo es
+                // uno o dos; el tope frena reintentos en bucle sin molestar a quien corrige un error de validación.
+                'otp_submit' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('OTP_SUBMIT_RATE_PER_MIN', '10'),
+                    ratePerIp: (int) $get('OTP_SUBMIT_RATE_PER_IP_MIN', '30'),
+                ),
                 'copilot_confirm' => new ThrottlePolicy(
                     ratePerUser: (int) $get('COPILOT_CONFIRM_RATE_PER_MIN', '30'),
                     ratePerIp: (int) $get('COPILOT_CONFIRM_RATE_PER_IP_MIN', '60'),

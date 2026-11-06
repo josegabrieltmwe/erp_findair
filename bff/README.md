@@ -57,6 +57,9 @@ OTP del correo. Ante el API quien se autentica es la aplicación.
    ni a `/bff/impersonation`.
 5. El Bearer no tiene refresh token: `TokenRefresher` negocia otro al caducar.
 
+El envío de la respuesta (`POST /bff/v1/api_carrier_offer`, ruta `otp.cargo_offer.submit`) exige el CSRF de la sesión y el origen de la app, solo admite un
+objeto JSON de hasta 32 kB y se le quitan `id`, `otp` y `type`; el API además los lee solo de la query. Límite propio: política `otp_submit`.
+
 Límite de intentos: en el BFF, no en el API (`Rate_Limiter_Service` no actúa sin APCu). `OtpAttemptLimiter` cuenta solo los fallos, por
 recurso (`tipo:id`, exista o no) y por IP, en Redis; una autorización correcta limpia el contador del recurso.
 
@@ -66,6 +69,8 @@ recurso (`tipo:id`, exista o no) y por IP, en Redis; una autorización correcta 
 | `OTP_MAX_FAILURES_PER_RESOURCE` | `8` | Fallos tolerados por recurso en la ventana |
 | `OTP_MAX_FAILURES_PER_IP` | `20` | Fallos tolerados por IP en la ventana |
 | `OTP_FAILURE_WINDOW` | `900` | Ventana de los contadores de fallos (s) |
+| `OTP_SUBMIT_RATE_PER_MIN` | `10` | Envíos de respuesta por minuto y sesión OTP |
+| `OTP_SUBMIT_RATE_PER_IP_MIN` | `30` | Envíos de respuesta por minuto e IP |
 
 Añadir un tipo de recurso: darlo de alta en `OtpGate::TYPES` (y en el API, `Otp_Resource_Authorizer`) y marcar sus rutas con `otp: <tipo>`.
 
