@@ -95,6 +95,10 @@ export async function bootstrapOtp(): Promise<OtpBootstrap> {
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id');
   const otp = query.get('otp');
+  // Tipo de recurso del enlace (`courier_offer`…). Sin él, la solicitud de una aerolínea (`cargo_offer`), que es lo que
+  // llevan los enlaces ya enviados. Solo la forma: el BFF rechaza un tipo que no conozca.
+  const rawType = query.get('type');
+  const type = rawType && /^[a-z_]{1,32}$/.test(rawType) ? rawType : undefined;
 
   if (id && otp) {
     let response: Response;
@@ -103,7 +107,7 @@ export async function bootstrapOtp(): Promise<OtpBootstrap> {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ id, otp }),
+        body: JSON.stringify(type ? { type, id, otp } : { id, otp }),
       });
     } catch {
       return finish({ ok: false, reason: 'unavailable' });

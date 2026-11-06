@@ -69,7 +69,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/offer",
     name: "carrier-offer",
-    component: () => import("@cargo/pages/CarrierOfferPage.vue"),
+    component: () => import("@/pages/OtpOfferEntry.vue"),
     meta: { fullscreen: true, otp: true },
   },
 

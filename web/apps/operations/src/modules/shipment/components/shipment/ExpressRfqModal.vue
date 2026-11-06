@@ -11,6 +11,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { EmailComposer, emailPreviewService } from "@shared/email";
+import { mailCallbackUrl } from "@shared/platform/appPageUrl";
 import type {
   EmailComposerModel,
   EmailPreview,
@@ -65,6 +66,7 @@ const adapter = computed<EmailScenarioAdapter>(() => ({
     return emailPreviewService.preview("express_rfq", props.shipmentId, {
       lang: input.lang,
       text: input.text,
+      callbackUrl: mailCallbackUrl("shipmentQuoteOffer"),
     });
   },
   async send(model: EmailComposerModel) {

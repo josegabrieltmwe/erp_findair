@@ -24,6 +24,8 @@ final class OtpGate
     /** Tipos de recurso admitidos y la forma de su OTP. Un tipo nuevo se da de alta aquí y en el API (Otp_Resource_Authorizer). */
     public const TYPES = [
         'cargo_offer' => ['otp' => '/^[0-9A-Za-z]{1,12}$/'],
+        // Solicitud de cotización de una expedición courier, para un courier o una anagrafica partner: el OTP es el token de 33 caracteres.
+        'courier_offer' => ['otp' => '/^[0-9A-Za-z]{1,33}$/'],
     ];
 
     public const AUTHORIZED = 'authorized';

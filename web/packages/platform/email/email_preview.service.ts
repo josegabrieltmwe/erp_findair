@@ -18,7 +18,7 @@ export const emailPreviewService = {
   async preview(
     scenario: string,
     entityId: number,
-    opts: { lang?: string; text?: string; mode?: string; partnerId?: number } = {},
+    opts: { lang?: string; text?: string; mode?: string; partnerId?: number; callbackUrl?: string } = {},
   ): Promise<EmailPreview | null> {
     const body: Record<string, unknown> = {
       scenario,
@@ -28,6 +28,8 @@ export const emailPreviewService = {
     if (opts.text != null) body.text = opts.text;
     if (opts.mode != null) body.mode = opts.mode;
     if (opts.partnerId != null) body.partner_id = opts.partnerId;
+    // Pantalla de la aplicación donde el destinatario responde: el enlace de muestra del preview la usa.
+    if (opts.callbackUrl) body.callback_url = opts.callbackUrl;
 
     const res = await http<PreviewEnvelope>('/api_modelli_email_preview', {
       method: 'POST',

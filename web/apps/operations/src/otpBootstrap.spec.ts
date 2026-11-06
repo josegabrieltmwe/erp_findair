@@ -54,6 +54,17 @@ describe("bootstrapOtp: el OTP del enlace autoriza el acceso, sin login", () => 
     onOtpSessionLost(null);
   });
 
+  it("lleva el tipo de recurso del enlace cuando lo trae y solo si tiene forma de tipo", async () => {
+    const withType = setup("?id=12&otp=t0123&type=courier_offer", [{ status: 200, body: { ...AUTHORIZED, resource: { type: "courier_offer", id: 12, state: "open" } } }]);
+    const ok = await bootstrapOtp();
+    expect(JSON.parse(String(withType.fetchMock.mock.calls[0][1]?.body))).toEqual({ type: "courier_offer", id: "12", otp: "t0123" });
+    expect(ok.ok && ok.resource.type).toBe("courier_offer");
+
+    const weird = setup("?id=12&otp=AbC123&type=%3Cx%3E", [{ status: 200, body: AUTHORIZED }]);
+    await bootstrapOtp();
+    expect(JSON.parse(String(weird.fetchMock.mock.calls[0][1]?.body))).toEqual({ id: "12", otp: "AbC123" });
+  });
+
   it("con id y otp los presenta al punto de autorización del BFF", async () => {
     const { fetchMock } = setup("?id=12&otp=AbC123", [{ status: 200, body: AUTHORIZED }]);
 

@@ -241,6 +241,27 @@ routes:
     limits: { body: 32k, timeout: 20 }
     throttle: otp_submit
 
+  # Solicitud de cotización de una expedición courier vista y respondida por un courier o una anagrafica partner (sesión OTP
+  # `courier_offer`). Misma forma que la de cargo: el API calcula/valida en el servidor y la respuesta es única.
+  - id: otp.courier_offer.view
+    method: GET
+    path: /api_courier_offer
+    upstream:
+      action: api_courier_offer
+    otp: courier_offer
+    check_effective_partner: false
+    limits: { timeout: 20 }
+
+  - id: otp.courier_offer.submit
+    method: POST
+    path: /api_courier_offer
+    upstream:
+      action: api_courier_offer
+    otp: courier_offer
+    check_effective_partner: false
+    limits: { body: 16k, timeout: 20 }
+    throttle: otp_submit
+
   # Ficheros de la aerolínea (sesión OTP): descargar uno de la expedición (`idf`) o uno suyo (`n`), y subir el suyo (multipart, máx. 4 MB).
   - id: otp.cargo_offer.file.download
     method: GET
