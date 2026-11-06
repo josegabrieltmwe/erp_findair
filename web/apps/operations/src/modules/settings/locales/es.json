@@ -783,7 +783,19 @@
     "empty": "Todos los clientes tienen margen configurado para este tipo",
     "total": "{n} clientes",
     "error": "No se pudo cargar el listado",
-    "error_forbidden": "No tienes permiso para ver los márgenes de los clientes"
+    "error_forbidden": "No tienes permiso para ver los márgenes de los clientes",
+    "apply_base": "Aplicar preset base ({n})",
+    "select_page": "Seleccionar todos los de esta página",
+    "select_row": "Seleccionar {name}",
+    "apply_confirm_title": "Aplicar el preset base a {n} clientes",
+    "apply_confirm_text": "Cada cliente recibe el preset base de {tipo} de su titular. Queda guardado en su ficha y se puede cambiar después. A los clientes que ya tengan margen no se les toca.",
+    "apply_confirm_ok": "Aplicar",
+    "apply_done": "Preset base aplicado a {n} clientes",
+    "apply_no_base": "{n} sin preset base en su titular",
+    "apply_already": "{n} ya tenían margen",
+    "apply_failed": "{n} no se pudieron actualizar",
+    "apply_forbidden": "No tienes permiso para cambiar los márgenes de los clientes",
+    "apply_error": "No se pudo aplicar el preset base"
   },
   "extracharges": {
     "subtitle": "Catálogo de suplementos y recargos usados en tarifas de courier y cargo",

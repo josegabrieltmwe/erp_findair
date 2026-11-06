@@ -783,7 +783,19 @@
     "empty": "All customers have a margin configured for this type",
     "total": "{n} customers",
     "error": "The list could not be loaded",
-    "error_forbidden": "You are not allowed to see customer margins"
+    "error_forbidden": "You are not allowed to see customer margins",
+    "apply_base": "Apply base preset ({n})",
+    "select_page": "Select all on this page",
+    "select_row": "Select {name}",
+    "apply_confirm_title": "Apply the base preset to {n} customers",
+    "apply_confirm_text": "Each customer gets their owner's {tipo} base preset. It is saved on the customer record and can be changed later. Customers that already have a margin are left untouched.",
+    "apply_confirm_ok": "Apply",
+    "apply_done": "Base preset applied to {n} customers",
+    "apply_no_base": "{n} whose owner has no base preset",
+    "apply_already": "{n} already had a margin",
+    "apply_failed": "{n} could not be updated",
+    "apply_forbidden": "You are not allowed to change customer margins",
+    "apply_error": "The base preset could not be applied"
   },
   "extracharges": {
     "subtitle": "Catalogue of surcharges used in courier and cargo rates",

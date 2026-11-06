@@ -546,3 +546,12 @@ routes:
     upstream:
       action: api_customers_without_margin
       forward_query: [tipo, q, page, per_page, id_titolare]
+
+  # Aplicar en bloque el preset base del titular a clientes sin margen (P92). Módulo margenes_clientes,
+  # margins:write; el API usa el preset del titular de cada cliente y un partner solo toca los suyos.
+  - id: post.api_customers_without_margin
+    method: POST
+    path: /api_customers_without_margin
+    upstream:
+      action: api_customers_without_margin
+    limits: { body: 64k, timeout: 60 }

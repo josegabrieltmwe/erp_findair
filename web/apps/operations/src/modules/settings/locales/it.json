@@ -783,7 +783,19 @@
     "empty": "Tutti i clienti hanno un margine configurato per questo tipo",
     "total": "{n} clienti",
     "error": "Impossibile caricare l'elenco",
-    "error_forbidden": "Non hai il permesso di vedere i margini dei clienti"
+    "error_forbidden": "Non hai il permesso di vedere i margini dei clienti",
+    "apply_base": "Applica preset base ({n})",
+    "select_page": "Seleziona tutti in questa pagina",
+    "select_row": "Seleziona {name}",
+    "apply_confirm_title": "Applica il preset base a {n} clienti",
+    "apply_confirm_text": "Ogni cliente riceve il preset base {tipo} del suo titolare. Resta salvato nella scheda e si può cambiare dopo. I clienti che hanno già un margine non vengono toccati.",
+    "apply_confirm_ok": "Applica",
+    "apply_done": "Preset base applicato a {n} clienti",
+    "apply_no_base": "{n} con titolare senza preset base",
+    "apply_already": "{n} avevano già un margine",
+    "apply_failed": "{n} non aggiornati",
+    "apply_forbidden": "Non hai i permessi per modificare i margini dei clienti",
+    "apply_error": "Impossibile applicare il preset base"
   },
   "extracharges": {
     "subtitle": "Catalogo dei supplementi usati nelle tariffe courier e cargo",

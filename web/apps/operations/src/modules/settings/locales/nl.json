@@ -783,7 +783,19 @@
     "empty": "Alle klanten hebben een marge ingesteld voor dit type",
     "total": "{n} klanten",
     "error": "De lijst kon niet worden geladen",
-    "error_forbidden": "Je hebt geen toestemming om klantmarges te bekijken"
+    "error_forbidden": "Je hebt geen toestemming om klantmarges te bekijken",
+    "apply_base": "Basispreset toepassen ({n})",
+    "select_page": "Alles op deze pagina selecteren",
+    "select_row": "{name} selecteren",
+    "apply_confirm_title": "Basispreset toepassen op {n} klanten",
+    "apply_confirm_text": "Elke klant krijgt de {tipo}-basispreset van zijn eigenaar. Die wordt op de klantkaart opgeslagen en kan later worden gewijzigd. Klanten die al een marge hebben, blijven ongewijzigd.",
+    "apply_confirm_ok": "Toepassen",
+    "apply_done": "Basispreset toegepast op {n} klanten",
+    "apply_no_base": "{n} zonder basispreset bij de eigenaar",
+    "apply_already": "{n} hadden al een marge",
+    "apply_failed": "{n} konden niet worden bijgewerkt",
+    "apply_forbidden": "Je mag de marges van klanten niet wijzigen",
+    "apply_error": "Basispreset kon niet worden toegepast"
   },
   "extracharges": {
     "subtitle": "Toeslagcatalogus gebruikt in koerier- en vrachttarieven",

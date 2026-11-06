@@ -12,7 +12,9 @@ vi.mock("@shared/anagrafiche/services/http", () => ({
 
 import {
   buildCustomersWithoutMarginQuery,
+  countByStatus,
   customersWithoutMarginService,
+  parseApplyBasePreset,
   marginConfigRoute,
   pageCount,
 } from "@shared/customers_without_margin/services/customersWithoutMargin.service";
@@ -130,5 +132,37 @@ describe("utilidades", () => {
       query: {},
     });
     expect(marginConfigRoute(42, "E").query).toEqual({ tipo: "E" });
+  });
+});
+
+describe("aplicar preset base en bloque", () => {
+  it("envía la acción, el tipo y los ids limpios por POST", async () => {
+    reply = { success: true, data: { items: [{ id: 9600, status: "applied", preset_id: 1 }], applied: 1, tipo: "A" } };
+    const res = await customersWithoutMarginService.applyBasePreset("A", [9600, 9600, 1, 0, 9601.7]);
+    const last = calls[calls.length - 1];
+    expect(last.url).toBe("/api_customers_without_margin");
+    expect(last.opts.method).toBe("POST");
+    expect(last.opts.body).toEqual({ action: "apply_base_preset", tipo: "A", ids: [9600, 9601] });
+    expect(res).toEqual({ applied: 1, items: [{ id: 9600, status: "applied", presetId: 1 }] });
+  });
+
+  it("un estado desconocido cuenta como error y el resumen cuenta por estado", () => {
+    const r = parseApplyBasePreset({
+      data: {
+        items: [
+          { id: 1, status: "applied", preset_id: 3 },
+          { id: 2, status: "no_base_preset", preset_id: null },
+          { id: 3, status: "raro" },
+          { id: 4, status: "no_base_preset" },
+        ],
+      },
+    });
+    expect(r.applied).toBe(1);
+    expect(r.items[2].status).toBe("error");
+    expect(countByStatus(r)).toEqual({ applied: 1, no_base_preset: 2, error: 1 });
+  });
+
+  it("tolera una respuesta vacía", () => {
+    expect(parseApplyBasePreset(null)).toEqual({ applied: 0, items: [] });
   });
 });

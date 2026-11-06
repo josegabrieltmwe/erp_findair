@@ -11,6 +11,9 @@ import { http } from '../../anagrafiche/services/http';
  *   params: tipo ('A' por defecto; 'E'|'A'|'S'), q (razón social o id), page (1..), per_page (50, máx. 200),
  *           id_titolare (opcional, solo TMWE).
  *   respuesta: { success, data: { items[], total, page, per_page, tipo } }, ordenado por cargo_shipments_12m desc.
+ * `POST /api_customers_without_margin` { action: 'apply_base_preset', tipo, ids[] } (margins:write): aplica a esos
+ *   clientes el preset base de SU titular; no pisa márgenes existentes. Respuesta por cliente:
+ *   { items: [{ id, status, preset_id }], applied }.
  * Alcance: TMWE ve todos los clientes activos; un partner solo los suyos (lo decide el API, la SPA no filtra).
  */
 
@@ -105,7 +108,60 @@ export function parseCustomersWithoutMargin(
   };
 }
 
+export type ApplyBasePresetStatus =
+  | 'applied'
+  | 'already_configured'
+  | 'no_base_preset'
+  | 'forbidden'
+  | 'not_found'
+  | 'error';
+
+export interface ApplyBasePresetResult {
+  applied: number;
+  items: Array<{ id: number; status: ApplyBasePresetStatus; presetId: number | null }>;
+}
+
+const APPLY_STATUSES: readonly ApplyBasePresetStatus[] = [
+  'applied',
+  'already_configured',
+  'no_base_preset',
+  'forbidden',
+  'not_found',
+  'error',
+];
+
+/** Cuerpo del API -> resultado por cliente. Un estado desconocido cuenta como error. */
+export function parseApplyBasePreset(raw: unknown): ApplyBasePresetResult {
+  const data = ((raw as { data?: Record<string, unknown> } | null)?.data ?? {}) as {
+    items?: Array<{ id?: unknown; status?: unknown; preset_id?: unknown }>;
+  };
+  const items = (Array.isArray(data.items) ? data.items : []).map((r) => {
+    const status = APPLY_STATUSES.includes(r?.status as ApplyBasePresetStatus)
+      ? (r.status as ApplyBasePresetStatus)
+      : 'error';
+    const presetId = toInt(r?.preset_id, 0);
+    return { id: toInt(r?.id, 0), status, presetId: presetId > 0 ? presetId : null };
+  });
+  return { applied: items.filter((i) => i.status === 'applied').length, items };
+}
+
+/** Cuántos clientes quedaron en cada estado (para el resumen tras aplicar). */
+export function countByStatus(r: ApplyBasePresetResult): Partial<Record<ApplyBasePresetStatus, number>> {
+  const out: Partial<Record<ApplyBasePresetStatus, number>> = {};
+  for (const i of r.items) out[i.status] = (out[i.status] ?? 0) + 1;
+  return out;
+}
+
 export const customersWithoutMarginService = {
+  async applyBasePreset(tipo: MarginTipo, ids: number[]): Promise<ApplyBasePresetResult> {
+    const clean = [...new Set(ids.map((n) => Math.trunc(Number(n))).filter((n) => n > 1))].slice(0, MAX_PER_PAGE);
+    const raw = await http<unknown>(ENDPOINT, {
+      method: 'POST',
+      body: { action: 'apply_base_preset', tipo: isTipo(tipo) ? tipo : 'A', ids: clean },
+    });
+    return parseApplyBasePreset(raw);
+  },
+
   async list(p: CustomersWithoutMarginQuery = {}): Promise<CustomersWithoutMarginPage> {
     const query = buildCustomersWithoutMarginQuery(p);
     const raw = await http<unknown>(ENDPOINT, { query });

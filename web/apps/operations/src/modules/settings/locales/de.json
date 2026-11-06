@@ -783,7 +783,19 @@
     "empty": "Alle Kunden haben für diesen Typ eine Marge konfiguriert",
     "total": "{n} Kunden",
     "error": "Die Liste konnte nicht geladen werden",
-    "error_forbidden": "Sie dürfen die Kundenmargen nicht sehen"
+    "error_forbidden": "Sie dürfen die Kundenmargen nicht sehen",
+    "apply_base": "Basis-Preset anwenden ({n})",
+    "select_page": "Alle auf dieser Seite auswählen",
+    "select_row": "{name} auswählen",
+    "apply_confirm_title": "Basis-Preset auf {n} Kunden anwenden",
+    "apply_confirm_text": "Jeder Kunde erhält das {tipo}-Basis-Preset seines Inhabers. Es wird im Kundenstamm gespeichert und kann später geändert werden. Kunden mit bestehender Marge bleiben unverändert.",
+    "apply_confirm_ok": "Anwenden",
+    "apply_done": "Basis-Preset auf {n} Kunden angewendet",
+    "apply_no_base": "{n} ohne Basis-Preset beim Inhaber",
+    "apply_already": "{n} hatten bereits eine Marge",
+    "apply_failed": "{n} konnten nicht aktualisiert werden",
+    "apply_forbidden": "Keine Berechtigung, Kundenmargen zu ändern",
+    "apply_error": "Basis-Preset konnte nicht angewendet werden"
   },
   "extracharges": {
     "subtitle": "Zuschlagskatalog für Kurier- und Frachttarife",
