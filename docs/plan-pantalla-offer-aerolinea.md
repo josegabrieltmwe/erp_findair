@@ -1,6 +1,6 @@
 # Plan: pantalla de respuesta de la aerolínea a la cotización cargo (`/offer`)
 
-> **Estado:** borrador · **Última modificación:** 2026-11-06 · **Revisión 3:** el token es el Bearer OAuth de la aplicación (sustituye a las revisiones 1 y 2)
+> **Estado:** borrador · **Última modificación:** 2026-11-06 · **Revisión 4:** punto de autorización por OTP como primer paso; el token es el Bearer OAuth de la aplicación (sustituye a las revisiones 1 a 3)
 
 Plan para construir en `erp_findair` la pantalla donde una aerolínea responde a una solicitud de cotización cargo (RFQ), y las
 piezas del BFF y del API que necesita. Sustituye en el ERP moderno a `vttoff.php` del legado. Es la petición **P94** de
@@ -76,26 +76,51 @@ emite el API, solo lo guarda el BFF y va en cada llamada al API; nunca llega al 
 cookie de sesión opaca. Explicado con diagramas en el artifact «Respuesta de
 aerolínea al RFQ».
 
-### 4.1 Cómo entra la aerolínea
+### 4.1 Punto de autorización por OTP (primer paso de todo el flujo)
 
+La aerolínea **no tiene un registro en `contatti`**: no hay autenticación de usuario. Lo que sí hay es un OTP que garantiza que quien
+lo presenta está **autorizado a entrar a ese recurso** (esa oferta). Por eso lo primero que se construye y lo primero que ocurre es
+un punto de autorización, y nada más se atiende antes de pasarlo. Cada actor hace una cosa distinta:
+
+| Quién | Qué garantiza |
+|---|---|
+| La aerolínea | Autorización al recurso: el OTP del correo (`id` + `otp`). |
+| El BFF (app client) | **Autenticación ante el API:** negocia un Bearer `client_credentials` y lo guarda en la sesión (sellado con `TokenVault`). |
+| El API | Verifica el OTP contra el recurso y vuelve a verificarlo en cada llamada; no confía en la sesión del BFF. |
+
+Orden:
 1. El correo lleva `<origen de la SPA>/offer?id=<oferta>&otp=<otp>` (ya construido con `callback_url`).
-2. La SPA abre la ruta `/offer`, marcada `meta.otp` y `fullscreen`, **dentro del módulo cargo**. `main.ts` tiene una rama: si la
-   ruta es OTP, no llama a `bootstrapBff()` (que redirige al login) y llama a `POST /bff/auth/otp {id, otp}`.
-3. El BFF (`AuthController::otp()`, junto a `login` y `callback`, que ya son anónimos) pide al API un token `client_credentials`
-   (nuevo método en `OAuthClient`, token cacheado) y valida el OTP con `public_offer`. Si es válido, abre una **sesión de tipo
-   `otp`** con la `Session` actual (Redis, cookie HttpOnly, CSRF) que guarda solo `{tipo: oferta, id}` y el token sellado en
-   `TokenVault`. Si no, responde igual que «no existe» y cuenta el fallo por oferta e IP (`Throttler`).
-4. La SPA quita el OTP de la barra (`history.replaceState`) y pide por `/bff/v1/*` solo rutas del manifiesto marcadas `otp`.
-   `AuthMiddleware` deja pasar una sesión OTP únicamente a esas rutas; el proxy **toma `id` y `otp` de la sesión** e ignora los del
-   navegador. En modo OTP un 401 muestra «enlace caducado» (hoy `bff.ts` y `anagrafiche/services/http.ts` redirigen al login).
-5. La sesión caduca por inactividad y se destruye al enviar la respuesta o al bloquearse la oferta.
+2. La SPA abre la ruta `/offer` (`meta.otp`, `fullscreen`, dentro del módulo cargo). `main.ts` tiene una rama: si la ruta es OTP, no llama
+   a `bootstrapBff()` (que redirige al login) sino al punto de autorización, `POST /bff/auth/otp {id, otp}`.
+3. **Autorización.** El BFF negocia su Bearer (`client_credentials`, método nuevo de `OAuthClient`) y llama al API, `POST api_otp_authorize
+   {type:'cargo_offer', id, otp}`. El API responde `{authorized, resource:{type,id}, scopes, expires_at}` o, si no, siempre lo mismo.
+4. **Solo si está autorizado** se crea la sesión (`Session::regenerate`): Bearer sellado + una **concesión** `{type, id, otp (sellado), scopes,
+   granted_at}` + CSRF. Un intento fallido **no crea sesión** (no hay fijación ni sesiones basura) y suma al contador.
+5. Cada petición posterior va por `/bff/v1/*`: `AuthMiddleware` deja pasar una sesión con concesión **solo a rutas del manifiesto
+   marcadas `otp: <tipo>`**; el proxy **toma `id` y `otp` de la concesión** (ignora los del navegador) y añade el Bearer de la sesión.
+   El API vuelve a comprobar el OTP en cada endpoint.
+6. El Bearer de `client_credentials` no tiene refresh token: `TokenRefresher` lo renegocia al caducar. La sesión se destruye por
+   inactividad, al enviar la respuesta o al bloquearse la oferta, y se **revoca** el Bearer (`OAuthClient::revoke`).
+7. En modo OTP un 401 muestra «enlace caducado» (hoy `bff.ts` y `anagrafiche/services/http.ts` redirigen al login).
 
-No hace falta cliente OAuth nuevo: `Client_Credentials_Controller` no restringe el grant por cliente **[verificar]** que el cliente del
-BFF tiene secreto y lo admite en el sandbox. Tampoco rutas anónimas nuevas más allá de `POST /bff/auth/otp`.
+**Límite de intentos: en el BFF, no en el API.** `Rate_Limiter_Service` del API es un no-op sin APCu y APCu no está instalado (lo dice
+`Public_Cod_Guard_Trait`). El BFF sí tiene `RedisCounterStore`/`Throttler`: política `otp_authorize` por IP y por recurso (`tipo:id`),
+con bloqueo temporal tras N fallos y la misma respuesta que «no existe». El OTP de las ofertas cargo es corto (10 caracteres), así
+que el bloqueo por recurso es lo que realmente lo protege.
+
+No hace falta cliente OAuth nuevo: `Client_Credentials_Controller` no restringe el grant por cliente **[verificar en el sandbox]**. La
+única ruta nueva del BFF sin sesión previa es `POST /bff/auth/otp`, como `login` y `callback`.
 
 ### 4.2 API (`tmwe_api`, sin interfaz)
 
-Todo con el Bearer de la aplicación (`Public_Route_Policy`) y el OTP como segundo factor, sobre `Public_Offer_Controller`.
+Todo con el Bearer de la aplicación (`Public_Route_Policy`). La autorización por OTP se construye **genérica y reutilizable**, siguiendo la
+puerta que ya existe para COD (`Public_Cod_Guard_Trait`): una sola implementación para que todos los endpoints con OTP respondan idéntico.
+
+0. **Punto de autorización** (fase 1, lo primero): `Otp_Resource_Authorizer` (singleton, `Abstract_Service`) con un registro de resolutores
+   por tipo de recurso (`Abstract_Otp_Resolver`; el primero, `Cargo_Offer_Otp_Resolver`, sobre `Spedizioni_Cargo_Off::get_public_by_id_otp`:
+   `stato='A'` y no caducada) y el controlador `api_otp_authorize`. Un trait de controlador, `Otp_Guard_Trait`, lo aplica en cada
+   endpoint protegido y devuelve siempre `200 {found:false}` ante un OTP erróneo, un recurso retirado o caducado. Registra los eventos
+   en `Security_Events_Logger`. Mañana pueden enchufarse la oferta courier, la oferta al cliente, COD o el tracking sin tocar el BFF.
 1. **Ampliar la vista** (`Cargo_Offer_Service::get_public_offer`, lista blanca): aerolínea, moneda, resumen de carga, bultos, ficheros
    de la expedición con `show_vettore='S'`, ficheros de la aerolínea y `state` ∈ `open` / `answered` / `locked`. Nunca cliente final,
    notas internas, márgenes ni costes propios.
@@ -124,7 +149,7 @@ Todo con el Bearer de la aplicación (`Public_Route_Policy`) y el OTP como segun
 
 | Fase | Entrega | Pasos del legado que cierra |
 |---|---|---|
-| 1 · Ver | Sesión OTP en el BFF, `/offer` en solo lectura, vista pública ampliada | acceso por OTP, mostrar la solicitud, solo lectura tras revisión |
+| 1 · Autorizar y ver | **Primero el punto de autorización** (API + BFF + concesión en sesión + límite de intentos), después `/offer` en solo lectura y la vista pública ampliada | acceso por OTP, mostrar la solicitud, solo lectura tras revisión |
 | 2 · Responder | `submit_carrier_quote`, estados, aviso al operador, total en vivo | recalcular, enviar, aviso |
 | 3 · Ficheros y constancia | Subida/descarga, CSV, PDF y correo `CRGO2` | ficheros, CSV, PDF |
 | 4 · Operador | Indicador de respuestas sin revisar en lista y ficha, acción «Reenviar» | marca `ofstat`, reenvío |
@@ -141,6 +166,7 @@ No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en �
 | D4 | Idioma | inglés, claves en los cinco idiomas |
 | D5 | Enlace `?id&otp` o token opaco `t` (el de los couriers) | `id`+`otp` ahora; `t` en una fase posterior |
 | D6 | PDF y `CRGO2` en el alcance inicial | fase 3 |
+| D7 | Dónde se guarda el Bearer negociado | **En la sesión OTP**, sellado con `TokenVault`: reutiliza `AuthMiddleware` y `TokenRefresher` y permite revocarlo al cerrar. La alternativa (un token de app cacheado y compartido) evita un token por visita pero rompe esa reutilización y la revocación por sesión |
 
 **Comprobado el 2026-11-06 (BD de desarrollo):** `spedizioni_cargo_off` **no tiene** `confirmed`, `confirm_datetime` ni `confirm_IP`
 (solo `owner_user`, `insert_datetime`, `insert_user`, `insert_IP`, `data_risp`, `file_name1..4`, `otp`…). Para no añadir una migración, la
@@ -153,6 +179,7 @@ bien un cuerpo `multipart` con el límite de la ruta (se prueba en local al cons
 
 ## 7. Riesgos
 
+- **OTP corto y límite de intentos:** el OTP es de 10 caracteres y el limitador del API no funciona sin APCu; la protección real es el bloqueo por recurso en el BFF (Redis). Valorar alargar el OTP en los RFQ nuevos.
 - **OTP en la URL:** `Referer`, historial y registros. Mitigado con `no-referrer`, `replaceState`, sesión propia y límite de intentos.
 - **Subida de ficheros desde Internet:** tipo real, tamaño, cantidad y nombre propio en disco.
 - **Una ruta del BFF sin sesión previa** (`/bff/auth/otp`): como `login` y `callback`; el API sigue sin exponer nada. Dejarlo por escrito.
@@ -164,5 +191,6 @@ bien un cuerpo `multipart` con el límite de la ruta (se prueba en local al cons
 2. La aerolínea responde y el total guardado es el que calcula el servidor, aunque la petición traiga otro.
 3. El operador recibe el aviso y ve la respuesta sin revisar en la lista y en la ficha.
 4. Una oferta revisada no admite cambios; un OTP erróneo no revela si la oferta existe y se bloquea tras N intentos.
-5. Con la sesión OTP no se puede llegar a ninguna ruta del BFF que no sea de esa oferta, ni pedir otra oferta.
-6. Los ficheros subidos son del tipo y tamaño permitidos y no se descargan sin la sesión de su oferta.
+5. Sin pasar el punto de autorización no existe sesión; un intento fallido no crea sesión y, tras N fallos sobre una oferta, se bloquea con la misma respuesta que «no existe».
+6. Con la sesión OTP no se puede llegar a ninguna ruta del BFF que no sea de esa oferta, ni pedir otra oferta.
+7. Los ficheros subidos son del tipo y tamaño permitidos y no se descargan sin la sesión de su oferta.
