@@ -91,9 +91,30 @@ export interface DistributeRfqRequest {
   file_ids?: number[];
 }
 
+/**
+ * Resultado de una aerolínea en `distribute`: una fila por sigla pedida, en el orden pedido.
+ * `failed` = la solicitud NO salió (correo ausente o inválido, SMTP caído…) y no se dejó oferta.
+ */
+export interface DistributeRfqResult {
+  sigla: string;
+  nombre: string;
+  to: string;
+  status: "sent" | "failed";
+  offer_id: number | null;
+  request_id: string | null;
+  error: string | null;
+  error_code: string | null;
+}
+
 export interface DistributeRfqResponse {
   success: boolean;
-  data?: { cargo_id: number; sent: number; errors: Record<string, string> };
+  data?: {
+    cargo_id: number;
+    sent: number;
+    /** Un texto «SIGLA: motivo» por aerolínea fallida. */
+    errors: string[];
+    results?: DistributeRfqResult[];
+  };
   error?: string;
   message?: string;
 }

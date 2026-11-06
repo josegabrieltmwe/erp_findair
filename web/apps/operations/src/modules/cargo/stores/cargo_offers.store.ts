@@ -7,6 +7,7 @@ import {
   type OfferCreate,
   type OfferPatch,
   type DistributeRfqRequest,
+  type DistributeRfqResult,
 } from "@cargo/services/cargo_offers.service";
 import { useToastStore } from "./toast.store";
 
@@ -19,6 +20,15 @@ import { useToastStore } from "./toast.store";
  * disable inputs, and emits toast feedback consistently with the other
  * cargo stores (charges, MAWB, HAWB).
  */
+/** Resultado de `distribute`: `ok` solo si todas las aerolíneas pedidas recibieron la solicitud. */
+export interface DistributeOutcome {
+  ok: boolean;
+  sent: number;
+  /** Siglas que NO recibieron la solicitud. */
+  failed: string[];
+  results: DistributeRfqResult[];
+}
+
 export const useCargoOffersStore = defineStore("cargo_offers", () => {
   const rows = ref<CargoOffer[]>([]);
   const loading = ref(false);
@@ -73,30 +83,59 @@ export const useCargoOffersStore = defineStore("cargo_offers", () => {
 
   /**
    * Distribute RFQ — picks N carriers and sends a templated mail per
-   * carrier. The backend writes one offer row per carrier; we reload to
-   * surface them.
+   * carrier. The backend writes one offer row per carrier that received the
+   * request; we reload to surface them.
+   *
+   * `failed` lists the sigla that did NOT get the request (so the dialog can
+   * keep them selected to retry). Partial failures are reported by name: the
+   * legacy showed every carrier's outcome, and a bare "sent to N" hid the
+   * ones with no mail on record.
    */
   async function distribute(
     cargo_id: number,
     body: DistributeRfqRequest,
-  ): Promise<boolean> {
+  ): Promise<DistributeOutcome> {
+    const t = i18n.global.t;
     try {
       const r = await cargoOffersService.distribute(body);
       if (r.success && r.data) {
         await load(cargo_id);
         const sent = r.data.sent ?? 0;
-        toasts.push(
-          "success",
-          `RFQ sent to ${sent} carrier${sent === 1 ? "" : "s"}`,
-        );
-        return true;
+        const failedRows = (r.data.results ?? []).filter((x) => x.status === "failed");
+        const failed = failedRows.length
+          ? failedRows.map((x) => x.sigla)
+          : (r.data.errors ?? []).map((e) => e.split(":")[0].trim());
+        if (failed.length === 0) {
+          toasts.push("success", t("cargo.toast.rfq_sent", { sent }));
+        } else {
+          toasts.push(
+            "warning",
+            t("cargo.toast.rfq_partial", {
+              sent,
+              total: sent + failed.length,
+              failed: describeFailures(failedRows, r.data.errors ?? []),
+            }),
+          );
+        }
+        return { ok: failed.length === 0, sent, failed, results: r.data.results ?? [] };
       }
-      toasts.push("error", r.error ?? "Failed to distribute RFQ");
-      return false;
+      toasts.push("error", r.error ?? t("cargo.toast.rfq_failed", { failed: "" }));
+      return { ok: false, sent: 0, failed: [...body.carriers], results: [] };
     } catch (e) {
+      // El API contesta 400 con el motivo por aerolínea dentro de `error`.
       toasts.push("error", (e as Error).message);
-      return false;
+      return { ok: false, sent: 0, failed: [...body.carriers], results: [] };
     }
+  }
+
+  /** «KL (KLM): Carrier email not found for partner; AF: …» */
+  function describeFailures(rows: DistributeRfqResult[], errors: string[]): string {
+    if (rows.length) {
+      return rows
+        .map((x) => `${x.sigla}${x.nombre ? ` (${x.nombre})` : ""}: ${x.error ?? ""}`)
+        .join("; ");
+    }
+    return errors.join("; ");
   }
 
   async function update(patch: OfferPatch): Promise<boolean> {

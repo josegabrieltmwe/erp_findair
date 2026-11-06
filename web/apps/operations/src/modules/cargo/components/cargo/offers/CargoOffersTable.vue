@@ -659,17 +659,21 @@ async function submitDistribute(): Promise<void> {
   if (!id.value || !rfqCarriers.value.length) return;
   distributing.value = true;
   try {
-    const ok = await store.distribute(Number(id.value), {
+    const outcome = await store.distribute(Number(id.value), {
       cargo_id: Number(id.value),
       carriers: [...rfqCarriers.value],
       rfq_text: rfqText.value,
       file_ids: [...rfqFileIds.value],
     });
-    if (ok) {
+    if (outcome.ok) {
       rfqOpen.value = false;
       rfqCarriers.value = [];
       rfqText.value = "";
       rfqFileIds.value = [];
+    } else if (outcome.sent > 0) {
+      // Salió a algunas: el diálogo sigue abierto con SOLO las que fallaron marcadas para reintentar,
+      // y las enviadas no vuelven a recibir otra solicitud.
+      rfqCarriers.value = rfqCarriers.value.filter((s) => outcome.failed.includes(s));
     }
   } finally {
     distributing.value = false;
