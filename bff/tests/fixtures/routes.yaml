@@ -18,6 +18,15 @@ routes:
     response: binary
     otp: cargo_offer
     check_effective_partner: false
+  - id: otp.courier.submit
+    method: POST
+    path: /otp_courier
+    upstream:
+      action: api_courier_offer
+    otp: courier_offer
+    check_effective_partner: false
+    limits: { body: 1k }
+    throttle: otp_submit
   - id: otp.offer.submit
     method: POST
     path: /otp_offer

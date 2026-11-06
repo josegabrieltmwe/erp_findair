@@ -1,4 +1,5 @@
 import { http } from "./http";
+import { mailCallbackUrl } from "@shared/platform/appPageUrl";
 
 /** Modo de envío a partner: cotizar (con OTP) o solo informar. */
 export type PartnerOfferMode = "Q" | "I";
@@ -80,6 +81,7 @@ export const partnerOffersService = {
         text,
         lang,
         partner_id: partnerId,
+        callback_url: mailCallbackUrl("shipmentQuoteOffer"),
       },
     });
     return res?.success && res.data ? res.data : null;
@@ -107,6 +109,8 @@ export const partnerOffersService = {
       mode,
       text,
       file_ids: fileIds,
+      // Pantalla donde el partner responde (solo se usa en modo cotizar).
+      callback_url: mailCallbackUrl("shipmentQuoteOffer"),
     };
     if (bodyHtml != null && bodyHtml !== "") body.body_html = bodyHtml;
     if (extraEmails.length) body.extra_emails = extraEmails;

@@ -1,4 +1,5 @@
 import { http } from "./http";
+import { mailCallbackUrl } from "@shared/platform/appPageUrl";
 
 /**
  * Courier RFQ service (request a quote from couriers by email) — the courier
@@ -85,6 +86,8 @@ export const expressOffersService = {
       carriers: courierIds,
       rfq_text: rfqText,
       file_ids: fileIds,
+      // El API no tiene interfaz: la aplicación le dice dónde responde el courier (le añade id, otp y type).
+      callback_url: mailCallbackUrl("shipmentQuoteOffer"),
     };
     if (extraEmails.length) body.extra_emails = extraEmails;
     if (cc.length) body.cc = cc;

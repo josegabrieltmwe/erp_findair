@@ -16,6 +16,8 @@
 export const MAIL_LANDING_PATHS = {
   /** La aerolínea abre su solicitud de cotización cargo: `?id=<oferta>&otp=<otp>`. */
   cargoCarrierOffer: '/offer',
+  /** Un courier o una anagrafica partner abre su solicitud de cotización de una expedición courier: `?id=<oferta>&otp=<token>&type=courier_offer`. */
+  shipmentQuoteOffer: '/offer',
 } as const;
 
 export type MailLandingKey = keyof typeof MAIL_LANDING_PATHS;

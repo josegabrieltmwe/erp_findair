@@ -249,6 +249,66 @@ final class OtpFlowTest extends AppTestCase
         self::assertCount($calls, $this->history, 'nada llegó al API');
     }
 
+    private const COURIER_TOKEN = 't0123456789abcdef0123456789abcdef';
+    private const COURIER_AUTHORIZED = '{"success":true,"authorized":true,"resource":{"type":"courier_offer","id":12,"state":"open"},"scopes":["view","answer"],"expires_at":1900000000}';
+
+    public function testACourierOfferOtpOpensASessionOfThatType(): void
+    {
+        $this->boot([$this->upstreamOk(self::TOKEN), $this->upstreamOk(self::COURIER_AUTHORIZED)]);
+
+        $response = $this->authorize(['type' => 'courier_offer', 'id' => 12, 'otp' => self::COURIER_TOKEN]);
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(['type' => 'courier_offer', 'id' => 12, 'state' => 'open'], $this->json($response)['resource']);
+        self::assertSame(
+            ['type' => 'courier_offer', 'id' => 12, 'otp' => self::COURIER_TOKEN],
+            json_decode((string) $this->history[1]['request']->getBody(), true)
+        );
+        $stored = $this->store->load($this->cookieId($response));
+        self::assertIsArray($stored);
+        self::assertSame('courier_offer', $stored['grant']['type']);
+        self::assertStringNotContainsString(self::COURIER_TOKEN, json_encode($stored, JSON_THROW_ON_ERROR), 'el OTP no queda en claro');
+    }
+
+    public function testTheOtpShapeIsPerType(): void
+    {
+        // Un token de 33 caracteres no es un OTP de cargo (12) y no llega al API; con el tipo courier sí se pregunta.
+        $this->boot();
+        $response = $this->authorize(['id' => 12, 'otp' => self::COURIER_TOKEN]);
+        self::assertSame(403, $response->getStatusCode());
+        self::assertCount(0, $this->history);
+
+        // Y uno de courier no pasa de 33.
+        $response = $this->authorize(['type' => 'courier_offer', 'id' => 12, 'otp' => str_repeat('a', 34)]);
+        self::assertSame(403, $response->getStatusCode());
+        self::assertCount(0, $this->history);
+    }
+
+    public function testACargoSessionCannotUseACourierRoute(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $calls = count($this->history);
+
+        $response = $this->send($this->request('POST', '/bff/v1/otp_courier', $sid, ['Origin' => self::ORIGIN, 'Content-Type' => 'application/json', 'X-CSRF-Token' => $csrf], '{}'));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('otp_scope', $this->json($response)['code']);
+        self::assertCount($calls, $this->history, 'nada llegó al API');
+    }
+
+    public function testTheRealManifestHasTheCourierOfferRoutes(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        foreach (['GET' => null, 'POST' => 'otp_submit'] as $method => $throttle) {
+            $hit = $manifest->match($method, '/api_courier_offer');
+            self::assertNotNull($hit, $method);
+            self::assertSame('courier_offer', $hit['route']->otp, $method);
+            self::assertSame('api_courier_offer', $hit['route']->action, $method);
+            self::assertFalse($hit['route']->forwardAllQuery, $method);
+            self::assertSame($throttle, $hit['route']->throttle, $method);
+        }
+    }
+
     public function testAnOtpSessionCannotUseImpersonationOrWriteRoutes(): void
     {
         $sid = $this->otpSession();
