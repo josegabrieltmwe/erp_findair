@@ -298,3 +298,4 @@ async function peekOauthRequired(res: Response): Promise<boolean> {
 export { ApiError } from './ApiError';
 export { resolveBasePath, DEFAULT_BASE_PATH } from './base_path';
 export * from './bff';
+export * from './otp';

@@ -12,11 +12,31 @@ import { authErrorFromSearch, renderAuthError } from './authError';
 import { renderNoAccess } from './noAccess';
 
 export const BFF_BASE_PATH = '/bff/v1';
-const BFF_AUTH_PATH = '/bff/auth';
+export const BFF_AUTH_PATH = '/bff/auth';
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 let csrfToken: string | null = null;
 let redirecting = false;
+
+/**
+ * Modo OTP: la página se abrió con el enlace de un correo y no hay usuario. Aquí el login del BFF no es una salida (no
+ * hay a quién loguear): si la sesión de OTP se pierde se avisa a quien se haya suscrito y nada más.
+ */
+let otpMode = false;
+let otpLostHandler: (() => void) | null = null;
+
+export function setOtpMode(on: boolean): void {
+  otpMode = on;
+}
+
+export function isOtpMode(): boolean {
+  return otpMode;
+}
+
+/** Quién quiere enterarse de que la sesión de OTP caducó (la vista muestra «enlace caducado»). */
+export function onOtpSessionLost(handler: (() => void) | null): void {
+  otpLostHandler = handler;
+}
 
 /**
  * Indicador global de "procesando": cuenta las peticiones que cambian estado hacia `/bff/`
@@ -90,6 +110,10 @@ export function bffLoginUrl(returnTo?: string): string {
 }
 
 export function redirectToBffLogin(): void {
+  if (otpMode) {
+    otpLostHandler?.();
+    return;
+  }
   if (typeof window === 'undefined' || redirecting) return;
   redirecting = true;
   window.location.assign(bffLoginUrl());
@@ -190,6 +214,10 @@ export interface BffUser {
 
 export interface BffSession {
   authenticated: boolean;
+  /** `otp` = sesión sin usuario abierta con el OTP de un correo (solo da acceso a un recurso). */
+  kind?: 'otp';
+  resource?: { type: string; id: number };
+  scopes?: string[];
   csrf_token?: string;
   access_expires_at?: number;
   /** Quién es el usuario; lo calcula el BFF al autenticar. */
