@@ -154,6 +154,11 @@ puerta que ya existe para COD (`Public_Cod_Guard_Trait`): una sola implementaci�
 | 3 · Ficheros y constancia | Subida/descarga, CSV, PDF y correo `CRGO2` | ficheros, CSV, PDF |
 | 4 · Operador | Indicador de respuestas sin revisar en lista y ficha, acción «Reenviar» | marca `ofstat`, reenvío |
 
+**Estado (2026-11-06):** la **fase 1 está construida y probada en local** (punto de autorización por OTP en el API y el BFF, sesión OTP,
+vista `/offer` en solo lectura, límite de intentos en Redis). Pruebas, 213 del BFF y 918 de la SPA en verde, y recorrido real en el navegador:
+ver `tmwe_api/docs/05-operacion/despliegue_offer_otp_fase1.md` §8. Pendiente de comprobar en el sandbox: el cliente del BFF allí y Apache.
+Fases 2 a 4 sin empezar.
+
 No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en él.
 
 ## 6. Decisiones abiertas
@@ -171,7 +176,7 @@ No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en �
 **Comprobado el 2026-11-06 (BD de desarrollo):** `spedizioni_cargo_off` **no tiene** `confirmed`, `confirm_datetime` ni `confirm_IP`
 (solo `owner_user`, `insert_datetime`, `insert_user`, `insert_IP`, `data_risp`, `file_name1..4`, `otp`…). Para no añadir una migración, la
 respuesta se audita como en el legado (`data_risp` + `insert_IP`) y la doble confirmación (precio y términos) se exige en el servidor sin
-persistirla; IP, oferta e importe van además al log. (`oauth_client` no existe en esa BD: ver abajo.)
+persistirla; IP, oferta e importe van además al log. (La tabla de clients es `auth_client`, sin columna de grants: `client_credentials` solo exige `client_id` y secreto válidos.)
 
 **[verificar en el sandbox]** (no se puede desde desarrollo): que el cliente del BFF tiene secreto y admite `client_credentials`; las
 extensiones y el tamaño de subida (`b2bfileext`, `b2bfilemaxmb`); que la plantilla `CRGO` de la BD use `!#OFFERURL#!`; que el proxy reenvíe
