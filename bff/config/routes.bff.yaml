@@ -196,6 +196,25 @@ routes:
       forward_query: '*'
     limits: { timeout: 45 }
 
+  # Contadores de la home (courier y cargo): con la caché del API fría (primera visita del día o dato de más de 1 h)
+  # el cálculo de TMWE tarda unos 16 s sin carga y 30-80 s con ella; el límite por defecto (15 s) daba 504 intermitentes.
+  # Sustituyen a las rutas generadas de routes.spa.yaml (misma id).
+  - id: get.api_courier_kpis
+    method: GET
+    path: /api_courier_kpis
+    upstream:
+      action: api_courier_kpis
+      forward_query: '*'
+    limits: { timeout: 60 }
+
+  - id: get.api_cargo_kpis
+    method: GET
+    path: /api_cargo_kpis
+    upstream:
+      action: api_cargo_kpis
+      forward_query: '*'
+    limits: { timeout: 60 }
+
   # Copilot del ERP: la SPA usa postJson() (método dinámico), que el generador no detecta.
   - id: copilot.chat
     method: POST
