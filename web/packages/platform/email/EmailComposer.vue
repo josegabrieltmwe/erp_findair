@@ -26,6 +26,7 @@
         <RecipientPicker
           v-model="recipients"
           :audience="audience"
+          :search="adapter.searchRecipients"
           :loading="loadingAudience"
           :allow-manual="adapter.supportsManualRecipients"
           :label="t('platform.email.recipients')"
@@ -36,6 +37,7 @@
           v-if="adapter.supportsCc"
           v-model="cc"
           :audience="audience"
+          :search="adapter.searchRecipients"
           :loading="loadingAudience"
           :allow-manual="adapter.supportsManualRecipients"
           :label="t('platform.email.cc')"
