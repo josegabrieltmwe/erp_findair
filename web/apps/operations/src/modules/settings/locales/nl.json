@@ -2403,7 +2403,7 @@
     "title_admin": "Gevaarlijke goederen: noodcontact per partner",
     "subtitle": "Uw bedrijf begeleidt het transport: dit contact wordt aan UPS, FedEx en DHL opgegeven bij zendingen met gevaarlijke goederen.",
     "filter_partner": "Partner",
-    "not_configured": "Zonder noodcontact kunnen geen volledig gereguleerde labels voor gevaarlijke goederen worden gemaakt bij UPS, FedEx of DHL.",
+    "not_configured": "Zonder eigen contact wordt het telefoonnummer van uw vestiging gebruikt en anders dat van TMWE. Dat nummer is mogelijk niet 24 uur bemand: stel hier het noodcontact in.",
     "emergency_title": "24-uurs noodcontact",
     "emergency_phone": "24-uurs telefoon",
     "emergency_contact": "Persoon of dienst",

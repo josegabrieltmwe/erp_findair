@@ -2403,7 +2403,7 @@
     "title_admin": "Merci pericolose: contatto di emergenza per partner",
     "subtitle": "La tua azienda accompagna il trasporto: questo contatto viene dichiarato a UPS, FedEx e DHL nelle spedizioni con merci pericolose.",
     "filter_partner": "Partner",
-    "not_configured": "Senza contatto di emergenza non si possono creare etichette di merci pericolose in regime completo con UPS, FedEx o DHL.",
+    "not_configured": "Senza un contatto proprio si usa il telefono della sede della tua azienda e, se manca, quello di TMWE. Quel telefono potrebbe non essere presidiato 24 h: configura qui il contatto di emergenza.",
     "emergency_title": "Contatto di emergenza 24 h",
     "emergency_phone": "Telefono 24 h",
     "emergency_contact": "Persona o servizio",

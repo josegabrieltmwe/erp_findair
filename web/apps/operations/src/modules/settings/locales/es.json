@@ -2403,7 +2403,7 @@
     "title_admin": "Mercancía peligrosa: contacto de emergencia por partner",
     "subtitle": "Tu empresa acompaña el transporte: este contacto se declara a UPS, FedEx y DHL en los envíos con mercancía peligrosa.",
     "filter_partner": "Partner",
-    "not_configured": "Sin contacto de emergencia no se pueden crear etiquetas de mercancía peligrosa en régimen completo con UPS, FedEx ni DHL.",
+    "not_configured": "Sin contacto propio se usa el teléfono de la sede de tu empresa y, si no lo hay, el de TMWE. Ese teléfono puede no estar atendido 24 h: configura aquí el contacto de emergencia.",
     "emergency_title": "Contacto de emergencia 24 h",
     "emergency_phone": "Teléfono 24 h",
     "emergency_contact": "Persona o servicio",

@@ -2403,7 +2403,7 @@
     "title_admin": "Dangerous goods: emergency contact by partner",
     "subtitle": "Your company accompanies the transport: this contact is declared to UPS, FedEx and DHL on dangerous goods shipments.",
     "filter_partner": "Partner",
-    "not_configured": "Without an emergency contact, fully regulated dangerous goods labels cannot be created with UPS, FedEx or DHL.",
+    "not_configured": "Without your own contact, your company's office phone is used and, if there is none, TMWE's. That phone may not be staffed 24 h: set the emergency contact here.",
     "emergency_title": "24 h emergency contact",
     "emergency_phone": "24 h phone",
     "emergency_contact": "Person or service",

@@ -2403,7 +2403,7 @@
     "title_admin": "Gefahrgut: Notfallkontakt je Partner",
     "subtitle": "Ihr Unternehmen begleitet den Transport: Dieser Kontakt wird UPS, FedEx und DHL bei Gefahrgutsendungen gemeldet.",
     "filter_partner": "Partner",
-    "not_configured": "Ohne Notfallkontakt können keine voll regulierten Gefahrgut-Labels bei UPS, FedEx oder DHL erstellt werden.",
+    "not_configured": "Ohne eigenen Kontakt wird die Telefonnummer Ihres Firmensitzes verwendet, sonst die von TMWE. Diese ist eventuell nicht rund um die Uhr besetzt: Hinterlegen Sie hier den Notfallkontakt.",
     "emergency_title": "24-h-Notfallkontakt",
     "emergency_phone": "24-h-Telefon",
     "emergency_contact": "Person oder Dienst",
