@@ -52,4 +52,14 @@ final class PublicCatalogRoutesTest extends AppTestCase
         $this->assertNotNull($hit);
         $this->assertSame(60.0, $hit['route']->timeout);
     }
+
+    public function testLosContadoresDeLaHomeAguantanLaCacheFria(): void
+    {
+        $m = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        foreach (['/api_courier_kpis', '/api_cargo_kpis', '/api_home_box_indicators'] as $path) {
+            $hit = $m->match('GET', $path);
+            $this->assertNotNull($hit, $path);
+            $this->assertGreaterThanOrEqual(45.0, $hit['route']->timeout, $path);
+        }
+    }
 }
