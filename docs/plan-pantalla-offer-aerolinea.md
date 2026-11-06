@@ -157,7 +157,9 @@ puerta que ya existe para COD (`Public_Cod_Guard_Trait`): una sola implementaci�
 **Estado (2026-11-06):** la **fase 1 está construida y probada en local** (punto de autorización por OTP en el API y el BFF, sesión OTP,
 vista `/offer` en solo lectura, límite de intentos en Redis). Pruebas, 213 del BFF y 918 de la SPA en verde, y recorrido real en el navegador:
 ver `tmwe_api/docs/05-operacion/despliegue_offer_otp_fase1.md` §8. Pendiente de comprobar en el sandbox: el cliente del BFF allí y Apache.
-Fases 2 a 4 sin empezar.
+**La fase 2 (responder) también está construida y probada en local** (2026-11-06): formulario con total en vivo, `POST api_carrier_offer` con el total
+calculado en el servidor, doble confirmación, aviso por correo al operador y bloqueo de la oferta revisada. La sesión OTP **no se destruye al enviar**
+(la aerolínea puede corregir hasta la revisión, como el legado); caduca por inactividad. Fases 3 y 4 sin empezar.
 
 No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en él.
 

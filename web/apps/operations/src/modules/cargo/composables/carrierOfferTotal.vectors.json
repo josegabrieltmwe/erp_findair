@@ -1,0 +1,268 @@
+{
+  "_comment": "Casos dorados del total de una cotizacion de aerolinea. DEBEN ser identicos en tmwe_api (tests/fixtures) y erp_findair (web/apps/operations/src/modules/cargo/composables/carrierOfferTotal.vectors.json): el servidor y la pantalla calculan lo mismo. Redondeo canonico: floor(x*100+0.5)/100.",
+  "cases": [
+    {
+      "name": "kg simple",
+      "chargeable_weight": 100,
+      "parcels": 2,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": "5.50",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 550.0
+    },
+    {
+      "name": "fix",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "fix",
+          "costo_unit": 20,
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 20.0
+    },
+    {
+      "name": "box",
+      "chargeable_weight": 10,
+      "parcels": 3,
+      "charges": [
+        {
+          "type": "box",
+          "costo_unit": "4.25",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 12.75
+    },
+    {
+      "name": "min applies",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 1,
+          "costo_min": 50,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 50.0
+    },
+    {
+      "name": "max applies",
+      "chargeable_weight": 1000,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 2,
+          "costo_min": 0,
+          "costo_max": 1500,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 1500.0
+    },
+    {
+      "name": "sentinel 9999999 does not cap",
+      "chargeable_weight": 100,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 5,
+          "costo_min": 0,
+          "costo_max": 9999999,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 500.0
+    },
+    {
+      "name": "carrier override of unit cost",
+      "chargeable_weight": 100,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 5,
+          "costo_min": 50,
+          "costo_max": 0,
+          "costo_unitV": 7,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 700.0
+    },
+    {
+      "name": "carrier override of min",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 1,
+          "costo_min": 50,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 80,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 80.0
+    },
+    {
+      "name": "carrier override of max",
+      "chargeable_weight": 100,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": 5,
+          "costo_min": 0,
+          "costo_max": 300,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 400
+        }
+      ],
+      "expected": 400.0
+    },
+    {
+      "name": "negative override clamps to zero",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "fix",
+          "costo_unit": 20,
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": -5,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 0.0
+    },
+    {
+      "name": "unknown type counts zero",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "otro",
+          "costo_unit": 9,
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 0.0
+    },
+    {
+      "name": "rounding is floor(x*100+0.5)/100",
+      "chargeable_weight": 1,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": "1.005",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 1.0
+    },
+    {
+      "name": "sum of lines",
+      "chargeable_weight": 50,
+      "parcels": 2,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": "3.2",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        },
+        {
+          "type": "fix",
+          "costo_unit": "12.34",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        },
+        {
+          "type": "box",
+          "costo_unit": "1.1",
+          "costo_min": 0,
+          "costo_max": 0,
+          "costo_unitV": 0,
+          "costo_minV": 0,
+          "costo_maxV": 0
+        }
+      ],
+      "expected": 174.54
+    },
+    {
+      "name": "empty",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [],
+      "expected": 0.0
+    },
+    {
+      "name": "string amounts and blanks",
+      "chargeable_weight": 10,
+      "parcels": 1,
+      "charges": [
+        {
+          "type": "kg",
+          "costo_unit": "2.5",
+          "costo_min": "",
+          "costo_max": "",
+          "costo_unitV": "",
+          "costo_minV": "",
+          "costo_maxV": ""
+        }
+      ],
+      "expected": 25.0
+    }
+  ]
+}
