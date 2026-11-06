@@ -215,6 +215,20 @@ routes:
       forward_query: '*'
     limits: { timeout: 60 }
 
+  # --- Sesiones abiertas con un OTP (sin usuario) --------------------------------------------------------------
+  # La aerolínea que responde a una cotización cargo no tiene usuario: el OTP del correo autoriza el acceso a ESA oferta
+  # (POST /bff/auth/otp) y la aplicación se autentica ante el API con su propio Bearer. Estas rutas las atiende SOLO una
+  # sesión de OTP del tipo indicado (`otp:`); id y OTP salen de la concesión de la sesión, no del navegador, así que no
+  # hay `forward_query`. Una sesión de usuario no llega aquí y una de OTP no llega a ninguna otra ruta.
+  - id: otp.cargo_offer.view
+    method: GET
+    path: /api_carrier_offer
+    upstream:
+      action: api_carrier_offer
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { timeout: 20 }
+
   # Copilot del ERP: la SPA usa postJson() (método dinámico), que el generador no detecta.
   - id: copilot.chat
     method: POST

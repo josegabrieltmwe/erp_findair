@@ -36,6 +36,16 @@ LUA;
         return (int) $this->redis->eval(self::INCREMENT_LUA, 1, $this->prefix . $key, (string) $ttlSeconds);
     }
 
+    public function get(string $key): int
+    {
+        return max(0, (int) $this->redis->get($this->prefix . $key));
+    }
+
+    public function delete(string $key): void
+    {
+        $this->redis->del([$this->prefix . $key]);
+    }
+
     public function ttl(string $key): int
     {
         return max(0, (int) $this->redis->ttl($this->prefix . $key));

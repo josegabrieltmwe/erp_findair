@@ -25,7 +25,7 @@ final class SessionMiddleware implements MiddlewareInterface
     {
         $session = $this->load($request);
         if (!$session->isNew()) {
-            $this->store->touch($session->id(), $this->settings->sessionIdleTtl);
+            $this->store->touch($session->id(), $this->settings->sessionIdleTtlFor($session->isOtp()));
         }
 
         $response = $handler->handle($request->withAttribute('session', $session));
@@ -43,7 +43,7 @@ final class SessionMiddleware implements MiddlewareInterface
             if ($session->previousId() !== null) {
                 $this->store->delete($session->previousId());
             }
-            $this->store->save($session->id(), $session->all(), $this->settings->sessionIdleTtl);
+            $this->store->save($session->id(), $session->all(), $this->settings->sessionIdleTtlFor($session->isOtp()));
             $response = $response->withAddedHeader('Set-Cookie', $this->cookie($session->id(), false));
         }
 

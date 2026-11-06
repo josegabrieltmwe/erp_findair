@@ -103,6 +103,24 @@ final class Session
         return is_string($this->data['tokens'] ?? null);
     }
 
+    /**
+     * Concesión de una sesión abierta con un OTP: `{type, id, otp (sellado), at}`, o null si es una sesión de usuario.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function grant(): ?array
+    {
+        $grant = $this->data['grant'] ?? null;
+
+        return is_array($grant) ? $grant : null;
+    }
+
+    /** Sesión sin usuario: el OTP del correo autoriza el acceso a UN recurso. */
+    public function isOtp(): bool
+    {
+        return $this->grant() !== null;
+    }
+
     /** Token sincronizado contra CSRF. Se crea al iniciar sesión. */
     public function csrfToken(): string
     {

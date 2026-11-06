@@ -90,6 +90,7 @@ import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useTheme } from "vuetify";
+import { isOtpMode } from "@tmwe/shared-frontend/http";
 import { applyThemeMode, themeMode } from "@shared/platform/themeMode";
 import DashboardShell from "@shared/listing/DashboardShell.vue";
 import { resolveSpaTarget } from "@shared/platform/navTargets";
@@ -107,7 +108,10 @@ const themeName = computed(() => theme.global.name.value);
 // Si el modo cambia fuera de esta pestaña (otra pestaña lo cambió), se aplica a la paleta de la pantalla actual.
 watch(themeMode, () => applyThemeMode(theme));
 
-const isFullscreen = computed<boolean>(() => route.meta?.fullscreen === true);
+// En modo OTP (una aerolínea con el enlace de un correo) NUNCA hay marco de operador: ni barra, ni chat, ni notificaciones, ni
+// perfil. Al montar, la ruta aún no está resuelta (el componente es perezoso) y `route.meta` llega vacío: sin esto el marco se
+// pintaría un instante y lanzaría peticiones de operador que el BFF rechaza.
+const isFullscreen = computed<boolean>(() => isOtpMode() || route.meta?.fullscreen === true);
 // La landing y las actividades del día llevan su propia cabecera: sin barra de página.
 const isHomeRoute = computed<boolean>(() => route.name === "home" || String(route.name ?? "").startsWith("home-"));
 

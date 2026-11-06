@@ -36,7 +36,20 @@ final class Settings
         public readonly array $throttlePolicies = [],
         /** @var list<string> IP/CIDR de proxies inversos de confianza; solo ellos pueden fijar X-Forwarded-For */
         public readonly array $trustedProxies = [],
+        /** Inactividad tras la que caduca una sesión OTP (la aerolínea rellena un formulario largo). */
+        public readonly int $otpSessionIdleTtl = 7200,
+        /** Fallos de OTP tolerados por recurso (tipo+id) en la ventana: el OTP es corto, esto es lo que lo protege. */
+        public readonly int $otpMaxFailuresPerResource = 8,
+        /** Fallos de OTP tolerados por IP en la ventana. */
+        public readonly int $otpMaxFailuresPerIp = 20,
+        public readonly int $otpFailureWindow = 900,
     ) {
+    }
+
+    /** TTL de inactividad de una sesión: las de OTP (sin usuario) tienen el suyo. */
+    public function sessionIdleTtlFor(bool $isOtpSession): int
+    {
+        return $isOtpSession ? $this->otpSessionIdleTtl : $this->sessionIdleTtl;
     }
 
     /** @param array<string, mixed> $env */
@@ -74,6 +87,10 @@ final class Settings
             contextAction: $get('UPSTREAM_CONTEXT_ACTION'),
             denyActions: array_values(array_filter(array_map('trim', explode(',', $get('UPSTREAM_DENY_ACTIONS'))), static fn (string $a): bool => $a !== '')),
             manifestPath: $manifestPath,
+            otpSessionIdleTtl: (int) $get('OTP_SESSION_IDLE_TTL', '7200'),
+            otpMaxFailuresPerResource: (int) $get('OTP_MAX_FAILURES_PER_RESOURCE', '8'),
+            otpMaxFailuresPerIp: (int) $get('OTP_MAX_FAILURES_PER_IP', '20'),
+            otpFailureWindow: (int) $get('OTP_FAILURE_WINDOW', '900'),
             trustedProxies: array_values(array_filter(array_map('trim', explode(',', $get('TRUSTED_PROXIES'))), static fn (string $a): bool => $a !== '')),
             throttlePolicies: [
                 // Copilot de IA: cada turno cuesta tokens y ocupa un worker hasta 120 s.

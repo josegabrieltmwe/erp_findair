@@ -62,6 +62,17 @@ final class TokenRefresher
                 return $fresh;
             }
             $tokens = $fresh ?? $tokens;
+            if (!$tokens->canRefresh($now) && $session->isOtp()) {
+                // Sesión OTP: el Bearer es el de la aplicación (client_credentials), sin refresh token. Se negocia otro.
+                try {
+                    $renewed = $this->oauth->clientCredentials($now);
+                } catch (OAuthException $e) {
+                    return $e->oauthError === 'server_unreachable' && $tokens->expiresAt > $now ? $tokens : null;
+                }
+                $this->persist($session, $renewed);
+
+                return $renewed;
+            }
             if (!$tokens->canRefresh($now)) {
                 return null;
             }
@@ -90,7 +101,7 @@ final class TokenRefresher
         $sealed = $this->vault->seal($tokens);
         $data = $this->store->load($session->id()) ?? $session->all();
         $data['tokens'] = $sealed;
-        $this->store->save($session->id(), $data, $this->settings->sessionIdleTtl);
+        $this->store->save($session->id(), $data, $this->settings->sessionIdleTtlFor($session->isOtp()));
         $session->hydrate('tokens', $sealed);
     }
 

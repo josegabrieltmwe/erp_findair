@@ -160,6 +160,16 @@ final class ThrottleTest extends TestCase
                 return $this->inner->increment($key, $ttlSeconds);
             }
 
+            public function get(string $key): int
+            {
+                return $this->inner->get($key);
+            }
+
+            public function delete(string $key): void
+            {
+                $this->inner->delete($key);
+            }
+
             public function ttl(string $key): int
             {
                 return $this->inner->ttl($key);
@@ -189,5 +199,26 @@ final class ThrottleTest extends TestCase
         self::assertNotSame('', $response->getHeaderLine('Retry-After'));
         $userKey = 'cc:p:u:' . substr(hash('sha256', 'u1'), 0, 20);
         self::assertSame(0, $inner->value($userKey), 'el hueco de usuario se devolvió');
+    }
+
+    public function testCounterStoreGetReadsWithoutIncrementingAndDeleteClears(): void
+    {
+        $store = $this->store();
+        self::assertSame(0, $store->get('k'));
+        $store->increment('k', 60);
+        $store->increment('k', 60);
+        self::assertSame(2, $store->get('k'));
+        self::assertSame(2, $store->get('k'), 'leer no incrementa');
+        $store->delete('k');
+        self::assertSame(0, $store->get('k'));
+        $store->delete('nunca-existio');
+    }
+
+    public function testCounterStoreGetIgnoresExpiredCounters(): void
+    {
+        $store = $this->store();
+        $store->increment('k', 10);
+        $this->now += 11;
+        self::assertSame(0, $store->get('k'));
     }
 }

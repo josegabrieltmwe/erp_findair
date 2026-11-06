@@ -6,6 +6,7 @@ import { i18n } from "./plugins/i18n";
 import { router } from "./router";
 import { installFetchInterceptor } from "@shared/anagrafiche/services/http";
 import { startPresenceHeartbeat } from "@shared/presence/presence";
+import { isOtpMode } from "@tmwe/shared-frontend/http";
 import "./styles/tokens.scss";
 import "@shared/styles/switch.scss"; // compact iOS-like <v-switch>, all apps
 import "./styles/reset.scss";
@@ -28,6 +29,9 @@ app.mount("#app-wrapper");
 
 // Presencia online: latido de esta pestaña (se para solo si el backend tiene
 // la presencia desactivada). Ver docs/03-diseno/presencia_online/PROPUESTA.md.
-startPresenceHeartbeat({
-  basePath: () => window.__TMWE_NAV__?.basePath ?? "/bff/v1",
-});
+// Sin usuario (página abierta con el OTP de un correo) no hay presencia que anunciar.
+if (!isOtpMode()) {
+  startPresenceHeartbeat({
+    basePath: () => window.__TMWE_NAV__?.basePath ?? "/bff/v1",
+  });
+}

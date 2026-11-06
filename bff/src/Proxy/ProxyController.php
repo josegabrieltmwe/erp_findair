@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Findair\Bff\Proxy;
 
 use Findair\Bff\Auth\TokenProbe;
+use Findair\Bff\Auth\TokenVault;
 use Findair\Bff\Auth\TokenRefresher;
 use Findair\Bff\Auth\TokenSet;
 use Findair\Bff\Http\CsrfGuard;
@@ -42,6 +43,7 @@ final class ProxyController
         private readonly UpstreamStreamer $streamer,
         private readonly TokenProbe $probe,
         private readonly Throttler $throttler,
+        private readonly TokenVault $vault,
     ) {
         $this->clientIp = new ClientIp($settings->trustedProxies);
     }
@@ -71,6 +73,13 @@ final class ProxyController
         $session = $request->getAttribute('session');
         /** @var TokenSet $tokens */
         $tokens = $request->getAttribute('tokens');
+        // Alcance de la sesión: la de OTP solo llega a rutas de SU tipo de recurso, y una de usuario nunca a esas rutas.
+        $grant = $session->grant();
+        if (($grant['type'] ?? null) !== $route->otp) {
+            $this->logger->warning('otp_scope_mismatch', ['route' => $route->id, 'request_id' => $requestId]);
+
+            return ProblemDetails::response(403, 'otp_scope', 'Acceso no permitido', null, $requestId);
+        }
 
         if ($route->csrf && !$this->csrf->tokenIsValid($request, $session)) {
             return ProblemDetails::response(403, 'csrf_invalid', 'Token CSRF no válido', null, $requestId);
@@ -105,7 +114,18 @@ final class ProxyController
     private function forward(Request $request, Route $route, array $params, Session $session, TokenSet $tokens, string $body, string $requestId, float $started): ResponseInterface
     {
         $impersonate = ImpersonationController::impersonatedPartner($session);
-        $url = $this->urls->internal($route->action, $this->buildQuery($request, $route, $params));
+        $query = $this->buildQuery($request, $route, $params);
+        $grant = $session->grant();
+        if ($grant !== null) {
+            // El navegador no decide a qué recurso accede: id y OTP salen de la concesión de la sesión.
+            $otp = is_string($grant['otp'] ?? null) ? $this->vault->openString($grant['otp']) : null;
+            if ($otp === null) {
+                return ProblemDetails::response(403, 'otp_scope', 'Acceso no permitido', null, $requestId);
+            }
+            $query['id'] = (string) (int) ($grant['id'] ?? 0);
+            $query['otp'] = $otp;
+        }
+        $url = $this->urls->internal($route->action, $query);
 
         try {
             $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId, $impersonate);

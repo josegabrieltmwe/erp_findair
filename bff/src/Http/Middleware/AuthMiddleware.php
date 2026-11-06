@@ -30,6 +30,11 @@ final class AuthMiddleware implements MiddlewareInterface
             return ProblemDetails::response(401, 'unauthenticated', 'Sesión no iniciada', 'Inicie sesión para continuar.', $requestId);
         }
 
+        // Una sesión abierta con un OTP (sin usuario) solo puede usar el proxy; la suplantación y demás son de usuarios.
+        if ($session->isOtp() && !str_starts_with($request->getUri()->getPath(), '/bff/v1/')) {
+            return ProblemDetails::response(403, 'otp_scope', 'Acceso no permitido', null, $requestId);
+        }
+
         $tokens = $this->refresher->ensureFresh($session, time());
         if ($tokens === null) {
             $session->destroy();

@@ -6,6 +6,7 @@ import {
   type RouteRecordRaw,
 } from "vue-router";
 import { useProfile } from "@shared/composables/useProfile";
+import { isOtpMode } from "@tmwe/shared-frontend/http";
 import { buildAccess } from "@shared/composables/useAccess";
 import { canEnterSettingsHub, canOpenAdminRoute } from "@/modules/settings/settingsAccess";
 import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_admin/composables/useAiScopes";
@@ -61,6 +62,16 @@ function myOrgTarget(tab?: string) {
  */
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "root", redirect: { name: "home" } },
+
+  // ── Solicitud de cotización vista por una aerolínea. SIN usuario ni login: se llega con el enlace del correo, el OTP
+  //    autoriza el acceso a esa oferta (main.ts → bootstrapOtp) y las peticiones las firma el BFF con el Bearer de la
+  //    aplicación. Pantalla completa y sin `meta.title`: no es una entrada del menú. ──────────
+  {
+    path: "/offer",
+    name: "carrier-offer",
+    component: () => import("@cargo/pages/CarrierOfferPage.vue"),
+    meta: { fullscreen: true, otp: true },
+  },
 
   // ── Inicio (landing) — fusiona el dashboard de KPIs (antes en
   //    /home/activities) con los accesos rápidos. El fetch de KPIs del
@@ -1269,6 +1280,15 @@ export const router = createRouter({
  * `OperationsNav` donde ese default es una decisión de UX deliberada, no de
  * seguridad.
  */
+/**
+ * Sesión de OTP (una aerolínea con el enlace de un correo): sin usuario, solo existe la pantalla de su solicitud. Cualquier
+ * otra ruta —aunque la teclee— vuelve a ella, en vez de lanzar peticiones que el BFF rechazaría.
+ */
+router.beforeEach((to) => {
+  if (isOtpMode() && !to.meta.otp) return { name: "carrier-offer" };
+  return true;
+});
+
 router.beforeEach(async (to) => {
   const moduleName = String(to.name ?? "");
   const moduleGuarded = isModuleGuardedRoute(moduleName);

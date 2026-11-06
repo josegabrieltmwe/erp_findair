@@ -23,13 +23,30 @@ final class TokenVault
 
     public function seal(TokenSet $tokens): string
     {
+        return $this->sealString(json_encode($tokens->toArray(), JSON_THROW_ON_ERROR));
+    }
+
+    public function open(string $sealed): ?TokenSet
+    {
+        $plain = $this->openString($sealed);
+        if ($plain === null) {
+            return null;
+        }
+        $data = json_decode($plain, true);
+
+        return is_array($data) ? TokenSet::fromArray($data) : null;
+    }
+
+    /** Cifra un texto cualquiera (p. ej. el OTP de una concesión): en el almacén de sesión nunca queda en claro. */
+    public function sealString(string $plain): string
+    {
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $cipher = sodium_crypto_secretbox(json_encode($tokens->toArray(), JSON_THROW_ON_ERROR), $nonce, $this->key);
+        $cipher = sodium_crypto_secretbox($plain, $nonce, $this->key);
 
         return rtrim(strtr(base64_encode($nonce . $cipher), '+/', '-_'), '=');
     }
 
-    public function open(string $sealed): ?TokenSet
+    public function openString(string $sealed): ?string
     {
         $raw = base64_decode(strtr($sealed, '-_', '+/'), true);
         if ($raw === false || strlen($raw) <= SODIUM_CRYPTO_SECRETBOX_NONCEBYTES) {
@@ -37,11 +54,7 @@ final class TokenVault
         }
         $nonce = substr($raw, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $plain = sodium_crypto_secretbox_open(substr($raw, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES), $nonce, $this->key);
-        if ($plain === false) {
-            return null;
-        }
-        $data = json_decode($plain, true);
 
-        return is_array($data) ? TokenSet::fromArray($data) : null;
+        return $plain === false ? null : $plain;
     }
 }
