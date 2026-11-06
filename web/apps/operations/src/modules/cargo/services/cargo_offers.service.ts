@@ -1,4 +1,5 @@
 import { http } from "./http";
+import { mailCallbackUrl } from "@shared/platform/appPageUrl";
 
 /**
  * Carrier offer row stored in `spedizioni_cargo_off`. Backend column
@@ -89,11 +90,38 @@ export interface DistributeRfqRequest {
   rfq_text?: string;
   /** Shipment file ids to attach to every RFQ email (G4). */
   file_ids?: number[];
+  /**
+   * URL base (GET) de la pantalla de ESTA aplicación donde la aerolínea abre su solicitud; el API le añade `id` y
+   * `otp` y la pone en el correo. Si no se informa, el servicio usa la pantalla declarada en `MAIL_LANDING_PATHS`.
+   * El API la rechaza (400 CALLBACK_URL_INVALID) si su origen no es uno de los registrados de esta aplicación.
+   */
+  callback_url?: string;
+}
+
+/**
+ * Resultado de una aerolínea en `distribute`: una fila por sigla pedida, en el orden pedido.
+ * `failed` = la solicitud NO salió (correo ausente o inválido, SMTP caído…) y no se dejó oferta.
+ */
+export interface DistributeRfqResult {
+  sigla: string;
+  nombre: string;
+  to: string;
+  status: "sent" | "failed";
+  offer_id: number | null;
+  request_id: string | null;
+  error: string | null;
+  error_code: string | null;
 }
 
 export interface DistributeRfqResponse {
   success: boolean;
-  data?: { cargo_id: number; sent: number; errors: Record<string, string> };
+  data?: {
+    cargo_id: number;
+    sent: number;
+    /** Un texto «SIGLA: motivo» por aerolínea fallida. */
+    errors: string[];
+    results?: DistributeRfqResult[];
+  };
   error?: string;
   message?: string;
 }
@@ -132,7 +160,11 @@ export const cargoOffersService = {
   distribute(body: DistributeRfqRequest): Promise<DistributeRfqResponse> {
     return http<DistributeRfqResponse>(BASE, {
       method: "POST",
-      body: { ...body, action: "distribute" },
+      body: {
+        ...body,
+        action: "distribute",
+        callback_url: body.callback_url ?? mailCallbackUrl("cargoCarrierOffer"),
+      },
     });
   },
 
