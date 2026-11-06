@@ -16,6 +16,8 @@ export interface Recipient {
   name?: string;
   /** Idioma del destinatario si el escenario lo expone (p.ej. lingua_web). */
   lingua?: string;
+  /** Etiqueta corta que el selector muestra junto al nombre (p.ej. 'ERP'). */
+  badge?: string;
   /** Procedencia: elegido de la audiencia vs introducido manualmente. */
   source: 'catalog' | 'manual';
 }
@@ -94,6 +96,13 @@ export interface EmailScenarioAdapter {
 
   /** Audiencia elegible (contactos/partners del escenario). */
   loadRecipients(): Promise<Recipient[]>;
+
+  /**
+   * Búsqueda remota en el catálogo (opcional). Con ella el selector consulta al
+   * teclear en lugar de filtrar solo `loadRecipients()`: necesario cuando la
+   * audiencia es demasiado grande para cargarla entera.
+   */
+  searchRecipients?(term: string): Promise<Recipient[]>;
 
   /** Adjuntos disponibles (vacío si no aplica). */
   loadAttachments?(): Promise<AttachmentRef[]>;

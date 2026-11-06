@@ -43,7 +43,10 @@ import type {
   EmailScenarioAdapter,
   Recipient,
 } from "@shared/email";
-import { selectablePartnersService } from "@shipment/services/selectable_partners.service";
+import {
+  selectablePartnersService,
+  type SelectablePartner,
+} from "@shipment/services/selectable_partners.service";
 import {
   partnerOffersService,
   type PartnerOfferMode,
@@ -60,6 +63,16 @@ const toasts = useToastStore();
 // cambiar, el adapter se recomputa (nueva identidad) y el EmailComposer recarga
 // el preview con el nuevo tipo (EXPQUOT ↔ PARTINFO).
 const mode = ref<PartnerOfferMode>("Q");
+
+/** Partner del catálogo (por id, sin email; el backend resuelve sus contactos elegibles). */
+function toRecipient(p: SelectablePartner): Recipient {
+  return {
+    id: p.id,
+    name: p.label,
+    source: "catalog",
+    badge: p.erp_partner ? "ERP" : undefined,
+  };
+}
 
 const LANG_ITEMS = [
   { title: "Italiano", value: "ITA" },
@@ -85,14 +98,12 @@ const adapter = computed<EmailScenarioAdapter>(() => {
     langItems: () => LANG_ITEMS,
     defaultLang: () => "ITA",
     async loadRecipients(): Promise<Recipient[]> {
-      // Audiencia = partners del catálogo (por id, sin email; el backend
-      // resuelve sus contactos elegibles).
-      const partners = await selectablePartnersService.search("");
-      return partners.map((p) => ({
-        id: p.id,
-        name: p.label,
-        source: "catalog" as const,
-      }));
+      // Audiencia inicial = primeros partners del catálogo (los ERP primero).
+      return (await selectablePartnersService.search("")).map(toRecipient);
+    },
+    // Hay miles de anagrafiche tipo P: se busca en el servidor al teclear.
+    async searchRecipients(term: string): Promise<Recipient[]> {
+      return (await selectablePartnersService.search(term, 30)).map(toRecipient);
     },
     async preview(input: {
       lang: string;

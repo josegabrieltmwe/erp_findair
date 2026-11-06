@@ -1,6 +1,6 @@
 # Plan: RFQ courier a anagrafiche de tipo partner (app erp_findair)
 
-> **Estado:** borrador · **Última modificación:** 2026-11-06
+> **Estado:** borrador (selector hecho) · **Última modificación:** 2026-11-06
 
 Parte de la aplicación (BFF Slim + SPA Vue) del plan que lleva a las expediciones courier el flujo que ya tiene cargo. La parte del API está en `tmwe_api/docs/03-diseno/rfq_courier_partners.md`; el patrón de autorización por OTP y la pantalla de cargo, en `tmwe_api/docs/03-diseno/otp_autorizacion_recursos.md` y en [plan-pantalla-offer-aerolinea.md](plan-pantalla-offer-aerolinea.md).
 
@@ -27,10 +27,10 @@ Parte de la aplicación (BFF Slim + SPA Vue) del plan que lleva a las expedicion
 
 ## 4. Cambios en la SPA
 
-1. **Selector de partners** (`PartnerOfferModal.vue`, `selectable_partners.service.ts`):
-   - Pedir `scope=all` (todos los tipo P) y mostrar en cada opción la etiqueta «ERP» cuando `erp_partner` sea verdadero, para que el operador distinga. Opción de filtrar solo ERP.
-   - Búsqueda remota obligatoria (miles de anagrafiche): sin texto se muestran los ERP primero, con tope de 30.
-   - Si el partner elegido no tiene contacto elegible, el modal avisa y deja escribir correos manuales (ya existe `extra_emails`) en lugar de fallar al enviar.
+1. **Selector de partners** (`PartnerOfferModal.vue`, `selectable_partners.service.ts`) — **hecho 2026-11-06** (salvo el aviso de partner sin contacto y el filtro «solo ERP», ver abajo):
+   - Pide `scope=all` (todos los tipo P) y muestra la etiqueta «ERP» en las que lo son. **No se hizo el filtro «solo ERP»**: con los ERP primero en la lista y la etiqueta no aportaba; el servicio ya admite `scope=erp` si se pide.
+   - Búsqueda remota: el `EmailComposer` admite ahora `searchRecipients(term)` en el adapter (genérico, lo puede usar cualquier escenario) y `RecipientPicker` consulta al teclear (2 caracteres, 250 ms, descarta respuestas viejas). Sin texto se muestran los 30 primeros, ERP primero.
+   - **Pendiente:** si el partner elegido no tiene contacto elegible, el modal debería avisarlo antes de enviar. Hoy el API devuelve `<id>: no eligible contacts (offerte_mail)` al enviar, y los correos manuales (`extra_emails`) ya permiten salvar el caso; el aviso previo necesita que el API diga si hay contactos elegibles.
 2. **Pantalla del destinatario.** Ruta `/offer` única que decide por el tipo de recurso (decisión abierta en el plan del API, §3.5), con `meta.otp`. Para courier muestra: datos de la expedición (sin cliente final, sin coste ni margen), formulario de precio, divisa, texto y horario, doble confirmación y agradecimiento; reutiliza `bootstrapOtp`, el shell a pantalla completa y los componentes comunes de `CarrierOfferPage` (cabecera, confirmación, tarjeta de agradecimiento). `CourierOfferPage.vue` nueva en el módulo `shipment`; sin duplicar la lógica de OTP.
 3. **Enlace del correo.** El modal de envío y los envíos desde `ServizioCard` pasan `callback_url` con `mailCallbackUrl(...)` (clave nueva en `appPageUrl`), igual que `distribute` de cargo.
 4. **Operador (fase posterior).** En el listado courier, badge «N por revisar» con filtro; en la ficha, estado «respuesta por revisar» y acción «Reenviar».
@@ -45,7 +45,7 @@ Parte de la aplicación (BFF Slim + SPA Vue) del plan que lleva a las expedicion
 
 ## 6. Orden y despliegue
 
-1. Selector abierto a todos los tipo P (API §3.1 y §3.2 + SPA §4.1): sin migración.
+1. Selector abierto a todos los tipo P (API §3.1 y §3.2 + SPA §4.1): **hecho 2026-11-06**, sin migración.
 2. Respuesta por OTP (API §3.3 + BFF §3 + SPA §4.2 y §4.3). Se despliega API → BFF → SPA.
 3. Indicador «por revisar» y «Reenviar» (API §3.4 + SPA §4.4).
 4. Ficheros y PDF del destinatario, solo si el negocio lo pide (no están hoy en el flujo courier).

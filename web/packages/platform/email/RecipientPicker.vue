@@ -6,9 +6,11 @@
     <v-autocomplete
       :model-value="null"
       :items="availableItems"
-      :loading="loading"
+      :loading="loading || searching"
+      :no-filter="!!search"
       item-title="label"
       item-value="key"
+      @update:search="onSearch"
       :placeholder="t('platform.email.pick_recipient')"
       :no-data-text="t('platform.email.no_recipients')"
       prepend-inner-icon="mdi-account-multiple-outline"
@@ -17,7 +19,15 @@
       hide-details
       hide-selected
       @update:model-value="onPickCatalog"
-    />
+    >
+      <template #item="{ props: itemProps, item }">
+        <v-list-item v-bind="itemProps">
+          <template v-if="item.raw.badge" #append>
+            <v-chip size="x-small" variant="tonal" color="primary">{{ item.raw.badge }}</v-chip>
+          </template>
+        </v-list-item>
+      </template>
+    </v-autocomplete>
 
     <!-- Añadir email manual. -->
     <div v-if="allowManual" class="rp__manual">
@@ -67,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { Recipient } from './types';
 
@@ -79,6 +89,8 @@ const props = withDefaults(
     audience: Recipient[];
     loading?: boolean;
     allowManual?: boolean;
+    /** Búsqueda remota (opcional): sustituye al filtrado local de `audience`. */
+    search?: (term: string) => Promise<Recipient[]>;
     label: string;
     hint?: string;
   }>(),
@@ -109,13 +121,47 @@ function chipLabel(r: Recipient): string {
 
 const selectedKeys = computed(() => new Set(props.modelValue.map(keyOf)));
 
-/** Items del autocomplete = audiencia menos lo ya seleccionado. */
+// Búsqueda remota: resultados de la última consulta (null = sin consulta, se usa `audience`).
+const remote = ref<Recipient[] | null>(null);
+const searching = ref(false);
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
+let searchSeq = 0;
+
+function onSearch(term: string | null): void {
+  if (!props.search) return;
+  if (searchTimer) clearTimeout(searchTimer);
+  const q = (term ?? '').trim();
+  if (q.length < 2) {
+    remote.value = null;
+    searching.value = false;
+    return;
+  }
+  searching.value = true;
+  searchTimer = setTimeout(async () => {
+    const seq = ++searchSeq;
+    try {
+      const found = await props.search!(q);
+      if (seq === searchSeq) remote.value = found;
+    } catch {
+      if (seq === searchSeq) remote.value = [];
+    } finally {
+      if (seq === searchSeq) searching.value = false;
+    }
+  }, 250);
+}
+
+onBeforeUnmount(() => {
+  if (searchTimer) clearTimeout(searchTimer);
+});
+
+/** Items del autocomplete = audiencia (o resultado de la búsqueda remota) menos lo ya seleccionado. */
 const availableItems = computed(() =>
-  props.audience
+  (remote.value ?? props.audience)
     .filter((r) => !selectedKeys.value.has(keyOf(r)))
     .map((r) => ({
       key: keyOf(r),
       label: r.name && r.email ? `${r.name} — ${r.email}` : r.name || r.email || String(r.id),
+      badge: r.badge ?? '',
       recipient: r,
     })),
 );
