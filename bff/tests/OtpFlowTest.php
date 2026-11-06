@@ -321,4 +321,126 @@ final class OtpFlowTest extends AppTestCase
         $this->expectException(\InvalidArgumentException::class);
         RouteManifest::fromArray([['id' => 'x', 'method' => 'GET', 'path' => '/x', 'upstream' => ['action' => 'a'], 'otp' => 'Bad Type!']]);
     }
+
+    /** @return array{0: string, 1: string} id de sesión y token CSRF de una sesión OTP recién abierta */
+    private function otpSessionWithCsrf(): array
+    {
+        $this->boot([$this->upstreamOk(self::TOKEN), $this->upstreamOk(self::AUTHORIZED)]);
+        $response = $this->authorize();
+
+        return [$this->cookieId($response), (string) $this->json($response)['csrf_token']];
+    }
+
+    /** @param array<string, string> $extra */
+    private function submitRequest(string $sid, string $csrf, string $body, array $extra = []): \Psr\Http\Message\ServerRequestInterface
+    {
+        return $this->request('POST', '/bff/v1/otp_offer', $sid, $extra + ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf, 'Content-Type' => 'application/json'], $body);
+    }
+
+    public function testSubmitForwardsTheReplyWithTheGrantAndWithoutTheKeysThatIdentifyTheResource(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $this->upstream->append($this->upstreamOk('{"success":true,"state":"submitted","total":625}'));
+        $body = json_encode(['id' => 999, 'otp' => 'HACK', 'type' => 'otra', 'chargeable_weight' => 100, 'confirm' => ['price' => true, 'terms' => true], 'lines' => [['id' => 1, 'costo_unitV' => 6]]], JSON_THROW_ON_ERROR);
+
+        $response = $this->send($this->submitRequest($sid, $csrf, $body, ['Content-Length' => (string) strlen($body)]));
+
+        self::assertSame(200, $response->getStatusCode());
+        $sent = $this->lastUpstreamRequest();
+        self::assertSame('POST', $sent->getMethod());
+        parse_str($sent->getUri()->getQuery(), $query);
+        self::assertSame('12', $query['id'], 'el id sale de la concesión');
+        self::assertSame('AbC123', $query['otp']);
+        self::assertSame('Bearer APPTOKEN', $sent->getHeaderLine('Authorization'));
+        $forwarded = json_decode((string) $sent->getBody(), true);
+        self::assertEqualsCanonicalizing(['chargeable_weight', 'confirm', 'lines'], array_keys($forwarded));
+        self::assertArrayNotHasKey('id', $forwarded);
+        self::assertArrayNotHasKey('otp', $forwarded);
+        self::assertArrayNotHasKey('type', $forwarded);
+        self::assertSame(625, $this->json($response)['total']);
+    }
+
+    public function testSubmitNeedsTheSessionCsrfToken(): void
+    {
+        [$sid] = $this->otpSessionWithCsrf();
+        $calls = count($this->history);
+
+        $response = $this->send($this->submitRequest($sid, 'otro-token', '{}'));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('csrf_invalid', $this->json($response)['code']);
+        self::assertCount($calls, $this->history);
+    }
+
+    public function testSubmitNeedsTheAppOriginToo(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+
+        $response = $this->send($this->request('POST', '/bff/v1/otp_offer', $sid, ['Origin' => 'https://evil.example', 'X-CSRF-Token' => $csrf, 'Content-Type' => 'application/json'], '{}'));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('origin_not_allowed', $this->json($response)['code']);
+    }
+
+    /** @dataProvider unsupportedBodies */
+    public function testSubmitOnlyAcceptsAJsonObject(string $body, string $contentType): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $calls = count($this->history);
+
+        $response = $this->send($this->submitRequest($sid, $csrf, $body, ['Content-Type' => $contentType]));
+
+        self::assertSame(415, $response->getStatusCode());
+        self::assertCount($calls, $this->history, 'no llega al API');
+    }
+
+    /** @return array<string, array{0: string, 1: string}> */
+    public static function unsupportedBodies(): array
+    {
+        return [
+            'formulario' => ['id=1&otp=x', 'application/x-www-form-urlencoded'],
+            'multipart' => ['--b', 'multipart/form-data; boundary=b'],
+            'json pero lista' => ['[1,2]', 'application/json'],
+            'json escalar' => ['"hola"', 'application/json'],
+            'no es json' => ['{nope', 'application/json'],
+        ];
+    }
+
+    public function testAUserSessionCannotSubmitThroughAnOtpRoute(): void
+    {
+        $this->boot();
+        $sid = $this->loginSession();
+
+        $response = $this->send($this->request('POST', '/bff/v1/otp_offer', $sid, $this->unsafeHeaders(), '{}'));
+
+        self::assertSame(403, $response->getStatusCode());
+        self::assertSame('otp_scope', $this->json($response)['code']);
+        self::assertCount(0, $this->history);
+    }
+
+    public function testSubmitIsRateLimitedPerSession(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        for ($i = 0; $i < 10; $i++) {
+            $this->upstream->append($this->upstreamOk('{"success":true}'));
+        }
+
+        $codes = [];
+        for ($i = 0; $i < 11; $i++) {
+            $codes[] = $this->send($this->submitRequest($sid, $csrf, '{}'))->getStatusCode();
+        }
+
+        self::assertSame(array_merge(array_fill(0, 10, 200), [429]), $codes, '10 envíos por minuto y sesión');
+    }
+
+    public function testTheSubmitRouteIsInTheRealManifest(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        $hit = $manifest->match('POST', '/api_carrier_offer');
+        self::assertNotNull($hit);
+        self::assertSame('cargo_offer', $hit['route']->otp);
+        self::assertTrue($hit['route']->csrf);
+        self::assertSame('otp_submit', $hit['route']->throttle);
+        self::assertFalse($hit['route']->forwardAllQuery);
+    }
 }

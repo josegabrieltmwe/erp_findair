@@ -89,6 +89,15 @@ final class ProxyController
         if ($body === null) {
             return ProblemDetails::response(413, 'payload_too_large', 'Cuerpo demasiado grande', null, $requestId);
         }
+        if ($grant !== null && $body !== '') {
+            // Sesión de OTP: el navegador no decide a qué recurso accede. El API ya lee id y otp solo de la query, pero aquí se
+            // quitan también del cuerpo (defensa en profundidad) y solo se admite JSON.
+            $clean = $this->withoutGrantKeys($body, $request->getHeaderLine('Content-Type'));
+            if ($clean === null) {
+                return ProblemDetails::response(415, 'unsupported_media_type', 'Formato no admitido', 'Se espera un objeto JSON.', $requestId);
+            }
+            $body = $clean;
+        }
 
         $bodyError = $this->checkBodyEnum($route, $body, $requestId);
         if ($bodyError !== null) {
@@ -296,6 +305,21 @@ final class ProxyController
         }
 
         return $query;
+    }
+
+    /** Cuerpo JSON de una sesión de OTP sin las claves que identifican el recurso; null si no es un objeto JSON. */
+    private function withoutGrantKeys(string $body, string $contentType): ?string
+    {
+        if (!str_starts_with(strtolower($contentType), 'application/json')) {
+            return null;
+        }
+        $decoded = json_decode($body, true);
+        if (!is_array($decoded) || ($decoded !== [] && array_is_list($decoded))) {
+            return null;
+        }
+        unset($decoded['id'], $decoded['otp'], $decoded['type']);
+
+        return json_encode($decoded, JSON_THROW_ON_ERROR);
     }
 
     private function readBody(Request $request, int $max): ?string
