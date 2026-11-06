@@ -300,6 +300,14 @@
           "title": "SMTP por partner",
           "description": "Cuentas SMTP de cualquier partner, con diagnóstico de cuál se usaría"
         },
+        "partner_dgr": {
+          "title": "Mercancía peligrosa: emergencia",
+          "description": "Contacto de emergencia 24 h y firmante de tu empresa para los envíos con mercancía peligrosa"
+        },
+        "partner_dgr_admin": {
+          "title": "Mercancía peligrosa por partner",
+          "description": "Contacto de emergencia y firmante DGR de cualquier partner"
+        },
         "forward_air_accounts": {
           "title": "Cuentas Forward Air",
           "description": "Cuentas LTL de Forward Air por partner y entorno"
@@ -2389,6 +2397,25 @@
     "section_sender": "Remitente",
     "password_stored": "Guardada — escribe una nueva para cambiarla",
     "partner_tab_hint": "Cuentas SMTP de este partner. Si no tiene cuenta propia para un propósito, sus correos salen con la de TMWE."
+  },
+  "partner_dgr": {
+    "title": "Mercancía peligrosa: contacto de emergencia",
+    "title_admin": "Mercancía peligrosa: contacto de emergencia por partner",
+    "subtitle": "Tu empresa acompaña el transporte: este contacto se declara a UPS, FedEx y DHL en los envíos con mercancía peligrosa.",
+    "filter_partner": "Partner",
+    "not_configured": "Sin contacto de emergencia no se pueden crear etiquetas de mercancía peligrosa en régimen completo con UPS, FedEx ni DHL.",
+    "emergency_title": "Contacto de emergencia 24 h",
+    "emergency_phone": "Teléfono 24 h",
+    "emergency_contact": "Persona o servicio",
+    "emergency_reference": "Contrato o registro",
+    "signatory_title": "Firmante de la declaración",
+    "signatory_name": "Nombre",
+    "signatory_role": "Cargo",
+    "signatory_place": "Lugar de firma",
+    "hint": "El teléfono debe estar atendido las 24 horas por personal formado en mercancía peligrosa. El firmante aparece en el documento DG que devuelve UPS.",
+    "phone_required": "El teléfono de emergencia es obligatorio",
+    "saved": "Contacto de emergencia guardado",
+    "error_generic": "No se pudo guardar la configuración"
   },
   "forward_air_accounts": {
     "title": "Cuentas Forward Air",

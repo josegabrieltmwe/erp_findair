@@ -618,6 +618,24 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'b2b_templates',
         aliases: ['SMTP por partner', 'Partner SMTP'],
       },
+      // Mercancía peligrosa: contacto de emergencia 24 h y firmante del partner (api_partner_dgr_config). Se declara a
+      // UPS, FedEx y DHL; sin él no se crean etiquetas de régimen completo.
+      {
+        key: 'partner_dgr',
+        i18nKey: 'partner_dgr',
+        icon: 'mdi-hazard-lights',
+        routeName: 'settings-partner-dgr',
+        subgroup: 'b2b_templates',
+        aliases: ['DGR', 'ADR', 'Dangerous goods', 'Merci pericolose', 'Mercancía peligrosa', 'Emergency contact'],
+      },
+      {
+        key: 'partner_dgr_admin',
+        i18nKey: 'partner_dgr_admin',
+        icon: 'mdi-hazard-lights',
+        routeName: 'settings-partner-dgr-admin',
+        subgroup: 'b2b_templates',
+        aliases: ['DGR por partner', 'Partner DGR'],
+      },
       // Fase 5 / L17: plantillas de documentos/mensajes (modelli) — distinto
       // de email_templates (tabla y controlador propios: Modelli_Controller).
       {

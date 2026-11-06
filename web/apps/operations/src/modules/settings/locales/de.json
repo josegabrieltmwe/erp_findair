@@ -300,6 +300,14 @@
           "title": "SMTP pro Partner",
           "description": "SMTP-Konten beliebiger Partner, mit Diagnose, welches verwendet würde"
         },
+        "partner_dgr": {
+          "title": "Gefahrgut: Notfall",
+          "description": "24-h-Notfallkontakt und Unterzeichner Ihres Unternehmens für Gefahrgutsendungen"
+        },
+        "partner_dgr_admin": {
+          "title": "Gefahrgut je Partner",
+          "description": "DGR-Notfallkontakt und Unterzeichner jedes Partners"
+        },
         "forward_air_accounts": {
           "title": "Forward-Air-Konten",
           "description": "Forward-Air-LTL-Konten pro Partner und Umgebung"
@@ -2389,6 +2397,25 @@
     "section_sender": "Absender",
     "password_stored": "Gespeichert — neues Passwort eingeben, um es zu ändern",
     "partner_tab_hint": "SMTP-Konten dieses Partners. Ohne eigenes Konto für einen Zweck läuft der Versand über das von TMWE."
+  },
+  "partner_dgr": {
+    "title": "Gefahrgut: Notfallkontakt",
+    "title_admin": "Gefahrgut: Notfallkontakt je Partner",
+    "subtitle": "Ihr Unternehmen begleitet den Transport: Dieser Kontakt wird UPS, FedEx und DHL bei Gefahrgutsendungen gemeldet.",
+    "filter_partner": "Partner",
+    "not_configured": "Ohne Notfallkontakt können keine voll regulierten Gefahrgut-Labels bei UPS, FedEx oder DHL erstellt werden.",
+    "emergency_title": "24-h-Notfallkontakt",
+    "emergency_phone": "24-h-Telefon",
+    "emergency_contact": "Person oder Dienst",
+    "emergency_reference": "Vertrag oder Registrierung",
+    "signatory_title": "Unterzeichner der Erklärung",
+    "signatory_name": "Name",
+    "signatory_role": "Funktion",
+    "signatory_place": "Ort der Unterzeichnung",
+    "hint": "Das Telefon muss rund um die Uhr mit in Gefahrgut geschultem Personal besetzt sein. Der Unterzeichner erscheint auf dem DG-Dokument von UPS.",
+    "phone_required": "Das Notfalltelefon ist erforderlich",
+    "saved": "Notfallkontakt gespeichert",
+    "error_generic": "Die Konfiguration konnte nicht gespeichert werden"
   },
   "forward_air_accounts": {
     "title": "Forward-Air-Konten",

@@ -11,6 +11,7 @@ export type {
   DgrSubstance,
   DgrTransportMode,
   DgrDeclaration,
+  DgrRequirements,
 } from "@shared/services/dgr.service";
 
 /** API estable consumida por los componentes DGR de courier (is_cargo='N'). */

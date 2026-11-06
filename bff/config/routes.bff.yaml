@@ -452,6 +452,23 @@ routes:
       forward_query: [live]
     limits: { timeout: 30 }
 
+  # Mercancía peligrosa: contacto de emergencia 24 h y firmante del partner. GET: el del partner de la sesión (TMWE
+  # puede pedir otro con anagrafica_id); POST: TMWE o administrador del partner (partner:manage), lo aplica la API.
+  - id: partner_dgr_config.get
+    method: GET
+    path: /api_partner_dgr_config
+    upstream:
+      action: api_partner_dgr_config
+      forward_query: [anagrafica_id]
+
+  - id: partner_dgr_config.post
+    method: POST
+    path: /api_partner_dgr_config
+    upstream:
+      action: api_partner_dgr_config
+      forward_query: [anagrafica_id]
+    limits: { body: 16k, timeout: 30 }
+
   # Cuentas SMTP por partner. api_partner_smtp: el administrador del partner gestiona las suyas (el partner sale
   # de la sesión, nunca del cliente); api_admin_partner_smtp: TMWE sobre cualquier partner. Scopes smtp:read/write y
   # "administrador del partner" los aplica la API. POST puede ser {action:'test'}: abre una conexión SMTP real.

@@ -355,6 +355,7 @@
         @generate="awbGen.generate"
         @copy-error="awbGen.copyBookingErrorDetails"
         @edit-packages="openPackagesFromAwb"
+        @edit-dgr="openDgrFromAwb"
       />
 
       <!-- AWB generated — success dialog with inline preview + one-click print.
@@ -811,6 +812,11 @@ const awbGen = useAwbGeneration(
 
 /** «Editar bultos» desde el error de la reserva (peso o medidas): cierra el dialogo y abre la ventana de bultos. */
 const ui = useUiStore();
+/** Mercancía peligrosa incompleta para el courier: se cierra la AWB y se abre la declaración DGR. */
+function openDgrFromAwb(): void {
+  awbGen.dialogOpen.value = false;
+  ui.openModal("dgr");
+}
 function openPackagesFromAwb(): void {
   awbGen.dialogOpen.value = false;
   ui.openModal("colli");

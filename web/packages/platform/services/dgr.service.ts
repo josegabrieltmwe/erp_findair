@@ -49,6 +49,36 @@ export interface DgrDeclaration {
   id_collo?: number | null;
   regulation_set?: string | null;
   technical_name?: string | null;
+  /** Desde 2026-11-06 (lo que piden los couriers). quantity_* = cantidad NETA por bulto. */
+  packaging_type?: string | null;
+  packaging_count?: number | null;
+  packing_instruction?: string | null; // PI966, Y963…
+  adr_transport_category?: string | null; // 0-4
+  adr_tunnel_code?: string | null; // B/D, E…
+  aircraft_limitation?: "PAX" | "CAO" | null;
+  lithium_section?: "IA" | "IB" | "I" | "II" | null;
+}
+
+/** Requisito o aviso del courier asignado (Dangerous_Goods_Profile_Service). */
+export interface DgrRequirementItem {
+  code: string;
+  message: string;
+}
+
+/** `api_shipment_dgr?op=requirements`: qué exige el courier asignado y falta. */
+export interface DgrRequirements {
+  courier: string | null;
+  dg: {
+    is_dangerous: boolean;
+    regime: DgrTransportMode | null;
+    regulation_set: string;
+    is_air: boolean;
+    emergency: { phone: string; contact: string | null } | null;
+    partner_id: number;
+  } | null;
+  missing: DgrRequirementItem[];
+  warnings: DgrRequirementItem[];
+  can_generate_label: boolean;
 }
 
 /** 'S' para cargo aéreo (spedizioni_cargo), 'N' para courier express. */
@@ -91,6 +121,45 @@ export async function saveDgrDeclarations(
   });
 }
 
+/** Requisitos de mercancía peligrosa del courier asignado (solo courier express). */
+export async function getDgrRequirements(shipmentId: number | string): Promise<DgrRequirements | null> {
+  const r = await http<ApiEnvelope<DgrRequirements>>("/api_shipment_dgr", {
+    query: { shipment_id: shipmentId, is_cargo: "N", op: "requirements" },
+  });
+  return r?.success && r.data ? r.data : null;
+}
+
+/** Contacto de emergencia 24 h y firmante del partner (`api_partner_dgr_config`). */
+export interface PartnerDgrConfig {
+  anagrafica_id: number;
+  configured: boolean;
+  emergency_phone: string | null;
+  emergency_contact: string | null;
+  emergency_reference: string | null;
+  signatory_name: string | null;
+  signatory_title: string | null;
+  signatory_place: string | null;
+  updated_at?: string | null;
+}
+
+export async function getPartnerDgrConfig(anagraficaId?: number): Promise<PartnerDgrConfig | null> {
+  const r = await http<ApiEnvelope<PartnerDgrConfig>>("/api_partner_dgr_config", {
+    query: anagraficaId ? { anagrafica_id: anagraficaId } : {},
+  });
+  return r?.success && r.data ? r.data : null;
+}
+
+export async function savePartnerDgrConfig(
+  config: Omit<PartnerDgrConfig, "anagrafica_id" | "configured" | "updated_at">,
+  anagraficaId?: number,
+): Promise<ApiEnvelope<PartnerDgrConfig>> {
+  return http<ApiEnvelope<PartnerDgrConfig>>("/api_partner_dgr_config", {
+    method: "POST",
+    query: anagraficaId ? { anagrafica_id: anagraficaId } : {},
+    body: config,
+  });
+}
+
 /**
  * Factory que liga el servicio a un modo (cargo/express) fijo, para que cada
  * app exponga la misma API `dgrService.{searchSubstances,getDeclarations,
@@ -103,5 +172,7 @@ export function createDgrService(isCargo: DgrIsCargo) {
       getDgrDeclarations(shipmentId, isCargo),
     saveDeclarations: (shipmentId: number | string, declarations: DgrDeclaration[]) =>
       saveDgrDeclarations(shipmentId, declarations, isCargo),
+    getRequirements: (shipmentId: number | string) =>
+      isCargo === "N" ? getDgrRequirements(shipmentId) : Promise.resolve(null),
   };
 }

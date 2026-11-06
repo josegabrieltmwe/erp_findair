@@ -300,6 +300,14 @@
           "title": "Partner SMTP",
           "description": "SMTP accounts of any partner, with a diagnosis of which one would be used"
         },
+        "partner_dgr": {
+          "title": "Dangerous goods: emergency",
+          "description": "Your company's 24 h emergency contact and signatory for dangerous goods shipments"
+        },
+        "partner_dgr_admin": {
+          "title": "Dangerous goods by partner",
+          "description": "DGR emergency contact and signatory of any partner"
+        },
         "forward_air_accounts": {
           "title": "Forward Air accounts",
           "description": "Forward Air LTL accounts per partner and environment"
@@ -2389,6 +2397,25 @@
     "section_sender": "Sender",
     "password_stored": "Stored — type a new one to change it",
     "partner_tab_hint": "This partner's SMTP accounts. Without its own account for a purpose, its email goes out through TMWE's."
+  },
+  "partner_dgr": {
+    "title": "Dangerous goods: emergency contact",
+    "title_admin": "Dangerous goods: emergency contact by partner",
+    "subtitle": "Your company accompanies the transport: this contact is declared to UPS, FedEx and DHL on dangerous goods shipments.",
+    "filter_partner": "Partner",
+    "not_configured": "Without an emergency contact, fully regulated dangerous goods labels cannot be created with UPS, FedEx or DHL.",
+    "emergency_title": "24 h emergency contact",
+    "emergency_phone": "24 h phone",
+    "emergency_contact": "Person or service",
+    "emergency_reference": "Contract or registration",
+    "signatory_title": "Declaration signatory",
+    "signatory_name": "Name",
+    "signatory_role": "Title",
+    "signatory_place": "Place of signature",
+    "hint": "The phone must be staffed 24 hours a day by people trained in dangerous goods. The signatory appears on the DG document returned by UPS.",
+    "phone_required": "The emergency phone is required",
+    "saved": "Emergency contact saved",
+    "error_generic": "The configuration could not be saved"
   },
   "forward_air_accounts": {
     "title": "Forward Air accounts",

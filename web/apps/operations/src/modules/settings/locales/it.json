@@ -300,6 +300,14 @@
           "title": "SMTP per partner",
           "description": "Account SMTP di qualsiasi partner, con diagnosi di quale verrebbe usato"
         },
+        "partner_dgr": {
+          "title": "Merci pericolose: emergenza",
+          "description": "Contatto di emergenza 24 h e firmatario della tua azienda per le spedizioni con merci pericolose"
+        },
+        "partner_dgr_admin": {
+          "title": "Merci pericolose per partner",
+          "description": "Contatto di emergenza e firmatario DGR di qualsiasi partner"
+        },
         "forward_air_accounts": {
           "title": "Account Forward Air",
           "description": "Account LTL di Forward Air per partner e ambiente"
@@ -2389,6 +2397,25 @@
     "section_sender": "Mittente",
     "password_stored": "Salvata — scrivine una nuova per cambiarla",
     "partner_tab_hint": "Account SMTP di questo partner. Senza un account proprio per uno scopo, le sue email partono con quello di TMWE."
+  },
+  "partner_dgr": {
+    "title": "Merci pericolose: contatto di emergenza",
+    "title_admin": "Merci pericolose: contatto di emergenza per partner",
+    "subtitle": "La tua azienda accompagna il trasporto: questo contatto viene dichiarato a UPS, FedEx e DHL nelle spedizioni con merci pericolose.",
+    "filter_partner": "Partner",
+    "not_configured": "Senza contatto di emergenza non si possono creare etichette di merci pericolose in regime completo con UPS, FedEx o DHL.",
+    "emergency_title": "Contatto di emergenza 24 h",
+    "emergency_phone": "Telefono 24 h",
+    "emergency_contact": "Persona o servizio",
+    "emergency_reference": "Contratto o registrazione",
+    "signatory_title": "Firmatario della dichiarazione",
+    "signatory_name": "Nome",
+    "signatory_role": "Ruolo",
+    "signatory_place": "Luogo di firma",
+    "hint": "Il telefono deve essere presidiato 24 ore su 24 da personale formato sulle merci pericolose. Il firmatario compare nel documento DG restituito da UPS.",
+    "phone_required": "Il telefono di emergenza è obbligatorio",
+    "saved": "Contatto di emergenza salvato",
+    "error_generic": "Impossibile salvare la configurazione"
   },
   "forward_air_accounts": {
     "title": "Account Forward Air",

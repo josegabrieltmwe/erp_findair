@@ -300,6 +300,14 @@
           "title": "SMTP per partner",
           "description": "SMTP-accounts van elke partner, met een diagnose van welke gebruikt zou worden"
         },
+        "partner_dgr": {
+          "title": "Gevaarlijke goederen: noodgeval",
+          "description": "24-uurs noodcontact en ondertekenaar van uw bedrijf voor zendingen met gevaarlijke goederen"
+        },
+        "partner_dgr_admin": {
+          "title": "Gevaarlijke goederen per partner",
+          "description": "DGR-noodcontact en ondertekenaar van elke partner"
+        },
         "forward_air_accounts": {
           "title": "Forward Air-accounts",
           "description": "Forward Air LTL-accounts per partner en omgeving"
@@ -2389,6 +2397,25 @@
     "section_sender": "Afzender",
     "password_stored": "Opgeslagen — typ een nieuw wachtwoord om te wijzigen",
     "partner_tab_hint": "SMTP-accounts van deze partner. Zonder eigen account voor een doel gaat de e-mail via dat van TMWE."
+  },
+  "partner_dgr": {
+    "title": "Gevaarlijke goederen: noodcontact",
+    "title_admin": "Gevaarlijke goederen: noodcontact per partner",
+    "subtitle": "Uw bedrijf begeleidt het transport: dit contact wordt aan UPS, FedEx en DHL opgegeven bij zendingen met gevaarlijke goederen.",
+    "filter_partner": "Partner",
+    "not_configured": "Zonder noodcontact kunnen geen volledig gereguleerde labels voor gevaarlijke goederen worden gemaakt bij UPS, FedEx of DHL.",
+    "emergency_title": "24-uurs noodcontact",
+    "emergency_phone": "24-uurs telefoon",
+    "emergency_contact": "Persoon of dienst",
+    "emergency_reference": "Contract of registratie",
+    "signatory_title": "Ondertekenaar van de verklaring",
+    "signatory_name": "Naam",
+    "signatory_role": "Functie",
+    "signatory_place": "Plaats van ondertekening",
+    "hint": "De telefoon moet 24 uur per dag bemand zijn door personeel opgeleid in gevaarlijke goederen. De ondertekenaar staat op het DG-document van UPS.",
+    "phone_required": "Het noodtelefoonnummer is verplicht",
+    "saved": "Noodcontact opgeslagen",
+    "error_generic": "De configuratie kon niet worden opgeslagen"
   },
   "forward_air_accounts": {
     "title": "Forward Air-accounts",

@@ -486,6 +486,21 @@ const routes: RouteRecordRaw[] = [
     props: { scope: "admin" },
     meta: { requiresAdmin: true },
   },
+  // Mercancía peligrosa: contacto de emergencia 24 h y firmante del partner (api_partner_dgr_config). El servidor
+  // autoriza la escritura (TMWE o partner:manage); la de TMWE sobre cualquier partner es requiresAdmin.
+  {
+    path: "/settings/dangerous-goods",
+    name: "settings-partner-dgr",
+    component: () => import("@shared/partner_dgr/feature/PartnerDgrConfigPage.vue"),
+    props: { scope: "self" },
+  },
+  {
+    path: "/settings/dangerous-goods-admin",
+    name: "settings-partner-dgr-admin",
+    component: () => import("@shared/partner_dgr/feature/PartnerDgrConfigPage.vue"),
+    props: { scope: "admin" },
+    meta: { requiresAdmin: true },
+  },
   // Pasarelas de pago. La del partner NO es requiresAdmin: la autoriza el servidor (el partner sale del token y una
   // cuenta ajena responde 404). La de TMWE sobre cualquier partner si lo es y es de solo lectura.
   {

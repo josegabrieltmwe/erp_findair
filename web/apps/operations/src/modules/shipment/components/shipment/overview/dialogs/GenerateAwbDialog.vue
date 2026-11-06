@@ -48,6 +48,16 @@
           {{ t("shipment.awb.booking_error.edit_packages") }}
         </v-btn>
         <v-btn
+          v-if="bookingError.code === 'DGR_DECLARATION_REQUIRED'"
+          size="small"
+          variant="flat"
+          color="error"
+          prepend-icon="mdi-hazard-lights"
+          @click="emit('edit-dgr')"
+        >
+          {{ t("shipment.dgr.open_declaration") }}
+        </v-btn>
+        <v-btn
           v-if="bookingError.retryable"
           size="small"
           variant="flat"
@@ -95,6 +105,17 @@
       <ul class="ldv-val-list">
         <li v-for="(e, i) in errors" :key="`e${i}`">{{ e.message }}</li>
       </ul>
+      <v-btn
+        v-if="hasDgrIssues"
+        size="small"
+        variant="flat"
+        color="error"
+        class="mt-2"
+        prepend-icon="mdi-hazard-lights"
+        @click="emit('edit-dgr')"
+      >
+        {{ t("shipment.dgr.open_declaration") }}
+      </v-btn>
     </v-alert>
     <v-alert
       v-else-if="warnings.length"
@@ -222,6 +243,8 @@ const emit = defineEmits<{
   generate: [];
   "edit-packages": [];
   "copy-error": [];
+  /** Abrir la declaración de mercancía peligrosa (faltan datos que el courier exige). */
+  "edit-dgr": [];
 }>();
 
 const { t } = useI18n();
@@ -233,6 +256,9 @@ const PACKAGE_CODES = new Set([
   "COURIER_INVALID_DIMENSIONS",
 ]);
 const isPackagesError = computed<boolean>(() => PACKAGE_CODES.has(props.bookingError?.code ?? ""));
+
+/** Prevalidación con requisitos de mercancía peligrosa (categoría «dgr», Dangerous_Goods_Profile_Service). */
+const hasDgrIssues = computed<boolean>(() => props.errors.some((e) => e.category === "dgr"));
 
 /** Titulo segun la categoria: rechazo del courier, sin respuesta, datos o fallo interno. */
 const bookingErrorTitle = computed<string>(() => {
