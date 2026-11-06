@@ -189,10 +189,24 @@ final class RouteManifest
             bodyEnum: self::bodyEnum($i),
             checkEffectivePartner: (bool) ($i['check_effective_partner'] ?? true),
             otp: self::otp($i),
+            multipart: self::multipart($i),
         );
     }
 
     /** @param array<mixed> $i */
+    /** @param array<mixed> $i */
+    private static function multipart(array $i): bool
+    {
+        if (!isset($i['multipart'])) {
+            return false;
+        }
+        if ($i['multipart'] !== true || !isset($i['otp'])) {
+            throw new \InvalidArgumentException("multipart solo vale con otp y true, en '{$i['id']}'.");
+        }
+
+        return true;
+    }
+
     /** @param array<mixed> $i */
     private static function otp(array $i): ?string
     {

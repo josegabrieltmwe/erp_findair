@@ -55,6 +55,10 @@
             :errors="errors"
           />
 
+          <CarrierFilesCard :view="view" @uploaded="refreshView" />
+
+          <CarrierReceiptCard v-if="view.answered_at" />
+
           <template v-if="editing && form">
             <CarrierReplyFields :form="form" :errors="errors" />
             <CarrierConfirmSend :form="form" :total="formatMoney(shownTotal, view.currency)" :sending="sending" :message="sendMessage" @send="send" />
@@ -96,6 +100,8 @@ import CarrierFreightDetails from "@cargo/components/carrier-offer/CarrierFreigh
 import CarrierChargesTable from "@cargo/components/carrier-offer/CarrierChargesTable.vue";
 import CarrierReplyFields from "@cargo/components/carrier-offer/CarrierReplyFields.vue";
 import CarrierConfirmSend from "@cargo/components/carrier-offer/CarrierConfirmSend.vue";
+import CarrierFilesCard from "@cargo/components/carrier-offer/CarrierFilesCard.vue";
+import CarrierReceiptCard from "@cargo/components/carrier-offer/CarrierReceiptCard.vue";
 
 type Phase = "loading" | "ready" | "error";
 type Reason = Parameters<typeof failureKeys>[0];
@@ -159,6 +165,12 @@ async function load(): Promise<void> {
     // Un 401 ya lo avisó onOtpSessionLost; el resto (red, 5xx) se puede reintentar.
     if (!sessionLost.value) fail("unavailable");
   }
+}
+
+/** Recarga la solicitud sin tocar lo que la aerolínea está escribiendo (p. ej. tras subir un fichero). */
+async function refreshView(): Promise<void> {
+  const fresh = await fetchView().catch(() => null);
+  if (fresh && view.value) view.value = { ...view.value, own_files: fresh.own_files, upload: fresh.upload };
 }
 
 function reload(): void {

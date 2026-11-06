@@ -190,6 +190,24 @@ export const useCargoOffersStore = defineStore("cargo_offers", () => {
    * exposes the same field on update; we wrap it here so the UI can
    * call `acceptWinner(id)` semantically without rebuilding the patch.
    */
+  /** Reenvía la solicitud (« - UPDATE»); la oferta vuelve a «sin revisar». */
+  async function resend(cargo_id: number, offer_id: number): Promise<boolean> {
+    const t = i18n.global.t;
+    try {
+      const r = await cargoOffersService.resend(offer_id);
+      if (r.success) {
+        await load(cargo_id);
+        toasts.push("success", t("cargo.toast.rfq_resent", { carrier: r.data?.carrier_name || r.data?.to || "" }));
+        return true;
+      }
+      toasts.push("error", t("cargo.toast.rfq_resend_failed", { reason: r.error ?? "" }));
+      return false;
+    } catch (e) {
+      toasts.push("error", t("cargo.toast.rfq_resend_failed", { reason: (e as Error).message }));
+      return false;
+    }
+  }
+
   async function acceptWinner(offer_id: number): Promise<boolean> {
     return update({ id: offer_id, accettata: "S", controllata: "S" });
   }
@@ -207,5 +225,6 @@ export const useCargoOffersStore = defineStore("cargo_offers", () => {
     update,
     remove,
     acceptWinner,
+    resend,
   };
 });

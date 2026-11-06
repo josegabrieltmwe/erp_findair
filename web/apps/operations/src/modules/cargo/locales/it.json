@@ -322,7 +322,8 @@
       "dest_country": "Paese dest.",
       "date": "Data",
       "chat_unread": "Messaggi non letti",
-      "client": "Cliente"
+      "client": "Cliente",
+      "pending_offers": "Risposte da controllare"
     },
     "click": {
       "by_client": "Filtra per questo cliente",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Sì",
       "date_from": "Dal {date}",
       "date_until": "Fino al {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Sì"
     },
     "search_placeholder": "Cerca filtro…",
     "search_no_match": "Nessun filtro corrisponde a «{q}»",
@@ -766,7 +768,26 @@
       "err_validation": "Alcuni valori richiedono la vostra attenzione.",
       "err_locked": "La richiesta è chiusa: la vostra quotazione è già stata verificata.",
       "err_rate": "Troppi tentativi. Attendete un momento.",
-      "err_generic": "Non siamo riusciti a inviare la quotazione. Riprovate."
+      "err_generic": "Non siamo riusciti a inviare la quotazione. Riprovate.",
+      "files_title": "File",
+      "shared_files": "File del nostro ufficio prenotazioni",
+      "own_files": "I vostri file",
+      "no_files_hint": "Se volete, potete allegare qui fino a {max} file.",
+      "add_file": "Aggiungi un file",
+      "upload_hint": "Consentiti: {types}. Fino a {mb} MB ciascuno.",
+      "upload_err_type": "Questo tipo di file non è consentito ({ext}).",
+      "upload_err_size": "Il file supera {mb} MB.",
+      "upload_err_limit": "Potete allegare fino a {max} file.",
+      "upload_err_empty": "Il file è vuoto.",
+      "upload_err_locked": "La richiesta è chiusa: la vostra quotazione è già stata verificata.",
+      "upload_err_generic": "Non siamo riusciti a caricare il file. Riprovate.",
+      "download_parcels": "Scarica l'elenco dei colli (CSV)",
+      "receipt_title": "Copia della vostra quotazione",
+      "receipt_pdf": "Scarica il PDF",
+      "receipt_mail": "Inviami una copia per e-mail",
+      "receipt_sent": "Abbiamo inviato una copia a {to}.",
+      "receipt_err_missing": "Non abbiamo un indirizzo e-mail registrato per voi. Scaricate il PDF.",
+      "receipt_err": "Non è stato possibile inviare l'e-mail. Riprovate."
     },
     "offers": {
       "title": "Offerte vettori (RFQ)",
@@ -802,7 +823,15 @@
       "status_replied": "Risposto",
       "status_pending": "In attesa",
       "remove_confirm": "Rimuovere l'offerta da {carrier}?",
-      "summary_awaiting": "In attesa di {n} risposta/e"
+      "summary_awaiting": "In attesa di {n} risposta/e",
+      "status_to_review": "Risposta da controllare",
+      "resend": "Reinvia richiesta",
+      "resend_dialog_title": "Reinvia la richiesta",
+      "resend_dialog_body": "Verrà inviata di nuovo per e-mail una richiesta aggiornata (oggetto «… - UPDATE») a",
+      "resend_dialog_hint": "La compagnia potrà rispondere di nuovo e la risposta torna «da controllare».",
+      "resend_confirm": "Reinvia",
+      "to_review_badge": "{n} da controllare",
+      "summary_to_review": "{n} da controllare"
     },
     "charges": {
       "title": "Dettaglio costi",
@@ -1917,7 +1946,9 @@
       "hawb_removed": "HAWB rimosso",
       "origin_sede": "Origine impostata sulla sede",
       "ignored_fields": "Campi non salvati: {fields}",
-      "blocked_by_lock": "Bloccato dal lucchetto: {fields}"
+      "blocked_by_lock": "Bloccato dal lucchetto: {fields}",
+      "rfq_resent": "Richiesta reinviata a {carrier}",
+      "rfq_resend_failed": "Impossibile reinviare: {reason}"
     },
     "consolidation": {
       "title": "Consolidato",

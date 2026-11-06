@@ -322,7 +322,8 @@
       "dest_country": "Bestemmingsland",
       "date": "Datum",
       "chat_unread": "Ongelezen berichten",
-      "client": "Klant"
+      "client": "Klant",
+      "pending_offers": "Antwoorden te controleren"
     },
     "click": {
       "by_client": "Filteren op deze klant",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Ja",
       "date_from": "Vanaf {date}",
       "date_until": "Tot {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Ja"
     },
     "search_placeholder": "Filter zoeken…",
     "search_no_match": "Geen filter komt overeen met ‘{q}’",
@@ -766,7 +768,26 @@
       "err_validation": "Sommige waarden hebben aandacht nodig.",
       "err_locked": "De aanvraag is gesloten: uw offerte is al gecontroleerd.",
       "err_rate": "Te veel pogingen. Wacht even.",
-      "err_generic": "We konden uw offerte niet verzenden. Probeer het opnieuw."
+      "err_generic": "We konden uw offerte niet verzenden. Probeer het opnieuw.",
+      "files_title": "Bestanden",
+      "shared_files": "Bestanden van ons boekingskantoor",
+      "own_files": "Uw bestanden",
+      "no_files_hint": "Indien gewenst kunt u hier maximaal {max} bestanden bijvoegen.",
+      "add_file": "Bestand toevoegen",
+      "upload_hint": "Toegestaan: {types}. Elk maximaal {mb} MB.",
+      "upload_err_type": "Dit bestandstype is niet toegestaan ({ext}).",
+      "upload_err_size": "Het bestand is groter dan {mb} MB.",
+      "upload_err_limit": "U kunt maximaal {max} bestanden bijvoegen.",
+      "upload_err_empty": "Het bestand is leeg.",
+      "upload_err_locked": "De aanvraag is gesloten: uw offerte is al gecontroleerd.",
+      "upload_err_generic": "We konden het bestand niet uploaden. Probeer het opnieuw.",
+      "download_parcels": "Lijst met colli downloaden (CSV)",
+      "receipt_title": "Kopie van uw offerte",
+      "receipt_pdf": "PDF downloaden",
+      "receipt_mail": "Stuur mij een kopie per e-mail",
+      "receipt_sent": "We hebben een kopie naar {to} gestuurd.",
+      "receipt_err_missing": "Voor u is geen e-mailadres geregistreerd. Download het PDF-bestand.",
+      "receipt_err": "De e-mail kon niet worden verzonden. Probeer het opnieuw."
     },
     "offers": {
       "title": "Vervoerdersoffertes (RFQ)",
@@ -802,7 +823,15 @@
       "status_replied": "Beantwoord",
       "status_pending": "In afwachting",
       "remove_confirm": "Offerte van {carrier} verwijderen?",
-      "summary_awaiting": "Wachten op {n} antwoord(en)"
+      "summary_awaiting": "Wachten op {n} antwoord(en)",
+      "status_to_review": "Antwoord te controleren",
+      "resend": "Aanvraag opnieuw versturen",
+      "resend_dialog_title": "Aanvraag opnieuw versturen",
+      "resend_dialog_body": "Een bijgewerkte aanvraag (onderwerp “… - UPDATE”) wordt opnieuw per e-mail verstuurd naar",
+      "resend_dialog_hint": "De maatschappij kan opnieuw antwoorden en het antwoord staat weer op “te controleren”.",
+      "resend_confirm": "Opnieuw versturen",
+      "to_review_badge": "{n} te controleren",
+      "summary_to_review": "{n} te controleren"
     },
     "charges": {
       "title": "Kostendetails",
@@ -1917,7 +1946,9 @@
       "hawb_removed": "HAWB verwijderd",
       "origin_sede": "Oorsprong ingesteld op vestiging",
       "ignored_fields": "Niet-opgeslagen velden: {fields}",
-      "blocked_by_lock": "Geblokkeerd door slot: {fields}"
+      "blocked_by_lock": "Geblokkeerd door slot: {fields}",
+      "rfq_resent": "Aanvraag opnieuw verstuurd naar {carrier}",
+      "rfq_resend_failed": "Opnieuw versturen mislukt: {reason}"
     },
     "consolidation": {
       "title": "Consolidatie",

@@ -241,6 +241,60 @@ routes:
     limits: { body: 32k, timeout: 20 }
     throttle: otp_submit
 
+  # Ficheros de la aerolínea (sesión OTP): descargar uno de la expedición (`idf`) o uno suyo (`n`), y subir el suyo (multipart, máx. 4 MB).
+  - id: otp.cargo_offer.file.download
+    method: GET
+    path: /api_carrier_offer_file
+    upstream:
+      action: api_carrier_offer_file
+      forward_query: [idf, n]
+    response: binary
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { timeout: 30 }
+
+  - id: otp.cargo_offer.file.upload
+    method: POST
+    path: /api_carrier_offer_file
+    upstream:
+      action: api_carrier_offer_file
+    otp: cargo_offer
+    multipart: true
+    check_effective_partner: false
+    limits: { body: 4m, timeout: 30 }
+    throttle: otp_upload
+
+  # CSV de bultos y constancia en PDF; el POST del PDF la manda por correo al contacto registrado de la aerolínea (no se elige el destinatario).
+  - id: otp.cargo_offer.packages
+    method: GET
+    path: /api_carrier_offer_packages
+    upstream:
+      action: api_carrier_offer_packages
+    response: binary
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { timeout: 20 }
+
+  - id: otp.cargo_offer.pdf.download
+    method: GET
+    path: /api_carrier_offer_pdf
+    upstream:
+      action: api_carrier_offer_pdf
+    response: binary
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { timeout: 45 }
+
+  - id: otp.cargo_offer.pdf.mail
+    method: POST
+    path: /api_carrier_offer_pdf
+    upstream:
+      action: api_carrier_offer_pdf
+    otp: cargo_offer
+    check_effective_partner: false
+    limits: { body: 1k, timeout: 45 }
+    throttle: otp_mail
+
   # Copilot del ERP: la SPA usa postJson() (método dinámico), que el generador no detecta.
   - id: copilot.chat
     method: POST

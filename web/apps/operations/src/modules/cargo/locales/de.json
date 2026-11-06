@@ -322,7 +322,8 @@
       "dest_country": "Zielland",
       "date": "Datum",
       "chat_unread": "Ungelesene Nachrichten",
-      "client": "Kunde"
+      "client": "Kunde",
+      "pending_offers": "Antworten zu prüfen"
     },
     "click": {
       "by_client": "Nach diesem Kunden filtern",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Ja",
       "date_from": "Ab {date}",
       "date_until": "Bis {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Ja"
     },
     "search_placeholder": "Filter suchen…",
     "search_no_match": "Kein Filter entspricht „{q}“",
@@ -766,7 +768,26 @@
       "err_validation": "Einige Werte müssen geprüft werden.",
       "err_locked": "Die Anfrage ist geschlossen: Ihr Angebot wurde bereits geprüft.",
       "err_rate": "Zu viele Versuche. Bitte warten Sie einen Moment.",
-      "err_generic": "Wir konnten Ihr Angebot nicht senden. Bitte versuchen Sie es erneut."
+      "err_generic": "Wir konnten Ihr Angebot nicht senden. Bitte versuchen Sie es erneut.",
+      "files_title": "Dateien",
+      "shared_files": "Dateien unseres Buchungsbüros",
+      "own_files": "Ihre Dateien",
+      "no_files_hint": "Auf Wunsch können Sie hier bis zu {max} Dateien anhängen.",
+      "add_file": "Datei hinzufügen",
+      "upload_hint": "Erlaubt: {types}. Je bis zu {mb} MB.",
+      "upload_err_type": "Dieser Dateityp ist nicht erlaubt ({ext}).",
+      "upload_err_size": "Die Datei ist größer als {mb} MB.",
+      "upload_err_limit": "Sie können bis zu {max} Dateien anhängen.",
+      "upload_err_empty": "Die Datei ist leer.",
+      "upload_err_locked": "Die Anfrage ist geschlossen: Ihr Angebot wurde bereits geprüft.",
+      "upload_err_generic": "Wir konnten die Datei nicht hochladen. Bitte versuchen Sie es erneut.",
+      "download_parcels": "Packstückliste herunterladen (CSV)",
+      "receipt_title": "Kopie Ihres Angebots",
+      "receipt_pdf": "PDF herunterladen",
+      "receipt_mail": "Kopie per E-Mail senden",
+      "receipt_sent": "Wir haben eine Kopie an {to} gesendet.",
+      "receipt_err_missing": "Für Sie ist keine E-Mail-Adresse hinterlegt. Bitte laden Sie das PDF herunter.",
+      "receipt_err": "Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
     },
     "offers": {
       "title": "Frachtführerangebote (RFQ)",
@@ -802,7 +823,15 @@
       "status_replied": "Beantwortet",
       "status_pending": "Ausstehend",
       "remove_confirm": "Angebot von {carrier} entfernen?",
-      "summary_awaiting": "Warte auf {n} Antwort(en)"
+      "summary_awaiting": "Warte auf {n} Antwort(en)",
+      "status_to_review": "Antwort zu prüfen",
+      "resend": "Anfrage erneut senden",
+      "resend_dialog_title": "Anfrage erneut senden",
+      "resend_dialog_body": "Eine aktualisierte Anfrage (Betreff „… - UPDATE“) wird erneut per E-Mail gesendet an",
+      "resend_dialog_hint": "Die Airline kann erneut antworten; die Antwort gilt wieder als „zu prüfen“.",
+      "resend_confirm": "Erneut senden",
+      "to_review_badge": "{n} zu prüfen",
+      "summary_to_review": "{n} zu prüfen"
     },
     "charges": {
       "title": "Kostendetails",
@@ -1917,7 +1946,9 @@
       "hawb_removed": "HAWB entfernt",
       "origin_sede": "Ursprung auf Standort gesetzt",
       "ignored_fields": "Nicht gespeicherte Felder: {fields}",
-      "blocked_by_lock": "Durch Sperre blockiert: {fields}"
+      "blocked_by_lock": "Durch Sperre blockiert: {fields}",
+      "rfq_resent": "Anfrage erneut gesendet an {carrier}",
+      "rfq_resend_failed": "Erneutes Senden fehlgeschlagen: {reason}"
     },
     "consolidation": {
       "title": "Konsolidierung",

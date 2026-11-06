@@ -23,7 +23,12 @@
         <v-icon icon="mdi-tag-multiple-outline" size="18" />
         <!-- Punto de aviso cuando hay RFQ enviadas sin respuesta: el operador
              ve desde la barra que hay algo pendiente sin abrir nada. -->
-        <span v-if="hasPending" class="topbar-iconbtn-dot" />
+        <!-- Rojo: hay respuestas de aerolínea sin revisar. Verde: solo hay solicitudes sin contestar. -->
+        <span
+          v-if="toReviewCount || hasPending"
+          class="topbar-iconbtn-dot"
+          :style="toReviewCount ? { background: 'rgb(var(--v-theme-error))' } : undefined"
+        />
       </button>
     </template>
 
@@ -65,6 +70,15 @@
           >
             {{ repliedCount }}/{{ store.total }}
           </v-chip>
+          <v-chip
+            v-if="toReviewCount"
+            size="x-small"
+            variant="flat"
+            color="error"
+            class="ms-1"
+          >
+            {{ t("cargo.offers.summary_to_review", { n: toReviewCount }) }}
+          </v-chip>
         </template>
       </v-list-item>
 
@@ -99,7 +113,7 @@ import { useRoute } from "vue-router";
 import { useUiStore } from "@cargo/stores/ui.store";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useCargoOffersStore } from "@cargo/stores/cargo_offers.store";
-import type { CargoOffer } from "@cargo/services/cargo_offers.service";
+import { offerNeedsReview, type CargoOffer } from "@cargo/services/cargo_offers.service";
 
 const { t } = useI18n();
 const ui = useUiStore();
@@ -116,6 +130,9 @@ function hasReply(o: CargoOffer): boolean {
 }
 
 const repliedCount = computed(() => store.rows.filter(hasReply).length);
+
+/** Respuestas de aerolínea que el operador aún no ha revisado (`ofstat` del legado). */
+const toReviewCount = computed(() => store.rows.filter(offerNeedsReview).length);
 
 /** Hay RFQ enviadas que aún no han contestado: se avisa en la barra. */
 const hasPending = computed(

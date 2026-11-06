@@ -161,6 +161,19 @@ function redirectToLogin(_url?: string): void {
 }
 
 /**
+ * ¿Un cuerpo que el navegador codifica por su cuenta (subida de ficheros, binarios)? Forzarle `application/json` rompe la subida:
+ * sin el `boundary` de `multipart/form-data` el servidor no puede leer el fichero. Se deja sin tocar el Content-Type.
+ */
+export function isRawBody(body: unknown): boolean {
+  return (
+    (typeof FormData !== 'undefined' && body instanceof FormData) ||
+    (typeof Blob !== 'undefined' && body instanceof Blob) ||
+    (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams) ||
+    (typeof ArrayBuffer !== 'undefined' && (body instanceof ArrayBuffer || ArrayBuffer.isView(body)))
+  );
+}
+
+/**
  * Build an ofetch instance with the shared interceptors. Each app gets its
  * own instance (different basePath) but shares the event bus.
  */
@@ -179,7 +192,8 @@ export function createHttpClient(opts: HttpClientOptions): $Fetch {
       if (
         options.body &&
         !options.headers.has('Content-Type') &&
-        typeof options.body === 'object'
+        typeof options.body === 'object' &&
+        !isRawBody(options.body)
       ) {
         options.headers.set('Content-Type', 'application/json');
       }

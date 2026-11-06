@@ -59,6 +59,8 @@ export interface CarrierOfferView {
   parcels: CarrierParcel[];
   files: Array<{ id: number; name: string; size_kb: number }>;
   own_files: Array<{ n: number; name: string }>;
+  /** Lo que la pantalla ofrece y valida antes de subir un fichero. */
+  upload: { max_files: number; max_kb: number; extensions: string[]; can_upload: boolean };
 }
 
 export interface CarrierOfferResponse {
@@ -85,10 +87,49 @@ export interface CarrierQuoteBody {
   confirm: { price: boolean; terms: boolean };
 }
 
+export interface CarrierUploadResponse {
+  success: boolean;
+  slot?: number;
+  name?: string;
+}
+
+export interface CarrierCopyResponse {
+  success: boolean;
+  /** Dirección registrada, enmascarada (`o***@klm.example`). */
+  sent_to?: string;
+}
+
+function basePath(): string {
+  return (typeof window !== "undefined" && (window as unknown as { __TMWE_NAV__?: { basePath?: string } }).__TMWE_NAV__?.basePath) || "/bff/v1";
+}
+
+/**
+ * Enlaces de descarga. Son navegaciones GET a rutas del BFF con la cookie de la sesión de OTP (sin token ni OTP en la URL): el
+ * API contesta como adjunto y el navegador baja el fichero sin salir de la página.
+ */
+export const carrierOfferLinks = {
+  sharedFile: (id: number): string => `${basePath()}/api_carrier_offer_file?idf=${encodeURIComponent(String(id))}`,
+  ownFile: (n: number): string => `${basePath()}/api_carrier_offer_file?n=${encodeURIComponent(String(n))}`,
+  packages: (): string => `${basePath()}/api_carrier_offer_packages`,
+  pdf: (): string => `${basePath()}/api_carrier_offer_pdf`,
+};
+
 export const carrierOfferService = {
   /** GET /api_carrier_offer — `found: false` si el enlace ya no sirve (caducado o retirado). */
   get(): Promise<CarrierOfferResponse> {
     return http<CarrierOfferResponse>("/api_carrier_offer");
+  },
+
+  /** POST /api_carrier_offer_file — sube un fichero de la aerolínea (multipart, campo `file`). */
+  uploadFile(file: File): Promise<CarrierUploadResponse> {
+    const body = new FormData();
+    body.append("file", file, file.name);
+    return http<CarrierUploadResponse>("/api_carrier_offer_file", { method: "POST", body });
+  },
+
+  /** POST /api_carrier_offer_pdf — manda el PDF al contacto REGISTRADO de la aerolínea (no se elige el destinatario). */
+  sendPdfCopy(): Promise<CarrierCopyResponse> {
+    return http<CarrierCopyResponse>("/api_carrier_offer_pdf", { method: "POST", body: {} });
   },
 
   /**

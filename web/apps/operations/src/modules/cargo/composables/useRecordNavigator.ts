@@ -98,6 +98,7 @@ function stateToNavigatorQuery(
   if (s.acc_danggoods) q.acc_danggoods = s.acc_danggoods;
   if (s.acc_bancale) q.acc_bancale = s.acc_bancale;
   if (s.chat_unread) q.chat_unread = s.chat_unread;
+  if (s.has_pending_offers) q.has_pending_offers = s.has_pending_offers;
   return q;
 }
 

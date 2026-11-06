@@ -159,7 +159,7 @@ vista `/offer` en solo lectura, límite de intentos en Redis). Pruebas, 213 del 
 ver `tmwe_api/docs/05-operacion/despliegue_offer_otp_fase1.md` §8. Pendiente de comprobar en el sandbox: el cliente del BFF allí y Apache.
 **La fase 2 (responder) también está construida y probada en local** (2026-11-06): formulario con total en vivo, `POST api_carrier_offer` con el total
 calculado en el servidor, doble confirmación, aviso por correo al operador y bloqueo de la oferta revisada. La sesión OTP **no se destruye al enviar**
-(la aerolínea puede corregir hasta la revisión, como el legado); caduca por inactividad. Fases 3 y 4 sin empezar.
+(la aerolínea puede corregir hasta la revisión, como el legado); caduca por inactividad. **La fase 3 (ficheros, bultos, PDF y copia por correo) también**, con el límite de subida en el BFF (`OTP_UPLOAD_*`, `OTP_MAIL_*`). **La fase 4 (operador) también**: `offers.to_review` en el listado cargo, badge y filtro, estado «por revisar», acción «Reenviar» (` - UPDATE`) y punto rojo en el menú de cotización.
 
 No enviar RFQs reales desde un entorno hasta que la fase 1 esté desplegada en él.
 

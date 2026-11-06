@@ -443,4 +443,161 @@ final class OtpFlowTest extends AppTestCase
         self::assertSame('otp_submit', $hit['route']->throttle);
         self::assertFalse($hit['route']->forwardAllQuery);
     }
+
+    public function testADownloadIsForwardedWithOnlyTheDeclaredQueryAndKeepsTheAttachmentHeaders(): void
+    {
+        $sid = $this->otpSession();
+        $this->upstream->append(new UpstreamResponse(200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'attachment; filename="pl.pdf"', 'Cache-Control' => 'private, no-store'], '%PDF-1.4 fake'));
+
+        $response = $this->send($this->request('GET', '/bff/v1/otp_file?idf=40&n=2&id=999&otp=HACK&x=1', $sid));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('application/pdf', $response->getHeaderLine('Content-Type'));
+        self::assertSame('attachment; filename="pl.pdf"', $response->getHeaderLine('Content-Disposition'));
+        self::assertSame('%PDF-1.4 fake', (string) $response->getBody());
+        parse_str($this->lastUpstreamRequest()->getUri()->getQuery(), $query);
+        self::assertSame('40', $query['idf']);
+        self::assertSame('2', $query['n']);
+        self::assertSame('12', $query['id'], 'el id sale de la concesión');
+        self::assertSame('AbC123', $query['otp']);
+        self::assertArrayNotHasKey('x', $query);
+    }
+
+    public function testADownloadNeedsNoCsrfButAnUnknownFileIsA404FromTheApi(): void
+    {
+        $sid = $this->otpSession();
+        $this->upstream->append(new UpstreamResponse(404, ['Content-Type' => 'application/json'], '{"success":true,"found":false}'));
+
+        self::assertSame(404, $this->send($this->request('GET', '/bff/v1/otp_file?idf=999', $sid))->getStatusCode());
+    }
+
+    public function testAnUploadIsForwardedUntouchedWithTheBoundaryAndTheGrantInTheQuery(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $this->upstream->append($this->upstreamOk('{"success":true,"slot":1,"name":"rates.pdf"}'));
+        $body = "--b\r\nContent-Disposition: form-data; name=\"file\"; filename=\"rates.pdf\"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4\r\n--b\r\nContent-Disposition: form-data; name=\"id\"\r\n\r\n999\r\n--b--\r\n";
+
+        $response = $this->send($this->request('POST', '/bff/v1/otp_upload', $sid, ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf, 'Content-Type' => 'multipart/form-data; boundary=b'], $body));
+
+        self::assertSame(200, $response->getStatusCode());
+        $sent = $this->lastUpstreamRequest();
+        self::assertSame($body, (string) $sent->getBody(), 'un fichero no se reescribe');
+        self::assertSame('multipart/form-data; boundary=b', $sent->getHeaderLine('Content-Type'));
+        parse_str($sent->getUri()->getQuery(), $query);
+        self::assertSame('12', $query['id'], 'el recurso va en la query, desde la concesión');
+        self::assertSame('AbC123', $query['otp']);
+    }
+
+    public function testAnUploadRouteRejectsAJsonBodyAndAJsonRouteRejectsAnUpload(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $calls = count($this->history);
+        $headers = ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf];
+
+        $json = $this->send($this->request('POST', '/bff/v1/otp_upload', $sid, $headers + ['Content-Type' => 'application/json'], '{"a":1}'));
+        $multipart = $this->send($this->request('POST', '/bff/v1/otp_offer', $sid, $headers + ['Content-Type' => 'multipart/form-data; boundary=b'], "--b\r\n--b--\r\n"));
+
+        self::assertSame(415, $json->getStatusCode());
+        self::assertSame(415, $multipart->getStatusCode());
+        self::assertCount($calls, $this->history);
+    }
+
+    public function testAnUploadNeedsCsrfAndIsLimitedPerSession(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $mp = ['Content-Type' => 'multipart/form-data; boundary=b'];
+
+        $noCsrf = $this->send($this->request('POST', '/bff/v1/otp_upload', $sid, ['Origin' => self::ORIGIN, 'X-CSRF-Token' => 'otro'] + $mp, "--b\r\n--b--\r\n"));
+        self::assertSame(403, $noCsrf->getStatusCode());
+
+        for ($i = 0; $i < 8; $i++) {
+            $this->upstream->append($this->upstreamOk('{"success":true}'));
+        }
+        $codes = [];
+        for ($i = 0; $i < 9; $i++) {
+            $codes[] = $this->send($this->request('POST', '/bff/v1/otp_upload', $sid, ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf] + $mp, "--b\r\n--b--\r\n"))->getStatusCode();
+        }
+        self::assertSame(array_merge(array_fill(0, 8, 200), [429]), $codes, '8 subidas por minuto y sesión');
+    }
+
+    public function testTheFileCsvAndPdfRoutesAreInTheRealManifest(): void
+    {
+        $manifest = RouteManifest::fromFile(__DIR__ . '/../config/routes.bff.yaml');
+        foreach ([['GET', '/api_carrier_offer_file', 'binary', false], ['POST', '/api_carrier_offer_file', 'json', true], ['GET', '/api_carrier_offer_packages', 'binary', false],
+                  ['GET', '/api_carrier_offer_pdf', 'binary', false], ['POST', '/api_carrier_offer_pdf', 'json', false]] as [$method, $path, $response, $multipart]) {
+            $hit = $manifest->match($method, $path);
+            self::assertNotNull($hit, "{$method} {$path}");
+            self::assertSame('cargo_offer', $hit['route']->otp, "{$method} {$path}");
+            self::assertSame($response, $hit['route']->response, "{$method} {$path}");
+            self::assertSame($multipart, $hit['route']->multipart, "{$method} {$path}");
+            self::assertFalse($hit['route']->forwardAllQuery, "{$method} {$path}");
+        }
+        $upload = $manifest->match('POST', '/api_carrier_offer_file');
+        $mail = $manifest->match('POST', '/api_carrier_offer_pdf');
+        self::assertNotNull($upload);
+        self::assertNotNull($mail);
+        self::assertSame('otp_upload', $upload['route']->throttle);
+        self::assertSame('otp_mail', $mail['route']->throttle);
+    }
+
+    public function testMultipartOnlyMakesSenseWithOtp(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        RouteManifest::fromArray([['id' => 'x', 'method' => 'POST', 'path' => '/x', 'upstream' => ['action' => 'a'], 'multipart' => true]]);
+    }
+
+    /** @return array{0: string, 1: string} */
+    private function tmpFile(string $bytes): array
+    {
+        $path = tempnam(sys_get_temp_dir(), 'bffup');
+        file_put_contents($path, $bytes);
+
+        return [$path, (string) strlen($bytes)];
+    }
+
+    public function testAParsedUploadIsRebuiltWithOnlyTheFileField(): void
+    {
+        // En FPM php://input está vacío para multipart/form-data: el fichero llega ya parseado.
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $this->upstream->append($this->upstreamOk('{"success":true,"slot":1}'));
+        [$path, $size] = $this->tmpFile('%PDF-1.4 rates');
+        $request = $this->request('POST', '/bff/v1/otp_upload', $sid, ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf, 'Content-Type' => 'multipart/form-data; boundary=orig'])
+            ->withUploadedFiles(['file' => new \Slim\Psr7\UploadedFile($path, 'rates.pdf', 'application/pdf', (int) $size, UPLOAD_ERR_OK)])
+            ->withParsedBody(['id' => '999', 'otp' => 'HACK']);
+
+        $response = $this->send($request);
+
+        self::assertSame(200, $response->getStatusCode());
+        $sent = $this->lastUpstreamRequest();
+        $body = (string) $sent->getBody();
+        self::assertStringContainsString('name="file"; filename="rates.pdf"', $body);
+        self::assertStringContainsString('Content-Type: application/pdf', $body);
+        self::assertStringContainsString('%PDF-1.4 rates', $body);
+        self::assertStringNotContainsString('HACK', $body, 'los demás campos del formulario se descartan');
+        self::assertMatchesRegularExpression('#^multipart/form-data; boundary=[A-Za-z0-9]+$#', $sent->getHeaderLine('Content-Type'));
+        self::assertStringNotContainsString('orig', $sent->getHeaderLine('Content-Type'), 'boundary nuevo');
+        parse_str($sent->getUri()->getQuery(), $query);
+        self::assertSame('12', $query['id']);
+        unlink($path);
+    }
+
+    public function testAnUploadWithoutTheFileFieldOrTooBigOrFailedIsRejectedBeforeTheApi(): void
+    {
+        [$sid, $csrf] = $this->otpSessionWithCsrf();
+        $calls = count($this->history);
+        [$path, $size] = $this->tmpFile(str_repeat('a', 5000));
+        $headers = ['Origin' => self::ORIGIN, 'X-CSRF-Token' => $csrf, 'Content-Type' => 'multipart/form-data; boundary=b'];
+
+        $wrongField = $this->request('POST', '/bff/v1/otp_upload', $sid, $headers)->withUploadedFiles(['other' => new \Slim\Psr7\UploadedFile($path, 'a.pdf', 'application/pdf', 5000, UPLOAD_ERR_OK)]);
+        $tooBig = $this->request('POST', '/bff/v1/otp_upload', $sid, $headers)->withUploadedFiles(['file' => new \Slim\Psr7\UploadedFile($path, 'a.pdf', 'application/pdf', 5000, UPLOAD_ERR_OK)]); // el máximo de la ruta de pruebas es 4k
+        $iniLimit = $this->request('POST', '/bff/v1/otp_upload', $sid, $headers)->withUploadedFiles(['file' => new \Slim\Psr7\UploadedFile($path, 'a.pdf', 'application/pdf', 5000, UPLOAD_ERR_INI_SIZE)]);
+        $partial = $this->request('POST', '/bff/v1/otp_upload', $sid, $headers)->withUploadedFiles(['file' => new \Slim\Psr7\UploadedFile($path, 'a.pdf', 'application/pdf', 10, UPLOAD_ERR_PARTIAL)]);
+
+        self::assertSame(400, $this->send($wrongField)->getStatusCode());
+        self::assertSame(413, $this->send($tooBig)->getStatusCode());
+        self::assertSame(413, $this->send($iniLimit)->getStatusCode());
+        self::assertSame(400, $this->send($partial)->getStatusCode());
+        self::assertCount($calls, $this->history);
+        @unlink($path);
+    }
 }

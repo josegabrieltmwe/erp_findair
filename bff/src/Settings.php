@@ -106,6 +106,16 @@ final class Settings
                     ratePerUser: (int) $get('OTP_SUBMIT_RATE_PER_MIN', '10'),
                     ratePerIp: (int) $get('OTP_SUBMIT_RATE_PER_IP_MIN', '30'),
                 ),
+                // Subidas de ficheros y correos de constancia de una aerolínea (sesión OTP): cada uno escribe en disco o manda un correo.
+                'otp_upload' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('OTP_UPLOAD_RATE_PER_MIN', '8'),
+                    ratePerIp: (int) $get('OTP_UPLOAD_RATE_PER_IP_MIN', '20'),
+                    concurrencyPerUser: 1,
+                ),
+                'otp_mail' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('OTP_MAIL_RATE_PER_MIN', '3'),
+                    ratePerIp: (int) $get('OTP_MAIL_RATE_PER_IP_MIN', '10'),
+                ),
                 'copilot_confirm' => new ThrottlePolicy(
                     ratePerUser: (int) $get('COPILOT_CONFIRM_RATE_PER_MIN', '30'),
                     ratePerIp: (int) $get('COPILOT_CONFIRM_RATE_PER_IP_MIN', '60'),

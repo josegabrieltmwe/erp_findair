@@ -322,7 +322,8 @@
       "dest_country": "Dest country",
       "date": "Date",
       "chat_unread": "Unread messages",
-      "client": "Client"
+      "client": "Client",
+      "pending_offers": "Replies to review"
     },
     "click": {
       "by_client": "Filter by this client",
@@ -389,7 +390,8 @@
       "chat_unread_yes": "Yes",
       "date_from": "From {date}",
       "date_until": "Until {date}",
-      "date_range": "{from} → {to}"
+      "date_range": "{from} → {to}",
+      "pending_offers_yes": "Yes"
     },
     "search_placeholder": "Search filter…",
     "search_no_match": "No filter matches “{q}”",
@@ -766,7 +768,26 @@
       "err_validation": "Some values need your attention.",
       "err_locked": "This request is closed: your quote has already been reviewed.",
       "err_rate": "Too many attempts. Please wait a moment.",
-      "err_generic": "We could not send your quotation. Please try again."
+      "err_generic": "We could not send your quotation. Please try again.",
+      "files_title": "Files",
+      "shared_files": "Files from our booking office",
+      "own_files": "Your files",
+      "no_files_hint": "If you want, you may attach here up to {max} files.",
+      "add_file": "Add a file",
+      "upload_hint": "Allowed: {types}. Up to {mb} MB each.",
+      "upload_err_type": "This file type is not allowed ({ext}).",
+      "upload_err_size": "The file is larger than {mb} MB.",
+      "upload_err_limit": "You can attach up to {max} files.",
+      "upload_err_empty": "The file is empty.",
+      "upload_err_locked": "This request is closed: your quote has already been reviewed.",
+      "upload_err_generic": "We could not upload the file. Please try again.",
+      "download_parcels": "Download the parcels list (CSV)",
+      "receipt_title": "Copy of your quotation",
+      "receipt_pdf": "Download PDF",
+      "receipt_mail": "Send me a copy by e-mail",
+      "receipt_sent": "We sent a copy to {to}.",
+      "receipt_err_missing": "We have no e-mail address registered for you. Please download the PDF instead.",
+      "receipt_err": "The e-mail could not be sent. Please try again."
     },
     "offers": {
       "title": "Carrier offers (RFQ)",
@@ -802,7 +823,15 @@
       "status_replied": "Replied",
       "status_pending": "Pending",
       "remove_confirm": "Remove offer from {carrier}?",
-      "summary_awaiting": "Awaiting {n} reply(ies)"
+      "summary_awaiting": "Awaiting {n} reply(ies)",
+      "status_to_review": "Reply to review",
+      "resend": "Resend request",
+      "resend_dialog_title": "Resend the request",
+      "resend_dialog_body": "An updated request (subject “… - UPDATE”) will be e-mailed again to",
+      "resend_dialog_hint": "The airline can answer again and the reply goes back to “to review”.",
+      "resend_confirm": "Resend",
+      "to_review_badge": "{n} to review",
+      "summary_to_review": "{n} to review"
     },
     "charges": {
       "title": "Charge details",
@@ -1917,7 +1946,9 @@
       "hawb_removed": "HAWB removed",
       "origin_sede": "Origin set to client site",
       "ignored_fields": "Fields not saved: {fields}",
-      "blocked_by_lock": "Blocked by lock: {fields}"
+      "blocked_by_lock": "Blocked by lock: {fields}",
+      "rfq_resent": "Request resent to {carrier}",
+      "rfq_resend_failed": "Could not resend: {reason}"
     },
     "consolidation": {
       "title": "Consolidation",
