@@ -13,6 +13,7 @@ Empezar por `contrato-con-api.md`. Los READMEs de código están junto al códig
 | [plan-consolidata-erp.md](plan-consolidata-erp.md) | Plan: gestión completa de los proyectos de consolidata desde el ERP | vigente (C0-C6 hechas sin commit; ver §10) |
 | [plan-migracion.md](plan-migracion.md) | Plan de migración ERP Findair (BFF + SPA) | vigente, parcialmente desfasado (cifras de 2026-10-18/19; el §3 «Pendiente en backend» está en parte resuelto, |
 | [plan-pantalla-offer-aerolinea.md](plan-pantalla-offer-aerolinea.md) | Plan: pantalla de respuesta de la aerolínea a la cotización cargo (`/offer`) | borrador |
+| [plan-rfq-courier-partners.md](plan-rfq-courier-partners.md) | Plan: RFQ courier a anagrafiche de tipo partner (ERP o no), parte BFF y SPA | borrador |
 | [plan-pruebas-ui.md](plan-pruebas-ui.md) | Plan de pruebas de la UI | borrador |
 | [plan-pruebas-formularios.md](plan-pruebas-formularios.md) | Plan de pruebas de formularios de la UI (índice; fichas en `pruebas-formularios/`) | borrador |
 | [plan-mitigacion-hallazgos-formularios.md](plan-mitigacion-hallazgos-formularios.md) | Plan de mitigación de los hallazgos de la revisión de formularios | borrador |
