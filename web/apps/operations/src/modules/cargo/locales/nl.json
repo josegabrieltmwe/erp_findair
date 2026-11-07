@@ -1974,7 +1974,8 @@
       "owner": "Eigenaar",
       "created_at": "Aangemaakt op",
       "reassign": "Eigenaar opnieuw toewijzen",
-      "no_users": "Geen gebruikers beschikbaar"
+      "no_users": "Geen gebruikers beschikbaar",
+      "unknown": "Gebruiker niet beschikbaar"
     },
     "resetflights": {
       "title": "Vluchten resetten",

@@ -1173,7 +1173,8 @@
       "created_on": "Erstellt am:",
       "ip": "IP:",
       "reassign": "Eigentümer neu zuweisen",
-      "no_users": "Keine Benutzer verfügbar"
+      "no_users": "Keine Benutzer verfügbar",
+      "unknown": "Benutzer nicht verfügbar"
     },
     "tracking_drawer": {
       "title": "Sendungsverfolgung",

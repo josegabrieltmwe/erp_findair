@@ -75,11 +75,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import {
   ownerService,
+  type OwnerInfo,
   type OwnerOption,
 } from "@shipment/services/shipment.service";
 
@@ -98,16 +99,18 @@ const hasInfo = computed(() =>
   Boolean(currentOwnerId.value || insertDatetime.value),
 );
 
-// Resolve the owner id → name once the options are loaded; until then show the
-// raw id (legacy behaviour) so the chip never renders empty.
+// El id no le dice nada a quien lee la pantalla: se muestra el nombre (o el login,
+// o la empresa si es de otra). El rótulo lo resuelve el API aunque el usuario no
+// esté en la lista de reasignables, y se pide al montar, no al abrir el menú.
 const options = ref<OwnerOption[]>([]);
+const info = ref<OwnerInfo | null>(null);
 const ownerLabel = computed<string>(() => {
   const match = options.value.find((o) => o.id === currentOwnerId.value);
-  return (
-    match?.name || (currentOwnerId.value ? String(currentOwnerId.value) : "")
-  );
+  return match?.name || match?.login || info.value?.label || "";
 });
-const ownerDisplay = computed(() => ownerLabel.value || "—");
+const ownerDisplay = computed(() =>
+  ownerLabel.value || (currentOwnerId.value ? t("shipment.owner.unknown") : "—"),
+);
 const canReassign = computed(() => Boolean(store.id));
 
 const menuOpen = ref(false);
@@ -121,11 +124,23 @@ async function loadOptions(): Promise<void> {
   try {
     const res = await ownerService.options(Number(store.id));
     options.value = res.options;
+    info.value = res.current_owner_info;
     selected.value = res.current_owner || currentOwnerId.value || null;
   } finally {
     loading.value = false;
   }
 }
+
+// Rótulo del propietario: una petición por registro, sin esperar a abrir el menú.
+onMounted(() => void loadOptions().catch(() => undefined));
+watch(
+  () => store.id,
+  () => {
+    options.value = [];
+    info.value = null;
+    void loadOptions().catch(() => undefined);
+  },
+);
 
 // Lazy-load the assignable list the first time the picker opens.
 function onOpen(open: boolean): void {

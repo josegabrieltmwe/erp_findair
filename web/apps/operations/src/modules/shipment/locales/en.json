@@ -1214,7 +1214,8 @@
       "created_on": "Created on:",
       "ip": "IP:",
       "reassign": "Reassign owner",
-      "no_users": "No users available"
+      "no_users": "No users available",
+      "unknown": "User unavailable"
     },
     "tracking_drawer": {
       "title": "Tracking",

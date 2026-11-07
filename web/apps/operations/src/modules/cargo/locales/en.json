@@ -1974,7 +1974,8 @@
       "owner": "Owner",
       "created_at": "Created on",
       "reassign": "Reassign owner",
-      "no_users": "No users available"
+      "no_users": "No users available",
+      "unknown": "User unavailable"
     },
     "resetflights": {
       "title": "Reset flights",
