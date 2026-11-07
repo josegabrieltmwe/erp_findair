@@ -188,6 +188,17 @@
         variant="outlined"
       />
       <v-select
+        v-model="local.cargo_leg"
+        :items="cargoLegOptions"
+        :label="t('filters.shipment.fields.cargo_leg')"
+        :hint="t('filters.shipment.cargo_leg_help')"
+        persistent-hint
+        density="comfortable"
+        clearable
+        variant="outlined"
+        data-testid="filter-cargo-leg"
+      />
+      <v-select
         v-model="local.archiviata"
         :items="archivedOptions"
         :label="t('filters.fields.archived')"
@@ -279,6 +290,7 @@ import FilterDrawer, {
 import { toSelectItems } from "@shared/listing/filterOptions";
 import {
   ARCHIVIATA_OPTIONS,
+  CARGO_LEG_OPTIONS,
   CONSEGNA_FIRMA_OPTIONS,
   CONTROLLATA_OPTIONS,
   LOCATION_SCOPE_OPTIONS,
@@ -330,6 +342,7 @@ interface LocalState {
   consegna_firma: string;
   presa_stato: string;
   archiviata: string;
+  cargo_leg: string;
   stato_giac: string;
   has_contrassegno: boolean;
   has_assicurazione: boolean;
@@ -369,6 +382,7 @@ const GROUP_FIELDS: Record<string, Array<keyof LocalState>> = {
     "consegna_firma",
     "presa_stato",
     "archiviata",
+    "cargo_leg",
     "has_assicurazione",
   ],
   weight: ["peso_da", "peso_a", "peso_tassax", "id_servizio"],
@@ -452,6 +466,7 @@ function snapshotLocal(): LocalState {
     consegna_firma: state.value.consegna_firma,
     presa_stato: state.value.presa_stato,
     archiviata: state.value.archiviata,
+    cargo_leg: state.value.cargo_leg,
     stato_giac: state.value.stato_giac,
     has_contrassegno: state.value.has_contrassegno === "S",
     has_assicurazione: state.value.has_assicurazione === "S",
@@ -535,6 +550,7 @@ const consegnaFirmaOptions = computed(() =>
 );
 const presaStatoOptions = computed(() => toSelectItems(PRESA_STATO_OPTIONS, t));
 const archivedOptions = computed(() => toSelectItems(ARCHIVIATA_OPTIONS, t));
+const cargoLegOptions = computed(() => toSelectItems(CARGO_LEG_OPTIONS, t));
 const statoGiacOptions = computed(() => toSelectItems(STATO_GIAC_OPTIONS, t));
 
 watch(
@@ -579,6 +595,7 @@ function localAsState(): Record<string, unknown> {
     consegna_firma: local.value.consegna_firma || "",
     presa_stato: local.value.presa_stato || "",
     archiviata: local.value.archiviata || "",
+    cargo_leg: local.value.cargo_leg || "",
     stato_giac: local.value.stato_giac || "",
     has_contrassegno: local.value.has_contrassegno ? "S" : "",
     has_assicurazione: local.value.has_assicurazione ? "S" : "",

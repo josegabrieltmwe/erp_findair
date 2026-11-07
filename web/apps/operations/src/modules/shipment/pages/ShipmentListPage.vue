@@ -913,6 +913,7 @@ const SHIPMENT_ADVANCED_CHIPS: Array<{
   { field: "presa_stato", label: "filters.shipment.fields.pickup_status" },
   { field: "archiviata", label: "filters.fields.archived" },
   { field: "stato_giac", label: "filters.shipment.fields.storage_state" },
+  { field: "cargo_leg", label: "filters.shipment.fields.cargo_leg" },
   { field: "has_contrassegno", label: "filters.shipment.fields.has_cod", yesNo: true },
   { field: "has_assicurazione", label: "filters.fields.has_insurance", yesNo: true },
   { field: "peso_da", label: "filters.fields.weight_from" },

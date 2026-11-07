@@ -1861,6 +1861,7 @@
       "click": {
         "by_service": "Filteren op deze service"
       },
+      "cargo_leg_help": "Zonder keuze worden alleen koerierszendingen getoond. Kies een traject om alleen cargo-ophalingen of alleen cargo-leveringen te zien.",
       "storage_help": "Heeft = actieve opslag · Open = nog niet gesloten · Alleen gesloten = had opslag, alles gesloten · Geen = nooit gehad.",
       "fields": {
         "shipment_id": "Zending-ID",
@@ -1873,6 +1874,7 @@
         "chargeable_weight": "Belastbaar gewicht (exact)",
         "supplier_id": "Leverancier-ID",
         "service_id": "Service-ID",
+        "cargo_leg": "Cargo-trajecten",
         "storage_state": "Opslagstatus",
         "country_ph": "bijv. IT, FR, DE",
         "supplier_ph": "Leverancier-ID",
@@ -1960,6 +1962,10 @@
       "none": "Geen"
     },
     "cod_amount": "Rembours {amount}",
+    "cargo_leg": {
+      "pickup": "Alleen cargo-ophalingen",
+      "delivery": "Alleen cargo-leveringen"
+    },
     "archived": {
       "yes": "Gearchiveerd",
       "no": "Niet gearchiveerd"
