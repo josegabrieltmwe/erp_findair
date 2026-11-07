@@ -507,6 +507,7 @@
             v-if="filteredRates.length > 0"
             :rates="tabRates"
             :selected-key="selectedKey"
+            :can-see-costs="canSeeCosts"
             @select="onSelectRate"
             @detail="openDetail"
           />
@@ -554,6 +555,7 @@
             v-model="detailOpen"
             :rate="detailRate"
             :saving="false"
+            :can-see-costs="canSeeCosts"
             @confirm="onSelectRate"
           />
         </v-card-text>
@@ -593,6 +595,7 @@ const {
   rates,
   searching,
   lateSearching,
+  canSeeCosts,
   searchOutcome,
   lastQuery,
   lastError,

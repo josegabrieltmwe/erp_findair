@@ -79,10 +79,7 @@
             {{ formatRateAmount(rate._client_price_n, rate._currency) }}
           </div>
         </div>
-        <div
-          v-if="rate._cost_n && rate._cost_n !== rate._client_price_n"
-          class="text-end"
-        >
+        <div v-if="showCost" class="text-end">
           <div class="text-caption text-medium-emphasis">
             {{ t("cargo.flight.cost_supplier") }}
           </div>
@@ -94,10 +91,44 @@
           <div class="text-caption text-medium-emphasis">
             {{ t("cargo.costi.margin") }}
           </div>
-          <div class="text-body-1 font-weight-medium" style="color: #2e7d32">
+          <div
+            class="text-body-1 font-weight-medium"
+            :style="{ color: margin > 0 ? '#2e7d32' : '#e65100' }"
+          >
             {{ formatRateAmount(margin, rate._currency) }}
+            <span v-if="rate._margin_pct_n !== null" class="text-caption">
+              ({{ rate._margin_pct_n }}%)
+            </span>
           </div>
         </div>
+      </div>
+
+      <!-- Regla de margen aplicada (solo staff con coste visible): nivel de la
+           cascada (pacto aerolinea / canal / escalones del cliente), tipo y
+           tramo. Explica de donde sale el precio de venta. -->
+      <div
+        v-if="showCost && rate._margin_type"
+        class="text-caption text-medium-emphasis mb-3"
+        data-testid="margin-rule"
+      >
+        <v-icon icon="mdi-scale-balance" size="14" class="me-1" />
+        {{ t("cargo.flight.margin_rule") }}:
+        {{ marginLevelText(rate._margin_level) }}
+        <template v-if="rate._margin_value_n !== null">
+          ·
+          {{
+            rate._margin_type === "FIXED"
+              ? t("cargo.flight.margin_rule_fixed", {
+                  value: formatRateAmount(rate._margin_value_n, rate._currency),
+                })
+              : t("cargo.flight.margin_rule_percent", {
+                  value: rate._margin_value_n,
+                })
+          }}
+        </template>
+        <template v-if="rate._margin_tier">
+          · {{ t("cargo.flight.margin_tier", { n: rate._margin_tier }) }}
+        </template>
       </div>
 
       <v-divider class="mb-3" />
@@ -187,16 +218,19 @@
             :value="String(rate.stopovers)"
           />
         </v-col>
-        <v-col v-if="rate.transit_hours" cols="6" sm="3">
+        <!-- `transit_hours`/`valid_until` no llegan en todas las fuentes: el
+             transito se resuelve con transitHoursOf (duration_hours…) y la
+             validez con `_valid_to` normalizado. -->
+        <v-col v-if="transitHours" cols="6" sm="3">
           <Metric
             :label="t('cargo.flight.transit')"
-            :value="formatTransit(Number(rate.transit_hours))"
+            :value="formatTransit(transitHours)"
           />
         </v-col>
-        <v-col v-if="rate.valid_until" cols="6" sm="3">
+        <v-col v-if="validUntil" cols="6" sm="3">
           <Metric
             :label="t('cargo.flight.valid_until')"
-            :value="formatDate(String(rate.valid_until))"
+            :value="formatDate(validUntil)"
           />
         </v-col>
         <!-- Cut-off (latest acceptance). El de `klm_quote` lo dicta la
@@ -351,13 +385,29 @@
             <tr>
               <th>{{ t("cargo.col.code") }}</th>
               <th>{{ t("cargo.col.description") }}</th>
-              <th class="text-end">{{ t("cargo.wcb.col_amount") }}</th>
+              <th v-if="surchargeCosts" class="text-end">
+                {{ t("cargo.flight.surcharge_cost") }}
+              </th>
+              <th class="text-end">
+                {{
+                  surchargeCosts
+                    ? t("cargo.flight.surcharge_sale")
+                    : t("cargo.wcb.col_amount")
+                }}
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(s, idx) in surchargeItems" :key="idx">
               <td class="text-caption">{{ s.code }}</td>
               <td class="text-caption">{{ s.name }}</td>
+              <td v-if="surchargeCosts" class="text-caption text-end">
+                {{
+                  s.cost_amount === null || s.cost_amount === undefined
+                    ? "—"
+                    : formatRateAmount(s.cost_amount, s.currency)
+                }}
+              </td>
               <td class="text-caption text-end">
                 {{ formatRateAmount(s.amount, s.currency) }}
               </td>
@@ -395,6 +445,7 @@ import {
   formatFlightDateTime,
   formatTransitHours,
   formatRateAmount,
+  transitHoursOf,
   type NormalizedRate,
 } from "@cargo/services/flight_search.service";
 
@@ -403,6 +454,8 @@ const props = defineProps<{
   modelValue: boolean;
   rate: NormalizedRate | null;
   saving: boolean;
+  /** Evento `permissions` del stream; false oculta coste y margen. */
+  canSeeCosts?: boolean | null;
   /**
    * Solo consulta: oculta "Seleccionar tarifa".
    *
@@ -462,15 +515,56 @@ const routeSummary = computed<string>(() => {
   return `${origin || "—"} → ${destination || "—"}`;
 });
 
+/** Texto del nivel de la cascada de margen (claves estaticas para el gate i18n). */
+function marginLevelText(level: string): string {
+  switch (level) {
+    case "airline":
+      return t("cargo.flight.margin_level_airline");
+    case "channel":
+      return t("cargo.flight.margin_level_channel");
+    case "general":
+      return t("cargo.flight.margin_level_general");
+    default:
+      return t("cargo.flight.margin_level_none");
+  }
+}
+
+/** Coste real (no el precio repetido) y el usuario puede verlo. */
+const showCost = computed<boolean>(
+  () =>
+    !!props.rate &&
+    props.canSeeCosts !== false &&
+    props.rate._cost_known &&
+    props.rate._cost_n > 0,
+);
+
+/** Margen de la API (o venta - coste); tambien 0 o negativo: es lo que hay que ver. */
 const margin = computed<number | null>(() => {
   const r = props.rate;
-  if (!r) return null;
-  const m = r._client_price_n - r._cost_n;
-  if (!r._client_price_n || !r._cost_n || m === 0) return null;
-  return m;
+  if (!r || !showCost.value || !r._client_price_n) return null;
+  return r._margin_n ?? Math.round((r._client_price_n - r._cost_n) * 100) / 100;
 });
 
 const surchargeItems = computed(() => props.rate?._surcharges_n ?? []);
+
+/** Columna de coste por recargo solo si alguno lo trae (nivel ADMIN). */
+const surchargeCosts = computed<boolean>(
+  () =>
+    showCost.value &&
+    surchargeItems.value.some(
+      (s) => s.cost_amount !== null && s.cost_amount !== undefined,
+    ),
+);
+
+const transitHours = computed<number>(() =>
+  props.rate ? transitHoursOf(props.rate) : 0,
+);
+
+const validUntil = computed<string>(() => {
+  const r = props.rate;
+  if (!r) return "";
+  return String(r._valid_to ?? r.valid_until ?? "");
+});
 
 const isRealtime = computed(() => props.rate?.source === "realtime");
 

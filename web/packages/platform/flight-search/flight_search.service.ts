@@ -548,10 +548,20 @@ export function rateKey(r: FlightRate): string {
 export interface NormalizedSurcharge {
   code: string;
   name: string;
+  /** Importe de VENTA (margen incluido). */
   amount: number;
+  /**
+   * Importe a COSTE (lo que cobra la aerolinea). Solo llega en nivel ADMIN
+   * (staff TMWE / partner con auth_20+auth_18): el reparto moderno trae
+   * `supplier_amount` + `client_amount`. null si no se conoce.
+   */
+  cost_amount?: number | null;
   currency: string;
   type?: string;
 }
+
+/** Nivel de la cascada de margen que decidio el precio (API `margin.level`). */
+export type MarginLevel = "airline" | "channel" | "general" | "none";
 
 /**
  * Normalized view used by the table/filters. Cross-source unification:
@@ -590,6 +600,20 @@ export interface NormalizedRate extends FlightRate {
   _service_type: string;
   _notes: string;
   _surcharges_n: NormalizedSurcharge[];
+  /**
+   * El coste viene de la API (nivel ADMIN). Si es false, `_cost_n` es solo el
+   * precio repetido como respaldo y NO debe pintarse como coste.
+   */
+  _cost_known: boolean;
+  /** Margen en importe (venta - coste) calculado por la API, o null. */
+  _margin_n: number | null;
+  /** Margen en % sobre coste calculado por la API (redondeos y tramos FIXED incluidos), o null. */
+  _margin_pct_n: number | null;
+  /** Regla aplicada: PERCENT | FIXED, valor del tramo, tramo y nivel de la cascada. */
+  _margin_type: string;
+  _margin_value_n: number | null;
+  _margin_tier: number | null;
+  _margin_level: MarginLevel;
   /** Por que la tarifa no es reservable (`SOLD_OUT`…). "" si lo es. */
   _not_bookable_reason: string;
   /**
@@ -666,6 +690,13 @@ export function normalizeRate(raw: FlightRate): NormalizedRate {
     _service_type: "",
     _notes: "",
     _surcharges_n: [],
+    _cost_known: false,
+    _margin_n: null,
+    _margin_pct_n: null,
+    _margin_type: "",
+    _margin_value_n: null,
+    _margin_tier: null,
+    _margin_level: "none",
     _not_bookable_reason: "",
     _last_acceptance: "",
     _last_acceptance_estimated: false,
@@ -715,8 +746,53 @@ export function normalizeRate(raw: FlightRate): NormalizedRate {
     out._client_price_n = rt.total_charge;
   }
   if (raw.currency) out._currency = raw.currency;
+
+  // ---- Margen moderno (Rate_Pricing_Applier): solo en nivel ADMIN ----
+  // Trae el coste (`supplier_total`) y el margen ya calculados con la regla
+  // real; el % de la SPA (venta/coste) no coincide con tramos FIXED.
+  const m = raw.margin as Record<string, unknown> | null | undefined;
+  if (m && typeof m === "object") {
+    const num = (v: unknown): number | null =>
+      v === null || v === undefined || v === "" || !Number.isFinite(Number(v))
+        ? null
+        : Number(v);
+    const supplier = num(m.supplier_total);
+    if (supplier !== null && supplier > 0) {
+      out._cost_n = supplier;
+      out._cost_known = true;
+    }
+    out._margin_n = num(m.delta_amount);
+    out._margin_pct_n = num(m.delta_percent ?? m.percent);
+    out._margin_type = String(m.type ?? (num(m.fixed) !== null ? "FIXED" : ""));
+    out._margin_value_n = num(m.value ?? m.fixed);
+    out._margin_tier = num(m.applied_tier);
+    const lvl = String(m.level ?? "none");
+    out._margin_level = (
+      ["airline", "channel", "general"].includes(lvl) ? lvl : "none"
+    ) as MarginLevel;
+  }
+  if (!out._cost_known) {
+    out._cost_known =
+      (typeof raw.cost === "number" && raw.cost > 0) ||
+      (typeof raw.cost === "object" &&
+        raw.cost !== null &&
+        Number((raw.cost as { total?: unknown }).total) > 0) ||
+      // Formas antiguas (cache sin bloque `margin`): `price` es el coste del
+      // proveedor; se mantiene el criterio previo de pintarlo solo si difiere.
+      (typeof raw.price === "number" &&
+        raw.price > 0 &&
+        raw.price !== out._client_price_n);
+  }
+
   if (!out._client_price_n && out._cost_n) out._client_price_n = out._cost_n;
   if (!out._cost_n && out._client_price_n) out._cost_n = out._client_price_n;
+  if (out._cost_known && out._margin_n === null && out._client_price_n) {
+    out._margin_n = Math.round((out._client_price_n - out._cost_n) * 100) / 100;
+    out._margin_pct_n =
+      out._cost_n > 0
+        ? Math.round((out._margin_n / out._cost_n) * 10000) / 100
+        : null;
+  }
 
   // ---- Weights: realtime top-level, fall back to published pricing.base ----
   const pricing = raw.pricing as
@@ -795,12 +871,24 @@ export function normalizeRate(raw: FlightRate): NormalizedRate {
   const flatSurs = rt.surcharges;
   if (Array.isArray(flatSurs)) {
     for (const s of flatSurs as Array<Record<string, unknown>>) {
-      const amt = Number(s.amount ?? s.amount_client ?? s.value ?? 0);
+      // Reparto moderno: `client_amount` (venta) + `supplier_amount` (coste,
+      // solo ADMIN). Antes se leia `amount` y estas filas salian a 0.
+      const amt = Number(
+        s.client_amount ?? s.amount ?? s.amount_client ?? s.value ?? 0,
+      );
       if (!amt && !s.code) continue;
+      const costRaw = s.supplier_amount ?? s.amount_supplier ?? s.cost;
+      const code = String(s.code ?? "");
       out._surcharges_n.push({
-        code: String(s.code ?? ""),
-        name: String(s.name ?? s.label ?? s.description ?? ""),
+        code,
+        name: String(
+          s.name ?? s.label ?? s.description ?? SURCHARGE_LABELS[code] ?? code,
+        ),
         amount: amt,
+        cost_amount:
+          costRaw === undefined || costRaw === null || costRaw === ""
+            ? null
+            : Number(costRaw),
         currency: String(s.currency ?? out._currency),
         type: s.type as string | undefined,
       });
@@ -809,10 +897,15 @@ export function normalizeRate(raw: FlightRate): NormalizedRate {
     const inc = pricing?.surcharges?.included_surcharges;
     if (Array.isArray(inc)) {
       for (const s of inc) {
+        const costRaw = s.amount_supplier ?? s.supplier_amount;
         out._surcharges_n.push({
           code: String(s.code ?? ""),
           name: String(s.name ?? s.label ?? ""),
           amount: Number(s.amount_client ?? s.amount ?? 0),
+          cost_amount:
+            costRaw === undefined || costRaw === null || costRaw === ""
+              ? null
+              : Number(costRaw),
           currency: String(s.currency ?? out._currency),
           type: s.type as string | undefined,
         });
@@ -1534,7 +1627,11 @@ export type FlightSortBy =
   | "price"
   | "arrival"
   | "transit"
-  | "stops";
+  | "stops"
+  /** Solo staff con coste visible: mayor margen (€) primero. */
+  | "margin"
+  /** Solo staff con coste visible: menor coste primero. */
+  | "cost";
 
 /** Aplica un orden. `recommended` delega en rankRecommended. */
 export function sortRates(
@@ -1562,6 +1659,22 @@ export function sortRates(
       break;
     case "stops":
       out.sort((a, b) => Number(a.stopovers ?? 0) - Number(b.stopovers ?? 0));
+      break;
+    case "margin":
+      // Sin margen conocido al final; a igualdad, la mas barata.
+      out.sort(
+        (a, b) =>
+          (b._margin_n ?? -Infinity) - (a._margin_n ?? -Infinity) ||
+          (a._client_price_n ?? 0) - (b._client_price_n ?? 0),
+      );
+      break;
+    case "cost":
+      out.sort(
+        (a, b) =>
+          (a._cost_known ? a._cost_n : Infinity) -
+            (b._cost_known ? b._cost_n : Infinity) ||
+          (a._client_price_n ?? 0) - (b._client_price_n ?? 0),
+      );
       break;
   }
   return out;

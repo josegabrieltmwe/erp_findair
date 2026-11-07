@@ -195,6 +195,8 @@ export function useCargoFlightSearch() {
    * abierto: se pueden asignar tarifas y la lista sigue creciendo.
    */
   const lateSearching = ref(false);
+  /** Evento `permissions` del stream (coste/margen visibles). null = no llegó. */
+  const canSeeCosts = ref<boolean | null>(null);
 
   function resetSearchState(): void {
     // La numeracion de filas arranca de cero en cada busqueda.
@@ -203,6 +205,7 @@ export function useCargoFlightSearch() {
     ratesIndex.clear();
     lastError.value = null;
     lateSearching.value = false;
+    canSeeCosts.value = null;
     searchOutcome.value = "idle";
     progress.value = null;
     airlineStatus.value = {};
@@ -284,7 +287,12 @@ export function useCargoFlightSearch() {
 
     stream = openFlightSearchStream(query, (ev) => {
       if (ev.type === "connected") return;
-      if (ev.type === "permissions") return;
+      if (ev.type === "permissions") {
+        if (typeof ev.data.can_see_costs === "boolean") {
+          canSeeCosts.value = ev.data.can_see_costs;
+        }
+        return;
+      }
       if (ev.type === "phase") {
         progress.value = {
           ...(progress.value ?? defaultProgress()),
@@ -606,6 +614,7 @@ export function useCargoFlightSearch() {
     rates,
     searching,
     lateSearching,
+    canSeeCosts,
     searchOutcome,
     lastQuery,
     lastError,

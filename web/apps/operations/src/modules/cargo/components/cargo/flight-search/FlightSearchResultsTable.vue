@@ -553,16 +553,26 @@
             every row. Visibility rules still apply upstream: a client-level
             session never receives `cost`, so this simply does not render.
           -->
+            <!-- Coste y margen SIEMPRE que la API los mande (staff TMWE y
+                 partners con coste visible), tambien con margen 0: es justo
+                 el caso que el operador tiene que ver. El % y el importe salen
+                 de la API (tramos FIXED y redondeos incluidos). -->
             <span
-              v-if="item._cost_n && item._cost_n !== item._client_price_n"
+              v-if="showCost(item)"
               class="text-caption text-medium-emphasis price-cost"
+              :title="marginRuleLabel(item)"
+              data-testid="rate-cost-line"
             >
               <!-- Sin el codigo de moneda: lo lleva el precio de venta justo
                    encima y repetirlo en la linea de coste solo anade ruido. -->
               {{ t("cargo.flight.cost_label") }}
               {{ formatRateNumber(item._cost_n, item._currency) }}
-              <span v-if="marginPercent(item) !== null" class="ms-1">
-                · +{{ marginPercent(item) }}%
+              <span
+                v-if="marginPercent(item) !== null"
+                class="ms-1"
+                :class="{ 'text-warning': (marginPercent(item) ?? 0) <= 0 }"
+              >
+                · {{ (marginPercent(item) ?? 0) > 0 ? "+" : "" }}{{ marginPercent(item) }}%
               </span>
             </span>
           </template>
@@ -737,7 +747,50 @@ const { t } = useI18n();
 const props = defineProps<{
   rates: NormalizedRate[];
   selectedKey: string | null;
+  /**
+   * Evento `permissions` del stream: false oculta coste y margen aunque una
+   * fila los trajera. null = el backend no lo dijo (se decide por fila).
+   */
+  canSeeCosts?: boolean | null;
 }>();
+
+/** Hay coste real que pintar en esta fila (y el usuario puede verlo). */
+function showCost(r: NormalizedRate): boolean {
+  return props.canSeeCosts !== false && r._cost_known && r._cost_n > 0;
+}
+
+/** El staff puede ordenar por coste/margen si al menos una fila los trae. */
+const anyCost = computed(() => props.rates.some((r) => showCost(r)));
+
+/** Texto del nivel de la cascada de margen (claves estaticas para el gate i18n). */
+function marginLevelText(level: string): string {
+  switch (level) {
+    case "airline":
+      return t("cargo.flight.margin_level_airline");
+    case "channel":
+      return t("cargo.flight.margin_level_channel");
+    case "general":
+      return t("cargo.flight.margin_level_general");
+    default:
+      return t("cargo.flight.margin_level_none");
+  }
+}
+
+/** Etiqueta de la regla de margen aplicada (nivel + tipo + tramo). */
+function marginRuleLabel(r: NormalizedRate): string {
+  const parts: string[] = [marginLevelText(r._margin_level)];
+  if (r._margin_type === "FIXED" && r._margin_value_n !== null) {
+    parts.push(
+      t("cargo.flight.margin_rule_fixed", {
+        value: formatRateAmount(r._margin_value_n, r._currency),
+      }),
+    );
+  } else if (r._margin_type && r._margin_value_n !== null) {
+    parts.push(t("cargo.flight.margin_rule_percent", { value: r._margin_value_n }));
+  }
+  if (r._margin_tier) parts.push(t("cargo.flight.margin_tier", { n: r._margin_tier }));
+  return parts.join(" · ");
+}
 
 const emit = defineEmits<{
   (e: "select", rate: NormalizedRate): void;
@@ -801,6 +854,12 @@ const sortItems = computed(() => [
   { value: "arrival", title: t("cargo.flight.sort_arrival") },
   { value: "transit", title: t("cargo.flight.sort_transit") },
   { value: "stops", title: t("cargo.flight.sort_stops") },
+  ...(anyCost.value
+    ? [
+        { value: "margin", title: t("cargo.flight.sort_margin") },
+        { value: "cost", title: t("cargo.flight.sort_cost") },
+      ]
+    : []),
 ]);
 
 /**
@@ -985,10 +1044,13 @@ const headers = computed(() => [
  * arrived pre-marked from the cache.
  */
 function marginPercent(r: NormalizedRate): number | null {
+  if (!showCost(r)) return null;
+  // El de la API cuando llega: es el del calculo real (FIXED, redondeos).
+  if (r._margin_pct_n !== null) return Math.round(r._margin_pct_n * 10) / 10;
   const cost = r._cost_n;
   const client = r._client_price_n;
-  if (!cost || !client || cost <= 0 || client <= cost) return null;
-  return Math.round(((client - cost) / cost) * 100);
+  if (!cost || !client || cost <= 0) return null;
+  return Math.round(((client - cost) / cost) * 1000) / 10;
 }
 
 function segCount(r: NormalizedRate): number {
