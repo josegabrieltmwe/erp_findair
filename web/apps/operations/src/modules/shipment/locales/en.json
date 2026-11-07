@@ -1861,7 +1861,7 @@
       "click": {
         "by_service": "Filter by this service"
       },
-      "cargo_leg_help": "If none is chosen, only courier shipments are shown. Choose a leg to see only cargo pickups or only cargo deliveries.",
+      "cargo_leg_help": "If none is chosen, only courier shipments are shown. Choose a leg to see only cargo pickups or only cargo deliveries. This filter is ignored when searching by ID.",
       "storage_help": "Has = any active storage · Open = not closed yet · Closed only = had storage, all closed · None = never had any.",
       "fields": {
         "shipment_id": "Shipment ID",

@@ -1861,7 +1861,7 @@
       "click": {
         "by_service": "Filtra per questo servizio"
       },
-      "cargo_leg_help": "Se non scegli nulla, vengono mostrate solo le spedizioni corriere. Scegli una tratta per vedere solo i ritiri o solo le consegne del cargo.",
+      "cargo_leg_help": "Se non scegli nulla, vengono mostrate solo le spedizioni corriere. Scegli una tratta per vedere solo i ritiri o solo le consegne del cargo. Questo filtro viene ignorato quando si cerca per ID.",
       "storage_help": "Presente = giacenza attiva · Aperta = non ancora chiusa · Solo chiuse = aveva giacenze, tutte chiuse · Nessuna = mai avute.",
       "fields": {
         "shipment_id": "ID spedizione",
