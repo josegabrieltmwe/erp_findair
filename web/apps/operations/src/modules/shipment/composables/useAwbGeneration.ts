@@ -6,6 +6,7 @@ import {
   labelsService,
   type ValidationIssue,
 } from "@shipment/services/labels.service";
+import { contactFallbackText, fallbacksToIssues } from "./contactFallback";
 
 /**
  * Courier AWB generation flow (pre-flight validation + booking), extracted from
@@ -44,6 +45,8 @@ export function useAwbGeneration(
 
   /** Aviso con codigo (p. ej. peso por bulto): texto traducido con sus datos; si no, el del servidor. */
   function issueText(issue: ValidationIssue): string {
+    const contact = contactFallbackText(issue.code, issue.params, i18n);
+    if (contact) return contact;
     const key = issue.code ? `errors.api.${issue.code}` : "";
     return key && te(key) ? t(key, issue.params ?? {}) : issue.message;
   }
@@ -156,6 +159,10 @@ export function useAwbGeneration(
           tracking: data.master_tracking_number,
         }),
       );
+      // Constancia de lo que viajó al courier en lugar de los datos ausentes (nunca bloqueó la reserva).
+      for (const issue of localize(fallbacksToIssues(data.contact_fallbacks))) {
+        if (issue.message) toasts.push("warning", issue.message);
+      }
       dialogOpen.value = false;
       onGenerated(data.master_tracking_number);
     } catch (e) {
