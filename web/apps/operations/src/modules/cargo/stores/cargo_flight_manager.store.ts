@@ -204,11 +204,9 @@ export const useCargoFlightManagerStore = defineStore(
     // ─── Actions: rate selection lifecycle ───────────────────────────
 
     /**
-     * Select a new rate. When a booking is currently active, the legacy
-     * cascade is:
+     * Select a new rate. When a booking is currently active:
      *   1. webcargo_booking_cancel  (if hasActiveBooking)
-     *   2. rate_clear
-     *   3. rate_select
+     *   2. rate_select con replace_current (vacía y aplica en una transacción)
      * Returns true on success.
      */
     async function selectRate(
@@ -224,7 +222,13 @@ export const useCargoFlightManagerStore = defineStore(
       } = {},
     ): Promise<boolean> {
       if (!shipmentId.value) return false;
-      if (!shortId && !opts.pricingSnapshotId) return false;
+      if (!opts.pricingSnapshotId) {
+        // Sin snapshot la API rechaza la selección: no se toca el vuelo actual.
+        error.value =
+          "Esta tarifa no tiene un precio fijado y no puede asignarse. Vuelve a lanzar la búsqueda.";
+        errorCode.value = "SNAPSHOT_REQUIRED";
+        return false;
+      }
       selecting.value = true;
       error.value = null;
       errorCode.value = null;
@@ -234,19 +238,17 @@ export const useCargoFlightManagerStore = defineStore(
           if (!ok) return false;
         }
 
-        const clr = await rateService.clear(shipmentId.value);
-        if (!clr.success) {
-          error.value = clr.error ?? "Rate clear failed";
-          return false;
-        }
-
+        // Un solo paso atómico: la API vacía el vuelo anterior y aplica el
+        // nuevo en la misma transacción. Antes eran rate_clear + rate_select y,
+        // si el segundo fallaba, la expedición se quedaba sin vuelo.
         const sel = await rateService.select({
           shipmentId: shipmentId.value,
-          shortId,
           pricingSnapshotId: opts.pricingSnapshotId,
+          replaceCurrent: true,
         });
         if (!sel.success) {
           error.value = sel.error ?? "Rate select failed";
+          errorCode.value = sel.error_code ?? null;
           return false;
         }
 

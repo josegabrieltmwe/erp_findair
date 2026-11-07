@@ -9,14 +9,12 @@ import { http } from "./http";
  *     even if nothing is selected.
  *
  *   - POST /api_cargo_rate_select
- *       modern: { shipment_id, pricing_snapshot_id, idempotency_key }
- *       legacy: { shipment_id, short_id, extend_ttl }
+ *       { shipment_id, pricing_snapshot_id, idempotency_key, replace_current? }
  *     Associates a flight rate with the cargo. Writes `idunivoco_volo` and
- *     the flight columns on spedizioni_cargo.
- *
- *     The modern form freezes the exact priced version the operator accepted;
- *     the legacy form resolves a mutable cache row. Both are accepted while
- *     the backend rollout is in progress.
+ *     the flight columns on spedizioni_cargo, freezing the exact priced
+ *     version the operator accepted. With `replace_current` the previous
+ *     flight is cleared in the same transaction (flight change). The legacy
+ *     `short_id` form is rejected by the API (VALIDATION_ERROR).
  *
  * **Important**: selecting a rate does NOT create a WebCargo booking.
  * Booking is a separate downstream action — see booking.service.ts.
@@ -27,6 +25,8 @@ import { http } from "./http";
 export interface RateOpResult {
   success: boolean;
   error?: string;
+  /** Código estable (QUOTE_EXPIRED, ALREADY_SELECTED, SNAPSHOT_REQUIRED…). */
+  error_code?: string;
   data?: unknown;
 }
 
@@ -59,27 +59,33 @@ export const rateService = {
    */
   async select(input: {
     shipmentId: number;
-    shortId?: string;
     pricingSnapshotId?: string;
+    /**
+     * Cambio de vuelo: la API vacía el vuelo anterior dentro de la misma
+     * transacción que aplica el nuevo. Si algo falla, la expedición conserva
+     * el vuelo que tenía (antes: rate_clear + rate_select por separado).
+     */
+    replaceCurrent?: boolean;
   }): Promise<RateOpResult> {
-    const body: Record<string, unknown> = { shipment_id: input.shipmentId };
-
-    if (input.pricingSnapshotId) {
-      body.pricing_snapshot_id = input.pricingSnapshotId;
+    // La API solo acepta `pricing_snapshot_id`: seleccionar por `short_id`
+    // leía una fila de caché mutable y responde VALIDATION_ERROR.
+    if (!input.pricingSnapshotId) {
+      return {
+        success: false,
+        error: "pricing_snapshot_id is required",
+        error_code: "SNAPSHOT_REQUIRED",
+      };
+    }
+    const body: Record<string, unknown> = {
+      shipment_id: input.shipmentId,
+      pricing_snapshot_id: input.pricingSnapshotId,
       // Retries must return the SAME selection instead of creating a second
       // one: a double click, a dropped connection or an impatient reload all
       // replay this request. Derived from the shipment and the snapshot so a
       // genuine retry reuses the key while a different choice gets a new one.
-      body.idempotency_key = `sel-${input.shipmentId}-${input.pricingSnapshotId.slice(0, 32)}`;
-    } else if (input.shortId) {
-      body.short_id = input.shortId;
-      body.extend_ttl = true;
-    } else {
-      return {
-        success: false,
-        error: "pricing_snapshot_id or short_id is required",
-      };
-    }
+      idempotency_key: `sel-${input.shipmentId}-${input.pricingSnapshotId.slice(0, 32)}`,
+    };
+    if (input.replaceCurrent) body.replace_current = true;
 
     try {
       const r = await http<RateOpResult>("/api_cargo_rate_select", {
@@ -88,7 +94,8 @@ export const rateService = {
       });
       return r;
     } catch (e) {
-      return { success: false, error: (e as Error).message };
+      const err = e as Error & { errorCode?: string };
+      return { success: false, error: err.message, error_code: err.errorCode };
     }
   },
 };

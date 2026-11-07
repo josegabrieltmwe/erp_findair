@@ -288,7 +288,20 @@ export type FlightSearchEvent =
       source: FlightRateSource;
       error: string;
     }
-  | { type: "complete"; data: { total_rates?: number; duration_ms?: number } }
+  | {
+      type: "complete";
+      data: {
+        total_rates?: number;
+        duration_ms?: number;
+        /**
+         * Quedan aerolíneas WebCargo por contestar tras el plazo de 25 s: sus
+         * tarifas llegarán como `late_rate` hasta `late_done`.
+         */
+        late_pending?: boolean;
+      };
+    }
+  /** Fin de las respuestas tardías (`timed_out`: se agotó la vida del stream). */
+  | { type: "late_done"; data: { timed_out?: boolean } }
   | { type: "error"; message: string };
 
 interface StreamHandle {
@@ -469,6 +482,9 @@ function dispatch(
       });
       return;
     }
+    // Tras `complete` el backend sigue entregando las aerolíneas lentas con el
+    // prefijo `late_` (UWC::drain_late_air). Antes se descartaban.
+    case "late_rate":
     case "rate": {
       const rates = Array.isArray(data.rates)
         ? (data.rates as FlightRate[])
@@ -482,6 +498,7 @@ function dispatch(
       });
       return;
     }
+    case "late_rate_error":
     case "rate_error":
       onEvent({
         type: "rate_error",
@@ -493,7 +510,19 @@ function dispatch(
     case "complete":
       onEvent({
         type: "complete",
-        data: data as { total_rates?: number; duration_ms?: number },
+        data: {
+          total_rates:
+            data.total_rates === undefined ? undefined : Number(data.total_rates),
+          duration_ms:
+            data.duration_ms === undefined ? undefined : Number(data.duration_ms),
+          late_pending: data.late_pending === true,
+        },
+      });
+      return;
+    case "late_done":
+      onEvent({
+        type: "late_done",
+        data: { timed_out: data.timed_out === true },
       });
       return;
     case "error":

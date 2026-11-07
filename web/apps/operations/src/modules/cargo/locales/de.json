@@ -1428,6 +1428,7 @@
       "no_rates_text": "Die Suche wurde erfolgreich abgeschlossen, aber keine Quelle hat Optionen für diese Route gefunden. Sie können die Parameter ändern oder es erneut versuchen.",
       "search_error_text": "Die Suche konnte nicht abgeschlossen werden. Ihre Parameter wurden für einen erneuten Versuch beibehalten.",
       "search_cancelled": "Die Suche wurde angehalten. Sie können die Parameter ändern oder sie erneut starten.",
+      "late_searching": "Tarife langsamerer Airlines treffen noch ein; die Liste wird weiter ergänzt.",
       "modify_search": "Suche ändern",
       "enter_params_title": "Parameter eingeben",
       "enter_params_text": "Herkunft, Ziel, Gewicht und Datum. Ergebnisse werden vom Backend gestreamt.",

@@ -1428,6 +1428,7 @@
       "no_rates_text": "The search completed successfully, but no source found options for this route. You can adjust the parameters or try again.",
       "search_error_text": "The search could not be completed. Your parameters have been kept so you can try again.",
       "search_cancelled": "The search was stopped. You can adjust the parameters or run it again whenever you are ready.",
+      "late_searching": "Rates from slower airlines are still arriving; the list will keep filling in.",
       "modify_search": "Modify search",
       "enter_params_title": "Enter the parameters",
       "enter_params_text": "Origin, destination, weight and date. Results stream in from the backend.",

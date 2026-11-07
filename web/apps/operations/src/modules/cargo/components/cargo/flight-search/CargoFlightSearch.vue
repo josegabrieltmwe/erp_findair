@@ -439,6 +439,17 @@
             {{ t("cargo.flight.search_cancelled") }}
           </v-alert>
 
+          <!-- Respuestas tardías: la búsqueda terminó pero aún llegan tarifas de
+               aerolíneas lentas (late_rate). La lista sigue creciendo. -->
+          <div
+            v-if="lateSearching"
+            class="d-flex align-center ga-2 mb-2 text-caption text-medium-emphasis"
+            data-testid="late-searching"
+          >
+            <v-progress-circular indeterminate size="14" width="2" />
+            {{ t("cargo.flight.late_searching") }}
+          </div>
+
           <!-- Todas bloqueadas por falta de margen del cliente: se dice una vez
                arriba, en vez de dejar que el operador lo descubra fila a fila. -->
           <v-alert
@@ -581,6 +592,7 @@ const {
   filters,
   rates,
   searching,
+  lateSearching,
   searchOutcome,
   lastQuery,
   lastError,

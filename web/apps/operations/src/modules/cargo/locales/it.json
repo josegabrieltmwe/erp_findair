@@ -1428,6 +1428,7 @@
       "no_rates_text": "La ricerca è terminata correttamente, ma nessuna fonte ha trovato opzioni per questa rotta. Puoi modificare i parametri o riprovare.",
       "search_error_text": "Non è stato possibile completare la ricerca. I parametri sono stati conservati per consentirti di riprovare.",
       "search_cancelled": "La ricerca è stata interrotta. Puoi modificare i parametri o eseguirla nuovamente quando vuoi.",
+      "late_searching": "Stanno ancora arrivando tariffe dalle compagnie più lente; l'elenco si completerà.",
       "modify_search": "Modifica ricerca",
       "enter_params_title": "Inserisci i parametri",
       "enter_params_text": "Origine, destinazione, peso e data. I risultati arrivano in streaming dal backend.",

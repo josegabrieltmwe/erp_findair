@@ -1428,6 +1428,7 @@
       "no_rates_text": "La búsqueda ha finalizado correctamente, pero ninguna fuente ha encontrado opciones para esta ruta. Puedes modificar los parámetros o intentarlo de nuevo.",
       "search_error_text": "No se ha podido completar la búsqueda. Tus parámetros se conservan para que puedas intentarlo de nuevo.",
       "search_cancelled": "La búsqueda se ha detenido. Puedes modificar los parámetros o volver a ejecutarla cuando quieras.",
+      "late_searching": "Aún llegan tarifas de aerolíneas que tardan más; la lista se irá completando.",
       "modify_search": "Modificar búsqueda",
       "enter_params_title": "Introduce los parámetros",
       "enter_params_text": "Origen, destino, peso y fecha. Los resultados llegan en streaming desde el backend.",

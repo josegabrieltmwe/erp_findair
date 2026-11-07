@@ -189,6 +189,12 @@ export function useCargoFlightSearch() {
   const detailRate = ref<NormalizedRate | null>(null);
 
   let stream: { abort(): void } | null = null;
+  /**
+   * La búsqueda principal terminó (`complete`) pero aún hay aerolíneas lentas
+   * cuyas tarifas llegan como `late_rate` hasta `late_done`. El stream sigue
+   * abierto: se pueden asignar tarifas y la lista sigue creciendo.
+   */
+  const lateSearching = ref(false);
 
   function resetSearchState(): void {
     // La numeracion de filas arranca de cero en cada busqueda.
@@ -196,6 +202,7 @@ export function useCargoFlightSearch() {
     rates.value = [];
     ratesIndex.clear();
     lastError.value = null;
+    lateSearching.value = false;
     searchOutcome.value = "idle";
     progress.value = null;
     airlineStatus.value = {};
@@ -328,13 +335,19 @@ export function useCargoFlightSearch() {
       if (ev.type === "complete") {
         searching.value = false;
         searchOutcome.value = "completed";
+        lateSearching.value = ev.data.late_pending === true;
         settlePendingSources();
+        return;
+      }
+      if (ev.type === "late_done") {
+        lateSearching.value = false;
         return;
       }
       if (ev.type === "error") {
         console.error("[flight-search] stream failed", ev.message);
         lastError.value = t("cargo.flight.search_error_text");
         searching.value = false;
+        lateSearching.value = false;
         searchOutcome.value = "error";
         settlePendingSources();
       }
@@ -361,6 +374,7 @@ export function useCargoFlightSearch() {
     stream?.abort();
     stream = null;
     searching.value = false;
+    lateSearching.value = false;
     if (wasSearching) searchOutcome.value = "cancelled";
     settlePendingSources();
   }
@@ -520,14 +534,14 @@ export function useCargoFlightSearch() {
       return;
     }
 
-    if (!shortId && !pricingSnapshotId) {
-      // Pasa con tarifas que no vienen de la caché de tarifas (p. ej. una
-      // published sin `rate_id`): no hay nada que el backend pueda resolver.
+    if (!pricingSnapshotId) {
+      // La API solo selecciona por `pricing_snapshot_id` (el precio fijado que
+      // se ve en pantalla). Sin él no se toca el vuelo actual.
       persistError.value =
         "Esta tarifa no tiene un identificador válido y no puede asignarse. " +
         "Vuelve a lanzar la búsqueda para obtener tarifas nuevas.";
       console.error(
-        "[flight-search] assignment aborted: rate has neither pricing_snapshot_id nor short_id",
+        "[flight-search] assignment aborted: rate has no pricing_snapshot_id",
         {
           airline: rate.airline_code,
           source: rate.source,
@@ -591,6 +605,7 @@ export function useCargoFlightSearch() {
     filters,
     rates,
     searching,
+    lateSearching,
     searchOutcome,
     lastQuery,
     lastError,
