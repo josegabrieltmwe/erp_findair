@@ -645,6 +645,8 @@
         "city": "Ciudad",
         "province": "Provincia / Estado",
         "airport": "Aeropuerto (IATA)",
+        "airport_auto": "Automático",
+        "airport_hint": "Si lo dejas vacío se calcula solo (zona DHL por CAP y ciudad, o el aeropuerto del vuelo en una cargo). Solo DHL lo exige.",
         "attention": "A la atención de (nombre de contacto)",
         "phone": "Teléfono",
         "cell": "Móvil",

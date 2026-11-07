@@ -645,6 +645,8 @@
         "city": "City",
         "province": "Province / State",
         "airport": "Airport (IATA)",
+        "airport_auto": "Automatic",
+        "airport_hint": "Leave it empty and it is filled in automatically (DHL zone from postcode and city, or the flight airport in a cargo). Only DHL requires it.",
         "attention": "Attention (contact name)",
         "phone": "Phone",
         "cell": "Mobile",

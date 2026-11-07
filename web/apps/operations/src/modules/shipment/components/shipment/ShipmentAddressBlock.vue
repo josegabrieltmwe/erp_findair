@@ -209,7 +209,8 @@
               :loading="airportLoading"
               :country="String(local.country ?? '')"
               :label="t('shipment.modals.address.airport')"
-              :placeholder="t('common.select')"
+              :placeholder="t('shipment.modals.address.airport_auto')"
+              :hint="t('shipment.modals.address.airport_hint')"
               :readonly="isReadonly"
               :disabled="isReadonly"
             />
@@ -698,9 +699,9 @@ async function lookupCap(): Promise<void> {
         value: a.sigla,
         label: a.label ?? a.sigla,
       }));
-      if (!local.value.airport && r.airport?.sigla) {
-        local.value.airport = r.airport.sigla;
-      }
+      // Solo sugerencias: el aeropuerto NO se rellena aqui. Estos son los mas cercanos por geografia (IATA) y la
+      // direccion necesita la zona DHL (Peschiera = MIL); vacio, el API la calcula al guardar (o pone el del vuelo
+      // en las direcciones de una cargo). Elegir uno a mano lo fija.
     }
   } finally {
     capLoading.value = false;
@@ -769,7 +770,7 @@ async function onCityChange(): Promise<void> {
  * not yet set, derive the nearest airport. We reuse `cap_city_prov` (the same
  * session-authenticated endpoint used on CAP blur, which already returns the
  * CAP-derived nearest airport) rather than the Bearer-only closer-airports API.
- * Only fills `dhl_airport` when empty/unset so a manual pick is never overwritten.
+ * Ya no rellena `dhl_airport`: solo carga las sugerencias. Vacio, el API pone la zona DHL al guardar.
  */
 async function lookupAirportByCity(): Promise<void> {
   const country = (local.value.country ?? "").toUpperCase();
@@ -785,9 +786,7 @@ async function lookupAirportByCity(): Promise<void> {
         label: a.label ?? a.sigla,
       }));
     }
-    if (r.airport?.sigla) {
-      local.value.airport = r.airport.sigla;
-    }
+    // Solo sugerencias (ver onCapLookup): el aeropuerto lo calcula el API si queda vacio.
   } catch {
     // Silent: the airport field keeps whatever value/options it already had.
   }

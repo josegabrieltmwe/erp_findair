@@ -31,6 +31,17 @@ export function bffLabelFileUrl(url: string, base: string): string {
   return `${base.replace(/\/+$/, "")}/${action}${query ? `?${query}` : ""}`;
 }
 
+/** URL absoluta con el origen de la pagina (sin window, tal cual). Las ya absolutas no cambian. */
+export function absoluteUrl(url: string, origin?: string): string {
+  const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
+  if (!url || !base) return url;
+  try {
+    return new URL(url, base).href;
+  } catch {
+    return url;
+  }
+}
+
 /**
  * Courier-label generation/preview/print/download, extracted from ServizioCard.
  *
@@ -79,7 +90,9 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
    */
   function labelUrl(it: CourierLabelItem, format: "pdf" | "image"): string {
     if (!it.url) return "";
-    const url = bffLabelFileUrl(it.url, basePath());
+    // Absoluta: la impresion monta un documento blob: con estas <img>, y en un blob: una ruta relativa
+    // ("/bff/v1/...") no tiene base y el navegador ni la pide (pagina de impresion en blanco, 1001084298).
+    const url = absoluteUrl(bffLabelFileUrl(it.url, basePath()));
     const sep = url.includes("?") ? "&" : "?";
     return `${url}${sep}format=${format}`;
   }

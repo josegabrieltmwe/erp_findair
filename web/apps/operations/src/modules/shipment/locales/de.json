@@ -645,6 +645,8 @@
         "city": "Stadt",
         "province": "Provinz / Bundesland",
         "airport": "Flughafen (IATA)",
+        "airport_auto": "Automatisch",
+        "airport_hint": "Leer lassen: wird automatisch ermittelt (DHL-Zone aus PLZ und Ort oder der Flughafen des Fluges bei Cargo). Nur DHL verlangt ihn.",
         "attention": "Zu Händen von (Ansprechpartner)",
         "phone": "Telefon",
         "cell": "Mobil",

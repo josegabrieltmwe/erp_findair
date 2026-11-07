@@ -645,6 +645,8 @@
         "city": "Plaats",
         "province": "Provincie / Staat",
         "airport": "Luchthaven (IATA)",
+        "airport_auto": "Automatisch",
+        "airport_hint": "Laat leeg en het wordt automatisch ingevuld (DHL-zone op postcode en plaats, of de luchthaven van de vlucht bij cargo). Alleen DHL vereist het.",
         "attention": "T.a.v. (contactnaam)",
         "phone": "Telefoon",
         "cell": "Mobiel",

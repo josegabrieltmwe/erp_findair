@@ -23,6 +23,9 @@
     :custom-filter="nearestFilter"
     :label="label"
     :placeholder="placeholder"
+    :hint="hint"
+    :persistent-hint="!!hint"
+    persistent-placeholder
     :disabled="disabled"
     :readonly="readonly"
     clearable
@@ -78,6 +81,8 @@ const props = withDefaults(
     loading?: boolean;
     label?: string;
     placeholder?: string;
+    /** Texto de ayuda fijo bajo el campo (modo nearest). */
+    hint?: string;
     disabled?: boolean;
     readonly?: boolean;
     clearable?: boolean;
@@ -89,6 +94,7 @@ const props = withDefaults(
     loading: false,
     label: '',
     placeholder: '',
+    hint: '',
     disabled: false,
     readonly: false,
     clearable: true,
