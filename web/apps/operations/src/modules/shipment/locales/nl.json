@@ -1861,7 +1861,7 @@
       "click": {
         "by_service": "Filteren op deze service"
       },
-      "cargo_leg_help": "Zonder keuze worden alleen koerierszendingen getoond. Kies een traject om alleen cargo-ophalingen of alleen cargo-leveringen te zien.",
+      "cargo_leg_help": "Zonder keuze worden alleen koerierszendingen getoond. Kies een traject om alleen cargo-ophalingen of alleen cargo-leveringen te zien. Bij zoeken op ID wordt dit filter genegeerd.",
       "storage_help": "Heeft = actieve opslag · Open = nog niet gesloten · Alleen gesloten = had opslag, alles gesloten · Geen = nooit gehad.",
       "fields": {
         "shipment_id": "Zending-ID",

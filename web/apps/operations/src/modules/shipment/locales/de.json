@@ -1861,7 +1861,7 @@
       "click": {
         "by_service": "Nach diesem Service filtern"
       },
-      "cargo_leg_help": "Ohne Auswahl werden nur Kuriersendungen angezeigt. Wähle eine Teilstrecke, um nur Cargo-Abholungen oder nur Cargo-Zustellungen zu sehen.",
+      "cargo_leg_help": "Ohne Auswahl werden nur Kuriersendungen angezeigt. Wähle eine Teilstrecke, um nur Cargo-Abholungen oder nur Cargo-Zustellungen zu sehen. Bei der Suche nach ID wird dieser Filter ignoriert.",
       "storage_help": "Hat = Lagerung aktiv · Offen = noch nicht geschlossen · Nur geschlossene = hatte Lagerung, alles geschlossen · Keine = hatte nie.",
       "fields": {
         "shipment_id": "Sendungs-ID",
