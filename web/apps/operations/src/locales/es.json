@@ -100,6 +100,7 @@
       "CARGO_HAS_ACTIVE_BOOKING": "El cargo tiene una reserva activa con la aerolínea: cancela antes la reserva.",
       "CARGO_HAS_AWB": "El cargo tiene un AWB emitido: solo el personal de TMWE puede cancelarlo, confirmándolo de forma explícita.",
       "COURIER_PACKAGE_OVERWEIGHT": "El bulto {package} supera el límite de {limit} {unit} por bulto de {courier}.",
+      "CARGO_LEG_ORIGIN_REQUIRED": "Este tramo de la cargo sale de la terminal: puedes cambiar la dirección de recogida, pero no quitarla ni usar la sede del cliente.",
       "COURIER_INVALID_WEIGHT": "{courier} necesita un peso válido para cada bulto.",
       "COURIER_INVALID_DIMENSIONS": "{courier} necesita medidas válidas para cada bulto.",
       "CONTACT_FALLBACK_SIDE_destination": "destinatario",
