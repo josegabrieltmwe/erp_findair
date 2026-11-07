@@ -1429,6 +1429,8 @@
       "search_error_text": "No se ha podido completar la búsqueda. Tus parámetros se conservan para que puedas intentarlo de nuevo.",
       "search_cancelled": "La búsqueda se ha detenido. Puedes modificar los parámetros o volver a ejecutarla cuando quieras.",
       "late_searching": "Aún llegan tarifas de aerolíneas que tardan más; la lista se irá completando.",
+      "only_selectable": "Solo asignables",
+      "min_margin_pct": "Margen mínimo",
       "margin_rule": "Margen aplicado",
       "margin_level_airline": "pacto con la aerolínea",
       "margin_level_channel": "pacto con el canal",

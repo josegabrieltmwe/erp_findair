@@ -270,6 +270,31 @@
               hide-details
               @update:model-value="patch('validNow', Boolean($event))"
             />
+            <v-switch
+              :model-value="modelValue.selectableOnly === true"
+              :label="t('cargo.flight.only_selectable')"
+              color="primary"
+              density="compact"
+              hide-details
+              data-testid="filter-selectable-only"
+              @update:model-value="patch('selectableOnly', Boolean($event))"
+            />
+            <!-- Solo staff con coste visible (alguna tarifa trae coste). -->
+            <v-text-field
+              v-if="anyCost"
+              :model-value="modelValue.minMarginPct ?? ''"
+              :label="t('cargo.flight.min_margin_pct')"
+              type="number"
+              min="0"
+              suffix="%"
+              density="compact"
+              clearable
+              hide-details
+              prepend-inner-icon="mdi-scale-balance"
+              style="max-width: 200px"
+              data-testid="filter-min-margin"
+              @update:model-value="onMinMargin($event)"
+            />
             <v-select
               :model-value="modelValue.products"
               :items="availableProducts"
@@ -519,6 +544,8 @@ const activeFilterCount = computed<number>(() => {
   n += m.maxStops !== null ? 1 : 0;
   n += m.priceRange !== null ? 1 : 0;
   n += m.maxTransitHours !== null ? 1 : 0;
+  n += m.selectableOnly ? 1 : 0;
+  n += m.minMarginPct !== null && m.minMarginPct !== undefined ? 1 : 0;
   return n;
 });
 
@@ -536,7 +563,9 @@ const hasActiveFilters = computed(() => {
     m.products.length > 0 ||
     m.serviceTypes.length > 0 ||
     (m.providers?.length ?? 0) > 0 ||
-    (m.kinds?.length ?? 0) > 0
+    (m.kinds?.length ?? 0) > 0 ||
+    m.selectableOnly === true ||
+    (m.minMarginPct !== null && m.minMarginPct !== undefined)
   );
 });
 
@@ -557,6 +586,16 @@ watch(
     }
   },
 );
+
+/** Alguna tarifa trae coste real: el usuario es staff con coste visible. */
+const anyCost = computed<boolean>(() =>
+  props.rates.some((r) => r._cost_known && r._cost_n > 0),
+);
+
+function onMinMargin(v: unknown): void {
+  const n = v === null || v === undefined || v === "" ? null : Number(v);
+  patch("minMarginPct", n === null || Number.isNaN(n) ? null : n);
+}
 
 const filteredCount = computed<number>(() => {
   const f = props.modelValue;

@@ -1429,6 +1429,8 @@
       "search_error_text": "Die Suche konnte nicht abgeschlossen werden. Ihre Parameter wurden für einen erneuten Versuch beibehalten.",
       "search_cancelled": "Die Suche wurde angehalten. Sie können die Parameter ändern oder sie erneut starten.",
       "late_searching": "Tarife langsamerer Airlines treffen noch ein; die Liste wird weiter ergänzt.",
+      "only_selectable": "Nur zuweisbare",
+      "min_margin_pct": "Mindestmarge",
       "margin_rule": "Angewandte Marge",
       "margin_level_airline": "Airline-Vereinbarung",
       "margin_level_channel": "Kanalvereinbarung",

@@ -1300,6 +1300,13 @@ export interface FlightFiltersModel {
   validNow: boolean;
   products: string[];
   serviceTypes: string[];
+  /** Solo tarifas que se pueden asignar (precio completo y `selectable`). */
+  selectableOnly?: boolean;
+  /**
+   * Staff con coste visible: margen minimo en % sobre coste. Las tarifas sin
+   * margen conocido quedan fuera mientras este activo.
+   */
+  minMarginPct?: number | null;
 }
 
 /** Modelo vacio (sin ningun filtro aplicado). */
@@ -1317,6 +1324,8 @@ export function emptyFilters(): FlightFiltersModel {
     validNow: false,
     products: [],
     serviceTypes: [],
+    selectableOnly: false,
+    minMarginPct: null,
   };
 }
 
@@ -1512,6 +1521,13 @@ export function matchesFilters(
   if (f.products.length && !f.products.includes(r._product_name)) return false;
   if (f.serviceTypes.length && !f.serviceTypes.includes(r._service_type)) {
     return false;
+  }
+  if (f.selectableOnly && (r.selectable === false || r.price_incomplete)) {
+    return false;
+  }
+  if (f.minMarginPct !== null && f.minMarginPct !== undefined) {
+    if (!r._cost_known || r._margin_pct_n === null) return false;
+    if (r._margin_pct_n < f.minMarginPct) return false;
   }
   return true;
 }

@@ -224,6 +224,8 @@ export function useCargoFlightSearch() {
       validNow: false,
       products: [],
       serviceTypes: [],
+      selectableOnly: false,
+      minMarginPct: null,
     };
   }
 

@@ -1429,6 +1429,8 @@
       "search_error_text": "The search could not be completed. Your parameters have been kept so you can try again.",
       "search_cancelled": "The search was stopped. You can adjust the parameters or run it again whenever you are ready.",
       "late_searching": "Rates from slower airlines are still arriving; the list will keep filling in.",
+      "only_selectable": "Assignable only",
+      "min_margin_pct": "Minimum margin",
       "margin_rule": "Applied margin",
       "margin_level_airline": "airline agreement",
       "margin_level_channel": "channel agreement",
