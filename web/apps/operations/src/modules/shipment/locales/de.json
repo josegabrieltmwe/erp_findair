@@ -1861,6 +1861,7 @@
       "click": {
         "by_service": "Nach diesem Service filtern"
       },
+      "cargo_leg_help": "Ohne Auswahl werden nur Kuriersendungen angezeigt. Wähle eine Teilstrecke, um nur Cargo-Abholungen oder nur Cargo-Zustellungen zu sehen.",
       "storage_help": "Hat = Lagerung aktiv · Offen = noch nicht geschlossen · Nur geschlossene = hatte Lagerung, alles geschlossen · Keine = hatte nie.",
       "fields": {
         "shipment_id": "Sendungs-ID",
@@ -1873,6 +1874,7 @@
         "chargeable_weight": "Berechenbares Gewicht (exakt)",
         "supplier_id": "Lieferanten-ID",
         "service_id": "Service-ID",
+        "cargo_leg": "Cargo-Teilstrecken",
         "storage_state": "Lagerungsstatus",
         "country_ph": "z. B. IT, FR, DE",
         "supplier_ph": "Lieferanten-ID",
@@ -1960,6 +1962,10 @@
       "none": "Keine"
     },
     "cod_amount": "NN {amount}",
+    "cargo_leg": {
+      "pickup": "Nur Cargo-Abholungen",
+      "delivery": "Nur Cargo-Zustellungen"
+    },
     "archived": {
       "yes": "Archiviert",
       "no": "Nicht archiviert"

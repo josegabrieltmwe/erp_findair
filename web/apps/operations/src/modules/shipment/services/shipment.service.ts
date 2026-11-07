@@ -295,6 +295,8 @@ export interface ShipmentListQuery {
   peso_tassax?: number | string;
   /** '1' = only shipments having unread chat messages. */
   chat_unread?: "1";
+  /** Tramos de cargo; sin valor, solo courier puros. */
+  cargo_leg?: "pickup" | "delivery";
   /** Weight range (kg). */
   peso_da?: number | string;
   peso_a?: number | string;

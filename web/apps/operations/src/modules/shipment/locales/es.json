@@ -1861,6 +1861,7 @@
       "click": {
         "by_service": "Filtrar por este servicio"
       },
+      "cargo_leg_help": "Sin elegir, solo se muestran las expediciones courier. Elige un tramo para ver solo recogidas o solo entregas de cargo.",
       "storage_help": "Tiene = almacenaje activo · Abierto = aún no cerrado · Solo cerrados = tuvo almacenaje, todo cerrado · Ninguno = nunca tuvo.",
       "fields": {
         "shipment_id": "ID expedición",
@@ -1873,6 +1874,7 @@
         "chargeable_weight": "Peso facturable (exacto)",
         "supplier_id": "ID proveedor",
         "service_id": "ID servicio",
+        "cargo_leg": "Tramos de cargo",
         "storage_state": "Estado de almacenaje",
         "country_ph": "p. ej. IT, FR, DE",
         "supplier_ph": "ID del proveedor",
@@ -1960,6 +1962,10 @@
       "none": "Ninguno"
     },
     "cod_amount": "CR {amount}",
+    "cargo_leg": {
+      "pickup": "Solo recogidas de cargo",
+      "delivery": "Solo entregas de cargo"
+    },
     "archived": {
       "yes": "Archivada",
       "no": "No archivada"
