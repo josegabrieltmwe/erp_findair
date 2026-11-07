@@ -1429,6 +1429,7 @@
       "search_error_text": "The search could not be completed. Your parameters have been kept so you can try again.",
       "search_cancelled": "The search was stopped. You can adjust the parameters or run it again whenever you are ready.",
       "late_searching": "Rates from slower airlines are still arriving; the list will keep filling in.",
+      "also_via": "Also via {provider}: {price}",
       "special_goods_warning": "The goods are {code}: airlines quote them as general cargo. Confirm price and acceptance with the airline before booking.",
       "only_selectable": "Assignable only",
       "min_margin_pct": "Minimum margin",

@@ -1819,6 +1819,129 @@ export function groupBySimilarity(rates: NormalizedRate[]): RateGroup[] {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
+   MISMO VUELO DE VARIOS PROVEEDORES
+   ═══════════════════════════════════════════════════════════════════════
+
+   Un vuelo de AF/KL puede llegar dos veces: por KLM directo (`klm_quote`) y
+   por WebCargo realtime. Son el MISMO avion a la misma hora; lo que cambia es
+   el canal y por tanto el precio y la cuenta. Se pintan en UNA fila: la mejor
+   oferta (asignable primero, luego la mas barata) y, colgadas de ella, las de
+   los otros proveedores, para comparar y elegir.
+
+   Solo se fusionan tarifas con itinerario completo (todos los tramos con
+   numero de vuelo) y de PROVEEDORES distintos: dos ofertas del mismo canal
+   para el mismo vuelo son productos distintos y se quedan separadas.
+*/
+
+/** "KL 0643", "kl643", "643" (con carrier aparte) → "KL643". */
+function normalizeFlightNumber(carrier: string, raw: string): string {
+  const s = String(raw ?? "").replace(/\s+/g, "").toUpperCase();
+  const m = /^(?:([A-Z][A-Z0-9]|\d[A-Z]|[A-Z]{3})(?=\d))?0*(\d+[A-Z]?)$/.exec(s);
+  if (!m) return "";
+  const code = (m[1] || carrier || "").toUpperCase();
+  return code ? `${code}${m[2]}` : "";
+}
+
+/**
+ * Identidad del vuelo fisico: tramos (carrier+numero) y dia de salida.
+ * "" si el itinerario no esta completo (no se puede asegurar que sea el mismo).
+ */
+export function flightIdentity(r: NormalizedRate): string {
+  const segs = segmentsFromRate(r);
+  if (!segs.length) return "";
+  const parts: string[] = [];
+  for (const sg of segs) {
+    const n = normalizeFlightNumber(
+      String(sg.carrier ?? r.airline_code ?? ""),
+      String(sg.flight_number ?? ""),
+    );
+    if (!n) return "";
+    parts.push(n);
+  }
+  const dep = String(segs[0].departure ?? r.departure ?? "");
+  const day = /^\d{4}-\d{2}-\d{2}/.exec(dep)?.[0];
+  if (!day) return "";
+  return `${parts.join(">")}|${day}`;
+}
+
+/** Se puede asignar: precio completo, seleccionable y reservable. */
+function isAssignable(r: NormalizedRate): boolean {
+  return (
+    r.selectable !== false &&
+    !r.price_incomplete &&
+    (r as { bookable?: boolean }).bookable !== false &&
+    r._client_price_n > 0
+  );
+}
+
+/** Mejor oferta del mismo vuelo: asignable primero, luego la mas barata. */
+function betterOffer(a: NormalizedRate, b: NormalizedRate): number {
+  const ra = isAssignable(a) ? 0 : 1;
+  const rb = isAssignable(b) ? 0 : 1;
+  if (ra !== rb) return ra - rb;
+  return (a._client_price_n || Infinity) - (b._client_price_n || Infinity);
+}
+
+export interface MergedFlights {
+  /** Filas a pintar, en el orden de entrada (cada vuelo donde aparecio primero). */
+  rows: NormalizedRate[];
+  /** Ofertas de otros proveedores del mismo vuelo, por `_rowKey` de la fila. */
+  alternatives: Record<string, NormalizedRate[]>;
+}
+
+/**
+ * Junta en una fila el mismo vuelo recibido de proveedores distintos.
+ * No muta las tarifas; `_rowKey` de cada una se conserva.
+ */
+export function mergeSameFlight(rates: NormalizedRate[]): MergedFlights {
+  const byFlight = new Map<string, NormalizedRate[]>();
+  for (const r of rates) {
+    const id = flightIdentity(r);
+    if (!id) continue;
+    const list = byFlight.get(id);
+    if (list) list.push(r);
+    else byFlight.set(id, [r]);
+  }
+
+  // Por vuelo: lider y alternativas (solo de OTROS proveedores).
+  const leaderOf = new Map<NormalizedRate, NormalizedRate>();
+  const alternatives: Record<string, NormalizedRate[]> = {};
+  for (const list of byFlight.values()) {
+    if (list.length < 2) continue;
+    const providers = new Set(list.map((r) => providerOf(r.source)));
+    if (providers.size < 2) continue;
+    const sorted = list.slice().sort(betterOffer);
+    const leader = sorted[0];
+    const leaderProvider = providerOf(leader.source);
+    // Del resto de proveedores, su mejor oferta; las del mismo proveedor que el
+    // lider siguen como filas propias.
+    const bestOther = new Map<string, NormalizedRate>();
+    for (const r of sorted.slice(1)) {
+      const p = providerOf(r.source);
+      if (p === leaderProvider || bestOther.has(p)) continue;
+      bestOther.set(p, r);
+    }
+    if (!bestOther.size) continue;
+    alternatives[leader._rowKey] = [...bestOther.values()];
+    for (const r of [leader, ...bestOther.values()]) leaderOf.set(r, leader);
+  }
+
+  const rows: NormalizedRate[] = [];
+  const placed = new Set<NormalizedRate>();
+  for (const r of rates) {
+    const leader = leaderOf.get(r);
+    if (!leader) {
+      rows.push(r);
+      continue;
+    }
+    if (placed.has(leader)) continue;
+    placed.add(leader);
+    rows.push(leader);
+  }
+  return { rows, alternatives };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
    PESTANAS POR FUENTE
    ═══════════════════════════════════════════════════════════════════════
 

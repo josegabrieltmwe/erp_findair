@@ -269,6 +269,33 @@
             `@click.stop` es obligatorio: el <tr> entero lleva `row-click` y sin
             el, abrir el grupo dispararia ademas el detalle del lider.
           -->
+            <!-- Mismo vuelo en otro proveedor: su precio y un clic para ver
+                 (y asignar) esa oferta. `@click.stop` por el row-click. -->
+            <div
+              v-if="alternativesOf[item._rowKey]?.length"
+              class="d-flex align-center ga-1 flex-wrap"
+              data-testid="same-flight-alternatives"
+            >
+              <v-chip
+                v-for="alt in alternativesOf[item._rowKey]"
+                :key="alt._rowKey"
+                size="x-small"
+                variant="outlined"
+                color="secondary"
+                link
+                @click.stop="emit('detail', alt)"
+              >
+                <v-icon icon="mdi-swap-horizontal" size="14" class="me-1" />
+                {{
+                  t("cargo.flight.also_via", {
+                    provider: providerTitle(alt),
+                    price: alt.price_incomplete
+                      ? t("cargo.flight.no_price")
+                      : formatRateAmount(alt._client_price_n, alt._currency),
+                  })
+                }}
+              </v-chip>
+            </div>
             <div
               v-if="similarCount[item._rowKey]"
               class="d-flex align-center ga-1 flex-wrap"
@@ -572,7 +599,9 @@
                 class="ms-1"
                 :class="{ 'text-warning': (marginPercent(item) ?? 0) <= 0 }"
               >
-                · {{ (marginPercent(item) ?? 0) > 0 ? "+" : "" }}{{ marginPercent(item) }}%
+                ·
+                {{ (marginPercent(item) ?? 0) > 0 ? "+" : ""
+                }}{{ marginPercent(item) }}%
               </span>
             </span>
           </template>
@@ -728,6 +757,8 @@ import {
   buildTabs,
   ratesForTab,
   groupBySimilarity,
+  mergeSameFlight,
+  providerOf,
   sourceShortLabel,
   sourceColorFor,
   flightLabelOf,
@@ -786,9 +817,12 @@ function marginRuleLabel(r: NormalizedRate): string {
       }),
     );
   } else if (r._margin_type && r._margin_value_n !== null) {
-    parts.push(t("cargo.flight.margin_rule_percent", { value: r._margin_value_n }));
+    parts.push(
+      t("cargo.flight.margin_rule_percent", { value: r._margin_value_n }),
+    );
   }
-  if (r._margin_tier) parts.push(t("cargo.flight.margin_tier", { n: r._margin_tier }));
+  if (r._margin_tier)
+    parts.push(t("cargo.flight.margin_tier", { n: r._margin_tier }));
   return parts.join(" · ");
 }
 
@@ -885,10 +919,30 @@ const orderedRates = computed<NormalizedRate[]>(() => {
   return ratesForTab(props.rates, activeTab.value, sortBy.value);
 });
 
+/**
+ * El mismo vuelo recibido de varios proveedores (KLM directo y WebCargo) va en
+ * UNA fila: la mejor oferta, con las de los otros proveedores colgadas para
+ * comparar. Se hace sobre el conjunto ya ordenado, antes de agrupar.
+ */
+const merged = computed(() => mergeSameFlight(orderedRates.value));
+const mergedRates = computed<NormalizedRate[]>(() => merged.value.rows);
+const alternativesOf = computed<Record<string, NormalizedRate[]>>(
+  () => merged.value.alternatives,
+);
+
+const PROVIDER_TITLES: Record<string, string> = {
+  klm: "KLM/AF",
+  webcargo: "WebCargo",
+};
+function providerTitle(r: NormalizedRate): string {
+  const p = providerOf(r.source);
+  return PROVIDER_TITLES[p] ?? String(p);
+}
+
 /** Grupos del conjunto YA ordenado: agrupar despues de ordenar conserva el
     ranking, porque groupBySimilarity respeta el orden de entrada. */
 const groups = computed(() =>
-  groupSimilar.value ? groupBySimilarity(orderedRates.value) : [],
+  groupSimilar.value ? groupBySimilarity(mergedRates.value) : [],
 );
 
 /**
@@ -897,7 +951,7 @@ const groups = computed(() =>
  * `_rowKey` sigue intacto.
  */
 const visibleRates = computed<NormalizedRate[]>(() =>
-  groupSimilar.value ? groups.value.map((g) => g.leader) : orderedRates.value,
+  groupSimilar.value ? groups.value.map((g) => g.leader) : mergedRates.value,
 );
 
 /** Cuantos similares esconde cada lider, indexado por `_rowKey`. */

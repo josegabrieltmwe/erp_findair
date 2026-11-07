@@ -1429,6 +1429,7 @@
       "search_error_text": "No se ha podido completar la búsqueda. Tus parámetros se conservan para que puedas intentarlo de nuevo.",
       "search_cancelled": "La búsqueda se ha detenido. Puedes modificar los parámetros o volver a ejecutarla cuando quieras.",
       "late_searching": "Aún llegan tarifas de aerolíneas que tardan más; la lista se irá completando.",
+      "also_via": "También en {provider}: {price}",
       "special_goods_warning": "La mercancía es {code}: las aerolíneas la cotizan como carga general. Confirma precio y aceptación con la aerolínea antes de reservar.",
       "only_selectable": "Solo asignables",
       "min_margin_pct": "Margen mínimo",

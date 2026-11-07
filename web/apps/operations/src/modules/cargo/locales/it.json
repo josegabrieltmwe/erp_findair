@@ -1429,6 +1429,7 @@
       "search_error_text": "Non è stato possibile completare la ricerca. I parametri sono stati conservati per consentirti di riprovare.",
       "search_cancelled": "La ricerca è stata interrotta. Puoi modificare i parametri o eseguirla nuovamente quando vuoi.",
       "late_searching": "Stanno ancora arrivando tariffe dalle compagnie più lente; l'elenco si completerà.",
+      "also_via": "Anche su {provider}: {price}",
       "special_goods_warning": "La merce è {code}: le compagnie aeree la quotano come merce generica. Conferma prezzo e accettazione con la compagnia prima di prenotare.",
       "only_selectable": "Solo assegnabili",
       "min_margin_pct": "Margine minimo",
