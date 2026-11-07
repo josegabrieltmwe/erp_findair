@@ -1882,6 +1882,8 @@
     "audit": {
       "title": "Registro de auditoría",
       "filter_field": "Filtrar por campo",
+      "no_matches": "Ninguna entrada coincide con el filtro.",
+      "no_changes": "No se ha registrado ningún cambio en este cargo.",
       "empty": "Sin entradas de auditoría"
     },
     "mailag": {

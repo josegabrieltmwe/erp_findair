@@ -13,7 +13,9 @@
     :location="LEG_SIDE[role]"
     :title="t(`cargo.legs.title_${role}`)"
     :icon="role === 'pickup' ? 'mdi-arrow-up-right' : 'mdi-arrow-down-right'"
-    @update:model-value="(v: boolean) => (v ? panels.open(role) : panels.close())"
+    @update:model-value="
+      (v: boolean) => (v ? panels.open(role) : panels.close())
+    "
   />
 </template>
 
@@ -21,7 +23,12 @@
 import { defineAsyncComponent, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useCargoStore } from "@cargo/stores/cargo.store";
-import { useLegPanelsStore, LEG_SIDE, type CargoLegRole } from "@cargo/stores/leg_panels.store";
+import { useUiStore } from "@cargo/stores/ui.store";
+import {
+  useLegPanelsStore,
+  LEG_SIDE,
+  type CargoLegRole,
+} from "@cargo/stores/leg_panels.store";
 import { legShipmentId } from "@cargo/composables/cargoLegs";
 
 // El detalle de expedición pesa: no entra en el bundle de la ficha hasta que se abre un tramo.
@@ -32,6 +39,7 @@ const ShipmentDetailDrawer = defineAsyncComponent(
 const { t } = useI18n();
 const cargo = useCargoStore();
 const panels = useLegPanelsStore();
+const ui = useUiStore();
 const roles: CargoLegRole[] = ["pickup", "delivery"];
 
 function legId(role: CargoLegRole): number | null {
@@ -45,6 +53,22 @@ watch(
     if (before && !now) void cargo.refreshQuiet();
   },
 );
+// El chat es el otro panel lateral de la ficha (derecha): no se muestra a la vez que un tramo. Abrir uno cierra el otro.
+watch(
+  () => ui.chatOpen,
+  (open) => {
+    if (open) panels.close();
+  },
+);
+watch(
+  () => panels.openRole,
+  (role) => {
+    if (role && ui.chatOpen) ui.closeAllDrawers();
+  },
+);
 // Otro cargo: se cierra lo que hubiera abierto.
-watch(() => cargo.id, () => panels.close());
+watch(
+  () => cargo.id,
+  () => panels.close(),
+);
 </script>

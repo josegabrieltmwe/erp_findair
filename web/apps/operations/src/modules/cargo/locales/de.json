@@ -1882,6 +1882,8 @@
     "audit": {
       "title": "Audit-Trail",
       "filter_field": "Nach Feld filtern",
+      "no_matches": "Kein Eintrag entspricht dem Filter.",
+      "no_changes": "Für diesen Cargo wurden keine Änderungen protokolliert.",
       "empty": "Keine Audit-Einträge"
     },
     "mailag": {

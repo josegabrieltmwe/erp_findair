@@ -1882,6 +1882,8 @@
     "audit": {
       "title": "Audit trail",
       "filter_field": "Filter by field",
+      "no_matches": "No entries match the filter.",
+      "no_changes": "No changes have been logged for this cargo.",
       "empty": "No audit entries"
     },
     "mailag": {
