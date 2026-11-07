@@ -1861,6 +1861,7 @@
       "click": {
         "by_service": "Filter by this service"
       },
+      "cargo_leg_help": "If none is chosen, only courier shipments are shown. Choose a leg to see only cargo pickups or only cargo deliveries.",
       "storage_help": "Has = any active storage · Open = not closed yet · Closed only = had storage, all closed · None = never had any.",
       "fields": {
         "shipment_id": "Shipment ID",
@@ -1873,6 +1874,7 @@
         "chargeable_weight": "Chargeable weight (exact)",
         "supplier_id": "Supplier ID",
         "service_id": "Service ID",
+        "cargo_leg": "Cargo legs",
         "storage_state": "Storage state",
         "country_ph": "e.g. IT, FR, DE",
         "supplier_ph": "Supplier ID",
@@ -1960,6 +1962,10 @@
       "none": "None"
     },
     "cod_amount": "COD {amount}",
+    "cargo_leg": {
+      "pickup": "Cargo pickups only",
+      "delivery": "Cargo deliveries only"
+    },
     "archived": {
       "yes": "Archived",
       "no": "Not archived"

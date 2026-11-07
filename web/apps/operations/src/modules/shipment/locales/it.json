@@ -1861,6 +1861,7 @@
       "click": {
         "by_service": "Filtra per questo servizio"
       },
+      "cargo_leg_help": "Se non scegli nulla, vengono mostrate solo le spedizioni corriere. Scegli una tratta per vedere solo i ritiri o solo le consegne del cargo.",
       "storage_help": "Presente = giacenza attiva · Aperta = non ancora chiusa · Solo chiuse = aveva giacenze, tutte chiuse · Nessuna = mai avute.",
       "fields": {
         "shipment_id": "ID spedizione",
@@ -1873,6 +1874,7 @@
         "chargeable_weight": "Peso tassabile (esatto)",
         "supplier_id": "ID fornitore",
         "service_id": "ID servizio",
+        "cargo_leg": "Tratte cargo",
         "storage_state": "Stato giacenza",
         "country_ph": "es. IT, FR, DE",
         "supplier_ph": "ID fornitore",
@@ -1960,6 +1962,10 @@
       "none": "Nessuna"
     },
     "cod_amount": "Contr. {amount}",
+    "cargo_leg": {
+      "pickup": "Solo ritiri cargo",
+      "delivery": "Solo consegne cargo"
+    },
     "archived": {
       "yes": "Archiviata",
       "no": "Non archiviata"

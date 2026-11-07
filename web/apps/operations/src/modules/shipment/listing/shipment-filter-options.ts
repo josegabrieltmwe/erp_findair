@@ -36,6 +36,15 @@ export const ARCHIVIATA_OPTIONS: readonly FilterOptionDef[] = [
   { value: "N", key: "enums.archived.no" },
 ];
 
+/**
+ * Tramos de cargo en el listado courier. Sin valor (por defecto) solo salen las expediciones courier puras; estas dos
+ * opciones muestran, en su lugar, solo las recogidas o solo las entregas de cargo.
+ */
+export const CARGO_LEG_OPTIONS: readonly FilterOptionDef[] = [
+  { value: "pickup", key: "enums.cargo_leg.pickup" },
+  { value: "delivery", key: "enums.cargo_leg.delivery" },
+];
+
 export const STATO_GIAC_OPTIONS: readonly FilterOptionDef[] = [
   { value: "S", key: "enums.stato_giac.has_any" },
   { value: "A", key: "enums.stato_giac.open" },
@@ -52,4 +61,5 @@ export const SHIPMENT_FILTER_OPTIONS: Readonly<
   presa_stato: PRESA_STATO_OPTIONS,
   archiviata: ARCHIVIATA_OPTIONS,
   stato_giac: STATO_GIAC_OPTIONS,
+  cargo_leg: CARGO_LEG_OPTIONS,
 };

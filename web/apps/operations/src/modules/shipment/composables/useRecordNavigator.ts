@@ -115,6 +115,7 @@ function stateToNavigatorQuery(
   if (s.peso_a) q.peso_a = s.peso_a;
   if (s.peso_tassax) q.peso_tassax = s.peso_tassax;
   if (s.chat_unread) q.chat_unread = s.chat_unread;
+  if (s.cargo_leg) q.cargo_leg = s.cargo_leg;
   return q;
 }
 
