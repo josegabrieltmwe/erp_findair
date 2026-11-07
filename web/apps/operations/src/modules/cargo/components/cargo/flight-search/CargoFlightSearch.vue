@@ -439,6 +439,22 @@
             {{ t("cargo.flight.search_cancelled") }}
           </v-alert>
 
+          <!-- Mercancía especial (DGR, PER, CAO…): las aerolíneas cotizan hoy como
+               carga general (WebCargo clase '0000', KLM GENERAL), así que el
+               precio y la aceptación hay que confirmarlos con la aerolínea. -->
+          <v-alert
+            v-if="specialGoods"
+            type="warning"
+            variant="tonal"
+            density="compact"
+            class="mb-3"
+            data-testid="special-goods-warning"
+          >
+            {{
+              t("cargo.flight.special_goods_warning", { code: specialGoods })
+            }}
+          </v-alert>
+
           <!-- Respuestas tardías: la búsqueda terminó pero aún llegan tarifas de
                aerolíneas lentas (late_rate). La lista sigue creciendo. -->
           <div
@@ -639,6 +655,18 @@ const {
  * deliberate choice mid-search.
  */
 const rateTypeTab = ref<"direct_booking" | "published" | "all">("published");
+
+/** Tipo de mercancía de la expedición si NO es carga general ("" si lo es). */
+const specialGoods = computed<string>(() => {
+  const code = String(
+    (cargo.value as { tipo_merce?: string | null } | null)?.tipo_merce ?? "",
+  )
+    .trim()
+    .toUpperCase();
+  return /^[A-Z]{3}$/.test(code) && code !== "GEN" && code !== "ALL"
+    ? code
+    : "";
+});
 
 /** Todas las tarifas recibidas llegan no seleccionables por falta de margen (`marginNotice.ts`). */
 const allNoMargin = computed(
