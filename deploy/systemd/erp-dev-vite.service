@@ -1,0 +1,24 @@
+# Servidor de desarrollo de Vite para sandbox.erp-dev.findair.it (recarga en caliente).
+# Servicio de USUARIO (sin root). Lo publica Apache: deploy/apache/sandbox.erp-dev.findair.it.hmr.conf
+#
+# Instalar:
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/systemd/erp-dev-vite.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now erp-dev-vite
+#   sudo loginctl enable-linger tmwe-admin2   # que siga vivo sin sesion abierta
+# Logs:  journalctl --user -u erp-dev-vite -f
+# Parar: systemctl --user stop erp-dev-vite
+
+[Unit]
+Description=Vite dev server (HMR) para sandbox.erp-dev.findair.it
+
+[Service]
+WorkingDirectory=/var/www/sandbox/dev/erp_findair_dev/web/apps/operations
+Environment=VITE_DEV_PUBLIC_HOST=sandbox.erp-dev.findair.it
+Environment=NODE_OPTIONS=--max-old-space-size=4096
+ExecStart=/home/tmwe-admin2/.nvm/versions/node/v22.21.0/bin/node node_modules/vite/bin/vite.js --port 5190 --strictPort
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

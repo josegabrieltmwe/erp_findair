@@ -6,7 +6,6 @@ import { fileURLToPath, URL } from "node:url";
 import { resolve } from "node:path";
 
 export default defineConfig(({ mode }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const env = loadEnv(mode, process.cwd(), "");
   const isProd = mode === "production";
 
@@ -73,6 +72,23 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
+      // Recarga en caliente detras de Apache (sandbox.erp-dev.findair.it):
+      // con VITE_DEV_PUBLIC_HOST definido, Vite escucha solo en 127.0.0.1,
+      // acepta ese Host y el cliente HMR abre el websocket por wss://<host>:443
+      // (Apache lo reenvia al 5190). Sin la variable, el `pnpm dev` local de
+      // siempre. Ver deploy/apache/sandbox.erp-dev.findair.it.hmr.conf.
+      ...(env.VITE_DEV_PUBLIC_HOST
+        ? {
+            host: "127.0.0.1",
+            allowedHosts: [env.VITE_DEV_PUBLIC_HOST],
+            origin: `https://${env.VITE_DEV_PUBLIC_HOST}`,
+            hmr: {
+              protocol: "wss",
+              host: env.VITE_DEV_PUBLIC_HOST,
+              clientPort: 443,
+            },
+          }
+        : {}),
       cors: {
         origin: [
           /^https?:\/\/localhost(:\d+)?$/,

@@ -89,24 +89,51 @@ export const useCargoStore = defineStore("cargo", () => {
         toasts.push("error", res.error ?? "Update failed");
         return false;
       }
-      if (res.data) {
-        cargo.value = { ...cargo.value, ...res.data };
-      }
-
       // El backend acepta la peticion (success:true) aunque descarte campos:
       // los que no estan en la whitelist salen en `ignored_fields` y los que
-      // protege un candado en `blocked_by_lock`. Sin mostrarlos, un campo que
-      // no se guarda es INVISIBLE — el toast dice "guardado", el input mantiene
-      // el valor en local y solo al recargar se ve que no se persistio.
+      // protege un candado (o una factura emitida) en `blocked_by_lock` /
+      // `blocked_by_invoice`. Sin mostrarlos, un campo que no se guarda es
+      // INVISIBLE — el toast dice "guardado" y solo al recargar se ve que no
+      // se persistio.
+      //
+      // El PATCH de unified_cargo_shipment devuelve esos metadatos DENTRO de
+      // `data` ({updated, header_updated, ignored_fields, ...}), no la fila.
+      // Se leen de `data` y, por compatibilidad, tambien de la raiz.
       //
       // `action` se filtra: es el discriminador de ruta del propio ERP, no un
       // campo que el operador haya intentado guardar.
-      const meta = res as unknown as {
+      type UpdateMeta = {
         ignored_fields?: string[];
         blocked_by_lock?: string[];
+        blocked_by_invoice?: string[];
+        header_updated?: unknown;
       };
-      const ignored = (meta.ignored_fields ?? []).filter((f) => f !== "action");
-      const blocked = meta.blocked_by_lock ?? [];
+      const root = res as unknown as UpdateMeta;
+      const body = (res.data ?? {}) as unknown as UpdateMeta;
+      const ignored = [
+        ...(body.ignored_fields ?? root.ignored_fields ?? []),
+      ].filter((f) => f !== "action");
+      const blocked = [
+        ...(body.blocked_by_lock ?? root.blocked_by_lock ?? []),
+        ...(body.blocked_by_invoice ?? root.blocked_by_invoice ?? []),
+      ];
+
+      // Reflejar en el estado local lo que el backend ha aceptado. Antes se
+      // mezclaba `res.data` tal cual: como el PATCH no devuelve la fila, los
+      // campos editados conservaban el valor viejo y los controles atados al
+      // store (p. ej. los interruptores de accesorios acc_*) volvian atras
+      // aunque la BD si se hubiera actualizado. Si algun dia el backend
+      // devuelve la fila, se sigue mezclando.
+      const rejected = new Set([...ignored, ...blocked]);
+      const accepted = Object.fromEntries(
+        Object.entries(patch).filter(([k]) => !rejected.has(k)),
+      ) as Partial<Cargo>;
+      const returnsRow = res.data && !("header_updated" in body);
+      cargo.value = {
+        ...(cargo.value as Cargo),
+        ...accepted,
+        ...(returnsRow ? res.data : {}),
+      };
 
       if (blocked.length) {
         toasts.push(
