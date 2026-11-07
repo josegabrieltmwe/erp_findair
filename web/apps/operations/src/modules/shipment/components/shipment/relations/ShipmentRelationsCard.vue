@@ -169,10 +169,10 @@
       </div>
     </div>
   </section>
-  <CrmContextDrawer
+  <CrmContextDialog
     v-if="data"
-    ref="crmDrawer"
-    v-model="crmDrawerOpen"
+    ref="crmDialog"
+    v-model="crmDialogOpen"
     entity-kind="shipment"
     :shipment-id="Number(id ?? 0)"
     :items="crmItems"
@@ -195,10 +195,10 @@ import {
   type FatturaPointer,
 } from "@shipment/services/shipment_drawers.service";
 import { crmService } from "@/modules/crm/services/crm.service";
-import CrmContextDrawer, {
+import CrmContextDialog, {
   type CrmContextItem,
-  type CrmContextDrawerHandle,
-} from "@/modules/crm/components/CrmContextDrawer.vue";
+  type CrmContextDialogHandle,
+} from "@/modules/crm/components/CrmContextDialog.vue";
 import type { CrmPratica } from "@/modules/crm/types";
 import { giacenzeService } from "@/modules/giacenze/services/giacenze.service";
 
@@ -209,8 +209,8 @@ const store = useShipmentStore();
 const { id, shipment } = storeToRefs(store);
 const data = ref<ShipmentRelations | null>(null);
 const loading = ref(false);
-const crmDrawerOpen = ref(false);
-const crmDrawer = ref<CrmContextDrawerHandle | null>(null);
+const crmDialogOpen = ref(false);
+const crmDialog = ref<CrmContextDialogHandle | null>(null);
 const crmInitialId = ref<number | null>(null);
 const crmItems = computed<CrmContextItem[]>(() => {
   if (data.value?.crm_allowed === false) return [];
@@ -226,8 +226,8 @@ async function openCrm(crmId?: number, seed: CrmPratica | null = null) {
   const nextId = crmId ?? crmItems.value[0]?.id ?? null;
   crmInitialId.value = nextId;
   if (!nextId) return null;
-  if (crmDrawer.value) return crmDrawer.value.open(nextId, seed);
-  crmDrawerOpen.value = true;
+  if (crmDialog.value) return crmDialog.value.open(nextId, seed);
+  crmDialogOpen.value = true;
   return null;
 }
 
