@@ -35,6 +35,31 @@
       }}
     </v-alert>
 
+    <!--
+      Reserva `pending`: su resultado no se conoce (timeout del carrier) o aún
+      está en curso. Anularla solo en el ERP dejaría viva la de la aerolínea, así
+      que se pide comprobarlo antes; la API lo exige (NEEDS_RECONCILIATION).
+    -->
+    <template v-if="isPending">
+      <v-alert
+        type="warning"
+        variant="tonal"
+        density="compact"
+        class="mb-2"
+        data-testid="cancel-pending-warning"
+      >
+        {{ t("cargo.bookingcancel.pending_warning") }}
+      </v-alert>
+      <v-checkbox
+        v-model="confirmNotBooked"
+        :label="t('cargo.bookingcancel.pending_confirm')"
+        density="compact"
+        hide-details
+        class="mb-2"
+        data-testid="cancel-pending-confirm"
+      />
+    </template>
+
     <v-textarea
       v-model="reason"
       :label="t('cargo.bookingcancel.reason')"
@@ -66,7 +91,7 @@
       density="compact"
       class="mt-3"
     >
-      {{ store.error }}
+      {{ errorText }}
     </v-alert>
 
     <template #actions>
@@ -83,6 +108,7 @@
         variant="flat"
         prepend-icon="mdi-cancel"
         :loading="store.cancellingBooking"
+        :disabled="isPending && !confirmNotBooked"
         @click="confirm"
       >
         {{ t("cargo.bookingcancel.confirm") }}
@@ -100,13 +126,26 @@ import { useCargoFlightManagerStore } from "@cargo/stores/cargo_flight_manager.s
 import { useToastStore } from "@cargo/stores/toast.store";
 import ModalWrapper from "./ModalWrapper.vue";
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const ui = useUiStore();
 const cargoStore = useCargoStore();
 const store = useCargoFlightManagerStore();
 const toasts = useToastStore();
 
 const reason = ref("");
+
+/** Error traducido por su código (NEEDS_RECONCILIATION, CANCEL_FAILED…); si no hay clave, el texto de la API. */
+const errorText = computed<string>(() => {
+  const code = (store.errorCode ?? "").trim();
+  const key = `cargo.flightmgr.booking_error.${code}`;
+  return code && te(key) ? t(key) : (store.error ?? "");
+});
+const confirmNotBooked = ref(false);
+
+/** Reserva con resultado desconocido o aún en curso. */
+const isPending = computed(
+  () => String(store.booking?.status ?? "").toLowerCase() === "pending",
+);
 
 /** Umbral de aviso, en horas. Coincide con CANCELLATION_WARNING_HOURS del backend. */
 const WARNING_HOURS = 24;
@@ -140,18 +179,26 @@ const lateWarning = computed<{ hours: string; pastDeadline: boolean } | null>(
 watch(
   () => ui.activeModal,
   (n) => {
-    if (n === "booking_cancel") reason.value = "";
+    if (n === "booking_cancel") {
+      reason.value = "";
+      confirmNotBooked.value = false;
+    }
   },
 );
 
 async function confirm(): Promise<void> {
-  const ok = await store.cancelBooking(reason.value.trim() || undefined);
+  const ok = await store.cancelBooking(reason.value.trim() || undefined, {
+    confirmNotBooked: isPending.value && confirmNotBooked.value,
+  });
   if (ok) {
     toasts.push("success", t("cargo.bookingcancel.done"));
     ui.closeModal();
     if (cargoStore.id) await cargoStore.load(Number(cargoStore.id));
   } else {
-    toasts.push("error", store.error ?? "Annullamento fallito");
+    toasts.push(
+      "error",
+      errorText.value || t("cargo.flightmgr.booking_error.CANCEL_FAILED"),
+    );
   }
 }
 </script>

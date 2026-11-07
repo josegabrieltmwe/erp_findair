@@ -715,3 +715,38 @@ routes:
       forward_query: [shipment_id, package_number, auxiliar_number, format, control]
     response: binary
     limits: { timeout: 60 }
+
+  # Reserva y anulación de vuelos (KLM y WebCargo): la API espera al carrier hasta 50 s (KLM) o 35 s + 35 s de
+  # consulta de estado (WebCargo). Con 30 s el BFF cortaba antes y la SPA veía un fallo mientras la operación seguía
+  # por detrás. Sustituyen a las rutas generadas (misma id).
+  - id: post.api_cargo_klm_booking
+    method: POST
+    path: /api_cargo_klm_booking
+    upstream:
+      action: api_cargo_klm_booking
+      forward_query: '*'
+    limits: { body: 1m, timeout: 120 }
+
+  - id: post.api_cargo_klm_booking_cancel
+    method: POST
+    path: /api_cargo_klm_booking_cancel
+    upstream:
+      action: api_cargo_klm_booking_cancel
+      forward_query: '*'
+    limits: { body: 1m, timeout: 120 }
+
+  - id: post.api_cargo_webcargo_booking
+    method: POST
+    path: /api_cargo_webcargo_booking
+    upstream:
+      action: api_cargo_webcargo_booking
+      forward_query: '*'
+    limits: { body: 1m, timeout: 120 }
+
+  - id: post.api_cargo_webcargo_booking_cancel
+    method: POST
+    path: /api_cargo_webcargo_booking_cancel
+    upstream:
+      action: api_cargo_webcargo_booking_cancel
+      forward_query: '*'
+    limits: { body: 1m, timeout: 120 }

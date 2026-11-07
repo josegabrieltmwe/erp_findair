@@ -222,6 +222,77 @@ export interface BookInput {
 interface CancelInput {
   bookingId: string;
   reason?: string;
+  /**
+   * Reserva `pending` (resultado desconocido): el operador confirma que la
+   * aerolínea NO la tiene. Sin esto la API responde 409 NEEDS_RECONCILIATION.
+   */
+  confirmNotBooked?: boolean;
+}
+
+/**
+ * Resultado de una reserva/cancelación que respondió con error HTTP.
+ *
+ * Antes todos los catch devolvían `NETWORK_ERROR`: el cliente http lanza
+ * `ApiError` con cualquier ≥400, así que códigos como QUOTE_EXPIRED,
+ * DUPLICATE_BOOKING o CANCEL_TIMEOUT —y la marca `indeterminate`— no
+ * llegaban nunca a la UI y el operador reintentaba a ciegas.
+ *
+ * Un 502/503/504 (o sin respuesta) NO es un fallo limpio: el BFF corta pero
+ * la API puede terminar la operación contra el carrier. Se devuelve como
+ * indeterminado con `timeoutCode` para que la UI pida verificar el estado
+ * antes de reintentar.
+ */
+export function bookingFailure(
+  e: unknown,
+  timeoutCode: "BOOKING_TIMEOUT" | "CANCEL_TIMEOUT",
+): {
+  success: false;
+  error: string;
+  error_code: string;
+  indeterminate?: boolean;
+} {
+  const err = (e ?? {}) as {
+    message?: string;
+    status?: number;
+    errorCode?: string;
+    payload?: unknown;
+  };
+  const p = (
+    err.payload && typeof err.payload === "object" ? err.payload : {}
+  ) as Record<string, unknown>;
+  const pe = (p.error && typeof p.error === "object" ? p.error : {}) as Record<
+    string,
+    unknown
+  >;
+  const details = (
+    pe.details && typeof pe.details === "object" ? pe.details : {}
+  ) as Record<string, unknown>;
+  const message =
+    (typeof p.error === "string" ? p.error : (pe.message as string)) ||
+    err.message ||
+    "";
+  const status = Number(err.status ?? 0);
+  if (status === 0 || status === 502 || status === 503 || status === 504) {
+    return {
+      success: false,
+      error: message,
+      error_code: timeoutCode,
+      indeterminate: true,
+    };
+  }
+  const code =
+    (p.error_code as string) ||
+    (pe.code as string) ||
+    (err.errorCode && err.errorCode !== "SERVER_ERROR" ? err.errorCode : "") ||
+    "BOOKING_FAILED";
+  const indeterminate =
+    p.indeterminate === true || details.indeterminate === true;
+  return {
+    success: false,
+    error: message,
+    error_code: code,
+    ...(indeterminate ? { indeterminate: true } : {}),
+  };
 }
 
 export const bookingService = {
@@ -250,11 +321,7 @@ export const bookingService = {
       );
       return r;
     } catch (e) {
-      return {
-        success: false,
-        error: (e as Error).message,
-        error_code: "NETWORK_ERROR",
-      };
+      return bookingFailure(e, "BOOKING_TIMEOUT");
     }
   },
 
@@ -288,15 +355,15 @@ export const bookingService = {
     try {
       const r = await http<CancelResult>("/api_cargo_webcargo_booking_cancel", {
         method: "POST",
-        body: { booking_id: input.bookingId, reason: input.reason ?? "" },
+        body: {
+          booking_id: input.bookingId,
+          reason: input.reason ?? "",
+          ...(input.confirmNotBooked ? { confirm_not_booked: true } : {}),
+        },
       });
       return r;
     } catch (e) {
-      return {
-        success: false,
-        error: (e as Error).message,
-        error_code: "NETWORK_ERROR",
-      };
+      return bookingFailure(e, "CANCEL_TIMEOUT");
     }
   },
 

@@ -12,7 +12,12 @@
  * cached rate and runs the quote→book flow.
  */
 import { http } from "./http";
-import type { BookInput, BookResult, BookingSummary } from "./booking.service";
+import {
+  bookingFailure,
+  type BookInput,
+  type BookResult,
+  type BookingSummary,
+} from "./booking.service";
 
 export const klmBookingService = {
   async book(input: BookInput): Promise<BookResult> {
@@ -38,11 +43,7 @@ export const klmBookingService = {
       );
       return r;
     } catch (e) {
-      return {
-        success: false,
-        error: (e as Error).message,
-        error_code: "NETWORK_ERROR",
-      };
+      return bookingFailure(e, "BOOKING_TIMEOUT");
     }
   },
 
@@ -70,19 +71,26 @@ export const klmBookingService = {
     }
   },
 
-  async cancel(bookingId: string, reason?: string): Promise<BookResult> {
+  async cancel(
+    bookingId: string,
+    reason?: string,
+    confirmNotBooked?: boolean,
+  ): Promise<BookResult> {
     try {
       const r = await http<BookResult & { success: boolean }>(
         "/api_cargo_klm_booking_cancel",
-        { method: "POST", body: { booking_id: bookingId, reason } },
+        {
+          method: "POST",
+          body: {
+            booking_id: bookingId,
+            reason,
+            ...(confirmNotBooked ? { confirm_not_booked: true } : {}),
+          },
+        },
       );
       return r;
     } catch (e) {
-      return {
-        success: false,
-        error: (e as Error).message,
-        error_code: "NETWORK_ERROR",
-      };
+      return bookingFailure(e, "CANCEL_TIMEOUT");
     }
   },
 };

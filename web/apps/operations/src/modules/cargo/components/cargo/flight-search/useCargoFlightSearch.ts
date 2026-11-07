@@ -559,6 +559,20 @@ export function useCargoFlightSearch() {
       );
       return;
     }
+    // Con una reserva activa, cambiar de vuelo empieza ANULÁNDOLA con la
+    // aerolínea. Si la tarifa nueva ya caducó, la selección fallaría después y
+    // la expedición se quedaría sin vuelo ni reserva: se para antes.
+    if (flightManager.hasActiveBooking && rate._valid_to) {
+      const raw = String(rate._valid_to);
+      // Solo fecha = válida todo ese día.
+      const exp = Date.parse(
+        /^\d{4}-\d{2}-\d{2}$/.test(raw) ? `${raw}T23:59:59` : raw,
+      );
+      if (Number.isFinite(exp) && exp < Date.now()) {
+        persistError.value = t("cargo.flight.replace_expired_rate");
+        return;
+      }
+    }
     persisting.value = true;
     persistError.value = null;
     persistingMessage.value = flightManager.hasActiveBooking
@@ -571,7 +585,17 @@ export function useCargoFlightSearch() {
         pricingSnapshotId,
       });
       if (!ok) {
-        persistError.value = flightManager.error ?? "Selezione fallita";
+        if (
+          flightManager.errorCode === "PREVIOUS_BOOKING_CANCELLED_SELECT_FAILED"
+        ) {
+          persistError.value = t("cargo.flight.replace_select_failed", {
+            error: flightManager.error ?? "",
+          });
+          // La expedición cambió (reserva anulada, vuelo vaciado): se recarga.
+          await cargoStore.load(Number(cargo.value.id));
+        } else {
+          persistError.value = flightManager.error ?? "Selezione fallita";
+        }
         return;
       }
       toasts.push("success", `Tariffa ${rate.airline_code} assegnata al cargo`);

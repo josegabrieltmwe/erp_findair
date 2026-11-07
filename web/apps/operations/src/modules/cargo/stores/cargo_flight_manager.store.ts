@@ -167,7 +167,8 @@ export const useCargoFlightManagerStore = defineStore(
           // Los segmentos NO se tocan aquí: llegan anidados en `rate_data` y de
           // izarlos se encarga `segmentsFromRate()`, que ya sabe traducir la
           // forma de cada proveedor (KLM y WebCargo la tienen distinta).
-          const inner = (r as { rate_data?: Record<string, unknown> }).rate_data ?? {};
+          const inner =
+            (r as { rate_data?: Record<string, unknown> }).rate_data ?? {};
           const isQuote = Boolean(
             (r as { quote_id?: unknown }).quote_id ?? inner.quote_id,
           );
@@ -233,9 +234,11 @@ export const useCargoFlightManagerStore = defineStore(
       error.value = null;
       errorCode.value = null;
       try {
+        let previousBookingCancelled = false;
         if (hasActiveBooking.value && opts.cancelBookingIfActive) {
           const ok = await internalCancelBooking("Replacing with new flight");
           if (!ok) return false;
+          previousBookingCancelled = true;
         }
 
         // Un solo paso atómico: la API vacía el vuelo anterior y aplica el
@@ -249,6 +252,12 @@ export const useCargoFlightManagerStore = defineStore(
         if (!sel.success) {
           error.value = sel.error ?? "Rate select failed";
           errorCode.value = sel.error_code ?? null;
+          // La reserva anterior YA se anuló con la aerolínea y el vuelo nuevo
+          // no se aplicó: la expedición queda sin vuelo ni reserva. Se dice
+          // tal cual (el llamante recarga la expedición).
+          if (previousBookingCancelled) {
+            errorCode.value = "PREVIOUS_BOOKING_CANCELLED_SELECT_FAILED";
+          }
           return false;
         }
 
@@ -278,7 +287,8 @@ export const useCargoFlightManagerStore = defineStore(
         // caller sent would defeat the point of asking it to confirm.
         currentShortId.value = shortId;
         await hydrate(shipmentId.value, shortId);
-        currentPricingSnapshotId.value = selectionData?.pricing_snapshot_id ?? "";
+        currentPricingSnapshotId.value =
+          selectionData?.pricing_snapshot_id ?? "";
         return true;
       } finally {
         selecting.value = false;
@@ -380,6 +390,18 @@ export const useCargoFlightManagerStore = defineStore(
         if (!r.success || !r.booking) {
           error.value = r.error ?? "Booking failed";
           errorCode.value = r.error_code ?? null;
+          // Resultado DESCONOCIDO (timeout del BFF/RPC): el carrier pudo
+          // reservar. Se relee la reserva del ERP para que la tarjeta muestre
+          // la `pending` (y no ofrezca reservar otra vez a ciegas).
+          if (r.indeterminate) {
+            errorCode.value = r.error_code ?? "BOOKING_TIMEOUT";
+            const fresh = await (
+              isKlm
+                ? klmBookingService.getByShortId(currentShortId.value)
+                : bookingService.getByShortId(currentShortId.value)
+            ).catch(() => null);
+            if (fresh) booking.value = fresh;
+          }
           return null;
         }
         booking.value = r.booking;
@@ -389,8 +411,11 @@ export const useCargoFlightManagerStore = defineStore(
       }
     }
 
-    async function cancelBooking(reason?: string): Promise<boolean> {
-      return internalCancelBooking(reason);
+    async function cancelBooking(
+      reason?: string,
+      opts: { confirmNotBooked?: boolean } = {},
+    ): Promise<boolean> {
+      return internalCancelBooking(reason, opts.confirmNotBooked === true);
     }
 
     /**
@@ -433,7 +458,10 @@ export const useCargoFlightManagerStore = defineStore(
 
     // Shared by selectRate() (when replacing booking) and the explicit
     // cancelBooking() action.
-    async function internalCancelBooking(reason?: string): Promise<boolean> {
+    async function internalCancelBooking(
+      reason?: string,
+      confirmNotBooked = false,
+    ): Promise<boolean> {
       if (!bookingId.value) return true;
       cancellingBooking.value = true;
       try {
@@ -450,10 +478,15 @@ export const useCargoFlightManagerStore = defineStore(
         // ya vacio: el book lo consume antes de reservar.
         const isKlmBooking = providerForBookingId(bookingId.value) === "klm";
         const r = isKlmBooking
-          ? await klmBookingService.cancel(bookingId.value, reason)
+          ? await klmBookingService.cancel(
+              bookingId.value,
+              reason,
+              confirmNotBooked,
+            )
           : await bookingService.cancel({
               bookingId: bookingId.value,
               reason,
+              confirmNotBooked,
             });
         if (!r.success) {
           // Un timeout NO es un fallo: el carrier pudo cancelar sin que
