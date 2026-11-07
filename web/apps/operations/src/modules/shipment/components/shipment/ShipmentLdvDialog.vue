@@ -17,7 +17,7 @@
         border="start"
       >
         <strong class="text-capitalize">{{ e.category }}:</strong>
-        {{ e.message }}
+        {{ issueText(e) }}
       </v-alert>
       <v-alert
         v-for="(w, i) in warnings"
@@ -28,7 +28,7 @@
         border="start"
       >
         <strong class="text-capitalize">{{ w.category }}:</strong>
-        {{ w.message }}
+        {{ issueText(w) }}
       </v-alert>
       <v-alert
         v-if="canProceed && errors.length === 0 && warnings.length === 0"
@@ -65,7 +65,14 @@ import {
 } from "@shipment/services/labels.service";
 import { useToastStore } from "@shipment/stores/toast.store";
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+import { contactFallbackText } from "@shipment/composables/contactFallback";
+
+/** Aviso con código (contacto completado con la sede/partner/TMWE): texto traducido; si no, el del servidor. */
+function issueText(issue: ValidationIssue): string {
+  const i18n = { t: (k: string, n?: Record<string, unknown>) => (n ? t(k, n) : t(k)), te: (k: string) => te(k) };
+  return contactFallbackText(issue.code, issue.params, i18n) ?? issue.message;
+}
 const props = defineProps<{ modelValue: boolean; shipmentId: number | null }>();
 const emit = defineEmits<{ (e: "update:modelValue", v: boolean): void }>();
 

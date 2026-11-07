@@ -134,6 +134,14 @@ export interface CourierLabelResult {
     packages_count: number;
     execution_time_ms?: number;
     fornitore_selected?: boolean;
+    /** Contacto ausente completado con la sede, el partner o TMWE (no bloquea). */
+    contact_fallbacks?: Array<{
+      code: string;
+      side: "origin" | "destination";
+      source: "sede" | "partner" | "tmwe" | "none";
+      source_name?: string;
+      value?: string;
+    }>;
   };
   error?: string | { message: string; code?: string };
 }
