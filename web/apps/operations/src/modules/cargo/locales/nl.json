@@ -1086,6 +1086,16 @@
       "weighed_yes": "Gewogen in magazijn",
       "weighed_no": "Door klant opgegeven gewicht"
     },
+    "legs": {
+      "title_pickup": "Ophaling",
+      "title_delivery": "Levering",
+      "show_pickup": "Ophaling tonen (linkerpaneel)",
+      "show_delivery": "Levering tonen (rechterpaneel)",
+      "hide_pickup": "Ophaling verbergen",
+      "hide_delivery": "Levering verbergen",
+      "none_pickup": "Deze cargo heeft nog geen ophaling",
+      "none_delivery": "Deze cargo heeft nog geen levering"
+    },
     "linked": {
       "title": "Gekoppelde express-zendingen",
       "create_prompt": "Gekoppelde express-zending aanmaken:",

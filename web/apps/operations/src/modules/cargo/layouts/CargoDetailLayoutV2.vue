@@ -39,6 +39,9 @@
              para dos cifras que el modal ya repite. -->
         <CargoQuoteMenu />
 
+        <!-- Tramos del cargo: recogida (panel izquierdo) y entrega (panel derecho), bajo solicitud. -->
+        <CargoLegButtons />
+
         <button
           type="button"
           class="topbar-iconbtn"
@@ -114,6 +117,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import CargoLegButtons from "@cargo/components/cargo/legs/CargoLegButtons.vue";
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";

@@ -38,6 +38,9 @@
            listado filtrado. -->
       <RecordNavigator />
 
+      <!-- Tramos del cargo en paneles laterales: recogida (izquierda) y entrega (derecha). -->
+      <CargoLegPanels />
+
       <!-- Modal stack -->
       <CargoModals />
 
@@ -98,6 +101,7 @@ import CargoAuditDrawer from "@cargo/components/cargo/audit/CargoAuditDrawer.vue
 import CargoModals from "@cargo/components/cargo/modals/CargoModals.vue";
 import PdfLoadingOverlay from "@cargo/components/cargo/PdfLoadingOverlay.vue";
 import RecordNavigator from "@cargo/components/shell/RecordNavigator.vue";
+import CargoLegPanels from "@cargo/components/cargo/legs/CargoLegPanels.vue";
 
 const { t } = useI18n();
 const route = useRoute();

@@ -1086,6 +1086,16 @@
       "weighed_yes": "Pesado en almacén",
       "weighed_no": "Peso declarado por el cliente"
     },
+    "legs": {
+      "title_pickup": "Recogida",
+      "title_delivery": "Entrega",
+      "show_pickup": "Ver la recogida (panel izquierdo)",
+      "show_delivery": "Ver la entrega (panel derecho)",
+      "hide_pickup": "Ocultar la recogida",
+      "hide_delivery": "Ocultar la entrega",
+      "none_pickup": "Este cargo aún no tiene recogida",
+      "none_delivery": "Este cargo aún no tiene entrega"
+    },
     "linked": {
       "title": "Envíos express vinculados",
       "create_prompt": "Crear envío express vinculado:",
