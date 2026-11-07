@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { NAV_SECTION_DEFS, isNavEntryVisible, visibleNavSections } from "@shared/platform/navCatalog";
 import { indicatorGroupsFromCatalog } from "@shared/dashboard/cockpit.store";
 import { HOME_KPI_CATALOG } from "@shared/dashboard/home_kpi_catalog";
+import { ATTENTION_CATEGORIES, ATTENTION_KEYS, pickAttention } from "./attention";
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 const ES = JSON.parse(readFileSync(here("./locales/es.json"), "utf8"));
@@ -49,7 +50,7 @@ describe("catálogo de navegación (menú y home comparten fuente)", () => {
 
   it("la home y las actividades tienen su ruta, y las acciones de crear existen", () => {
     const router = readFileSync(here("../../router/index.ts"), "utf8");
-    for (const name of ["home", "home-activities", "cargo-new", "shipment-new"]) {
+    for (const name of ["home", "home-indicators", "home-activities", "cargo-new", "shipment-new"]) {
       expect(router).toContain(`name: "${name}"`);
     }
   });
@@ -92,9 +93,11 @@ describe("traducciones de la home", () => {
     }
   });
 
-  it("el botón 'Actividades del día' está traducido (no es el mismo texto en todos)", () => {
-    const texts = LOCALES.map((l) => JSON.parse(readFileSync(here(`./locales/${l}.json`), "utf8")).home.landing.activities_button);
-    expect(new Set(texts).size).toBe(LOCALES.length);
+  it("el buscador y los avisos están traducidos (no es el mismo texto en todos)", () => {
+    for (const k of ["search_placeholder", "attention_title", "attention_empty"]) {
+      const texts = LOCALES.map((l) => JSON.parse(readFileSync(here(`./locales/${l}.json`), "utf8")).home.landing[k]);
+      expect(new Set(texts).size, k).toBe(LOCALES.length);
+    }
   });
 
   it("las claves home.home.cta que usa la landing existen en los 5 idiomas", () => {
@@ -104,5 +107,28 @@ describe("traducciones de la home", () => {
         expect(d.home.home.cta[k], `${l}.${k}`).toBeTruthy();
       }
     }
+  });
+});
+
+describe("avisos de la home", () => {
+  it("todas las claves de avisos existen en el catálogo y salen de courier/cargo (sin indicadores pesados)", () => {
+    const byKey = new Map(HOME_KPI_CATALOG.map((k) => [k.key, k]));
+    for (const key of ATTENTION_KEYS) {
+      const kpi = byKey.get(key);
+      expect(kpi, key).toBeDefined();
+      expect(["courier", "cargo"]).toContain(kpi!.countSource);
+      expect(ATTENTION_CATEGORIES).toContain(kpi!.category);
+    }
+  });
+
+  it("solo muestra los que valen más de 0, en orden de prioridad y con tope", () => {
+    const counts: Record<string, number> = { indelay: 0, badaddr: 4, presefornF: 2, presefornW: 1, toqt: 9, toorg: 3 };
+    expect(pickAttention(counts).map((i) => i.kpi.key)).toEqual(["badaddr", "presefornF", "presefornW", "toqt", "toorg"]);
+    expect(pickAttention(counts, 2)).toHaveLength(2);
+    expect(pickAttention({})).toEqual([]);
+  });
+
+  it("el indicador de atención no depende de la ruta de indicadores pesados", () => {
+    expect(ATTENTION_CATEGORIES.some((c) => ["assist", "warehouse", "commercial_leads", "tracking_indicators"].includes(c))).toBe(false);
   });
 });

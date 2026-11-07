@@ -243,7 +243,18 @@
             "back": "Back to home",
             "refresh": "Refresh",
             "new_actions": "Create",
-            "updated_at": "Updated at {time}"
+            "updated_at": "Updated at {time}",
+            "search_placeholder": "Search by reference, customer, AWB…",
+            "search_shipments": "Shipments",
+            "search_cargo": "Cargo",
+            "search_button": "Search",
+            "attention_title": "Needs your attention",
+            "attention_empty": "All caught up",
+            "attention_error": "The alerts could not be loaded.",
+            "all_indicators": "See all indicators"
+        },
+        "indicators": {
+            "title": "Indicators"
         }
     },
     "kpi": {

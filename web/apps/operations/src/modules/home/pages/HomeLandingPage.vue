@@ -1,143 +1,157 @@
 <template>
   <!--
-    Inicio (landing tras el login). Lleva el dashboard de KPIs ("Actividades
-    del día", antes en /home/activities) arriba, y debajo las CTAs y los
-    accesos del menú.
-
-    El fetch de los KPIs (vía HomePage.vue → cockpit store) es no bloqueante:
-    cola propia con máximo 3 peticiones en paralelo, cliente `ofetch` propio
-    (no el `http` compartido de las SPAs) y nada en el router lo espera. Entrar
-    a la app dispara esas peticiones en segundo plano, pero navegar a otra
-    pantalla (buscar una expedición, abrir un cliente…) no espera ni un
-    instante a que lleguen.
-
-    Los accesos salen del MISMO catálogo que el menú lateral (navCatalog) y se
-    filtran con el mismo rol, así que home y menú no pueden divergir.
+    Inicio minimalista: una sola pregunta, «¿qué quieres hacer?».
+      1. Buscador (lleva al listado ya filtrado).
+      2. Dos acciones primarias: nuevo cargo y nueva expedición.
+      3. «Requiere tu atención»: máx. 5 avisos con valor > 0 (2 peticiones).
+    El menú lateral es la navegación; ya no se repite aquí. El cuadro de mando
+    completo vive en /home/indicators y solo se carga si se visita.
+    Todo lo de arriba se pinta sin esperar datos; los avisos llegan después.
   -->
   <div class="home-landing" data-testid="home-landing">
-    <section class="home-landing__dashboard" data-testid="home-activities">
-      <div class="home-landing__dashboard-bar">
-        <h2 class="home-landing__label home-landing__label--inline">{{ t('home.landing.activities_title') }}</h2>
-        <v-spacer />
-        <span v-if="updatedText" class="home-landing__updated" data-testid="home-activities-updated">{{ updatedText }}</span>
+    <section class="home-landing__hero">
+      <h1 class="home-landing__title">{{ t('home.landing.title') }}</h1>
+      <form class="home-landing__search" role="search" data-testid="home-search" @submit.prevent="submitSearch">
+        <v-text-field
+          v-model="term"
+          :placeholder="t('home.landing.search_placeholder')"
+          :aria-label="t('home.landing.search_placeholder')"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="comfortable"
+          hide-details
+          clearable
+          autofocus
+          data-testid="home-search-input"
+        />
+        <v-btn-toggle v-model="target" mandatory density="comfortable" variant="outlined" divided class="home-landing__target">
+          <v-btn value="shipment-list" data-testid="home-search-shipment">{{ t('home.landing.search_shipments') }}</v-btn>
+          <v-btn value="cargo-list" data-testid="home-search-cargo">{{ t('home.landing.search_cargo') }}</v-btn>
+        </v-btn-toggle>
+        <v-btn type="submit" color="primary" data-testid="home-search-submit">{{ t('home.landing.search_button') }}</v-btn>
+      </form>
+      <div class="home-landing__create">
         <v-btn
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          data-testid="home-activities-refresh"
-          @click="dashboard?.reload()"
-        >
-          {{ t('home.landing.refresh') }}
-        </v-btn>
-      </div>
-      <HomePage ref="dashboard" :categories="categories" :hide-zero="true" />
-    </section>
-
-    <section class="home-landing__section" data-testid="home-create">
-      <h2 class="home-landing__label">{{ t('home.landing.new_actions') }}</h2>
-      <div class="home-landing__grid">
-        <v-card
           v-for="cta in createActions"
           :key="cta.routeName"
-          class="home-card"
-          variant="outlined"
+          color="primary"
+          variant="flat"
+          :prepend-icon="cta.icon"
           :to="{ name: cta.routeName }"
           :data-testid="`home-cta-${cta.routeName}`"
         >
-          <v-icon :icon="cta.icon" size="26" class="home-card__icon" />
-          <div class="home-card__text">
-            <span class="home-card__title">{{ t(cta.titleKey) }}</span>
-            <span class="home-card__sub">{{ t(cta.subKey) }}</span>
-          </div>
-        </v-card>
+          {{ t(cta.titleKey) }}
+        </v-btn>
       </div>
     </section>
 
-    <section v-for="section in sections" :key="section.sectionKey" class="home-landing__section">
-      <h2 class="home-landing__label">{{ t(`platform.opsnav.sections.${section.sectionKey}`) }}</h2>
-      <div class="home-landing__grid">
-        <v-card
-          v-for="it in section.items"
-          :key="it.key"
-          class="home-card"
-          variant="outlined"
-          v-bind="it.routeName ? { to: { name: it.routeName } } : { href: it.href }"
-          :data-testid="`home-link-${it.key}`"
-        >
-          <v-icon :icon="it.icon" size="22" class="home-card__icon" />
-          <div class="home-card__text">
-            <span class="home-card__title">{{ t(`platform.opsnav.${it.key}`) }}</span>
-          </div>
-        </v-card>
-      </div>
+    <section class="home-landing__attention" data-testid="home-attention" :aria-busy="loading">
+      <h2 class="home-landing__label">{{ t('home.landing.attention_title') }}</h2>
+
+      <ul v-if="loading" class="home-attention__list" data-testid="home-attention-loading">
+        <li v-for="n in 3" :key="n" class="home-attention__skeleton" />
+      </ul>
+
+      <p v-else-if="failed" class="home-landing__muted" data-testid="home-attention-error">
+        {{ t('home.landing.attention_error') }}
+        <v-btn variant="text" size="small" @click="load(true)">{{ t('common.retry') }}</v-btn>
+      </p>
+
+      <p v-else-if="items.length === 0" class="home-landing__muted" data-testid="home-attention-empty">
+        <v-icon icon="mdi-check-circle-outline" size="18" color="success" class="mr-1" />
+        {{ t('home.landing.attention_empty') }}
+      </p>
+
+      <ul v-else class="home-attention__list">
+        <li v-for="it in items" :key="it.kpi.key">
+          <button
+            type="button"
+            class="home-attention__row"
+            :class="`home-attention__row--${it.kpi.variant ?? 'default'}`"
+            :data-testid="`home-attention-${it.kpi.key}`"
+            @click="open(it)"
+          >
+            <span class="home-attention__count">{{ it.count }}</span>
+            <span class="home-attention__label">{{ kpiLabel(t, it.kpi) }}</span>
+            <v-icon icon="mdi-arrow-right" size="18" />
+          </button>
+        </li>
+      </ul>
+
+      <router-link :to="{ name: 'home-indicators' }" class="home-landing__more" data-testid="home-indicators-link">
+        {{ t('home.landing.all_indicators') }}
+      </router-link>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import HomePage from '@shared/dashboard/HomePage.vue';
-import type { KpiCategory } from '@shared/dashboard/home_kpi_catalog';
-import { NAV_SECTION_DEFS, visibleNavSections } from '@shared/platform/navCatalog';
-import { useNavRole } from '@shared/platform/useNavRole';
+import { storeToRefs } from 'pinia';
+import { useCockpitStore } from '@shared/dashboard/cockpit.store';
+import { kpiLabel } from '@shared/dashboard/home_kpi_catalog';
+import { ATTENTION_CATEGORIES, ATTENTION_KEYS, pickAttention, type AttentionItem } from '../attention';
 
-const { t, locale } = useI18n();
-const { isAdmin, load } = useNavRole();
-const dashboard = ref<InstanceType<typeof HomePage> | null>(null);
+const { t } = useI18n();
+const router = useRouter();
+const BASE_PATH = '/bff/v1';
 
-// Mismos indicadores que antes pedía /home/activities.
-const categories: KpiCategory[] = [
-  'cargo_lifecycle',
-  'cargo_in_transit',
-  'courier_ops_in',
-  'courier_ops_out',
-  'assist',
-  'warehouse',
-  'commercial_leads',
-  'tracking_indicators',
-];
+const term = ref('');
+const target = ref<'shipment-list' | 'cargo-list'>('shipment-list');
 
-// "Actualizado a las HH:MM": hora del dato más antiguo de la carga (el servidor
-// sirve de su caché; "Actualizar" fuerza el recálculo).
-const updatedText = computed(() => {
-  const ts = dashboard.value?.updatedAt;
-  if (!ts) return '';
-  const time = new Date(ts).toLocaleTimeString(String(locale.value), { hour: '2-digit', minute: '2-digit' });
-  return t('home.landing.updated_at', { time });
-});
-
-// Crear algo es lo que más se hace desde el inicio. Claves ya traducidas
-// (home.home.cta.*) en los 5 idiomas del módulo.
+// Crear algo es lo que más se hace desde el inicio.
 const createActions = [
-  { routeName: 'cargo-new', icon: 'mdi-airplane', titleKey: 'home.home.cta.new_cargo', subKey: 'home.home.cta.new_cargo_sub' },
-  { routeName: 'shipment-new', icon: 'mdi-truck-fast-outline', titleKey: 'home.home.cta.new_shipment', subKey: 'home.home.cta.new_shipment_sub' },
+  { routeName: 'cargo-new', icon: 'mdi-airplane', titleKey: 'home.home.cta.new_cargo' },
+  { routeName: 'shipment-new', icon: 'mdi-truck-fast-outline', titleKey: 'home.home.cta.new_shipment' },
 ];
 
-// El menú lateral ya tiene "Inicio": aquí sobra. El resto, mismo orden y rol.
-const sections = computed(() =>
-  visibleNavSections(NAV_SECTION_DEFS, isAdmin.value)
-    .map((s) => ({ ...s, items: s.items.filter((it) => it.key !== 'home') }))
-    .filter((s) => s.items.length > 0),
-);
+function submitSearch(): void {
+  const search = (term.value ?? '').trim();
+  void router.push({ name: target.value, query: search ? { search } : {} });
+}
 
-onMounted(() => {
-  void load();
-});
+// ── Avisos: store del cockpit (stale-while-revalidate, no bloquea el router) ──
+const cockpit = useCockpitStore();
+const { counts, pending, errors } = storeToRefs(cockpit);
+
+const hasAllData = computed(() => ATTENTION_KEYS.every((k) => counts.value[k] !== undefined));
+const loading = computed(() => !hasAllData.value && pending.value.size > 0);
+const failed = computed(() => !hasAllData.value && !loading.value && Object.keys(errors.value).length > 0);
+const items = computed<AttentionItem[]>(() => pickAttention(counts.value));
+
+function load(force = false): void {
+  if (force) cockpit.forceRefresh(ATTENTION_CATEGORIES, BASE_PATH);
+  else cockpit.ensureCategories(ATTENTION_CATEGORIES, BASE_PATH);
+}
+
+function open(it: AttentionItem): void {
+  void router.push({ name: it.kpi.link.page, query: it.kpi.link.query });
+}
+
+onMounted(() => load());
 </script>
 
 <style scoped lang="scss">
-.home-landing { display: flex; flex-direction: column; gap: 22px; width: 100%; max-width: 1180px; margin: 0 auto; padding: 24px 20px 64px; }
-.home-landing__dashboard { display: flex; flex-direction: column; gap: 12px; }
-.home-landing__dashboard-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.home-landing__updated { font-size: 0.8rem; opacity: 0.7; }
-.home-landing__section { display: flex; flex-direction: column; gap: 10px; }
+.home-landing { display: flex; flex-direction: column; gap: 32px; width: 100%; max-width: 760px; margin: 0 auto; padding: 40px 20px 64px; }
+.home-landing__hero { display: flex; flex-direction: column; gap: 16px; }
+.home-landing__title { font-size: 1.6rem; font-weight: 600; margin: 0; }
+.home-landing__search { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.home-landing__search :deep(.v-text-field) { flex: 1 1 280px; }
+.home-landing__create { display: flex; flex-wrap: wrap; gap: 8px; }
+.home-landing__attention { display: flex; flex-direction: column; gap: 10px; }
 .home-landing__label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; margin: 0; }
-.home-landing__label--inline { font-size: 1rem; text-transform: none; letter-spacing: normal; opacity: 1; }
-.home-landing__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.home-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; text-decoration: none; }
-.home-card__icon { flex: none; }
-.home-card__text { display: flex; flex-direction: column; min-width: 0; }
-.home-card__title { font-weight: 600; }
-.home-card__sub { font-size: 0.8rem; opacity: 0.7; }
+.home-landing__muted { margin: 0; opacity: 0.75; display: flex; align-items: center; }
+.home-landing__more { align-self: flex-start; font-size: 0.85rem; }
+.home-attention__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.home-attention__skeleton { height: 44px; border-radius: 6px; background: rgba(var(--v-theme-on-surface), 0.06); }
+.home-attention__row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; border: 1px solid rgba(var(--v-theme-on-surface), 0.14); border-left-width: 4px; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; text-align: left; font: inherit; }
+.home-attention__row:hover { background: rgba(var(--v-theme-on-surface), 0.04); }
+.home-attention__row--error { border-left-color: rgb(var(--v-theme-error)); }
+.home-attention__row--warning { border-left-color: rgb(var(--v-theme-warning)); }
+.home-attention__row--default,
+.home-attention__row--success { border-left-color: rgb(var(--v-theme-primary)); }
+.home-attention__count { font-weight: 700; min-width: 2ch; }
+.home-attention__label { flex: 1; }
 </style>

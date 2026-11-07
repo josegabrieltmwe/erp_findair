@@ -243,7 +243,18 @@
             "back": "Torna alla home",
             "refresh": "Aggiorna",
             "new_actions": "Crea",
-            "updated_at": "Aggiornato alle {time}"
+            "updated_at": "Aggiornato alle {time}",
+            "search_placeholder": "Cerca per riferimento, cliente, AWB…",
+            "search_shipments": "Spedizioni",
+            "search_cargo": "Cargo",
+            "search_button": "Cerca",
+            "attention_title": "Richiede la tua attenzione",
+            "attention_empty": "Tutto in ordine",
+            "attention_error": "Impossibile caricare gli avvisi.",
+            "all_indicators": "Vedi tutti gli indicatori"
+        },
+        "indicators": {
+            "title": "Indicatori"
         }
     },
     "kpi": {
