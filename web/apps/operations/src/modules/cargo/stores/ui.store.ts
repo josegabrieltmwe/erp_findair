@@ -77,6 +77,8 @@ export type ModalName =
   | "pricing_breakdown"
   | "flight_legs_manual"
   | "currency_day"
+  | "documents"
+  | "audit"
   | "post_invoice"
   | "dgr"
   | null;
@@ -142,12 +144,15 @@ export const useUiStore = defineStore("cargo_ui", () => {
 
   // Drawers (mutually exclusive when on the v2 layout).
   const sidebarOpen = ref(false);
-  const docOpen = ref(false);
   const chatOpen = ref(false);
-  const auditOpen = ref(false);
 
   // Single-modal stack — only one open at a time per the mockup design.
   const activeModal = ref<ModalName>(null);
+
+  // Documentos y auditoría son MODALES (antes paneles laterales que competían con los paneles de los tramos del
+  // cargo): su estado sale de la pila de modales. El chat sigue siendo un panel (tiempo real).
+  const docOpen = computed(() => activeModal.value === "documents");
+  const auditOpen = computed(() => activeModal.value === "audit");
 
   // Active detail tab ('overview' | 'flights'). Shared here so overview cards
   // can deep-link into the "Voli & MAWB" tab (where the MAWB form + HAWB list
@@ -237,35 +242,32 @@ export const useUiStore = defineStore("cargo_ui", () => {
 
   function openSidebar(): void {
     sidebarOpen.value = true;
-    docOpen.value = false;
     chatOpen.value = false;
+    if (docOpen.value || auditOpen.value) activeModal.value = null;
   }
 
   function openDoc(): void {
-    docOpen.value = true;
     sidebarOpen.value = false;
     chatOpen.value = false;
+    activeModal.value = "documents";
   }
 
   function openChat(): void {
     chatOpen.value = true;
     sidebarOpen.value = false;
-    docOpen.value = false;
-    auditOpen.value = false;
+    if (docOpen.value || auditOpen.value) activeModal.value = null;
   }
 
   function openAudit(): void {
-    auditOpen.value = true;
     sidebarOpen.value = false;
-    docOpen.value = false;
     chatOpen.value = false;
+    activeModal.value = "audit";
   }
 
   function closeAllDrawers(): void {
     sidebarOpen.value = false;
-    docOpen.value = false;
     chatOpen.value = false;
-    auditOpen.value = false;
+    if (docOpen.value || auditOpen.value) activeModal.value = null;
   }
 
   watch(splitterPct, () => {

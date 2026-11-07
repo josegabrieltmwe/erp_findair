@@ -1882,6 +1882,8 @@
     "audit": {
       "title": "Audittrail",
       "filter_field": "Filteren op veld",
+      "no_matches": "Geen items komen overeen met het filter.",
+      "no_changes": "Er zijn geen wijzigingen vastgelegd voor deze cargo.",
       "empty": "Geen auditregistraties"
     },
     "mailag": {
