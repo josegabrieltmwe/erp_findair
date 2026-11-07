@@ -1,42 +1,21 @@
 <template>
-  <v-navigation-drawer v-model="open" location="right" width="520" temporary>
-    <v-toolbar density="compact" color="surface">
-      <v-icon icon="mdi-history" class="ms-3 me-2" />
-      <v-toolbar-title>{{ t("cargo.audit.title") }}</v-toolbar-title>
-      <v-spacer />
-      <v-btn
-        icon="mdi-refresh"
-        variant="text"
-        size="small"
-        density="comfortable"
-        :title="t('common.refresh')"
-        :loading="loading"
-        @click="load"
-      />
-      <v-btn
-        icon="mdi-close"
-        variant="text"
-        size="small"
-        density="comfortable"
-        @click="ui.closeAllDrawers()"
-      />
-    </v-toolbar>
-    <v-divider />
-
-    <!-- Filters -->
-    <div class="pa-3">
-      <v-text-field
-        v-model="filterCampo"
-        :label="t('cargo.audit.filter_field')"
-        density="compact"
-        variant="outlined"
-        hide-details
-        prepend-inner-icon="mdi-filter-outline"
-        clearable
-        class="mb-2"
-      />
-    </div>
-    <v-divider />
+  <!-- Historial de cambios del cargo en un MODAL (antes un panel lateral de 520 px). -->
+  <ModalWrapper
+    name="audit"
+    :title="t('cargo.audit.title')"
+    icon="mdi-history"
+    :max-width="760"
+  >
+    <v-text-field
+      v-model="filterCampo"
+      :label="t('cargo.audit.filter_field')"
+      density="compact"
+      variant="outlined"
+      hide-details
+      prepend-inner-icon="mdi-filter-outline"
+      clearable
+      class="mb-2"
+    />
 
     <v-skeleton-loader v-if="loading" type="list-item-two-line@8" />
 
@@ -46,8 +25,8 @@
       :title="t('cargo.audit.empty')"
       :text="
         entries.length
-          ? 'No matches for the current filter.'
-          : 'No changes have been logged for this cargo.'
+          ? t('cargo.audit.no_matches')
+          : t('cargo.audit.no_changes')
       "
       density="compact"
     />
@@ -76,7 +55,24 @@
         </v-list-item-subtitle>
       </v-list-item>
     </v-list>
-  </v-navigation-drawer>
+
+    <template #actions>
+      <v-btn
+        prepend-icon="mdi-refresh"
+        variant="text"
+        :loading="loading"
+        @click="load"
+        >{{ t("common.refresh") }}</v-btn
+      >
+      <v-spacer />
+      <v-btn
+        variant="text"
+        data-testid="audit-close"
+        @click="ui.closeModal()"
+        >{{ t("common.close") }}</v-btn
+      >
+    </template>
+  </ModalWrapper>
 </template>
 
 <script setup lang="ts">
@@ -90,6 +86,7 @@ import {
   cargoAuditService,
   type AuditEntry,
 } from "@cargo/services/cargo_pricing.service";
+import ModalWrapper from "./ModalWrapper.vue";
 
 const { t } = useI18n();
 const ui = useUiStore();
@@ -99,13 +96,6 @@ const { id } = storeToRefs(cargoStore);
 const entries = ref<AuditEntry[]>([]);
 const loading = ref(false);
 const filterCampo = ref("");
-
-const open = computed({
-  get: () => ui.auditOpen,
-  set: (v) => {
-    if (!v) ui.closeAllDrawers();
-  },
-});
 
 const filtered = computed(() => {
   const q = filterCampo.value?.trim().toLowerCase() ?? "";
@@ -129,8 +119,8 @@ async function load(): Promise<void> {
   }
 }
 
-function tableLabel(t: string): string {
-  return t.replace("spedizioni_", "").replace("_", " ");
+function tableLabel(name: string): string {
+  return name.replace("spedizioni_", "").replace("_", " ");
 }
 
 function truncate(v: string | null): string {
@@ -139,7 +129,7 @@ function truncate(v: string | null): string {
   return s.length > 48 ? `${s.slice(0, 45)}…` : s;
 }
 
-// Lazy-load every time the drawer opens to surface fresh activity.
+// Se relee cada vez que se abre, para mostrar la actividad reciente.
 watch(
   () => ui.auditOpen,
   (v) => {

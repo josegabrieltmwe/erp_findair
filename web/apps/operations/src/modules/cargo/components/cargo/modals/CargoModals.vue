@@ -33,6 +33,8 @@
   <FlightLegsManualModal />
   <CurrencyDayModal />
   <DgrDeclarationDialog />
+  <DocumentsModal />
+  <AuditModal />
 </template>
 
 <script setup lang="ts">
@@ -67,4 +69,6 @@ import PricingBreakdownModal from "../pricing/PricingBreakdownModal.vue";
 import FlightLegsManualModal from "../flight-manager/FlightLegsManualModal.vue";
 import CurrencyDayModal from "./CurrencyDayModal.vue";
 import DgrDeclarationDialog from "../dgr/DgrDeclarationDialog.vue";
+import DocumentsModal from "./DocumentsModal.vue";
+import AuditModal from "./AuditModal.vue";
 </script>

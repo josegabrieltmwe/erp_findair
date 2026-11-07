@@ -13,6 +13,20 @@ Desde la ficha de un cargo se opera cada tramo (la expedición de recogida y la 
 - **Carga diferida:** el detalle de expedición va en un chunk aparte y solo se descarga al abrir un tramo.
 - Al ocultar un panel se relee la cabecera del cargo (`cargo.store.refreshQuiet`, sin pantalla de carga) porque operar el tramo puede cambiar importes.
 
+## Reparto de paneles y modales en la ficha de cargo
+
+Los paneles laterales quedan reservados para los tramos; lo demás es modal para no competir por el mismo lado:
+
+| Elemento | Antes | Ahora |
+|---|---|---|
+| Recogida / Entrega | — | panel izquierdo / derecho (`ShipmentDetailDrawer`) |
+| CRM (expedición y cargo) | panel `v-navigation-drawer` derecho de 720 px | **modal** `CrmContextDialog` (880 px) |
+| Documentos | `<aside>` propio de 440 px con pestaña fija en el borde y fondo oscuro | **modal** `DocumentsModal` (sin pestaña fija; el botón de la barra lo abre) |
+| Auditoría | `v-navigation-drawer` derecho de 520 px | **modal** `AuditModal` |
+| Chat | panel propio a la derecha | **sigue siendo panel** (tiempo real); se cierra al abrir un tramo y al revés |
+
+Documentos y auditoría usan la pila de modales de la ficha (`ui.store`, un solo modal a la vez); `docOpen` y `auditOpen` salen de `activeModal`.
+
 ## Limitación conocida
 
 Los dos paneles comparten el `shipment.store` de la aplicación, que guarda una sola expedición a la vez. **Solo uno puede estar abierto**: abrir la entrega cierra la recogida y al revés (`leg_panels.store`). Mostrar los dos a la vez exigiría un store de expedición por panel (o aislar cada panel en su propio contexto), un cambio mayor que no se hizo.

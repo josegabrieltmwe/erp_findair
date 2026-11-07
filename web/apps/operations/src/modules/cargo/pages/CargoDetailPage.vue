@@ -28,10 +28,8 @@
         </template>
       </CargoDetailLayoutV2>
 
-      <!-- Off-canvas drawers -->
-      <CargoDocumentsDrawer />
+      <!-- Panel lateral del chat (documentos, auditoría y CRM son modales) -->
       <CargoChatDrawer ref="chatDrawerRef" />
-      <CargoAuditDrawer />
 
       <!-- Barra de navegación entre registros (prev/next + contador + atajos),
            unificada con shipment_express. Sólo se muestra si se llegó desde un
@@ -95,9 +93,7 @@ import CargoOverviewV2 from "@cargo/components/cargo/overview/CargoOverviewV2.vu
 // Flight legs, MAWB, HAWB list and consolidation are no longer embedded as a
 // page tab — they are edited from the overview via modals (FlightsModal,
 // MawbModal, HawbListModal, ConsolidationModal).
-import CargoDocumentsDrawer from "@cargo/components/cargo/drawers/CargoDocumentsDrawer.vue";
 import CargoChatDrawer from "@cargo/components/cargo/drawers/CargoChatDrawer.vue";
-import CargoAuditDrawer from "@cargo/components/cargo/audit/CargoAuditDrawer.vue";
 import CargoModals from "@cargo/components/cargo/modals/CargoModals.vue";
 import PdfLoadingOverlay from "@cargo/components/cargo/PdfLoadingOverlay.vue";
 import RecordNavigator from "@cargo/components/shell/RecordNavigator.vue";
