@@ -101,6 +101,8 @@
       "CARGO_HAS_AWB": "De cargo heeft een uitgegeven AWB: alleen TMWE-personeel kan hem annuleren, met uitdrukkelijke bevestiging.",
       "COURIER_PACKAGE_OVERWEIGHT": "Collo {package} overschrijdt de limiet van {limit} {unit} per collo van {courier}.",
       "CARGO_LEG_ORIGIN_REQUIRED": "Dit cargotraject vertrekt vanaf de terminal: je kunt het ophaaladres wijzigen, maar niet verwijderen of het kantoor van de klant gebruiken.",
+      "CANCEL_BLOCKED_BY_PICKUP": "De koerier heeft de annulering van de ophaling niet aanvaard, dus de zending is niet geannuleerd.",
+      "CANCEL_FAILED_PICKUP_CANCELLED": "De ophaling is geannuleerd, maar de koerier heeft de zending niet geannuleerd.",
       "COURIER_INVALID_WEIGHT": "{courier} heeft voor elk collo een geldig gewicht nodig.",
       "COURIER_INVALID_DIMENSIONS": "{courier} heeft voor elk collo geldige afmetingen nodig.",
       "CONTACT_FALLBACK_SIDE_destination": "ontvanger",

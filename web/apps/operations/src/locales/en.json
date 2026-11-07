@@ -101,6 +101,8 @@
       "CARGO_HAS_AWB": "The cargo has an issued AWB: only TMWE staff can cancel it, with explicit confirmation.",
       "COURIER_PACKAGE_OVERWEIGHT": "Package {package} exceeds the {limit} {unit} per-package limit of {courier}.",
       "CARGO_LEG_ORIGIN_REQUIRED": "This cargo leg starts at the terminal: you can change the pickup address, but not remove it or use the customer's office.",
+      "CANCEL_BLOCKED_BY_PICKUP": "The courier did not accept the pickup cancellation, so the shipment was not cancelled.",
+      "CANCEL_FAILED_PICKUP_CANCELLED": "The pickup was cancelled, but the courier did not cancel the shipment.",
       "COURIER_INVALID_WEIGHT": "{courier} needs a valid weight for every package.",
       "COURIER_INVALID_DIMENSIONS": "{courier} needs valid dimensions for every package.",
       "CONTACT_FALLBACK_SIDE_destination": "recipient",

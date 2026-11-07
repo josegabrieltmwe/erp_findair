@@ -513,7 +513,11 @@ import GenerateAwbDialog from "@shipment/components/shipment/overview/dialogs/Ge
 import { useAwbGeneration } from "@shipment/composables/useAwbGeneration";
 import { labelsService } from "@shipment/services/labels.service";
 import { shipmentService } from "@shipment/services/shipment.service";
-import { localizedErrorText } from "@shared/utils/apiError";
+import {
+  apiErrorCode,
+  apiErrorDetails,
+  localizedErrorText,
+} from "@shared/utils/apiError";
 
 const { t, te } = useI18n();
 const store = useShipmentStore();
@@ -871,18 +875,54 @@ const cancelling = ref(false);
 async function cancelAtCourier(): Promise<void> {
   const sid = Number(shipment.value?.id ?? id.value ?? 0);
   if (!sid || cancelling.value) return;
-  if (!confirm(t("shipment.awb.cancel_courier_confirm", { awb: awb.value }))) return;
+  if (!confirm(t("shipment.awb.cancel_courier_confirm", { awb: awb.value })))
+    return;
   cancelling.value = true;
   try {
     const r = await shipmentService.cancel(sid);
     if (r.success) {
-      toasts.push("success", t("shipment.detail.toast_cancelled"));
+      const status = r.data?.status ?? "cancelled";
+      const pickup = r.data?.pickup ?? "none";
+      if (status === "local_only") {
+        // El courier no permite anular el envio por API (DHL, MyTNT, TNT): AWB archivado solo en el ERP.
+        toasts.push(
+          "warning",
+          t(
+            pickup === "cancelled"
+              ? "shipment.awb.cancel_local_only_pickup"
+              : "shipment.awb.cancel_local_only",
+          ),
+        );
+      } else {
+        toasts.push(
+          "success",
+          t(
+            pickup === "cancelled"
+              ? "shipment.awb.cancel_ok_with_pickup"
+              : "shipment.detail.toast_cancelled",
+          ),
+        );
+      }
+      if (pickup === "not_supported") {
+        toasts.push("info", t("shipment.awb.cancel_pickup_not_supported"));
+      }
       await store.load(sid);
     } else {
       toasts.push("error", r.error ?? t("shipment.detail.toast_cancel_failed"));
     }
   } catch (e) {
-    toasts.push("error", localizedErrorText(e, { t, te }, t("shipment.detail.toast_cancel_failed")));
+    // Codigos estables del API (errors.api.*) + el motivo del courier, si lo hay.
+    const code = apiErrorCode(e);
+    const reason = String(apiErrorDetails(e).courier_message ?? "");
+    let text = localizedErrorText(
+      e,
+      { t, te },
+      t("shipment.detail.toast_cancel_failed"),
+    );
+    if (code && te(`errors.api.${code}`) && reason) text += ` (${reason})`;
+    toasts.push("error", text);
+    // Si la recogida se anulo aunque el envio no, la ficha ha cambiado.
+    if (code === "CANCEL_FAILED_PICKUP_CANCELLED") await store.load(sid);
   } finally {
     cancelling.value = false;
   }

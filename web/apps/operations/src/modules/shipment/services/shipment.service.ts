@@ -50,7 +50,19 @@ export const shipmentService = {
     });
   },
 
-  cancel(id: number): Promise<{ success: boolean; error?: string }> {
+  /**
+   * Anula en el courier recogida y envio (api_shipment_cancel). data.status: 'cancelled' | 'local_only' (el courier
+   * no permite anular el envio: AWB archivado solo en el ERP); data.pickup: 'none' | 'cancelled' | 'not_supported'.
+   * Los fallos llegan como 422 con codigo CANCEL_BLOCKED_BY_PICKUP | CANCEL_FAILED_PICKUP_CANCELLED | CANCEL_FAILED.
+   */
+  cancel(id: number): Promise<{
+    success: boolean;
+    error?: string;
+    data?: {
+      status?: "cancelled" | "local_only";
+      pickup?: "none" | "cancelled" | "not_supported";
+    };
+  }> {
     return http("/api_shipment_cancel", {
       method: "POST",
       body: { shipment_id: id },

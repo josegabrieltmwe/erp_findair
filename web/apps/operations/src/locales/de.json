@@ -101,6 +101,8 @@
       "CARGO_HAS_AWB": "Der Cargo hat ein ausgestelltes AWB: nur TMWE-Personal kann ihn mit ausdrücklicher Bestätigung stornieren.",
       "COURIER_PACKAGE_OVERWEIGHT": "Packstück {package} überschreitet das Limit von {limit} {unit} pro Packstück bei {courier}.",
       "CARGO_LEG_ORIGIN_REQUIRED": "Dieser Cargo-Abschnitt beginnt am Terminal: Die Abholadresse kann geändert, aber nicht entfernt oder durch den Kundensitz ersetzt werden.",
+      "CANCEL_BLOCKED_BY_PICKUP": "Der Kurier hat die Stornierung der Abholung nicht angenommen, daher wurde die Sendung nicht storniert.",
+      "CANCEL_FAILED_PICKUP_CANCELLED": "Die Abholung wurde storniert, aber der Kurier hat die Sendung nicht storniert.",
       "COURIER_INVALID_WEIGHT": "{courier} benötigt für jedes Packstück ein gültiges Gewicht.",
       "COURIER_INVALID_DIMENSIONS": "{courier} benötigt für jedes Packstück gültige Maße.",
       "CONTACT_FALLBACK_SIDE_destination": "Empfängers",
