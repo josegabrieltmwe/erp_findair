@@ -1974,7 +1974,8 @@
       "owner": "Proprietario",
       "created_at": "Creato il",
       "reassign": "Riassegna proprietario",
-      "no_users": "Nessun utente disponibile"
+      "no_users": "Nessun utente disponibile",
+      "unknown": "Utente non disponibile"
     },
     "resetflights": {
       "title": "Reset voli",

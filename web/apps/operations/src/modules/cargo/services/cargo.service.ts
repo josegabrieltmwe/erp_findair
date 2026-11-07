@@ -82,6 +82,15 @@ export const cargoService = {
 };
 
 /** One assignable owner user (partner-scoped). */
+/** Rótulo legible del propietario actual (nombre; empresa si no es de la misma empresa). */
+export interface OwnerInfo {
+  id: number;
+  label: string;
+  company: string;
+  /** true = `label` es el nombre de la persona; false = es la empresa. */
+  exact: boolean;
+}
+
 export interface OwnerOption {
   id: number;
   name: string;
@@ -98,14 +107,15 @@ export interface OwnerOption {
 export const ownerService = {
   async options(
     cargo_id: number,
-  ): Promise<{ options: OwnerOption[]; current_owner: number }> {
+  ): Promise<{ options: OwnerOption[]; current_owner: number; current_owner_info: OwnerInfo | null }> {
     const res = await http<{
       success: boolean;
-      data?: { options: OwnerOption[]; current_owner: number };
+      data?: { options: OwnerOption[]; current_owner: number; current_owner_info?: OwnerInfo | null };
     }>("/api_cargo_owner_options", { query: { cargo_id } });
     return {
       options: res?.data?.options ?? [],
       current_owner: Number(res?.data?.current_owner ?? 0),
+      current_owner_info: res?.data?.current_owner_info ?? null,
     };
   },
 };
