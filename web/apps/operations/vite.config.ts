@@ -4,6 +4,46 @@ import vuetify from "vite-plugin-vuetify";
 import vueI18n from "@intlify/unplugin-vue-i18n/vite";
 import { fileURLToPath, URL } from "node:url";
 import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+
+/**
+ * Componentes de Vuetify que vite-plugin-vuetify importa uno a uno
+ * (`vuetify/components/VBtn`, ...). En `vite dev`, si no se declaran, Vite los
+ * descubre al navegar, re-optimiza las dependencias y fuerza una recarga: en ese
+ * momento las peticiones a los chunks viejos fallan (504 "Outdated Optimize
+ * Dep") y el navegador muestra decenas de .js/.ts en error. Declarandolos todos,
+ * la optimizacion se hace una sola vez al arrancar.
+ */
+function vuetifyOptimizeDeps(): string[] {
+  try {
+    const dir = resolve(__dirname, "node_modules/vuetify/lib/components");
+    // Algun componente publicado viene roto (p. ej. VOverflowBtn importa un
+    // .css que el paquete no incluye) y tumbaria la optimizacion entera: se
+    // descartan los que importan un CSS inexistente.
+    const brokenCss = (name: string): boolean => {
+      try {
+        return readdirSync(resolve(dir, name))
+          .filter((f) => f.endsWith(".js"))
+          .some((f) =>
+            [
+              ...readFileSync(resolve(dir, name, f), "utf8").matchAll(
+                /import\s+["'](\.\/[^"']+\.css)["']/g,
+              ),
+            ].some((m) => !existsSync(resolve(dir, name, m[1]))),
+          );
+      } catch {
+        return false;
+      }
+    };
+    return readdirSync(dir, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && /^V[A-Z]/.test(d.name))
+      .filter((d) => !brokenCss(d.name))
+      .map((d) => `vuetify/components/${d.name}`)
+      .concat("vuetify/directives");
+  } catch {
+    return [];
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -71,7 +111,18 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    // Solo afecta a `vite dev` (el build no usa optimizeDeps).
+    optimizeDeps: {
+      include: vuetifyOptimizeDeps(),
+    },
+
     server: {
+      // Precalienta todo el codigo de la app al arrancar: Vite descubre ahi
+      // cualquier dependencia que falte por optimizar, antes de que entre
+      // ningun navegador, en vez de hacerlo a mitad de una carga.
+      warmup: {
+        clientFiles: ["./src/main.ts", "./src/**/*.vue"],
+      },
       // Recarga en caliente detras de Apache (sandbox.erp-dev.findair.it):
       // con VITE_DEV_PUBLIC_HOST definido, Vite escucha solo en 127.0.0.1,
       // acepta ese Host y el cliente HMR abre el websocket por wss://<host>:443
