@@ -692,3 +692,26 @@ routes:
     upstream:
       action: api_customers_without_margin
     limits: { body: 64k, timeout: 60 }
+
+  # Fichero de la etiqueta del courier (y documentos auxiliares: factura comercial...) de una expedicion. La SPA lo
+  # pide por aqui y no por la URL absoluta del API que devuelve get_label_courier_shipment: desde el ERP el navegador
+  # no lleva sesion ni token al host del API (401 public_route_unauthenticated_call, 1001084298, 2026-11-07). El API
+  # comprueba el acceso a la expedicion (titular del cliente, compartida, cliente, cuenta courier del partner).
+  # format=image|pdf convierte con el worker image_converter: timeout holgado.
+  - id: get.get_label_file
+    method: GET
+    path: /get_label_file
+    upstream:
+      action: get_label_file
+      forward_query: [shipment_id, package_number, format]
+    response: binary
+    limits: { timeout: 60 }
+
+  - id: get.get_label_auxiliar_file
+    method: GET
+    path: /get_label_auxiliar_file
+    upstream:
+      action: get_label_auxiliar_file
+      forward_query: [shipment_id, package_number, auxiliar_number, format, control]
+    response: binary
+    limits: { timeout: 60 }

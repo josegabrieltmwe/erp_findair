@@ -6,6 +6,31 @@ import {
   type CourierLabelItem,
 } from "@shipment/services/labels.service";
 
+/** Acciones de fichero de etiqueta que el BFF sirve como binario (bff/config/routes.bff.yaml). */
+const LABEL_FILE_ACTIONS = ["get_label_file", "get_label_auxiliar_file"] as const;
+
+/**
+ * URL de un fichero de etiqueta a traves del BFF. get_label_courier_shipment devuelve la URL absoluta del API
+ * (https://sandbox.api.../erp/tmwe_json/get_label_file?shipment_id=..&package_number=..); desde el ERP el navegador
+ * no lleva sesion ni token a ese host y el API responde 401 (1001084298, 2026-11-07). Se reescribe a
+ * `${base}/get_label_file?...` conservando la query. Otras URLs se devuelven tal cual.
+ */
+export function bffLabelFileUrl(url: string, base: string): string {
+  if (!url) return "";
+  let parsed: URL;
+  try {
+    parsed = new URL(url, "http://local.invalid");
+  } catch {
+    return url;
+  }
+  const segment = parsed.pathname.split("/").filter(Boolean).pop() ?? "";
+  const action = parsed.searchParams.get("action") ?? segment;
+  if (!(LABEL_FILE_ACTIONS as readonly string[]).includes(action)) return url;
+  parsed.searchParams.delete("action");
+  const query = parsed.searchParams.toString();
+  return `${base.replace(/\/+$/, "")}/${action}${query ? `?${query}` : ""}`;
+}
+
 /**
  * Courier-label generation/preview/print/download, extracted from ServizioCard.
  *
@@ -54,8 +79,9 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
    */
   function labelUrl(it: CourierLabelItem, format: "pdf" | "image"): string {
     if (!it.url) return "";
-    const sep = it.url.includes("?") ? "&" : "?";
-    return `${it.url}${sep}format=${format}`;
+    const url = bffLabelFileUrl(it.url, basePath());
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}format=${format}`;
   }
 
   /**
