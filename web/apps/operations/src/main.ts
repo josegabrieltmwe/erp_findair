@@ -10,11 +10,20 @@ import { bootstrapBff, bootstrapOtp, hasErpAccess, isOtpLandingPath, showNoAcces
 // Excepción: las páginas a las que se llega con el OTP de un correo (`/offer`, una aerolínea que responde a una cotización) no
 // tienen usuario. No pasan por el login: presentan el OTP al punto de autorización del BFF y, tengan o no sesión, la app se
 // monta para mostrar la vista o el motivo (enlace caducado, demasiados intentos…).
+// Solo se descargan las traducciones del idioma activo y las de reserva (en),
+// antes de evaluar la app: ver loadInitialLocales en plugins/i18n.ts.
+async function loadI18n(): Promise<void> {
+  const { loadInitialLocales } = await import("./plugins/i18n");
+  await loadInitialLocales();
+}
+
 if (isOtpLandingPath()) {
   await bootstrapOtp();
+  await loadI18n();
   await import("./app");
 } else if (await bootstrapBff()) {
   if (hasErpAccess()) {
+    await loadI18n();
     await import("./app");
   } else {
     showNoAccess();

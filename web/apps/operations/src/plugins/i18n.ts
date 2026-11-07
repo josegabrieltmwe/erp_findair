@@ -30,113 +30,11 @@ function deepMerge(...objs: Dict[]): Dict {
   return out;
 }
 
-// Shell/transversal namespaces (common, errors, platform) live once here.
-import shellEn from "@/locales/en.json";
-import shellEs from "@/locales/es.json";
-import shellIt from "@/locales/it.json";
-import shellNl from "@/locales/nl.json";
-import shellDe from "@/locales/de.json";
-
-// Per-module locale bundles. Each module ships its locale WRAPPED under its own
-// domain key (e.g. { tracking: {...} }, { pickup: {...} }) so namespaces never
-// collide between modules. Adding a module = 3 imports + 3 spreads below.
-import trackingEn from "@/modules/tracking/locales/en.json";
-import trackingEs from "@/modules/tracking/locales/es.json";
-import trackingIt from "@/modules/tracking/locales/it.json";
-import trackingNl from "@/modules/tracking/locales/nl.json";
-import trackingDe from "@/modules/tracking/locales/de.json";
-import consolidataEn from "@/modules/consolidata/locales/en.json";
-import consolidataEs from "@/modules/consolidata/locales/es.json";
-import consolidataIt from "@/modules/consolidata/locales/it.json";
-import consolidataNl from "@/modules/consolidata/locales/nl.json";
-import consolidataDe from "@/modules/consolidata/locales/de.json";
-import giacenzeEn from "@/modules/giacenze/locales/en.json";
-import giacenzeEs from "@/modules/giacenze/locales/es.json";
-import giacenzeIt from "@/modules/giacenze/locales/it.json";
-import giacenzeNl from "@/modules/giacenze/locales/nl.json";
-import giacenzeDe from "@/modules/giacenze/locales/de.json";
-import clientsEn from "@/modules/partner_clients/locales/en.json";
-import clientsEs from "@/modules/partner_clients/locales/es.json";
-import clientsIt from "@/modules/partner_clients/locales/it.json";
-import clientsNl from "@/modules/partner_clients/locales/nl.json";
-import clientsDe from "@/modules/partner_clients/locales/de.json";
-import pickupEn from "@/modules/pickup/locales/en.json";
-import pickupEs from "@/modules/pickup/locales/es.json";
-import pickupIt from "@/modules/pickup/locales/it.json";
-import pickupNl from "@/modules/pickup/locales/nl.json";
-import pickupDe from "@/modules/pickup/locales/de.json";
-import crmEn from "@/modules/crm/locales/en.json";
-import crmEs from "@/modules/crm/locales/es.json";
-import crmIt from "@/modules/crm/locales/it.json";
-import crmNl from "@/modules/crm/locales/nl.json";
-import crmDe from "@/modules/crm/locales/de.json";
-import copilotEn from "@/modules/copilot/locales/en.json";
-import copilotEs from "@/modules/copilot/locales/es.json";
-import copilotIt from "@/modules/copilot/locales/it.json";
-import copilotNl from "@/modules/copilot/locales/nl.json";
-import copilotDe from "@/modules/copilot/locales/de.json";
-import communicationEn from "@/modules/communication/locales/en.json";
-import communicationEs from "@/modules/communication/locales/es.json";
-import communicationIt from "@/modules/communication/locales/it.json";
-import communicationNl from "@/modules/communication/locales/nl.json";
-import communicationDe from "@/modules/communication/locales/de.json";
-import bulkEn from "@/modules/bulk/locales/en.json";
-import bulkEs from "@/modules/bulk/locales/es.json";
-import bulkIt from "@/modules/bulk/locales/it.json";
-import bulkNl from "@/modules/bulk/locales/nl.json";
-import bulkDe from "@/modules/bulk/locales/de.json";
-import settingsEn from "@/modules/settings/locales/en.json";
-import settingsEs from "@/modules/settings/locales/es.json";
-import settingsIt from "@/modules/settings/locales/it.json";
-import settingsNl from "@/modules/settings/locales/nl.json";
-import settingsDe from "@/modules/settings/locales/de.json";
-import invoicingEn from "@/modules/invoicing/locales/en.json";
-import paymentsEn from "@/modules/payments/locales/en.json";
-import warehouseEn from "@/modules/warehouse/locales/en.json";
-import invoicingEs from "@/modules/invoicing/locales/es.json";
-import paymentsEs from "@/modules/payments/locales/es.json";
-import warehouseEs from "@/modules/warehouse/locales/es.json";
-import invoicingIt from "@/modules/invoicing/locales/it.json";
-import paymentsIt from "@/modules/payments/locales/it.json";
-import warehouseIt from "@/modules/warehouse/locales/it.json";
-import invoicingNl from "@/modules/invoicing/locales/nl.json";
-import paymentsNl from "@/modules/payments/locales/nl.json";
-import warehouseNl from "@/modules/warehouse/locales/nl.json";
-import invoicingDe from "@/modules/invoicing/locales/de.json";
-import paymentsDe from "@/modules/payments/locales/de.json";
-import warehouseDe from "@/modules/warehouse/locales/de.json";
-import proformaEn from "@/modules/proforma/locales/en.json";
-import proformaEs from "@/modules/proforma/locales/es.json";
-import proformaIt from "@/modules/proforma/locales/it.json";
-import proformaNl from "@/modules/proforma/locales/nl.json";
-import proformaDe from "@/modules/proforma/locales/de.json";
-import codEn from "@/modules/cod_assegni/locales/en.json";
-import codEs from "@/modules/cod_assegni/locales/es.json";
-import codIt from "@/modules/cod_assegni/locales/it.json";
-import codNl from "@/modules/cod_assegni/locales/nl.json";
-import codDe from "@/modules/cod_assegni/locales/de.json";
-import homeEn from "@/modules/home/locales/en.json";
-import homeEs from "@/modules/home/locales/es.json";
-import homeIt from "@/modules/home/locales/it.json";
-import homeNl from "@/modules/home/locales/nl.json";
-import homeDe from "@/modules/home/locales/de.json";
-import emailTplEn from "@/modules/email_templates/locales/en.json";
-import emailTplEs from "@/modules/email_templates/locales/es.json";
-import emailTplIt from "@/modules/email_templates/locales/it.json";
-import emailTplNl from "@/modules/email_templates/locales/nl.json";
-import emailTplDe from "@/modules/email_templates/locales/de.json";
-// Cargo integrado "tal cual": trae sus locales completas (incluye common/
-// platform/listing propios) sin namespacing — sus pages dependen de ellas.
-import cargoEn from "@cargo/locales/en.json";
-import cargoEs from "@cargo/locales/es.json";
-import cargoIt from "@cargo/locales/it.json";
-import cargoNl from "@cargo/locales/nl.json";
-import cargoDe from "@cargo/locales/de.json";
-import shipmentEn from "@shipment/locales/en.json";
-import shipmentEs from "@shipment/locales/es.json";
-import shipmentIt from "@shipment/locales/it.json";
-import shipmentNl from "@shipment/locales/nl.json";
-import shipmentDe from "@shipment/locales/de.json";
+// Shell/transversal namespaces (common, errors, platform) viven en
+// src/locales. Cada modulo trae su bundle ENVUELTO bajo su propia clave de
+// dominio (p. ej. { tracking: {...} }) para que no choquen. Cargo y shipment se
+// integraron "tal cual": traen sus locales completas (common/platform/listing
+// propios) sin namespacing. Anadir un modulo = una entrada en BUNDLES (abajo).
 
 export type AvailableLocale = "en" | "it" | "es" | "nl" | "de";
 
@@ -200,134 +98,93 @@ function liftClients(bundle: Dict): Dict {
   return deepMerge(inner as Dict, bundle);
 }
 
-// Merge shell + every module bundle per language.
-//
-// deepMerge, NO spread plano: los dominios ya NO son disjuntos (partner_clients
-// y email_templates comparten `sections` y `selectors`). Con `...` el último
-// módulo REEMPLAZABA el objeto entero del anterior — por eso se perdía
-// `sections.anagrafiche` (título del listado de clientes), que email_templates
-// pisaba con su propio `sections`. El orden se mantiene: en un choque de hoja,
-// gana el último, igual que antes.
-const messages = {
-  en: deepMerge(
-    shellEn,
-    cargoEn,
-    shipmentEn,
-    trackingEn,
-    giacenzeEn,
-    consolidataEn,
-    liftClients(clientsEn),
-    pickupEn,
-    crmEn,
-    copilotEn,
-    communicationEn,
-    bulkEn,
-    settingsEn,
-    invoicingEn,
-    paymentsEn,
-    warehouseEn,
-    proformaEn,
-    codEn,
-    homeEn,
-    emailTplEn,
-  ),
-  es: deepMerge(
-    shellEs,
-    cargoEs,
-    shipmentEs,
-    trackingEs,
-    giacenzeEs,
-    consolidataEs,
-    liftClients(clientsEs),
-    pickupEs,
-    crmEs,
-    copilotEs,
-    communicationEs,
-    bulkEs,
-    settingsEs,
-    invoicingEs,
-    paymentsEs,
-    warehouseEs,
-    proformaEs,
-    codEs,
-    homeEs,
-    emailTplEs,
-  ),
-  it: deepMerge(
-    shellIt,
-    cargoIt,
-    shipmentIt,
-    trackingIt,
-    giacenzeIt,
-    consolidataIt,
-    liftClients(clientsIt),
-    pickupIt,
-    crmIt,
-    copilotIt,
-    communicationIt,
-    bulkIt,
-    settingsIt,
-    invoicingIt,
-    paymentsIt,
-    warehouseIt,
-    proformaIt,
-    codIt,
-    homeIt,
-    emailTplIt,
-  ),
-  // NL/DE completos: shell + los 15 módulos tienen bundle propio. Lo que no
-  // se pudo traducir (siglas y etiquetas que ya estaban en inglés en el
-  // bundle italiano de origen) quedó con su valor inglés, nunca italiano.
-  nl: deepMerge(
-    shellNl,
-    cargoNl,
-    shipmentNl,
-    trackingNl,
-    giacenzeNl,
-    consolidataNl,
-    liftClients(clientsNl),
-    pickupNl,
-    crmNl,
-    copilotNl,
-    communicationNl,
-    bulkNl,
-    settingsNl,
-    invoicingNl,
-    paymentsNl,
-    warehouseNl,
-    proformaNl,
-    codNl,
-    homeNl,
-    emailTplNl,
-  ),
-  de: deepMerge(
-    shellDe,
-    cargoDe,
-    shipmentDe,
-    trackingDe,
-    giacenzeDe,
-    consolidataDe,
-    liftClients(clientsDe),
-    pickupDe,
-    crmDe,
-    copilotDe,
-    communicationDe,
-    bulkDe,
-    settingsDe,
-    invoicingDe,
-    paymentsDe,
-    warehouseDe,
-    proformaDe,
-    codDe,
-    homeDe,
-    emailTplDe,
-  ),
-};
+/**
+ * Orden de fusion de los bundles de un idioma (shell + modulos). deepMerge, NO
+ * spread plano: los dominios ya NO son disjuntos (partner_clients y
+ * email_templates comparten `sections` y `selectors`); con `...` el ultimo
+ * modulo reemplazaba el objeto entero del anterior. En un choque de hoja gana el
+ * ultimo, en este orden.
+ *
+ * `lift`: el bundle de partner_clients se eleva tambien a la raiz (ver
+ * liftClients).
+ */
+const BUNDLES: ReadonlyArray<{ dir: string; lift?: boolean }> = [
+  { dir: "../locales" },
+  { dir: "../modules/cargo/locales" },
+  { dir: "../modules/shipment/locales" },
+  { dir: "../modules/tracking/locales" },
+  { dir: "../modules/giacenze/locales" },
+  { dir: "../modules/consolidata/locales" },
+  { dir: "../modules/partner_clients/locales", lift: true },
+  { dir: "../modules/pickup/locales" },
+  { dir: "../modules/crm/locales" },
+  { dir: "../modules/copilot/locales" },
+  { dir: "../modules/communication/locales" },
+  { dir: "../modules/bulk/locales" },
+  { dir: "../modules/settings/locales" },
+  { dir: "../modules/invoicing/locales" },
+  { dir: "../modules/payments/locales" },
+  { dir: "../modules/warehouse/locales" },
+  { dir: "../modules/proforma/locales" },
+  { dir: "../modules/cod_assegni/locales" },
+  { dir: "../modules/home/locales" },
+  { dir: "../modules/email_templates/locales" },
+];
 
+/**
+ * Carga perezosa: antes se importaban los 5 idiomas de los 20 bundles (100
+ * JSON) en el arranque. Precompilados por @intlify/unplugin-vue-i18n ocupaban
+ * ~5 MB por idioma (25 MB en `vite dev`, buena parte del app.js de 3,9 MB en el
+ * build) aunque la sesion solo use uno. Ahora se carga el idioma activo y el de
+ * reserva (en); el resto, nunca: el LanguageSwitcher recarga la pagina al
+ * cambiar de idioma. En el build, los JSON de cada idioma van en un unico chunk
+ * (`locale-<iso2>`, ver vite.config.ts).
+ */
+const LOADERS = import.meta.glob<Dict>(
+  ["../locales/*.json", "../modules/*/locales/*.json"],
+  { import: "default" },
+);
+
+const loaded = new Set<AvailableLocale>();
+
+async function buildMessages(lang: AvailableLocale): Promise<Dict> {
+  const bundles = await Promise.all(
+    BUNDLES.map(async ({ dir, lift }) => {
+      const load = LOADERS[`${dir}/${lang}.json`];
+      if (!load) return {};
+      const bundle = await load();
+      return lift ? liftClients(bundle) : bundle;
+    }),
+  );
+  return deepMerge(...bundles);
+}
+
+/** Carga (una sola vez) los mensajes de un idioma en la instancia global. */
+export async function loadLocaleMessages(lang: AvailableLocale): Promise<void> {
+  if (loaded.has(lang)) return;
+  i18n.global.setLocaleMessage(lang, await buildMessages(lang));
+  loaded.add(lang);
+}
+
+/**
+ * Carga el idioma inicial y el de reserva. main.ts lo espera ANTES de importar
+ * la app, para que ningun modulo se evalue con el catalogo vacio.
+ */
+export async function loadInitialLocales(): Promise<void> {
+  const current = i18n.global.locale.value as AvailableLocale;
+  await Promise.all([loadLocaleMessages(current), loadLocaleMessages("en")]);
+}
+
+// Los 5 idiomas se registran vacios desde el principio: `availableLocales`
+// (de donde el LanguageSwitcher saca los idiomas que ofrece) sigue listandolos
+// todos aunque solo se carguen el activo y el de reserva.
 export const i18n = createI18n({
   legacy: false,
   globalInjection: true,
   locale: resolveInitialLocale(),
   fallbackLocale: "en",
-  messages,
+  messages: Object.fromEntries(AVAILABLE.map((l) => [l, {}])) as Record<
+    AvailableLocale,
+    Dict
+  >,
 });

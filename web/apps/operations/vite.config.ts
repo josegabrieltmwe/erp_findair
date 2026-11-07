@@ -14,6 +14,28 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
  * Dep") y el navegador muestra decenas de .js/.ts en error. Declarandolos todos,
  * la optimizacion se hace una sola vez al arrancar.
  */
+/**
+ * Un chunk por idioma (`locale-es`, ...) con los JSON de ese idioma de todos los
+ * modulos: plugins/i18n.ts los carga perezosamente y sin esto serian 20
+ * peticiones sueltas por idioma.
+ */
+function localeChunks(): Record<string, string[]> {
+  const src = resolve(__dirname, "src");
+  const dirs = [
+    resolve(src, "locales"),
+    ...readdirSync(resolve(src, "modules"), { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => resolve(src, "modules", d.name, "locales")),
+  ].filter((d) => existsSync(d));
+  const out: Record<string, string[]> = {};
+  for (const lang of ["en", "es", "it", "nl", "de"]) {
+    out[`locale-${lang}`] = dirs
+      .map((d) => resolve(d, `${lang}.json`))
+      .filter((f) => existsSync(f));
+  }
+  return out;
+}
+
 function vuetifyOptimizeDeps(): string[] {
   try {
     const dir = resolve(__dirname, "node_modules/vuetify/lib/components");
@@ -106,6 +128,7 @@ export default defineConfig(({ mode }) => {
             "vendor-vuetify": ["vuetify"],
             "vendor-i18n": ["vue-i18n"],
             "vendor-utils": ["ofetch", "@vueuse/core"],
+            ...localeChunks(),
           },
         },
       },
