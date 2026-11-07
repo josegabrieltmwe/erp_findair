@@ -243,7 +243,18 @@
             "back": "Terug naar start",
             "refresh": "Vernieuwen",
             "new_actions": "Aanmaken",
-            "updated_at": "Bijgewerkt om {time}"
+            "updated_at": "Bijgewerkt om {time}",
+            "search_placeholder": "Zoeken op referentie, klant, AWB…",
+            "search_shipments": "Zendingen",
+            "search_cargo": "Cargo",
+            "search_button": "Zoeken",
+            "attention_title": "Vraagt je aandacht",
+            "attention_empty": "Alles bijgewerkt",
+            "attention_error": "De meldingen konden niet worden geladen.",
+            "all_indicators": "Alle indicatoren bekijken"
+        },
+        "indicators": {
+            "title": "Indicatoren"
         }
     },
     "kpi": {

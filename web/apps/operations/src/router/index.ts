@@ -87,12 +87,19 @@ const routes: RouteRecordRaw[] = [
     // nav de dominios). Ya no es fullscreen.
     meta: { title: "Inicio", icon: "mdi-home-outline" },
   },
-  // Compatibilidad: la ruta vivía separada ("Actividades del día"); ahora es
-  // la propia home. Se conserva el nombre por si queda algún enlace/favorito.
+  // Cuadro de mando completo (antes ocupaba la home). Solo lanza sus peticiones si se visita.
+  {
+    path: "/home/indicators",
+    name: "home-indicators",
+    component: () => import("@/modules/home/pages/HomeIndicatorsPage.vue"),
+    meta: { title: "Indicadores", icon: "mdi-chart-box-outline" },
+  },
+  // Compatibilidad: la ruta vivía separada ("Actividades del día"); ahora son
+  // los Indicadores. Se conserva el nombre por si queda algún enlace/favorito.
   {
     path: "/home/activities",
     name: "home-activities",
-    redirect: { name: "home" },
+    redirect: { name: "home-indicators" },
   },
   // ── Expediciones — cargo (aéreo), integrado "tal cual" (módulo con
   //    sus propias sub-rutas bajo /cargo, sin fusionar). ──────────

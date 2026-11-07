@@ -243,7 +243,18 @@
             "back": "Volver al inicio",
             "refresh": "Actualizar",
             "new_actions": "Crear",
-            "updated_at": "Actualizado a las {time}"
+            "updated_at": "Actualizado a las {time}",
+            "search_placeholder": "Buscar por referencia, cliente, AWB…",
+            "search_shipments": "Expediciones",
+            "search_cargo": "Cargo",
+            "search_button": "Buscar",
+            "attention_title": "Requiere tu atención",
+            "attention_empty": "Todo al día",
+            "attention_error": "No se pudieron cargar los avisos.",
+            "all_indicators": "Ver todos los indicadores"
+        },
+        "indicators": {
+            "title": "Indicadores"
         }
     },
     "kpi": {

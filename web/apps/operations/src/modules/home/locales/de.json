@@ -243,7 +243,18 @@
             "back": "Zurück zur Startseite",
             "refresh": "Aktualisieren",
             "new_actions": "Erstellen",
-            "updated_at": "Aktualisiert um {time}"
+            "updated_at": "Aktualisiert um {time}",
+            "search_placeholder": "Suche nach Referenz, Kunde, AWB…",
+            "search_shipments": "Sendungen",
+            "search_cargo": "Cargo",
+            "search_button": "Suchen",
+            "attention_title": "Erfordert Ihre Aufmerksamkeit",
+            "attention_empty": "Alles erledigt",
+            "attention_error": "Die Hinweise konnten nicht geladen werden.",
+            "all_indicators": "Alle Kennzahlen anzeigen"
+        },
+        "indicators": {
+            "title": "Kennzahlen"
         }
     },
     "kpi": {
