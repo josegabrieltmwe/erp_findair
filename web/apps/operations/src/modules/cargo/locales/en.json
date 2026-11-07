@@ -1086,6 +1086,16 @@
       "weighed_yes": "Weighed in warehouse",
       "weighed_no": "Client-declared weight"
     },
+    "legs": {
+      "title_pickup": "Pickup",
+      "title_delivery": "Delivery",
+      "show_pickup": "Show the pickup (left panel)",
+      "show_delivery": "Show the delivery (right panel)",
+      "hide_pickup": "Hide the pickup",
+      "hide_delivery": "Hide the delivery",
+      "none_pickup": "This cargo has no pickup yet",
+      "none_delivery": "This cargo has no delivery yet"
+    },
     "linked": {
       "title": "Linked express shipments",
       "create_prompt": "Create linked express shipment:",

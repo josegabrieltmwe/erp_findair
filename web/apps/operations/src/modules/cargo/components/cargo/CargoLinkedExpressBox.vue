@@ -49,7 +49,7 @@
       :title="link.title"
       :subtitle="link.subtitle"
       clickable
-      @click="openShipment(link.id)"
+      @click="openShipment(link.id, link.role)"
     >
       <template #append>
         <v-icon icon="mdi-open-in-new" size="16" class="text-medium-emphasis" />
@@ -90,6 +90,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
+import { useLegPanelsStore } from "@cargo/stores/leg_panels.store";
 import { useToastStore } from "@cargo/stores/toast.store";
 import { useConfirm } from "@shared/anagrafiche/composables/useConfirm";
 import {
@@ -109,6 +110,7 @@ const { t } = useI18n();
 const router = useRouter();
 const store = useCargoStore();
 const toasts = useToastStore();
+const legPanels = useLegPanelsStore();
 const confirmDialog = useConfirm();
 const { cargo } = storeToRefs(store);
 
@@ -197,7 +199,15 @@ const currentCargoId = computed<number>(() => {
 // Botón en curso (tpc) — bloquea el resto mientras se crea.
 const creating = ref<LinkedExpressTpc | null>(null);
 
-function openShipment(id: number): void {
+/**
+ * Recogida y entrega se abren en su panel lateral de la propia ficha (izquierda / derecha); el handler no tiene
+ * panel y abre la ficha de la expedición.
+ */
+function openShipment(id: number, role?: string): void {
+  if (role === "pickup" || role === "delivery") {
+    legPanels.open(role);
+    return;
+  }
   void router.push({ name: "shipment-detail", params: { id: String(id) } });
 }
 
@@ -221,8 +231,9 @@ async function createLeg(tpc: LinkedExpressTpc): Promise<void> {
         "success",
         t("cargo.linked.created", { id: res.shipment_id }) as string,
       );
-      // Crear y abrir el detalle de la nueva expedición (paridad legacy).
-      openShipment(res.shipment_id);
+      // Crear y abrir el detalle de la nueva expedición (paridad legacy). El cargo ya apunta al tramo nuevo.
+      await store.refreshQuiet();
+      openShipment(res.shipment_id, role);
     } else {
       toasts.push("error", t("cargo.linked.create_error") as string);
     }

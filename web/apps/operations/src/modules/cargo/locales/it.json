@@ -1086,6 +1086,16 @@
       "weighed_yes": "Pesato in magazzino",
       "weighed_no": "Peso dichiarato dal cliente"
     },
+    "legs": {
+      "title_pickup": "Ritiro",
+      "title_delivery": "Consegna",
+      "show_pickup": "Mostra il ritiro (pannello sinistro)",
+      "show_delivery": "Mostra la consegna (pannello destro)",
+      "hide_pickup": "Nascondi il ritiro",
+      "hide_delivery": "Nascondi la consegna",
+      "none_pickup": "Questo cargo non ha ancora un ritiro",
+      "none_delivery": "Questo cargo non ha ancora una consegna"
+    },
     "linked": {
       "title": "Spedizioni express collegate",
       "create_prompt": "Crea spedizione express collegata:",

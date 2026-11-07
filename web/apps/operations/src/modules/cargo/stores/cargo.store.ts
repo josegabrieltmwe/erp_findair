@@ -343,6 +343,22 @@ export const useCargoStore = defineStore("cargo", () => {
     }
   }
 
+  /**
+   * Relee la cabecera del cargo SIN marcar `loading` (la página sustituiría su contenido por el estado de carga y
+   * cerraría los paneles de los tramos). La usa la ficha al cerrar un tramo: operar el tramo puede cambiar importes
+   * del cargo.
+   */
+  async function refreshQuiet(): Promise<void> {
+    const id = Number(cargo.value?.id ?? 0);
+    if (!id) return;
+    try {
+      const res = await cargoService.load(id);
+      if (res.success && res.data) cargo.value = res.data;
+    } catch {
+      /* silencioso: la ficha sigue mostrando lo último que tenía */
+    }
+  }
+
   async function refreshAddresses(): Promise<void> {
     if (!id.value) return;
     const r = await cargoAddressesService.list(id.value);
@@ -485,6 +501,7 @@ export const useCargoStore = defineStore("cargo", () => {
   }
 
   return {
+    refreshQuiet,
     cargo,
     packages,
     destination,

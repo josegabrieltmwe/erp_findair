@@ -102,6 +102,14 @@ $col-gap: 12px !default;           // shipment: 8px
 .shipment-v2 .topbar-iconbtn:hover {
   color: rgb(var(--v-theme-primary));
 }
+.shipment-v2 .topbar-iconbtn--active {
+  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.12);
+}
+.shipment-v2 .topbar-iconbtn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
 .shipment-v2 .topbar-iconbtn .topbar-iconbtn-dot {
   position: absolute;
   top: 7px;

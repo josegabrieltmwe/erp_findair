@@ -1086,6 +1086,16 @@
       "weighed_yes": "Im Lager gewogen",
       "weighed_no": "Vom Kunden angegebenes Gewicht"
     },
+    "legs": {
+      "title_pickup": "Abholung",
+      "title_delivery": "Zustellung",
+      "show_pickup": "Abholung anzeigen (linkes Panel)",
+      "show_delivery": "Zustellung anzeigen (rechtes Panel)",
+      "hide_pickup": "Abholung ausblenden",
+      "hide_delivery": "Zustellung ausblenden",
+      "none_pickup": "Dieser Cargo hat noch keine Abholung",
+      "none_delivery": "Dieser Cargo hat noch keine Zustellung"
+    },
     "linked": {
       "title": "Verknüpfte Express-Sendungen",
       "create_prompt": "Verknüpfte Express-Sendung erstellen:",
