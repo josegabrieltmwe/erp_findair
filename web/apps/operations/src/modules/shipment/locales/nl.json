@@ -1173,7 +1173,8 @@
       "created_on": "Aangemaakt op:",
       "ip": "IP:",
       "reassign": "Eigenaar opnieuw toewijzen",
-      "no_users": "Geen gebruikers beschikbaar"
+      "no_users": "Geen gebruikers beschikbaar",
+      "unknown": "Gebruiker niet beschikbaar"
     },
     "tracking_drawer": {
       "title": "Tracking",

@@ -47,6 +47,7 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "operativa",
     items: [
       { key: "home",     icon: "mdi-home-outline",           routeName: "home", daily: true },
+      { key: "indicators", icon: "mdi-chart-box-outline",    routeName: "home-indicators" },
       { key: "cargo",    icon: "mdi-airplane",               routeName: "cargo-list", daily: true, partnerKey: "cargo_partner" },
       { key: "shipment", icon: "mdi-truck-fast-outline",     routeName: "shipment-list", daily: true },
       { key: "tracking", icon: "mdi-radar",                  routeName: "tracking", daily: true, adminOnly: true },

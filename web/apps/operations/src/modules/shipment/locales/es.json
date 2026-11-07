@@ -1173,7 +1173,8 @@
       "created_on": "Creado el:",
       "ip": "IP:",
       "reassign": "Reasignar propietario",
-      "no_users": "Sin usuarios disponibles"
+      "no_users": "Sin usuarios disponibles",
+      "unknown": "Usuario no disponible"
     },
     "tracking_drawer": {
       "title": "Seguimiento",
