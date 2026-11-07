@@ -31,6 +31,11 @@ export function bffLabelFileUrl(url: string, base: string): string {
   return `${base.replace(/\/+$/, "")}/${action}${query ? `?${query}` : ""}`;
 }
 
+/** ¿Imagen apaisada? Un margen del 5 % evita girar etiquetas casi cuadradas. */
+export function isLandscape(width: number, height: number): boolean {
+  return width > 0 && height > 0 && width > height * 1.05;
+}
+
 /** URL absoluta con el origen de la pagina (sin window, tal cual). Las ya absolutas no cambian. */
 export function absoluteUrl(url: string, origin?: string): string {
   const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
@@ -107,11 +112,49 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
    * clockwise left them upside down — the barcode ended up at the top and the
    * address unreadable. Verified against a real FedEx 1400x950 label.
    */
+  /**
+   * Etiquetas cuya imagen es apaisada (mas ancha que alta), por URL. Se rellena al cargar cada imagen
+   * (noteLabelSize) y, para imprimir, precargandolas (detectLandscape): asi se gira cualquier courier aunque el
+   * backend no mande `rotate` (p. ej. FedEx 1400x950 en «Ver etiquetas del courier»).
+   */
+  const landscape = ref(new Set<string>());
+
   function rotateDeg(it: CourierLabelItem): number {
     const r = it.rotate;
     if (r === "inverse") return 270;
     if (r === true || r === "true") return 270;
+    if (it.url && landscape.value.has(it.url)) return 270;
     return 0;
+  }
+
+  /** Apunta si la imagen cargada de la etiqueta es apaisada (handler de @load de la <img>). */
+  function noteLabelSize(it: CourierLabelItem, ev: Event): void {
+    const img = ev.target as HTMLImageElement | null;
+    if (!it.url || !img) return;
+    if (isLandscape(img.naturalWidth, img.naturalHeight) && !landscape.value.has(it.url)) {
+      landscape.value = new Set(landscape.value).add(it.url);
+    }
+  }
+
+  /** Precarga las imagenes de las etiquetas para saber cuales son apaisadas antes de montar la impresion. */
+  async function detectLandscape(items: CourierLabelItem[]): Promise<void> {
+    await Promise.all(
+      items.map(
+        (it) =>
+          new Promise<void>((resolve) => {
+            if (!it.url || landscape.value.has(it.url) || typeof Image === "undefined") return resolve();
+            const img = new Image();
+            img.onload = () => {
+              if (isLandscape(img.naturalWidth, img.naturalHeight)) {
+                landscape.value = new Set(landscape.value).add(it.url as string);
+              }
+              resolve();
+            };
+            img.onerror = () => resolve();
+            img.src = labelUrl(it, "image");
+          }),
+      ),
+    );
   }
 
   /**
@@ -158,6 +201,8 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
         toasts.push("warning", t("shipment.awb.no_courier_labels"));
         return;
       }
+      // Saber cuales son apaisadas antes de montar la pagina: se imprimen giradas.
+      await detectLandscape(labels);
       const imgs = labels
         .map((it) => {
           const deg = rotateDeg(it);
@@ -339,6 +384,7 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
     labelUrl,
     rotateDeg,
     imgStyle,
+    noteLabelSize,
     title,
     subtitle,
   };

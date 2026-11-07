@@ -310,6 +310,15 @@
           />
           <v-list-item
             v-if="awb"
+            prepend-icon="mdi-cancel"
+            :title="t('shipment.awb.cancel_courier')"
+            :subtitle="t('shipment.awb.cancel_courier_sub', { awb })"
+            base-color="error"
+            :disabled="cancelling"
+            @click="cancelAtCourier"
+          />
+          <v-list-item
+            v-if="awb"
             prepend-icon="mdi-restart"
             :title="t('shipment.awb.reset_awb')"
             :subtitle="t('shipment.awb.reset_awb_sub')"
@@ -369,6 +378,7 @@
         :label-url="labels.labelUrl"
         :rotate-deg="labels.rotateDeg"
         :img-style="labels.imgStyle"
+        :note-label-size="labels.noteLabelSize"
         @copy="copyText"
         @print="labels.print"
       />
@@ -385,6 +395,9 @@
         :label-url="labels.labelUrl"
         :title="labels.title"
         :subtitle="labels.subtitle"
+        :rotate-deg="labels.rotateDeg"
+        :img-style="labels.imgStyle"
+        :note-label-size="labels.noteLabelSize"
         @print="labels.print"
         @download-all="labels.downloadAll"
         @open="labels.openLabel"
@@ -499,8 +512,10 @@ import { useCourierLabels } from "@shipment/composables/useCourierLabels";
 import GenerateAwbDialog from "@shipment/components/shipment/overview/dialogs/GenerateAwbDialog.vue";
 import { useAwbGeneration } from "@shipment/composables/useAwbGeneration";
 import { labelsService } from "@shipment/services/labels.service";
+import { shipmentService } from "@shipment/services/shipment.service";
+import { localizedErrorText } from "@shared/utils/apiError";
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 const store = useShipmentStore();
 const { shipment, id } = storeToRefs(store);
 const shareLabelOpen = ref(false);
@@ -844,6 +859,32 @@ async function sendLdvMail(): Promise<void> {
     toasts.push("error", (e as Error).message);
   } finally {
     sendingLdvMail.value = false;
+  }
+}
+
+// ─── Anular en el courier ─────────────────────────────────────
+// Anula el envio en el courier (api_shipment_cancel: recogida si la hay, despues el envio) y, si el courier acepta,
+// el API archiva el AWB para poder generar otra etiqueta. Distinto de «Reset AWB», que solo lo borra en el ERP y deja
+// el envio vivo en el courier.
+const cancelling = ref(false);
+
+async function cancelAtCourier(): Promise<void> {
+  const sid = Number(shipment.value?.id ?? id.value ?? 0);
+  if (!sid || cancelling.value) return;
+  if (!confirm(t("shipment.awb.cancel_courier_confirm", { awb: awb.value }))) return;
+  cancelling.value = true;
+  try {
+    const r = await shipmentService.cancel(sid);
+    if (r.success) {
+      toasts.push("success", t("shipment.detail.toast_cancelled"));
+      await store.load(sid);
+    } else {
+      toasts.push("error", r.error ?? t("shipment.detail.toast_cancel_failed"));
+    }
+  } catch (e) {
+    toasts.push("error", localizedErrorText(e, { t, te }, t("shipment.detail.toast_cancel_failed")));
+  } finally {
+    cancelling.value = false;
   }
 }
 

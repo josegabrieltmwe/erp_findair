@@ -71,7 +71,7 @@
             'courier-label__img--loaded': loaded.has(i),
           }"
           :style="zoom.styleFor(imgStyle(it))"
-          @load="onImgLoad(i)"
+          @load="onImgLoad(i, it, $event)"
         />
       </div>
     </div>
@@ -115,6 +115,8 @@ const props = defineProps<{
   labelUrl: (it: CourierLabelItem, format: "pdf" | "image") => string;
   rotateDeg: (it: CourierLabelItem) => number;
   imgStyle: (it: CourierLabelItem) => Record<string, string>;
+  /** Avisa del tamano real de la imagen para detectar las apaisadas (useCourierLabels.noteLabelSize). */
+  noteLabelSize?: (it: CourierLabelItem, ev: Event) => void;
 }>();
 
 const emit = defineEmits<{
@@ -131,8 +133,9 @@ const { t } = useI18n();
 // (naturalWidth=0), so the first-time scale is wrong (worst for TNT, whose JPG
 // is HTML-rendered and has no rotation fallback). Reset on reopen / new labels.
 const loaded = ref(new Set<number>());
-function onImgLoad(i: number): void {
+function onImgLoad(i: number, it?: CourierLabelItem, ev?: Event): void {
   loaded.value = new Set(loaded.value).add(i);
+  if (it && ev) props.noteLabelSize?.(it, ev);
 }
 
 const zoom = useLabelZoom();
