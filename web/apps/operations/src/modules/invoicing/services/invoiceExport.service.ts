@@ -5,6 +5,7 @@
  * Ambas devuelven el fichero en base64 dentro del JSON.
  */
 import { http } from "./http";
+import { awaitQueued } from "@shared/async/awaitQueued";
 import { downloadBase64 } from "./einvoice.service";
 
 export interface ExportFile {
@@ -85,10 +86,14 @@ export const invoiceExportService = {
     year: number,
     format: BalanceFormat,
   ): Promise<ExportFile> {
-    const res = await http<RawFile>(`/api_balance_sheet_export`, {
-      method: "POST",
-      body: buildBalanceBody(type, year, format),
-    });
+    // Con async el API encarga el fichero a su demonio y se consulta el estado (PLAN_MIGRACION_RPC_DEMONIO.md R2).
+    const res = await awaitQueued(
+      await http<RawFile>(`/api_balance_sheet_export`, {
+        method: "POST",
+        body: { ...buildBalanceBody(type, year, format), async: true },
+      }),
+      (id) => http<RawFile>(`/api_balance_sheet_export_state`, { method: "GET", query: { request_id: id } }),
+    );
     return pickFile(
       res,
       "file",

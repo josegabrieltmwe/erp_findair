@@ -11,6 +11,7 @@
  * (hybrid auth: session or Bearer).
  */
 import { http } from "@shared/anagrafiche/services/http";
+import { queuedOf } from "@shared/async/awaitQueued";
 import type {
   ApiEnvelope,
   Carrier,
@@ -173,11 +174,23 @@ export async function downloadDistinta(params: {
   if (params.to) q.set("to", params.to);
   if (params.billNo) q.set("bill_no", params.billNo);
   if (params.format) q.set("format", params.format);
+  // xlsx: lo genera el worker; con async el API responde 202 {request_id} y aquí se consulta hasta tener el fichero
+  // (PLAN_MIGRACION_RPC_DEMONIO.md R2). Sin demonio en el API llega el fichero directamente.
+  if (params.format === "xlsx") q.set("async", "1");
 
   const base = window.__TMWE_NAV__?.basePath ?? "/bff/v1";
-  const res = await fetch(`${base}${bffRoute(q)}`, {
+  let res = await fetch(`${base}${bffRoute(q)}`, {
     credentials: "include",
   });
+  const started = Date.now();
+  while (res.ok && (res.headers.get("Content-Type") ?? "").includes("application/json")) {
+    const queued = queuedOf(await res.clone().json().catch(() => null));
+    if (!queued) break;
+    if (Date.now() - started > 130_000) throw new Error("Could not generate the export");
+    await new Promise<void>((resolve) => setTimeout(resolve, Math.max(500, queued.poll_after_ms ?? 1000)));
+    const poll = new URLSearchParams({ action: "api_cod_distinta_export", request_id: String(queued.request_id) });
+    res = await fetch(`${base}${bffRoute(poll)}`, { credentials: "include" });
+  }
 
   if (!res.ok) {
     // The endpoint answers JSON on error; surface its message.

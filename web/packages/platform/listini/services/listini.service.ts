@@ -1,4 +1,5 @@
 import { http } from '../../anagrafiche/services/http';
+import { awaitQueued } from '../../async/awaitQueued';
 import { paginated, unwrap } from '../../anagrafiche/services/normalizers';
 import type { Paginated } from '../../anagrafiche/services/api.types';
 
@@ -708,7 +709,11 @@ export const listiniService = {
     const query: Record<string, string | number> = { pack_id: packId, format };
     if (opts.section) query.section = opts.section;
     if (opts.date) query.date = opts.date;
-    const raw = await http<unknown>(EXPORT, { query });
+    // xlsx: lo genera el worker; con async el API no retiene la petición y se consulta el estado (R2).
+    if (format === 'xlsx') query.async = 1;
+    const raw = await awaitQueued(await http<unknown>(EXPORT, { query }), (id) =>
+      http<unknown>(EXPORT, { query: { request_id: id } }),
+    );
     const data = (raw && typeof raw === 'object' && 'data' in raw
       ? (raw as { data: unknown }).data
       : raw) as Partial<ListinoExportFile> | null;

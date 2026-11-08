@@ -131,6 +131,11 @@ final class Settings
                     ratePerUser: (int) $get('TACT_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('TACT_POLL_RATE_PER_IP_MIN', '360'),
                 ),
+                // Estado de las exportaciones a Excel asíncronas: ~1 por segundo mientras se espera.
+                'export_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('EXPORT_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('EXPORT_POLL_RATE_PER_IP_MIN', '360'),
+                ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
                     ratePerIp: (int) $get('RATE_SEARCH_POLL_RATE_PER_IP_MIN', '900'),

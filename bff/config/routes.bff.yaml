@@ -362,6 +362,27 @@ routes:
     limits: { timeout: 15 }
     throttle: tact_poll
 
+  # Estado de una exportación a Excel encargada con async:true (la genera el demonio del API,
+  # PLAN_MIGRACION_RPC_DEMONIO.md R2): {status:waiting} o la misma respuesta (fichero en base64) que el POST síncrono.
+  # Rutas propias porque los POST no tienen GET en el manifiesto de la SPA.
+  - id: fatturazione.balance_sheet_export.state
+    method: GET
+    path: /api_balance_sheet_export_state
+    upstream:
+      action: api_balance_sheet_export
+      forward_query: [request_id]
+    limits: { timeout: 15 }
+    throttle: export_poll
+
+  - id: cod.export.state
+    method: GET
+    path: /api_cod_export_state
+    upstream:
+      action: api_cod_export
+      forward_query: [request_id]
+    limits: { timeout: 15 }
+    throttle: export_poll
+
   # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
   # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
   # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).

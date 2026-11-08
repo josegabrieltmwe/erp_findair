@@ -7,6 +7,7 @@
  *   POST api_cod_export {date_from,date_to,format}  -> fichero en base64
  */
 import { http } from "@shared/anagrafiche/services/http";
+import { awaitQueued } from "@shared/async/awaitQueued";
 import type { ApiEnvelope } from "../types";
 import { errorText } from "@shared/utils/apiError";
 
@@ -176,12 +177,13 @@ export async function exportCod(
   dateTo: string,
   format: "xlsx" | "csv",
 ): Promise<CodExportFile> {
-  const res = await http<ApiEnvelope<CodExportFile>>(
-    "/api_cod_export",
-    {
+  // Con async el API encarga el fichero a su demonio y se consulta el estado (PLAN_MIGRACION_RPC_DEMONIO.md R2).
+  const res = await awaitQueued(
+    await http<ApiEnvelope<CodExportFile>>("/api_cod_export", {
       method: "POST",
-      body: { date_from: dateFrom, date_to: dateTo, format },
-    },
+      body: { date_from: dateFrom, date_to: dateTo, format, async: true },
+    }),
+    (id) => http<ApiEnvelope<CodExportFile>>("/api_cod_export_state", { method: "GET", query: { request_id: id } }),
   );
   const d = ensure(res, "Export failed");
   if (!d.file) throw new Error("Export failed");
