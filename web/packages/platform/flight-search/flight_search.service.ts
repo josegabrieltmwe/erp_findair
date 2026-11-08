@@ -583,7 +583,15 @@ async function runStream(
     body: JSON.stringify({ mode: "stream", ...body }),
   });
   if (!resp.ok || !resp.body) {
-    onEvent({ type: "error", message: `Stream HTTP ${resp.status}` });
+    // Sin demonio, el API responde 503 con su mensaje (PLAN_MIGRACION_RPC_DEMONIO.md R4): se muestra ese.
+    let message = `Stream HTTP ${resp.status}`;
+    try {
+      const j = (await resp.json()) as { message?: string; error?: string | { message?: string } };
+      message = j.message ?? (typeof j.error === "string" ? j.error : j.error?.message) ?? message;
+    } catch {
+      /* cuerpo no JSON: el estado HTTP basta */
+    }
+    onEvent({ type: "error", message });
     return;
   }
   await readEventStream(resp.body, onEvent);
