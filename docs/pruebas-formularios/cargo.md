@@ -1,6 +1,6 @@
 # Formularios de Cargo: casos de prueba
 
-> **Estado:** borrador · **Última modificación:** 2026-11-01 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
+> **Estado:** borrador · **Última modificación:** 2026-11-08 · Generado por lectura de código (no se ejecutó nada). Parte de [plan-pruebas-formularios.md](../plan-pruebas-formularios.md). Las reglas de cada ficha salen del código citado; lo marcado «no determinado» no se pudo confirmar.
 
 ## Cargo (aéreo) · prefijo CGO
 
@@ -332,7 +332,7 @@ Calculados: volumen por bulto (m3), peso total, peso tasable `max(peso real, vol
 ---
 
 ### CGO-11 · Búsqueda de vuelos y asignación de tarifa (asistente)
-- **Ruta/pantalla:** `/cargo/:id`, modal `flight_search`  **Componentes:** `flight-search/CargoFlightSearch.vue`, `FlightSearchParams.vue`, `FlightFilters.vue`, `FlightSearchResultsTable.vue`, `FlightSelectionWizard.vue`, `useCargoFlightSearch.ts`, guarda previa `composables/useQuoteGuard.ts`  **Envía:** búsqueda por SSE (`flight_search.service.ts`, `include_courier=false`); asignación `store.selectRate` (endpoint en `cargo_flight_manager.store.ts`, no desglosado aquí).
+- **Ruta/pantalla:** `/cargo/:id`, modal `flight_search`  **Componentes:** `flight-search/CargoFlightSearch.vue`, `FlightSearchParams.vue`, `FlightFilters.vue`, `FlightSearchResultsTable.vue`, `FlightSelectionWizard.vue`, `useCargoFlightSearch.ts`, guarda previa `composables/useQuoteGuard.ts`  **Envía:** búsqueda asíncrona con vuelta al SSE (`flight_search.service.ts`, `include_courier=false`); asignación `store.selectRate` (endpoint en `cargo_flight_manager.store.ts`, no desglosado aquí).
 - **Permisos:** cada fuente depende de las credenciales disponibles (`isSourceAvailable`); delegación de credenciales de otro partner solo si se marca.
 - **Campos:**
 

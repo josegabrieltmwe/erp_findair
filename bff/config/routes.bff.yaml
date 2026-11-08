@@ -735,6 +735,43 @@ routes:
       forward_query: '*'
     limits: { body: 1m, timeout: 120 }
 
+  # Búsqueda de vuelos asíncrona (api/docs/03-diseno/cargo_rate_latencia/PLAN_BUSQUEDA_ASINCRONA.md): peticiones
+  # cortas en lugar del stream, que ocupaba un worker del BFF toda la búsqueda. El stream
+  # (post.api_cargo_shipment_flight_search) no cambia y es la vuelta atrás si el API responde 503.
+  - id: post.api_cargo_rate_search
+    method: POST
+    path: /api_cargo_rate_search
+    upstream:
+      action: api_cargo_rate_search
+      forward_query: '*'
+    limits: { body: 64k, timeout: 15 }
+
+  - id: get.api_cargo_rate_search_events
+    method: GET
+    path: /api_cargo_rate_search_events
+    upstream:
+      action: api_cargo_rate_search_events
+      forward_query: [search_id, since]
+    limits: { timeout: 15 }
+    throttle: rate_search_poll
+
+  - id: get.api_cargo_rate_search_result
+    method: GET
+    path: /api_cargo_rate_search_result
+    upstream:
+      action: api_cargo_rate_search_result
+      forward_query: [search_id]
+    limits: { timeout: 15 }
+    throttle: rate_search_poll
+
+  - id: post.api_cargo_rate_search_cancel
+    method: POST
+    path: /api_cargo_rate_search_cancel
+    upstream:
+      action: api_cargo_rate_search_cancel
+      forward_query: [search_id]
+    limits: { body: 4k, timeout: 15 }
+
   - id: post.api_cargo_webcargo_booking
     method: POST
     path: /api_cargo_webcargo_booking

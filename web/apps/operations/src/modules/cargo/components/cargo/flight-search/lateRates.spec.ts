@@ -25,8 +25,11 @@ describe("respuestas tardías del stream de vuelos", () => {
   it("entrega late_rate como tarifa, late_pending en complete y late_done", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        sse([
+      vi.fn(async (url: string) =>
+        // Sin búsqueda asíncrona disponible (503) la SPA abre el stream.
+        String(url).includes("api_cargo_rate_search")
+          ? new Response('{"success":false,"error":{"code":"ASYNC_SEARCH_UNAVAILABLE"}}', { status: 503 })
+          : sse([
           'event: rate\ndata: {"airline":"LH","source":"realtime","rates":[{"short_id":"a"}]}\n\n',
           'event: complete\ndata: {"total_rates":1,"late_pending":true}\n\n',
           'event: late_rate\ndata: {"airline":"EK","source":"realtime","rates":[{"short_id":"b"}]}\n\n',

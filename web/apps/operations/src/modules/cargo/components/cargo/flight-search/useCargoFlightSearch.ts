@@ -6,7 +6,7 @@
  * The SFC keeps only the template + a thin <script setup> that calls
  * this composable and destructures the returned API.
  */
-import { computed, ref, watch } from "vue";
+import { computed, onScopeDispose, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
@@ -189,6 +189,13 @@ export function useCargoFlightSearch() {
   const detailRate = ref<NormalizedRate | null>(null);
 
   let stream: { abort(): void } | null = null;
+  // Cerrar el modal (o salir de la página) termina la búsqueda: antes seguía
+  // ocupando un worker del BFF hasta el final y, con la búsqueda asíncrona,
+  // seguiría consultando eventos. abort() también la cancela en el API.
+  onScopeDispose(() => {
+    stream?.abort();
+    stream = null;
+  });
   /**
    * La búsqueda principal terminó (`complete`) pero aún hay aerolíneas lentas
    * cuyas tarifas llegan como `late_rate` hasta `late_done`. El stream sigue

@@ -113,6 +113,9 @@ bin/regen-spa-manifest.sh        # añade aquí cada módulo o paquete nuevo que
   las rutas cuya descripción en tmwe_json dice «SSE» (salvo las `*token*`).
 - Cada SSE abierto ocupa un worker de Apache mientras dure; dimensionar `MaxRequestWorkers` o servir
   `/bff/v1` de streams con otro proceso si hay muchos usuarios.
+- La búsqueda de vuelos ya no necesita el stream: `api_cargo_rate_search*` (encargo + consulta de eventos,
+  peticiones cortas). El stream `api_cargo_shipment_flight_search` queda como vuelta atrás cuando el API
+  responde 503.
 - **Descargas** (`response: binary`) y respuestas JSON grandes: probadas con 20 MB; cabeceras de descarga
   conservadas y memoria acotada.
 - **Subidas** multipart: el cuerpo llega intacto (comprobado con 5 MB); el límite por ruta

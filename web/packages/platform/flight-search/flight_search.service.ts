@@ -1,6 +1,10 @@
 /**
- * Flight search service — talks to
- * `api_cargo_shipment_flight_search?mode=stream` (Web_Shipment_Flight_Search_Controller).
+ * Flight search service — two transports, same events:
+ *   - asynchronous (preferred): `POST api_cargo_rate_search` answers 202 {search_id}; the events are then read with
+ *     short `GET api_cargo_rate_search_events?search_id&since` calls, so no BFF/API worker waits for the airlines
+ *     (api/docs/03-diseno/cargo_rate_latencia/PLAN_BUSQUEDA_ASINCRONA.md);
+ *   - stream (fallback when the API answers 503 ASYNC_SEARCH_UNAVAILABLE):
+ *     `api_cargo_shipment_flight_search?mode=stream` (Shipment_Flight_Search_Controller).
  *
  * Backend emits NAMED Server-Sent Events (not plain `message` events),
  * so `EventSource.onmessage` would miss them all. We use the same
@@ -314,12 +318,9 @@ interface StreamHandle {
  *   - the route accepts override_* in the JSON body (override origin,
  *     destination, weight, date, packages…).
  */
-export function openFlightSearchStream(
-  params: FlightSearchParams,
-  onEvent: (e: FlightSearchEvent) => void,
-): StreamHandle {
-  const controller = new AbortController();
-  const body: Record<string, unknown> = { mode: "stream" };
+/** Request body shared by both transports (override_* + phase flags). */
+export function buildFlightSearchBody(params: FlightSearchParams): Record<string, unknown> {
+  const body: Record<string, unknown> = {};
   if (params.origin) body.override_origin = params.origin.toUpperCase();
   if (params.destination)
     body.override_destination = params.destination.toUpperCase();
@@ -340,6 +341,7 @@ export function openFlightSearchStream(
     body.include_realtime = true;
     body.force_direct_account = true;
   }
+  if (params.via_partner) body.via_partner = params.via_partner;
   if (params.include_express !== undefined)
     body.include_express = params.include_express;
   if (params.include_klm !== undefined) body.include_klm = params.include_klm;
@@ -351,38 +353,240 @@ export function openFlightSearchStream(
     body.include_courier_live = params.include_courier_live;
   if (params.include_courier !== undefined)
     body.include_courier = params.include_courier;
+  return body;
+}
 
-  const qs = new URLSearchParams({ shipment_id: String(params.shipment_id) });
-  const url = `/bff/v1/api_cargo_shipment_flight_search?${qs.toString()}`;
+/** Polling limits of the asynchronous transport. */
+export const ASYNC_SEARCH = {
+  /** The API gives the search 150 s; past this the client stops on its own. */
+  maxDurationMs: 180_000,
+  /** Consecutive failed polls before giving up. */
+  maxFailures: 6,
+  minPollMs: 250,
+  maxPollMs: 5_000,
+};
+
+interface AsyncEventsPage {
+  status?: string;
+  done?: boolean;
+  cursor?: number;
+  poll_after_ms?: number;
+  events?: Array<{ seq: number; event: string; data: Record<string, unknown> }>;
+}
+
+const sleep = (ms: number, signal: AbortSignal): Promise<void> =>
+  new Promise((resolve) => {
+    if (signal.aborted) return resolve();
+    const t = setTimeout(resolve, ms);
+    signal.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(t);
+        resolve();
+      },
+      { once: true },
+    );
+  });
+
+/** Error message of an API JSON error body, if any. */
+function apiErrorOf(payload: unknown): { code?: string; message?: string } {
+  const p = (payload ?? {}) as Record<string, unknown>;
+  const err = (p.error ?? {}) as Record<string, unknown>;
+  return {
+    code: typeof err.code === "string" ? err.code : (p.error_code as string | undefined),
+    message: typeof err.message === "string" ? err.message : (p.message as string | undefined),
+  };
+}
+
+/**
+ * Open a flight search: asynchronous first, stream as fallback. Same events
+ * and same `dispatch()` normalisation either way, so the composable does not
+ * know which transport ran.
+ */
+export function openFlightSearchStream(
+  params: FlightSearchParams,
+  onEvent: (e: FlightSearchEvent) => void,
+): StreamHandle {
+  const controller = new AbortController();
+  const body = buildFlightSearchBody(params);
+  let searchId: number | null = null;
 
   void (async (): Promise<void> => {
     try {
-      const resp = await fetch(url, {
-        method: "POST",
-        credentials: "include",
-        signal: controller.signal,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "text/event-stream",
-        },
-        body: JSON.stringify(body),
-      });
-      if (!resp.ok || !resp.body) {
-        onEvent({ type: "error", message: `Stream HTTP ${resp.status}` });
+      const started = await startAsyncSearch(params, body, controller.signal);
+      if (started.kind === "fallback") {
+        await runStream(params, body, controller.signal, onEvent);
         return;
       }
-      await readEventStream(resp.body, onEvent);
+      if (started.kind === "error") {
+        onEvent({ type: "error", message: started.message });
+        return;
+      }
+      searchId = started.searchId;
+      await pollAsyncSearch(started.searchId, controller.signal, onEvent);
     } catch (e) {
-      // Raw fetch (SSE), not ofetch: here `err.name` IS 'AbortError'.
       // isAbortLikeError also covers the page-unload case, where the browser
-      // kills the stream and the failure is not worth reporting.
+      // kills the request and the failure is not worth reporting.
       if (isAbortLikeError(e, controller.signal)) return;
       const err = e as { message?: string };
       onEvent({ type: "error", message: err.message ?? "Connection error" });
     }
   })();
 
-  return { abort: () => controller.abort() };
+  return {
+    abort: () => {
+      controller.abort();
+      if (searchId !== null) cancelAsyncSearch(searchId);
+    },
+  };
+}
+
+type StartResult =
+  | { kind: "async"; searchId: number }
+  | { kind: "fallback" }
+  | { kind: "error"; message: string };
+
+/** POST api_cargo_rate_search. 503 (or a BFF without the route) means: use the stream. */
+async function startAsyncSearch(
+  params: FlightSearchParams,
+  body: Record<string, unknown>,
+  signal: AbortSignal,
+): Promise<StartResult> {
+  const resp = await fetch("/bff/v1/api_cargo_rate_search", {
+    method: "POST",
+    credentials: "include",
+    signal,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      // The search is shown by its own progress UI, not the global busy modal.
+      "X-Busy": "off",
+    },
+    body: JSON.stringify({ ...body, shipment_id: params.shipment_id }),
+  });
+  let payload: unknown = null;
+  try {
+    payload = await resp.json();
+  } catch {
+    payload = null;
+  }
+  if (resp.status === 202) {
+    const data = ((payload as Record<string, unknown>)?.data ?? {}) as Record<string, unknown>;
+    const id = Number(data.search_id);
+    if (id > 0) return { kind: "async", searchId: id };
+    return { kind: "fallback" };
+  }
+  if (resp.status === 503 || resp.status === 404 || resp.status === 405) {
+    return { kind: "fallback" };
+  }
+  const err = apiErrorOf(payload);
+  return { kind: "error", message: err.message || err.code || `Search HTTP ${resp.status}` };
+}
+
+/** Read the events of an asynchronous search until it is done, aborted or gives up. */
+async function pollAsyncSearch(
+  searchId: number,
+  signal: AbortSignal,
+  onEvent: (e: FlightSearchEvent) => void,
+): Promise<void> {
+  const startedAt = Date.now();
+  let since = 0;
+  let failures = 0;
+  let sawTerminal = false;
+  while (!signal.aborted) {
+    if (Date.now() - startedAt > ASYNC_SEARCH.maxDurationMs) {
+      if (!sawTerminal) onEvent({ type: "error", message: "SEARCH_EXPIRED" });
+      return;
+    }
+    let page: AsyncEventsPage | null = null;
+    try {
+      const qs = new URLSearchParams({ search_id: String(searchId), since: String(since) });
+      const resp = await fetch(`/bff/v1/api_cargo_rate_search_events?${qs.toString()}`, {
+        method: "GET",
+        credentials: "include",
+        signal,
+        headers: { Accept: "application/json" },
+      });
+      if (resp.status === 404) {
+        onEvent({ type: "error", message: "SEARCH_NOT_FOUND" });
+        return;
+      }
+      if (resp.ok) {
+        const json = (await resp.json()) as { data?: AsyncEventsPage };
+        page = json.data ?? null;
+      }
+    } catch (e) {
+      if (isAbortLikeError(e, signal)) return;
+      page = null;
+    }
+    if (page === null) {
+      failures += 1;
+      if (failures >= ASYNC_SEARCH.maxFailures) {
+        onEvent({ type: "error", message: "Connection error" });
+        return;
+      }
+      await sleep(Math.min(ASYNC_SEARCH.maxPollMs, 500 * 2 ** failures), signal);
+      continue;
+    }
+    failures = 0;
+    for (const e of page.events ?? []) {
+      if (e.event === "late_done" || e.event === "error") sawTerminal = true;
+      if (e.event === "complete" && e.data?.late_pending !== true) sawTerminal = true;
+      dispatch(e.event, e.data ?? {}, onEvent);
+    }
+    if (typeof page.cursor === "number") since = page.cursor;
+    if (page.done) {
+      if (!sawTerminal) onEvent({ type: "error", message: page.status === "cancelled" ? "CANCELLED" : "SEARCH_FAILED" });
+      return;
+    }
+    const wait = Math.max(ASYNC_SEARCH.minPollMs, Math.min(ASYNC_SEARCH.maxPollMs, page.poll_after_ms ?? 1000));
+    if (wait > 0) await sleep(wait, signal);
+  }
+}
+
+/** Fire-and-forget cancel; keepalive so it survives closing the page. */
+function cancelAsyncSearch(searchId: number): void {
+  try {
+    void fetch("/bff/v1/api_cargo_rate_search_cancel", {
+      method: "POST",
+      credentials: "include",
+      keepalive: true,
+      headers: { "Content-Type": "application/json", "X-Busy": "off" },
+      body: JSON.stringify({ search_id: searchId }),
+    }).catch(() => undefined);
+  } catch {
+    /* nothing to do */
+  }
+}
+
+/**
+ * The stream transport (fallback). POST + fetch (not EventSource) because:
+ *   - backend emits NAMED events that EventSource.onmessage misses,
+ *   - the route accepts override_* in the JSON body.
+ */
+async function runStream(
+  params: FlightSearchParams,
+  body: Record<string, unknown>,
+  signal: AbortSignal,
+  onEvent: (e: FlightSearchEvent) => void,
+): Promise<void> {
+  const qs = new URLSearchParams({ shipment_id: String(params.shipment_id) });
+  const url = `/bff/v1/api_cargo_shipment_flight_search?${qs.toString()}`;
+  const resp = await fetch(url, {
+    method: "POST",
+    credentials: "include",
+    signal,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "text/event-stream",
+    },
+    body: JSON.stringify({ mode: "stream", ...body }),
+  });
+  if (!resp.ok || !resp.body) {
+    onEvent({ type: "error", message: `Stream HTTP ${resp.status}` });
+    return;
+  }
+  await readEventStream(resp.body, onEvent);
 }
 
 /** Parse an SSE stream into typed events. */
