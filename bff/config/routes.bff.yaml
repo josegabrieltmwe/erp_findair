@@ -350,6 +350,18 @@ routes:
     limits: { timeout: 15 }
     throttle: modelli_assist_poll
 
+  # Estado de una tarifa TACT encargada con async:true (la procesa el demonio del API, PLAN_MIGRACION_RPC_DEMONIO.md
+  # R2): {status:waiting} o la misma respuesta (o error HTTP) que el POST síncrono. Ruta propia porque
+  # GET /api_cargo_tact_update está excluida arriba.
+  - id: cargo.tact.state
+    method: GET
+    path: /api_cargo_tact_state
+    upstream:
+      action: api_cargo_tact_update
+      forward_query: [request_id]
+    limits: { timeout: 15 }
+    throttle: tact_poll
+
   # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
   # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
   # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).

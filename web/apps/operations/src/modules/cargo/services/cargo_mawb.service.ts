@@ -1,4 +1,5 @@
 import { http } from "./http";
+import { requestTact } from "./tactRequest";
 import type {
   CargoMawb,
   CargoMawbPatch,
@@ -55,10 +56,7 @@ export const cargoMawbService = {
    * `id` is the shipment (`spedizioni_cargo.id`), i.e. the cargo id.
    */
   tactLookup(cargo_id: number): Promise<TactRateResult> {
-    return http<{ data: TactRateResult }>("/api_cargo_tact_update", {
-      method: "POST",
-      body: { id: cargo_id },
-    }).then((r) => r.data);
+    return requestTact<{ data: TactRateResult }>({ id: cargo_id }).then((r) => r.data);
   },
 };
 

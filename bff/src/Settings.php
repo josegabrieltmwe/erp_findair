@@ -126,6 +126,11 @@ final class Settings
                     ratePerUser: (int) $get('MODELLI_ASSIST_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('MODELLI_ASSIST_POLL_RATE_PER_IP_MIN', '360'),
                 ),
+                // Estado de la tarifa TACT asíncrona: ~1 por segundo mientras se espera.
+                'tact_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('TACT_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('TACT_POLL_RATE_PER_IP_MIN', '360'),
+                ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
                     ratePerIp: (int) $get('RATE_SEARCH_POLL_RATE_PER_IP_MIN', '900'),

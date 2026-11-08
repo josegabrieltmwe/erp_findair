@@ -1,4 +1,4 @@
-import { http } from "./http";
+import { requestTact } from "./tactRequest";
 
 /**
  * TACT IATA tact rate lookup. Modern endpoint already exists:
@@ -43,11 +43,7 @@ export const tactService = {
     try {
       const body: Record<string, unknown> = { id: input.shipmentId };
       if (input.carrier) body.carrier = input.carrier;
-      const r = await http<TactLookupResponse>("/api_cargo_tact_update", {
-        method: "POST",
-        body,
-      });
-      return r;
+      return await requestTact<TactLookupResponse>(body);
     } catch (e) {
       return {
         success: false,
