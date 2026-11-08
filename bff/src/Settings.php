@@ -121,6 +121,11 @@ final class Settings
                     ratePerUser: (int) $get('COPILOT_CHAT_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('COPILOT_CHAT_POLL_RATE_PER_IP_MIN', '360'),
                 ),
+                // Estado de la sugerencia de IA para plantillas asíncrona: ~1 por segundo mientras se espera.
+                'modelli_assist_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('MODELLI_ASSIST_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('MODELLI_ASSIST_POLL_RATE_PER_IP_MIN', '360'),
+                ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
                     ratePerIp: (int) $get('RATE_SEARCH_POLL_RATE_PER_IP_MIN', '900'),

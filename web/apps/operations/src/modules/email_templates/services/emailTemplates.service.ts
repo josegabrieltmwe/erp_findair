@@ -127,6 +127,22 @@ export interface AssistResult {
 const BASE = "/api_master_templates_web";
 const PREVIEW = "/api_modelli_preview_web";
 const ASSIST = "/api_modelli_assist_web";
+const ASSIST_STATE = "/api_modelli_assist_state";
+/** Plazo de la sugerencia asíncrona (el API la da por vencida a los 120 s). */
+const ASSIST_MAX_WAIT_MS = 130_000;
+
+interface AssistQueued {
+  status: "waiting";
+  request_id: number;
+  poll_after_ms?: number;
+}
+
+function isAssistQueued(d: unknown): d is AssistQueued {
+  const r = d as Partial<AssistQueued> | null;
+  return !!r && r.status === "waiting" && typeof r.request_id === "number";
+}
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 interface RawWrite {
   success?: boolean;
@@ -241,8 +257,18 @@ export const emailTemplatesService = {
     target_lingua?: string;
     instruction?: string;
   }): Promise<AssistResult> {
-    const raw = await http<RawWrite>(ASSIST, { method: "POST", body: input });
+    // async: el API la encarga al demonio y responde {status:waiting, request_id}; sin interruptor o demonio responde
+    // la sugerencia directamente, como antes (PLAN_MIGRACION_RPC_DEMONIO.md R2).
+    let raw = await http<RawWrite>(ASSIST, { method: "POST", body: { ...input, async: true } });
     assertOk(raw, "No se pudo obtener la sugerencia");
+    const started = Date.now();
+    while (isAssistQueued(objOf<unknown>(raw))) {
+      const queued = objOf<AssistQueued>(raw);
+      if (Date.now() - started > ASSIST_MAX_WAIT_MS) throw new Error("La IA no respondió a tiempo");
+      await sleep(Math.max(500, queued.poll_after_ms ?? 1000));
+      raw = await http<RawWrite>(ASSIST_STATE, { method: "GET", query: { request_id: queued.request_id } });
+      assertOk(raw, "No se pudo obtener la sugerencia");
+    }
     return objOf<AssistResult>(raw);
   },
 };

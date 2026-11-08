@@ -338,6 +338,18 @@ routes:
     limits: { timeout: 15 }
     throttle: copilot_chat_poll
 
+  # Estado de una sugerencia de IA para plantillas encargada con async:true (la procesa el demonio del API,
+  # PLAN_MIGRACION_RPC_DEMONIO.md R2): mientras espera {status:waiting}; al terminar, la misma respuesta que el POST
+  # síncrono. El POST síncrono podía pasar de los 30 s del límite de esta ruta.
+  - id: modelli.assist.state
+    method: GET
+    path: /api_modelli_assist_state
+    upstream:
+      action: api_modelli_assist_web
+      forward_query: [request_id]
+    limits: { timeout: 15 }
+    throttle: modelli_assist_poll
+
   # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
   # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
   # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).
