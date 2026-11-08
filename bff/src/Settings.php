@@ -136,6 +136,11 @@ final class Settings
                     ratePerUser: (int) $get('EXPORT_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('EXPORT_POLL_RATE_PER_IP_MIN', '360'),
                 ),
+                // Estado común de las peticiones asíncronas (R3): ~1 por segundo mientras se espera.
+                'async_request_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_IP_MIN', '360'),
+                ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
                     ratePerIp: (int) $get('RATE_SEARCH_POLL_RATE_PER_IP_MIN', '900'),

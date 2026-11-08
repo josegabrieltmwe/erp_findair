@@ -383,6 +383,26 @@ routes:
     limits: { timeout: 15 }
     throttle: export_poll
 
+  # Estado común de cualquier petición encargada al demonio del API (PLAN_MIGRACION_RPC_DEMONIO.md R3): estado,
+  # progreso, eventos públicos (cursor `since`) y cancelar (POST op=cancel; solo lecturas). El resultado lo da la
+  # ruta de cada operación.
+  - id: async.request.state
+    method: GET
+    path: /api_async_request
+    upstream:
+      action: api_async_request
+      forward_query: [request_id, since]
+    limits: { timeout: 15 }
+    throttle: async_request_poll
+
+  - id: async.request.cancel
+    method: POST
+    path: /api_async_request
+    upstream:
+      action: api_async_request
+    limits: { body: 1k, timeout: 15 }
+    throttle: async_request_poll
+
   # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
   # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
   # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).
