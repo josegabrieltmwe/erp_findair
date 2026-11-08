@@ -370,3 +370,58 @@ describe("propuestas y confirmacion", () => {
     }).toThrow();
   });
 });
+
+/**
+ * Conversación procesada por el demonio del API (PLAN_MIGRACION_RPC_DEMONIO.md R2): 202 {request_id} y sondeo de
+ * /copilot_chat_state hasta el resultado, que se trata igual que la respuesta síncrona.
+ */
+describe("conversación asíncrona del copilot", () => {
+  beforeEach(() => {
+    httpMock.mockReset();
+    setActivePinia(createPinia());
+    vi.useFakeTimers();
+  });
+
+  it("pide async y, con 202, consulta el estado hasta la respuesta", async () => {
+    httpMock
+      .mockResolvedValueOnce({ success: true, status: "waiting", request_id: 9, poll_after_ms: 0 })
+      .mockResolvedValueOnce({ success: true, status: "running", request_id: 9, poll_after_ms: 0 })
+      .mockResolvedValueOnce({ success: true, status: "done", request_id: 9, result: ok({ answer: "Es el 1Z1." }) });
+    const store = useChatStore();
+    const p = store.send("ficha del 500");
+    await vi.runAllTimersAsync();
+    await p;
+    vi.useRealTimers();
+
+    expect(httpMock.mock.calls[0][1].body.async).toBe(true);
+    expect(httpMock.mock.calls[1][0]).toBe("/copilot_chat_state");
+    expect(httpMock.mock.calls[1][1].query).toEqual({ request_id: 9 });
+    const last = store.bubbles[store.bubbles.length - 1];
+    expect(last.text).toBe("Es el 1Z1.");
+    expect(last.error).toBeFalsy();
+  });
+
+  it("un fallo de la conversación queda como error con su código", async () => {
+    httpMock
+      .mockResolvedValueOnce({ success: true, status: "waiting", request_id: 9, poll_after_ms: 0 })
+      .mockResolvedValueOnce({ success: false, status: "failed", request_id: 9, error: { code: "AI_TIMEOUT", message: "x" } });
+    const store = useChatStore();
+    const p = store.send("hola");
+    await vi.runAllTimersAsync();
+    await p;
+    vi.useRealTimers();
+
+    const last = store.bubbles[store.bubbles.length - 1];
+    expect(last.error).toBe(true);
+    expect(last.errorKey).toBe("copilot.errors.ai_unavailable");
+  });
+
+  it("sin demonio el servidor responde en síncrono y no se sondea", async () => {
+    httpMock.mockResolvedValueOnce(ok({ answer: "directo" }));
+    const store = useChatStore();
+    await store.send("hola");
+    vi.useRealTimers();
+    expect(httpMock).toHaveBeenCalledTimes(1);
+    expect(store.bubbles[store.bubbles.length - 1].text).toBe("directo");
+  });
+});

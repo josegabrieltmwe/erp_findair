@@ -117,6 +117,10 @@ final class Settings
                     ratePerIp: (int) $get('OTP_MAIL_RATE_PER_IP_MIN', '10'),
                 ),
                 // Consulta de eventos de la búsqueda de vuelos asíncrona: ~1 por segundo y búsqueda, hasta 3 búsquedas a la vez.
+                'copilot_chat_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('COPILOT_CHAT_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('COPILOT_CHAT_POLL_RATE_PER_IP_MIN', '360'),
+                ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
                     ratePerIp: (int) $get('RATE_SEARCH_POLL_RATE_PER_IP_MIN', '900'),

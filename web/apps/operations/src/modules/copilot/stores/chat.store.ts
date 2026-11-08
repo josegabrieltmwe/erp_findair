@@ -32,11 +32,69 @@ export interface SendContext {
   router?: ActionRouter;
 }
 
+/**
+ * Conversación procesada por el demonio del API (PLAN_MIGRACION_RPC_DEMONIO.md R2): el POST con `async: true`
+ * responde 202 {request_id} y el resultado (la misma respuesta que el POST síncrono) se consulta en
+ * /copilot_chat_state. Sin demonio el servidor responde en síncrono y no hay nada que esperar.
+ */
+export const COPILOT_ASYNC = { maxDurationMs: 8 * 60_000, defaultPollMs: 1000, minPollMs: 300 };
+
+interface CopilotChatQueued {
+  status: "waiting";
+  request_id: number;
+  poll_after_ms?: number;
+}
+
+interface CopilotChatState {
+  status: string;
+  request_id: number;
+  cursor?: number;
+  result?: CopilotChatResponse;
+  error?: { code?: string; message?: string };
+  poll_after_ms?: number;
+}
+
+/** Error de una conversación asíncrona, con el código del backend donde lo busca backendCode(). */
+class CopilotAsyncError extends Error {
+  details: { code: string };
+  constructor(code: string, message: string) {
+    super(message);
+    this.details = { code };
+  }
+}
+
+function isQueued(res: unknown): res is CopilotChatQueued {
+  const r = res as Partial<CopilotChatQueued> | null;
+  return !!r && r.status === "waiting" && typeof r.request_id === "number";
+}
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/** Espera el resultado de una conversación encargada con async:true. */
+export async function awaitCopilotChat(queued: CopilotChatQueued): Promise<CopilotChatResponse> {
+  const started = Date.now();
+  let wait = queued.poll_after_ms ?? COPILOT_ASYNC.defaultPollMs;
+  while (Date.now() - started < COPILOT_ASYNC.maxDurationMs) {
+    await sleep(Math.max(COPILOT_ASYNC.minPollMs, wait));
+    const st = await http<CopilotChatState>("/copilot_chat_state", {
+      method: "GET",
+      query: { request_id: queued.request_id },
+    });
+    if (st.status === "done" && st.result) return st.result;
+    if (st.status !== "running") {
+      throw new CopilotAsyncError(st.error?.code ?? "AI_TIMEOUT", st.error?.message ?? "The assistant did not answer");
+    }
+    wait = st.poll_after_ms ?? COPILOT_ASYNC.defaultPollMs;
+  }
+  throw new CopilotAsyncError("AI_TIMEOUT", "The assistant did not answer in time");
+}
+
 /** Known chat failures that deserve a specific message (BFF limits, kill-switch). */
 function chatErrorKey(e: unknown): string | undefined {
   const status = (e as { status?: unknown })?.status;
   switch (backendCode(e)) {
     case "concurrency_limited":
+    case "copilot_busy":
       return "copilot.errors.busy";
     case "rate_limited":
       return "copilot.errors.rate_limited";
@@ -107,10 +165,11 @@ export const useChatStore = defineStore("copilotChat", () => {
     if (ctx.currentRoute) context.current_route = ctx.currentRoute;
 
     try {
-      const res = await http<CopilotChatResponse>("/copilot_chat", {
+      const first = await http<CopilotChatResponse | CopilotChatQueued>("/copilot_chat", {
         method: "POST",
-        body: { message: text, history: history.value, context },
+        body: { message: text, history: history.value, context, async: true },
       });
+      const res: CopilotChatResponse = isQueued(first) ? await awaitCopilotChat(first) : first;
 
       const bubble = bubbles.value.find((b) => b.id === pendingId);
       if (bubble) {

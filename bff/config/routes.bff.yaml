@@ -326,6 +326,18 @@ routes:
     # 1 chat simultáneo por usuario, tope global y ritmo por minuto (contadores atómicos en Valkey; ver Settings).
     throttle: copilot_chat
 
+  # Estado de una conversación encargada con async:true (la procesa el demonio del API, PLAN_MIGRACION_RPC_DEMONIO.md
+  # R2): eventos desde el cursor y, al terminar, la misma respuesta que el POST síncrono. Ruta propia porque
+  # GET /copilot_chat está excluida arriba.
+  - id: copilot.chat.state
+    method: GET
+    path: /copilot_chat_state
+    upstream:
+      action: copilot_chat
+      forward_query: [request_id, since]
+    limits: { timeout: 15 }
+    throttle: copilot_chat_poll
+
   # Confirmación de una propuesta de escritura del copilot (contrato: tmwe_json Copilot_Write_Proposal_Controller).
   # Solo se expone op=confirmar: op=proponer permitiría fabricar propuestas desde el navegador saltándose
   # el modelo, copilot_write_enabled y la auditoría de la propuesta (las propuestas se firman en copilot_chat).
