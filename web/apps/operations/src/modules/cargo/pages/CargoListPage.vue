@@ -471,16 +471,6 @@
               :title="t('listing.open_modern')"
               @click.stop="openCargo((item as CargoListRow).id)"
             />
-            <v-btn
-              :href="legacyDetailHref((item as CargoListRow).id)"
-              target="_blank"
-              rel="noopener"
-              icon="mdi-folder-open-outline"
-              size="x-small"
-              variant="text"
-              :title="t('listing.open_legacy')"
-              @click.stop
-            />
           </div>
         </template>
       </ListingDataView>
@@ -1279,11 +1269,6 @@ function setDrawerOpen(open: boolean): void {
   const query = { ...route.query };
   delete query.view;
   void router.replace({ query });
-}
-
-/** URL absoluta del detalle cargo en el form legacy (winbody pp=spedyc). */
-function legacyDetailHref(id: string | number): string {
-  return `/erp/winbody.php?pp=spedyc&id=${encodeURIComponent(String(id))}`;
 }
 
 function serializeFilterKey(): string {

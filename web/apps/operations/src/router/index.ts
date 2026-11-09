@@ -13,6 +13,7 @@ import { AI_LEGACY_ROUTE_TABS, canSeeAiScope, type AiScope } from "@shared/ai_ad
 import { anagraficaExtraTabs } from "@/modules/anagrafica/anagraficaExtraTabs";
 import { can as paymentsCan } from "@/modules/payments/env";
 import { canOpenModuleRoute, isModuleGuardedRoute } from "./moduleAccess";
+import { resolveLegacyUrl } from "./legacyRedirect";
 import { can as warehouseCan } from "@/modules/warehouse/env";
 import { can as invoicingCan } from "@/modules/invoicing/services/http";
 
@@ -1266,6 +1267,10 @@ const routes: RouteRecordRaw[] = [
     name: "my-org-sites",
     redirect: () => myOrgTarget("sedi"),
   },
+
+  // URLs del ERP antiguo que siguen vivas en marcadores, correos y notificaciones guardadas.
+  { path: "/erp/tmwe_json/:rest(.*)*", redirect: resolveLegacyUrl },
+  { path: "/ops/:rest(.*)*", redirect: resolveLegacyUrl },
 
   { path: "/:pathMatch(.*)*", redirect: { name: "home" } },
 ];

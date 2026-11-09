@@ -90,15 +90,11 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "herramientas",
     items: [
       { key: "bulk",         icon: "mdi-upload-multiple", routeName: "bulk", scopes: ["import:read", "import:write"] },
-      { key: "import",       icon: "mdi-upload",          href: "/erp/winbody.php?pp=spedy_import&ti=new" },
-      { key: "import_v2",    icon: "mdi-upload-outline",  href: "/erp/winbody.php?pp=spedy_import2&ti=new" },
       // Tarifas: ruta INTERNA (la feature vive en @shared/listini). Antes
       // apuntaba al legacy `winbody.php?pp=listy`, que además rechaza a los
       // partners — justo el público de este item (`partnerOnly`).
       { key: "price_lists",  icon: "mdi-cash-register",   routeName: "price-lists", partnerOnly: true, daily: true },
-      { key: "send_message", icon: "mdi-message-plus",    href: "/erp/winbody.php?pp=docsstory&ti=new" },
       { key: "email_templates", icon: "mdi-email-multiple-outline", routeName: "email_templates", scopes: ["config:read", "partner:manage"] },
-      { key: "api_portal",   icon: "mdi-api",             href: "/erp/tmwe_json/api_doc", adminOnly: true },
     ],
   },
   {

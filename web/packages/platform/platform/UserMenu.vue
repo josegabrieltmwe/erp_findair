@@ -32,10 +32,6 @@
       </header>
 
       <div class="um-section">
-        <a class="um-link" :href="profileHref">
-          <v-icon icon="mdi-account-cog-outline" size="16" />
-          <span>{{ t('platform.user_menu.profile') }}</span>
-        </a>
         <a class="um-link" href="#" @click.prevent="onLogout">
           <v-icon icon="mdi-logout" size="16" />
           <span>{{ t('common.logout') }}</span>
@@ -63,7 +59,6 @@ interface Profile {
 const open = ref(false);
 const profile = ref<Profile | null>(null);
 
-const profileHref = '/erp/profilo.php';
 async function onLogout(): Promise<void> {
   await bffLogout();
 }

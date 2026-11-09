@@ -213,7 +213,7 @@
           variant="flat"
           color="primary"
           prepend-icon="mdi-magnify"
-          href="/erp/"
+          href="/shipment/list"
         >
           {{ t("shipment.detail.go_back_search") }}
         </v-btn>
