@@ -40,11 +40,23 @@ import DatosFiscalesAnagraficaTab from "@/modules/invoicing/components/fiscal/Da
  * propósito (el propio contrato lo prohíbe: la casa TMWE, tipo 'I',
  * también tiene credenciales).
  *
+ * "webcargo" y "fornitori_accnt" son la excepción: sus backends
+ * (`api_admin_webcargo_key`, `api_admin_fornitori_accnt`) son `admin_only`
+ * INCONDICIONAL — solo responden si quien llama es TMWE, sea cual sea el
+ * `tipo` del registro que se mira. No es un filtro por `tipo` del registro
+ * (lo que el contrato de arriba prohíbe), es por identidad del que mira: un
+ * operador de partner veía estas dos pestañas y siempre le fallaban con 403
+ * (recorrido UI 2026-11-09). Mismo composable que ya usa GiacenzeListPage.vue
+ * para la misma distinción TMWE/partner.
+ *
  * `markRaw` evita que Vue intente hacer reactivo el propio componente
  * (innecesario y más lento para un valor que nunca cambia).
  */
 export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
   const t = i18n.global.t;
+  // Backends admin_only incondicional (ver docblock arriba): solo TMWE puede
+  // llamarlos, nunca un partner, sea cual sea el registro que mire.
+  const isTmwe = Boolean(window.__TMWE_OPERATIONS__?.isTmwe);
   return [
     {
       key: "air_carrier_credentials",
@@ -59,6 +71,7 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       icon: "mdi-key-variant",
       component: markRaw(WebcargoCredentialsPartnerTab),
       group: "integrations",
+      visible: () => isTmwe,
     },
     {
       key: "fornitori_accnt",
@@ -66,6 +79,7 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       icon: "mdi-truck-fast",
       component: markRaw(FornitoriAccntPartnerTab),
       group: "integrations",
+      visible: () => isTmwe,
     },
     {
       key: "ai_credentials",
@@ -82,7 +96,8 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       icon: "mdi-email-fast-outline",
       component: markRaw(PartnerSmtpPartnerTab),
       group: "integrations",
-      visible: (record) => ["P", "I"].includes(String(record.tipo ?? "").toUpperCase()),
+      visible: (record) =>
+        ["P", "I"].includes(String(record.tipo ?? "").toUpperCase()),
     },
     {
       // «Datos fiscales» (DISENO §5): ajustes con vigencia y datos que exige
