@@ -66,12 +66,9 @@
           :src="labelUrl(it, 'image')"
           alt="label"
           class="courier-label__img"
-          :class="{
-            'courier-label__img--rot90': rotateDeg(it) !== 0,
-            'courier-label__img--loaded': loaded.has(i),
-          }"
-          :style="zoom.styleFor(imgStyle(it))"
-          @load="onImgLoad(i, it, $event)"
+          :class="{ 'courier-label__img--loaded': loaded.has(i) }"
+          :style="zoom.styleFor()"
+          @load="onImgLoad(i)"
         />
       </div>
     </div>
@@ -113,10 +110,6 @@ const props = defineProps<{
   loading: boolean;
   printing: boolean;
   labelUrl: (it: CourierLabelItem, format: "pdf" | "image") => string;
-  rotateDeg: (it: CourierLabelItem) => number;
-  imgStyle: (it: CourierLabelItem) => Record<string, string>;
-  /** Avisa del tamano real de la imagen para detectar las apaisadas (useCourierLabels.noteLabelSize). */
-  noteLabelSize?: (it: CourierLabelItem, ev: Event) => void;
 }>();
 
 const emit = defineEmits<{
@@ -133,9 +126,8 @@ const { t } = useI18n();
 // (naturalWidth=0), so the first-time scale is wrong (worst for TNT, whose JPG
 // is HTML-rendered and has no rotation fallback). Reset on reopen / new labels.
 const loaded = ref(new Set<number>());
-function onImgLoad(i: number, it?: CourierLabelItem, ev?: Event): void {
+function onImgLoad(i: number): void {
   loaded.value = new Set(loaded.value).add(i);
-  if (it && ev) props.noteLabelSize?.(it, ev);
 }
 
 const zoom = useLabelZoom();
@@ -216,48 +208,4 @@ watch(
   transition: opacity 0.15s ease;
 }
 
-/*
-  Rotated labels (courier labels come landscape — FedEx ships 1400x950 — and
-  must be shown upright).
-
-  `transform: rotate()` is purely visual: the element keeps occupying its
-  PRE-rotation box, so the 1400px-wide image still claimed 1400px of layout
-  width. The card could not shrink to the upright result, `margin: auto` had
-  nothing to center within, and the label spilled out mis-scaled.
-
-  Fix: the wrapper reserves the post-rotation box via aspect-ratio (swapped
-  W/H), and the image is sized against the wrapper's *height* — which, after
-  the 90° turn, is what becomes the visible width. `object-fit: contain`
-  guarantees the whole label stays inside its frame at any viewport size.
-*/
-.courier-label:has(.courier-label__img--rot90) {
-  /* Upright result of a landscape label: taller than wide. */
-  aspect-ratio: 950 / 1400;
-  max-height: 70vh;
-  /* Cap the width so the portrait frame never gets wider than the dialog. */
-  width: min(100%, calc(70vh * 950 / 1400));
-  margin-inline: auto;
-}
-.courier-label__img--rot90 {
-  /* Sized in pre-rotation space: `width` here becomes the on-screen HEIGHT
-     and vice versa, hence the swapped 100%/100% against the flex parent. */
-  max-width: none;
-  max-height: none;
-  width: auto;
-  height: auto;
-  max-block-size: 100%;
-  max-inline-size: 100%;
-  object-fit: contain;
-  margin: 0;
-}
-
-/* Fallback for browsers without :has() — keep the old containment so the
-   label is never larger than the viewport, even if not perfectly framed. */
-@supports not selector(:has(*)) {
-  .courier-label__img--rot90 {
-    max-height: 60vh;
-    width: auto;
-    margin: 8px auto;
-  }
-}
 </style>

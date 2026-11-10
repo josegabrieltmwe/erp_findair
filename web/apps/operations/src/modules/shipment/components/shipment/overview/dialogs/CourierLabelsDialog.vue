@@ -127,12 +127,9 @@
             :src="labelUrl(it, 'image')"
             alt="label"
             class="courier-label__img"
-            :class="{
-              'courier-label__img--loaded': loaded.has(i),
-              'courier-label__img--rot90': rotateDeg ? rotateDeg(it) !== 0 : false,
-            }"
-            :style="zoom.styleFor(imgStyle ? imgStyle(it) : {})"
-            @load="onImgLoad(i, it, $event)"
+            :class="{ 'courier-label__img--loaded': loaded.has(i) }"
+            :style="zoom.styleFor()"
+            @load="onImgLoad(i)"
           />
         </div>
         <a
@@ -178,19 +175,13 @@ const props = defineProps<{
   labelUrl: (it: CourierLabelItem, format: "pdf" | "image") => string;
   title: (it: CourierLabelItem) => string;
   subtitle: (it: CourierLabelItem) => string;
-  /** Giro de la etiqueta (apaisada -> 270) y su estilo; ver useCourierLabels.rotateDeg. */
-  rotateDeg?: (it: CourierLabelItem) => number;
-  imgStyle?: (it: CourierLabelItem) => Record<string, string>;
-  /** Avisa del tamano real de la imagen para detectar las apaisadas. */
-  noteLabelSize?: (it: CourierLabelItem, ev: Event) => void;
 }>();
 
 // Only size each label image once it has loaded (naturalWidth known), so it
 // doesn't get mis-scaled while the dialog opens with the image not yet loaded.
 const loaded = ref(new Set<number>());
-function onImgLoad(i: number, it?: CourierLabelItem, ev?: Event): void {
+function onImgLoad(i: number): void {
   loaded.value = new Set(loaded.value).add(i);
-  if (it && ev) props.noteLabelSize?.(it, ev);
 }
 
 const zoom = useLabelZoom();
@@ -273,35 +264,4 @@ const { t } = useI18n();
   transition: opacity 0.15s ease;
 }
 
-/*
-  Etiquetas apaisadas (FedEx 1400x950, UPS...) giradas 270° para verlas en vertical, como en AwbSuccessDialog:
-  `transform: rotate()` no cambia la caja del elemento, asi que el marco reserva la caja ya girada (aspect-ratio con
-  ancho y alto cambiados) y la imagen se dimensiona contra su alto, que tras el giro es el ancho visible.
-*/
-.courier-label__frame:has(.courier-label__img--rot90) {
-  aspect-ratio: 950 / 1400;
-  max-height: 70vh;
-  width: min(100%, calc(70vh * 950 / 1400));
-  margin-inline: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.courier-label__img--rot90 {
-  max-width: none;
-  max-height: none;
-  width: auto;
-  height: auto;
-  max-block-size: 100%;
-  max-inline-size: 100%;
-  object-fit: contain;
-  margin: 0;
-}
-@supports not selector(:has(*)) {
-  .courier-label__img--rot90 {
-    max-height: 60vh;
-    width: auto;
-    margin: 8px auto;
-  }
-}
 </style>

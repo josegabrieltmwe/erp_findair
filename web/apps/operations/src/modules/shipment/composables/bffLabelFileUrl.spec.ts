@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { bffLabelFileUrl, absoluteUrl, isLandscape } from "./useCourierLabels";
+import { bffLabelFileUrl, absoluteUrl } from "./useCourierLabels";
 
 // get_label_courier_shipment devuelve la URL absoluta del API; desde el ERP el navegador no lleva sesion a ese host
 // (401, 1001084298). La etiqueta se pide por el BFF, conservando la query.
@@ -41,11 +41,3 @@ describe("absoluteUrl", () => {
 });
 
 // Etiquetas apaisadas (FedEx 1400x950, UPS...) se giran 270° para verse en vertical; se decide por la imagen.
-describe("isLandscape", () => {
-  it("gira las apaisadas y deja las verticales o casi cuadradas", () => {
-    expect(isLandscape(1400, 950)).toBe(true);
-    expect(isLandscape(800, 1200)).toBe(false);
-    expect(isLandscape(1000, 980)).toBe(false);
-    expect(isLandscape(0, 0)).toBe(false);
-  });
-});

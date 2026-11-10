@@ -31,11 +31,6 @@ export function bffLabelFileUrl(url: string, base: string): string {
   return `${base.replace(/\/+$/, "")}/${action}${query ? `?${query}` : ""}`;
 }
 
-/** ¿Imagen apaisada? Un margen del 5 % evita girar etiquetas casi cuadradas. */
-export function isLandscape(width: number, height: number): boolean {
-  return width > 0 && height > 0 && width > height * 1.05;
-}
-
 /** URL absoluta con el origen de la pagina (sin window, tal cual). Las ya absolutas no cambian. */
 export function absoluteUrl(url: string, origin?: string): string {
   const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
@@ -102,71 +97,8 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
     return `${url}${sep}format=${format}`;
   }
 
-  /**
-   * Degrees a label must be rotated CLOCKWISE to read vertically. Some couriers
-   * (UPS, FedEx) return landscape labels; the backend flags them via `rotate`
-   * ('inverse' = UPS, true = FedEx). 0 means already upright.
-   *
-   * 270°, not 90°: these labels are laid out with the text running BOTTOM-TO-TOP
-   * (rotated counter-clockwise from upright), so turning them a further 90°
-   * clockwise left them upside down — the barcode ended up at the top and the
-   * address unreadable. Verified against a real FedEx 1400x950 label.
-   */
-  /**
-   * Etiquetas cuya imagen es apaisada (mas ancha que alta), por URL. Se rellena al cargar cada imagen
-   * (noteLabelSize) y, para imprimir, precargandolas (detectLandscape): asi se gira cualquier courier aunque el
-   * backend no mande `rotate` (p. ej. FedEx 1400x950 en «Ver etiquetas del courier»).
-   */
-  const landscape = ref(new Set<string>());
-
-  function rotateDeg(it: CourierLabelItem): number {
-    const r = it.rotate;
-    if (r === "inverse") return 270;
-    if (r === true || r === "true") return 270;
-    if (it.url && landscape.value.has(it.url)) return 270;
-    return 0;
-  }
-
-  /** Apunta si la imagen cargada de la etiqueta es apaisada (handler de @load de la <img>). */
-  function noteLabelSize(it: CourierLabelItem, ev: Event): void {
-    const img = ev.target as HTMLImageElement | null;
-    if (!it.url || !img) return;
-    if (isLandscape(img.naturalWidth, img.naturalHeight) && !landscape.value.has(it.url)) {
-      landscape.value = new Set(landscape.value).add(it.url);
-    }
-  }
-
-  /** Precarga las imagenes de las etiquetas para saber cuales son apaisadas antes de montar la impresion. */
-  async function detectLandscape(items: CourierLabelItem[]): Promise<void> {
-    await Promise.all(
-      items.map(
-        (it) =>
-          new Promise<void>((resolve) => {
-            if (!it.url || landscape.value.has(it.url) || typeof Image === "undefined") return resolve();
-            const img = new Image();
-            img.onload = () => {
-              if (isLandscape(img.naturalWidth, img.naturalHeight)) {
-                landscape.value = new Set(landscape.value).add(it.url as string);
-              }
-              resolve();
-            };
-            img.onerror = () => resolve();
-            img.src = labelUrl(it, "image");
-          }),
-      ),
-    );
-  }
-
-  /**
-   * Inline style that rotates a landscape label image to vertical inside its
-   * container. When rotated 90°/270° the image's width becomes the container's
-   * height, so we size by viewport-relative units and let the wrapper clip.
-   */
-  function imgStyle(it: CourierLabelItem): Record<string, string> {
-    const deg = rotateDeg(it);
-    if (!deg) return {};
-    return { transform: `rotate(${deg}deg)`, transformOrigin: "center center" };
-  }
+  // La UI NO gira las etiquetas: la orientacion (las de UPS/FedEx llegan apaisadas) la corrigen los workers de
+  // imagen/PDF, asi que el JPG/PDF que sirve el API ya sale de pie.
 
   /**
    * One-click print of the courier label — the most-used action. Fetches the
@@ -201,16 +133,8 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
         toasts.push("warning", t("shipment.awb.no_courier_labels"));
         return;
       }
-      // Saber cuales son apaisadas antes de montar la pagina: se imprimen giradas.
-      await detectLandscape(labels);
       const imgs = labels
-        .map((it) => {
-          const deg = rotateDeg(it);
-          const inner = deg
-            ? `<img src="${labelUrl(it, "image")}" alt="label" class="rot" style="transform:rotate(${deg}deg)" />`
-            : `<img src="${labelUrl(it, "image")}" alt="label" />`;
-          return `<div class="page">${inner}</div>`;
-        })
+        .map((it) => `<div class="page"><img src="${labelUrl(it, "image")}" alt="label" /></div>`)
         .join("");
       const html = `
       <!doctype html><html><head><title>${t("shipment.awb.print_title", { awb: awb() })}</title>
@@ -218,21 +142,10 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
         body { margin: 0; padding: 8px; font-family: sans-serif; }
         .page { display: flex; align-items: center; justify-content: center;
                 overflow: hidden; page-break-after: always; }
-        img { max-width: 100%; display: block; margin: 0 auto; }
-        /* A rotated label keeps its PRE-rotation layout box (transform is
-           visual only), so the landscape image still claims its full width and
-           the upright result overflowed the sheet. Sizing it against the
-           viewport HEIGHT — which is what becomes on-screen width after the
-           90° turn — keeps the whole label on one page, centered. */
-        img.rot { max-width: none; max-height: 96vw; width: auto;
-                  transform-origin: center center; }
+        img { max-width: 100%; max-height: 96vh; display: block; margin: 0 auto; }
         @media print {
           body { padding: 0; }
           .page { height: 100vh; }
-          /* On paper the constraint is the page box: cap by height so the
-             rotated label scales down to fit instead of being clipped. */
-          img.rot { max-height: 96vw; max-width: none; }
-          /* Portrait sheet for upright labels. */
           @page { size: auto; margin: 6mm; }
         }
       </style></head>
@@ -382,9 +295,6 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
     downloadAll,
     // presentational helpers
     labelUrl,
-    rotateDeg,
-    imgStyle,
-    noteLabelSize,
     title,
     subtitle,
   };
