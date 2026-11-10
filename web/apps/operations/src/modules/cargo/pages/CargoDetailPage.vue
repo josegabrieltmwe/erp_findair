@@ -65,7 +65,7 @@
           variant="flat"
           color="primary"
           prepend-icon="mdi-magnify"
-          href="/erp/"
+          href="/cargo/list"
         >
           {{ t("cargo.page.back_to_search") }}
         </v-btn>

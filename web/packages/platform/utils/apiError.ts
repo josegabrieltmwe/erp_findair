@@ -195,7 +195,7 @@ export function userError(e: unknown, i18n: Translator, fallback = 'Error'): Use
     status ? `http: ${status}` : '',
     typeof details.courier_code === 'string' ? `courier_code: ${details.courier_code}` : '',
     typeof details.field === 'string' ? `field: ${details.field}` : '',
-    typeof details.courier_message === 'string' ? `courier: ${details.courier_message}` : serverText ? `message: ${serverText}` : '',
+    typeof details.reference === 'string' ? `ref: ${details.reference}` : serverText ? `message: ${serverText}` : '',
     requestId ? `request_id: ${requestId}` : '',
   ]
     .filter(Boolean)

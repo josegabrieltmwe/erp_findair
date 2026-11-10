@@ -101,9 +101,8 @@ const rows = computed<RowDescriptor[]>(() => [
     icon: 'mdi-clipboard-text-outline',
     color: 'warning',
     count: counts.value.crm ?? 0,
-    // SPA crm_pratica. El router usa hash history, así que el filtro va
-    // dentro del hash. ti=open == legacy winbody.php?pp=crm&ti=open.
-    href: '/erp/tmwe_json/crm_pratica#/pratiche?ti=open',
+    // ti=open == legacy winbody.php?pp=crm&ti=open.
+    href: '/crm?ti=open',
   },
 ]);
 

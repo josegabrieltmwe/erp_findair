@@ -905,15 +905,16 @@ async function cancelAtCourier(): Promise<void> {
       toasts.push("error", r.error ?? t("shipment.detail.toast_cancel_failed"));
     }
   } catch (e) {
-    // Codigos estables del API (errors.api.*) + el motivo del courier, si lo hay.
+    // Codigos estables del API (errors.api.*) + la referencia del incidente, si la hay. El motivo real del
+    // courier ya no viaja al cliente (puede traer datos de la cuenta) — se registra en el log del servidor.
     const code = apiErrorCode(e);
-    const reason = String(apiErrorDetails(e).courier_message ?? "");
+    const reference = String(apiErrorDetails(e).reference ?? "");
     let text = localizedErrorText(
       e,
       { t, te },
       t("shipment.detail.toast_cancel_failed"),
     );
-    if (code && te(`errors.api.${code}`) && reason) text += ` (${reason})`;
+    if (code && te(`errors.api.${code}`) && reference) text += ` (ref: ${reference})`;
     toasts.push("error", text);
     // Si la recogida se anulo aunque el envio no, la ficha ha cambiado.
     if (code === "CANCEL_FAILED_PICKUP_CANCELLED") await store.load(sid);

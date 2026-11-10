@@ -395,16 +395,6 @@
               :title="t('listing.open_modern')"
               @click.stop="openShipment((item as ShipmentListRow).id)"
             />
-            <v-btn
-              :href="legacyDetailHref((item as ShipmentListRow).id)"
-              target="_blank"
-              rel="noopener"
-              icon="mdi-folder-open-outline"
-              size="x-small"
-              variant="text"
-              :title="t('listing.open_legacy')"
-              @click.stop
-            />
           </div>
         </template>
       </ListingDataView>
@@ -1238,12 +1228,6 @@ function detailHref(id: string | number): string {
   // (hoy /ops, antes /operations#) vive en navTargets, y tenerlo duplicado en
   // cada listado es lo que dejó estos enlaces apuntando al esquema viejo.
   return spaDetailHref("shipment", id, qs);
-}
-
-/** URL absoluta del detalle en el form legacy (winbody pp=spedy). El usuario
- *  puede preferir la vista clásica para ciertas operaciones no migradas. */
-function legacyDetailHref(id: string | number): string {
-  return `/erp/winbody.php?pp=spedy&id=${encodeURIComponent(String(id))}`;
 }
 
 /** Abre el listado de postfacturación (réplica de la vista legacy faddebit2). */

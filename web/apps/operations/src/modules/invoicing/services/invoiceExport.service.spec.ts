@@ -48,8 +48,26 @@ describe("invoiceExport.service", () => {
     expect(g.filename).toBe("b.xlsx");
     expect(httpMock.mock.calls[1][1]).toEqual({
       method: "POST",
-      body: { type: "active", year: 2025, format: "xlsx" },
+      body: { type: "active", year: 2025, format: "xlsx", async: true },
     });
+  });
+
+  it("espera el listado anual encargado al demonio del API", async () => {
+    vi.useFakeTimers();
+    httpMock
+      .mockResolvedValueOnce({ success: true, data: { status: "waiting", request_id: 9, poll_after_ms: 500 } })
+      .mockResolvedValueOnce({ success: true, data: { status: "waiting", request_id: 9 } })
+      .mockResolvedValueOnce({ success: true, data: { file: "QQ==", filename: "a.xlsx" } });
+    const p = invoiceExportService.balance("active", 2025, "xlsx");
+    await vi.runAllTimersAsync();
+    const f = await p;
+    vi.useRealTimers();
+    expect(f.filename).toBe("a.xlsx");
+    expect(httpMock.mock.calls[1]).toEqual([
+      "/api_balance_sheet_export_state",
+      { method: "GET", query: { request_id: 9 } },
+    ]);
+    expect(httpMock).toHaveBeenCalledTimes(3);
   });
 
   it("falla si el servidor no devuelve fichero", async () => {

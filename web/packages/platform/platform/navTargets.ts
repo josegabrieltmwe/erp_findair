@@ -58,15 +58,15 @@ const LEGACY_HREF: Record<NavModule, string> = {
   cargo: `${BASE}/cargo/list`,
   shipment: `${BASE}/shipment/list`,
   clients: `${BASE}/clients`,
-  invoicing: `${BASE}/invoicing/list`,
-  cod_assegni: `${BASE}/cod_assegni`,
+  invoicing: `${BASE}/invoicing`,
+  cod_assegni: `${BASE}/cod`,
   giacenze: `${BASE}/giacenze`,
-  pickup: `${BASE}/pickup_manager`,
-  crm: `${BASE}/crm_pratica`,
+  pickup: `${BASE}/pickup`,
+  crm: `${BASE}/crm`,
   proforma: `${BASE}/proforma`,
   bulk: `${BASE}/bulk`,
   copilot: `${BASE}/copilot`,
-  tracking: `${BASE}/admin_tracking`,
+  tracking: `${BASE}/tracking`,
 };
 
 /**

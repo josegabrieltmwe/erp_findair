@@ -70,15 +70,6 @@
             @blur="dataSped1.commit"
           />
         </v-col>
-        <v-col cols="auto">
-          <v-btn
-            variant="text"
-            prepend-icon="$package"
-            :href="trackingUrl"
-            target="_blank"
-            >{{ t("shipment.modals.delivery.tracking") }}</v-btn
-          >
-        </v-col>
       </v-row>
     </component>
   </component>
@@ -187,10 +178,6 @@ async function onConsegnaCommit(field: FieldBinding<string>): Promise<void> {
     await sendDeliveryNotice();
   }
 }
-
-const trackingUrl = computed(() =>
-  id.value ? `/erp/tmwe_json/get-tracking-list?id=${id.value}` : "#",
-);
 
 // Imagen de firma de entrega. Cuelga de la raíz /erp (el basePath de la SPA es
 // /erp/tmwe_json → recortamos el sufijo). @error marca signatureImageError y el

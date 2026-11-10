@@ -132,16 +132,9 @@ interface ToolItem {
   partnerOnly?: boolean;
 }
 // invoicing / cod_assegni SÍ están migrados → moduleHref (SPA bajo cutover).
-// Las herramientas winbody (import, price_lists, send_message) y api_doc NO
-// están migradas → URL fija (recarga a la página legacy correspondiente).
 const tools = computed<ToolItem[]>(() => [
   { key: 'invoicing',    labelKey: 'platform.tools.invoicing',    icon: 'mdi-receipt-text',      href: moduleHref('invoicing') },
   { key: 'cod_assegni',  labelKey: 'platform.tools.cod_assegni',  icon: 'mdi-cash-check',        href: moduleHref('cod_assegni') },
-  { key: 'import',       labelKey: 'platform.tools.import',       icon: 'mdi-upload',            href: '/erp/winbody.php?pp=spedy_import&ti=new' },
-  { key: 'import_v2',    labelKey: 'platform.tools.import_v2',    icon: 'mdi-upload-multiple',   href: '/erp/winbody.php?pp=spedy_import2&ti=new' },
-  { key: 'price_lists',  labelKey: 'platform.tools.price_lists',  icon: 'mdi-cash-register',     href: '/erp/winbody.php?pp=listy&ti=cerca&tp=C', partnerOnly: true },
-  { key: 'send_message', labelKey: 'platform.tools.send_message', icon: 'mdi-message-plus',      href: '/erp/winbody.php?pp=docsstory&ti=new' },
-  { key: 'api_portal',   labelKey: 'platform.tools.api_portal',   icon: 'mdi-api',               href: '/erp/tmwe_json/api_doc', adminOnly: true },
 ]);
 
 function roleVisible(it: { adminOnly?: boolean; partnerOnly?: boolean }): boolean {
