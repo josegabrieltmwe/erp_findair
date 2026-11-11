@@ -6,10 +6,13 @@
     size="md"
     @close="emit('update:modelValue', false)"
   >
-    <div v-if="labels.length" class="d-flex align-center mb-3">
+    <div
+      v-if="labels.length || totalPackages > 1"
+      class="d-flex align-center mb-3"
+    >
       <v-spacer />
       <v-btn
-        v-if="labels.length > 1"
+        v-if="totalPackages > 1"
         variant="text"
         size="small"
         prepend-icon="mdi-folder-zip-outline"
@@ -25,6 +28,33 @@
       >
         {{ t("shipment.awb.print") }}
       </v-btn>
+    </div>
+    <div
+      v-if="totalPackages > 1"
+      class="d-flex align-center justify-center mb-3 ga-2"
+    >
+      <v-btn
+        icon="mdi-chevron-left"
+        variant="text"
+        density="comfortable"
+        :disabled="loading || currentPackage <= 1"
+        @click="emit('go-to-package', currentPackage - 1)"
+      />
+      <span class="text-caption text-medium-emphasis">
+        {{
+          t("shipment.awb.package_n_of_m", {
+            n: currentPackage,
+            m: totalPackages,
+          })
+        }}
+      </span>
+      <v-btn
+        icon="mdi-chevron-right"
+        variant="text"
+        density="comfortable"
+        :disabled="loading || currentPackage >= totalPackages"
+        @click="emit('go-to-package', currentPackage + 1)"
+      />
     </div>
     <div v-if="loading" class="d-flex flex-column align-center pa-6">
       <v-progress-circular indeterminate size="32" />
@@ -104,9 +134,12 @@ import type { TmweLabelItem } from "@shipment/services/labels.service";
 
 defineProps<{
   modelValue: boolean;
+  /** Bulto(s) cargados actualmente — a lo sumo 1 (ver useTmweLabels::fetchPackage). */
   labels: TmweLabelItem[];
   loading: boolean;
   error: string | null;
+  currentPackage: number;
+  totalPackages: number;
 }>();
 
 const emit = defineEmits<{
@@ -114,6 +147,7 @@ const emit = defineEmits<{
   download: [lab: TmweLabelItem];
   "download-all": [];
   print: [];
+  "go-to-package": [page: number];
 }>();
 
 const { t } = useI18n();

@@ -342,9 +342,12 @@
         :labels="tmwe.labels.value"
         :loading="tmwe.loading.value"
         :error="tmwe.error.value"
+        :current-package="tmwe.currentPackage.value"
+        :total-packages="tmwe.totalPackages.value"
         @download="tmwe.downloadLabel"
         @download-all="tmwe.downloadAll"
         @print="tmwe.printInTab"
+        @go-to-package="tmwe.goToPackage"
       />
 
       <!-- Generate AWB confirmation dialog -->
@@ -914,7 +917,8 @@ async function cancelAtCourier(): Promise<void> {
       { t, te },
       t("shipment.detail.toast_cancel_failed"),
     );
-    if (code && te(`errors.api.${code}`) && reference) text += ` (ref: ${reference})`;
+    if (code && te(`errors.api.${code}`) && reference)
+      text += ` (ref: ${reference})`;
     toasts.push("error", text);
     // Si la recogida se anulo aunque el envio no, la ficha ha cambiado.
     if (code === "CANCEL_FAILED_PICKUP_CANCELLED") await store.load(sid);

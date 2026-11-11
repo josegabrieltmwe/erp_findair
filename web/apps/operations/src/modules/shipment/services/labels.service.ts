@@ -106,7 +106,10 @@ export interface TmweLabelResponse {
   shipment?: {
     shipment_id: number;
     master_tracking_number: string;
+    /** Bultos incluidos en ESTA respuesta (1 si se pidió `package_number`). */
     packages_count: number;
+    /** Total de bultos de la expedición, independiente de `package_number`. */
+    total_packages?: number;
     driver_name?: string;
     delivery_round?: string;
     labels: TmweLabelItem[];
@@ -208,7 +211,8 @@ export const labelsService = {
     // Con Bearer el contrato es POST con `options` anidado (no query plana).
     const options: Record<string, string | number> = {};
     if (opts.output_format) options.output_format = opts.output_format;
-    if (opts.package_number != null) options.package_number = opts.package_number;
+    if (opts.package_number != null)
+      options.package_number = opts.package_number;
     return http<TmweLabelResponse>("/tmwe_label", {
       method: "POST",
       body: { shipment_id, options },
