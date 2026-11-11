@@ -11,6 +11,7 @@ Empezar por `contrato-con-api.md`. Los READMEs de código están junto al códig
 | [informe-autenticacion-autorizacion.md](informe-autenticacion-autorizacion.md) | Informe: autenticación, autorización y roles en el ERP (SPA + BFF) tras el cambio del API | vigente (su implementación en la SPA es parcial) |
 | [peticiones-backend.md](peticiones-backend.md) | Peticiones al backend (tmwe_json) | vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en ` |
 | [plan-consolidata-erp.md](plan-consolidata-erp.md) | Plan: gestión completa de los proyectos de consolidata desde el ERP | vigente (C0-C6 hechas sin commit; ver §10) |
+| [plan-extraccion-ia-erp.md](plan-extraccion-ia-erp.md) | Plan: extracción por IA de datos de expedición desde el ERP (courier, cargo y consolidata) | borrador |
 | [plan-migracion.md](plan-migracion.md) | Plan de migración ERP Findair (BFF + SPA) | vigente, parcialmente desfasado (cifras de 2026-10-18/19; el §3 «Pendiente en backend» está en parte resuelto, |
 | [plan-pantalla-offer-aerolinea.md](plan-pantalla-offer-aerolinea.md) | Plan: pantalla de respuesta de la aerolínea a la cotización cargo (`/offer`) | borrador |
 | [plan-rfq-courier-partners.md](plan-rfq-courier-partners.md) | Plan: RFQ courier a anagrafiche de tipo partner (ERP o no), parte BFF y SPA | borrador |
