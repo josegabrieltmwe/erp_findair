@@ -14,7 +14,7 @@ for (const p of PROFILES) {
       setup.skip(true, `faltan E2E_${p.toUpperCase()}_USER / E2E_${p.toUpperCase()}_PASS`);
       return;
     }
-    // Flujo real: BFF → pantalla de login del API (tmwe-api.php7) → callback del BFF → SPA.
+    // Flujo real: BFF → pantalla de login del API (tmwe-api.php8) → callback del BFF → SPA.
     await page.goto("/bff/auth/login");
     await page.locator("#oauth-login-username").fill(c.user);
     await page.locator("#oauth-login-password").fill(c.pass);

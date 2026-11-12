@@ -2,7 +2,7 @@
 
 > **Estado:** vigente (su implementación en la SPA es parcial) · **Última modificación:** 2026-10-25 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
 
-Fecha: 2026-10-25 · Backend analizado: `/var/www/dev/tmwe_api` (rama `tmwe_api`, `https://tmwe-api.php7`), BD `tmwe_development` (solo lectura) · Frontend: `web/` y `bff/` de este repo.
+Fecha: 2026-10-25 · Backend analizado: `/var/www/dev/tmwe_api` (rama `tmwe_api`, `https://tmwe-api.php8`), BD `tmwe_development` (solo lectura) · Frontend: `web/` y `bff/` de este repo.
 
 Alcance y límites: lectura de código y de datos de desarrollo. No se probó nada contra producción ni sandbox. La pantalla nueva se verificó con `vue-tsc`, tests unitarios y el gate de i18n; **no se abrió en el navegador** (requiere una sesión de login real).
 
@@ -109,7 +109,7 @@ Recogidas en `docs/peticiones-backend.md` §9.
 
 ## 8. Avance del plan
 
-**Fase 1 · Contexto de acceso — hecha en código, sin desplegar ni commit (2026-10-25).** Host del API confirmado: `https://tmwe-api.php7`.
+**Fase 1 · Contexto de acceso — hecha en código, sin desplegar ni commit (2026-10-25).** Host del API confirmado: `https://tmwe-api.php8`.
 
 - **API** (`/var/www/dev/tmwe_api`): `get_my_profile` devuelve ahora `access` con `roles` (el base primero, luego los aditivos, con marca `addon`), `scopes` efectivos del token, `is_root` y `grant`. Servicio nuevo `service/security/Access_Context_Service.php`; calcula con `Scope_Service::get_effective_scopes` y los scopes concedidos al token, los mismos que usa `Authz_Service`. Aditivo: el resto de la respuesta no cambia. Test: `tests/Unit/Service/Security/AccessContextServiceTest.php` (5).
 - **BFF**: `UserContextProvider` copia `user.access` (`roles`, `scopes`, `is_root`) saneado, por lo que `/bff/auth/session` ya lo entrega a la SPA. Test nuevo en `tests/UnitTest.php`; suite completa 145/145.
