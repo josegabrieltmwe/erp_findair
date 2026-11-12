@@ -1,6 +1,10 @@
 <template>
   <div>
     <v-progress-linear v-if="store.logLoading" indeterminate class="mb-2" />
+    <ConsolidataApiError
+      :error="store.logError"
+      @close="store.logError = null"
+    />
     <v-table density="compact">
       <thead>
         <tr>
@@ -51,6 +55,7 @@
 import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useConsolidataStore } from "../stores/consolidata.store";
+import ConsolidataApiError from "./ConsolidataApiError.vue";
 import { logActionI18nKey, shortDate } from "../logic";
 
 const { t } = useI18n();

@@ -11,6 +11,7 @@ import {
   consolidataService,
   ConsolidataRequestError,
 } from "../services/consolidata.service";
+import { isViewMissing } from "../logic";
 import {
   type AnswerPayload,
   type ApiMeta,
@@ -39,8 +40,12 @@ export const useConsolidataStore = defineStore("consolidata", () => {
   const steps = ref<ConversionStep[] | null>(null);
   /** El API aún no expone view=conversion (o falló): la pestaña lo explica en vez de romperse. */
   const stepsUnavailable = ref(false);
+  /** Fallo real (403, 5xx, red) al cargar los pasos: se enseña, no se disfraza de «no disponible». */
+  const stepsError = ref<ConsolidataError | null>(null);
   const logPage = ref<LogPage | null>(null);
   const logLoading = ref(false);
+  /** Fallo real al cargar el historial paginado (ver stepsError). */
+  const logError = ref<ConsolidataError | null>(null);
   const operating = ref(false);
   const meta = ref<ApiMeta | null>(null);
   /** Fallo al cargar `meta`: sin catálogo no se sabe qué botones mostrar, y la página lo dice. */
@@ -99,7 +104,15 @@ export const useConsolidataStore = defineStore("consolidata", () => {
   }
 
   // ── Detalle ───────────────────────────────────────────────
+  /**
+   * Número de la última apertura. Una respuesta lenta del proyecto anterior no debe pisar al actual:
+   * cada carga comprueba que el proyecto abierto sigue siendo el suyo (`isCurrent`).
+   */
+  let openSeq = 0;
+  const isCurrent = (id: number): boolean => project.value?.id === id;
+
   async function openProject(id: number): Promise<void> {
+    const seq = ++openSeq;
     detailLoading.value = true;
     project.value = null;
     shipments.value = null;
@@ -109,9 +122,12 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     operateResult.value = null;
     steps.value = null;
     stepsUnavailable.value = false;
+    stepsError.value = null;
     logPage.value = null;
+    logError.value = null;
     try {
       const res = await run(() => consolidataService.detail(id));
+      if (seq !== openSeq) return;
       if (res) {
         project.value = res;
         await Promise.all([
@@ -122,30 +138,29 @@ export const useConsolidataStore = defineStore("consolidata", () => {
         ]);
       }
     } finally {
-      detailLoading.value = false;
+      if (seq === openSeq) detailLoading.value = false;
     }
   }
 
   async function loadShipments(): Promise<void> {
     if (!project.value) return;
-    const res = await run(() =>
-      consolidataService.shipments(project.value!.id),
-    );
-    if (res) shipments.value = res;
+    const id = project.value.id;
+    const res = await run(() => consolidataService.shipments(id));
+    if (res && isCurrent(id)) shipments.value = res;
   }
 
   async function loadReadiness(): Promise<void> {
     if (!project.value) return;
-    const res = await run(() =>
-      consolidataService.readiness(project.value!.id),
-    );
-    if (res) readiness.value = res;
+    const id = project.value.id;
+    const res = await run(() => consolidataService.readiness(id));
+    if (res && isCurrent(id)) readiness.value = res;
   }
 
   async function loadNotes(): Promise<void> {
     if (!project.value) return;
-    const res = await run(() => consolidataService.notes(project.value!.id));
-    if (res) notes.value = res.note;
+    const id = project.value.id;
+    const res = await run(() => consolidataService.notes(id));
+    if (res && isCurrent(id)) notes.value = res.note;
   }
 
   /** Tras una mutación que devuelve el detalle: lo adopta y refresca vistas derivadas. */
@@ -222,6 +237,20 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     return true;
   }
 
+  /** Staff: completa el perfil de una house. Cambia el cumplimiento (avisos de datos que faltan), no la cabecera. */
+  async function updateProfile(
+    idSped: number,
+    profilo: Record<string, string>,
+  ): Promise<boolean> {
+    const res = await mutate(() =>
+      consolidataService.updateProfile(pid(), idSped, profilo),
+    );
+    if (!res) return false;
+    shipments.value = res;
+    await loadReadiness();
+    return true;
+  }
+
   async function removeShipment(idSped: number): Promise<boolean> {
     const res = await mutate(() =>
       consolidataService.removeShipment(pid(), idSped),
@@ -235,8 +264,9 @@ export const useConsolidataStore = defineStore("consolidata", () => {
   /** Recarga cabecera y cumplimiento (un cambio de expediciones puede devolver P→A). */
   async function refreshProject(): Promise<void> {
     if (!project.value) return;
-    const res = await run(() => consolidataService.detail(project.value!.id));
-    if (res) project.value = res;
+    const id = project.value.id;
+    const res = await run(() => consolidataService.detail(id));
+    if (res && isCurrent(id)) project.value = res;
     await loadReadiness();
   }
 
@@ -260,33 +290,48 @@ export const useConsolidataStore = defineStore("consolidata", () => {
   const requestQuote = async (): Promise<boolean> =>
     adopt(await mutate(() => consolidataService.requestQuote(pid())));
 
-  /** Pasos de conversión (view=conversion). Un fallo deja `stepsUnavailable` sin tocar `error`. */
+  /**
+   * Pasos de conversión (view=conversion). Sin la vista en el API (400/404/405/501) queda `stepsUnavailable`;
+   * cualquier otro fallo queda en `stepsError`. Ninguno toca `error`.
+   */
   async function loadSteps(): Promise<void> {
     if (!project.value) return;
+    const id = project.value.id;
     try {
-      const res = await consolidataService.conversion(project.value.id);
+      const res = await consolidataService.conversion(id);
+      if (!isCurrent(id)) return;
       steps.value = Array.isArray(res.passi) ? res.passi : [];
       stepsUnavailable.value = false;
+      stepsError.value = null;
     } catch (err) {
       if (!(err instanceof ConsolidataRequestError)) throw err;
+      if (!isCurrent(id)) return;
       steps.value = null;
-      stepsUnavailable.value = true;
+      stepsUnavailable.value = isViewMissing(err.info);
+      stepsError.value = stepsUnavailable.value ? null : err.info;
     }
   }
 
-  /** Historial paginado (view=log). Sin la vista en el API se cae al `log` del detalle. */
+  /**
+   * Historial paginado (view=log). Sin la vista en el API (400/404/405/501) se cae al `log` del detalle;
+   * cualquier otro fallo queda en `logError` y la pestaña lo enseña.
+   */
   async function loadLog(pageNo = 1, perPage = 20): Promise<void> {
     if (!project.value) return;
+    const id = project.value.id;
     logLoading.value = true;
+    logError.value = null;
     try {
-      logPage.value = await consolidataService.log(
-        project.value.id,
-        pageNo,
-        perPage,
-      );
+      const res = await consolidataService.log(id, pageNo, perPage);
+      if (isCurrent(id)) logPage.value = res;
     } catch (err) {
       if (!(err instanceof ConsolidataRequestError)) throw err;
-      const rows = project.value.log ?? [];
+      if (!isCurrent(id)) return;
+      if (!isViewMissing(err.info)) {
+        logError.value = err.info;
+        return;
+      }
+      const rows = project.value?.log ?? [];
       logPage.value = {
         items: rows,
         count: rows.length,
@@ -331,8 +376,10 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     operateResult,
     steps,
     stepsUnavailable,
+    stepsError,
     logPage,
     logLoading,
+    logError,
     operating,
     meta,
     metaError,
@@ -357,6 +404,7 @@ export const useConsolidataStore = defineStore("consolidata", () => {
     addNote,
     waive,
     saveShipment,
+    updateProfile,
     removeShipment,
     convert,
     refreshProject,

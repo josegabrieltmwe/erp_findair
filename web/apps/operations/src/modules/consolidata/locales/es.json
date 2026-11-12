@@ -51,6 +51,7 @@
       "assigneeLabel": "Asignado",
       "cargoLabel": "Cargo",
       "createdLabel": "Creado",
+      "createdBy": "por {name}",
       "updatedLabel": "Modificado",
       "closedLabel": "Cerrado",
       "metaFailed": "No se pudo cargar el catálogo de acciones del API: los botones de acción están ocultos hasta que se cargue."
@@ -342,6 +343,36 @@
       "noUsers": "Sin usuarios",
       "unavailable": "La lista de usuarios no está disponible."
     },
+    "profile": {
+      "title": "Perfil de la house {ref}",
+      "help": "Completa solo lo que falta. Los campos que no cambies no se envían; uno vaciado se borra.",
+      "sectionTitle": "Perfil de las houses sin expedición",
+      "sectionHelp": "Si «Operar» falló por datos que faltan, complétalos aquí y reintenta. No cambia precios, pesos ni el reparto.",
+      "complete": "Completar perfil",
+      "saved": "Perfil guardado",
+      "fields": {
+        "esportatore_nome": "Exportador",
+        "esportatore_paese": "País del exportador (ISO2)",
+        "esportatore_eori": "EORI del exportador",
+        "orig_provincia": "Provincia de origen",
+        "mittente_indirizzo": "Dirección de recogida",
+        "mittente_referente": "Contacto de recogida",
+        "mittente_tel": "Teléfono de recogida",
+        "mittente_mail": "Email de recogida",
+        "destinatario_nome": "Destinatario de la mercancía",
+        "destinatario_paese": "País del destinatario (ISO2)",
+        "destinatario_indirizzo": "Dirección de entrega",
+        "destinatario_cap": "Código postal de entrega",
+        "destinatario_citta": "Ciudad de entrega",
+        "destinatario_provincia": "Provincia de entrega",
+        "destinatario_referente": "Contacto de entrega",
+        "destinatario_tel": "Teléfono de entrega",
+        "destinatario_mail": "Email de entrega",
+        "incoterm": "Incoterm",
+        "hs_code": "Código HS",
+        "note": "Notas"
+      }
+    },
     "conversion": {
       "blocking": "{n} aviso(s) bloquean la conversión:",
       "quoteExpired": "La cotización está vencida. Recalcula los tramos antes de convertir.",
@@ -356,6 +387,7 @@
       "retry": "Reintentar",
       "notAvailable": "No se puede operar en estado «{state}». El proyecto debe estar cerrado (aceptado).",
       "steps": "Pasos de la conversión",
+      "alreadyComplete": "La conversión está completa: no hay nada más que operar ni enlazar.",
       "stepsUnavailable": "Los pasos de conversión no están disponibles todavía.",
       "noSteps": "Aún no se ha ejecutado ningún paso.",
       "globalGroup": "MAWB / camión",

@@ -1,6 +1,6 @@
 # Plan: gestión completa de los proyectos de consolidata desde el ERP
 
-> **Estado:** vigente (C0-C6 implementadas sin commit; pendiente C7 y la prueba en navegador, ver §10) · **Última modificación:** 2026-11-05
+> **Estado:** vigente (C0-C6 implementadas y commiteadas; pendiente C7 y la prueba en navegador, ver §10) · **Última modificación:** 2026-11-12
 
 Objetivo: que el staff gestione en el ERP (SPA `operations` + BFF) todo el ciclo de un proyecto de consolidata (alta, cotización, respuesta, aceptación, conversión a operativo y seguimiento), con un listado de proyectos con los mismos filtros, columnas, vistas y acciones que los listados de cargo y courier.
 
@@ -333,7 +333,7 @@ Orden recomendado: **C0 y C1 en paralelo → C2 → C3 → C4 → C5 → C6 → 
 
 ## 10. Ejecución (2026-11-03)
 
-Cambios en el árbol de trabajo de la rama `sandbox` de `tmwe_api` y `erp_findair`, **sin commit**. El bundle de la SPA **no se ha compilado**. La migración de índices está escrita y **no aplicada**. Nada se ha escrito en BD ni en la cola.
+Cambios en la rama `sandbox` de `tmwe_api` y `erp_findair` (en `erp_findair` ya commiteados; el 2026-11-12 se añadieron los ajustes del plan B de [plan-consolidata-cliente-final.md](plan-consolidata-cliente-final.md)). El bundle de la SPA **no se ha compilado**. La migración de índices está escrita y **no aplicada**. Nada se ha escrito en BD ni en la cola.
 
 | Fase | Estado | Notas |
 |---|---|---|
@@ -345,6 +345,8 @@ Cambios en el árbol de trabajo de la rama `sandbox` de `tmwe_api` y `erp_findai
 | C5 | Hecha | Pestaña Conversión con `operate`, pasos e historial paginado. |
 | C6 | Hecha | Tarjeta «Proyecto de origen» en el modal de consolidación del cargo y chip «En proyecto #N» en la ficha courier. Exportación XLSX en servidor (P75) no hecha. |
 | C7 | Pendiente | Ver la lista de abajo. |
+
+Actualización 2026-11-12: la pestaña Conversión ya no ofrece `operate`/`convert` con la conversión completa, distingue un fallo real de `view=conversion`/`view=log` de una vista ausente, el detalle descarta respuestas tardías de otro proyecto, y el detalle muestra quién creó el proyecto.
 
 Comprobaciones:
 - **API:**
@@ -388,5 +390,5 @@ Decisión del negocio: todos los usuarios de las anagraficas de TMWE y de los pa
 Resultado de la prueba de facturación en el sandbox (detalle en `tmwe_api/docs/07-gestion/consolidata_octubre/EXECUTION_LOG.md`):
 
 - El API ya traslada a lo facturable el precio del proyecto al operar: el MAWB lleva el aéreo y la entrega, y las houses y el camión su tramo, con el combustible incluido cuando el tramo no tiene servicio.
-- **Pendiente en la SPA:** la acción de staff `update_profile` (completar el perfil de una house sin spedizione en un proyecto aceptado o con la operación a medias). Sin ella, un `operate` que falla por faltar datos solo se puede reintentar por API. Encaja en la pestaña «Conversión», junto a «Reintentar».
+- **`update_profile` en la SPA (hecho 2026-11-12):** diálogo «Completar perfil» en la pestaña «Conversión» para las houses sin spedizione de un proyecto aceptado o con la operación a medias; solo envía los campos que cambian. Permite reintentar `operate` sin pasar por el API a mano.
 - Los costes fijos de la opción del simulador no se guardan en el proyecto y no se facturan: decisión pendiente del negocio.

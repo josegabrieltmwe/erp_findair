@@ -103,6 +103,12 @@
             </v-btn>
           </div>
         </template>
+        <p
+          v-else-if="store.project?.conversione === 'completo'"
+          class="text-medium-emphasis text-body-2"
+        >
+          {{ t("consolidata.conversion.alreadyComplete") }}
+        </p>
         <p v-else class="text-medium-emphasis text-body-2">
           {{
             t("consolidata.conversion.notAvailable", {
@@ -132,11 +138,56 @@
       </v-card-text>
     </v-card>
 
+    <!-- Perfil de las houses sin expedición: permite reintentar `operate` cuando falló por datos que faltan. -->
+    <v-card
+      v-if="gates.updateProfile && pendingHouses.length"
+      variant="outlined"
+      class="mb-4"
+    >
+      <v-card-title class="text-subtitle-1">{{
+        t("consolidata.profile.sectionTitle")
+      }}</v-card-title>
+      <v-card-text>
+        <p class="text-body-2 mb-2">
+          {{ t("consolidata.profile.sectionHelp") }}
+        </p>
+        <v-list density="compact">
+          <v-list-item v-for="h in pendingHouses" :key="h.id" :title="h.ref">
+            <template #append>
+              <v-btn
+                size="small"
+                variant="tonal"
+                prepend-icon="mdi-pencil-outline"
+                @click="openProfile(h)"
+              >
+                {{ t("consolidata.profile.complete") }}
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-card-text>
+    </v-card>
+    <ConsolidataProfileDialog
+      v-model="profileDialog"
+      :saving="store.saving"
+      :error="store.error"
+      :shipment="profileTarget"
+      @submit="saveProfile"
+    />
+
     <!-- Pasos (view=conversion): solo lectura, por house + MAWB/camión. -->
     <h3 class="text-subtitle-1 mb-2">
       {{ t("consolidata.conversion.steps") }}
     </h3>
-    <p v-if="store.stepsUnavailable" class="text-medium-emphasis text-body-2">
+    <ConsolidataApiError
+      v-if="store.stepsError"
+      :error="store.stepsError"
+      @close="store.stepsError = null"
+    />
+    <p
+      v-else-if="store.stepsUnavailable"
+      class="text-medium-emphasis text-body-2"
+    >
       {{ t("consolidata.conversion.stepsUnavailable") }}
     </p>
     <p
@@ -251,11 +302,15 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
 import { useConsolidataStore } from "../stores/consolidata.store";
+import ConsolidataApiError from "./ConsolidataApiError.vue";
+import ConsolidataProfileDialog from "./ConsolidataProfileDialog.vue";
+import type { Shipment } from "../types";
 import { useCargoSearch } from "../composables/useCargoSearch";
 import { useConsolidataConfirm } from "../composables/useConfirm";
 import {
   blockingWarnings,
   groupConversionSteps,
+  housesWithoutShipment,
   stateI18nKey,
   stepColor,
   type projectGates,
@@ -301,6 +356,28 @@ function stepLabel(passo: string): string {
 function stepStateLabel(s: string): string {
   const key = `consolidata.conversion.stepState.${(s || "").toUpperCase()}`;
   return te(key) ? t(key) : s;
+}
+
+const pendingHouses = computed(() =>
+  housesWithoutShipment(store.shipments?.spedizioni),
+);
+const profileDialog = ref(false);
+const profileTarget = ref<Shipment | null>(null);
+
+function openProfile(h: Shipment): void {
+  store.clearError();
+  profileTarget.value = h;
+  profileDialog.value = true;
+}
+
+async function saveProfile(
+  idSped: number,
+  payload: Record<string, string>,
+): Promise<void> {
+  if (await store.updateProfile(idSped, payload)) {
+    profileDialog.value = false;
+    toast.success(t("consolidata.profile.saved"));
+  }
 }
 
 async function recalc(): Promise<void> {

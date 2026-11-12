@@ -179,11 +179,16 @@ export interface ProjectDetail {
   cliente_nome?: string | null;
   assegnato_nome?: string | null;
   risposta_da_nome?: string | null;
+  /** Quién creó el proyecto (solo staff): el cliente desde su aplicación, o personal desde el ERP. */
+  insert_user_nome?: string | null;
   insert_datetime: string | null;
   modif_datetime: string | null;
   tratte: Leg[];
   log: LogEntry[];
 }
+
+/** Perfil de recogida/entrega de una house (view=shipments → `profilo`); todo texto, vacío = null. */
+export type ShipmentProfile = Partial<Record<string, string | null>>;
 
 export interface Shipment {
   id: number;
@@ -202,6 +207,7 @@ export interface Shipment {
   merce: string | null;
   data_pronta: string | null;
   quota_totale: number;
+  profilo?: ShipmentProfile | null;
 }
 
 export interface ShipmentForm {

@@ -51,6 +51,7 @@
       "assigneeLabel": "Assegnato",
       "cargoLabel": "Cargo",
       "createdLabel": "Creato",
+      "createdBy": "da {name}",
       "updatedLabel": "Modificato",
       "closedLabel": "Chiuso",
       "metaFailed": "Impossibile caricare il catalogo azioni dell'API: i pulsanti di azione restano nascosti finché non si carica."
@@ -342,6 +343,36 @@
       "noUsers": "Nessun utente",
       "unavailable": "L'elenco utenti non è disponibile."
     },
+    "profile": {
+      "title": "Profilo della house {ref}",
+      "help": "Completa solo ciò che manca. I campi che non modifichi non vengono inviati; un campo svuotato viene cancellato.",
+      "sectionTitle": "Profilo delle house senza spedizione",
+      "sectionHelp": "Se «Rendi operativo» è fallito per dati mancanti, completali qui e riprova. Non cambia prezzi, pesi né il riparto.",
+      "complete": "Completa profilo",
+      "saved": "Profilo salvato",
+      "fields": {
+        "esportatore_nome": "Esportatore",
+        "esportatore_paese": "Paese esportatore (ISO2)",
+        "esportatore_eori": "EORI esportatore",
+        "orig_provincia": "Provincia di origine",
+        "mittente_indirizzo": "Indirizzo di ritiro",
+        "mittente_referente": "Referente ritiro",
+        "mittente_tel": "Telefono ritiro",
+        "mittente_mail": "Email ritiro",
+        "destinatario_nome": "Destinatario",
+        "destinatario_paese": "Paese destinatario (ISO2)",
+        "destinatario_indirizzo": "Indirizzo di consegna",
+        "destinatario_cap": "CAP consegna",
+        "destinatario_citta": "Città consegna",
+        "destinatario_provincia": "Provincia consegna",
+        "destinatario_referente": "Referente consegna",
+        "destinatario_tel": "Telefono consegna",
+        "destinatario_mail": "Email consegna",
+        "incoterm": "Incoterm",
+        "hs_code": "Codice HS",
+        "note": "Note"
+      }
+    },
     "conversion": {
       "blocking": "{n} avviso/i bloccano la conversione:",
       "quoteExpired": "Il preventivo è scaduto. Ricalcola le tratte prima di convertire.",
@@ -356,6 +387,7 @@
       "retry": "Riprova",
       "notAvailable": "Impossibile rendere operativo nello stato «{state}». Il progetto deve essere chiuso (accettato).",
       "steps": "Passi della conversione",
+      "alreadyComplete": "La conversione è completa: non c'è altro da rendere operativo o collegare.",
       "stepsUnavailable": "I passi di conversione non sono ancora disponibili.",
       "noSteps": "Nessun passo eseguito finora.",
       "globalGroup": "MAWB / camion",

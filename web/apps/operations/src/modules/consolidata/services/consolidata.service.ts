@@ -229,6 +229,12 @@ export const consolidataService = {
       id_sped,
       spedizione: shipmentPayload(form),
     }),
+  /** Staff: completa el perfil de una house (solo las claves enviadas; "" borra). */
+  updateProfile: (
+    id: number,
+    id_sped: number,
+    profilo: Record<string, string>,
+  ) => post<ShipmentsView>("update_profile", { id, id_sped, profilo }),
   removeShipment: (id: number, id_sped: number) =>
     post<ShipmentsView>("remove_shipment", { id, id_sped }),
 

@@ -127,6 +127,16 @@ describe("consolidataService — acciones nuevas", () => {
     expect(lastBody()).toEqual({ action: "operate", id: 7, reservar: true });
   });
 
+  it("update_profile manda id, id_sped y solo el perfil recibido", async () => {
+    await consolidataService.updateProfile(7, 12, { mittente_tel: "+39 02" });
+    expect(lastBody()).toEqual({
+      action: "update_profile",
+      id: 7,
+      id_sped: 12,
+      profilo: { mittente_tel: "+39 02" },
+    });
+  });
+
   it("create_from_option envía la opción completa (con legs), envíos, destino, título y cliente", async () => {
     const option: QuoteOption = {
       key: "hub_MXP",

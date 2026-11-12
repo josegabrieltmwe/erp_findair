@@ -51,6 +51,7 @@
       "assigneeLabel": "Assignee",
       "cargoLabel": "Cargo",
       "createdLabel": "Created",
+      "createdBy": "by {name}",
       "updatedLabel": "Updated",
       "closedLabel": "Closed",
       "metaFailed": "The API action catalogue could not be loaded: action buttons stay hidden until it loads."
@@ -342,6 +343,36 @@
       "noUsers": "No users",
       "unavailable": "The user list is not available."
     },
+    "profile": {
+      "title": "Profile of house {ref}",
+      "help": "Fill in only what is missing. Fields you do not change are not sent; a cleared field is deleted.",
+      "sectionTitle": "Profile of houses without a shipment",
+      "sectionHelp": "If “Operate” failed because of missing data, fill it in here and retry. It does not change prices, weights or the allocation.",
+      "complete": "Complete profile",
+      "saved": "Profile saved",
+      "fields": {
+        "esportatore_nome": "Exporter",
+        "esportatore_paese": "Exporter country (ISO2)",
+        "esportatore_eori": "Exporter EORI",
+        "orig_provincia": "Origin province",
+        "mittente_indirizzo": "Pickup address",
+        "mittente_referente": "Pickup contact",
+        "mittente_tel": "Pickup phone",
+        "mittente_mail": "Pickup email",
+        "destinatario_nome": "Consignee",
+        "destinatario_paese": "Consignee country (ISO2)",
+        "destinatario_indirizzo": "Delivery address",
+        "destinatario_cap": "Delivery postcode",
+        "destinatario_citta": "Delivery city",
+        "destinatario_provincia": "Delivery province",
+        "destinatario_referente": "Delivery contact",
+        "destinatario_tel": "Delivery phone",
+        "destinatario_mail": "Delivery email",
+        "incoterm": "Incoterm",
+        "hs_code": "HS code",
+        "note": "Notes"
+      }
+    },
     "conversion": {
       "blocking": "{n} warning(s) block the conversion:",
       "quoteExpired": "The quote has expired. Recalculate the legs before converting.",
@@ -356,6 +387,7 @@
       "retry": "Retry",
       "notAvailable": "Cannot operate in state “{state}”. The project must be closed (accepted).",
       "steps": "Conversion steps",
+      "alreadyComplete": "The conversion is complete: there is nothing left to operate or link.",
       "stepsUnavailable": "Conversion steps are not available yet.",
       "noSteps": "No step has run yet.",
       "globalGroup": "MAWB / truck",

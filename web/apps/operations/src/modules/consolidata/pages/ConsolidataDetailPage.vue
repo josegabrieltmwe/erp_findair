@@ -107,6 +107,9 @@
             t("consolidata.detail.createdLabel")
           }}</span>
           {{ shortDate(p.insert_datetime) || "—" }}
+          <span v-if="p.insert_user_nome" class="text-medium-emphasis">
+            · {{ t("consolidata.detail.createdBy", { name: p.insert_user_nome }) }}
+          </span>
         </div>
         <div>
           <span class="cons-fact-label">{{

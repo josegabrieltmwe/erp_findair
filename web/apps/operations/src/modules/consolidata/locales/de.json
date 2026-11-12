@@ -51,6 +51,7 @@
       "assigneeLabel": "Zugewiesen",
       "cargoLabel": "Cargo",
       "createdLabel": "Erstellt",
+      "createdBy": "von {name}",
       "updatedLabel": "Geändert",
       "closedLabel": "Geschlossen",
       "metaFailed": "Der Aktionskatalog der API konnte nicht geladen werden: Aktionsschaltflächen bleiben ausgeblendet, bis er geladen ist."
@@ -342,6 +343,36 @@
       "noUsers": "Keine Benutzer",
       "unavailable": "Die Benutzerliste ist nicht verfügbar."
     },
+    "profile": {
+      "title": "Profil der House {ref}",
+      "help": "Ergänzen Sie nur, was fehlt. Nicht geänderte Felder werden nicht gesendet; ein geleertes Feld wird gelöscht.",
+      "sectionTitle": "Profil der Houses ohne Sendung",
+      "sectionHelp": "Ist «Ausführen» wegen fehlender Daten fehlgeschlagen, ergänzen Sie sie hier und versuchen Sie es erneut. Preise, Gewichte und Verteilung bleiben unverändert.",
+      "complete": "Profil ergänzen",
+      "saved": "Profil gespeichert",
+      "fields": {
+        "esportatore_nome": "Exporteur",
+        "esportatore_paese": "Land des Exporteurs (ISO2)",
+        "esportatore_eori": "EORI des Exporteurs",
+        "orig_provincia": "Herkunftsprovinz",
+        "mittente_indirizzo": "Abholadresse",
+        "mittente_referente": "Ansprechpartner Abholung",
+        "mittente_tel": "Telefon Abholung",
+        "mittente_mail": "E-Mail Abholung",
+        "destinatario_nome": "Empfänger",
+        "destinatario_paese": "Land des Empfängers (ISO2)",
+        "destinatario_indirizzo": "Lieferadresse",
+        "destinatario_cap": "PLZ Lieferung",
+        "destinatario_citta": "Stadt Lieferung",
+        "destinatario_provincia": "Provinz Lieferung",
+        "destinatario_referente": "Ansprechpartner Lieferung",
+        "destinatario_tel": "Telefon Lieferung",
+        "destinatario_mail": "E-Mail Lieferung",
+        "incoterm": "Incoterm",
+        "hs_code": "HS-Code",
+        "note": "Notizen"
+      }
+    },
     "conversion": {
       "blocking": "{n} Warnung(en) blockieren die Umwandlung:",
       "quoteExpired": "Das Angebot ist abgelaufen. Berechne die Teilstrecken vor der Umwandlung neu.",
@@ -356,6 +387,7 @@
       "retry": "Erneut versuchen",
       "notAvailable": "Im Status „{state}“ nicht möglich. Das Projekt muss geschlossen (angenommen) sein.",
       "steps": "Umwandlungsschritte",
+      "alreadyComplete": "Die Umwandlung ist abgeschlossen: Es gibt nichts mehr auszuführen oder zu verknüpfen.",
       "stepsUnavailable": "Die Umwandlungsschritte sind noch nicht verfügbar.",
       "noSteps": "Noch kein Schritt ausgeführt.",
       "globalGroup": "MAWB / LKW",

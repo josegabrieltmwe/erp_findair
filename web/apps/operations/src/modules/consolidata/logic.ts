@@ -10,6 +10,7 @@ import type {
   ProjectPhase,
   ProjectState,
   ShipmentForm,
+  ShipmentProfile,
   Warning,
 } from "./types";
 
@@ -292,7 +293,8 @@ export function projectGates(
   | "recalc"
   | "waive"
   | "note"
-  | "setEori",
+  | "setEori"
+  | "updateProfile",
   boolean
 > {
   const can = (a: string): boolean => actionAvailable(actions, a, stato);
@@ -306,8 +308,9 @@ export function projectGates(
     close: can("close"),
     reopen: can("reopen") && (conversione ?? "no") === "no",
     cancel: can("cancel"),
-    convert: can("convert"),
-    operate: can("operate"),
+    // Con la conversión completa no hay nada que convertir ni operar: ofrecer el botón invita a repetirla.
+    convert: can("convert") && conversione !== "completo",
+    operate: can("operate") && conversione !== "completo",
     addShipment: can("add_shipment"),
     updateShipment: can("update_shipment"),
     removeShipment: can("remove_shipment"),
@@ -319,7 +322,17 @@ export function projectGates(
     waive: can("waive_warning"),
     note: can("note_internal"),
     setEori: can("set_eori"),
+    updateProfile: can("update_profile"),
   };
+}
+
+/**
+ * ¿El fallo de `view=conversion` / `view=log` significa que el API no ofrece esa vista (backend antiguo)?
+ * Solo 400 (vista desconocida), 404, 405 y 501. Un 403, un 5xx o un corte de red son fallos reales y se
+ * enseñan como tales: presentarlos como «no disponible» esconde el problema.
+ */
+export function isViewMissing(err: { status: number }): boolean {
+  return [400, 404, 405, 501].includes(err.status);
 }
 
 /** Puerta de «Tomar» en el listado: misma regla que en el detalle, con el catálogo del API. */
@@ -473,6 +486,95 @@ export function legPayload(f: LegForm, withManualPrice: boolean): LegPayload {
     if (f.supplementi) leg.manual_price.supplementi = Number(f.supplementi);
   }
   return leg;
+}
+
+/**
+ * Campos de texto del perfil de una house que acepta `update_profile` (Consolidation_Shipment_Service::PROFILE_TEXT
+ * más países, EORI e incoterm). `colli` y `merci_pericolose` no se editan aquí: no se envían y el API no los toca.
+ */
+export const PROFILE_FIELDS = [
+  "esportatore_nome",
+  "esportatore_paese",
+  "esportatore_eori",
+  "orig_provincia",
+  "mittente_indirizzo",
+  "mittente_referente",
+  "mittente_tel",
+  "mittente_mail",
+  "destinatario_nome",
+  "destinatario_paese",
+  "destinatario_indirizzo",
+  "destinatario_cap",
+  "destinatario_citta",
+  "destinatario_provincia",
+  "destinatario_referente",
+  "destinatario_tel",
+  "destinatario_mail",
+  "incoterm",
+  "hs_code",
+  "note",
+] as const;
+export type ProfileField = (typeof PROFILE_FIELDS)[number];
+export type ProfileFormValues = Record<ProfileField, string>;
+
+export const INCOTERMS = [
+  "EXW",
+  "FCA",
+  "CPT",
+  "CIP",
+  "DAP",
+  "DPU",
+  "DDP",
+  "FAS",
+  "FOB",
+  "CFR",
+  "CIF",
+] as const;
+
+/** Campos que el API guarda en mayúsculas (países ISO2, EORI, incoterm). */
+const PROFILE_UPPER: readonly string[] = [
+  "esportatore_paese",
+  "destinatario_paese",
+  "esportatore_eori",
+  "incoterm",
+];
+
+function profileValue(field: string, raw: unknown): string {
+  let v = typeof raw === "string" ? raw.trim() : "";
+  if (field === "esportatore_eori") v = v.replace(/\s+/g, "");
+  return PROFILE_UPPER.includes(field) ? v.toUpperCase() : v;
+}
+
+/** Perfil del API → valores del formulario (todo texto; ausente = vacío). */
+export function profileFormFrom(
+  p: ShipmentProfile | null | undefined,
+): ProfileFormValues {
+  const out = {} as ProfileFormValues;
+  for (const f of PROFILE_FIELDS) out[f] = profileValue(f, p?.[f] ?? "");
+  return out;
+}
+
+/**
+ * Formulario → cuerpo de `update_profile`: SOLO los campos que cambian respecto al perfil inicial. El API trata
+ * las claves ausentes como «no tocar» y la cadena vacía como «borrar», así que un campo sin cambios no se envía.
+ */
+export function profilePayload(
+  form: ProfileFormValues,
+  initial: ProfileFormValues,
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const f of PROFILE_FIELDS) {
+    const now = profileValue(f, form[f]);
+    if (now !== profileValue(f, initial[f])) out[f] = now;
+  }
+  return out;
+}
+
+/** Houses sin expedición real: son las que `update_profile` puede completar con el proyecto ya cerrado (C). */
+export function housesWithoutShipment<
+  T extends { id_spedizione: number | null },
+>(houses: readonly T[] | null | undefined): T[] {
+  return (houses ?? []).filter((h) => !h.id_spedizione);
 }
 
 /** Días transcurridos desde una fecha 'YYYY-MM-DD[ HH:MM:SS]' (antigüedad en el listado). */

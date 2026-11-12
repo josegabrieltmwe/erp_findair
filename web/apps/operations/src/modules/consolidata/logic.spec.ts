@@ -10,6 +10,10 @@ import {
   projectGates,
   blockingWarnings,
   errorI18nKey,
+  isViewMissing,
+  housesWithoutShipment,
+  profileFormFrom,
+  profilePayload,
   normalizeApiError,
   shortDate,
   shipmentFormErrors,
@@ -181,6 +185,25 @@ describe("puertas de botones por meta (E2/E3)", () => {
     expect(projectGates(acts, "C", null, "completo").reopen).toBe(false);
   });
 
+  it("operar y convertir: no se ofrecen con la conversión completa; sí sin ella o a medias", () => {
+    const acts = { operate: { from: ["C"] }, convert: { from: ["C"] } };
+    expect(projectGates(acts, "C", null, "no").operate).toBe(true);
+    expect(projectGates(acts, "C", null, null).convert).toBe(true);
+    expect(projectGates(acts, "C", null, "parcial").operate).toBe(true);
+    expect(projectGates(acts, "C", null, "parcial").convert).toBe(true);
+    expect(projectGates(acts, "C", null, "completo").operate).toBe(false);
+    expect(projectGates(acts, "C", null, "completo").convert).toBe(false);
+  });
+
+  it("isViewMissing: solo la ausencia de la vista, no los fallos reales", () => {
+    for (const status of [400, 404, 405, 501]) {
+      expect(isViewMissing({ status })).toBe(true);
+    }
+    for (const status of [0, 401, 403, 409, 500, 502, 504]) {
+      expect(isViewMissing({ status })).toBe(false);
+    }
+  });
+
   it("tomar: solo A/P sin asignar y si el catálogo lo tiene", () => {
     expect(projectGates(actions, "A", null).take).toBe(true);
     expect(projectGates(actions, "A", 5).take).toBe(false);
@@ -193,6 +216,65 @@ describe("puertas de botones por meta (E2/E3)", () => {
   it("sin meta no hay botones", () => {
     const g = projectGates(null, "P", null);
     expect(Object.values(g).some(Boolean)).toBe(false);
+  });
+});
+
+describe("perfil de la house (update_profile)", () => {
+  it("profileFormFrom: todo texto, vacío si falta, países/EORI/incoterm en mayúsculas", () => {
+    const f = profileFormFrom({
+      esportatore_paese: " it ",
+      esportatore_eori: "it 123 456",
+      incoterm: "dap",
+      mittente_tel: null,
+      note: "  hola ",
+    });
+    expect(f.esportatore_paese).toBe("IT");
+    expect(f.esportatore_eori).toBe("IT123456");
+    expect(f.incoterm).toBe("DAP");
+    expect(f.mittente_tel).toBe("");
+    expect(f.note).toBe("hola");
+    expect(f.hs_code).toBe("");
+    expect(profileFormFrom(null).note).toBe("");
+  });
+
+  it("profilePayload: solo los campos que cambian; vaciar un campo manda cadena vacía", () => {
+    const initial = profileFormFrom({
+      mittente_tel: "123",
+      destinatario_nome: "ACME",
+    });
+    const form = { ...initial };
+    expect(profilePayload(form, initial)).toEqual({});
+    form.mittente_tel = "456";
+    form.destinatario_nome = "";
+    form.esportatore_paese = "fr";
+    expect(profilePayload(form, initial)).toEqual({
+      mittente_tel: "456",
+      destinatario_nome: "",
+      esportatore_paese: "FR",
+    });
+  });
+
+  it("profilePayload: espacios y mayúsculas sin efecto real no cuentan como cambio", () => {
+    const initial = profileFormFrom({ incoterm: "DAP", note: "x" });
+    const form = { ...initial, incoterm: " dap ", note: " x " };
+    expect(profilePayload(form, initial)).toEqual({});
+  });
+
+  it("housesWithoutShipment: solo las houses sin spedizione", () => {
+    const rows = [
+      { ref: "A", id_spedizione: null },
+      { ref: "B", id_spedizione: 5 },
+      { ref: "C", id_spedizione: 0 },
+    ];
+    expect(housesWithoutShipment(rows).map((h) => h.ref)).toEqual(["A", "C"]);
+    expect(housesWithoutShipment(null)).toEqual([]);
+  });
+
+  it("projectGates.updateProfile sigue el catálogo del API", () => {
+    const acts = { update_profile: { from: ["A", "P", "C"] } };
+    expect(projectGates(acts, "C", null).updateProfile).toBe(true);
+    expect(projectGates(acts, "X", null).updateProfile).toBe(false);
+    expect(projectGates({}, "C", null).updateProfile).toBe(false);
   });
 });
 

@@ -51,6 +51,7 @@
       "assigneeLabel": "Toegewezen aan",
       "cargoLabel": "Cargo",
       "createdLabel": "Aangemaakt",
+      "createdBy": "door {name}",
       "updatedLabel": "Gewijzigd",
       "closedLabel": "Gesloten",
       "metaFailed": "De actiecatalogus van de API kon niet worden geladen: actieknoppen blijven verborgen tot hij geladen is."
@@ -342,6 +343,36 @@
       "noUsers": "Geen gebruikers",
       "unavailable": "De gebruikerslijst is niet beschikbaar."
     },
+    "profile": {
+      "title": "Profiel van house {ref}",
+      "help": "Vul alleen aan wat ontbreekt. Velden die je niet wijzigt worden niet verzonden; een leeggemaakt veld wordt verwijderd.",
+      "sectionTitle": "Profiel van houses zonder zending",
+      "sectionHelp": "Als «Operationeel maken» mislukte door ontbrekende gegevens, vul ze hier aan en probeer opnieuw. Prijzen, gewichten en verdeling blijven ongewijzigd.",
+      "complete": "Profiel aanvullen",
+      "saved": "Profiel opgeslagen",
+      "fields": {
+        "esportatore_nome": "Exporteur",
+        "esportatore_paese": "Land exporteur (ISO2)",
+        "esportatore_eori": "EORI exporteur",
+        "orig_provincia": "Provincie van herkomst",
+        "mittente_indirizzo": "Ophaaladres",
+        "mittente_referente": "Contactpersoon ophaling",
+        "mittente_tel": "Telefoon ophaling",
+        "mittente_mail": "E-mail ophaling",
+        "destinatario_nome": "Geadresseerde",
+        "destinatario_paese": "Land geadresseerde (ISO2)",
+        "destinatario_indirizzo": "Afleveradres",
+        "destinatario_cap": "Postcode aflevering",
+        "destinatario_citta": "Plaats aflevering",
+        "destinatario_provincia": "Provincie aflevering",
+        "destinatario_referente": "Contactpersoon aflevering",
+        "destinatario_tel": "Telefoon aflevering",
+        "destinatario_mail": "E-mail aflevering",
+        "incoterm": "Incoterm",
+        "hs_code": "HS-code",
+        "note": "Notities"
+      }
+    },
     "conversion": {
       "blocking": "{n} waarschuwing(en) blokkeren de conversie:",
       "quoteExpired": "De offerte is verlopen. Herbereken de trajecten voordat je converteert.",
@@ -356,6 +387,7 @@
       "retry": "Opnieuw proberen",
       "notAvailable": "Kan niet operationeel maken in status „{state}”. Het project moet gesloten (geaccepteerd) zijn.",
       "steps": "Conversiestappen",
+      "alreadyComplete": "De conversie is voltooid: er valt niets meer te operationaliseren of te koppelen.",
       "stepsUnavailable": "De conversiestappen zijn nog niet beschikbaar.",
       "noSteps": "Er is nog geen stap uitgevoerd.",
       "globalGroup": "MAWB / vrachtwagen",
