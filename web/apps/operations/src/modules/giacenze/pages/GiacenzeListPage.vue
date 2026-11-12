@@ -22,7 +22,7 @@
         <span
           v-else-if="q !== 'all'"
           class="giac-queue__count giac-queue__count--na"
-          >n/d</span
+          >{{ t("giacenze.giacenze.notAvailable") }}</span
         >
       </v-btn>
       <v-spacer />
@@ -291,10 +291,10 @@
         formatCharge(item)
       }}</template>
       <template #[`item.data_open`]="{ item }">{{
-        item.data_open ?? "—"
+        formatDate(item.data_open, String(locale))
       }}</template>
       <template #[`item.data_close`]="{ item }">{{
-        hasDate(item.data_close) ? item.data_close : "—"
+        formatDate(item.data_close, String(locale))
       }}</template>
       <template #[`item.actions`]="{ item }">
         <span @click.stop><CmRowActions :actions="rowActions(item)" /></span>
@@ -382,6 +382,7 @@ import GiacenzaCreateDialog from "../components/GiacenzaCreateDialog.vue";
 import {
   DEFAULT_QUEUE,
   QUEUE_ORDER,
+  formatDate,
   hasDate,
   isStale,
   lifecycleStep,
@@ -396,7 +397,7 @@ import {
   type GiacenzaOperation,
 } from "../types";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const store = useGiacenzeStore();
 const toast = useToastStore();
@@ -571,7 +572,7 @@ function formatCharge(item: Giacenza): string {
     item.addebito_riconsegna_display ?? item.addebito_riconsegna ?? 0;
   if (!amount) return "—";
   const currency = item.addebito_riconsegna_currency ?? "EUR";
-  return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
+  return `${amount.toLocaleString(String(locale.value), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
 }
 
 function fail(error: unknown): void {

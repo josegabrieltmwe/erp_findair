@@ -223,7 +223,8 @@
         "title": "Storage and charge",
         "daysHint": "Days on hold: they drive the charge",
         "save": "Save storage"
-      }
+      },
+      "notAvailable": "n/a"
     }
   }
 }

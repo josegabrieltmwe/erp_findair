@@ -223,7 +223,8 @@
         "title": "Opslag en kosten",
         "daysHint": "Dagen in opslag: bepalen de kosten",
         "save": "Opslag bewaren"
-      }
+      },
+      "notAvailable": "n.v.t."
     }
   }
 }

@@ -113,3 +113,24 @@ export const STALE_DAYS = 10;
 export function isStale(g: Giacenza, now: Date = new Date()): boolean {
   return lifecycleStep(g) !== "closed" && openDays(g, now) > STALE_DAYS;
 }
+
+/**
+ * Fecha (o fecha y hora) del servidor `YYYY-MM-DD[ HH:MM:SS]` en el formato del idioma activo.
+ * Devuelve «—» si no hay fecha informada; si no se puede interpretar, el texto original.
+ */
+export function formatDate(
+  value: string | null | undefined,
+  locale: string,
+  withTime = false,
+): string {
+  if (!hasDate(value)) return "—";
+  const raw = String(value);
+  const d = new Date(
+    raw.length > 10 ? raw.replace(" ", "T") : `${raw}T00:00:00`,
+  );
+  if (Number.isNaN(d.getTime())) return raw;
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "short",
+    ...(withTime && raw.length > 10 ? { timeStyle: "short" } : {}),
+  }).format(d);
+}

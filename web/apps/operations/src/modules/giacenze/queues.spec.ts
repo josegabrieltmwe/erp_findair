@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_QUEUE,
+  formatDate,
   QUEUE_ORDER,
   hasDate,
   isStale,
@@ -45,6 +46,16 @@ describe("hasDate", () => {
     expect(hasDate("")).toBe(false);
     expect(hasDate(null)).toBe(false);
     expect(hasDate("2026-11-01 10:00:00")).toBe(true);
+  });
+});
+
+describe("formatDate", () => {
+  it("usa el formato del idioma y «—» si no hay fecha", () => {
+    expect(formatDate("2026-11-05", "en-GB")).toBe("05/11/2026");
+    expect(formatDate("2026-11-05", "de")).toBe("05.11.26");
+    expect(formatDate("2026-11-05 09:30:00", "en-GB", true)).toContain("09:30");
+    expect(formatDate(ZERO, "es")).toBe("—");
+    expect(formatDate(null, "es")).toBe("—");
   });
 });
 

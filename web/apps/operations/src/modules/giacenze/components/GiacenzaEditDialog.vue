@@ -54,7 +54,7 @@
             <v-icon size="16" icon="mdi-calendar" />
             {{
               t("giacenze.giacenze.detail.openedAgo", {
-                date: cur.data_open,
+                date: formatDate(cur.data_open, String(locale)),
                 days: days,
               })
             }}
@@ -337,7 +337,7 @@ import { useGiacenzeStore } from "../stores/giacenze.store";
 import { giacenzeService } from "../services/giacenze.service";
 import GiacenzaAddresses from "./GiacenzaAddresses.vue";
 import GiacenzaMessages from "./GiacenzaMessages.vue";
-import { hasDate, lifecycleStep, openDays } from "../queues";
+import { formatDate, hasDate, lifecycleStep, openDays } from "../queues";
 import {
   GIACENZA_OPERATIONS,
   type Giacenza,
@@ -353,7 +353,7 @@ const emit = defineEmits<{
   next: [id: number];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useGiacenzeStore();
 const toast = useToastStore();
 const confirm = useConfirmStore();
@@ -431,7 +431,7 @@ const cycle = computed(() => {
   const firstPending = items.findIndex((i) => !i.done);
   return items.map((i, idx) => ({
     ...i,
-    date: hasDate(i.date) ? String(i.date).slice(0, 16) : "—",
+    date: formatDate(i.date, String(locale.value), true),
     now: !closed.value && idx === firstPending,
   }));
 });

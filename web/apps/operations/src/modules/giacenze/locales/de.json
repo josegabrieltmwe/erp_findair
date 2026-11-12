@@ -223,7 +223,8 @@
         "title": "Lagerung und Gebühr",
         "daysHint": "Lagertage: bestimmen die Gebühr",
         "save": "Lagerung speichern"
-      }
+      },
+      "notAvailable": "k. A."
     }
   }
 }

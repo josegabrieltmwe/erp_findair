@@ -223,7 +223,8 @@
         "title": "Depósito y cargo",
         "daysHint": "Días de retención: alimentan el cargo",
         "save": "Guardar depósito"
-      }
+      },
+      "notAvailable": "n/d"
     }
   }
 }

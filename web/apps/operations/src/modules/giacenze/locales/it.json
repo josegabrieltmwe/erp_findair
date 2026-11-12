@@ -223,7 +223,8 @@
         "title": "Deposito e addebito",
         "daysHint": "Giorni di giacenza: determinano l'addebito",
         "save": "Salva deposito"
-      }
+      },
+      "notAvailable": "n/d"
     }
   }
 }
