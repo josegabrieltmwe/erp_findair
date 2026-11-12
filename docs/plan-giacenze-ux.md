@@ -1,6 +1,6 @@
 # Plan: mejorar el acceso y la ficha de giacenza en la SPA
 
-> **Estado:** borrador · **Última modificación:** 2026-11-12
+> **Estado:** vigente (fases 1 a 4 implementadas; falta desplegar el API y probar en sandbox) · **Última modificación:** 2026-11-12
 
 Origen: comparación del legado (`legacy/tmwe_erp/erp/giacenze_*.php`), la SPA
 (`web/apps/operations/src/modules/giacenze`) y Jose_master (`tmwe2/giacenze.html`).
@@ -90,3 +90,12 @@ Panel lateral ancho o página `/giacenze/:id` (deep-link `?id=` se mantiene), co
 
 ## 6. Orden y esfuerzo
 Fase 1 (M) → Fase 2 (L) → Fase 3 (M) → Fase 4 (S, en paralelo). Fase 1 aporta la mayor mejora de acceso con menos riesgo y no requiere API.
+
+## 7. Estado de implementación (2026-11-12)
+
+| Fase | Hecho | Pendiente |
+|---|---|---|
+| 1 Acceso y colas | Barra de colas con contador y texto de ayuda (abre en «Por avisar al cliente»); columnas de próximo paso, cliente avisado, respuesta y proveedor avisado; filas resaltadas a partir de 10 días; selector de cliente con búsqueda; `?sped=` (banner «ver todas» / «volver al envío») y `?indicator=` reflejado en la cola; enlace desde el envío por router, misma pestaña | Orden por columna (API); cola «entregadas por cerrar» (necesita indicador del API) |
+| 2 Ficha | Franja «Da sistemare» con cerrar/reabrir, ciclo de tres pasos con fechas que fijan las acciones, resultado A/C/N/R/E (los textos anteriores «Abierta/Cerrada/Anotada…» eran incorrectos), instrucciones y notas, depósito y cargo, dirección editable (el API conserva la original), mensajes, «siguiente» | Pestaña de operaciones (línea de tiempo del API) |
+| 3 Mensajes y alta | Destinatario sugerido y validado, errores visibles, aviso previo y alta con buscador de envío, cierre en bloque con resumen de fallos | Vista previa del mensaje; correo sugerido del proveedor |
+| 4 Calidad | Errores capturados en las acciones de lista y ficha; 5 idiomas; tests de colas/ciclo/textos (11) y del API (reply rule, destinatarios, apertura por tracking) | Probar en sandbox; casos SHP-32..36 de `pruebas-formularios/expediciones.md` |

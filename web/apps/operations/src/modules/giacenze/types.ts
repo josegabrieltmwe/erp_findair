@@ -74,6 +74,8 @@ export interface GiacenzaFilters {
   data_open_da: string | null;
   data_open_a: string | null;
   open_only: boolean;
+  /** Cerrada: 'S' solo cerradas, 'N' solo abiertas (data_close_flag del API). */
+  closed: "S" | "N" | null;
 }
 
 export function emptyFilters(): GiacenzaFilters {
@@ -86,6 +88,7 @@ export function emptyFilters(): GiacenzaFilters {
     data_open_da: null,
     data_open_a: null,
     open_only: false,
+    closed: null,
   };
 }
 
@@ -179,4 +182,10 @@ export interface GiacenzaMessage {
   dest_msg: string | null;
   esito: string | null;
   insert_datetime: string | null;
+}
+
+/** Destinatarios sugeridos para los avisos manuales (api_giacenze_message?recipients=1). */
+export interface SuggestedRecipients {
+  client: string[];
+  supplier: string[];
 }

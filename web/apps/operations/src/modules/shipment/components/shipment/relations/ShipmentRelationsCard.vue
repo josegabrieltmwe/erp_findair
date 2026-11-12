@@ -87,9 +87,8 @@
               v-for="g in data.giacenze"
               :key="g.id"
               :href="g.legacy_url"
-              target="_blank"
-              rel="noopener"
               class="rel-item"
+              @click.prevent="openGiacenza(g.id)"
             >
               <span
                 class="rel-dot rel-item__dot"
@@ -111,7 +110,11 @@
               <span v-if="g.quantity > 0" class="rel-item__qty"
                 >×{{ g.quantity }}</span
               >
-              <v-icon icon="mdi-open-in-new" size="12" class="rel-item__ext" />
+              <v-icon
+                icon="mdi-chevron-right"
+                size="12"
+                class="rel-item__ext"
+              />
             </a>
           </div>
           <!-- Sin giacenza: botón crear (find-or-create + notificación GIAc,
@@ -121,6 +124,7 @@
             type="button"
             class="rel-create"
             :disabled="giacBusy"
+            :title="t('shipment.cards.relations.giac_create_hint')"
             @click="createGiacenza"
           >
             <v-icon
@@ -360,6 +364,11 @@ async function createCrm(): Promise<void> {
   } finally {
     crmBusy.value = false;
   }
+}
+
+/** Abre la ficha de la giacenza en la misma pestaña (con el router, sin perder la sesión ni el contexto). */
+function openGiacenza(gid: number): void {
+  void router.push({ name: "giacenze", query: { id: String(gid) } });
 }
 
 async function createGiacenza(): Promise<void> {

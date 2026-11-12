@@ -462,6 +462,7 @@
         "crm_created": "Pratica creata",
         "crm_create_failed": "Impossibile creare la pratica",
         "giac_create": "Crea giacenza",
+        "giac_create_hint": "Alla creazione il cliente viene avvisato via e-mail",
         "giac_created": "Giacenza creata",
         "giac_create_failed": "Impossibile creare la giacenza",
         "giac_open": "Aperta",

@@ -12,7 +12,90 @@
           <v-icon size="18" icon="mdi-map-marker" />
           <span>{{ t("giacenze.giacenze.addr.delivery") }}</span>
         </div>
-        <AddressLines v-if="addresses?.delivery" :addr="addresses.delivery" />
+        <template v-if="editing">
+          <div class="giac-addr__form" data-testid="giac-addr-form">
+            <v-text-field
+              v-model="draft.nome"
+              :label="t('giacenze.giacenze.addr.name')"
+              density="compact"
+              hide-details
+            />
+            <v-text-field
+              v-model="draft.adress"
+              :label="t('giacenze.giacenze.addr.street')"
+              density="compact"
+              hide-details
+              :error="submitted && !draft.adress"
+            />
+            <div class="giac-addr__row">
+              <v-text-field
+                v-model="draft.cap"
+                :label="t('giacenze.giacenze.addr.zip')"
+                density="compact"
+                hide-details
+                :error="submitted && !draft.cap"
+              />
+              <v-text-field
+                v-model="draft.citta"
+                :label="t('giacenze.giacenze.addr.city')"
+                density="compact"
+                hide-details
+                :error="submitted && !draft.citta"
+              />
+              <v-text-field
+                v-model="draft.prov"
+                :label="t('giacenze.giacenze.addr.province')"
+                density="compact"
+                hide-details
+              />
+            </div>
+            <div class="giac-addr__row">
+              <v-text-field
+                v-model="draft.id_paese_iso"
+                :label="t('giacenze.giacenze.addr.country')"
+                density="compact"
+                hide-details
+                maxlength="2"
+              />
+              <v-text-field
+                v-model="draft.attenzione"
+                :label="t('giacenze.giacenze.addr.attention')"
+                density="compact"
+                hide-details
+              />
+              <v-text-field
+                v-model="draft.tel"
+                :label="t('giacenze.giacenze.addr.phone')"
+                density="compact"
+                hide-details
+              />
+            </div>
+            <p class="giac-addr__note">
+              {{ t("giacenze.giacenze.addr.keepsOriginal") }}
+            </p>
+            <p v-if="saveError" class="giac-addr__error" role="alert">
+              {{ saveError }}
+            </p>
+            <div class="giac-addr__actions">
+              <v-btn variant="text" size="small" @click="cancelEdit">{{
+                t("common.cancel")
+              }}</v-btn>
+              <v-btn
+                color="primary"
+                size="small"
+                :loading="saving"
+                data-testid="giac-addr-save"
+                @click="saveEdit"
+              >
+                {{ t("common.save") }}
+              </v-btn>
+            </div>
+          </div>
+        </template>
+        <AddressLines
+          v-else-if="addresses?.delivery"
+          :addr="addresses.delivery"
+        />
         <div v-else class="giac-addr__empty">
           {{ t("giacenze.giacenze.addr.none") }}
         </div>
@@ -33,14 +116,16 @@
         <AddressLines :addr="addresses.delivery_original" />
       </div>
 
-      <div class="giac-addr__actions">
+      <div
+        v-if="!editing && addresses?.delivery && !readonly"
+        class="giac-addr__actions"
+      >
         <v-btn
-          v-if="shipmentId"
           variant="text"
           size="small"
           prepend-icon="mdi-pencil"
-          :href="editHref"
-          target="_blank"
+          data-testid="giac-addr-edit"
+          @click="startEdit"
         >
           {{ t("giacenze.giacenze.addr.editDelivery") }}
         </v-btn>
@@ -50,29 +135,95 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { giacenzeService } from "../services/giacenze.service";
-import { detailHref } from "@shared/platform/navTargets";
 import type { ShipmentAddresses, ShipmentAddress } from "../types";
 import { defineComponent, h } from "vue";
 
 const { t } = useI18n();
 
-const props = defineProps<{ shipmentId: number | null }>();
+const props = defineProps<{ shipmentId: number | null; readonly?: boolean }>();
+const emit = defineEmits<{ changed: [] }>();
 
 const addresses = ref<ShipmentAddresses | null>(null);
 const loading = ref(false);
 
+const editing = ref(false);
+const saving = ref(false);
+const submitted = ref(false);
+const saveError = ref("");
+type AddressDraft = {
+  nome: string;
+  adress: string;
+  cap: string;
+  citta: string;
+  prov: string;
+  id_paese_iso: string;
+  attenzione: string;
+  tel: string;
+};
+const draft = reactive<AddressDraft>({
+  nome: "",
+  adress: "",
+  cap: "",
+  citta: "",
+  prov: "",
+  id_paese_iso: "",
+  attenzione: "",
+  tel: "",
+});
+
 /**
- * La EDICION de la direccion de entrega se hace en el formulario de expedicion,
- * cuyo endpoint (api_shipment_addresses) es el que dispara el clonado D->V para
- * preservar el destino original. La SPA de giacenze solo MUESTRA — asi no se
- * duplica la logica de direcciones ni el autocompletado CAP.
+ * La dirección de entrega se edita aquí (como en el legado). El API (`api_shipment_addresses`) clona la
+ * dirección original a un registro de tipo V la primera vez que se toca con una giacenza activa, así que la
+ * original sigue visible en solo lectura debajo.
  */
-const editHref = computed(() =>
-  props.shipmentId ? detailHref("shipment", props.shipmentId) : "#",
-);
+function startEdit(): void {
+  const a = addresses.value?.delivery;
+  if (!a) return;
+  draft.nome = a.nome ?? "";
+  draft.adress = a.adress ?? "";
+  draft.cap = a.cap ?? "";
+  draft.citta = a.citta ?? "";
+  draft.prov = a.prov ?? "";
+  draft.id_paese_iso = a.id_paese_iso ?? "";
+  draft.attenzione = a.attenzione ?? "";
+  draft.tel = a.tel ?? "";
+  submitted.value = false;
+  saveError.value = "";
+  editing.value = true;
+}
+
+function cancelEdit(): void {
+  editing.value = false;
+}
+
+async function saveEdit(): Promise<void> {
+  const a = addresses.value?.delivery;
+  if (!a) return;
+  submitted.value = true;
+  // Un campo vacío no se envía (no borra datos), pero la calle, el CAP y la ciudad son obligatorios.
+  if (!draft.adress.trim() || !draft.cap.trim() || !draft.citta.trim()) return;
+  const fields: Record<string, string> = {};
+  for (const [k, v] of Object.entries(draft))
+    if (v.trim() !== "") fields[k] = v.trim();
+  saving.value = true;
+  saveError.value = "";
+  try {
+    await giacenzeService.updateDeliveryAddress(a.id, fields);
+    editing.value = false;
+    await load();
+    emit("changed");
+  } catch (e) {
+    saveError.value =
+      e instanceof Error && e.message
+        ? e.message
+        : t("giacenze.giacenze.addr.saveFailed");
+  } finally {
+    saving.value = false;
+  }
+}
 
 async function load(): Promise<void> {
   if (!props.shipmentId) {
@@ -157,6 +308,25 @@ const AddressLines = defineComponent({
 .giac-addr__empty {
   font-style: italic;
   color: rgba(0, 0, 0, 0.5);
+}
+.giac-addr__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.giac-addr__row {
+  display: flex;
+  gap: 8px;
+}
+.giac-addr__note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+.giac-addr__error {
+  margin: 0;
+  color: rgb(var(--v-theme-error));
+  font-size: 0.85rem;
 }
 .giac-addr__actions {
   display: flex;

@@ -462,6 +462,7 @@
         "crm_created": "Expediente creado",
         "crm_create_failed": "No se pudo crear el expediente",
         "giac_create": "Crear almacenaje",
+        "giac_create_hint": "Al crearla se avisa al cliente por correo",
         "giac_created": "Almacenaje creado",
         "giac_create_failed": "No se pudo crear el almacenaje",
         "giac_open": "Abierto",

@@ -462,6 +462,7 @@
         "crm_created": "Fall angelegt",
         "crm_create_failed": "Fall konnte nicht angelegt werden",
         "giac_create": "Lagerung anlegen",
+        "giac_create_hint": "Beim Anlegen wird der Kunde per E-Mail informiert",
         "giac_created": "Lagerung angelegt",
         "giac_create_failed": "Lagerung konnte nicht angelegt werden",
         "giac_open": "Offen",

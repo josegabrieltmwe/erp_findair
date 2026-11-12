@@ -462,6 +462,7 @@
         "crm_created": "Dossier aangemaakt",
         "crm_create_failed": "Kon het dossier niet aanmaken",
         "giac_create": "Opslag aanmaken",
+        "giac_create_hint": "Bij het aanmaken wordt de klant per e-mail geïnformeerd",
         "giac_created": "Opslag aangemaakt",
         "giac_create_failed": "Kon de opslag niet aanmaken",
         "giac_open": "Open",

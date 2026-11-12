@@ -35,11 +35,11 @@
       "autoCloseDays": "Max days",
       "autoCloseHint": "Closes all holds open for more than the given number of days.",
       "operations": {
-        "A": "Open",
-        "C": "Closed",
-        "N": "Noted",
-        "R": "Redelivery",
-        "E": "Settled"
+        "A": "Waiting",
+        "C": "Redeliver",
+        "N": "New address",
+        "R": "To sender",
+        "E": "Abandon"
       },
       "aging": {
         "title": "Aging",
@@ -56,7 +56,11 @@
         "autoClosed": "{count} hold closed | {count} holds closed",
         "deleteConfirm": "Delete this hold? This cannot be undone.",
         "closeConfirm": "Close this hold?",
-        "notFound": "Hold #{id} not found"
+        "notFound": "Hold #{id} not found",
+        "actionFailed": "The action could not be completed",
+        "reopenConfirm": "Reopen this hold? A note will record it.",
+        "reopened": "Hold reopened",
+        "closeConfirmCharge": "Close this hold? Redelivery charge: {amount} {currency}."
       },
       "validation": {
         "shipmentRequired": "Shipment ID is required",
@@ -73,7 +77,17 @@
         "readonly": "Read-only",
         "none": "No address",
         "loading": "Loading…",
-        "editDelivery": "Edit delivery"
+        "editDelivery": "Edit delivery",
+        "name": "Name",
+        "street": "Address",
+        "zip": "ZIP",
+        "city": "City",
+        "province": "Province",
+        "country": "Country (ISO)",
+        "attention": "Attention",
+        "phone": "Phone",
+        "keepsOriginal": "The original address is kept and shown below.",
+        "saveFailed": "The address could not be saved"
       },
       "msg": {
         "title": "Messages",
@@ -88,11 +102,128 @@
         "type": "Type",
         "status": "Status",
         "client": "Client",
-        "supplier": "Supplier"
+        "supplier": "Supplier",
+        "leadClient": "Sent with the client hold notice template, through the partner's e-mail queue.",
+        "leadSupplier": "Sent with the carrier instructions template, through the partner's e-mail queue.",
+        "sendFailed": "The message could not be sent"
       },
       "replied": "Replied",
       "awaitingReply": "Awaiting",
-      "copyPrice": "Copy loading price"
+      "copyPrice": "Copy loading price",
+      "queue": {
+        "title": "Work queues",
+        "to_notify": "To notify client",
+        "waiting_client": "Waiting for client",
+        "to_instruct_supplier": "Instruct carrier",
+        "over_15": "Over 15 days",
+        "open": "Open",
+        "closed": "Closed",
+        "all": "All",
+        "hint": {
+          "to_notify": "Open holds where the client has not been notified yet.",
+          "waiting_client": "Client notified but has not given instructions yet.",
+          "to_instruct_supplier": "The client replied: the carrier still needs instructions.",
+          "over_15": "Open for more than 15 days.",
+          "open": "All holds that are not closed.",
+          "closed": "Holds already closed.",
+          "all": "Not filtered by status."
+        }
+      },
+      "shipmentBanner": "Holds of shipment {id}",
+      "showAll": "Show all",
+      "backToShipment": "Back to the shipment",
+      "openShipment": "Open the shipment",
+      "nextStep": "Next step",
+      "clientNotified": "Client notified",
+      "supplierNotified": "Carrier notified",
+      "yes": "Yes",
+      "no": "No",
+      "indicator": "Indicator",
+      "step": {
+        "closed": "Closed",
+        "notify_client": "Notify the client",
+        "waiting_client": "Waiting for client",
+        "instruct_supplier": "Instruct the carrier",
+        "ready_to_close": "Ready to close"
+      },
+      "empty": {
+        "to_notify": "No holds to notify to the client. The other open ones are in the «Open» queue.",
+        "generic": "No holds."
+      },
+      "bulk": {
+        "selected": "{count} selected",
+        "close": "Close selected",
+        "clear": "Clear selection",
+        "nothingToClose": "The selected holds are already closed.",
+        "closeConfirm": "Close {count} holds?",
+        "done": "{count} holds closed",
+        "partial": "{ok} closed; {failed} failed (#{ids})"
+      },
+      "reopen": "Reopen hold",
+      "create": {
+        "title": "New hold",
+        "lead": "Pick the held shipment. The client is always notified by e-mail on creation, from the partner's sender.",
+        "shipment": "Shipment",
+        "shipmentHint": "Search by number, AWB, client or recipient",
+        "typeToSearch": "Type at least 2 characters",
+        "existing": "This shipment already has an open hold: that one will be opened, no other is created.",
+        "willNotify": "The client will be notified by e-mail when the hold is created.",
+        "openExisting": "Open the existing one",
+        "submit": "Create and notify the client",
+        "failed": "The hold could not be created"
+      },
+      "detail": {
+        "title": "Hold #{id}",
+        "open": "Open",
+        "openedAgo": "Opened on {date} ({days} days ago)",
+        "next": "Next"
+      },
+      "fix": {
+        "closed": "Hold closed. You can reopen it if needed.",
+        "notify_client": "The client has not been notified yet.",
+        "waiting_client": "Client notified: waiting for their instructions. Write them down below once you have them.",
+        "instruct_supplier": "The client replied: the carrier still needs instructions.",
+        "ready_to_close": "All done: ready to close."
+      },
+      "act": {
+        "notifyClient": "Notify the client",
+        "notifySupplier": "Notify the carrier"
+      },
+      "cycle": {
+        "title": "Cycle",
+        "client_notified": "Client notified",
+        "client_reply": "Client instructions received",
+        "supplier_notified": "Instructions given to the carrier"
+      },
+      "esito": {
+        "title": "Outcome",
+        "missing": "The outcome is missing.",
+        "hint": {
+          "A": "Stays on hold waiting for instructions",
+          "C": "The carrier redelivers to the same address",
+          "N": "The carrier redelivers to another address",
+          "R": "The carrier returns the parcels to the sender",
+          "E": "The parcels are abandoned"
+        },
+        "confirm": {
+          "A": "Leave the hold waiting for instructions? The client's reply is cleared.",
+          "C": "The carrier will redeliver to the same address. You can notify it afterwards.",
+          "N": "The carrier will redeliver to another address: check the delivery address on the right first. You can notify it afterwards.",
+          "R": "The carrier will return the parcels to the sender. You can notify it afterwards.",
+          "E": "The parcels will be abandoned. You can notify the carrier afterwards."
+        }
+      },
+      "instr": {
+        "title": "Instructions and notes",
+        "client": "Client instructions",
+        "clientHint": "Saving them records that the client has replied.",
+        "save": "Save instructions"
+      },
+      "deposit": {
+        "title": "Storage and charge",
+        "daysHint": "Days on hold: they drive the charge",
+        "save": "Save storage"
+      }
     }
   }
 }

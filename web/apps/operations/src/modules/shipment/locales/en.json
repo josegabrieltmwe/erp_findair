@@ -462,6 +462,7 @@
         "crm_created": "Case created",
         "crm_create_failed": "Could not create the case",
         "giac_create": "Create hold",
+        "giac_create_hint": "The client is notified by e-mail on creation",
         "giac_created": "Hold created",
         "giac_create_failed": "Could not create the hold",
         "giac_open": "Open",

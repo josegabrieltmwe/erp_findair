@@ -1,13 +1,79 @@
 <template>
   <div class="giac-page">
-    <!-- ── Filtros ─────────────────────────────────────────── -->
-    <section class="giac-filters">
+    <!-- ── Colas de trabajo (primero lo que hay que hacer) ─────────── -->
+    <nav
+      class="giac-queues"
+      :aria-label="t('giacenze.giacenze.queue.title')"
+      data-testid="giac-queues"
+    >
+      <v-btn
+        v-for="q in queueIds"
+        :key="q"
+        size="small"
+        :variant="store.queue === q ? 'flat' : 'tonal'"
+        :color="store.queue === q ? 'primary' : undefined"
+        :data-testid="`giac-queue-${q}`"
+        @click="pickQueue(q)"
+      >
+        {{ t(`giacenze.giacenze.queue.${q}`) }}
+        <span v-if="queueCount(q) !== null" class="giac-queue__count">{{
+          queueCount(q)
+        }}</span>
+        <span
+          v-else-if="q !== 'all'"
+          class="giac-queue__count giac-queue__count--na"
+          >n/d</span
+        >
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        size="small"
+        prepend-icon="mdi-filter-variant"
+        @click="showFilters = !showFilters"
+      >
+        {{ t("giacenze.giacenze.filters") }}
+      </v-btn>
+    </nav>
+    <p
+      v-if="store.queue"
+      class="giac-queue__hint"
+      data-testid="giac-queue-hint"
+    >
+      {{ t(`giacenze.giacenze.queue.hint.${store.queue}`) }}
+    </p>
+
+    <!-- ── Contexto de envío (llegada desde la ficha del envío) ───── -->
+    <v-alert
+      v-if="shipmentContext"
+      type="info"
+      variant="tonal"
+      density="compact"
+      data-testid="giac-shipment-banner"
+    >
+      {{ t("giacenze.giacenze.shipmentBanner", { id: shipmentContext }) }}
+      <template #append>
+        <v-btn variant="text" size="small" @click="clearShipmentContext">{{
+          t("giacenze.giacenze.showAll")
+        }}</v-btn>
+        <v-btn
+          variant="text"
+          size="small"
+          :href="detailHref('shipment', shipmentContext)"
+          >{{ t("giacenze.giacenze.backToShipment") }}</v-btn
+        >
+      </template>
+    </v-alert>
+
+    <!-- ── Filtros adicionales ─────────────────────────────────────── -->
+    <section v-if="showFilters" class="giac-filters" data-testid="giac-filters">
       <v-text-field
         v-model.number="local.id_spedizione"
         :label="t('giacenze.giacenze.shipmentId')"
         type="number"
         density="comfortable"
         clearable
+        hide-details
         class="giac-filter-field"
         @keyup.enter="applyFilters"
       />
@@ -16,17 +82,15 @@
         :label="t('giacenze.giacenze.searchText')"
         density="comfortable"
         clearable
+        hide-details
         class="giac-filter-field"
         @keyup.enter="applyFilters"
       />
-      <v-text-field
-        v-model.number="local.id_cliente"
-        :label="t('giacenze.giacenze.clientId')"
-        type="number"
-        density="comfortable"
-        clearable
-        class="giac-filter-field"
-        @keyup.enter="applyFilters"
+      <CmAnagraficaAutocomplete
+        v-model="local.id_cliente"
+        :label="t('giacenze.giacenze.client')"
+        class="giac-filter-field giac-filter-field--wide"
+        @select="onClientSelect"
       />
       <v-select
         v-model="local.operazione"
@@ -34,6 +98,7 @@
         :label="t('giacenze.giacenze.operation')"
         density="comfortable"
         clearable
+        hide-details
         class="giac-filter-field"
       />
       <v-text-field
@@ -42,6 +107,7 @@
         type="date"
         density="comfortable"
         clearable
+        hide-details
         class="giac-filter-field"
       />
       <v-text-field
@@ -50,14 +116,8 @@
         type="date"
         density="comfortable"
         clearable
-        class="giac-filter-field"
-      />
-      <v-checkbox
-        v-model="local.open_only"
-        :label="t('giacenze.giacenze.openOnly')"
-        density="comfortable"
         hide-details
-        class="giac-filter-check"
+        class="giac-filter-field"
       />
       <div class="giac-filter-actions">
         <v-btn color="primary" :loading="store.loading" @click="applyFilters">
@@ -69,25 +129,43 @@
       </div>
     </section>
 
-    <!-- ── Filtros activos (click-to-filter) ──────────────────── -->
+    <!-- ── Filtros activos ─────────────────────────────────────────── -->
     <ActiveFilterChips
       :filters="activeFilters"
       @remove="removeFilter"
       @clear="clearFilters"
     />
 
-    <!-- ── Aging widget ────────────────────────────────────── -->
+    <!-- ── Aging ───────────────────────────────────────────────────── -->
     <section v-if="agingTiles.length" class="giac-aging">
       <ListingKpiStrip :tiles="agingTiles" />
     </section>
 
-    <!-- ── Toolbar ─────────────────────────────────────────── -->
+    <!-- ── Toolbar ─────────────────────────────────────────────────── -->
     <div class="giac-toolbar">
       <div class="giac-toolbar-title">
         <span class="giac-count">{{ store.total }}</span>
         <span class="giac-count-label">{{ t("giacenze.giacenze.title") }}</span>
       </div>
       <v-spacer />
+      <template v-if="selected.length">
+        <span class="giac-selected">{{
+          t("giacenze.giacenze.bulk.selected", { count: selected.length })
+        }}</span>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-check-circle-outline"
+          :loading="bulkBusy"
+          data-testid="giac-bulk-close"
+          @click="bulkClose"
+        >
+          {{ t("giacenze.giacenze.bulk.close") }}
+        </v-btn>
+        <v-btn variant="text" @click="selected = []">{{
+          t("giacenze.giacenze.bulk.clear")
+        }}</v-btn>
+      </template>
       <v-btn
         v-if="isTmwe"
         variant="tonal"
@@ -102,31 +180,90 @@
         :title="t('common.refresh')"
         @click="refresh"
       />
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreate">
+      <v-btn
+        color="primary"
+        prepend-icon="mdi-plus"
+        data-testid="giac-new"
+        @click="createOpen = true"
+      >
         {{ t("giacenze.giacenze.new") }}
       </v-btn>
     </div>
 
-    <!-- ── Tabla ───────────────────────────────────────────── -->
+    <!-- ── Tabla ───────────────────────────────────────────────────── -->
     <v-data-table
+      v-model="selected"
       :headers="headers"
       :items="store.items"
       :loading="store.loading"
-      :no-data-text="t('common.noData')"
       item-value="id"
+      show-select
       class="giac-table"
       hover
+      :row-props="rowProps"
+      @click:row="onRowClick"
     >
+      <template #no-data>
+        <p class="giac-empty" data-testid="giac-empty">{{ emptyText }}</p>
+      </template>
+
       <template #[`item.id_spedizione`]="{ item }">
-        <button
+        <a
           v-if="item.id_spedizione"
-          type="button"
-          class="filterable"
-          :title="t('giacenze.giacenze.filterClick.byShipment')"
-          @click.stop="setFilterFromCell('id_spedizione', item.id_spedizione)"
+          class="giac-link"
+          :href="detailHref('shipment', item.id_spedizione)"
+          :title="t('giacenze.giacenze.openShipment')"
+          @click.stop
+          >{{ item.id_spedizione }}</a
         >
-          {{ item.id_spedizione }}
-        </button>
+        <span v-else>—</span>
+      </template>
+
+      <template #[`item.step`]="{ item }">
+        <v-chip
+          size="small"
+          label
+          :color="stepColor(item)"
+          :data-testid="`giac-step-${item.id}`"
+        >
+          {{ t(`giacenze.giacenze.step.${lifecycleStep(item)}`) }}
+        </v-chip>
+      </template>
+
+      <template #[`item.cont_cliente_data`]="{ item }">
+        <v-chip
+          v-if="hasDate(item.cont_cliente_data)"
+          size="x-small"
+          color="success"
+          variant="tonal"
+          >{{ t("giacenze.giacenze.yes") }}</v-chip
+        >
+        <v-chip v-else size="x-small" color="warning" variant="tonal">{{
+          t("giacenze.giacenze.no")
+        }}</v-chip>
+      </template>
+
+      <template #[`item.risp_cliente_data`]="{ item }">
+        <v-chip
+          v-if="hasDate(item.risp_cliente_data)"
+          size="x-small"
+          color="success"
+          variant="tonal"
+          >{{ t("giacenze.giacenze.replied") }}</v-chip
+        >
+        <v-chip v-else size="x-small" color="warning" variant="tonal">{{
+          t("giacenze.giacenze.awaitingReply")
+        }}</v-chip>
+      </template>
+
+      <template #[`item.cont_fornitore_data`]="{ item }">
+        <v-chip
+          v-if="hasDate(item.cont_fornitore_data)"
+          size="x-small"
+          color="success"
+          variant="tonal"
+          >{{ t("giacenze.giacenze.yes") }}</v-chip
+        >
         <span v-else>—</span>
       </template>
 
@@ -150,24 +287,20 @@
         <span v-else>—</span>
       </template>
 
-      <template #[`item.addebito_riconsegna`]="{ item }">
-        {{ formatCharge(item) }}
-      </template>
-
-      <template #[`item.data_open`]="{ item }">
-        {{ item.data_open ?? "—" }}
-      </template>
-
-      <template #[`item.data_close`]="{ item }">
-        {{ item.data_close ?? "—" }}
-      </template>
-
+      <template #[`item.addebito_riconsegna`]="{ item }">{{
+        formatCharge(item)
+      }}</template>
+      <template #[`item.data_open`]="{ item }">{{
+        item.data_open ?? "—"
+      }}</template>
+      <template #[`item.data_close`]="{ item }">{{
+        hasDate(item.data_close) ? item.data_close : "—"
+      }}</template>
       <template #[`item.actions`]="{ item }">
-        <CmRowActions :actions="rowActions(item)" />
+        <span @click.stop><CmRowActions :actions="rowActions(item)" /></span>
       </template>
     </v-data-table>
 
-    <!-- ── Paginación ──────────────────────────────────────── -->
     <div v-if="pageCount > 1" class="giac-pagination">
       <v-pagination
         :model-value="store.page"
@@ -178,14 +311,15 @@
       />
     </div>
 
-    <!-- ── Diálogo crear/editar ────────────────────────────── -->
+    <GiacenzaCreateDialog v-model="createOpen" @created="onCreated" />
     <GiacenzaEditDialog
       v-model="dialogOpen"
       :giacenza="editing"
-      @saved="onSaved"
+      @changed="onChanged"
+      @next="openNext"
     />
 
-    <!-- ── Diálogo auto-close ──────────────────────────────── -->
+    <!-- ── Auto-cierre (admin) ─────────────────────────────────────── -->
     <v-dialog v-model="autoCloseOpen" max-width="420">
       <v-card>
         <v-card-title>{{ t("giacenze.giacenze.autoClose") }}</v-card-title>
@@ -207,9 +341,12 @@
           <v-btn variant="text" @click="autoCloseOpen = false">{{
             t("common.cancel")
           }}</v-btn>
-          <v-btn color="primary" :loading="store.saving" @click="runAutoClose">
-            {{ t("common.confirm") }}
-          </v-btn>
+          <v-btn
+            color="primary"
+            :loading="store.saving"
+            @click="runAutoClose"
+            >{{ t("common.confirm") }}</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -227,13 +364,30 @@ import ActiveFilterChips from "@shared/listing/ActiveFilterChips.vue";
 import CmRowActions, {
   type RowAction,
 } from "@shared/anagrafiche/components/CmRowActions.vue";
-import { mdiPencil, mdiCheckCircleOutline, mdiDeleteOutline } from "@mdi/js";
+import CmAnagraficaAutocomplete from "@shared/listini/components/CmAnagraficaAutocomplete.vue";
+import { detailHref } from "@shared/platform/navTargets";
+import {
+  mdiPencil,
+  mdiCheckCircleOutline,
+  mdiDeleteOutline,
+  mdiLockOpenVariantOutline,
+} from "@mdi/js";
 import type { ActiveFilter } from "@shared/listing/types";
 import { useToastStore } from "@shared/anagrafiche/stores/toast.store";
 import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
 import { useGiacenzeStore } from "../stores/giacenze.store";
 import { giacenzeService } from "../services/giacenze.service";
 import GiacenzaEditDialog from "../components/GiacenzaEditDialog.vue";
+import GiacenzaCreateDialog from "../components/GiacenzaCreateDialog.vue";
+import {
+  DEFAULT_QUEUE,
+  QUEUE_ORDER,
+  hasDate,
+  isStale,
+  lifecycleStep,
+  queueFromIndicator,
+  type QueueId,
+} from "../queues";
 import {
   GIACENZA_OPERATIONS,
   emptyFilters,
@@ -249,37 +403,87 @@ const toast = useToastStore();
 const confirm = useConfirmStore();
 
 const isTmwe = computed(() => Boolean(window.__TMWE_OPERATIONS__?.isTmwe));
+const queueIds = QUEUE_ORDER;
 
-// ── Filtros locales (se aplican explícitamente) ──────────────
+/** Indicadores antiguos de la home que no son una cola: se aplican como filtro libre. */
+const FREE_INDICATORS = new Set(["giacenze_overdue_15"]);
+
+// ── Filtros secundarios (las colas viven en el store) ─────────
 const local = reactive<GiacenzaFilters>(emptyFilters());
+const clientLabel = ref("");
+const showFilters = ref(false);
+const selected = ref<number[]>([]);
+const bulkBusy = ref(false);
 
 const operationItems = computed(() =>
   GIACENZA_OPERATIONS.map((op) => ({ title: operationLabel(op), value: op })),
 );
 
-const headers = computed(() => [
-  { title: t("giacenze.giacenze.shipment"), key: "id_spedizione", width: 110 },
-  { title: t("giacenze.giacenze.client"), key: "cliente_rag_soc" },
-  { title: t("giacenze.giacenze.tracking"), key: "tracking_descr", width: 160 },
-  { title: t("giacenze.giacenze.description"), key: "descriz" },
-  { title: t("giacenze.giacenze.operation"), key: "operazione", width: 130 },
-  { title: t("giacenze.giacenze.dataOpen"), key: "data_open", width: 120 },
-  { title: t("giacenze.giacenze.dataClose"), key: "data_close", width: 120 },
-  { title: t("giacenze.giacenze.days"), key: "giacenza_gg", width: 100 },
-  {
-    title: t("giacenze.giacenze.redeliveryCharge"),
-    key: "addebito_riconsegna",
-    width: 150,
-    align: "end" as const,
-  },
-  {
+const showClose = computed(
+  () => store.queue === "closed" || store.queue === "all",
+);
+const headers = computed(() => {
+  const cols: Array<Record<string, unknown>> = [
+    {
+      title: t("giacenze.giacenze.nextStep"),
+      key: "step",
+      sortable: false,
+      width: 190,
+    },
+    {
+      title: t("giacenze.giacenze.shipment"),
+      key: "id_spedizione",
+      width: 100,
+    },
+    { title: t("giacenze.giacenze.client"), key: "cliente_rag_soc" },
+    {
+      title: t("giacenze.giacenze.tracking"),
+      key: "tracking_descr",
+      width: 160,
+    },
+    { title: t("giacenze.giacenze.dataOpen"), key: "data_open", width: 110 },
+    { title: t("giacenze.giacenze.days"), key: "giacenza_gg", width: 80 },
+    {
+      title: t("giacenze.giacenze.clientNotified"),
+      key: "cont_cliente_data",
+      sortable: false,
+      width: 110,
+    },
+    {
+      title: t("giacenze.giacenze.clientReply"),
+      key: "risp_cliente_data",
+      sortable: false,
+      width: 120,
+    },
+    {
+      title: t("giacenze.giacenze.supplierNotified"),
+      key: "cont_fornitore_data",
+      sortable: false,
+      width: 110,
+    },
+    { title: t("giacenze.giacenze.operation"), key: "operazione", width: 120 },
+    {
+      title: t("giacenze.giacenze.redeliveryCharge"),
+      key: "addebito_riconsegna",
+      width: 130,
+      align: "end",
+    },
+  ];
+  if (showClose.value)
+    cols.splice(5, 0, {
+      title: t("giacenze.giacenze.dataClose"),
+      key: "data_close",
+      width: 110,
+    });
+  cols.push({
     title: t("common.actions"),
     key: "actions",
     sortable: false,
-    align: "end" as const,
-    width: 140,
-  },
-]);
+    align: "end",
+    width: 90,
+  });
+  return cols;
+});
 
 const pageCount = computed(() => store.pagination?.total_pages ?? 1);
 
@@ -307,9 +511,13 @@ const agingTiles = computed<KpiTileDescriptor[]>(() => {
 
 // ── Diálogos ─────────────────────────────────────────────────
 const dialogOpen = ref(false);
+const createOpen = ref(false);
 const editing = ref<Giacenza | null>(null);
 const autoCloseOpen = ref(false);
 const autoCloseDays = ref(30);
+
+/** Envío de contexto cuando se llega desde su ficha (`?sped=`). */
+const shipmentContext = computed(() => store.filters.id_spedizione ?? null);
 
 function operationLabel(op: GiacenzaOperation | null): string {
   if (!op) return "—";
@@ -331,6 +539,33 @@ function operationColor(op: GiacenzaOperation | null): string {
   }
 }
 
+function stepColor(item: Giacenza): string {
+  switch (lifecycleStep(item)) {
+    case "closed":
+      return "grey";
+    case "ready_to_close":
+      return "success";
+    default:
+      return "warning";
+  }
+}
+
+function rowProps(data: { item: Giacenza }): Record<string, unknown> {
+  return { class: isStale(data.item) ? "giac-row--stale" : "" };
+}
+
+function queueCount(q: QueueId): number | null {
+  if (q === "all") return null;
+  const n = store.queueCounts[q];
+  return typeof n === "number" ? n : null;
+}
+
+const emptyText = computed(() => {
+  if (store.queue === "to_notify")
+    return t("giacenze.giacenze.empty.to_notify");
+  return t("giacenze.giacenze.empty.generic");
+});
+
 function formatCharge(item: Giacenza): string {
   const amount =
     item.addebito_riconsegna_display ?? item.addebito_riconsegna ?? 0;
@@ -339,53 +574,112 @@ function formatCharge(item: Giacenza): string {
   return `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
 }
 
+function fail(error: unknown): void {
+  const msg = error instanceof Error && error.message ? error.message : "";
+  toast.error(msg || t("giacenze.giacenze.messages.actionFailed"));
+}
+
+/** Aplica los filtros secundarios conservando los que fija la cola. */
 function applyFilters(): void {
-  store.setFilters({ ...local });
+  store.setFilters({
+    ...local,
+    indicator: store.filters.indicator,
+    closed: store.filters.closed,
+  });
+  selected.value = [];
   void store.fetchList();
 }
 
+function onClientSelect(o: { rag_soc?: string } | null): void {
+  clientLabel.value = o?.rag_soc ?? "";
+}
+
+function pickQueue(q: QueueId): void {
+  store.selectQueue(q);
+  applyFilters();
+}
+
 // ── Click-to-filter ──────────────────────────────────────────
-// Clicar un valor de celda lo fija en los filtros locales y recarga (AJAX).
-// Backend ya soporta operazione e id_spedizione (api_inventory_crud).
 function setFilterFromCell(
-  field: "id_spedizione" | "operazione",
+  field: "operazione",
   value: number | string | null,
 ): void {
   if (value == null || value === "") return;
-  if (field === "id_spedizione") local.id_spedizione = Number(value);
-  else local.operazione = value as GiacenzaOperation;
+  local[field] = value as GiacenzaOperation;
   applyFilters();
 }
 
 const activeFilters = computed<ActiveFilter[]>(() => {
   const out: ActiveFilter[] = [];
-  if (local.id_spedizione != null) {
-    out.push({
-      field: "id_spedizione",
-      group: t("giacenze.giacenze.shipment") as string,
-      value: String(local.id_spedizione),
-    });
-  }
-  if (local.operazione) {
-    out.push({
-      field: "operazione",
-      group: t("giacenze.giacenze.operation") as string,
-      value: operationLabel(local.operazione),
-    });
-  }
+  const add = (field: string, group: string, value: string): void => {
+    out.push({ field, group, value });
+  };
+  if (local.id_spedizione != null)
+    add(
+      "id_spedizione",
+      t("giacenze.giacenze.shipment") as string,
+      String(local.id_spedizione),
+    );
+  if (local.id_cliente != null)
+    add(
+      "id_cliente",
+      t("giacenze.giacenze.client") as string,
+      clientLabel.value || String(local.id_cliente),
+    );
+  if (local.q) add("q", t("giacenze.giacenze.searchText") as string, local.q);
+  if (local.operazione)
+    add(
+      "operazione",
+      t("giacenze.giacenze.operation") as string,
+      operationLabel(local.operazione),
+    );
+  if (local.data_open_da)
+    add(
+      "data_open_da",
+      t("giacenze.giacenze.fromDate") as string,
+      local.data_open_da,
+    );
+  if (local.data_open_a)
+    add(
+      "data_open_a",
+      t("giacenze.giacenze.toDate") as string,
+      local.data_open_a,
+    );
+  if (store.queue === null && store.filters.indicator)
+    add(
+      "indicator",
+      t("giacenze.giacenze.indicator") as string,
+      store.filters.indicator,
+    );
   return out;
 });
 
 function removeFilter(field: string): void {
-  if (field === "id_spedizione") local.id_spedizione = null;
-  else if (field === "operazione") local.operazione = null;
+  if (field === "indicator") {
+    store.selectQueue("all");
+  } else if (field === "id_spedizione" || field === "id_cliente") {
+    local[field] = null;
+    if (field === "id_cliente") clientLabel.value = "";
+  } else if (
+    field === "q" ||
+    field === "data_open_da" ||
+    field === "data_open_a" ||
+    field === "operazione"
+  ) {
+    local[field] = null;
+  }
   applyFilters();
+}
+
+function clearShipmentContext(): void {
+  removeFilter("id_spedizione");
 }
 
 function clearFilters(): void {
   Object.assign(local, emptyFilters());
-  store.resetFilters();
-  void store.fetchList();
+  clientLabel.value = "";
+  store.selectQueue("all");
+  applyFilters();
 }
 
 function goToPage(p: number): void {
@@ -394,12 +688,15 @@ function goToPage(p: number): void {
 }
 
 function refresh(): void {
-  void Promise.all([store.fetchList(), store.fetchAging()]);
+  void Promise.all([
+    store.fetchList(),
+    store.fetchAging(),
+    store.fetchQueueCounts(),
+  ]);
 }
 
-function openCreate(): void {
-  editing.value = null;
-  dialogOpen.value = true;
+function onRowClick(_e: Event, row: { item: Giacenza }): void {
+  openEdit(row.item);
 }
 
 function openEdit(item: Giacenza): void {
@@ -407,8 +704,22 @@ function openEdit(item: Giacenza): void {
   dialogOpen.value = true;
 }
 
-/** Acciones de fila: editar (visible) + cerrar (si no cerrada)/eliminar en kebab. */
+/** «Apri la prossima»: tras resolver una giacenza de la cola, abre la siguiente de la lista. */
+function openNext(currentId: number): void {
+  const list = store.items;
+  const i = list.findIndex((g) => g.id === currentId);
+  const next = i >= 0 ? list[i + 1] : undefined;
+  if (next) {
+    editing.value = next;
+    dialogOpen.value = true;
+  } else {
+    dialogOpen.value = false;
+  }
+}
+
+/** Acciones de fila: abrir, cerrar o reabrir según el estado, eliminar. */
 function rowActions(item: Giacenza): RowAction[] {
+  const closed = lifecycleStep(item) === "closed";
   return [
     {
       key: "edit",
@@ -420,8 +731,15 @@ function rowActions(item: Giacenza): RowAction[] {
       key: "close",
       title: t("giacenze.giacenze.closeHold"),
       icon: mdiCheckCircleOutline,
-      hidden: item.operazione === "C",
+      hidden: closed,
       onClick: () => confirmClose(item),
+    },
+    {
+      key: "reopen",
+      title: t("giacenze.giacenze.reopen"),
+      icon: mdiLockOpenVariantOutline,
+      hidden: !closed,
+      onClick: () => confirmReopen(item),
     },
     {
       key: "delete",
@@ -434,8 +752,16 @@ function rowActions(item: Giacenza): RowAction[] {
   ];
 }
 
-function onSaved(mode: "created" | "updated"): void {
-  toast.success(t(`giacenze.giacenze.messages.${mode}`));
+function onCreated(g: Giacenza): void {
+  toast.success(t("giacenze.giacenze.messages.created"));
+  refresh();
+  // Abre la ficha recién creada (o la que ya estaba abierta para ese envío).
+  editing.value = g;
+  dialogOpen.value = true;
+}
+
+function onChanged(): void {
+  refresh();
 }
 
 async function confirmClose(item: Giacenza): Promise<void> {
@@ -445,8 +771,28 @@ async function confirmClose(item: Giacenza): Promise<void> {
     confirmLabel: t("giacenze.giacenze.closeHold"),
   });
   if (!ok) return;
-  await store.close(item.id);
-  toast.success(t("giacenze.giacenze.messages.closed"));
+  try {
+    await store.close(item.id);
+    await store.fetchQueueCounts();
+    toast.success(t("giacenze.giacenze.messages.closed"));
+  } catch (e) {
+    fail(e);
+  }
+}
+
+async function confirmReopen(item: Giacenza): Promise<void> {
+  const ok = await confirm.ask({
+    title: t("giacenze.giacenze.reopen"),
+    message: t("giacenze.giacenze.messages.reopenConfirm"),
+    confirmLabel: t("giacenze.giacenze.reopen"),
+  });
+  if (!ok) return;
+  try {
+    await store.reopen(item.id);
+    toast.success(t("giacenze.giacenze.messages.reopened"));
+  } catch (e) {
+    fail(e);
+  }
 }
 
 async function confirmDelete(item: Giacenza): Promise<void> {
@@ -457,8 +803,54 @@ async function confirmDelete(item: Giacenza): Promise<void> {
     variant: "danger",
   });
   if (!ok) return;
-  await store.remove(item.id);
-  toast.success(t("giacenze.giacenze.messages.deleted"));
+  try {
+    await store.remove(item.id);
+    await store.fetchQueueCounts();
+    toast.success(t("giacenze.giacenze.messages.deleted"));
+  } catch (e) {
+    fail(e);
+  }
+}
+
+/** Cierre en bloque: una a una, con resumen de las que fallan. */
+async function bulkClose(): Promise<void> {
+  const ids = selected.value.filter((id) => {
+    const g = store.items.find((x) => x.id === id);
+    return g && lifecycleStep(g) !== "closed";
+  });
+  if (ids.length === 0) {
+    toast.error(t("giacenze.giacenze.bulk.nothingToClose"));
+    return;
+  }
+  const ok = await confirm.ask({
+    title: t("giacenze.giacenze.bulk.close"),
+    message: t("giacenze.giacenze.bulk.closeConfirm", { count: ids.length }),
+    confirmLabel: t("giacenze.giacenze.closeHold"),
+  });
+  if (!ok) return;
+  bulkBusy.value = true;
+  const failed: number[] = [];
+  for (const id of ids) {
+    try {
+      await giacenzeService.close(id);
+    } catch {
+      failed.push(id);
+    }
+  }
+  bulkBusy.value = false;
+  selected.value = failed;
+  refresh();
+  if (failed.length === 0) {
+    toast.success(t("giacenze.giacenze.bulk.done", { count: ids.length }));
+  } else {
+    toast.error(
+      t("giacenze.giacenze.bulk.partial", {
+        ok: ids.length - failed.length,
+        failed: failed.length,
+        ids: failed.join(", "),
+      }),
+    );
+  }
 }
 
 function openAutoClose(): void {
@@ -467,17 +859,20 @@ function openAutoClose(): void {
 }
 
 async function runAutoClose(): Promise<void> {
-  const closed = await store.autoClose(autoCloseDays.value);
-  autoCloseOpen.value = false;
-  toast.success(
-    t("giacenze.giacenze.messages.autoClosed", { count: closed }, closed),
-  );
+  try {
+    const closed = await store.autoClose(autoCloseDays.value);
+    toast.success(
+      t("giacenze.giacenze.messages.autoClosed", { count: closed }, closed),
+    );
+    void store.fetchQueueCounts();
+  } catch (e) {
+    fail(e);
+  } finally {
+    autoCloseOpen.value = false;
+  }
 }
 
-/**
- * Deep-link ?id=N (bloque Cross-app de la ficha de expedición): carga la
- * giacenza por id y abre su ficha directamente. Best-effort.
- */
+/** Deep-link ?id=N: carga la giacenza y abre su ficha. */
 async function openFromDeepLink(): Promise<void> {
   const raw = route.query.id;
   const gid = Number(Array.isArray(raw) ? raw[0] : raw);
@@ -491,24 +886,82 @@ async function openFromDeepLink(): Promise<void> {
 }
 
 onMounted(() => {
-  const indicator = String(route.query.indicator ?? "");
-  if (
-    indicator === "open_giacenze" ||
-    indicator === "giacenze_overdue_15" ||
-    indicator === "awaiting_client_response" ||
-    indicator === "giac_to_notify_client" ||
-    indicator === "giac_to_instruct_supplier" ||
-    indicator === "giac_open_over_15_days"
-  ) {
-    local.indicator = indicator;
-    store.setFilters({ ...local });
+  const one = (v: unknown): string =>
+    String(Array.isArray(v) ? v[0] : (v ?? ""));
+  const indicator = one(route.query.indicator);
+  const sped = Number(one(route.query.sped));
+  const hasId = Number(one(route.query.id)) > 0;
+
+  if (Number.isFinite(sped) && sped > 0) {
+    // Llegada desde la ficha del envío: todas las giacenze de ese envío.
+    local.id_spedizione = sped;
+    store.selectQueue("all");
+  } else if (indicator) {
+    const q = queueFromIndicator(indicator);
+    if (q) store.selectQueue(q);
+    else if (FREE_INDICATORS.has(indicator)) {
+      store.selectQueue("all");
+      store.queue = null;
+      store.filters = {
+        ...store.filters,
+        indicator: indicator as GiacenzaFilters["indicator"],
+      };
+    } else store.selectQueue(DEFAULT_QUEUE);
+  } else if (hasId) {
+    store.selectQueue("all");
+  } else {
+    store.selectQueue(DEFAULT_QUEUE);
   }
-  void Promise.all([store.fetchList(), store.fetchAging()]);
+  applyFilters();
+  void Promise.all([store.fetchAging(), store.fetchQueueCounts()]);
   void openFromDeepLink();
 });
 </script>
 
 <style scoped>
+.giac-queues {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.giac-queue__count {
+  margin-left: 6px;
+  font-weight: 700;
+}
+.giac-queue__count--na {
+  opacity: 0.6;
+  font-weight: 400;
+}
+.giac-queue__hint {
+  margin: -8px 0 0;
+  font-size: 0.85rem;
+  color: var(--cm-text-secondary, #64748b);
+}
+.giac-filter-field--wide {
+  max-width: 280px;
+  flex: 1 1 220px;
+}
+.giac-link {
+  color: rgb(var(--v-theme-primary));
+  text-decoration: none;
+}
+.giac-link:hover {
+  text-decoration: underline;
+}
+.giac-selected {
+  font-size: 0.9rem;
+}
+.giac-empty {
+  padding: 24px 12px;
+  color: var(--cm-text-secondary, #64748b);
+}
+.giac-table :deep(tr.giac-row--stale) {
+  background: rgba(var(--v-theme-warning), 0.08);
+}
+.giac-table :deep(tbody tr) {
+  cursor: pointer;
+}
 .giac-page {
   padding: 16px 20px 40px;
   display: flex;
