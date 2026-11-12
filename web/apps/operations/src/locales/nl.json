@@ -594,6 +594,7 @@
     "matrix_add_weight": "Stap toevoegen",
     "matrix_new_zone": "Nieuwe zone",
     "matrix_add_zone": "Zone toevoegen",
+    "matrix_zone_unknown": "Deze zone bestaat niet voor deze dienst — controleer het nummer",
     "matrix_empty_error": "De matrix bevat geen prijzen om op te slaan",
     "bulk_btn": "Bulkwijziging ({n})",
     "bulk_history": "Geschiedenis bulkwijzigingen",

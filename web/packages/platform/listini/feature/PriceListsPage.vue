@@ -528,6 +528,7 @@
                 :editable="matrixEditMode"
                 :field="matrixField"
                 :zone-names="zoneNames"
+                :valid-zones="validZones"
                 @update:prices="matrixDraft = $event"
                 @dirty-change="matrixDirty = $event"
               />
@@ -1145,6 +1146,7 @@ const extDraft = ref<ListinoPrice[]>([]);
 const extDirty = ref(false);
 const packMeta = ref<Record<string, unknown> | null>(null);
 const zoneNames = ref<Record<string, string>>({});
+const validZones = ref<string[]>([]);
 const matrixField = ref<PriceField>('prezzo');
 
 const isBancale = computed<boolean>(() => packMeta.value?.peso_bancale === 'B');
@@ -1337,6 +1339,7 @@ async function loadMatrix(packId: number, date?: string, refreshVersions = true)
     extPrices.value = full.ext_prices;
     packMeta.value = full.metadata;
     zoneNames.value = full.zone_names;
+    validZones.value = full.valid_zones;
     zonesKo.value = full.zones_ko;
     if (refreshVersions) versions.value = full.versions;
     if (!availableFields.value.some((f) => f.value === matrixField.value)) matrixField.value = 'prezzo';

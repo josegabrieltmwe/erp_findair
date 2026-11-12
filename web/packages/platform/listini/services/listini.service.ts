@@ -92,6 +92,8 @@ export interface MatrixFull {
   ext_prices: ListinoPrice[];
   metadata: Record<string, unknown> | null;
   zone_names: Record<string, string>;
+  /** Todas las zonas válidas del servizio (a diferencia de zone_names, incluye las sin nombre fiable). */
+  valid_zones: string[];
   versions: ListinoVersion[];
   zones_ko: Array<number | string>;
 }
@@ -570,6 +572,7 @@ export const listiniService = {
       enriched?: {
         metadata?: Record<string, unknown> | null;
         zone_names?: Record<string, string>;
+        valid_zones?: string[];
         ext_prices?: ListinoPrice[];
         versions?: ListinoVersion[];
       };
@@ -580,6 +583,7 @@ export const listiniService = {
       ext_prices: e.ext_prices ?? [],
       metadata: e.metadata ?? null,
       zone_names: e.zone_names ?? {},
+      valid_zones: e.valid_zones ?? [],
       versions: e.versions ?? [],
       zones_ko: (d?.zones_ko ?? []).map((z) => (z.zona ?? z) as number | string),
     };

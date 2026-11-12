@@ -19,9 +19,10 @@
       <v-text-field
         v-model="newZone"
         :label="t('price_lists.matrix_new_zone')"
+        :error-messages="zoneError ? [zoneError] : []"
         density="compact"
         variant="outlined"
-        hide-details
+        hide-details="auto"
         class="cm-add-field"
         @keydown.enter.prevent="addZone"
       />
@@ -88,8 +89,16 @@ const props = withDefaults(
     /** Columna de la fila que se muestra y edita (la matriz es la misma para las cuatro). */
     field?: PriceField;
     zoneNames?: Record<string, string>;
+    /**
+     * Catálogo de zonas reales del servizio (Listini_Prices_Model::get_valid_zones()).
+     * Sin esto, una zona mal escrita a mano (p. ej. "99" en vez de "9") se guardaba
+     * igual, nunca casaba con ningún envío real, y el precio puesto ahí nunca se
+     * usaba, sin ningún aviso. Vacío/undefined = catálogo no disponible, no bloquea
+     * (evita que un fallo de carga de metadatos impida gestionar zonas por completo).
+     */
+    validZones?: string[];
   }>(),
-  { editable: false, field: 'prezzo', zoneNames: undefined },
+  { editable: false, field: 'prezzo', zoneNames: undefined, validZones: undefined },
 );
 
 const emit = defineEmits<{
@@ -204,9 +213,28 @@ const canAddWeight = computed(() => {
   const n = Number(newWeight.value);
   return newWeight.value !== '' && n > 0 && !weights.value.some((w) => Number(w) === n) && zones.value.length > 0;
 });
+/** true si hay catálogo de zonas con el que validar (ver validZones en las props). */
+const hasZoneCatalog = computed(() => Array.isArray(props.validZones) && props.validZones.length > 0);
+
+function isKnownZone(z: string): boolean {
+  return !hasZoneCatalog.value || (props.validZones as string[]).includes(z);
+}
+
+/** Mensaje bajo el campo cuando la zona escrita no existe en el catálogo del servizio. */
+const zoneError = computed<string>(() => {
+  const z = newZone.value.trim();
+  if (z === '' || zones.value.some((x) => String(x) === z)) return '';
+  return isKnownZone(z) ? '' : t('price_lists.matrix_zone_unknown');
+});
+
 const canAddZone = computed(() => {
   const z = newZone.value.trim();
-  return z !== '' && !zones.value.some((x) => String(x) === z) && weights.value.length > 0;
+  return (
+    z !== '' &&
+    !zones.value.some((x) => String(x) === z) &&
+    weights.value.length > 0 &&
+    isKnownZone(z)
+  );
 });
 
 function addWeight(): void {

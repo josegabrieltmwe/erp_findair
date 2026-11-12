@@ -594,6 +594,7 @@
     "matrix_add_weight": "Stufe hinzufügen",
     "matrix_new_zone": "Neue Zone",
     "matrix_add_zone": "Zone hinzufügen",
+    "matrix_zone_unknown": "Diese Zone existiert für diesen Dienst nicht — Nummer prüfen",
     "matrix_empty_error": "Die Matrix enthält keine Preise zum Speichern",
     "bulk_btn": "Mehrfachänderung ({n})",
     "bulk_history": "Verlauf der Mehrfachänderungen",
