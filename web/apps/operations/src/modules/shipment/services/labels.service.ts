@@ -21,6 +21,7 @@
  *   (b) inspect the underlying label metadata via `ajax_get_label_*`.
  */
 import { http } from "./http";
+import { tmweBundleUrl as buildTmweBundleUrl } from "../labels/labelUrls";
 import type { FetchOptions } from "ofetch";
 
 export interface ValidationIssue {
@@ -57,6 +58,9 @@ export interface CourierLabelItem {
   url?: string;
   /** Optional HTML preview wrapper URL (legacy `print_print_label_*`). */
   print_url?: string;
+  /** Tracking del bulto y de la expedición (los trae el manifiesto de etiquetas). */
+  package_tracking?: string | null;
+  master_tracking?: string | null;
   /** Human-readable label description (courier name, package qty…). */
   description?: string;
   /** Rotation hint from the courier client: `false` = already upright,
@@ -155,11 +159,20 @@ export const labelsService = {
    * solo binario, generado server-side (bundle=pdf: una etiqueta por página;
    * bundle=zip: una JPG por bulto). Mismo endpoint que usa cargo.
    */
-  tmweBundleUrl(shipment_id: number, bundle: "pdf" | "zip"): string {
+  tmweBundleUrl(
+    shipment_id: number,
+    bundle: "pdf" | "zip",
+    opts: { packages?: number[] | null; inline?: boolean } = {},
+  ): string {
     const base =
       (typeof window !== "undefined" && window.__TMWE_SHIPMENT__?.basePath) ||
       "/bff/v1";
-    return `${base}/api_label_tmwe_bundle?shipment_id=${shipment_id}&bundle=${bundle}`;
+    return buildTmweBundleUrl(
+      base,
+      shipment_id,
+      { packages: opts.packages ?? null, format: bundle },
+      opts.inline,
+    );
   },
 
   /** `ajax_validate_before_ldv` — pre-flight check before printing. */

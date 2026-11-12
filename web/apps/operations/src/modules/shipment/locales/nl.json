@@ -372,7 +372,27 @@
       "img": "Img",
       "zoom_in": "Inzoomen",
       "zoom_out": "Uitzoomen",
-      "zoom_fit": "Passend maken"
+      "zoom_fit": "Passend maken",
+      "viewer": {
+        "aria": "Etikettenweergave",
+        "retry": "Opnieuw proberen",
+        "this_package": "Dit pakket",
+        "all_packages": "Alle pakketten ({n})",
+        "all_pdf": "Alles in één PDF",
+        "all_zip": "Alles in één ZIP (JPG)",
+        "range": "Pakketbereik…",
+        "range_label": "Pakketten (bijv. 1-5,8)",
+        "range_err_empty": "Geef de pakketten op, bijv. 1-5,8",
+        "range_err_invalid": "Ongeldig formaat. Gebruik cijfers en bereiken, bijv. 1-5,8",
+        "range_err_out_of_range": "Pakketten lopen van 1 tot {max}",
+        "range_err_too_many": "Te veel pakketten geselecteerd",
+        "packages": "Pakketten",
+        "go_to": "Ga naar pakket",
+        "prev": "Vorig pakket",
+        "next": "Volgend pakket",
+        "docs": "Documenten ({n})",
+        "package_n": "Pakket {n}"
+      }
     },
     "cards": {
       "accessori": {

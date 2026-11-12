@@ -372,7 +372,27 @@
       "img": "Img",
       "zoom_in": "Vergrößern",
       "zoom_out": "Verkleinern",
-      "zoom_fit": "An Fenster anpassen"
+      "zoom_fit": "An Fenster anpassen",
+      "viewer": {
+        "aria": "Etikettenanzeige",
+        "retry": "Erneut versuchen",
+        "this_package": "Dieses Kolli",
+        "all_packages": "Alle Kolli ({n})",
+        "all_pdf": "Alle in einem PDF",
+        "all_zip": "Alle in einem ZIP (JPG)",
+        "range": "Kolli-Bereich…",
+        "range_label": "Kolli (z. B. 1-5,8)",
+        "range_err_empty": "Kolli angeben, z. B. 1-5,8",
+        "range_err_invalid": "Ungültiges Format. Zahlen und Bereiche verwenden, z. B. 1-5,8",
+        "range_err_out_of_range": "Kolli gehen von 1 bis {max}",
+        "range_err_too_many": "Zu viele Kolli ausgewählt",
+        "packages": "Kolli",
+        "go_to": "Zu Kolli springen",
+        "prev": "Vorheriges Kolli",
+        "next": "Nächstes Kolli",
+        "docs": "Dokumente ({n})",
+        "package_n": "Kolli {n}"
+      }
     },
     "cards": {
       "accessori": {

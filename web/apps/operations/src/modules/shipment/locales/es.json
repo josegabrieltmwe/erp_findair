@@ -372,7 +372,27 @@
       "img": "Img",
       "zoom_in": "Ampliar",
       "zoom_out": "Reducir",
-      "zoom_fit": "Ajustar a la ventana"
+      "zoom_fit": "Ajustar a la ventana",
+      "viewer": {
+        "aria": "Visor de etiquetas",
+        "retry": "Reintentar",
+        "this_package": "Este bulto",
+        "all_packages": "Todos los bultos ({n})",
+        "all_pdf": "Todos en un PDF",
+        "all_zip": "Todos en un ZIP (JPG)",
+        "range": "Rango de bultos…",
+        "range_label": "Bultos (p. ej. 1-5,8)",
+        "range_err_empty": "Indica los bultos, p. ej. 1-5,8",
+        "range_err_invalid": "Formato no válido. Usa números y rangos, p. ej. 1-5,8",
+        "range_err_out_of_range": "Solo hay bultos del 1 al {max}",
+        "range_err_too_many": "Demasiados bultos seleccionados",
+        "packages": "Bultos",
+        "go_to": "Ir al bulto",
+        "prev": "Bulto anterior",
+        "next": "Bulto siguiente",
+        "docs": "Documentos ({n})",
+        "package_n": "Bulto {n}"
+      }
     },
     "cards": {
       "accessori": {

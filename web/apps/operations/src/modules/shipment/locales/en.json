@@ -372,7 +372,27 @@
       "img": "Img",
       "zoom_in": "Zoom in",
       "zoom_out": "Zoom out",
-      "zoom_fit": "Fit to window"
+      "zoom_fit": "Fit to window",
+      "viewer": {
+        "aria": "Label viewer",
+        "retry": "Retry",
+        "this_package": "This package",
+        "all_packages": "All packages ({n})",
+        "all_pdf": "All in one PDF",
+        "all_zip": "All in one ZIP (JPG)",
+        "range": "Package range…",
+        "range_label": "Packages (e.g. 1-5,8)",
+        "range_err_empty": "Enter the packages, e.g. 1-5,8",
+        "range_err_invalid": "Invalid format. Use numbers and ranges, e.g. 1-5,8",
+        "range_err_out_of_range": "Packages go from 1 to {max}",
+        "range_err_too_many": "Too many packages selected",
+        "packages": "Packages",
+        "go_to": "Go to package",
+        "prev": "Previous package",
+        "next": "Next package",
+        "docs": "Documents ({n})",
+        "package_n": "Package {n}"
+      }
     },
     "cards": {
       "accessori": {

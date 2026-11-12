@@ -784,6 +784,35 @@ routes:
     response: binary
     limits: { timeout: 60 }
 
+  # PDF combinado, ZIP de etiquetas del courier y paquete de LDV TMWE: binarios. Sin esto el manifiesto generado los trata
+  # como json con 15 s; el PDF combinado puede esperar al worker de imagen (UPS/FedEx) y la LDV TMWE renderiza por bulto.
+  - id: get.api_label_combined_pdf
+    method: GET
+    path: /api_label_combined_pdf
+    upstream:
+      action: api_label_combined_pdf
+      forward_query: [shipment_id, packages, disposition, otp]
+    response: binary
+    limits: { timeout: 120 }
+
+  - id: get.api_label_combined_zip
+    method: GET
+    path: /api_label_combined_zip
+    upstream:
+      action: api_label_combined_zip
+      forward_query: [shipment_id, packages, disposition]
+    response: binary
+    limits: { timeout: 120 }
+
+  - id: get.api_label_tmwe_bundle
+    method: GET
+    path: /api_label_tmwe_bundle
+    upstream:
+      action: api_label_tmwe_bundle
+      forward_query: [shipment_id, bundle, packages, disposition]
+    response: binary
+    limits: { timeout: 120 }
+
   - id: get.get_label_auxiliar_file
     method: GET
     path: /get_label_auxiliar_file

@@ -339,15 +339,17 @@
       <!-- TMWE LDV preview dialog (image inline) -->
       <TmweLabelDialog
         v-model="tmwe.dialogOpen.value"
-        :labels="tmwe.labels.value"
+        :cache="tmwe.cache.value"
         :loading="tmwe.loading.value"
         :error="tmwe.error.value"
+        :item-error="tmwe.itemError.value"
         :current-package="tmwe.currentPackage.value"
         :total-packages="tmwe.totalPackages.value"
-        @download="tmwe.downloadLabel"
-        @download-all="tmwe.downloadAll"
-        @print="tmwe.printInTab"
+        :printing="tmwe.printing.value"
+        @download="tmwe.downloadScope"
+        @print="tmwe.printScope"
         @go-to-package="tmwe.goToPackage"
+        @retry="tmwe.retry"
       />
 
       <!-- Generate AWB confirmation dialog -->
@@ -380,7 +382,8 @@
         :printing="labels.printing.value"
         :label-url="labels.labelUrl"
         @copy="copyText"
-        @print="labels.print"
+        @print="labels.printScope"
+        @download="labels.downloadScope"
       />
 
       <!-- Courier labels dialog — inline image preview + print/download-all,
@@ -388,17 +391,17 @@
       <CourierLabelsDialog
         v-model="labels.dialogOpen.value"
         :list="labels.list.value"
-        :items="labels.items.value"
         :loading="labels.loading.value"
         :error="labels.error.value"
         :printing="labels.printing.value"
         :label-url="labels.labelUrl"
         :title="labels.title"
         :subtitle="labels.subtitle"
-        @print="labels.print"
-        @download-all="labels.downloadAll"
+        @print="labels.printScope"
+        @download="labels.downloadScope"
         @open="labels.openLabel"
-        @download="labels.downloadLabel"
+        @download-item="labels.downloadLabel"
+        @retry="labels.openDialog"
       />
 
       <ShareLabelModal

@@ -372,7 +372,27 @@
       "img": "Img",
       "zoom_in": "Ingrandisci",
       "zoom_out": "Riduci",
-      "zoom_fit": "Adatta alla finestra"
+      "zoom_fit": "Adatta alla finestra",
+      "viewer": {
+        "aria": "Visualizzatore etichette",
+        "retry": "Riprova",
+        "this_package": "Questo collo",
+        "all_packages": "Tutti i colli ({n})",
+        "all_pdf": "Tutti in un PDF",
+        "all_zip": "Tutti in uno ZIP (JPG)",
+        "range": "Intervallo di colli…",
+        "range_label": "Colli (es. 1-5,8)",
+        "range_err_empty": "Indica i colli, es. 1-5,8",
+        "range_err_invalid": "Formato non valido. Usa numeri e intervalli, es. 1-5,8",
+        "range_err_out_of_range": "I colli vanno da 1 a {max}",
+        "range_err_too_many": "Troppi colli selezionati",
+        "packages": "Colli",
+        "go_to": "Vai al collo",
+        "prev": "Collo precedente",
+        "next": "Collo successivo",
+        "docs": "Documenti ({n})",
+        "package_n": "Collo {n}"
+      }
     },
     "cards": {
       "accessori": {

@@ -5,9 +5,18 @@ import {
   labelsService,
   type CourierLabelItem,
 } from "@shipment/services/labels.service";
+import type { LabelSelection } from "@shipment/labels/labelPackages";
+import {
+  courierCombinedPdfUrl,
+  courierCombinedZipUrl,
+} from "@shipment/labels/labelUrls";
+import { printPdfFromUrl } from "@shipment/labels/printPdf";
 
 /** Acciones de fichero de etiqueta que el BFF sirve como binario (bff/config/routes.bff.yaml). */
-const LABEL_FILE_ACTIONS = ["get_label_file", "get_label_auxiliar_file"] as const;
+const LABEL_FILE_ACTIONS = [
+  "get_label_file",
+  "get_label_auxiliar_file",
+] as const;
 
 /**
  * URL de un fichero de etiqueta a traves del BFF. get_label_courier_shipment devuelve la URL absoluta del API
@@ -33,7 +42,8 @@ export function bffLabelFileUrl(url: string, base: string): string {
 
 /** URL absoluta con el origen de la pagina (sin window, tal cual). Las ya absolutas no cambian. */
 export function absoluteUrl(url: string, origin?: string): string {
-  const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
+  const base =
+    origin ?? (typeof window !== "undefined" ? window.location.origin : "");
   if (!url || !base) return url;
   try {
     return new URL(url, base).href;
@@ -134,7 +144,10 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
         return;
       }
       const imgs = labels
-        .map((it) => `<div class="page"><img src="${labelUrl(it, "image")}" alt="label" /></div>`)
+        .map(
+          (it) =>
+            `<div class="page"><img src="${labelUrl(it, "image")}" alt="label" /></div>`,
+        )
         .join("");
       const html = `
       <!doctype html><html><head><title>${t("shipment.awb.print_title", { awb: awb() })}</title>
@@ -237,25 +250,56 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
     list.value.filter((it) => it.is_label && Boolean(it.url)),
   );
 
+  /** Hay etiquetas reales, ya sea en el diálogo completo o en el de «AWB generada». */
+  const hasLabels = (): boolean =>
+    items.value.length > 0 || successLabels.value.length > 0;
+
   /**
-   * Download ALL courier labels as a single combined PDF (one label per page),
-   * built server-side from the on-disk label images. One file, one click.
+   * Descarga generada en el servidor, de todos los bultos o solo de la selección (`packages`): un PDF combinado
+   * (una etiqueta por página) o un ZIP con una imagen por bulto.
    */
-  function downloadAll(): void {
+  function downloadScope(sel: LabelSelection): void {
     const sid = shipmentId();
-    if (!sid || !items.value.length) {
+    if (!sid || !hasLabels()) {
       toasts.push("warning", t("shipment.awb.no_courier_labels"));
       return;
     }
-    const url = `${basePath()}/api_label_combined_pdf?shipment_id=${sid}`;
+    const zip = sel.format === "zip";
+    const url = zip
+      ? courierCombinedZipUrl(basePath(), sid, sel.packages)
+      : courierCombinedPdfUrl(basePath(), sid, sel.packages);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `labels_${awb() || sid}.pdf`;
+    a.download = `labels_${awb() || sid}.${zip ? "zip" : "pdf"}`;
     a.target = "_blank";
     a.rel = "noopener";
     document.body.appendChild(a);
     a.click();
     a.remove();
+  }
+
+  function downloadAll(): void {
+    downloadScope({ scope: "all", packages: null, format: "pdf" });
+  }
+
+  /** Imprime la selección desde el PDF que genera el servidor (no se monta HTML en el navegador). */
+  async function printScope(sel: LabelSelection): Promise<void> {
+    const sid = shipmentId();
+    if (!sid || printing.value) return;
+    if (!hasLabels()) {
+      toasts.push("warning", t("shipment.awb.no_courier_labels"));
+      return;
+    }
+    printing.value = true;
+    try {
+      await printPdfFromUrl(
+        courierCombinedPdfUrl(basePath(), sid, sel.packages, true),
+      );
+    } catch (e) {
+      toasts.push("error", (e as Error).message);
+    } finally {
+      printing.value = false;
+    }
   }
 
   function title(it: CourierLabelItem): string {
@@ -293,6 +337,8 @@ export function useCourierLabels(shipmentId: () => number, awb: () => string) {
     openLabel,
     downloadLabel,
     downloadAll,
+    downloadScope,
+    printScope,
     // presentational helpers
     labelUrl,
     title,

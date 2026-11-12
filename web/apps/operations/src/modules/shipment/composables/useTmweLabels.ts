@@ -5,6 +5,11 @@ import {
   labelsService,
   type TmweLabelItem,
 } from "@shipment/services/labels.service";
+import {
+  neighborIndexes,
+  type LabelSelection,
+} from "@shipment/labels/labelPackages";
+import { printPdfFromUrl } from "@shipment/labels/printPdf";
 
 /**
  * TMWE internal LDV (label) generation/preview/print, extracted from
@@ -30,6 +35,11 @@ export function useTmweLabels(shipmentId: () => number) {
   const currentPackage = ref(1);
   /** Total de bultos de la expedición (independiente de cuántos están cargados). */
   const totalPackages = ref(1);
+  /** Bultos ya pedidos (número → etiqueta). Acotada: cada uno es una imagen base64. */
+  const cache = ref<Record<number, TmweLabelItem>>({});
+  const CACHE_MAX = 12;
+  /** Fallo al pedir un bulto concreto (el resto de la galería sigue usable). */
+  const itemError = ref<string | null>(null);
 
   function base64ToBlob(b64: string, mime: string): Blob {
     const bytes = atob(b64);
@@ -98,43 +108,91 @@ export function useTmweLabels(shipmentId: () => number) {
     dialogOpen.value = true;
     currentPackage.value = 1;
     totalPackages.value = 1;
+    cache.value = {};
+    itemError.value = null;
     await fetchPackage(sid, 1);
   }
 
+  function remember(n: number, lab: TmweLabelItem): void {
+    const next = { ...cache.value, [n]: lab };
+    const keys = Object.keys(next).map(Number);
+    if (keys.length > CACHE_MAX) {
+      // Se descartan los más lejanos al bulto visible.
+      keys
+        .sort((x, y) => Math.abs(y - n) - Math.abs(x - n))
+        .slice(0, keys.length - CACHE_MAX)
+        .forEach((k) => delete next[k]);
+    }
+    cache.value = next;
+  }
+
   /**
-   * Pide UN bulto concreto (no todos) — la base de la galería paginada: con
-   * cientos de bultos, cargar todos de golpe (antes: `tmweLabel(sid, {...})`
-   * sin `package_number`) decodificaba/montaba cientos de imágenes base64 a
-   * la vez. `total_packages` viene siempre en la respuesta, así que el primer
-   * fetch ya informa de cuántas páginas tiene la galería.
+   * Pide UN bulto concreto (no todos) — la base de la galería paginada: con cientos de bultos, cargar todos de
+   * golpe decodificaba/montaba cientos de imágenes base64 a la vez. `total_packages` viene siempre en la
+   * respuesta, así que el primer fetch ya informa de cuántas páginas tiene la galería. Un bulto ya pedido sale
+   * de la caché sin red.
    */
   async function fetchPackage(
     sid: number,
     packageNumber: number,
+    silent = false,
   ): Promise<void> {
-    loading.value = true;
-    error.value = null;
+    const hit = cache.value[packageNumber];
+    if (hit && !silent) {
+      labels.value = [hit];
+      currentPackage.value = packageNumber;
+      itemError.value = null;
+      void prefetchNeighbors(sid, packageNumber);
+      return;
+    }
+    if (hit && silent) return;
+    if (!silent) {
+      loading.value = true;
+      error.value = null;
+      itemError.value = null;
+    }
     try {
       const r = await labelsService.tmweLabel(sid, {
         output_format: "image",
         package_number: packageNumber,
       });
       if (!r.success) {
-        error.value =
+        if (silent) return;
+        const msg =
           typeof r.error === "string"
             ? r.error
             : (r.error?.message ?? t("shipment.awb.toast_generate_failed"));
+        // Primer bulto: la galería no existe. Otro bulto: se queda donde estaba y se ofrece reintentar.
+        if (Object.keys(cache.value).length === 0) error.value = msg;
+        else itemError.value = msg;
         labels.value = [];
+        currentPackage.value = packageNumber;
         return;
       }
+      const lab = r.shipment?.labels?.[0];
+      totalPackages.value = r.shipment?.total_packages ?? totalPackages.value;
+      if (lab) remember(packageNumber, lab);
+      if (silent) return;
       labels.value = r.shipment?.labels ?? [];
-      totalPackages.value = r.shipment?.total_packages ?? labels.value.length;
       currentPackage.value = packageNumber;
+      void prefetchNeighbors(sid, packageNumber);
     } catch (e) {
-      error.value = (e as Error).message;
+      if (silent) return;
+      if (Object.keys(cache.value).length === 0)
+        error.value = (e as Error).message;
+      else itemError.value = (e as Error).message;
       labels.value = [];
+      currentPackage.value = packageNumber;
     } finally {
-      loading.value = false;
+      if (!silent) loading.value = false;
+    }
+  }
+
+  /** El siguiente/anterior se piden en segundo plano para que las flechas no esperen a la red. */
+  async function prefetchNeighbors(sid: number, n: number): Promise<void> {
+    for (const idx of neighborIndexes(n - 1, totalPackages.value)) {
+      const num = idx + 1;
+      if (!cache.value[num]) await fetchPackage(sid, num, true);
     }
   }
 
@@ -145,12 +203,19 @@ export function useTmweLabels(shipmentId: () => number) {
       !sid ||
       packageNumber < 1 ||
       packageNumber > totalPackages.value ||
-      packageNumber === currentPackage.value ||
+      (packageNumber === currentPackage.value && !itemError.value) ||
       loading.value
     ) {
       return;
     }
     await fetchPackage(sid, packageNumber);
+  }
+
+  /** Reintenta el bulto que falló (o la carga inicial). */
+  async function retry(): Promise<void> {
+    const sid = shipmentId();
+    if (!sid) return;
+    await fetchPackage(sid, currentPackage.value || 1);
   }
 
   function downloadLabel(lab: TmweLabelItem): void {
@@ -187,71 +252,57 @@ export function useTmweLabels(shipmentId: () => number) {
     document.body.removeChild(a);
   }
 
-  function downloadAll(): void {
+  /**
+   * Descarga según la selección. Un bulto ya cargado se baja tal cual; el resto lo genera el servidor
+   * (PDF con una etiqueta por página, o ZIP con una JPG por bulto), siempre en UN fichero: los navegadores
+   * bloquean casi todas las descargas disparadas en serie salvo la primera.
+   */
+  function downloadScope(sel: LabelSelection): void {
     const sid = shipmentId();
     if (!sid) return;
-    if (totalPackages.value > 1) {
-      // Varios bultos: un único .zip generado server-side (api_label_tmwe_bundle),
-      // no N descargas sueltas — los navegadores bloquean casi todas salvo la
-      // primera cuando se disparan varios `<a download>` seguidos sin gesto
-      // del usuario por archivo, que es lo que pasaba antes aquí.
-      triggerNavDownload(labelsService.tmweBundleUrl(sid, "zip"));
+    if (sel.scope === "current" && sel.packages?.length === 1) {
+      const lab = cache.value[sel.packages[0]];
+      if (lab) {
+        downloadLabel(lab);
+        return;
+      }
+    }
+    // Un solo bulto en total: no hace falta zip.
+    if (sel.scope === "all" && totalPackages.value <= 1 && labels.value[0]) {
+      downloadLabel(labels.value[0]);
       return;
     }
-    // Un solo bulto: no hace falta zip.
-    if (labels.value[0]) downloadLabel(labels.value[0]);
-  }
-
-  function printInTab(): void {
-    if (!labels.value.length) return;
-    // Build a tiny HTML doc with all label images side by side, then auto-print.
-    const imgs = labels.value
-      .map((lab) => {
-        if (lab.format === "pdf") {
-          return `<embed src="data:application/pdf;base64,${lab.base64}" type="application/pdf" />`;
-        }
-        return `<img src="data:image/${lab.format};base64,${lab.base64}" alt="LDV" />`;
-      })
-      .join("");
-    const html = `
-    <!doctype html><html><head><title>LDV TMWE</title>
-    <style>
-      body { margin: 0; padding: 8px; font-family: sans-serif; }
-      img, embed { max-width: 100%; display: block; margin: 0 0 8px; }
-      @media print { body { padding: 0; } }
-    </style></head><body onload="window.print()">${imgs}</body></html>`;
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank", "noopener,noreferrer");
-    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    triggerNavDownload(
+      labelsService.tmweBundleUrl(sid, sel.format, { packages: sel.packages }),
+    );
   }
 
   /**
-   * One-click print of the internal TMWE LDV — parity with the courier print
-   * action. Generates the LDV images and auto-prints without opening the
-   * preview dialog.
+   * Imprime según la selección: el servidor genera el PDF (una etiqueta por página, al tamaño real) y se
+   * manda a la impresora desde un iframe oculto. Nada de montar HTML con imágenes base64 en el navegador:
+   * con muchos bultos eso congelaba la pestaña y no respetaba el salto de página.
    */
-  async function printDirect(): Promise<void> {
+  async function printScope(sel: LabelSelection): Promise<void> {
     const sid = shipmentId();
-    if (!sid) return;
+    if (!sid || printing.value) return;
     printing.value = true;
     try {
-      const r = await labelsService.tmweLabel(sid, { output_format: "image" });
-      if (!r.success || !r.shipment?.labels?.length) {
-        const msg =
-          typeof r.error === "string"
-            ? r.error
-            : (r.error?.message ?? t("shipment.awb.toast_generate_failed"));
-        toasts.push("error", msg);
-        return;
-      }
-      labels.value = r.shipment.labels;
-      printInTab();
+      await printPdfFromUrl(
+        labelsService.tmweBundleUrl(sid, "pdf", {
+          packages: sel.packages,
+          inline: true,
+        }),
+      );
     } catch (e) {
       toasts.push("error", (e as Error).message);
     } finally {
       printing.value = false;
     }
+  }
+
+  /** Impresión con un clic desde la tarjeta: todos los bultos, sin abrir la galería. */
+  async function printDirect(): Promise<void> {
+    await printScope({ scope: "all", packages: null, format: "pdf" });
   }
 
   return {
@@ -265,10 +316,13 @@ export function useTmweLabels(shipmentId: () => number) {
     currentPackage,
     totalPackages,
     openLabel,
+    cache,
+    itemError,
     goToPackage,
+    retry,
     downloadLabel,
-    downloadAll,
-    printInTab,
+    downloadScope,
+    printScope,
     printDirect,
   };
 }
