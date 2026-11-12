@@ -21,6 +21,20 @@ interface RawProvince {
   [k: string]: unknown;
 }
 
+/**
+ * Texto de una provincia en el selector: «MI — Milano». El API manda la sigla como `code` y, cuando la
+ * fila no tiene sigla (la mayoría de los países fuera de IT/ES/FR/DE), repite el nombre; en ese caso se
+ * muestra una sola vez, sin «Ontario — Ontario». El nombre es el oficial local y no se traduce: es lo que
+ * valida el courier y reconoce el destinatario.
+ */
+export function provinceTitle(p: ProvinceOption): string {
+  const code = p.code.trim();
+  const name = p.name.trim();
+  if (!name) return code;
+  if (!code || name.toLowerCase() === code.toLowerCase()) return name;
+  return `${code} — ${name}`;
+}
+
 const ENDPOINT = '/api_provinces';
 
 const cache = new Map<string, ProvinceOption[]>();

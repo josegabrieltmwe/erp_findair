@@ -37,7 +37,7 @@
  */
 import { computed, ref, watch } from 'vue';
 import { countryFlagsService } from '../services/countryFlags.service';
-import { provinceService, type ProvinceOption } from '../services/province.service';
+import { provinceService, provinceTitle, type ProvinceOption } from '../services/province.service';
 
 const props = withDefaults(
   defineProps<{
@@ -70,7 +70,7 @@ const sourceItems = computed<ProvinceOption[]>(() =>
 );
 
 const items = computed(() => {
-  const list = sourceItems.value.map((p) => ({ code: p.code, title: `${p.code} — ${p.name}` }));
+  const list = sourceItems.value.map((p) => ({ code: p.code, title: provinceTitle(p) }));
   // Preserva el valor actual aunque no esté en el catálogo.
   const cur = (props.modelValue ?? '').toUpperCase();
   if (cur && !list.some((i) => i.code.toUpperCase() === cur)) {
