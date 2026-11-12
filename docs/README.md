@@ -17,6 +17,7 @@ Empezar por `contrato-con-api.md`. Los READMEs de código están junto al códig
 | [plan-pantalla-offer-aerolinea.md](plan-pantalla-offer-aerolinea.md) | Plan: pantalla de respuesta de la aerolínea a la cotización cargo (`/offer`) | borrador |
 | [plan-rfq-courier-partners.md](plan-rfq-courier-partners.md) | Plan: RFQ courier a anagrafiche de tipo partner (ERP o no), parte BFF y SPA | borrador |
 | [propuesta-home-minimalista.md](propuesta-home-minimalista.md) | Propuesta de home minimalista del ERP (menos botones, carga rápida) | vigente (implementada; incluye «Da fare oggi») |
+| [plan-giacenze-ux.md](plan-giacenze-ux.md) | Plan: acceso y ficha de giacenza más simples (colas, ciclo guiado, mensajes) a partir del legado y Jose_master | borrador |
 | [plan-listados-de-trabajo.md](plan-listados-de-trabajo.md) | Plan para migrar las colas de trabajo con filtros por defecto y acciones por lote de Jose_master al SPA | borrador |
 | [cargo-paneles-tramos.md](cargo-paneles-tramos.md) | Ficha de cargo: tramos de recogida (panel izquierdo) y entrega (panel derecho) con el detalle de expedición | vigente |
 | [plan-pruebas-ui.md](plan-pruebas-ui.md) | Plan de pruebas de la UI | borrador |
