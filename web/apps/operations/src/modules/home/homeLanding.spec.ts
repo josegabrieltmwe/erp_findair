@@ -92,19 +92,10 @@ describe("traducciones de la home", () => {
     }
   });
 
-  it("el buscador y los avisos están traducidos (no es el mismo texto en todos)", () => {
-    for (const k of ["search_placeholder", "attention_title", "attention_empty"]) {
+  it("los avisos están traducidos (no es el mismo texto en todos)", () => {
+    for (const k of ["attention_title", "attention_empty"]) {
       const texts = LOCALES.map((l) => JSON.parse(readFileSync(here(`./locales/${l}.json`), "utf8")).home.landing[k]);
       expect(new Set(texts).size, k).toBe(LOCALES.length);
-    }
-  });
-
-  it("las claves home.home.cta que usa la landing existen en los 5 idiomas", () => {
-    for (const l of LOCALES) {
-      const d = JSON.parse(readFileSync(here(`./locales/${l}.json`), "utf8"));
-      for (const k of ["new_cargo", "new_cargo_sub", "new_shipment", "new_shipment_sub"]) {
-        expect(d.home.home.cta[k], `${l}.${k}`).toBeTruthy();
-      }
     }
   });
 });

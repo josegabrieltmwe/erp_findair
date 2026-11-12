@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, express courier and daily operations"
             },
-            "cta": {
-                "new_cargo": "New cargo",
-                "new_cargo_sub": "Create air shipment",
-                "new_shipment": "New shipment",
-                "new_shipment_sub": "Create courier shipment"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Tools",
@@ -235,7 +229,6 @@
             "see_all": "See all"
         },
         "landing": {
-            "title": "What do you need to do?",
             "subtitle": "Quick access to your daily work",
             "activities_button": "Today's activities",
             "activities_hint": "Pending items, delays and tasks. Calculated when opened.",
@@ -244,10 +237,6 @@
             "refresh": "Refresh",
             "new_actions": "Create",
             "updated_at": "Updated at {time}",
-            "search_placeholder": "Search by reference, customer, AWB…",
-            "search_shipments": "Shipments",
-            "search_cargo": "Cargo",
-            "search_button": "Search",
             "attention_title": "Needs your attention",
             "attention_empty": "All caught up",
             "attention_error": "The alerts could not be loaded.",

@@ -5,12 +5,6 @@
                 "title": "TMWE — Inicio",
                 "subtitle": "Cargo, mensajería express y operaciones diarias"
             },
-            "cta": {
-                "new_cargo": "Nuevo cargo",
-                "new_cargo_sub": "Crear expedición aérea",
-                "new_shipment": "Nueva expedición",
-                "new_shipment_sub": "Crear expedición de mensajería"
-            },
             "menu": {
                 "group_import": "Importar",
                 "group_tools": "Herramientas",
@@ -235,7 +229,6 @@
             "see_all": "Ver todo"
         },
         "landing": {
-            "title": "¿Qué necesitas hacer?",
             "subtitle": "Accesos rápidos a tu trabajo diario",
             "activities_button": "Actividades del día",
             "activities_hint": "Pendientes, retrasos y tareas. Se calculan al abrir.",
@@ -244,10 +237,6 @@
             "refresh": "Actualizar",
             "new_actions": "Crear",
             "updated_at": "Actualizado a las {time}",
-            "search_placeholder": "Buscar por referencia, cliente, AWB…",
-            "search_shipments": "Expediciones",
-            "search_cargo": "Cargo",
-            "search_button": "Buscar",
             "attention_title": "Requiere tu atención",
             "attention_empty": "Todo al día",
             "attention_error": "No se pudieron cargar los avisos.",

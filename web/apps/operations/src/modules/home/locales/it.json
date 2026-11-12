@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, courier express e operazioni quotidiane"
             },
-            "cta": {
-                "new_cargo": "Nuovo cargo",
-                "new_cargo_sub": "Crea spedizione aerea",
-                "new_shipment": "Nuova spedizione",
-                "new_shipment_sub": "Crea spedizione corriere"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Strumenti",
@@ -235,7 +229,6 @@
             "see_all": "Vedi tutti"
         },
         "landing": {
-            "title": "Cosa devi fare?",
             "subtitle": "Accessi rapidi al tuo lavoro quotidiano",
             "activities_button": "Attività del giorno",
             "activities_hint": "Pendenze, ritardi e attività. Calcolati all'apertura.",
@@ -244,10 +237,6 @@
             "refresh": "Aggiorna",
             "new_actions": "Crea",
             "updated_at": "Aggiornato alle {time}",
-            "search_placeholder": "Cerca per riferimento, cliente, AWB…",
-            "search_shipments": "Spedizioni",
-            "search_cargo": "Cargo",
-            "search_button": "Cerca",
             "attention_title": "Richiede la tua attenzione",
             "attention_empty": "Tutto in ordine",
             "attention_error": "Impossibile caricare gli avvisi.",

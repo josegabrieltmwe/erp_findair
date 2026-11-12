@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, Expresskurier und tägliche Vorgänge"
             },
-            "cta": {
-                "new_cargo": "Neue Cargo",
-                "new_cargo_sub": "Luftfrachtsendung erstellen",
-                "new_shipment": "Neue Sendung",
-                "new_shipment_sub": "Kuriersendung erstellen"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Werkzeuge",
@@ -235,7 +229,6 @@
             "see_all": "Alle anzeigen"
         },
         "landing": {
-            "title": "Was möchten Sie tun?",
             "subtitle": "Schnellzugriff auf Ihre tägliche Arbeit",
             "activities_button": "Tagesaktivitäten",
             "activities_hint": "Offene Punkte, Verzögerungen und Aufgaben. Werden beim Öffnen berechnet.",
@@ -244,10 +237,6 @@
             "refresh": "Aktualisieren",
             "new_actions": "Erstellen",
             "updated_at": "Aktualisiert um {time}",
-            "search_placeholder": "Suche nach Referenz, Kunde, AWB…",
-            "search_shipments": "Sendungen",
-            "search_cargo": "Cargo",
-            "search_button": "Suchen",
             "attention_title": "Erfordert Ihre Aufmerksamkeit",
             "attention_empty": "Alles erledigt",
             "attention_error": "Die Hinweise konnten nicht geladen werden.",

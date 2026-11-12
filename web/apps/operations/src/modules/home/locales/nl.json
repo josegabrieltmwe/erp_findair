@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, expreskoerier en dagelijkse handelingen"
             },
-            "cta": {
-                "new_cargo": "Nieuwe cargo",
-                "new_cargo_sub": "Luchtvrachtzending aanmaken",
-                "new_shipment": "Nieuwe zending",
-                "new_shipment_sub": "Koerierzending aanmaken"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Hulpmiddelen",
@@ -235,7 +229,6 @@
             "see_all": "Alles bekijken"
         },
         "landing": {
-            "title": "Wat wilt u doen?",
             "subtitle": "Snelle toegang tot uw dagelijkse werk",
             "activities_button": "Activiteiten van vandaag",
             "activities_hint": "Openstaande punten, vertragingen en taken. Berekend bij het openen.",
@@ -244,10 +237,6 @@
             "refresh": "Vernieuwen",
             "new_actions": "Aanmaken",
             "updated_at": "Bijgewerkt om {time}",
-            "search_placeholder": "Zoeken op referentie, klant, AWB…",
-            "search_shipments": "Zendingen",
-            "search_cargo": "Cargo",
-            "search_button": "Zoeken",
             "attention_title": "Vraagt je aandacht",
             "attention_empty": "Alles bijgewerkt",
             "attention_error": "De meldingen konden niet worden geladen.",
