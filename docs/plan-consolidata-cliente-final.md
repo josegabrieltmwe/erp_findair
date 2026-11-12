@@ -65,7 +65,7 @@ El cliente **no edita houses** una vez creado el proyecto: el proxy de `wueform`
 
 ## 4. Plan A (cliente, `tmwe-wueform`)
 
-**Estado (2026-11-12): A1-A4 implementadas** detrás del flag `project_mode_enabled` (apagado por defecto), sin tocar el API ni la BD: página `/consolidata/` («Mis proyectos»: lista, detalle, aceptar, reabrir, cancelar y pedir precio), entrada de menú, 58 textos en 9 idiomas y pruebas. **Pendientes:** A0 (recorrido manual en sandbox con un cliente real) y A5 (activación). Detalle, desviaciones y pasos de activación en el documento de `wueform`.
+**Estado (2026-11-12): A1-A4 implementadas** detrás del flag `project_mode_enabled` (apagado por defecto), sin tocar el API ni la BD: página `/consolidata/` («Mis proyectos»: lista, detalle, aceptar, reabrir, cancelar y pedir precio), entrada de menú, 58 textos en 9 idiomas y pruebas. **A0 hecha en parte** (2026-11-12, en proceso sobre sandbox, sin HTTP ni interfaz): el ciclo del cliente y los permisos funcionan como asume la pantalla. **Hallazgo:** un cliente sin `house_fee` configurado (`anagrafiche_listvol`, servicio 1475) no puede crear proyectos con cotización (422 `house_fee_not_configured`); y la cotización aérea no se pudo probar desde esta máquina (RabbitMQ no accesible). **Pendientes:** A0 por HTTP con un cliente real, y A5 (activación). Detalle, desviaciones y pasos de activación en el documento de `wueform`.
 
 Resumen; el detalle está en el documento de `wueform`:
 
@@ -102,7 +102,7 @@ Fuera de alcance, por decisión: nada del lado del cliente en esta SPA; no se to
 | # | Decisión | Propuesta |
 |---|---|---|
 | DC-1 | ~~Dónde vive la página del cliente~~ | **Resuelta por el usuario (2026-11-12):** clientes en `tmwe-wueform`; staff y partners en el ERP |
-| DC-2 | ¿El cliente puede aceptar (`close`) sin respuesta vigente del staff? (P70/D-C) | No; solo con respuesta vigente |
+| DC-2 | ¿El cliente puede aceptar (`close`) sin respuesta vigente del staff? (P70/D-C) | **Resuelta:** no. El API ya lo impone (409 `quote_not_answered`, comprobado en A0 el 2026-11-12) |
 | DC-3 | ¿Se activa `project_mode_enabled` en producción y para qué clientes? | Primero sandbox, luego un grupo piloto |
 | DC-4 | ¿La reserva real (`CONSOLIDATION_ALLOW_BOOKING`) sigue apagada? | Sí; la consolidada solo cotiza |
 | DC-5 | ¿Un partner que entra por `wueform` ve solo sus propios proyectos como cliente? | Sí (es lo que hace el API hoy); gestionar como staff solo en el ERP |
