@@ -1,6 +1,6 @@
 # Plan marco de consolidata: cliente en `tmwe-wueform`, staff y partners en el ERP
 
-> **Estado:** borrador (plan B ejecutado salvo B6 y B8; plan A pendiente de A0) · **Última modificación:** 2026-11-12
+> **Estado:** borrador (plan B ejecutado salvo B6 y B8; plan A implementado detrás del flag, pendiente de A0 y A5) · **Última modificación:** 2026-11-12
 
 Sustituye al borrador anterior de este mismo fichero (que ponía la página del cliente en esta SPA; K0 demostró que no es viable, ver §2). Son dos planes que comparten el mismo API y no crean nada nuevo en él:
 
@@ -64,6 +64,8 @@ Recorrido ya definido por el API: `create`/`create_from_option` → `request_quo
 El cliente **no edita houses** una vez creado el proyecto: el proxy de `wueform` no admite `add_shipment`/`update_shipment` por decisión de diseño (el borrador vive en el navegador hasta «Aplicar»). Se mantiene.
 
 ## 4. Plan A (cliente, `tmwe-wueform`)
+
+**Estado (2026-11-12): A1-A4 implementadas** detrás del flag `project_mode_enabled` (apagado por defecto), sin tocar el API ni la BD: página `/consolidata/` («Mis proyectos»: lista, detalle, aceptar, reabrir, cancelar y pedir precio), entrada de menú, 58 textos en 9 idiomas y pruebas. **Pendientes:** A0 (recorrido manual en sandbox con un cliente real) y A5 (activación). Detalle, desviaciones y pasos de activación en el documento de `wueform`.
 
 Resumen; el detalle está en el documento de `wueform`:
 
