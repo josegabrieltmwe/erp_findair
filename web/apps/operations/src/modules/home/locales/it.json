@@ -331,8 +331,8 @@
                     "desc": "richieste dei partner sui cargo"
                 },
                 "incassare": {
-                    "label": "Clienti con scaduto da incassare",
-                    "desc": "rate scadute: sollecita"
+                    "label": "Rate scadute da incassare",
+                    "desc": "clienti con rate scadute: sollecita"
                 },
                 "dafatt": {
                     "label": "Da fatturare fino a oggi",

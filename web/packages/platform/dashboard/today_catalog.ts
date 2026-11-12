@@ -315,71 +315,69 @@ export function isZeroTile(tile: TodayTile, r: TileResolution): boolean {
   );
 }
 
-/** Cuenta los clientes distintos con saldo vencido > 0 (misma regla que el gestionale). */
-export function countOverdueCustomers(
-  rows: ReadonlyArray<{
-    id_anagrafica?: number | string;
-    importo?: number | string;
-    scadenza?: string;
-    data_close?: string | null;
-    tipo?: string;
-  }>,
-  today: string,
-): number {
-  const byCustomer = new Map<string, number>();
-  for (const r of rows) {
-    if (r.tipo && r.tipo !== "A") continue;
-    if (r.data_close && !/^0000-00-00/.test(String(r.data_close))) continue;
-    const due = String(r.scadenza ?? "").slice(0, 10);
-    if (
-      !/^\d{4}-\d{2}-\d{2}$/.test(due) ||
-      due.startsWith("0000") ||
-      due >= today
-    )
-      continue;
-    const key = String(r.id_anagrafica ?? "");
-    byCustomer.set(key, (byCustomer.get(key) ?? 0) + (Number(r.importo) || 0));
-  }
-  return [...byCustomer.values()].filter((v) => v > 0).length;
+export interface CountRequest {
+  /** Ruta del BFF (se pide con GET). */
+  path: string;
+  query: Record<string, string>;
 }
 
-export interface GiacenzaRowLike {
-  data_open?: string | null;
-  data_close?: string | null;
-  cont_cliente_data?: string | null;
-  cont_fornitore_data?: string | null;
-  risp_cliente_data?: string | null;
+/** Una petición «de conteo»: el servidor devuelve el total y como mucho UNA fila (nunca una página de datos). */
+export function isCountOnly(req: CountRequest): boolean {
+  return (
+    req.query.count_only === "1" ||
+    req.query.per_page === "1" ||
+    req.query.per_page === "0"
+  );
 }
 
-const isDate = (v: unknown): v is string =>
-  typeof v === "string" && v !== "" && !v.startsWith("0000-00-00");
+const ymd = (d: Date): string =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 /**
- * Los tres contadores de giacenze desde las mismas filas abiertas:
- *  - `giac_dacom`: abiertas y el cliente aún no fue avisado.
- *  - `giac_forn`: el cliente respondió y el proveedor no recibió las instrucciones después.
+ * Peticiones de conteo de las tarjetas `special` que se leen de un listado. La home NO pide listados: cada una
+ * es el total (`pagination.total`) del listado ya filtrado en el servidor, con `per_page=1` o `count_only=1`.
+ *
+ *  - `giac_dacom`: giacenze abiertas con el cliente aún sin avisar.
+ *  - `giac_forn`: abiertas en las que el cliente respondió y el proveedor no recibió instrucciones (el caso «el
+ *    proveedor fue avisado ANTES de la respuesta» no se puede expresar con los filtros del API: ver P118).
  *  - `giac15`: abiertas hace más de 15 días (días desde la apertura, no `giacenza_gg`, que son los días a cobrar).
+ *  - `incassare`: cuotas de clientes vencidas y abiertas (cuotas, no clientes distintos: ver P118).
  */
-export function countGiacenze(
-  rows: readonly GiacenzaRowLike[],
-  now: number = Date.now(),
-): Record<"giac_dacom" | "giac_forn" | "giac15", number> {
-  let dacom = 0;
-  let forn = 0;
-  let over15 = 0;
-  for (const g of rows) {
-    if (isDate(g.data_close)) continue;
-    if (!isDate(g.cont_cliente_data)) dacom += 1;
-    if (
-      isDate(g.risp_cliente_data) &&
-      (!isDate(g.cont_fornitore_data) ||
-        g.cont_fornitore_data < g.risp_cliente_data)
-    )
-      forn += 1;
-    const opened = isDate(g.data_open)
-      ? Date.parse(g.data_open.replace(" ", "T"))
-      : NaN;
-    if (!Number.isNaN(opened) && now - opened > 15 * 864e5) over15 += 1;
-  }
-  return { giac_dacom: dacom, giac_forn: forn, giac15: over15 };
+export function countRequests(
+  now: Date = new Date(),
+): Record<string, CountRequest> {
+  const open = { data_close_flag: "N", per_page: "1" };
+  return {
+    resi: {
+      path: "/api_courier_shipments",
+      query: { consegna_stato: "5", count_only: "1", per_page: "1" },
+    },
+    prese_daaff: {
+      path: "/api_pickups_crud",
+      query: { affidata: "N", per_page: "1" },
+    },
+    pratiche_lav: {
+      path: "/api_crm_crud",
+      query: { stato_pratica: "L", per_page: "1", limit: "1" },
+    },
+    giac_dacom: {
+      path: "/api_inventory_crud",
+      query: { ...open, cont_cliente: "N" },
+    },
+    giac_forn: {
+      path: "/api_inventory_crud",
+      query: { ...open, risp_cliente: "S", cont_fornitore: "N" },
+    },
+    giac15: {
+      path: "/api_inventory_crud",
+      query: {
+        ...open,
+        data_open_a: ymd(new Date(now.getTime() - 15 * 864e5)),
+      },
+    },
+    incassare: {
+      path: "/api_payments",
+      query: { tipo: "A", statop: "SC", per_page: "1" },
+    },
+  };
 }

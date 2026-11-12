@@ -331,8 +331,8 @@
                     "desc": "partner requests about cargos"
                 },
                 "incassare": {
-                    "label": "Customers with overdue payments",
-                    "desc": "overdue instalments: send a reminder"
+                    "label": "Overdue instalments to collect",
+                    "desc": "customers with overdue instalments: send a reminder"
                 },
                 "dafatt": {
                     "label": "To invoice up to today",

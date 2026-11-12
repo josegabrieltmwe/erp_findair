@@ -331,8 +331,8 @@
                     "desc": "Partneranfragen zu Cargos"
                 },
                 "incassare": {
-                    "label": "Kunden mit überfälligen Zahlungen",
-                    "desc": "überfällige Raten: mahnen"
+                    "label": "Überfällige Raten einzuziehen",
+                    "desc": "Kunden mit überfälligen Raten: mahnen"
                 },
                 "dafatt": {
                     "label": "Bis heute zu fakturieren",

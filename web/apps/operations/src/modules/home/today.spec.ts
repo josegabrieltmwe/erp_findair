@@ -5,8 +5,8 @@ import { HOME_KPI_CATALOG } from "@shared/dashboard/home_kpi_catalog";
 import {
   TODAY_GROUPS,
   TODAY_TILES,
-  countGiacenze,
-  countOverdueCustomers,
+  countRequests,
+  isCountOnly,
   isZeroTile,
   resolveTile,
   todayCategories,
@@ -123,87 +123,43 @@ describe("estado de una tarjeta", () => {
 });
 
 describe("contadores especiales", () => {
-  it("giacenze: avisar al cliente, instrucciones al proveedor y más de 15 días", () => {
-    const now = Date.parse("2026-11-12T10:00:00");
-    const rows = [
-      {
-        data_open: "2026-10-01 09:00:00",
-        data_close: null,
-        cont_cliente_data: null,
-      }, // sin avisar, >15 d
-      {
-        data_open: "2026-11-10 09:00:00",
-        data_close: "0000-00-00",
-        cont_cliente_data: "2026-11-11",
-        risp_cliente_data: "2026-11-11",
-        cont_fornitore_data: null,
-      }, // cliente respondió, proveedor sin instrucciones
-      {
-        data_open: "2026-10-01",
-        data_close: "2026-10-20",
-        cont_cliente_data: null,
-      }, // cerrada: no cuenta
-      {
-        data_open: "2026-11-01",
-        data_close: null,
-        cont_cliente_data: "2026-11-02",
-        risp_cliente_data: "2026-11-03",
-        cont_fornitore_data: "2026-11-04",
-      }, // proveedor ya avisado después
-    ];
-    expect(countGiacenze(rows, now)).toEqual({
-      giac_dacom: 1,
-      giac_forn: 1,
-      giac15: 1,
-    });
+  it("la home solo pide conteos: ninguna petición trae una página de datos", () => {
+    for (const [key, req] of Object.entries(countRequests()))
+      expect(isCountOnly(req), key).toBe(true);
   });
 
-  it("cobros: clientes distintos con saldo vencido > 0, ignorando pagos y cerradas", () => {
-    const rows = [
-      {
-        id_anagrafica: 1,
-        importo: 100,
-        scadenza: "2026-10-01",
-        data_close: "0000-00-00",
-        tipo: "A",
-      },
-      {
-        id_anagrafica: 1,
-        importo: 50,
-        scadenza: "2026-10-05",
-        data_close: null,
-        tipo: "A",
-      },
-      {
-        id_anagrafica: 2,
-        importo: 80,
-        scadenza: "2026-12-01",
-        data_close: null,
-        tipo: "A",
-      }, // no vencida
-      {
-        id_anagrafica: 3,
-        importo: 80,
-        scadenza: "2026-10-01",
-        data_close: "2026-10-10",
-        tipo: "A",
-      }, // cobrada
-      {
-        id_anagrafica: 4,
-        importo: 80,
-        scadenza: "2026-10-01",
-        data_close: null,
-        tipo: "P",
-      }, // pago a proveedor
-      {
-        id_anagrafica: 5,
-        importo: 0,
-        scadenza: "2026-10-01",
-        data_close: null,
-        tipo: "A",
-      }, // saldo 0
-    ];
-    expect(countOverdueCustomers(rows, "2026-11-12")).toBe(1);
+  it("cubre todas las tarjetas especiales que se leen de un listado", () => {
+    const keys = Object.keys(countRequests());
+    const listed = TODAY_TILES.filter(
+      (t) => t.source === "special" && !t.key.startsWith("chat_"),
+    ).map((t) => t.key);
+    expect(keys.sort()).toEqual(listed.sort());
+  });
+
+  it("giacenze: filtros de servidor (abiertas / cliente sin avisar / respuesta sin instrucciones / más de 15 días)", () => {
+    const r = countRequests(new Date(2026, 10, 12, 10, 0, 0));
+    expect(r.giac_dacom.query).toMatchObject({
+      data_close_flag: "N",
+      cont_cliente: "N",
+    });
+    expect(r.giac_forn.query).toMatchObject({
+      data_close_flag: "N",
+      risp_cliente: "S",
+      cont_fornitore: "N",
+    });
+    expect(r.giac15.query).toMatchObject({
+      data_close_flag: "N",
+      data_open_a: "2026-10-28",
+    });
+    for (const k of ["giac_dacom", "giac_forn", "giac15"])
+      expect(r[k].path).toBe("/api_inventory_crud");
+  });
+
+  it("cobros: cuotas de clientes vencidas y abiertas, en una sola consulta de conteo", () => {
+    expect(countRequests().incassare).toEqual({
+      path: "/api_payments",
+      query: { tipo: "A", statop: "SC", per_page: "1" },
+    });
   });
 
   it("el total del listado es obligatorio: sin él falla (n/d) en vez de inventar 0", () => {

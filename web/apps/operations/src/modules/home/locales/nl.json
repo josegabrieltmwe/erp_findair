@@ -331,8 +331,8 @@
                     "desc": "vragen van partners over cargo"
                 },
                 "incassare": {
-                    "label": "Klanten met achterstallige betalingen",
-                    "desc": "vervallen termijnen: aanmanen"
+                    "label": "Vervallen termijnen te innen",
+                    "desc": "klanten met vervallen termijnen: aanmanen"
                 },
                 "dafatt": {
                     "label": "Te factureren tot vandaag",

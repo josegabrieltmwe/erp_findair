@@ -331,8 +331,8 @@
                     "desc": "consultas de partners sobre cargos"
                 },
                 "incassare": {
-                    "label": "Clientes con vencido por cobrar",
-                    "desc": "cuotas vencidas: reclama"
+                    "label": "Cuotas vencidas por cobrar",
+                    "desc": "clientes con cuotas vencidas: reclama"
                 },
                 "dafatt": {
                     "label": "Por facturar hasta hoy",
