@@ -194,7 +194,7 @@
             v-if="hasBulkAction('control')"
             variant="text"
             prepend-icon="mdi-check-bold"
-            :loading="bulkBusy"
+            :loading="bulkRun.busy.value"
             @click="onBulkControl"
           >
             {{ t("listing.bulk.mark_controlled", { count: ids.length }) }}
@@ -203,7 +203,7 @@
             v-if="hasBulkAction('archive')"
             variant="text"
             prepend-icon="mdi-archive"
-            :loading="bulkBusy"
+            :loading="bulkRun.busy.value"
             @click="onBulkArchive"
           >
             {{ t("listing.bulk.archive") }}
@@ -504,6 +504,9 @@ import {
 } from "@cargo/stores/cargo_list.store";
 import { useToastStore } from "@cargo/stores/toast.store";
 import { createKpiCounter } from "@shared/listing/kpiCounter";
+import { useVisibilityRefresh } from "@shared/listing/useVisibilityRefresh";
+import { useBulkRun } from "@shared/listing/useBulkRun";
+import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
 import { useListEntry } from "@shared/listing/useListEntry";
 import { filterOptionLabel } from "@shared/listing/filterOptions";
 import { CARGO_FILTER_OPTIONS } from "@cargo/listing/cargo-filter-options";
@@ -1036,7 +1039,6 @@ const toasts = useToastStore();
  * (e.g. showing client names in confirmation dialogs in future fases).
  */
 const selected = ref<CargoListRow[]>([]);
-const bulkBusy = ref(false);
 const selectedIds = computed<number[]>(() => selected.value.map((r) => r.id));
 
 /**
@@ -1057,69 +1059,42 @@ const exportParams = computed<Record<string, unknown>>(() => {
   return rest as Record<string, unknown>;
 });
 
-async function onBulkArchive(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await cargoListService.bulkArchive(selectedIds.value);
-    if (r.success) {
-      // Las controladas o anuladas no se archivan: el API las devuelve en `skipped`.
-      const skipped = r.skipped?.length ?? 0;
-      if (skipped > 0) {
-        toasts.push(
-          "warning",
-          t("listing.toast.archive_skipped", {
-            archived: r.applied?.length ?? selectedIds.value.length - skipped,
-            skipped,
-          }),
-        );
-      } else {
-        toasts.push(
-          "success",
-          t("listing.toast.archived", selectedIds.value.length),
-        );
-      }
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.archive_failed"));
-    }
-  } catch (err) {
-    // 409 NOT_APPLICABLE: ninguna se podía archivar (todas controladas o anuladas).
-    // ApiError lleva el cuerpo en `payload`: {error: {details: {skipped: [...]}}}.
-    const e = err as { payload?: { error?: { details?: { skipped?: unknown[] } } } };
-    const skipped = e.payload?.error?.details?.skipped?.length ?? 0;
-    toasts.push(
-      skipped > 0 ? "warning" : "error",
-      skipped > 0
-        ? t("listing.toast.archive_skipped", { archived: 0, skipped })
-        : (err as Error).message,
-    );
-  } finally {
-    bulkBusy.value = false;
-  }
+// Lote: ids saneados contra las filas cargadas, tope, confirmación y resultado por elemento.
+// La autoridad es el API (403 si algún id no es del usuario): ver packages/platform/listing/bulkRun.ts.
+const confirmStore = useConfirmStore();
+const bulkRun = useBulkRun<CargoListRow>({
+  rows: () => store.rows,
+  selected,
+  t: (key, params) => t(key, params ?? {}) as string,
+  confirm: (o) => confirmStore.ask(o),
+  toast: (kind, message) => toasts.push(kind, message),
+  describe: (r) => `#${r.id} · ${(r as { cliente?: string }).cliente ?? ""}`.trim(),
+  afterApplied: async (applied) => {
+    if (applied.length) store.removeRows(applied);
+    await store.fetchPage();
+  },
+});
+
+function onBulkArchive(): Promise<void> {
+  return bulkRun.execute({
+    label: t("listing.bulk.archive") as string,
+    run: (ids) => cargoListService.bulkArchive(ids),
+    successMessage: (n) => t("listing.toast.archived", n) as string,
+    skippedMessage: (archived, skipped) =>
+      t("listing.toast.archive_skipped", { archived, skipped }) as string,
+    failedMessage: t("listing.toast.archive_failed") as string,
+  });
 }
 
-async function onBulkControl(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await cargoListService.bulkControl(selectedIds.value);
-    if (r.success) {
-      toasts.push(
-        "success",
-        t("listing.toast.marked_controlled", selectedIds.value.length),
-      );
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.control_failed"));
-    }
-  } catch (err) {
-    toasts.push("error", (err as Error).message);
-  } finally {
-    bulkBusy.value = false;
-  }
+function onBulkControl(): Promise<void> {
+  return bulkRun.execute({
+    label: t("listing.bulk.mark_controlled_short") as string,
+    run: (ids) => cargoListService.bulkControl(ids),
+    successMessage: (n) => t("listing.toast.marked_controlled", n) as string,
+    skippedMessage: (done, skipped) =>
+      t("listing.toast.control_skipped", { done, skipped }) as string,
+    failedMessage: t("listing.toast.control_failed") as string,
+  });
 }
 
 /** Count of "advanced" filters active (those exposed only via the drawer). */
@@ -1397,6 +1372,21 @@ async function enterList(): Promise<void> {
 // Vue dispara justo después de `mounted`, se ignora (antes repetía la carga y
 // el recuento de KPI). Al reactivar se invalidan los KPI para recontarlos.
 useListEntry(enterList, { onReenter: kpi.invalidate });
+
+// Al volver a la pestaña tras un rato, se relee la cola. No se toca la lista si hay una ficha abierta,
+// un diálogo, filas seleccionadas o una carga en curso.
+useVisibilityRefresh({
+  refresh: () => {
+    kpi.invalidate();
+    return store.fetchPage();
+  },
+  isBusy: () =>
+    store.loading ||
+    bulkRun.busy.value ||
+    selected.value.length > 0 ||
+    openViewId.value != null ||
+    !!confirmStore.active,
+});
 
 // Leaving the listing: cancel the in-flight page and clear any stale error.
 // Without this the request keeps running against a page nobody is looking at,

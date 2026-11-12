@@ -78,6 +78,13 @@
           }}
         </v-card-title>
         <v-card-text>
+          <p class="giac-msg__lead">
+            {{
+              composeTipo === "GIAf"
+                ? t("giacenze.giacenze.msg.leadSupplier")
+                : t("giacenze.giacenze.msg.leadClient")
+            }}
+          </p>
           <v-text-field
             v-model="composeDest"
             :label="t('giacenze.giacenze.msg.recipient')"
@@ -94,6 +101,9 @@
             auto-grow
             density="comfortable"
           />
+          <p v-if="composeError" class="giac-msg__error" role="alert">
+            {{ composeError }}
+          </p>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -117,6 +127,7 @@ import type { GiacenzaMessage } from "../types";
 
 const { t } = useI18n();
 const props = defineProps<{ giacenzaId: number | null }>();
+const emit = defineEmits<{ sent: [tipo: "GIAc" | "GIAf"] }>();
 
 const history = ref<GiacenzaMessage[]>([]);
 const loading = ref(false);
@@ -127,6 +138,8 @@ const composeDest = ref("");
 const composeText = ref("");
 const sending = ref(false);
 const destError = ref(false);
+const composeError = ref("");
+const EMAIL = /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/;
 
 function statusColor(esito: string | null): string {
   if (esito === "OK") return "success";
@@ -149,34 +162,54 @@ async function loadHistory(): Promise<void> {
   }
 }
 
-function openCompose(tipo: "GIAc" | "GIAf"): void {
+/** Abre el envío con el destinatario ya sugerido (mismas fuentes que el aviso automático de apertura). */
+async function openCompose(tipo: "GIAc" | "GIAf"): Promise<void> {
   composeTipo.value = tipo;
   composeDest.value = "";
   composeText.value = "";
   destError.value = false;
+  composeError.value = "";
   composeOpen.value = true;
+  if (!props.giacenzaId) return;
+  try {
+    const rec = await giacenzeService.suggestedRecipients(props.giacenzaId);
+    const list = tipo === "GIAf" ? rec.supplier : rec.client;
+    if (!composeDest.value) composeDest.value = list.join(", ");
+  } catch {
+    /* sin sugerencia: lo escribe el operador */
+  }
 }
 
 async function submitMessage(): Promise<void> {
   if (!props.giacenzaId) return;
-  if (!composeDest.value.trim()) {
-    destError.value = true;
-    return;
-  }
+  const dest = composeDest.value.trim();
+  const valid =
+    dest !== "" && dest.split(/[,;]\s*/).every((a) => EMAIL.test(a.trim()));
+  destError.value = !valid;
+  if (!valid) return;
   sending.value = true;
+  composeError.value = "";
   try {
     await giacenzeService.sendMessage(
       props.giacenzaId,
       composeTipo.value,
-      composeDest.value.trim(),
+      dest,
       composeText.value,
     );
     composeOpen.value = false;
     await loadHistory();
+    emit("sent", composeTipo.value);
+  } catch (e) {
+    composeError.value =
+      e instanceof Error && e.message
+        ? e.message
+        : t("giacenze.giacenze.msg.sendFailed");
   } finally {
     sending.value = false;
   }
 }
+
+defineExpose({ openCompose, reload: loadHistory });
 
 watch(() => props.giacenzaId, loadHistory, { immediate: true });
 </script>
@@ -195,6 +228,16 @@ watch(() => props.giacenzaId, loadHistory, { immediate: true });
 .giac-msg__empty {
   color: rgba(0, 0, 0, 0.5);
   font-style: italic;
+  font-size: 0.85rem;
+}
+.giac-msg__lead {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+.giac-msg__error {
+  margin: 8px 0 0;
+  color: rgb(var(--v-theme-error));
   font-size: 0.85rem;
 }
 .giac-msg__table th {

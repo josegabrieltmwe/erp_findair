@@ -5,8 +5,8 @@ import { HOME_KPI_CATALOG } from "@shared/dashboard/home_kpi_catalog";
 import {
   TODAY_GROUPS,
   TODAY_TILES,
-  countGiacenze,
-  countOverdueCustomers,
+  countRequests,
+  isCountOnly,
   isZeroTile,
   resolveTile,
   todayCategories,
@@ -40,7 +40,10 @@ describe("catálogo «Da fare oggi»", () => {
     for (const t of TODAY_TILES.filter((x) => x.source === "catalog")) {
       const kpi = HOME_KPI_CATALOG.find((k) => k.key === t.key);
       expect(kpi, t.key).toBeDefined();
-      expect(t.link.page, t.key).toBe(kpi!.link.page);
+      // El catálogo nombra «giacenze-list» al destino que el router llama «giacenze» (HomePage.gotoListing).
+      const route =
+        kpi!.link.page === "giacenze-list" ? "giacenze" : kpi!.link.page;
+      expect(t.link.page, t.key).toBe(route);
       expect(t.link.query, t.key).toEqual(kpi!.link.query);
     }
   });
@@ -123,87 +126,41 @@ describe("estado de una tarjeta", () => {
 });
 
 describe("contadores especiales", () => {
-  it("giacenze: avisar al cliente, instrucciones al proveedor y más de 15 días", () => {
-    const now = Date.parse("2026-11-12T10:00:00");
-    const rows = [
-      {
-        data_open: "2026-10-01 09:00:00",
-        data_close: null,
-        cont_cliente_data: null,
-      }, // sin avisar, >15 d
-      {
-        data_open: "2026-11-10 09:00:00",
-        data_close: "0000-00-00",
-        cont_cliente_data: "2026-11-11",
-        risp_cliente_data: "2026-11-11",
-        cont_fornitore_data: null,
-      }, // cliente respondió, proveedor sin instrucciones
-      {
-        data_open: "2026-10-01",
-        data_close: "2026-10-20",
-        cont_cliente_data: null,
-      }, // cerrada: no cuenta
-      {
-        data_open: "2026-11-01",
-        data_close: null,
-        cont_cliente_data: "2026-11-02",
-        risp_cliente_data: "2026-11-03",
-        cont_fornitore_data: "2026-11-04",
-      }, // proveedor ya avisado después
-    ];
-    expect(countGiacenze(rows, now)).toEqual({
-      giac_dacom: 1,
-      giac_forn: 1,
-      giac15: 1,
+  it("la home solo pide conteos: ninguna petición trae una página de datos", () => {
+    for (const [key, req] of Object.entries(countRequests()))
+      expect(isCountOnly(req), key).toBe(true);
+  });
+
+  it("las tarjetas «special» que se leen de un listado tienen su petición de conteo", () => {
+    const keys = Object.keys(countRequests());
+    const listed = TODAY_TILES.filter(
+      (t) => t.source === "special" && !t.key.startsWith("chat_"),
+    ).map((t) => t.key);
+    expect(keys.sort()).toEqual(listed.sort());
+  });
+
+  it("prese por asignar cuenta lo mismo que la cola «Da assegnare» de la lista de ritiri", () => {
+    const q = countRequests(new Date(2026, 10, 12, 10, 0, 0)).prese_daaff.query;
+    expect(q).toMatchObject({ affidata: "N", data_da: "2026-11-12" });
+    expect(tile("prese_daaff").link).toEqual({
+      page: "pickup-list",
+      query: { queue: "to_assign" },
     });
   });
 
-  it("cobros: clientes distintos con saldo vencido > 0, ignorando pagos y cerradas", () => {
-    const rows = [
-      {
-        id_anagrafica: 1,
-        importo: 100,
-        scadenza: "2026-10-01",
-        data_close: "0000-00-00",
-        tipo: "A",
-      },
-      {
-        id_anagrafica: 1,
-        importo: 50,
-        scadenza: "2026-10-05",
-        data_close: null,
-        tipo: "A",
-      },
-      {
-        id_anagrafica: 2,
-        importo: 80,
-        scadenza: "2026-12-01",
-        data_close: null,
-        tipo: "A",
-      }, // no vencida
-      {
-        id_anagrafica: 3,
-        importo: 80,
-        scadenza: "2026-10-01",
-        data_close: "2026-10-10",
-        tipo: "A",
-      }, // cobrada
-      {
-        id_anagrafica: 4,
-        importo: 80,
-        scadenza: "2026-10-01",
-        data_close: null,
-        tipo: "P",
-      }, // pago a proveedor
-      {
-        id_anagrafica: 5,
-        importo: 0,
-        scadenza: "2026-10-01",
-        data_close: null,
-        tipo: "A",
-      }, // saldo 0
-    ];
-    expect(countOverdueCustomers(rows, "2026-11-12")).toBe(1);
+  it("los indicadores de giacenze y cobros salen del API y la lista aplica el mismo filtro", () => {
+    for (const key of [
+      "giac_to_notify_client",
+      "giac_to_instruct_supplier",
+      "giac_open_over_15_days",
+    ]) {
+      expect(tile(key).source, key).toBe("catalog");
+      expect(tile(key).link.query, key).toEqual({ indicator: key });
+    }
+    expect(tile("payments_overdue_customers").link).toEqual({
+      page: "payments",
+      query: { statop: "SC" },
+    });
   });
 
   it("el total del listado es obligatorio: sin él falla (n/d) en vez de inventar 0", () => {
@@ -220,7 +177,7 @@ describe("traducciones de «Da fare oggi»", () => {
   it("existen en los 5 idiomas, para todos los grupos y todas las tarjetas", () => {
     for (const l of LOCALES) {
       const d = load(l);
-      for (const k of ["title", "all_groups", "error", "list_approximate"])
+      for (const k of ["title", "all_groups", "error"])
         expect(String(d[k] ?? "").trim().length, `${l}.${k}`).toBeGreaterThan(
           0,
         );

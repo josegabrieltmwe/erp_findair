@@ -35,11 +35,11 @@
       "autoCloseDays": "Giorni max",
       "autoCloseHint": "Chiude tutte le giacenze aperte da più del numero di giorni indicato.",
       "operations": {
-        "A": "Aperta",
-        "C": "Chiusa",
-        "N": "Annotata",
-        "R": "Riconsegna",
-        "E": "Esitata"
+        "A": "In attesa",
+        "C": "Riconsegna",
+        "N": "Nuovo indirizzo",
+        "R": "Al mittente",
+        "E": "Abbandono"
       },
       "aging": {
         "title": "Anzianità",
@@ -56,7 +56,11 @@
         "autoClosed": "{count} giacenza chiusa | {count} giacenze chiuse",
         "deleteConfirm": "Eliminare questa giacenza? L'operazione non è reversibile.",
         "closeConfirm": "Chiudere questa giacenza?",
-        "notFound": "Giacenza #{id} non trovata"
+        "notFound": "Giacenza #{id} non trovata",
+        "actionFailed": "Impossibile completare l'azione",
+        "reopenConfirm": "Riaprire questa giacenza? Resterà traccia nelle note.",
+        "reopened": "Giacenza riaperta",
+        "closeConfirmCharge": "Chiudere questa giacenza? Addebito riconsegna: {amount} {currency}."
       },
       "validation": {
         "shipmentRequired": "L'ID spedizione è obbligatorio",
@@ -73,7 +77,17 @@
         "readonly": "Sola lettura",
         "none": "Nessun indirizzo",
         "loading": "Caricamento…",
-        "editDelivery": "Modifica consegna"
+        "editDelivery": "Modifica consegna",
+        "name": "Nome",
+        "street": "Indirizzo",
+        "zip": "CAP",
+        "city": "Città",
+        "province": "Prov.",
+        "country": "Paese (ISO)",
+        "attention": "Attenzione",
+        "phone": "Telefono",
+        "keepsOriginal": "L'indirizzo originale viene conservato e mostrato sotto.",
+        "saveFailed": "Impossibile salvare l'indirizzo"
       },
       "msg": {
         "title": "Messaggi",
@@ -88,11 +102,129 @@
         "type": "Tipo",
         "status": "Esito",
         "client": "Cliente",
-        "supplier": "Corriere"
+        "supplier": "Corriere",
+        "leadClient": "Parte con il modello di avviso giacenza al cliente, dalla coda e-mail del partner.",
+        "leadSupplier": "Parte con il modello di istruzioni al corriere, dalla coda e-mail del partner.",
+        "sendFailed": "Impossibile inviare il messaggio"
       },
       "replied": "Ha risposto",
       "awaitingReply": "In attesa",
-      "copyPrice": "Copia prezzo di carico"
+      "copyPrice": "Copia prezzo di carico",
+      "queue": {
+        "title": "Code di lavoro",
+        "to_notify": "Da comunicare al cliente",
+        "waiting_client": "In attesa del cliente",
+        "to_instruct_supplier": "Istruzioni al fornitore",
+        "over_15": "Oltre 15 giorni",
+        "open": "Aperte",
+        "closed": "Chiuse",
+        "all": "Tutte",
+        "hint": {
+          "to_notify": "Giacenze aperte per cui il cliente non è ancora stato avvisato.",
+          "waiting_client": "Cliente avvisato che non ha ancora dato istruzioni.",
+          "to_instruct_supplier": "Il cliente ha risposto: mancano le istruzioni al corriere.",
+          "over_15": "Aperte da più di 15 giorni.",
+          "open": "Tutte le giacenze non chiuse.",
+          "closed": "Giacenze già chiuse.",
+          "all": "Senza filtro di stato."
+        }
+      },
+      "shipmentBanner": "Giacenze della spedizione {id}",
+      "showAll": "Mostra tutte",
+      "backToShipment": "Torna alla spedizione",
+      "openShipment": "Apri la spedizione",
+      "nextStep": "Prossimo passo",
+      "clientNotified": "Cliente avvisato",
+      "supplierNotified": "Fornitore avvisato",
+      "yes": "Sì",
+      "no": "No",
+      "indicator": "Indicatore",
+      "step": {
+        "closed": "Chiusa",
+        "notify_client": "Avvisare il cliente",
+        "waiting_client": "In attesa del cliente",
+        "instruct_supplier": "Istruire il corriere",
+        "ready_to_close": "Pronta da chiudere"
+      },
+      "empty": {
+        "to_notify": "Nessuna giacenza da comunicare al cliente: le altre aperte sono nella coda «Aperte».",
+        "generic": "Nessuna giacenza."
+      },
+      "bulk": {
+        "selected": "{count} selezionate",
+        "close": "Chiudi selezionate",
+        "clear": "Deseleziona",
+        "nothingToClose": "Le selezionate sono già chiuse.",
+        "closeConfirm": "Chiudere {count} giacenze?",
+        "done": "{count} giacenze chiuse",
+        "partial": "{ok} chiuse; {failed} non riuscite (#{ids})"
+      },
+      "reopen": "Riapri giacenza",
+      "create": {
+        "title": "Nuova giacenza",
+        "lead": "Scegli la spedizione in giacenza. Alla creazione il cliente viene sempre avvisato via e-mail, con il mittente del partner.",
+        "shipment": "Spedizione",
+        "shipmentHint": "Cerca per numero, AWB, cliente o destinatario",
+        "typeToSearch": "Scrivi almeno 2 caratteri",
+        "existing": "Questa spedizione ha già una giacenza aperta: si apre quella, non se ne crea un'altra.",
+        "willNotify": "Alla creazione verrà inviato l'avviso al cliente via e-mail.",
+        "openExisting": "Apri quella esistente",
+        "submit": "Crea e avvisa il cliente",
+        "failed": "Impossibile creare la giacenza"
+      },
+      "detail": {
+        "title": "Giacenza #{id}",
+        "open": "Aperta",
+        "openedAgo": "Aperta il {date} ({days} giorni fa)",
+        "next": "Prossima"
+      },
+      "fix": {
+        "closed": "Giacenza chiusa. Puoi riaprirla se serve.",
+        "notify_client": "Manca l'avviso al cliente.",
+        "waiting_client": "Cliente avvisato: in attesa delle sue istruzioni. Quando le hai, annotale qui sotto.",
+        "instruct_supplier": "Il cliente ha risposto: mancano le istruzioni al corriere.",
+        "ready_to_close": "Tutto fatto: pronta da chiudere."
+      },
+      "act": {
+        "notifyClient": "Avvisa il cliente",
+        "notifySupplier": "Avvisa il corriere"
+      },
+      "cycle": {
+        "title": "Ciclo",
+        "client_notified": "Cliente avvisato",
+        "client_reply": "Istruzioni del cliente ricevute",
+        "supplier_notified": "Istruzioni date al corriere"
+      },
+      "esito": {
+        "title": "Esito",
+        "missing": "Manca l'esito.",
+        "hint": {
+          "A": "Resta ferma in attesa di istruzioni",
+          "C": "Il corriere riconsegna allo stesso indirizzo",
+          "N": "Il corriere riconsegna a un altro indirizzo",
+          "R": "Il corriere restituisce i colli al mittente",
+          "E": "I colli vengono abbandonati"
+        },
+        "confirm": {
+          "A": "Lasciare la giacenza in attesa di istruzioni? La risposta del cliente viene cancellata.",
+          "C": "Il corriere riconsegnerà allo stesso indirizzo. Poi potrai avvisarlo.",
+          "N": "Il corriere riconsegnerà a un altro indirizzo: controlla prima l'indirizzo di consegna a destra. Poi potrai avvisarlo.",
+          "R": "Il corriere restituirà i colli al mittente. Poi potrai avvisarlo.",
+          "E": "I colli verranno abbandonati. Poi potrai avvisare il corriere."
+        }
+      },
+      "instr": {
+        "title": "Istruzioni e note",
+        "client": "Istruzioni del cliente",
+        "clientHint": "Salvandole si registra che il cliente ha risposto.",
+        "save": "Salva istruzioni"
+      },
+      "deposit": {
+        "title": "Deposito e addebito",
+        "daysHint": "Giorni di giacenza: determinano l'addebito",
+        "save": "Salva deposito"
+      },
+      "notAvailable": "n/d"
     }
   }
 }

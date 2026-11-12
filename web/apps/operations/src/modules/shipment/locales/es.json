@@ -464,6 +464,7 @@
         "crm_created": "Expediente creado",
         "crm_create_failed": "No se pudo crear el expediente",
         "giac_create": "Crear almacenaje",
+        "giac_create_hint": "Al crearla se avisa al cliente por correo",
         "giac_created": "Almacenaje creado",
         "giac_create_failed": "No se pudo crear el almacenaje",
         "giac_open": "Abierto",
@@ -1814,10 +1815,39 @@
     "advanced_open": "Abrir filtros avanzados",
     "advanced_active": "{count} filtros avanzados activos",
     "empty_text": "Ningún resultado coincide con los filtros actuales. Prueba a limpiar la búsqueda o el rango de fechas.",
+    "queue": { "all": "Todas las expediciones", "label": "Colas de trabajo", "groups": { "operations_in": "Operativa IN: por preparar", "operations_out": "Operativa OUT: en viaje" }, "left": "{count} salen de la cola; quedan {remaining}", "empty": "Cola vacía: no queda nada por hacer aquí" },
     "bulk": {
       "mark_controlled": "Marcar controlada ({count})",
       "archive": "Archivar",
-      "launch_tracking": "Lanzar tracking ({count})"
+      "launch_tracking": "Lanzar tracking ({count})",
+      "mark_controlled_short": "Marcar controladas",
+      "confirm_title": "Confirmar acción en lote",
+      "confirm_message": "¿Aplicar «{action}» a {count} elementos?",
+      "confirm_ok": "Aplicar",
+      "capped": "Máximo {max} por pasada: se aplican solo los {max} primeros.",
+      "foreign_dropped": "{count} elementos seleccionados no están en la lista actual y se han descartado.",
+      "denied": "No tienes acceso a alguno de los elementos seleccionados. No se ha cambiado nada: actualiza el listado e inténtalo de nuevo.",
+      "and_more": "… y {count} más",
+      "actions": "Acciones ({count})",
+      "done": "{count} actualizadas",
+      "done_skipped": "{done} aplicadas; {skipped} no admiten este cambio en su estado actual",
+      "failed": "No se pudo aplicar la acción",
+      "act": {
+        "control": "Marcar controladas",
+        "depart": "Marcar salida (afidadas al corriere)",
+        "transit": "Marcar en tránsito",
+        "deliver": "Marcar entregadas",
+        "archive": "Archivar",
+        "tracking": "Lanzar tracking",
+        "pickup_send": "Recogida: enviar al corriere",
+        "pickup_confirm": "Recogida: confirmada por el corriere",
+        "pickup_picked": "Recogida: colis recogidos",
+        "pickup_failed": "Recogida: fallida (a reprogramar)",
+        "pickup_reset": "Recogida: volver a «por enviar»",
+        "cod_collected": "COD cobrado",
+        "cod_bank": "COD cobrado por transferencia",
+        "cod_annul": "COD anulado"
+      }
     },
     "toast": {
       "archived": "Archivada {count} expedición | Archivadas {count} expediciones",
@@ -1825,6 +1855,7 @@
       "archive_skipped": "{archived} archivada(s); {skipped} no se archivan porque están controladas o anuladas",
       "marked_controlled": "Marcada {count} expedición como controlada | Marcadas {count} expediciones como controladas",
       "control_failed": "Fallo al controlar en masa",
+      "control_skipped": "{done} marcada(s) como controlada(s); {skipped} no se pueden controlar (por ejemplo, sin país de destino)",
       "tracking_ok": "Tracking lanzado",
       "tracking_failed": "Fallo al lanzar el tracking",
       "tracking_queued": "Tracking encolado para {count} expediciones"
@@ -2100,6 +2131,10 @@
       "overdue_followups": { "label": "Seguimientos vencidos" },
       "open_giacenze": { "label": "Depósitos abiertos" },
       "giacenze_overdue_15": { "label": "Depósitos de más de 15 días" },
+      "giac_to_notify_client": { "label": "Depósitos por comunicar al cliente" },
+      "giac_to_instruct_supplier": { "label": "Instrucciones por dar al proveedor" },
+      "giac_open_over_15_days": { "label": "Depósitos abiertos hace más de 15 días" },
+      "payments_overdue_customers": { "label": "Clientes con vencido por cobrar" },
       "awaiting_client_response": {
         "label": "Esperando respuesta del cliente"
       },

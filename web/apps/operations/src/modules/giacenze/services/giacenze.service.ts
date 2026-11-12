@@ -19,6 +19,8 @@ import type {
   ContactDateField,
   ShipmentAddresses,
   GiacenzaMessage,
+  SuggestedRecipients,
+  ShipmentAddress,
 } from "../types";
 
 interface SingleEnvelope<T> {
@@ -45,6 +47,7 @@ function buildListQuery(
   if (filters.data_open_da) q.data_open_da = filters.data_open_da;
   if (filters.data_open_a) q.data_open_a = filters.data_open_a;
   if (filters.open_only) q.open_only = "1";
+  if (filters.closed) q.data_close_flag = filters.closed;
   return q;
 }
 
@@ -112,6 +115,55 @@ export const giacenzeService = {
     return res.data;
   },
 
+  /** Total de un filtro sin traer filas (per_page=1): para los contadores de las colas. */
+  async count(filters: GiacenzaFilters): Promise<number> {
+    const res = await http<PaginatedResult<Giacenza>>("/api_inventory_crud", {
+      method: "GET",
+      query: buildListQuery(filters, 1, 1),
+    });
+    const n = Number(res.pagination?.total);
+    if (!Number.isFinite(n)) throw new Error("total no informado");
+    return n;
+  },
+
+  /** Destinatarios sugeridos para los avisos manuales al cliente / proveedor. */
+  async suggestedRecipients(id: number): Promise<SuggestedRecipients> {
+    const res = await http<SingleEnvelope<SuggestedRecipients>>(
+      "/api_giacenze_message",
+      { method: "GET", query: { id: String(id), recipients: "1" } },
+    );
+    return {
+      client: res.data?.client ?? [],
+      supplier: res.data?.supplier ?? [],
+    };
+  },
+
+  /**
+   * Edita la dirección de entrega de la expedición. El API clona la original (tipo V) la primera vez,
+   * si hay una giacenza activa, así que la original no se pierde.
+   */
+  async updateDeliveryAddress(
+    addressId: number,
+    fields: Partial<
+      Pick<
+        ShipmentAddress,
+        | "nome"
+        | "adress"
+        | "cap"
+        | "citta"
+        | "prov"
+        | "id_paese_iso"
+        | "attenzione"
+        | "tel"
+      >
+    >,
+  ): Promise<void> {
+    await http("/api_shipment_addresses", {
+      method: "PUT",
+      body: { address_id: addressId, ...fields },
+    });
+  },
+
   /** Una giacenza por id (con IDOR guard backend). */
   async get(id: number): Promise<Giacenza> {
     const res = await http<SingleEnvelope<Giacenza>>("/api_inventory_crud", {
@@ -162,17 +214,25 @@ export const giacenzeService = {
     return res.data;
   },
 
-  /** Cambia la operación + fechas de contacto. */
+  /**
+   * Cambia la operación (esito) y guarda instrucción / notas / días con las reglas del legado en el servidor:
+   * guardar `descriz` sella la respuesta del cliente. Las fechas de hito no se envían desde la SPA.
+   */
   async updateOperation(
     id: number,
     operation: GiacenzaOperation,
-    contactDates: Partial<Record<ContactDateField, string | null>>,
+    fields: Partial<
+      Record<
+        ContactDateField | "descriz" | "note" | "giacenza_gg",
+        string | number | null
+      >
+    > = {},
   ): Promise<Giacenza> {
     const res = await http<SingleEnvelope<Giacenza>>(
       "/api_giacenze_operations",
       {
         method: "PUT",
-        body: { id, operation, ...contactDates },
+        body: { id, operation, ...fields },
       },
     );
     return res.data;
@@ -187,26 +247,26 @@ export const giacenzeService = {
   },
 
   /**
-   * Abre-o-crea la giacenza de una expedición (paridad legacy CreateGiac):
-   * find-or-create en backend + notificación GIAc al cliente. Devuelve la
-   * giacenza nueva o la existente. `sendNotification=false` la crea sin email.
+   * Abre-o-crea la giacenza de una expedición (paridad legacy CreateGiac): find-or-create en backend.
+   * Siempre avisa al cliente (GIAc) por la cola de correo del partner: no hay modo «sin aviso».
    */
-  async createFromShipment(
-    shipmentId: number,
-    sendNotification = true,
-  ): Promise<Giacenza> {
+  async createFromShipment(shipmentId: number): Promise<Giacenza> {
     const res = await http<SingleEnvelope<Giacenza>>(
       "/api_giacenze_operations",
       {
         method: "POST",
-        body: {
-          action: "create_from_shipment",
-          shipment_id: shipmentId,
-          send_notification: sendNotification,
-        },
+        body: { action: "create_from_shipment", shipment_id: shipmentId },
       },
     );
     return res.data;
+  },
+
+  /** Reabre una giacenza cerrada (queda constancia en las notas). */
+  async reopen(id: number, reason = ""): Promise<void> {
+    await http("/api_giacenze_operations", {
+      method: "POST",
+      body: { action: "reopen", id, reason },
+    });
   },
 
   /** Cierre masivo de giacenze vencidas (admin). */

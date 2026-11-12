@@ -68,6 +68,14 @@
             />
           </div>
         </v-menu>
+        <ListingQueueSelector
+          :groups="shipmentQueues"
+          :model-value="state.type"
+          all-key="all"
+          :all-label="t('listing.queue.all')"
+          label-key-prefix="home.kpi.tile"
+          @select="onKpiSelect"
+        />
         <ListingWorkViewSelector
           v-model="workViewId"
           :views="SHIPMENT_WORK_VIEWS"
@@ -189,33 +197,30 @@
         @row-click="(row) => openShipment((row as ShipmentListRow).id)"
       >
         <template #bulk-actions="{ selectedIds: ids }">
-          <v-btn
-            v-if="hasBulkAction('tracking')"
-            variant="text"
-            prepend-icon="mdi-radar"
-            :loading="bulkBusy"
-            @click="onBulkTracking"
-          >
-            {{ t("listing.bulk.launch_tracking", { count: ids.length }) }}
-          </v-btn>
-          <v-btn
-            v-if="hasBulkAction('control')"
-            variant="text"
-            prepend-icon="mdi-check-bold"
-            :loading="bulkBusy"
-            @click="onBulkControl"
-          >
-            {{ t("listing.bulk.mark_controlled", { count: ids.length }) }}
-          </v-btn>
-          <v-btn
-            v-if="hasBulkAction('archive')"
-            variant="text"
-            prepend-icon="mdi-archive"
-            :loading="bulkBusy"
-            @click="onBulkArchive"
-          >
-            {{ t("listing.bulk.archive") }}
-          </v-btn>
+          <v-menu location="bottom start">
+            <template #activator="{ props: menuProps }">
+              <v-btn
+                v-bind="menuProps"
+                variant="text"
+                prepend-icon="mdi-lightning-bolt-outline"
+                append-icon="mdi-menu-down"
+                :loading="bulkBusy || bulkRun.busy.value"
+                data-testid="bulk-actions-menu"
+              >
+                {{ t("listing.bulk.actions", { count: ids.length }) }}
+              </v-btn>
+            </template>
+            <v-list density="compact" min-width="260">
+              <v-list-item
+                v-for="a in availableBulkActions"
+                :key="a"
+                :prepend-icon="BULK_ACTION_META[a].icon"
+                :title="t(`listing.bulk.act.${a}`)"
+                :data-testid="`bulk-${a}`"
+                @click="runBulkAction(a)"
+              />
+            </v-list>
+          </v-menu>
         </template>
 
         <!-- Solo el número: "abrir en modern" vive en la columna de acciones,
@@ -445,6 +450,14 @@ import CountryFlag from "@shared/listing/CountryFlag.vue";
 import ActiveFilterChips from "@shared/listing/ActiveFilterChips.vue";
 import ViewModeToggle from "@shared/listing/ViewModeToggle.vue";
 import ListingWorkViewSelector from "@shared/listing/ListingWorkViewSelector.vue";
+import { useVisibilityRefresh } from "@shared/listing/useVisibilityRefresh";
+import ListingQueueSelector from "@shared/listing/ListingQueueSelector.vue";
+import { queuesForPage } from "@shared/listing/queueCatalog";
+import { HOME_KPI_CATALOG } from "@shared/dashboard/home_kpi_catalog";
+import { useBulkRun } from "@shared/listing/useBulkRun";
+import { useNavRole } from "@shared/platform/useNavRole";
+import { sanitizeBulkIds } from "@shared/listing/bulkRun";
+import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
 import {
   headersForWorkView,
   resolveWorkView,
@@ -467,6 +480,10 @@ import type { ListSource, DataTableHeader } from "@shared/listing/types";
 import {
   SHIPMENT_WORK_VIEWS,
   shipmentDefaultWorkView,
+  DEFAULT_SHIPMENT_QUEUE,
+  actionLeavesQueue,
+  shipmentBulkActionsFor,
+  type ShipmentBulkActionId,
 } from "@shipment/listing/shipment-work-views";
 
 const { t } = useI18n();
@@ -673,10 +690,6 @@ const workViewId = computed({
 const headers = computed<DataTableHeader[]>(() =>
   headersForWorkView(allHeaders.value, activeWorkView.value),
 );
-
-function hasBulkAction(action: string): boolean {
-  return activeWorkView.value.bulkActions?.some((item) => item === action) ?? false;
-}
 
 /**
  * Origin/destination sort by their country (spi/spi2.id_paese_iso). The JOIN
@@ -979,80 +992,133 @@ async function onLaunchTracking(id: number): Promise<void> {
   }
 }
 
-async function onBulkArchive(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await shipmentService.bulkArchive(selectedIds.value);
-    if (r.success) {
-      // Las controladas o anuladas no se archivan: el API las devuelve en `skipped`.
-      const skipped = r.skipped?.length ?? 0;
-      if (skipped > 0) {
-        toasts.push(
-          "warning",
-          t("listing.toast.archive_skipped", {
-            archived: r.applied?.length ?? selectedIds.value.length - skipped,
-            skipped,
-          }),
-        );
-      } else {
-        toasts.push(
-          "success",
-          t("listing.toast.archived", selectedIds.value.length),
-        );
-      }
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.archive_failed"));
-    }
-  } catch (err) {
-    // 409 NOT_APPLICABLE: ninguna se podía archivar (todas controladas o anuladas).
-    // ApiError lleva el cuerpo en `payload`: {error: {details: {skipped: [...]}}}.
-    const e = err as { payload?: { error?: { details?: { skipped?: unknown[] } } } };
-    const skipped = e.payload?.error?.details?.skipped?.length ?? 0;
+// Lote: ids saneados contra las filas cargadas (nunca de la URL ni de estado obsoleto), tope, confirmación
+// y resultado por elemento. La autoridad es el API (403 si algún id no es del usuario): ver bulkRun.ts.
+// Colas de trabajo del selector: las mismas del catálogo de la home (un solo origen).
+const shipmentQueues = queuesForPage(HOME_KPI_CATALOG, "shipment-list");
+
+const confirmStore = useConfirmStore();
+const bulkRun = useBulkRun<ShipmentListRow>({
+  rows: () => store.rows,
+  selected,
+  t: (key, params) => t(key, params ?? {}) as string,
+  confirm: (o) => confirmStore.ask(o),
+  toast: (kind, message) => toasts.push(kind, message),
+  describe: (r) => `#${r.id} · ${r.cliente ?? ""}`.trim(),
+  afterApplied: afterBulk,
+});
+
+async function afterBulk(applied: number[]): Promise<void> {
+  const leaves = currentActionLeaves && applied.length > 0;
+  currentActionLeaves = false;
+  // El registro que sale de la cola desaparece al instante; la relectura del API confirma la verdad.
+  if (leaves) store.removeRows(applied);
+  await store.fetchPage();
+  kpi.invalidate();
+  void refreshKpiCounts();
+  if (leaves && state.value.type !== "all") {
     toasts.push(
-      skipped > 0 ? "warning" : "error",
-      skipped > 0
-        ? t("listing.toast.archive_skipped", { archived: 0, skipped })
-        : (err as Error).message,
+      "success",
+      total.value > 0
+        ? t("listing.queue.left", { count: applied.length, remaining: total.value })
+        : t("listing.queue.empty"),
     );
-  } finally {
-    bulkBusy.value = false;
   }
 }
 
-async function onBulkControl(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await shipmentService.bulkControl(selectedIds.value);
-    if (r.success) {
-      toasts.push(
-        "success",
-        t("listing.toast.marked_controlled", selectedIds.value.length),
-      );
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.control_failed"));
-    }
-  } catch (err) {
-    toasts.push("error", (err as Error).message);
-  } finally {
-    bulkBusy.value = false;
+/** Icono y llamada al API de cada acción por lote (las ofrecidas por cola: `shipmentBulkActionsFor`). */
+const BULK_ACTION_META: Record<
+  ShipmentBulkActionId,
+  { icon: string; danger?: boolean }
+> = {
+  control: { icon: "mdi-check-bold" },
+  depart: { icon: "mdi-airplane-takeoff" },
+  transit: { icon: "mdi-truck-fast-outline" },
+  deliver: { icon: "mdi-package-variant-closed-check" },
+  archive: { icon: "mdi-archive-outline", danger: true },
+  tracking: { icon: "mdi-radar" },
+  pickup_send: { icon: "mdi-send-outline" },
+  pickup_confirm: { icon: "mdi-check-circle-outline" },
+  pickup_picked: { icon: "mdi-package-up" },
+  pickup_failed: { icon: "mdi-alert-circle-outline", danger: true },
+  pickup_reset: { icon: "mdi-restore" },
+  cod_collected: { icon: "mdi-cash-check" },
+  cod_bank: { icon: "mdi-bank-transfer" },
+  cod_annul: { icon: "mdi-cash-remove", danger: true },
+};
+
+const availableBulkActions = computed<readonly ShipmentBulkActionId[]>(() =>
+  shipmentBulkActionsFor(state.value.type),
+);
+
+/** Cada acción llama a UN endpoint con el set completo; el API autoriza todo o nada (403 si un id no es del usuario). */
+function bulkRunner(
+  action: ShipmentBulkActionId,
+): ((ids: number[]) => ReturnType<typeof shipmentService.bulkControl>) | null {
+  switch (action) {
+    case "control":
+      return (ids) => shipmentService.bulkControl(ids);
+    case "archive":
+      return (ids) => shipmentService.bulkArchive(ids);
+    case "depart":
+      return (ids) => shipmentService.bulkDelivery(ids, "2");
+    case "transit":
+      return (ids) => shipmentService.bulkDelivery(ids, "3");
+    case "deliver":
+      return (ids) => shipmentService.bulkDelivery(ids, "7");
+    case "pickup_send":
+      return (ids) => shipmentService.bulkPickup(ids, "W");
+    case "pickup_confirm":
+      return (ids) => shipmentService.bulkPickup(ids, "C");
+    case "pickup_picked":
+      return (ids) => shipmentService.bulkPickup(ids, "E");
+    case "pickup_failed":
+      return (ids) => shipmentService.bulkPickup(ids, "F");
+    case "pickup_reset":
+      return (ids) => shipmentService.bulkPickup(ids, "N");
+    case "cod_collected":
+      return (ids) => shipmentService.bulkCod(ids, "C");
+    case "cod_bank":
+      return (ids) => shipmentService.bulkCod(ids, "B");
+    case "cod_annul":
+      return (ids) => shipmentService.bulkCod(ids, "CLC");
+    default:
+      return null;
   }
+}
+
+/** ¿La acción en curso saca el registro de la cola? (para quitar la fila al instante). */
+let currentActionLeaves = false;
+
+function runBulkAction(action: ShipmentBulkActionId): Promise<void> {
+  if (action === "tracking") return onBulkTracking();
+  const run = bulkRunner(action);
+  if (!run) return Promise.resolve();
+  currentActionLeaves = actionLeavesQueue(state.value.type, action);
+  return bulkRun.execute({
+    label: t(`listing.bulk.act.${action}`) as string,
+    run,
+    danger: BULK_ACTION_META[action].danger,
+    successMessage: (n) => t("listing.bulk.done", { count: n }) as string,
+    skippedMessage: (done, skipped) =>
+      t("listing.bulk.done_skipped", { done, skipped }) as string,
+    failedMessage: t("listing.bulk.failed") as string,
+  });
 }
 
 async function onBulkTracking(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  const count = selectedIds.value.length;
+  const { ids: safeIds } = sanitizeBulkIds(
+    selectedIds.value,
+    new Set(store.rows.map((r) => r.id)),
+  );
+  if (!safeIds.length) return;
+  const count = safeIds.length;
   bulkBusy.value = true;
   try {
     // Enqueues a background job: the tracking runs off-request and persists.
     // We confirm it was queued; the list will reflect new states on its next
     // refresh (the job is not instantaneous).
-    const r = await shipmentService.bulkTracking(selectedIds.value);
+    const r = await shipmentService.bulkTracking(safeIds);
     if (r.success && r.queued) {
       toasts.push("success", t("listing.toast.tracking_queued", count));
       selected.value = [];
@@ -1340,10 +1406,24 @@ watch(kpiFilterKey, () => {
   void refreshKpiCounts();
 });
 
+// Cola de trabajo por defecto (Jose_master: LISTA.coda('dacontr')): quien entra al listado SIN ningún
+// parámetro cae en «Por controlar», no en «todas». Solo el personal TMWE (`is_admin`): es su flujo de
+// trabajo; el partner sigue viendo todo. Solo en la primera entrada: al volver de un detalle manda la URL,
+// y quien eligió «Todas» a mano no vuelve a la cola. Cualquier parámetro (?search=, ?id_cliente=,
+// ?view=…) significa «vengo por un registro o contexto»: sin cola.
+const { isAdmin } = useNavRole();
+let firstEntry = true;
+
 async function enterList(): Promise<void> {
   entering = true;
+  const useDefaultQueue =
+    firstEntry && isAdmin.value && Object.keys(route.query).length === 0;
+  firstEntry = false;
   try {
     syncUrlToState();
+    if (useDefaultQueue) {
+      store.applyState({ type: DEFAULT_SHIPMENT_QUEUE, kpi: "", page: 1 });
+    }
     await store.fetchPage();
   } finally {
     entering = false;
@@ -1376,6 +1456,23 @@ async function enterList(): Promise<void> {
 // los 3 recuentos de KPI). Al reactivar se invalidan los KPI para que se
 // vuelvan a contar aunque el filtro no haya cambiado.
 useListEntry(enterList, { onReenter: kpi.invalidate });
+
+// Al volver a la pestaña tras un rato, se relee la cola (otro operador o el proceso de fondo pudieron
+// moverla). No se toca la lista si hay una ficha abierta, un diálogo, filas seleccionadas o una carga.
+useVisibilityRefresh({
+  refresh: () => {
+    kpi.invalidate();
+    void refreshKpiCounts();
+    return store.fetchPage();
+  },
+  isBusy: () =>
+    store.loading ||
+    bulkRun.busy.value ||
+    bulkBusy.value ||
+    selected.value.length > 0 ||
+    openViewId.value != null ||
+    !!confirmStore.active,
+});
 
 // Leaving the listing: cancel the in-flight page and clear any stale error.
 // Without this the request keeps running against a page nobody is looking at,

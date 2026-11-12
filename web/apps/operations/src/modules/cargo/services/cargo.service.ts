@@ -577,7 +577,12 @@ export const cargoListService = {
     });
   },
 
-  bulkControl(ids: number[]): Promise<{ success: boolean; error?: string }> {
+  bulkControl(ids: number[]): Promise<{
+    success: boolean;
+    error?: string;
+    applied?: number[];
+    skipped?: Array<{ id: number; reason: string }>;
+  }> {
     return http("/api_cargo_review", {
       method: "POST",
       body: { id: ids },

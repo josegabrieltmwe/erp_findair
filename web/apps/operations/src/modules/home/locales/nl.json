@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, expreskoerier en dagelijkse handelingen"
             },
-            "cta": {
-                "new_cargo": "Nieuwe cargo",
-                "new_cargo_sub": "Luchtvrachtzending aanmaken",
-                "new_shipment": "Nieuwe zending",
-                "new_shipment_sub": "Koerierzending aanmaken"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Hulpmiddelen",
@@ -235,7 +229,6 @@
             "see_all": "Alles bekijken"
         },
         "landing": {
-            "title": "Wat wilt u doen?",
             "subtitle": "Snelle toegang tot uw dagelijkse werk",
             "activities_button": "Activiteiten van vandaag",
             "activities_hint": "Openstaande punten, vertragingen en taken. Berekend bij het openen.",
@@ -244,10 +237,6 @@
             "refresh": "Vernieuwen",
             "new_actions": "Aanmaken",
             "updated_at": "Bijgewerkt om {time}",
-            "search_placeholder": "Zoeken op referentie, klant, AWB…",
-            "search_shipments": "Zendingen",
-            "search_cargo": "Cargo",
-            "search_button": "Zoeken",
             "attention_title": "Vraagt je aandacht",
             "attention_empty": "Alles bijgewerkt",
             "attention_error": "De meldingen konden niet worden geladen.",
@@ -260,7 +249,6 @@
             "title": "Vandaag te doen",
             "all_groups": "Alle",
             "error": "Sommige aantallen konden niet worden geladen.",
-            "list_approximate": "de lijst past dit filter niet toe",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +290,6 @@
                     "label": "Ophalingen te boeken bij koeriers",
                     "desc": "boek de ophaling"
                 },
-                "giac_dacom": {
-                    "label": "Stilstanden door te geven aan de klant",
-                    "desc": "open, klant nog niet op de hoogte"
-                },
-                "giac_forn": {
-                    "label": "Instructies voor de leverancier",
-                    "desc": "de klant heeft geantwoord"
-                },
-                "giac15": {
-                    "label": "Stilstanden langer dan 15 dagen",
-                    "desc": "informeren, beslissen"
-                },
                 "open_cases": {
                     "label": "Open dossiers",
                     "desc": "op te pakken of te beantwoorden"
@@ -330,13 +306,25 @@
                     "label": "Cargo-berichten te beantwoorden",
                     "desc": "vragen van partners over cargo"
                 },
-                "incassare": {
-                    "label": "Klanten met achterstallige betalingen",
-                    "desc": "vervallen termijnen: aanmanen"
-                },
                 "dafatt": {
                     "label": "Te factureren tot vandaag",
                     "desc": "klanten met afgesloten, niet gefactureerde diensten"
+                },
+                "giac_to_notify_client": {
+                    "label": "Stilstanden door te geven aan de klant",
+                    "desc": "open, klant nog niet op de hoogte"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Instructies voor de leverancier",
+                    "desc": "de klant heeft geantwoord"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Stilstanden langer dan 15 dagen",
+                    "desc": "informeren, beslissen"
+                },
+                "payments_overdue_customers": {
+                    "label": "Klanten met achterstallige betalingen",
+                    "desc": "minstens één vervallen termijn: aanmanen"
                 }
             }
         }

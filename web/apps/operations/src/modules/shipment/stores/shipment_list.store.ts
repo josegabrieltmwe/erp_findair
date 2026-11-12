@@ -421,6 +421,18 @@ export const useShipmentListStore = defineStore("shipment_list", () => {
     }
   }
 
+  /**
+   * Quita de la vista los registros que acaban de salir de la cola (aplicados por un lote). Es solo
+   * feedback inmediato: la relectura del API que sigue es la que manda.
+   */
+  function removeRows(ids: readonly number[]): void {
+    if (ids.length === 0) return;
+    const gone = new Set(ids);
+    const before = rows.value.length;
+    rows.value = rows.value.filter((r) => !gone.has(r.id));
+    total.value = Math.max(0, total.value - (before - rows.value.length));
+  }
+
   async function refresh(): Promise<void> {
     state.value.page = 1;
     await fetchPage(false);
@@ -460,6 +472,7 @@ export const useShipmentListStore = defineStore("shipment_list", () => {
     applyState,
     reset,
     fetchPage,
+    removeRows,
     cancelInFlight,
     refresh,
     loadMore,

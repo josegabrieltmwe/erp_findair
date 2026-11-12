@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, Expresskurier und tägliche Vorgänge"
             },
-            "cta": {
-                "new_cargo": "Neue Cargo",
-                "new_cargo_sub": "Luftfrachtsendung erstellen",
-                "new_shipment": "Neue Sendung",
-                "new_shipment_sub": "Kuriersendung erstellen"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Werkzeuge",
@@ -235,7 +229,6 @@
             "see_all": "Alle anzeigen"
         },
         "landing": {
-            "title": "Was möchten Sie tun?",
             "subtitle": "Schnellzugriff auf Ihre tägliche Arbeit",
             "activities_button": "Tagesaktivitäten",
             "activities_hint": "Offene Punkte, Verzögerungen und Aufgaben. Werden beim Öffnen berechnet.",
@@ -244,10 +237,6 @@
             "refresh": "Aktualisieren",
             "new_actions": "Erstellen",
             "updated_at": "Aktualisiert um {time}",
-            "search_placeholder": "Suche nach Referenz, Kunde, AWB…",
-            "search_shipments": "Sendungen",
-            "search_cargo": "Cargo",
-            "search_button": "Suchen",
             "attention_title": "Erfordert Ihre Aufmerksamkeit",
             "attention_empty": "Alles erledigt",
             "attention_error": "Die Hinweise konnten nicht geladen werden.",
@@ -260,7 +249,6 @@
             "title": "Heute zu tun",
             "all_groups": "Alle",
             "error": "Einige Zahlen konnten nicht geladen werden.",
-            "list_approximate": "die Liste wendet diesen Filter nicht an",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +290,6 @@
                     "label": "Abholungen beim Kurier zu buchen",
                     "desc": "Abholung buchen"
                 },
-                "giac_dacom": {
-                    "label": "Lagerungen dem Kunden mitzuteilen",
-                    "desc": "offen, Kunde noch nicht informiert"
-                },
-                "giac_forn": {
-                    "label": "Anweisungen an den Lieferanten",
-                    "desc": "der Kunde hat geantwortet"
-                },
-                "giac15": {
-                    "label": "Lagerungen über 15 Tage",
-                    "desc": "informieren, entscheiden"
-                },
                 "open_cases": {
                     "label": "Offene Fälle",
                     "desc": "zu übernehmen oder zu beantworten"
@@ -330,13 +306,25 @@
                     "label": "Cargo-Nachrichten zu beantworten",
                     "desc": "Partneranfragen zu Cargos"
                 },
-                "incassare": {
-                    "label": "Kunden mit überfälligen Zahlungen",
-                    "desc": "überfällige Raten: mahnen"
-                },
                 "dafatt": {
                     "label": "Bis heute zu fakturieren",
                     "desc": "Kunden mit abgeschlossenen, nicht fakturierten Leistungen"
+                },
+                "giac_to_notify_client": {
+                    "label": "Lagerungen dem Kunden mitzuteilen",
+                    "desc": "offen, Kunde noch nicht informiert"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Anweisungen an den Lieferanten",
+                    "desc": "der Kunde hat geantwortet"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Lagerungen über 15 Tage",
+                    "desc": "informieren, entscheiden"
+                },
+                "payments_overdue_customers": {
+                    "label": "Kunden mit überfälligen Zahlungen",
+                    "desc": "mindestens eine überfällige Rate: mahnen"
                 }
             }
         }

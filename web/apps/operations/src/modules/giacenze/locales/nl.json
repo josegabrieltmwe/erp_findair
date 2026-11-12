@@ -35,11 +35,11 @@
       "autoCloseDays": "Max. dagen",
       "autoCloseHint": "Sluit alle opslagposten die langer open staan dan het opgegeven aantal dagen.",
       "operations": {
-        "A": "Open",
-        "C": "Gesloten",
-        "N": "Genoteerd",
-        "R": "Heraflevering",
-        "E": "Afgehandeld"
+        "A": "In afwachting",
+        "C": "Opnieuw leveren",
+        "N": "Nieuw adres",
+        "R": "Naar afzender",
+        "E": "Afstand doen"
       },
       "aging": {
         "title": "Ouderdom",
@@ -56,7 +56,11 @@
         "autoClosed": "{count} opslag gesloten | {count} opslagposten gesloten",
         "deleteConfirm": "Deze opslag verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
         "closeConfirm": "Deze opslag sluiten?",
-        "notFound": "Opslag #{id} niet gevonden"
+        "notFound": "Opslag #{id} niet gevonden",
+        "actionFailed": "De actie kon niet worden voltooid",
+        "reopenConfirm": "Deze opslag heropenen? Er blijft een notitie achter.",
+        "reopened": "Opslag heropend",
+        "closeConfirmCharge": "Deze opslag sluiten? Kosten voor heraflevering: {amount} {currency}."
       },
       "validation": {
         "shipmentRequired": "Het zending-ID is verplicht",
@@ -73,7 +77,17 @@
         "readonly": "Alleen lezen",
         "none": "Geen adres",
         "loading": "Laden…",
-        "editDelivery": "Aflevering bewerken"
+        "editDelivery": "Aflevering bewerken",
+        "name": "Naam",
+        "street": "Adres",
+        "zip": "Postcode",
+        "city": "Plaats",
+        "province": "Provincie",
+        "country": "Land (ISO)",
+        "attention": "T.a.v.",
+        "phone": "Telefoon",
+        "keepsOriginal": "Het oorspronkelijke adres blijft bewaard en staat hieronder.",
+        "saveFailed": "Het adres kon niet worden opgeslagen"
       },
       "msg": {
         "title": "Berichten",
@@ -88,11 +102,129 @@
         "type": "Type",
         "status": "Uitkomst",
         "client": "Klant",
-        "supplier": "Koerier"
+        "supplier": "Koerier",
+        "leadClient": "Wordt verstuurd met de sjabloon voor de opslagmelding aan de klant, via de e-mailwachtrij van de partner.",
+        "leadSupplier": "Wordt verstuurd met de sjabloon voor instructies aan de vervoerder, via de e-mailwachtrij van de partner.",
+        "sendFailed": "Het bericht kon niet worden verzonden"
       },
       "replied": "Heeft geantwoord",
       "awaitingReply": "In afwachting",
-      "copyPrice": "Inkoopprijs kopiëren"
+      "copyPrice": "Inkoopprijs kopiëren",
+      "queue": {
+        "title": "Werklijsten",
+        "to_notify": "Klant informeren",
+        "waiting_client": "Wacht op klant",
+        "to_instruct_supplier": "Vervoerder instrueren",
+        "over_15": "Meer dan 15 dagen",
+        "open": "Open",
+        "closed": "Gesloten",
+        "all": "Alle",
+        "hint": {
+          "to_notify": "Open opslagen waarvoor de klant nog niet is geïnformeerd.",
+          "waiting_client": "Klant geïnformeerd maar nog zonder instructies.",
+          "to_instruct_supplier": "De klant heeft geantwoord: de vervoerder mist nog instructies.",
+          "over_15": "Langer dan 15 dagen open.",
+          "open": "Alle niet-gesloten opslagen.",
+          "closed": "Reeds gesloten opslagen.",
+          "all": "Niet op status gefilterd."
+        }
+      },
+      "shipmentBanner": "Opslagen van zending {id}",
+      "showAll": "Alles tonen",
+      "backToShipment": "Terug naar de zending",
+      "openShipment": "Zending openen",
+      "nextStep": "Volgende stap",
+      "clientNotified": "Klant geïnformeerd",
+      "supplierNotified": "Vervoerder geïnformeerd",
+      "yes": "Ja",
+      "no": "Nee",
+      "indicator": "Indicator",
+      "step": {
+        "closed": "Gesloten",
+        "notify_client": "Klant informeren",
+        "waiting_client": "Wacht op klant",
+        "instruct_supplier": "Vervoerder instrueren",
+        "ready_to_close": "Klaar om te sluiten"
+      },
+      "empty": {
+        "to_notify": "Geen opslagen om aan de klant te melden. De overige open staan onder «Open».",
+        "generic": "Geen opslagen."
+      },
+      "bulk": {
+        "selected": "{count} geselecteerd",
+        "close": "Geselecteerde sluiten",
+        "clear": "Selectie wissen",
+        "nothingToClose": "De geselecteerde zijn al gesloten.",
+        "closeConfirm": "{count} opslagen sluiten?",
+        "done": "{count} opslagen gesloten",
+        "partial": "{ok} gesloten; {failed} mislukt (#{ids})"
+      },
+      "reopen": "Opslag heropenen",
+      "create": {
+        "title": "Nieuwe opslag",
+        "lead": "Kies de zending in opslag. Bij het aanmaken wordt de klant altijd per e-mail geïnformeerd, met de afzender van de partner.",
+        "shipment": "Zending",
+        "shipmentHint": "Zoek op nummer, AWB, klant of ontvanger",
+        "typeToSearch": "Typ minstens 2 tekens",
+        "existing": "Deze zending heeft al een open opslag: die wordt geopend, er wordt geen tweede aangemaakt.",
+        "willNotify": "Bij het aanmaken ontvangt de klant een e-mail.",
+        "openExisting": "Bestaande openen",
+        "submit": "Aanmaken en klant informeren",
+        "failed": "De opslag kon niet worden aangemaakt"
+      },
+      "detail": {
+        "title": "Opslag #{id}",
+        "open": "Open",
+        "openedAgo": "Geopend op {date} ({days} dagen geleden)",
+        "next": "Volgende"
+      },
+      "fix": {
+        "closed": "Opslag gesloten. Indien nodig kun je hem heropenen.",
+        "notify_client": "De klant is nog niet geïnformeerd.",
+        "waiting_client": "Klant geïnformeerd: wacht op zijn instructies. Noteer ze hieronder zodra je ze hebt.",
+        "instruct_supplier": "De klant heeft geantwoord: de vervoerder mist nog instructies.",
+        "ready_to_close": "Alles gedaan: klaar om te sluiten."
+      },
+      "act": {
+        "notifyClient": "Klant informeren",
+        "notifySupplier": "Vervoerder informeren"
+      },
+      "cycle": {
+        "title": "Verloop",
+        "client_notified": "Klant geïnformeerd",
+        "client_reply": "Instructies van de klant ontvangen",
+        "supplier_notified": "Instructies aan de vervoerder gegeven"
+      },
+      "esito": {
+        "title": "Uitkomst",
+        "missing": "De uitkomst ontbreekt.",
+        "hint": {
+          "A": "Blijft liggen in afwachting van instructies",
+          "C": "De vervoerder levert opnieuw op hetzelfde adres",
+          "N": "De vervoerder levert op een ander adres",
+          "R": "De vervoerder stuurt de colli terug naar de afzender",
+          "E": "De colli worden achtergelaten"
+        },
+        "confirm": {
+          "A": "De opslag laten wachten op instructies? Het antwoord van de klant wordt gewist.",
+          "C": "De vervoerder levert opnieuw op hetzelfde adres. Daarna kun je hem informeren.",
+          "N": "De vervoerder levert op een ander adres: controleer eerst het afleveradres rechts. Daarna kun je hem informeren.",
+          "R": "De vervoerder stuurt de colli terug naar de afzender. Daarna kun je hem informeren.",
+          "E": "De colli worden achtergelaten. Daarna kun je de vervoerder informeren."
+        }
+      },
+      "instr": {
+        "title": "Instructies en notities",
+        "client": "Instructies van de klant",
+        "clientHint": "Bij opslaan wordt vastgelegd dat de klant heeft geantwoord.",
+        "save": "Instructies opslaan"
+      },
+      "deposit": {
+        "title": "Opslag en kosten",
+        "daysHint": "Dagen in opslag: bepalen de kosten",
+        "save": "Opslag bewaren"
+      },
+      "notAvailable": "n.v.t."
     }
   }
 }

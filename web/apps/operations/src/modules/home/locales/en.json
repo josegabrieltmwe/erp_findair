@@ -5,12 +5,6 @@
                 "title": "TMWE — Home",
                 "subtitle": "Cargo, express courier and daily operations"
             },
-            "cta": {
-                "new_cargo": "New cargo",
-                "new_cargo_sub": "Create air shipment",
-                "new_shipment": "New shipment",
-                "new_shipment_sub": "Create courier shipment"
-            },
             "menu": {
                 "group_import": "Import",
                 "group_tools": "Tools",
@@ -235,7 +229,6 @@
             "see_all": "See all"
         },
         "landing": {
-            "title": "What do you need to do?",
             "subtitle": "Quick access to your daily work",
             "activities_button": "Today's activities",
             "activities_hint": "Pending items, delays and tasks. Calculated when opened.",
@@ -244,10 +237,6 @@
             "refresh": "Refresh",
             "new_actions": "Create",
             "updated_at": "Updated at {time}",
-            "search_placeholder": "Search by reference, customer, AWB…",
-            "search_shipments": "Shipments",
-            "search_cargo": "Cargo",
-            "search_button": "Search",
             "attention_title": "Needs your attention",
             "attention_empty": "All caught up",
             "attention_error": "The alerts could not be loaded.",
@@ -260,7 +249,6 @@
             "title": "To do today",
             "all_groups": "All",
             "error": "Some numbers could not be loaded.",
-            "list_approximate": "the list does not apply this filter",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +290,6 @@
                     "label": "Pickups to book with carriers",
                     "desc": "book the pickup"
                 },
-                "giac_dacom": {
-                    "label": "Holds to tell the customer",
-                    "desc": "open, customer not yet informed"
-                },
-                "giac_forn": {
-                    "label": "Instructions to give the carrier",
-                    "desc": "the customer has replied"
-                },
-                "giac15": {
-                    "label": "Holds over 15 days",
-                    "desc": "notify, decide"
-                },
                 "open_cases": {
                     "label": "Open cases",
                     "desc": "to take on or answer"
@@ -330,13 +306,25 @@
                     "label": "Cargo messages to answer",
                     "desc": "partner requests about cargos"
                 },
-                "incassare": {
-                    "label": "Customers with overdue payments",
-                    "desc": "overdue instalments: send a reminder"
-                },
                 "dafatt": {
                     "label": "To invoice up to today",
                     "desc": "customers with closed, uninvoiced services"
+                },
+                "giac_to_notify_client": {
+                    "label": "Holds to tell the customer",
+                    "desc": "open, customer not yet informed"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Instructions to give the carrier",
+                    "desc": "the customer has replied"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Holds over 15 days",
+                    "desc": "notify, decide"
+                },
+                "payments_overdue_customers": {
+                    "label": "Customers with overdue payments",
+                    "desc": "at least one overdue instalment: send a reminder"
                 }
             }
         }

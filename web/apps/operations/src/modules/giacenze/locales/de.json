@@ -35,11 +35,11 @@
       "autoCloseDays": "Max. Tage",
       "autoCloseHint": "Schließt alle Lagerungen, die länger als die angegebene Anzahl Tage offen sind.",
       "operations": {
-        "A": "Offen",
-        "C": "Geschlossen",
-        "N": "Vermerkt",
-        "R": "Erneute Zustellung",
-        "E": "Erledigt"
+        "A": "Wartet",
+        "C": "Erneut zustellen",
+        "N": "Neue Adresse",
+        "R": "An Absender",
+        "E": "Aufgeben"
       },
       "aging": {
         "title": "Alter",
@@ -56,7 +56,11 @@
         "autoClosed": "{count} Lagerung geschlossen | {count} Lagerungen geschlossen",
         "deleteConfirm": "Diese Lagerung löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.",
         "closeConfirm": "Diese Lagerung schließen?",
-        "notFound": "Lagerung #{id} nicht gefunden"
+        "notFound": "Lagerung #{id} nicht gefunden",
+        "actionFailed": "Die Aktion konnte nicht abgeschlossen werden",
+        "reopenConfirm": "Diese Lagerung wieder öffnen? Es bleibt ein Vermerk in den Notizen.",
+        "reopened": "Lagerung wieder geöffnet",
+        "closeConfirmCharge": "Diese Lagerung schließen? Gebühr für erneute Zustellung: {amount} {currency}."
       },
       "validation": {
         "shipmentRequired": "Die Sendungs-ID ist erforderlich",
@@ -73,7 +77,17 @@
         "readonly": "Schreibgeschützt",
         "none": "Keine Adresse",
         "loading": "Wird geladen…",
-        "editDelivery": "Zustellung bearbeiten"
+        "editDelivery": "Zustellung bearbeiten",
+        "name": "Name",
+        "street": "Adresse",
+        "zip": "PLZ",
+        "city": "Ort",
+        "province": "Provinz",
+        "country": "Land (ISO)",
+        "attention": "Zu Händen",
+        "phone": "Telefon",
+        "keepsOriginal": "Die ursprüngliche Adresse bleibt erhalten und wird unten angezeigt.",
+        "saveFailed": "Die Adresse konnte nicht gespeichert werden"
       },
       "msg": {
         "title": "Nachrichten",
@@ -88,11 +102,129 @@
         "type": "Typ",
         "status": "Ergebnis",
         "client": "Kunde",
-        "supplier": "Kurier"
+        "supplier": "Kurier",
+        "leadClient": "Wird mit der Vorlage für die Lagerungsmitteilung an den Kunden über die E-Mail-Warteschlange des Partners gesendet.",
+        "leadSupplier": "Wird mit der Vorlage für Anweisungen an den Spediteur über die E-Mail-Warteschlange des Partners gesendet.",
+        "sendFailed": "Die Nachricht konnte nicht gesendet werden"
       },
       "replied": "Hat geantwortet",
       "awaitingReply": "Ausstehend",
-      "copyPrice": "Einkaufspreis kopieren"
+      "copyPrice": "Einkaufspreis kopieren",
+      "queue": {
+        "title": "Arbeitslisten",
+        "to_notify": "Kunde informieren",
+        "waiting_client": "Wartet auf Kunde",
+        "to_instruct_supplier": "Spediteur anweisen",
+        "over_15": "Über 15 Tage",
+        "open": "Offen",
+        "closed": "Geschlossen",
+        "all": "Alle",
+        "hint": {
+          "to_notify": "Offene Lagerungen, bei denen der Kunde noch nicht informiert wurde.",
+          "waiting_client": "Kunde informiert, aber noch ohne Anweisungen.",
+          "to_instruct_supplier": "Der Kunde hat geantwortet: der Spediteur braucht noch Anweisungen.",
+          "over_15": "Seit mehr als 15 Tagen offen.",
+          "open": "Alle nicht geschlossenen Lagerungen.",
+          "closed": "Bereits geschlossene Lagerungen.",
+          "all": "Nicht nach Status gefiltert."
+        }
+      },
+      "shipmentBanner": "Lagerungen der Sendung {id}",
+      "showAll": "Alle anzeigen",
+      "backToShipment": "Zurück zur Sendung",
+      "openShipment": "Sendung öffnen",
+      "nextStep": "Nächster Schritt",
+      "clientNotified": "Kunde informiert",
+      "supplierNotified": "Spediteur informiert",
+      "yes": "Ja",
+      "no": "Nein",
+      "indicator": "Kennzahl",
+      "step": {
+        "closed": "Geschlossen",
+        "notify_client": "Kunde informieren",
+        "waiting_client": "Wartet auf Kunde",
+        "instruct_supplier": "Spediteur anweisen",
+        "ready_to_close": "Bereit zum Schließen"
+      },
+      "empty": {
+        "to_notify": "Keine Lagerungen, die dem Kunden mitzuteilen sind. Die übrigen offenen stehen unter «Offen».",
+        "generic": "Keine Lagerungen."
+      },
+      "bulk": {
+        "selected": "{count} ausgewählt",
+        "close": "Ausgewählte schließen",
+        "clear": "Auswahl aufheben",
+        "nothingToClose": "Die ausgewählten sind bereits geschlossen.",
+        "closeConfirm": "{count} Lagerungen schließen?",
+        "done": "{count} Lagerungen geschlossen",
+        "partial": "{ok} geschlossen; {failed} fehlgeschlagen (#{ids})"
+      },
+      "reopen": "Lagerung wieder öffnen",
+      "create": {
+        "title": "Neue Lagerung",
+        "lead": "Wähle die eingelagerte Sendung. Beim Anlegen wird der Kunde immer per E-Mail informiert, mit dem Absender des Partners.",
+        "shipment": "Sendung",
+        "shipmentHint": "Suche nach Nummer, AWB, Kunde oder Empfänger",
+        "typeToSearch": "Mindestens 2 Zeichen eingeben",
+        "existing": "Diese Sendung hat bereits eine offene Lagerung: diese wird geöffnet, es wird keine weitere angelegt.",
+        "willNotify": "Beim Anlegen wird dem Kunden eine E-Mail gesendet.",
+        "openExisting": "Vorhandene öffnen",
+        "submit": "Anlegen und Kunde informieren",
+        "failed": "Die Lagerung konnte nicht angelegt werden"
+      },
+      "detail": {
+        "title": "Lagerung #{id}",
+        "open": "Offen",
+        "openedAgo": "Geöffnet am {date} (vor {days} Tagen)",
+        "next": "Weiter"
+      },
+      "fix": {
+        "closed": "Lagerung geschlossen. Bei Bedarf kann sie wieder geöffnet werden.",
+        "notify_client": "Der Kunde wurde noch nicht informiert.",
+        "waiting_client": "Kunde informiert: wartet auf seine Anweisungen. Trage sie unten ein, sobald sie vorliegen.",
+        "instruct_supplier": "Der Kunde hat geantwortet: der Spediteur braucht noch Anweisungen.",
+        "ready_to_close": "Alles erledigt: bereit zum Schließen."
+      },
+      "act": {
+        "notifyClient": "Kunde informieren",
+        "notifySupplier": "Spediteur informieren"
+      },
+      "cycle": {
+        "title": "Ablauf",
+        "client_notified": "Kunde informiert",
+        "client_reply": "Anweisungen des Kunden erhalten",
+        "supplier_notified": "Anweisungen an den Spediteur gegeben"
+      },
+      "esito": {
+        "title": "Ergebnis",
+        "missing": "Das Ergebnis fehlt.",
+        "hint": {
+          "A": "Bleibt liegen und wartet auf Anweisungen",
+          "C": "Der Spediteur stellt an dieselbe Adresse erneut zu",
+          "N": "Der Spediteur stellt an eine andere Adresse zu",
+          "R": "Der Spediteur schickt die Packstücke an den Absender zurück",
+          "E": "Die Packstücke werden aufgegeben"
+        },
+        "confirm": {
+          "A": "Lagerung auf Anweisungen warten lassen? Die Antwort des Kunden wird gelöscht.",
+          "C": "Der Spediteur stellt an dieselbe Adresse erneut zu. Danach kannst du ihn informieren.",
+          "N": "Der Spediteur stellt an eine andere Adresse zu: prüfe zuerst die Lieferadresse rechts. Danach kannst du ihn informieren.",
+          "R": "Der Spediteur schickt die Packstücke an den Absender zurück. Danach kannst du ihn informieren.",
+          "E": "Die Packstücke werden aufgegeben. Danach kannst du den Spediteur informieren."
+        }
+      },
+      "instr": {
+        "title": "Anweisungen und Notizen",
+        "client": "Anweisungen des Kunden",
+        "clientHint": "Beim Speichern wird vermerkt, dass der Kunde geantwortet hat.",
+        "save": "Anweisungen speichern"
+      },
+      "deposit": {
+        "title": "Lagerung und Gebühr",
+        "daysHint": "Lagertage: bestimmen die Gebühr",
+        "save": "Lagerung speichern"
+      },
+      "notAvailable": "k. A."
     }
   }
 }

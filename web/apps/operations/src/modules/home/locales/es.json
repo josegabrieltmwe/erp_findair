@@ -5,12 +5,6 @@
                 "title": "TMWE — Inicio",
                 "subtitle": "Cargo, mensajería express y operaciones diarias"
             },
-            "cta": {
-                "new_cargo": "Nuevo cargo",
-                "new_cargo_sub": "Crear expedición aérea",
-                "new_shipment": "Nueva expedición",
-                "new_shipment_sub": "Crear expedición de mensajería"
-            },
             "menu": {
                 "group_import": "Importar",
                 "group_tools": "Herramientas",
@@ -235,7 +229,6 @@
             "see_all": "Ver todo"
         },
         "landing": {
-            "title": "¿Qué necesitas hacer?",
             "subtitle": "Accesos rápidos a tu trabajo diario",
             "activities_button": "Actividades del día",
             "activities_hint": "Pendientes, retrasos y tareas. Se calculan al abrir.",
@@ -244,10 +237,6 @@
             "refresh": "Actualizar",
             "new_actions": "Crear",
             "updated_at": "Actualizado a las {time}",
-            "search_placeholder": "Buscar por referencia, cliente, AWB…",
-            "search_shipments": "Expediciones",
-            "search_cargo": "Cargo",
-            "search_button": "Buscar",
             "attention_title": "Requiere tu atención",
             "attention_empty": "Todo al día",
             "attention_error": "No se pudieron cargar los avisos.",
@@ -260,7 +249,6 @@
             "title": "Por hacer hoy",
             "all_groups": "Todos",
             "error": "No se pudieron cargar algunos números.",
-            "list_approximate": "la lista no aplica este filtro",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +290,6 @@
                     "label": "Recogidas por reservar al courier",
                     "desc": "reserva la recogida"
                 },
-                "giac_dacom": {
-                    "label": "Giacenzas por comunicar al cliente",
-                    "desc": "abiertas, cliente aún sin avisar"
-                },
-                "giac_forn": {
-                    "label": "Instrucciones por dar al proveedor",
-                    "desc": "el cliente ya respondió"
-                },
-                "giac15": {
-                    "label": "Giacenzas de más de 15 días",
-                    "desc": "avisa, decide"
-                },
                 "open_cases": {
                     "label": "Casos abiertos",
                     "desc": "por atender o responder"
@@ -330,13 +306,25 @@
                     "label": "Mensajes de cargo por responder",
                     "desc": "consultas de partners sobre cargos"
                 },
-                "incassare": {
-                    "label": "Clientes con vencido por cobrar",
-                    "desc": "cuotas vencidas: reclama"
-                },
                 "dafatt": {
                     "label": "Por facturar hasta hoy",
                     "desc": "clientes con servicios cerrados sin facturar"
+                },
+                "giac_to_notify_client": {
+                    "label": "Giacenzas por comunicar al cliente",
+                    "desc": "abiertas, cliente aún sin avisar"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Instrucciones por dar al proveedor",
+                    "desc": "el cliente ya respondió"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Giacenzas de más de 15 días",
+                    "desc": "avisa, decide"
+                },
+                "payments_overdue_customers": {
+                    "label": "Clientes con vencido por cobrar",
+                    "desc": "al menos una cuota vencida: reclama"
                 }
             }
         }

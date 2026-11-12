@@ -2,13 +2,13 @@
  * Store de «Da fare oggi»: contadores especiales (sin KPI propio) y último valor bueno.
  *
  * - Cada fuente se pide por separado y un fallo solo afecta a sus tarjetas (`null` = «n/d»).
- * - Las fuentes ligeras salen primero; las que recorren páginas, después.
+ * - Todas son peticiones de conteo (ver `countRequests`): la home nunca pide listados.
  * - El último valor bueno de cada tarjeta se guarda en `localStorage` con su hora: al volver a
  *   la home (o recargar) se enseña de inmediato mientras llega el dato fresco.
  */
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { HEAVY_SOURCES, LIGHT_SOURCES } from "./today_special.service";
+import { SPECIAL_SOURCES } from "./today_special.service";
 
 const STORAGE_KEY = "tmwe_today_v1";
 /** Cuánto vale un dato especial antes de volver a pedirlo al entrar en la home. */
@@ -94,15 +94,11 @@ export const useTodayStore = defineStore("today", () => {
   ): Promise<void> {
     if (!force && Date.now() - lastLoadedAt.value < FRESH_MS) return;
     lastLoadedAt.value = Date.now();
-    const pick = (group: typeof LIGHT_SOURCES) =>
-      Object.entries(group).filter(([, s]) =>
-        s.keys.some((k) => wanted.has(k)),
-      );
+    // Todas son peticiones de conteo (una fila como mucho): salen a la vez, cada una aislada de las demás.
     await Promise.all(
-      pick(LIGHT_SOURCES).map(([name, s]) => runSource(name, s)),
-    );
-    await Promise.all(
-      pick(HEAVY_SOURCES).map(([name, s]) => runSource(name, s)),
+      Object.entries(SPECIAL_SOURCES)
+        .filter(([, source]) => source.keys.some((k) => wanted.has(k)))
+        .map(([name, source]) => runSource(name, source)),
     );
   }
 

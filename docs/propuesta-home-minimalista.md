@@ -100,7 +100,7 @@ Riesgo bajo: no cambia rutas ni permisos; los accesos retirados de la home sigue
 
 ## Actualización 2026-11-12: «Da fare oggi» en la home
 
-Se sustituyó el bloque «Requiere tu atención» (6 avisos) por la franja **«Da fare oggi»**, portada de la home de `Jose_master` (`tmwe2/index.html`, sección «DA FARE OGGI»). La home sigue siendo buscador + crear + esta franja; el cuadro de mando completo sigue en `/home/indicators`.
+Se sustituyó el bloque «Requiere tu atención» (6 avisos) por la franja **«Da fare oggi»**, portada de la home de `Jose_master` (`tmwe2/index.html`, sección «DA FARE OGGI»). La home (ver la actualización siguiente) queda con esta franja; el cuadro de mando completo sigue en `/home/indicators`.
 
 **Qué hace** (`web/packages/platform/dashboard/TodayBoard.vue`):
 - Tarjetas curadas y transversales en 6 grupos (Express, Cargo, Recogidas, Asistencia, Mensajes, Administración), con carril vertical para filtrar por grupo cuando hay más de uno.
@@ -113,6 +113,13 @@ Se sustituyó el bloque «Requiere tu atención» (6 avisos) por la franja **«D
 **Dónde está el código:** catálogo y reglas puras en `today_catalog.ts`; contadores sin KPI propio en `today_special.service.ts`; estado en `today.store.ts`; textos en `home.today.*` (5 idiomas). Los 33 KPI del catálogo siguen en `home_kpi_catalog.ts`; las tarjetas «de catálogo» reutilizan la misma fuente del cockpit.
 
 **Límites conocidos:**
-- Las tarjetas `giac_dacom`, `giac_forn`, `prese_daaff`, `pratiche_lav` e `incassare` llevan a su pantalla, pero esa lista **no aplica el mismo filtro** que el número (las pantallas no leen esos filtros de la URL). Lo dice la propia tarjeta («la lista no aplica este filtro»). Petición abierta: P118 en [contrato-con-api.md](contrato-con-api.md).
+- **La home solo pide conteos**, nunca listados. Los números salen de los indicadores del API (`api_home_box_indicators`: `giac_to_notify_client`, `giac_to_instruct_supplier`, `giac_open_over_15_days`, `payments_overdue_customers`, además de los KPI de courier/cargo) o de conteos (`per_page=1` / `count_only=1`) en `countRequests` (`today_catalog.ts`); un test impide que se añada una petición que traiga una página de datos. Ver P118 en [contrato-con-api.md](contrato-con-api.md).
+- **Cada card abre una lista con la misma regla que su número.** Giacenze: `?indicator=` (el API aplica la regla del indicador); ritiri: `?queue=to_assign`; pratiche: `?stato_pratica=L`; cobros: `?statop=SC`; devoluciones: `?consegna_stato=5`; chat: `?chat_unread=1`. La lista de cobros muestra cuotas y la card cuenta clientes distintos.
 - «Da fatturare» y «Fatture dei fornitori» (sin número en Jose_master) solo están como acceso, no como contador. Solo se portó la primera.
 - No se portó la cola por defecto «Da controllare» del listado ni el carril de cestinos con contadores dentro de la lista: son cambios de comportamiento del listado, aparte.
+
+## Actualización 2026-11-12: se retira de la home el buscador y «Nuevo…»
+
+El buscador (con el selector Expediciones/Cargo) y los botones «Nuevo cargo» / «Nueva expedición» de la home duplicaban la barra superior (`PlatformTopBar`: `PlatformSearch` y `PlatformNewShipment`, este último con Cargo, Courier y Nuevo cliente). Se eliminaron de `HomeLandingPage.vue`, junto con sus textos (`home.landing.title`, `search_*`, `home.home.cta`). La home queda en «Da fare oggi» + enlace a Indicadores.
+
+Corrección a §2.1: **sí existe un buscador global** (`PlatformSearch`, `/api_platform_search`, atajo `/`; devuelve cargo, expedición y anagrafica). Lo único que se pierde es ir a la lista filtrada por texto (`?search=`): ahora se abre un resultado concreto, o se filtra desde la propia lista.

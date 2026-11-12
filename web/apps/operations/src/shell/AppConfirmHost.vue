@@ -47,5 +47,7 @@ const { t } = useI18n();
   padding: var(--cm-space-sm) var(--cm-space-lg) var(--cm-space-md);
   font-size: var(--cm-fs-base);
   color: var(--cm-text-secondary);
+  /* Los lotes listan los primeros registros, uno por línea. */
+  white-space: pre-line;
 }
 </style>
