@@ -1,6 +1,6 @@
 # Plan de pruebas de la UI
 
-> **Estado:** borrador · **Última modificación:** 2026-11-04
+> **Estado:** borrador · **Última modificación:** 2026-11-13
 
 Cómo comprobar, perfil por perfil y pantalla por pantalla, que la SPA (`web/apps/operations`) funciona sobre el BFF y respeta los permisos del API. Sale de la lectura de `docs/`, del router y de los tests existentes. **No se arrancó la aplicación ni se ejecutó ninguna prueba al redactarlo.**
 ## 1. Punto de partida
@@ -271,6 +271,8 @@ Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El 
 ### Altas reales del partner (CGO-01 y SHP-01)
 
 `npm run test:alta` (proyecto `partner-alta`, `tests/partner/alta.spec.ts`) crea un cargo y una expedición courier con el usuario partner. **Escribe datos**: no corre sin `E2E_ALLOW_WRITE=1` y sin `E2E_PARTNER_CLIENT` (texto de búsqueda de un cliente propio del partner). Comprueba el botón deshabilitado sin cliente, que una sola letra no busca, la redirección al detalle y que el doble clic envía un único `POST`. No reserva, no genera AWB, no factura ni envía correos. Los IDs creados quedan en `web/e2e/.auth/ids-creados.txt` para anularlos. Antes de lanzarlo hay que confirmar que la base del API es de pruebas. `web/e2e/scripts/rellenar-env.sh` rellena `.env.e2e` del partner leyendo la BD del API local (solo lectura; `--list` muestra usuarios y clientes; `--allow-write` fija `E2E_ALLOW_WRITE=1`). Estado: escrito y listado, sin ejecutar con credenciales.
+
+`tests/staff/visor-etiquetas.spec.ts` (proyecto `staff-alta`, se lanza con `npm run test:alta-staff`) cubre el visor de etiquetas del courier: una etiqueta cada vez, anterior/siguiente y teclado, ir al bulto, zoom que se reinicia, y las URLs de descarga e impresión (`api_label_combined_pdf` y `api_label_combined_zip`, con `packages` y `disposition=inline`). **No escribe ni reserva**: exige `E2E_SHIPMENT_WITH_AWB` (id de una expedición courier que ya tenga AWB) y sustituye en el navegador las respuestas de etiquetas por 3 bultos fijos. No cubre el diálogo «AWB generado», que solo aparece al reservar una AWB real. Estado: escrito y listado (7 pruebas), sin ejecutar con credenciales.
 
 **Resultados de la primera ejecución con partner (2026-11-01, usuario `JRN9069B` de 123Logistix, BD `tmwe_development`)**
 
