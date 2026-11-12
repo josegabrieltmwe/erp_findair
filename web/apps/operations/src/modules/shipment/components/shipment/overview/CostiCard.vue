@@ -186,9 +186,10 @@ const canBill = computed<boolean>(() => {
   return a1 === 0 || a2 === 0;
 });
 const billUrl = computed<string>(() => {
-  const base =
-    (typeof window !== "undefined" && window.__TMWE_SHIPMENT__?.basePath) ||
-    "/bff/v1";
+  // Ruta de la SPA (router en "/"), no del BFF: `window.__TMWE_SHIPMENT__.basePath`
+  // es el prefijo de las llamadas JSON (/bff/v1) y nunca el de esta app montada
+  // en la raíz, así que reusarlo aquí abría `/bff/v1/invoicing` (404 del BFF,
+  // que no tiene esa ruta) en vez de `/invoicing` (la página real).
   const client = Number(get<string | number>("id_cliente") ?? 0);
   const shipId = Number(get<string | number>("id") ?? 0);
   const qs = new URLSearchParams({ new: "1" });
@@ -197,7 +198,7 @@ const billUrl = computed<string>(() => {
     qs.set("shipment", String(shipId));
     qs.set("tipo", "express");
   }
-  return `${base}/invoicing?${qs.toString()}`;
+  return `/invoicing?${qs.toString()}`;
 });
 
 async function toggleLock(
