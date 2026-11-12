@@ -1,6 +1,6 @@
 # Plan: listados de trabajo («colas») de Jose_master → SPA erp_findair
 
-> **Estado:** vigente (fases 0-2 ejecutadas; 3-6 bloqueadas por backend, ver §10) · **Última modificación:** 2026-11-12
+> **Estado:** vigente (fases 0-4 ejecutadas en código; 5-6 pendientes; falta desplegar y probar en vivo, ver §11) · **Última modificación:** 2026-11-12
 
 Origen: análisis de `Jose_master/tmwe2` (`spedizioni.html`, `cargo.html`, `giacenze.html`, `prese.html`, `crm.html`, `pagamenti.html`, `messaggi.html`; motor común en `assets/tmwe.js`: `LISTA` y `BULK`) y de `Jose_master/56_ciclo_operativo_cestini.md`. Se compara con el SPA (`web/apps/operations`, `web/packages/platform/listing`). Complementa [propuesta-home-minimalista.md](propuesta-home-minimalista.md): las tarjetas de «Da fare oggi» abren estas colas.
 
@@ -130,3 +130,17 @@ Si se confirman como peticiones, se registran en [contrato-con-api.md](contrato-
 6. **LDV masiva y listas sin preset** (chat sin leer, en viaje de partners, voces de tracking, `faddebit`): sin cambios; siguen pendientes de backend.
 
 **Qué sí puede hacerse ya, sin backend nuevo:** nada de lote con escritura de estado. Lo siguiente razonable es (a) cerrar con Luca el punto 1, (b) revisar el punto 5, y (c) las colas locales de solo lectura (giacenze, pratiche, mensajes) como selector de colas, sin lote.
+
+## 11. Decisiones de Luca (2026-11-12) y qué se hizo
+
+Respuestas a los bloqueos del §10 y su resultado (código y tests; **sin desplegar**):
+
+1. **Replicar las acciones del legado** → `tmwe_api` `POST api_shipment_bulk` `op=delivery` (códigos 2/3/7). Replica `_cambiaStato`: pasa por la máquina de estados (con historial), fija `data_corriere` al salir y `consegna_data` al entregar si faltan, y trata como no-salto la misma fase y N/V/AC→TR. Lo demás se omite, no se fuerza.
+2. **Un solo envío del set completo, todo o nada** → el API comprueba que **todos** los ids son del usuario antes de planificar o escribir (`is_access_allowed` + `Shipment_Access_Service` por fila); un solo id ajeno = 403 sin tocar nada. Tope 200. Pruebas: `ShipmentBulkControllerTest` (10), `CodReconciliationBatchTest` (5), `Shipment_Bulk_State_Service_Test` (11).
+3. **Estados de recogida como el legado** → `op=pickup` con `presa_stato` N/W/C/E/F, solo con `presa_fornitore='S'`.
+4. **COD** → **corrección de un error mío del §10.4:** el controlador de reconciliación **sí existía** (`Cod_Reconciliation_Controller`, ruta `api_cod_reconciliation`, fiel al legado). Solo faltaba el lote: se añadió `action=reconcile` + `shipment_ids[]` con el mismo todo o nada.
+5. **Giro fijo de recogidas** → sigue sin exponerse en lote hasta revisar la comprobación de propiedad de la sede en `Recurring_Pickup_Controller` (recomendación del §10.5).
+
+**SPA:** el listado de expediciones sustituye los tres botones por un menú «Acciones» que ofrece, según la cola abierta, las mismas acciones del legado (`shipmentBulkActionsFor`, equivalente a `bulkOptionsFor`): IN → controlar/salida/archivar; salidas → salida/tránsito; OUT → tránsito/entregada; recogida → los cinco estados de presa; COD → cobrado/transferencia/anulado; ofertas → solo archivar. Cada acción hace UNA petición con el set completo y el diálogo de confirmación con nombres.
+
+**Pendiente:** desplegar `tmwe_api` y el BFF; prueba en vivo con Luca (en particular `presa_stato='N'` y el COD con bonifico); fases 5-6 (colas locales de giacenze/pratiche/mensajes y cargo); LDV masiva; giro fijo.

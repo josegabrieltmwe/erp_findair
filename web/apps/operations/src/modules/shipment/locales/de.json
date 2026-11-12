@@ -1825,7 +1825,27 @@
       "capped": "Höchstens {max} pro Durchgang: nur die ersten {max} werden angewendet.",
       "foreign_dropped": "{count} ausgewählte Elemente sind nicht in der aktuellen Liste und wurden verworfen.",
       "denied": "Du hast auf einige der ausgewählten Elemente keinen Zugriff. Es wurde nichts geändert: Liste aktualisieren und erneut versuchen.",
-      "and_more": "… und {count} weitere"
+      "and_more": "… und {count} weitere",
+      "actions": "Aktionen ({count})",
+      "done": "{count} aktualisiert",
+      "done_skipped": "{done} angewendet; {skipped} lassen diese Änderung in ihrem aktuellen Status nicht zu",
+      "failed": "Die Aktion konnte nicht angewendet werden",
+      "act": {
+        "control": "Als geprüft markieren",
+        "depart": "Als abgefahren markieren (Frachtführer übergeben)",
+        "transit": "Als unterwegs markieren",
+        "deliver": "Als zugestellt markieren",
+        "archive": "Archivieren",
+        "tracking": "Tracking starten",
+        "pickup_send": "Abholung: an Frachtführer senden",
+        "pickup_confirm": "Abholung: vom Frachtführer bestätigt",
+        "pickup_picked": "Abholung: Packstücke abgeholt",
+        "pickup_failed": "Abholung: fehlgeschlagen (neu planen)",
+        "pickup_reset": "Abholung: zurück auf «zu senden»",
+        "cod_collected": "Nachnahme eingezogen",
+        "cod_bank": "Nachnahme per Überweisung eingezogen",
+        "cod_annul": "Nachnahme storniert"
+      }
     },
     "toast": {
       "archived": "{count} Sendung archiviert | {count} Sendungen archiviert",

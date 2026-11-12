@@ -1825,7 +1825,27 @@
       "capped": "Maximum {max} per run: only the first {max} are applied.",
       "foreign_dropped": "{count} selected items are not in the current list and were discarded.",
       "denied": "You don't have access to some of the selected items. Nothing was changed: refresh the list and try again.",
-      "and_more": "… and {count} more"
+      "and_more": "… and {count} more",
+      "actions": "Actions ({count})",
+      "done": "{count} updated",
+      "done_skipped": "{done} applied; {skipped} cannot take this change in their current state",
+      "failed": "The action could not be applied",
+      "act": {
+        "control": "Mark as checked",
+        "depart": "Mark as departed (handed to carrier)",
+        "transit": "Mark as in transit",
+        "deliver": "Mark as delivered",
+        "archive": "Archive",
+        "tracking": "Launch tracking",
+        "pickup_send": "Pickup: send to carrier",
+        "pickup_confirm": "Pickup: confirmed by carrier",
+        "pickup_picked": "Pickup: parcels collected",
+        "pickup_failed": "Pickup: failed (to reschedule)",
+        "pickup_reset": "Pickup: back to “to send”",
+        "cod_collected": "COD collected",
+        "cod_bank": "COD collected by bank transfer",
+        "cod_annul": "COD annulled"
+      }
     },
     "toast": {
       "archived": "Archived {count} shipment | Archived {count} shipments",

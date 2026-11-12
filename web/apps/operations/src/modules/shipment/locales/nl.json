@@ -1825,7 +1825,27 @@
       "capped": "Maximaal {max} per keer: alleen de eerste {max} worden toegepast.",
       "foreign_dropped": "{count} geselecteerde items staan niet in de huidige lijst en zijn genegeerd.",
       "denied": "Je hebt geen toegang tot enkele van de geselecteerde items. Er is niets gewijzigd: ververs de lijst en probeer opnieuw.",
-      "and_more": "… en {count} meer"
+      "and_more": "… en {count} meer",
+      "actions": "Acties ({count})",
+      "done": "{count} bijgewerkt",
+      "done_skipped": "{done} toegepast; {skipped} kunnen deze wijziging in hun huidige status niet aan",
+      "failed": "De actie kon niet worden toegepast",
+      "act": {
+        "control": "Markeer als gecontroleerd",
+        "depart": "Markeer als vertrokken (aan vervoerder toegewezen)",
+        "transit": "Markeer als onderweg",
+        "deliver": "Markeer als geleverd",
+        "archive": "Archiveren",
+        "tracking": "Tracking starten",
+        "pickup_send": "Ophaling: naar vervoerder sturen",
+        "pickup_confirm": "Ophaling: bevestigd door vervoerder",
+        "pickup_picked": "Ophaling: colli opgehaald",
+        "pickup_failed": "Ophaling: mislukt (opnieuw plannen)",
+        "pickup_reset": "Ophaling: terug naar «te verzenden»",
+        "cod_collected": "Rembours geïnd",
+        "cod_bank": "Rembours geïnd via overschrijving",
+        "cod_annul": "Rembours geannuleerd"
+      }
     },
     "toast": {
       "archived": "{count} zending gearchiveerd | {count} zendingen gearchiveerd",

@@ -5665,6 +5665,16 @@ routes:
       body: 1m
       timeout: 30
   -
+    id: post.api_shipment_bulk
+    method: POST
+    path: /api_shipment_bulk
+    upstream:
+      action: api_shipment_bulk
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_shipment_cancel
     method: POST
     path: /api_shipment_cancel

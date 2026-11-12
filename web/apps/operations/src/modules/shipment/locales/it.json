@@ -1825,7 +1825,27 @@
       "capped": "Massimo {max} per volta: si applicano solo i primi {max}.",
       "foreign_dropped": "{count} elementi selezionati non sono nella lista attuale e sono stati scartati.",
       "denied": "Non hai accesso ad alcuni degli elementi selezionati. Non è stato cambiato nulla: aggiorna la lista e riprova.",
-      "and_more": "… e altri {count}"
+      "and_more": "… e altri {count}",
+      "actions": "Azioni ({count})",
+      "done": "{count} aggiornate",
+      "done_skipped": "{done} applicate; {skipped} non ammettono questa modifica nel loro stato attuale",
+      "failed": "Impossibile applicare l'azione",
+      "act": {
+        "control": "Segna controllate",
+        "depart": "Segna partite (affidate al corriere)",
+        "transit": "Segna in transito",
+        "deliver": "Segna consegnate",
+        "archive": "Archivia",
+        "tracking": "Avvia tracking",
+        "pickup_send": "Presa: invia al corriere",
+        "pickup_confirm": "Presa: confermata dal corriere",
+        "pickup_picked": "Presa: colli ritirati",
+        "pickup_failed": "Presa: fallita (da riprenotare)",
+        "pickup_reset": "Presa: riporta a «da inviare»",
+        "cod_collected": "COD incassato",
+        "cod_bank": "COD incassato con bonifico",
+        "cod_annul": "COD annullato"
+      }
     },
     "toast": {
       "archived": "Archiviata {count} spedizione | Archiviate {count} spedizioni",

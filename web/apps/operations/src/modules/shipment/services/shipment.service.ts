@@ -177,6 +177,41 @@ export const shipmentService = {
       body: { id: ids },
     });
   },
+
+  /**
+   * Estado de entrega por lote («Marcar salida» 2, «en tránsito» 3, «entregada» 7), como el legado.
+   * El API comprueba que TODOS los ids son del usuario (403 si uno no lo es, sin tocar nada) y devuelve
+   * `skipped` con motivo para lo que no admite el cambio por su estado.
+   */
+  bulkDelivery(ids: number[], code: "2" | "3" | "7"): Promise<SetFlagResult> {
+    return http<SetFlagResult>("/api_shipment_bulk", {
+      method: "POST",
+      body: { id: ids, op: "delivery", code },
+    });
+  },
+
+  /** Estado de la recogida del fornitore por lote (`presa_stato` N/W/C/E/F). Mismo todo-o-nada. */
+  bulkPickup(
+    ids: number[],
+    state: "N" | "W" | "C" | "E" | "F",
+  ): Promise<SetFlagResult> {
+    return http<SetFlagResult>("/api_shipment_bulk", {
+      method: "POST",
+      body: { id: ids, op: "pickup", state },
+    });
+  },
+
+  /**
+   * Cobro de contrassegno por lote. Lo escribe el API (`api_cod_reconciliation`): conserva la fecha de
+   * cobro ya existente o pone hoy en el servidor; el SPA nunca escribe `contras_incasso` a mano.
+   * Estados: C cobrado · B transferencia · CLC anulado.
+   */
+  bulkCod(ids: number[], state: "C" | "B" | "CLC"): Promise<SetFlagResult> {
+    return http<SetFlagResult>("/api_cod_reconciliation", {
+      method: "POST",
+      body: { action: "reconcile", shipment_ids: ids, state },
+    });
+  },
 };
 
 // ────────────────────────────────────────────────────────────
