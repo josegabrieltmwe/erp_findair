@@ -255,14 +255,23 @@
     },
     "bulk": {
       "mark_controlled": "Markeer als gecontroleerd ({count})",
-      "archive": "Archiveren"
+      "archive": "Archiveren",
+      "mark_controlled_short": "Markeer als gecontroleerd",
+      "confirm_title": "Bevestig groepsactie",
+      "confirm_message": "«{action}» toepassen op {count} items?",
+      "confirm_ok": "Toepassen",
+      "capped": "Maximaal {max} per keer: alleen de eerste {max} worden toegepast.",
+      "foreign_dropped": "{count} geselecteerde items staan niet in de huidige lijst en zijn genegeerd.",
+      "denied": "Je hebt geen toegang tot enkele van de geselecteerde items. Er is niets gewijzigd: ververs de lijst en probeer opnieuw.",
+      "and_more": "… en {count} meer"
     },
     "toast": {
       "archived": "{count} zending gearchiveerd | {count} zendingen gearchiveerd",
       "archive_failed": "Bulk archiveren mislukt",
       "archive_skipped": "{archived} gearchiveerd; {skipped} niet gearchiveerd omdat ze gecontroleerd of geannuleerd zijn",
       "marked_controlled": "{count} zending als gecontroleerd gemarkeerd | {count} zendingen als gecontroleerd gemarkeerd",
-      "control_failed": "Bulk controle mislukt"
+      "control_failed": "Bulk controle mislukt",
+      "control_skipped": "{done} als gecontroleerd gemarkeerd; {skipped} kunnen niet worden gecontroleerd (bijv. geen bestemmingsland)"
     },
     "cargo": {
       "title": "Cargozendingen",

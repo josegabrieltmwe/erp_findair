@@ -55,3 +55,10 @@ export function shipmentDefaultWorkView(listingType: string): string {
   if (listingType === "in_transit") return "tracking";
   return "standard";
 }
+
+/**
+ * Cola de trabajo con la que se abre el listado para el personal TMWE (equivale al `dacontr` del legado:
+ * las expediciones propias aún sin controlar). Debe ser un tipo que `normalisedType` acepte (clave del
+ * catálogo KPI de la home); un test lo comprueba.
+ */
+export const DEFAULT_SHIPMENT_QUEUE = "dacontr";

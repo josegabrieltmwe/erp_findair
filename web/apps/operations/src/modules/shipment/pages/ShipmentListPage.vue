@@ -68,6 +68,14 @@
             />
           </div>
         </v-menu>
+        <ListingQueueSelector
+          :groups="shipmentQueues"
+          :model-value="state.type"
+          all-key="all"
+          :all-label="t('listing.queue.all')"
+          label-key-prefix="home.kpi.tile"
+          @select="onKpiSelect"
+        />
         <ListingWorkViewSelector
           v-model="workViewId"
           :views="SHIPMENT_WORK_VIEWS"
@@ -193,7 +201,7 @@
             v-if="hasBulkAction('tracking')"
             variant="text"
             prepend-icon="mdi-radar"
-            :loading="bulkBusy"
+            :loading="bulkBusy || bulkRun.busy.value"
             @click="onBulkTracking"
           >
             {{ t("listing.bulk.launch_tracking", { count: ids.length }) }}
@@ -202,7 +210,7 @@
             v-if="hasBulkAction('control')"
             variant="text"
             prepend-icon="mdi-check-bold"
-            :loading="bulkBusy"
+            :loading="bulkBusy || bulkRun.busy.value"
             @click="onBulkControl"
           >
             {{ t("listing.bulk.mark_controlled", { count: ids.length }) }}
@@ -211,7 +219,7 @@
             v-if="hasBulkAction('archive')"
             variant="text"
             prepend-icon="mdi-archive"
-            :loading="bulkBusy"
+            :loading="bulkBusy || bulkRun.busy.value"
             @click="onBulkArchive"
           >
             {{ t("listing.bulk.archive") }}
@@ -445,6 +453,14 @@ import CountryFlag from "@shared/listing/CountryFlag.vue";
 import ActiveFilterChips from "@shared/listing/ActiveFilterChips.vue";
 import ViewModeToggle from "@shared/listing/ViewModeToggle.vue";
 import ListingWorkViewSelector from "@shared/listing/ListingWorkViewSelector.vue";
+import { useVisibilityRefresh } from "@shared/listing/useVisibilityRefresh";
+import ListingQueueSelector from "@shared/listing/ListingQueueSelector.vue";
+import { queuesForPage } from "@shared/listing/queueCatalog";
+import { HOME_KPI_CATALOG } from "@shared/dashboard/home_kpi_catalog";
+import { useBulkRun } from "@shared/listing/useBulkRun";
+import { useNavRole } from "@shared/platform/useNavRole";
+import { sanitizeBulkIds } from "@shared/listing/bulkRun";
+import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
 import {
   headersForWorkView,
   resolveWorkView,
@@ -467,6 +483,7 @@ import type { ListSource, DataTableHeader } from "@shared/listing/types";
 import {
   SHIPMENT_WORK_VIEWS,
   shipmentDefaultWorkView,
+  DEFAULT_SHIPMENT_QUEUE,
 } from "@shipment/listing/shipment-work-views";
 
 const { t } = useI18n();
@@ -979,80 +996,76 @@ async function onLaunchTracking(id: number): Promise<void> {
   }
 }
 
-async function onBulkArchive(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await shipmentService.bulkArchive(selectedIds.value);
-    if (r.success) {
-      // Las controladas o anuladas no se archivan: el API las devuelve en `skipped`.
-      const skipped = r.skipped?.length ?? 0;
-      if (skipped > 0) {
-        toasts.push(
-          "warning",
-          t("listing.toast.archive_skipped", {
-            archived: r.applied?.length ?? selectedIds.value.length - skipped,
-            skipped,
-          }),
-        );
-      } else {
-        toasts.push(
-          "success",
-          t("listing.toast.archived", selectedIds.value.length),
-        );
-      }
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.archive_failed"));
-    }
-  } catch (err) {
-    // 409 NOT_APPLICABLE: ninguna se podía archivar (todas controladas o anuladas).
-    // ApiError lleva el cuerpo en `payload`: {error: {details: {skipped: [...]}}}.
-    const e = err as { payload?: { error?: { details?: { skipped?: unknown[] } } } };
-    const skipped = e.payload?.error?.details?.skipped?.length ?? 0;
+// Lote: ids saneados contra las filas cargadas (nunca de la URL ni de estado obsoleto), tope, confirmación
+// y resultado por elemento. La autoridad es el API (403 si algún id no es del usuario): ver bulkRun.ts.
+// Colas de trabajo del selector: las mismas del catálogo de la home (un solo origen).
+const shipmentQueues = queuesForPage(HOME_KPI_CATALOG, "shipment-list");
+
+const confirmStore = useConfirmStore();
+const bulkRun = useBulkRun<ShipmentListRow>({
+  rows: () => store.rows,
+  selected,
+  t: (key, params) => t(key, params ?? {}) as string,
+  confirm: (o) => confirmStore.ask(o),
+  toast: (kind, message) => toasts.push(kind, message),
+  describe: (r) => `#${r.id} · ${r.cliente ?? ""}`.trim(),
+  afterApplied: afterBulk,
+});
+
+/** Colas de trabajo de las que un registro «controlado» sale (el resto de vistas lo siguen mostrando). */
+const CONTROL_QUEUES: ReadonlySet<string> = new Set(["dacontr", "dactrnote"]);
+
+async function afterBulk(applied: number[]): Promise<void> {
+  // El registro que sale de la cola desaparece al instante; la relectura del API confirma la verdad.
+  if (applied.length) store.removeRows(applied);
+  await store.fetchPage();
+  kpi.invalidate();
+  void refreshKpiCounts();
+  if (applied.length && CONTROL_QUEUES.has(state.value.type)) {
     toasts.push(
-      skipped > 0 ? "warning" : "error",
-      skipped > 0
-        ? t("listing.toast.archive_skipped", { archived: 0, skipped })
-        : (err as Error).message,
+      "success",
+      total.value > 0
+        ? t("listing.queue.left", { count: applied.length, remaining: total.value })
+        : t("listing.queue.empty"),
     );
-  } finally {
-    bulkBusy.value = false;
   }
 }
 
-async function onBulkControl(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  bulkBusy.value = true;
-  try {
-    const r = await shipmentService.bulkControl(selectedIds.value);
-    if (r.success) {
-      toasts.push(
-        "success",
-        t("listing.toast.marked_controlled", selectedIds.value.length),
-      );
-      selected.value = [];
-      void store.fetchPage();
-    } else {
-      toasts.push("error", r.error || t("listing.toast.control_failed"));
-    }
-  } catch (err) {
-    toasts.push("error", (err as Error).message);
-  } finally {
-    bulkBusy.value = false;
-  }
+function onBulkArchive(): Promise<void> {
+  return bulkRun.execute({
+    label: t("listing.bulk.archive") as string,
+    run: (ids) => shipmentService.bulkArchive(ids),
+    successMessage: (n) => t("listing.toast.archived", n) as string,
+    skippedMessage: (archived, skipped) =>
+      t("listing.toast.archive_skipped", { archived, skipped }) as string,
+    failedMessage: t("listing.toast.archive_failed") as string,
+  });
+}
+
+function onBulkControl(): Promise<void> {
+  return bulkRun.execute({
+    label: t("listing.bulk.mark_controlled_short") as string,
+    run: (ids) => shipmentService.bulkControl(ids),
+    successMessage: (n) => t("listing.toast.marked_controlled", n) as string,
+    skippedMessage: (done, skipped) =>
+      t("listing.toast.control_skipped", { done, skipped }) as string,
+    failedMessage: t("listing.toast.control_failed") as string,
+  });
 }
 
 async function onBulkTracking(): Promise<void> {
-  if (!selectedIds.value.length) return;
-  const count = selectedIds.value.length;
+  const { ids: safeIds } = sanitizeBulkIds(
+    selectedIds.value,
+    new Set(store.rows.map((r) => r.id)),
+  );
+  if (!safeIds.length) return;
+  const count = safeIds.length;
   bulkBusy.value = true;
   try {
     // Enqueues a background job: the tracking runs off-request and persists.
     // We confirm it was queued; the list will reflect new states on its next
     // refresh (the job is not instantaneous).
-    const r = await shipmentService.bulkTracking(selectedIds.value);
+    const r = await shipmentService.bulkTracking(safeIds);
     if (r.success && r.queued) {
       toasts.push("success", t("listing.toast.tracking_queued", count));
       selected.value = [];
@@ -1340,10 +1353,24 @@ watch(kpiFilterKey, () => {
   void refreshKpiCounts();
 });
 
+// Cola de trabajo por defecto (Jose_master: LISTA.coda('dacontr')): quien entra al listado SIN ningún
+// parámetro cae en «Por controlar», no en «todas». Solo el personal TMWE (`is_admin`): es su flujo de
+// trabajo; el partner sigue viendo todo. Solo en la primera entrada: al volver de un detalle manda la URL,
+// y quien eligió «Todas» a mano no vuelve a la cola. Cualquier parámetro (?search=, ?id_cliente=,
+// ?view=…) significa «vengo por un registro o contexto»: sin cola.
+const { isAdmin } = useNavRole();
+let firstEntry = true;
+
 async function enterList(): Promise<void> {
   entering = true;
+  const useDefaultQueue =
+    firstEntry && isAdmin.value && Object.keys(route.query).length === 0;
+  firstEntry = false;
   try {
     syncUrlToState();
+    if (useDefaultQueue) {
+      store.applyState({ type: DEFAULT_SHIPMENT_QUEUE, kpi: "", page: 1 });
+    }
     await store.fetchPage();
   } finally {
     entering = false;
@@ -1376,6 +1403,23 @@ async function enterList(): Promise<void> {
 // los 3 recuentos de KPI). Al reactivar se invalidan los KPI para que se
 // vuelvan a contar aunque el filtro no haya cambiado.
 useListEntry(enterList, { onReenter: kpi.invalidate });
+
+// Al volver a la pestaña tras un rato, se relee la cola (otro operador o el proceso de fondo pudieron
+// moverla). No se toca la lista si hay una ficha abierta, un diálogo, filas seleccionadas o una carga.
+useVisibilityRefresh({
+  refresh: () => {
+    kpi.invalidate();
+    void refreshKpiCounts();
+    return store.fetchPage();
+  },
+  isBusy: () =>
+    store.loading ||
+    bulkRun.busy.value ||
+    bulkBusy.value ||
+    selected.value.length > 0 ||
+    openViewId.value != null ||
+    !!confirmStore.active,
+});
 
 // Leaving the listing: cancel the in-flight page and clear any stale error.
 // Without this the request keeps running against a page nobody is looking at,

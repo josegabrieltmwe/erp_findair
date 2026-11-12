@@ -255,14 +255,23 @@
     },
     "bulk": {
       "mark_controlled": "Segna controllata ({count})",
-      "archive": "Archivia"
+      "archive": "Archivia",
+      "mark_controlled_short": "Segna controllate",
+      "confirm_title": "Conferma azione di gruppo",
+      "confirm_message": "Applicare «{action}» a {count} elementi?",
+      "confirm_ok": "Applica",
+      "capped": "Massimo {max} per volta: si applicano solo i primi {max}.",
+      "foreign_dropped": "{count} elementi selezionati non sono nella lista attuale e sono stati scartati.",
+      "denied": "Non hai accesso ad alcuni degli elementi selezionati. Non è stato cambiato nulla: aggiorna la lista e riprova.",
+      "and_more": "… e altri {count}"
     },
     "toast": {
       "archived": "Archiviata {count} spedizione | Archiviate {count} spedizioni",
       "archive_failed": "Archiviazione massiva fallita",
       "archive_skipped": "{archived} archiviata/e; {skipped} non archiviabili perché controllate o annullate",
       "marked_controlled": "Segnata {count} spedizione come controllata | Segnate {count} spedizioni come controllate",
-      "control_failed": "Controllo massivo fallito"
+      "control_failed": "Controllo massivo fallito",
+      "control_skipped": "{done} segnate come controllate; {skipped} non si possono controllare (ad esempio, senza paese di destinazione)"
     },
     "cargo": {
       "title": "Spedizioni cargo",

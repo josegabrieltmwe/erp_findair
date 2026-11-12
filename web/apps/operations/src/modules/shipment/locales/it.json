@@ -1812,10 +1812,19 @@
     "advanced_open": "Apri filtri avanzati",
     "advanced_active": "{count} filtri avanzati attivi",
     "empty_text": "Nessun risultato corrisponde ai filtri attuali. Prova a pulire la ricerca o l'intervallo di date.",
+    "queue": { "all": "Tutte le spedizioni", "label": "Code di lavoro", "groups": { "operations_in": "Operativo IN: da preparare", "operations_out": "Operativo OUT: in viaggio" }, "left": "{count} escono dalla coda; ne restano {remaining}", "empty": "Coda vuota: non resta niente da fare qui" },
     "bulk": {
       "mark_controlled": "Segna controllata ({count})",
       "archive": "Archivia",
-      "launch_tracking": "Avvia tracking ({count})"
+      "launch_tracking": "Avvia tracking ({count})",
+      "mark_controlled_short": "Segna controllate",
+      "confirm_title": "Conferma azione di gruppo",
+      "confirm_message": "Applicare «{action}» a {count} elementi?",
+      "confirm_ok": "Applica",
+      "capped": "Massimo {max} per volta: si applicano solo i primi {max}.",
+      "foreign_dropped": "{count} elementi selezionati non sono nella lista attuale e sono stati scartati.",
+      "denied": "Non hai accesso ad alcuni degli elementi selezionati. Non è stato cambiato nulla: aggiorna la lista e riprova.",
+      "and_more": "… e altri {count}"
     },
     "toast": {
       "archived": "Archiviata {count} spedizione | Archiviate {count} spedizioni",
@@ -1823,6 +1832,7 @@
       "archive_skipped": "{archived} archiviata/e; {skipped} non archiviabili perché controllate o annullate",
       "marked_controlled": "Segnata {count} spedizione come controllata | Segnate {count} spedizioni come controllate",
       "control_failed": "Controllo massivo fallito",
+      "control_skipped": "{done} segnate come controllate; {skipped} non si possono controllare (ad esempio, senza paese di destinazione)",
       "tracking_ok": "Tracking avviato",
       "tracking_failed": "Avvio del tracking non riuscito",
       "tracking_queued": "Tracking in coda per {count} spedizioni"

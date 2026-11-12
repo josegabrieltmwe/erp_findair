@@ -1812,10 +1812,19 @@
     "advanced_open": "Erweiterte Filter öffnen",
     "advanced_active": "{count} erweiterte Filter aktiv",
     "empty_text": "Keine Ergebnisse entsprechen den aktuellen Filtern. Versuchen Sie, die Suche oder den Datumsbereich zurückzusetzen.",
+    "queue": { "all": "Alle Sendungen", "label": "Arbeitsschlangen", "groups": { "operations_in": "Betrieb IN: vorzubereiten", "operations_out": "Betrieb OUT: unterwegs" }, "left": "{count} haben die Warteschlange verlassen; {remaining} verbleiben", "empty": "Warteschlange leer: hier ist nichts mehr zu tun" },
     "bulk": {
       "mark_controlled": "Als kontrolliert markieren ({count})",
       "archive": "Archivieren",
-      "launch_tracking": "Tracking starten ({count})"
+      "launch_tracking": "Tracking starten ({count})",
+      "mark_controlled_short": "Als geprüft markieren",
+      "confirm_title": "Sammelaktion bestätigen",
+      "confirm_message": "«{action}» auf {count} Elemente anwenden?",
+      "confirm_ok": "Anwenden",
+      "capped": "Höchstens {max} pro Durchgang: nur die ersten {max} werden angewendet.",
+      "foreign_dropped": "{count} ausgewählte Elemente sind nicht in der aktuellen Liste und wurden verworfen.",
+      "denied": "Du hast auf einige der ausgewählten Elemente keinen Zugriff. Es wurde nichts geändert: Liste aktualisieren und erneut versuchen.",
+      "and_more": "… und {count} weitere"
     },
     "toast": {
       "archived": "{count} Sendung archiviert | {count} Sendungen archiviert",
@@ -1823,6 +1832,7 @@
       "archive_skipped": "{archived} archiviert; {skipped} nicht archiviert, da kontrolliert oder storniert",
       "marked_controlled": "{count} Sendung als kontrolliert markiert | {count} Sendungen als kontrolliert markiert",
       "control_failed": "Massenkontrolle fehlgeschlagen",
+      "control_skipped": "{done} als geprüft markiert; {skipped} können nicht geprüft werden (z. B. ohne Zielland)",
       "tracking_ok": "Tracking gestartet",
       "tracking_failed": "Tracking konnte nicht gestartet werden",
       "tracking_queued": "Tracking eingereiht für {count} Sendungen"

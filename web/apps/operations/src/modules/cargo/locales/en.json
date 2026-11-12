@@ -255,14 +255,23 @@
     },
     "bulk": {
       "mark_controlled": "Mark controlled ({count})",
-      "archive": "Archive"
+      "archive": "Archive",
+      "mark_controlled_short": "Mark as checked",
+      "confirm_title": "Confirm bulk action",
+      "confirm_message": "Apply “{action}” to {count} items?",
+      "confirm_ok": "Apply",
+      "capped": "Maximum {max} per run: only the first {max} are applied.",
+      "foreign_dropped": "{count} selected items are not in the current list and were discarded.",
+      "denied": "You don't have access to some of the selected items. Nothing was changed: refresh the list and try again.",
+      "and_more": "… and {count} more"
     },
     "toast": {
       "archived": "Archived {count} shipment | Archived {count} shipments",
       "archive_failed": "Bulk archive failed",
       "archive_skipped": "{archived} archived; {skipped} not archived because they are controlled or cancelled",
       "marked_controlled": "Marked {count} shipment as controlled | Marked {count} shipments as controlled",
-      "control_failed": "Bulk control failed"
+      "control_failed": "Bulk control failed",
+      "control_skipped": "{done} marked as checked; {skipped} cannot be checked (e.g. no destination country)"
     },
     "cargo": {
       "title": "Cargo shipments",

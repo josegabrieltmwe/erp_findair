@@ -1812,10 +1812,19 @@
     "advanced_open": "Abrir filtros avanzados",
     "advanced_active": "{count} filtros avanzados activos",
     "empty_text": "Ningún resultado coincide con los filtros actuales. Prueba a limpiar la búsqueda o el rango de fechas.",
+    "queue": { "all": "Todas las expediciones", "label": "Colas de trabajo", "groups": { "operations_in": "Operativa IN: por preparar", "operations_out": "Operativa OUT: en viaje" }, "left": "{count} salen de la cola; quedan {remaining}", "empty": "Cola vacía: no queda nada por hacer aquí" },
     "bulk": {
       "mark_controlled": "Marcar controlada ({count})",
       "archive": "Archivar",
-      "launch_tracking": "Lanzar tracking ({count})"
+      "launch_tracking": "Lanzar tracking ({count})",
+      "mark_controlled_short": "Marcar controladas",
+      "confirm_title": "Confirmar acción en lote",
+      "confirm_message": "¿Aplicar «{action}» a {count} elementos?",
+      "confirm_ok": "Aplicar",
+      "capped": "Máximo {max} por pasada: se aplican solo los {max} primeros.",
+      "foreign_dropped": "{count} elementos seleccionados no están en la lista actual y se han descartado.",
+      "denied": "No tienes acceso a alguno de los elementos seleccionados. No se ha cambiado nada: actualiza el listado e inténtalo de nuevo.",
+      "and_more": "… y {count} más"
     },
     "toast": {
       "archived": "Archivada {count} expedición | Archivadas {count} expediciones",
@@ -1823,6 +1832,7 @@
       "archive_skipped": "{archived} archivada(s); {skipped} no se archivan porque están controladas o anuladas",
       "marked_controlled": "Marcada {count} expedición como controlada | Marcadas {count} expediciones como controladas",
       "control_failed": "Fallo al controlar en masa",
+      "control_skipped": "{done} marcada(s) como controlada(s); {skipped} no se pueden controlar (por ejemplo, sin país de destino)",
       "tracking_ok": "Tracking lanzado",
       "tracking_failed": "Fallo al lanzar el tracking",
       "tracking_queued": "Tracking encolado para {count} expediciones"
