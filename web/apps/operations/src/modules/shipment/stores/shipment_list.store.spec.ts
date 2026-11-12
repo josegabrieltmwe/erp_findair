@@ -59,3 +59,23 @@ describe("tramos de cargo en el listado courier (cargo_leg)", () => {
     expect(parseShipmentListQuery({}).cargo_leg).toBe("");
   });
 });
+
+describe("estado de entrega desde la home (consegna_stato)", () => {
+  it("por defecto no se envía", () => {
+    expect(buildShipmentListQuery(SHIPMENT_LIST_DEFAULTS).consegna_stato).toBeUndefined();
+    expect(serializeShipmentListQuery(SHIPMENT_LIST_DEFAULTS)).not.toHaveProperty("consegna_stato");
+  });
+
+  it("la card «Devoluciones» (?consegna_stato=5) llega a la API, vuelve a la URL y cuenta como filtro", () => {
+    const s = parseShipmentListQuery({ consegna_stato: "5" });
+    expect(s.consegna_stato).toBe("5");
+    expect(buildShipmentListQuery(s).consegna_stato).toBe("5");
+    expect(serializeShipmentListQuery(s).consegna_stato).toBe("5");
+    expect(shipmentActiveFilterCount(s)).toBe(shipmentActiveFilterCount(SHIPMENT_LIST_DEFAULTS) + 1);
+  });
+
+  it("solo admite códigos numéricos", () => {
+    expect(parseShipmentListQuery({ consegna_stato: "5; DROP" }).consegna_stato).toBe("");
+    expect(parseShipmentListQuery({ consegna_stato: "abc" }).consegna_stato).toBe("");
+  });
+});

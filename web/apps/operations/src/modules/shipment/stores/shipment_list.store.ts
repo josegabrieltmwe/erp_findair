@@ -96,6 +96,8 @@ export interface ShipmentListUrlState {
    * `/shipment/list?chat_unread=1`. Backend: Filter_Analyzer 'chat_unread'.
    */
   chat_unread: string;
+  /** Código de estado de entrega del tracking (p. ej. '5' = devuelta al remitente). Backend: `consegna_stato`. */
+  consegna_stato: string;
   /**
    * Tramos de cargo. '' = solo expediciones courier PURAS (por defecto: el listado courier no muestra los tramos de un
    * cargo). 'pickup' / 'delivery' = solo los tramos de recogida / de entrega de un cargo. Backend: `cargo_leg`.
@@ -136,6 +138,7 @@ export const SHIPMENT_LIST_DEFAULTS: ShipmentListUrlState = {
   peso_a: "",
   peso_tassax: "",
   chat_unread: "",
+  consegna_stato: "",
   cargo_leg: "",
 };
 
@@ -145,7 +148,7 @@ export const SHIPMENT_FILTER_KEYS: ReadonlyArray<keyof ShipmentListUrlState> = [
   "country_iso", "city", "id", "id_cliente", "AWB_forn", "RIF_cliente",
   "note", "controllata", "consegna_firma", "presa_stato", "archiviata",
   "stato_giac", "has_contrassegno", "has_assicurazione", "peso_da",
-  "peso_a", "peso_tassax", "chat_unread", "cargo_leg",
+  "peso_a", "peso_tassax", "chat_unread", "consegna_stato", "cargo_leg",
 ];
 
 export function shipmentActiveFilterCount(s: ShipmentListUrlState): number {
@@ -247,6 +250,8 @@ export function parseShipmentListQuery(
     peso_a: asString(q.peso_a),
     peso_tassax: asString(q.peso_tassax),
     chat_unread: asString(q.chat_unread),
+    // Solo códigos numéricos: es un deep-link (cards de la home), no texto libre.
+    consegna_stato: /^\d{1,3}$/.test(asString(q.consegna_stato)) ? asString(q.consegna_stato) : "",
     // Solo se admiten los dos tramos; cualquier otro valor vuelve al defecto (solo courier puros).
     cargo_leg: q.cargo_leg === "pickup" || q.cargo_leg === "delivery" ? q.cargo_leg : "",
   };
@@ -333,6 +338,7 @@ export function buildShipmentListQuery(
     peso_a: s.peso_a || undefined,
     peso_tassax: s.peso_tassax || undefined,
     chat_unread: s.chat_unread ? "1" : undefined,
+    consegna_stato: s.consegna_stato || undefined,
     cargo_leg: (s.cargo_leg || undefined) as ShipmentListQuery["cargo_leg"],
   };
 }

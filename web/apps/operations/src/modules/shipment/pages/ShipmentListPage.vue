@@ -900,6 +900,7 @@ const SHIPMENT_ADVANCED_CHIPS: Array<{
   { field: "city", label: "filters.shipment.fields.dest_city" },
   { field: "controllata", label: "filters.fields.controlled" },
   { field: "consegna_firma", label: "filters.fields.delivered" },
+  { field: "consegna_stato", label: "filters.shipment.fields.delivery_state" },
   { field: "presa_stato", label: "filters.shipment.fields.pickup_status" },
   { field: "archiviata", label: "filters.fields.archived" },
   { field: "stato_giac", label: "filters.shipment.fields.storage_state" },

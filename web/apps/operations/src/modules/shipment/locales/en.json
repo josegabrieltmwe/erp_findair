@@ -1885,6 +1885,7 @@
         "supplier_id": "Supplier ID",
         "service_id": "Service ID",
         "cargo_leg": "Cargo legs",
+        "delivery_state": "Delivery status",
         "storage_state": "Storage state",
         "country_ph": "e.g. IT, FR, DE",
         "supplier_ph": "Supplier ID",
@@ -1934,6 +1935,7 @@
       "origin": "Origin",
       "destination": "Destination",
       "chat_unread_yes": "Yes",
+      "returned": "Returned to sender",
       "date_from": "From {date}",
       "date_until": "Until {date}",
       "date_range": "{from} → {to}"

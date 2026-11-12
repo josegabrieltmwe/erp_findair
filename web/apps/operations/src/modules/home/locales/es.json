@@ -255,6 +255,90 @@
         },
         "indicators": {
             "title": "Indicadores"
+        },
+        "today": {
+            "title": "Por hacer hoy",
+            "all_groups": "Todos",
+            "error": "No se pudieron cargar algunos números.",
+            "list_approximate": "la lista no aplica este filtro",
+            "group": {
+                "express": "Express",
+                "cargo": "Cargo",
+                "pickups": "Recogidas",
+                "assistance": "Asistencia",
+                "messages": "Mensajes",
+                "admin": "Administración"
+            },
+            "tile": {
+                "dacontr": {
+                    "label": "Expediciones por revisar",
+                    "desc": "notas, servicio, datos, proveedor"
+                },
+                "dactrnote": {
+                    "label": "Por revisar, con notas",
+                    "desc": "¿la nota pide más que el servicio elegido?"
+                },
+                "resi": {
+                    "label": "Devoluciones",
+                    "desc": "por gestionar"
+                },
+                "toqt": {
+                    "label": "Solicitudes de cargo por cotizar",
+                    "desc": "ofertas sin responder todavía"
+                },
+                "toorg": {
+                    "label": "Bookings por organizar",
+                    "desc": "confirmados por el cliente: viabilidad y recogida"
+                },
+                "preseint": {
+                    "label": "Expediciones sin recogida",
+                    "desc": "recogida con nuestros conductores, aún sin crear"
+                },
+                "prese_daaff": {
+                    "label": "Recogidas por asignar",
+                    "desc": "día, horarios, conductor de la zona"
+                },
+                "presefornN": {
+                    "label": "Recogidas por reservar al courier",
+                    "desc": "reserva la recogida"
+                },
+                "giac_dacom": {
+                    "label": "Giacenzas por comunicar al cliente",
+                    "desc": "abiertas, cliente aún sin avisar"
+                },
+                "giac_forn": {
+                    "label": "Instrucciones por dar al proveedor",
+                    "desc": "el cliente ya respondió"
+                },
+                "giac15": {
+                    "label": "Giacenzas de más de 15 días",
+                    "desc": "avisa, decide"
+                },
+                "open_cases": {
+                    "label": "Casos abiertos",
+                    "desc": "por atender o responder"
+                },
+                "pratiche_lav": {
+                    "label": "Casos en curso",
+                    "desc": "tomados, aún sin cerrar"
+                },
+                "chat_express": {
+                    "label": "Mensajes express por responder",
+                    "desc": "consultas de partners sobre expediciones"
+                },
+                "chat_cargo": {
+                    "label": "Mensajes de cargo por responder",
+                    "desc": "consultas de partners sobre cargos"
+                },
+                "incassare": {
+                    "label": "Clientes con vencido por cobrar",
+                    "desc": "cuotas vencidas: reclama"
+                },
+                "dafatt": {
+                    "label": "Por facturar hasta hoy",
+                    "desc": "clientes con servicios cerrados sin facturar"
+                }
+            }
         }
     },
     "kpi": {

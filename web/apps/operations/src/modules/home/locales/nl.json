@@ -255,6 +255,90 @@
         },
         "indicators": {
             "title": "Indicatoren"
+        },
+        "today": {
+            "title": "Vandaag te doen",
+            "all_groups": "Alle",
+            "error": "Sommige aantallen konden niet worden geladen.",
+            "list_approximate": "de lijst past dit filter niet toe",
+            "group": {
+                "express": "Express",
+                "cargo": "Cargo",
+                "pickups": "Ophalingen",
+                "assistance": "Assistentie",
+                "messages": "Berichten",
+                "admin": "Administratie"
+            },
+            "tile": {
+                "dacontr": {
+                    "label": "Zendingen te controleren",
+                    "desc": "notities, dienst, gegevens, vervoerder"
+                },
+                "dactrnote": {
+                    "label": "Te controleren, met notities",
+                    "desc": "vraagt de notitie meer dan de gekozen dienst?"
+                },
+                "resi": {
+                    "label": "Retouren",
+                    "desc": "af te handelen"
+                },
+                "toqt": {
+                    "label": "Cargo-aanvragen te offreren",
+                    "desc": "offertes zonder antwoord"
+                },
+                "toorg": {
+                    "label": "Boekingen te organiseren",
+                    "desc": "bevestigd door de klant: haalbaarheid en ophaling"
+                },
+                "preseint": {
+                    "label": "Zendingen zonder ophaling",
+                    "desc": "ophaling door onze chauffeurs, nog niet aangemaakt"
+                },
+                "prese_daaff": {
+                    "label": "Ophalingen toe te wijzen",
+                    "desc": "dag, tijden, chauffeur van de zone"
+                },
+                "presefornN": {
+                    "label": "Ophalingen te boeken bij koeriers",
+                    "desc": "boek de ophaling"
+                },
+                "giac_dacom": {
+                    "label": "Stilstanden door te geven aan de klant",
+                    "desc": "open, klant nog niet op de hoogte"
+                },
+                "giac_forn": {
+                    "label": "Instructies voor de leverancier",
+                    "desc": "de klant heeft geantwoord"
+                },
+                "giac15": {
+                    "label": "Stilstanden langer dan 15 dagen",
+                    "desc": "informeren, beslissen"
+                },
+                "open_cases": {
+                    "label": "Open dossiers",
+                    "desc": "op te pakken of te beantwoorden"
+                },
+                "pratiche_lav": {
+                    "label": "Dossiers in behandeling",
+                    "desc": "opgepakt, nog niet gesloten"
+                },
+                "chat_express": {
+                    "label": "Express-berichten te beantwoorden",
+                    "desc": "vragen van partners over zendingen"
+                },
+                "chat_cargo": {
+                    "label": "Cargo-berichten te beantwoorden",
+                    "desc": "vragen van partners over cargo"
+                },
+                "incassare": {
+                    "label": "Klanten met achterstallige betalingen",
+                    "desc": "vervallen termijnen: aanmanen"
+                },
+                "dafatt": {
+                    "label": "Te factureren tot vandaag",
+                    "desc": "klanten met afgesloten, niet gefactureerde diensten"
+                }
+            }
         }
     },
     "kpi": {

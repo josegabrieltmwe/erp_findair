@@ -1,6 +1,6 @@
 # Propuesta: home minimalista del ERP
 
-> **Estado:** borrador (propuesta, sin implementar) · **Última modificación:** 2026-11-07
+> **Estado:** vigente (home implementada; ver «Actualización 2026-11-12») · **Última modificación:** 2026-11-12
 
 Motivo: el cliente dice que la home actual tiene demasiados botones y el usuario no sabe por dónde empezar. Se analizó `web/apps/operations/src/modules/home/pages/HomeLandingPage.vue` (versión local, tras `git pull` de `sandbox`) y el cockpit de KPIs (`web/packages/platform/dashboard/`). No se midió la página desplegada en sandbox porque exige login; los tiempos son por lectura de código.
 
@@ -97,3 +97,22 @@ Riesgo bajo: no cambia rutas ni permisos; los accesos retirados de la home sigue
 2. ¿El buscador global cubre lo que buscan (expedición, AWB, cliente, referencia)? ¿Algo más?
 3. ¿Se aceptan los KPI completos en una pantalla aparte, o alguno debe quedar en la home?
 4. ¿Los usuarios de partner necesitan una home distinta en contenido, o basta con el vocabulario simplificado?
+
+## Actualización 2026-11-12: «Da fare oggi» en la home
+
+Se sustituyó el bloque «Requiere tu atención» (6 avisos) por la franja **«Da fare oggi»**, portada de la home de `Jose_master` (`tmwe2/index.html`, sección «DA FARE OGGI»). La home sigue siendo buscador + crear + esta franja; el cuadro de mando completo sigue en `/home/indicators`.
+
+**Qué hace** (`web/packages/platform/dashboard/TodayBoard.vue`):
+- Tarjetas curadas y transversales en 6 grupos (Express, Cargo, Recogidas, Asistencia, Mensajes, Administración), con carril vertical para filtrar por grupo cuando hay más de uno.
+- Cada tarjeta lleva su número y abre la lista ya filtrada (`type=` del preset del backend, `chat_unread=1`, `consegna_stato=5`).
+- Las que valen 0 se ocultan, y los grupos que se quedan vacíos; si no queda nada, «Todo al día».
+- Un contador que falla muestra **n/d**, nunca 0 (a cero la tarjeta desaparecería y parecería que no hay trabajo).
+- Se pinta al instante con el último valor bueno (guardado en `localStorage` con su hora) y cada fuente rellena sus tarjetas al llegar, sin esperas cruzadas: primero las baratas (un total), después las que recorren páginas (giacenze, cobros).
+- Las tarjetas se filtran por los scopes del token (`inventory:read`, `pickups:read`, `payments:read`, `invoices:read`); sin perfil cargado fallan abiertas, porque el API autoriza igualmente.
+
+**Dónde está el código:** catálogo y reglas puras en `today_catalog.ts`; contadores sin KPI propio en `today_special.service.ts`; estado en `today.store.ts`; textos en `home.today.*` (5 idiomas). Los 33 KPI del catálogo siguen en `home_kpi_catalog.ts`; las tarjetas «de catálogo» reutilizan la misma fuente del cockpit.
+
+**Límites conocidos:**
+- Las tarjetas `giac_dacom`, `giac_forn`, `prese_daaff`, `pratiche_lav` e `incassare` llevan a su pantalla, pero esa lista **no aplica el mismo filtro** que el número (las pantallas no leen esos filtros de la URL). Lo dice la propia tarjeta («la lista no aplica este filtro»). Petición abierta: P118 en [contrato-con-api.md](contrato-con-api.md).
+- «Da fatturare» y «Fatture dei fornitori» (sin número en Jose_master) solo están como acceso, no como contador. Solo se portó la primera.
+- No se portó la cola por defecto «Da controllare» del listado ni el carril de cestinos con contadores dentro de la lista: son cambios de comportamiento del listado, aparte.

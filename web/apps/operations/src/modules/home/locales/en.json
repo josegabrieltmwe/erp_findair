@@ -255,6 +255,90 @@
         },
         "indicators": {
             "title": "Indicators"
+        },
+        "today": {
+            "title": "To do today",
+            "all_groups": "All",
+            "error": "Some numbers could not be loaded.",
+            "list_approximate": "the list does not apply this filter",
+            "group": {
+                "express": "Express",
+                "cargo": "Cargo",
+                "pickups": "Pickups",
+                "assistance": "Assistance",
+                "messages": "Messages",
+                "admin": "Administration"
+            },
+            "tile": {
+                "dacontr": {
+                    "label": "Shipments to review",
+                    "desc": "notes, service, data, carrier"
+                },
+                "dactrnote": {
+                    "label": "To review, with notes",
+                    "desc": "does the note ask for more than the chosen service?"
+                },
+                "resi": {
+                    "label": "Returns",
+                    "desc": "to handle"
+                },
+                "toqt": {
+                    "label": "Cargo requests to quote",
+                    "desc": "offers we have not answered yet"
+                },
+                "toorg": {
+                    "label": "Bookings to organise",
+                    "desc": "confirmed by the customer: feasibility and pickup"
+                },
+                "preseint": {
+                    "label": "Shipments without pickup",
+                    "desc": "collected by our drivers, pickup not created yet"
+                },
+                "prese_daaff": {
+                    "label": "Pickups to assign",
+                    "desc": "day, time windows, driver of the area"
+                },
+                "presefornN": {
+                    "label": "Pickups to book with carriers",
+                    "desc": "book the pickup"
+                },
+                "giac_dacom": {
+                    "label": "Holds to tell the customer",
+                    "desc": "open, customer not yet informed"
+                },
+                "giac_forn": {
+                    "label": "Instructions to give the carrier",
+                    "desc": "the customer has replied"
+                },
+                "giac15": {
+                    "label": "Holds over 15 days",
+                    "desc": "notify, decide"
+                },
+                "open_cases": {
+                    "label": "Open cases",
+                    "desc": "to take on or answer"
+                },
+                "pratiche_lav": {
+                    "label": "Cases in progress",
+                    "desc": "taken on, not closed yet"
+                },
+                "chat_express": {
+                    "label": "Express messages to answer",
+                    "desc": "partner requests about shipments"
+                },
+                "chat_cargo": {
+                    "label": "Cargo messages to answer",
+                    "desc": "partner requests about cargos"
+                },
+                "incassare": {
+                    "label": "Customers with overdue payments",
+                    "desc": "overdue instalments: send a reminder"
+                },
+                "dafatt": {
+                    "label": "To invoice up to today",
+                    "desc": "customers with closed, uninvoiced services"
+                }
+            }
         }
     },
     "kpi": {

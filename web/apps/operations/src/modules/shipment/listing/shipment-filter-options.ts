@@ -52,6 +52,11 @@ export const STATO_GIAC_OPTIONS: readonly FilterOptionDef[] = [
   { value: "N", key: "enums.stato_giac.none" },
 ];
 
+/** Estados de entrega con acceso directo desde la home (la card «Devoluciones»). */
+export const CONSEGNA_STATO_OPTIONS: readonly FilterOptionDef[] = [
+  { value: "5", key: "filters.value.returned" },
+];
+
 /** Campo del estado del listado → lista de opciones que lo etiqueta. */
 export const SHIPMENT_FILTER_OPTIONS: Readonly<
   Record<string, readonly FilterOptionDef[]>
@@ -61,5 +66,6 @@ export const SHIPMENT_FILTER_OPTIONS: Readonly<
   presa_stato: PRESA_STATO_OPTIONS,
   archiviata: ARCHIVIATA_OPTIONS,
   stato_giac: STATO_GIAC_OPTIONS,
+  consegna_stato: CONSEGNA_STATO_OPTIONS,
   cargo_leg: CARGO_LEG_OPTIONS,
 };

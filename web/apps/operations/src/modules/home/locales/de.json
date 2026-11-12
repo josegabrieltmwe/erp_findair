@@ -255,6 +255,90 @@
         },
         "indicators": {
             "title": "Kennzahlen"
+        },
+        "today": {
+            "title": "Heute zu tun",
+            "all_groups": "Alle",
+            "error": "Einige Zahlen konnten nicht geladen werden.",
+            "list_approximate": "die Liste wendet diesen Filter nicht an",
+            "group": {
+                "express": "Express",
+                "cargo": "Cargo",
+                "pickups": "Abholungen",
+                "assistance": "Service",
+                "messages": "Nachrichten",
+                "admin": "Verwaltung"
+            },
+            "tile": {
+                "dacontr": {
+                    "label": "Sendungen zu prüfen",
+                    "desc": "Notizen, Service, Daten, Spediteur"
+                },
+                "dactrnote": {
+                    "label": "Zu prüfen, mit Notizen",
+                    "desc": "verlangt die Notiz mehr als der gewählte Service?"
+                },
+                "resi": {
+                    "label": "Retouren",
+                    "desc": "zu bearbeiten"
+                },
+                "toqt": {
+                    "label": "Cargo-Anfragen zu kalkulieren",
+                    "desc": "Angebote ohne Antwort"
+                },
+                "toorg": {
+                    "label": "Buchungen zu organisieren",
+                    "desc": "vom Kunden bestätigt: Machbarkeit und Abholung"
+                },
+                "preseint": {
+                    "label": "Sendungen ohne Abholung",
+                    "desc": "Abholung durch unsere Fahrer, noch nicht angelegt"
+                },
+                "prese_daaff": {
+                    "label": "Abholungen zuzuweisen",
+                    "desc": "Tag, Zeiten, Fahrer der Zone"
+                },
+                "presefornN": {
+                    "label": "Abholungen beim Kurier zu buchen",
+                    "desc": "Abholung buchen"
+                },
+                "giac_dacom": {
+                    "label": "Lagerungen dem Kunden mitzuteilen",
+                    "desc": "offen, Kunde noch nicht informiert"
+                },
+                "giac_forn": {
+                    "label": "Anweisungen an den Lieferanten",
+                    "desc": "der Kunde hat geantwortet"
+                },
+                "giac15": {
+                    "label": "Lagerungen über 15 Tage",
+                    "desc": "informieren, entscheiden"
+                },
+                "open_cases": {
+                    "label": "Offene Fälle",
+                    "desc": "zu übernehmen oder zu beantworten"
+                },
+                "pratiche_lav": {
+                    "label": "Fälle in Bearbeitung",
+                    "desc": "übernommen, noch offen"
+                },
+                "chat_express": {
+                    "label": "Express-Nachrichten zu beantworten",
+                    "desc": "Partneranfragen zu Sendungen"
+                },
+                "chat_cargo": {
+                    "label": "Cargo-Nachrichten zu beantworten",
+                    "desc": "Partneranfragen zu Cargos"
+                },
+                "incassare": {
+                    "label": "Kunden mit überfälligen Zahlungen",
+                    "desc": "überfällige Raten: mahnen"
+                },
+                "dafatt": {
+                    "label": "Bis heute zu fakturieren",
+                    "desc": "Kunden mit abgeschlossenen, nicht fakturierten Leistungen"
+                }
+            }
         }
     },
     "kpi": {

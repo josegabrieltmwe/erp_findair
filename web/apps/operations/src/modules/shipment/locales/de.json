@@ -1885,6 +1885,7 @@
         "supplier_id": "Lieferanten-ID",
         "service_id": "Service-ID",
         "cargo_leg": "Cargo-Teilstrecken",
+        "delivery_state": "Zustellstatus",
         "storage_state": "Lagerungsstatus",
         "country_ph": "z. B. IT, FR, DE",
         "supplier_ph": "Lieferanten-ID",
@@ -1934,6 +1935,7 @@
       "origin": "Ursprung",
       "destination": "Ziel",
       "chat_unread_yes": "Ja",
+      "returned": "An Absender zurück",
       "date_from": "Ab {date}",
       "date_until": "Bis {date}",
       "date_range": "{from} → {to}"

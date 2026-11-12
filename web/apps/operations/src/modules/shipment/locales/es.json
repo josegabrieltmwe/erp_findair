@@ -1885,6 +1885,7 @@
         "supplier_id": "ID proveedor",
         "service_id": "ID servicio",
         "cargo_leg": "Tramos de cargo",
+        "delivery_state": "Estado de entrega",
         "storage_state": "Estado de almacenaje",
         "country_ph": "p. ej. IT, FR, DE",
         "supplier_ph": "ID del proveedor",
@@ -1934,6 +1935,7 @@
       "origin": "Origen",
       "destination": "Destino",
       "chat_unread_yes": "Sí",
+      "returned": "Devuelta al remitente",
       "date_from": "Desde {date}",
       "date_until": "Hasta {date}",
       "date_range": "{from} → {to}"

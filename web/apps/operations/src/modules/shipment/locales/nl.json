@@ -1885,6 +1885,7 @@
         "supplier_id": "Leverancier-ID",
         "service_id": "Service-ID",
         "cargo_leg": "Cargo-trajecten",
+        "delivery_state": "Afleverstatus",
         "storage_state": "Opslagstatus",
         "country_ph": "bijv. IT, FR, DE",
         "supplier_ph": "Leverancier-ID",
@@ -1934,6 +1935,7 @@
       "origin": "Herkomst",
       "destination": "Bestemming",
       "chat_unread_yes": "Ja",
+      "returned": "Retour afzender",
       "date_from": "Vanaf {date}",
       "date_until": "Tot {date}",
       "date_range": "{from} → {to}"

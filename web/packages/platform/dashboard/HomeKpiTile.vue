@@ -21,7 +21,7 @@
       <v-icon v-if="icon" :icon="icon" size="18" />
       <v-icon icon="mdi-arrow-top-right" size="14" />
     </div>
-    <div class="stat-val" :class="variant">
+    <div v-if="!noValue" class="stat-val" :class="variant">
       <span v-if="loading" class="homekpi-skel">—</span>
       <template v-else>{{ formatted }}</template>
     </div>
@@ -44,11 +44,16 @@ const props = defineProps<{
   loading?: boolean;
   /** The destination listing applies this KPI filter on the server. */
   serverFiltered?: boolean;
+  /** El contador no se pudo calcular: se muestra «n/d», nunca 0. */
+  unavailable?: boolean;
+  /** Tarjeta sin número (lleva a la cola y basta). */
+  noValue?: boolean;
 }>();
 
 defineEmits<{ (e: 'click'): void }>();
 
 const formatted = computed<string>(() => {
+  if (props.unavailable && props.value == null) return 'n/d';
   if (props.value == null) return '—';
   return props.value.toLocaleString('en-US');
 });

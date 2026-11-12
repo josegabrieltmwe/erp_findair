@@ -1885,6 +1885,7 @@
         "supplier_id": "ID fornitore",
         "service_id": "ID servizio",
         "cargo_leg": "Tratte cargo",
+        "delivery_state": "Stato di consegna",
         "storage_state": "Stato giacenza",
         "country_ph": "es. IT, FR, DE",
         "supplier_ph": "ID fornitore",
@@ -1934,6 +1935,7 @@
       "origin": "Origine",
       "destination": "Destinazione",
       "chat_unread_yes": "Sì",
+      "returned": "Reso al mittente",
       "date_from": "Dal {date}",
       "date_until": "Fino al {date}",
       "date_range": "{from} → {to}"
