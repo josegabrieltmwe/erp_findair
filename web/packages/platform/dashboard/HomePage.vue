@@ -321,6 +321,8 @@ function listingBaseUrl(page: DashboardListPage): string {
   if (page === 'cargo-list') return moduleHref('cargo');
   if (page === 'crm-list') return moduleHref('crm');
   if (page === 'giacenze-list') return moduleHref('giacenze');
+  // Cobros no es un NavModule: solo se llega aquí si el router no tiene la ruta (fuera de operations).
+  if (page === 'payments') return moduleHref('invoicing').replace(/\/invoicing$/, '/payments');
   return moduleHref('shipment');
 }
 
@@ -330,6 +332,7 @@ function gotoListing(page: DashboardListPage, query: Record<string, string>): vo
     'cargo-list': 'cargo-list',
     'crm-list': 'crm-list',
     'giacenze-list': 'giacenze',
+    payments: 'payments',
   };
   const routeName = routeNames[page];
   if (router.hasRoute(routeName)) {

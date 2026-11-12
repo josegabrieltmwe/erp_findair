@@ -85,7 +85,7 @@
             :loading="row.res.state === 'loading' && row.res.value === null"
             :unavailable="row.res.state === 'unavailable'"
             :no-value="row.tile.source === 'none'"
-            :server-filtered="!row.tile.listApproximate"
+            :server-filtered="true"
             :data-testid="`home-today-${row.tile.key}`"
             @click="open(row.tile)"
           />
@@ -215,11 +215,8 @@ const statusText = computed(() => {
   return t("home.landing.updated_at", { time });
 });
 
-function describe(tile: TodayTile): string | undefined {
-  const base = t(`home.today.tile.${tile.key}.desc`);
-  return tile.listApproximate
-    ? `${base} · ${t("home.today.list_approximate")}`
-    : base;
+function describe(tile: TodayTile): string {
+  return t(`home.today.tile.${tile.key}.desc`);
 }
 
 function open(tile: TodayTile): void {

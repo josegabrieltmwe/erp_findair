@@ -46,8 +46,6 @@ export interface TodayTile {
   link: { page: TodayRoute; query: Record<string, string> };
   /** Scopes del token que dan acceso a la pantalla destino; sin ninguno de ellos la tarjeta no se muestra. */
   scopes?: readonly string[];
-  /** Hay contador pero la lista de destino no aplica este filtro: se dice en la descripción. */
-  listApproximate?: boolean;
 }
 
 export const TODAY_GROUPS: readonly TodayGroupId[] = [
@@ -118,8 +116,7 @@ export const TODAY_TILES: readonly TodayTile[] = [
     variant: "default",
     source: "special",
     scopes: ["pickups:read"],
-    listApproximate: true,
-    link: { page: "pickup-list", query: {} },
+    link: { page: "pickup-list", query: { queue: "to_assign" } },
   },
   {
     key: "presefornN",
@@ -131,33 +128,34 @@ export const TODAY_TILES: readonly TodayTile[] = [
   },
   // — Asistencia —
   {
-    key: "giac_dacom",
+    key: "giac_to_notify_client",
     group: "assistance",
     icon: "mdi-package-variant-closed-plus",
     variant: "default",
-    source: "special",
+    source: "catalog",
     scopes: ["inventory:read"],
-    listApproximate: true,
-    link: { page: "giacenze", query: { indicator: "open_giacenze" } },
+    link: { page: "giacenze", query: { indicator: "giac_to_notify_client" } },
   },
   {
-    key: "giac_forn",
+    key: "giac_to_instruct_supplier",
     group: "assistance",
     icon: "mdi-message-reply-text-outline",
     variant: "default",
-    source: "special",
+    source: "catalog",
     scopes: ["inventory:read"],
-    listApproximate: true,
-    link: { page: "giacenze", query: { indicator: "open_giacenze" } },
+    link: {
+      page: "giacenze",
+      query: { indicator: "giac_to_instruct_supplier" },
+    },
   },
   {
-    key: "giac15",
+    key: "giac_open_over_15_days",
     group: "assistance",
     icon: "mdi-package-variant-closed-alert",
     variant: "error",
-    source: "special",
+    source: "catalog",
     scopes: ["inventory:read"],
-    link: { page: "giacenze", query: { indicator: "giacenze_overdue_15" } },
+    link: { page: "giacenze", query: { indicator: "giac_open_over_15_days" } },
   },
   {
     key: "open_cases",
@@ -173,8 +171,7 @@ export const TODAY_TILES: readonly TodayTile[] = [
     icon: "mdi-progress-wrench",
     variant: "default",
     source: "special",
-    listApproximate: true,
-    link: { page: "crm-list", query: {} },
+    link: { page: "crm-list", query: { stato_pratica: "L" } },
   },
   // — Mensajes —
   {
@@ -195,14 +192,13 @@ export const TODAY_TILES: readonly TodayTile[] = [
   },
   // — Administración —
   {
-    key: "incassare",
+    key: "payments_overdue_customers",
     group: "admin",
     icon: "mdi-cash-clock",
     variant: "error",
-    source: "special",
+    source: "catalog",
     scopes: ["payments:read"],
-    listApproximate: true,
-    link: { page: "payments", query: {} },
+    link: { page: "payments", query: { statop: "SC" } },
   },
   {
     key: "dafatt",
@@ -334,19 +330,16 @@ const ymd = (d: Date): string =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 /**
- * Peticiones de conteo de las tarjetas `special` que se leen de un listado. La home NO pide listados: cada una
- * es el total (`pagination.total`) del listado ya filtrado en el servidor, con `per_page=1` o `count_only=1`.
+ * Peticiones de conteo de las tarjetas `special`. La home NO pide listados: cada una es el total
+ * (`pagination.total`) del listado ya filtrado en el servidor, con `per_page=1` o `count_only=1`.
+ * Las demás tarjetas con número salen de los indicadores del API (`api_home_box_indicators`).
  *
- *  - `giac_dacom`: giacenze abiertas con el cliente aún sin avisar.
- *  - `giac_forn`: abiertas en las que el cliente respondió y el proveedor no recibió instrucciones (el caso «el
- *    proveedor fue avisado ANTES de la respuesta» no se puede expresar con los filtros del API: ver P118).
- *  - `giac15`: abiertas hace más de 15 días (días desde la apertura, no `giacenza_gg`, que son los días a cobrar).
- *  - `incassare`: cuotas de clientes vencidas y abiertas (cuotas, no clientes distintos: ver P118).
+ *  - `prese_daaff`: la cola «Da assegnare» de la lista de ritiri (`queueFilters('to_assign')`).
+ *  - `pratiche_lav`: pratiche en curso (estado L).
  */
 export function countRequests(
   now: Date = new Date(),
 ): Record<string, CountRequest> {
-  const open = { data_close_flag: "N", per_page: "1" };
   return {
     resi: {
       path: "/api_courier_shipments",
@@ -354,30 +347,11 @@ export function countRequests(
     },
     prese_daaff: {
       path: "/api_pickups_crud",
-      query: { affidata: "N", per_page: "1" },
+      query: { affidata: "N", data_da: ymd(now), per_page: "1" },
     },
     pratiche_lav: {
       path: "/api_crm_crud",
       query: { stato_pratica: "L", per_page: "1", limit: "1" },
-    },
-    giac_dacom: {
-      path: "/api_inventory_crud",
-      query: { ...open, cont_cliente: "N" },
-    },
-    giac_forn: {
-      path: "/api_inventory_crud",
-      query: { ...open, risp_cliente: "S", cont_fornitore: "N" },
-    },
-    giac15: {
-      path: "/api_inventory_crud",
-      query: {
-        ...open,
-        data_open_a: ymd(new Date(now.getTime() - 15 * 864e5)),
-      },
-    },
-    incassare: {
-      path: "/api_payments",
-      query: { tipo: "A", statop: "SC", per_page: "1" },
     },
   };
 }

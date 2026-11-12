@@ -2098,6 +2098,10 @@
       "overdue_followups": { "label": "Seguimientos vencidos" },
       "open_giacenze": { "label": "Depósitos abiertos" },
       "giacenze_overdue_15": { "label": "Depósitos de más de 15 días" },
+      "giac_to_notify_client": { "label": "Depósitos por comunicar al cliente" },
+      "giac_to_instruct_supplier": { "label": "Instrucciones por dar al proveedor" },
+      "giac_open_over_15_days": { "label": "Depósitos abiertos hace más de 15 días" },
+      "payments_overdue_customers": { "label": "Clientes con vencido por cobrar" },
       "awaiting_client_response": {
         "label": "Esperando respuesta del cliente"
       },

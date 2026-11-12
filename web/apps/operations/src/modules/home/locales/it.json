@@ -260,7 +260,6 @@
             "title": "Da fare oggi",
             "all_groups": "Tutti",
             "error": "Impossibile caricare alcuni numeri.",
-            "list_approximate": "la lista non applica questo filtro",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +301,6 @@
                     "label": "Ritiri da prenotare ai corrieri",
                     "desc": "prenota il ritiro"
                 },
-                "giac_dacom": {
-                    "label": "Giacenze da comunicare al cliente",
-                    "desc": "aperte, cliente non ancora avvisato"
-                },
-                "giac_forn": {
-                    "label": "Istruzioni da dare al fornitore",
-                    "desc": "il cliente ha risposto"
-                },
-                "giac15": {
-                    "label": "Giacenze oltre 15 giorni",
-                    "desc": "avvisa, decidi"
-                },
                 "open_cases": {
                     "label": "Pratiche aperte",
                     "desc": "da prendere in carico o da rispondere"
@@ -330,13 +317,25 @@
                     "label": "Messaggi cargo da rispondere",
                     "desc": "richieste dei partner sui cargo"
                 },
-                "incassare": {
-                    "label": "Rate scadute da incassare",
-                    "desc": "clienti con rate scadute: sollecita"
-                },
                 "dafatt": {
                     "label": "Da fatturare fino a oggi",
                     "desc": "clienti con servizi chiusi non fatturati"
+                },
+                "giac_to_notify_client": {
+                    "label": "Giacenze da comunicare al cliente",
+                    "desc": "aperte, cliente non ancora avvisato"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Istruzioni da dare al fornitore",
+                    "desc": "il cliente ha risposto"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Giacenze oltre 15 giorni",
+                    "desc": "avvisa, decidi"
+                },
+                "payments_overdue_customers": {
+                    "label": "Clienti con scaduto da incassare",
+                    "desc": "almeno una rata scaduta: sollecita"
                 }
             }
         }

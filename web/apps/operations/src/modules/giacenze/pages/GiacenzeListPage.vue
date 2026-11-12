@@ -495,7 +495,10 @@ onMounted(() => {
   if (
     indicator === "open_giacenze" ||
     indicator === "giacenze_overdue_15" ||
-    indicator === "awaiting_client_response"
+    indicator === "awaiting_client_response" ||
+    indicator === "giac_to_notify_client" ||
+    indicator === "giac_to_instruct_supplier" ||
+    indicator === "giac_open_over_15_days"
   ) {
     local.indicator = indicator;
     store.setFilters({ ...local });

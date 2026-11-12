@@ -40,7 +40,10 @@ describe("catálogo «Da fare oggi»", () => {
     for (const t of TODAY_TILES.filter((x) => x.source === "catalog")) {
       const kpi = HOME_KPI_CATALOG.find((k) => k.key === t.key);
       expect(kpi, t.key).toBeDefined();
-      expect(t.link.page, t.key).toBe(kpi!.link.page);
+      // El catálogo nombra «giacenze-list» al destino que el router llama «giacenze» (HomePage.gotoListing).
+      const route =
+        kpi!.link.page === "giacenze-list" ? "giacenze" : kpi!.link.page;
+      expect(t.link.page, t.key).toBe(route);
       expect(t.link.query, t.key).toEqual(kpi!.link.query);
     }
   });
@@ -128,7 +131,7 @@ describe("contadores especiales", () => {
       expect(isCountOnly(req), key).toBe(true);
   });
 
-  it("cubre todas las tarjetas especiales que se leen de un listado", () => {
+  it("las tarjetas «special» que se leen de un listado tienen su petición de conteo", () => {
     const keys = Object.keys(countRequests());
     const listed = TODAY_TILES.filter(
       (t) => t.source === "special" && !t.key.startsWith("chat_"),
@@ -136,29 +139,27 @@ describe("contadores especiales", () => {
     expect(keys.sort()).toEqual(listed.sort());
   });
 
-  it("giacenze: filtros de servidor (abiertas / cliente sin avisar / respuesta sin instrucciones / más de 15 días)", () => {
-    const r = countRequests(new Date(2026, 10, 12, 10, 0, 0));
-    expect(r.giac_dacom.query).toMatchObject({
-      data_close_flag: "N",
-      cont_cliente: "N",
+  it("prese por asignar cuenta lo mismo que la cola «Da assegnare» de la lista de ritiri", () => {
+    const q = countRequests(new Date(2026, 10, 12, 10, 0, 0)).prese_daaff.query;
+    expect(q).toMatchObject({ affidata: "N", data_da: "2026-11-12" });
+    expect(tile("prese_daaff").link).toEqual({
+      page: "pickup-list",
+      query: { queue: "to_assign" },
     });
-    expect(r.giac_forn.query).toMatchObject({
-      data_close_flag: "N",
-      risp_cliente: "S",
-      cont_fornitore: "N",
-    });
-    expect(r.giac15.query).toMatchObject({
-      data_close_flag: "N",
-      data_open_a: "2026-10-28",
-    });
-    for (const k of ["giac_dacom", "giac_forn", "giac15"])
-      expect(r[k].path).toBe("/api_inventory_crud");
   });
 
-  it("cobros: cuotas de clientes vencidas y abiertas, en una sola consulta de conteo", () => {
-    expect(countRequests().incassare).toEqual({
-      path: "/api_payments",
-      query: { tipo: "A", statop: "SC", per_page: "1" },
+  it("los indicadores de giacenze y cobros salen del API y la lista aplica el mismo filtro", () => {
+    for (const key of [
+      "giac_to_notify_client",
+      "giac_to_instruct_supplier",
+      "giac_open_over_15_days",
+    ]) {
+      expect(tile(key).source, key).toBe("catalog");
+      expect(tile(key).link.query, key).toEqual({ indicator: key });
+    }
+    expect(tile("payments_overdue_customers").link).toEqual({
+      page: "payments",
+      query: { statop: "SC" },
     });
   });
 
@@ -176,7 +177,7 @@ describe("traducciones de «Da fare oggi»", () => {
   it("existen en los 5 idiomas, para todos los grupos y todas las tarjetas", () => {
     for (const l of LOCALES) {
       const d = load(l);
-      for (const k of ["title", "all_groups", "error", "list_approximate"])
+      for (const k of ["title", "all_groups", "error"])
         expect(String(d[k] ?? "").trim().length, `${l}.${k}`).toBeGreaterThan(
           0,
         );

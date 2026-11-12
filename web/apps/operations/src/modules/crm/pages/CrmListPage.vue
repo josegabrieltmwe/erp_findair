@@ -142,6 +142,12 @@ async function applyRouteFilter(): Promise<void> {
     store.shortcut = null;
     store.hasAppliedInitialFilters = true;
     await store.fetchList();
+  } else if (route.query.stato_pratica === "L") {
+    // Deep-link de la home («Pratiche in lavorazione»): prese en carga y aún sin cerrar.
+    store.filters = { stato_pratica: "L" };
+    store.shortcut = null;
+    store.hasAppliedInitialFilters = true;
+    await store.fetchList();
   } else if (route.query.ti) {
     await store.applyShortcut(route.query.ti);
     store.hasAppliedInitialFilters = true;
@@ -188,7 +194,7 @@ onActivated(() => {
 // indicador sin depender de que Vue desmonte la página. Sin `immediate`: la
 // primera carga ya corre desde `onMounted` arriba.
 watch(
-  () => [route.query.ti, route.query.indicator],
+  () => [route.query.ti, route.query.indicator, route.query.stato_pratica],
   () => void applyRouteFilter(),
 );
 </script>

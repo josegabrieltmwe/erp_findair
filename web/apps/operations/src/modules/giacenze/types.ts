@@ -59,7 +59,14 @@ export interface Giacenza {
 
 /** Filtros del listado (mapean a los query params del controller). */
 export interface GiacenzaFilters {
-  indicator: "open_giacenze" | "giacenze_overdue_15" | "awaiting_client_response" | null;
+  indicator:
+    | "open_giacenze"
+    | "giacenze_overdue_15"
+    | "awaiting_client_response"
+    | "giac_to_notify_client"
+    | "giac_to_instruct_supplier"
+    | "giac_open_over_15_days"
+    | null;
   id_spedizione: number | null;
   id_cliente: number | null;
   q: string | null;

@@ -260,7 +260,6 @@
             "title": "Por hacer hoy",
             "all_groups": "Todos",
             "error": "No se pudieron cargar algunos números.",
-            "list_approximate": "la lista no aplica este filtro",
             "group": {
                 "express": "Express",
                 "cargo": "Cargo",
@@ -302,18 +301,6 @@
                     "label": "Recogidas por reservar al courier",
                     "desc": "reserva la recogida"
                 },
-                "giac_dacom": {
-                    "label": "Giacenzas por comunicar al cliente",
-                    "desc": "abiertas, cliente aún sin avisar"
-                },
-                "giac_forn": {
-                    "label": "Instrucciones por dar al proveedor",
-                    "desc": "el cliente ya respondió"
-                },
-                "giac15": {
-                    "label": "Giacenzas de más de 15 días",
-                    "desc": "avisa, decide"
-                },
                 "open_cases": {
                     "label": "Casos abiertos",
                     "desc": "por atender o responder"
@@ -330,13 +317,25 @@
                     "label": "Mensajes de cargo por responder",
                     "desc": "consultas de partners sobre cargos"
                 },
-                "incassare": {
-                    "label": "Cuotas vencidas por cobrar",
-                    "desc": "clientes con cuotas vencidas: reclama"
-                },
                 "dafatt": {
                     "label": "Por facturar hasta hoy",
                     "desc": "clientes con servicios cerrados sin facturar"
+                },
+                "giac_to_notify_client": {
+                    "label": "Giacenzas por comunicar al cliente",
+                    "desc": "abiertas, cliente aún sin avisar"
+                },
+                "giac_to_instruct_supplier": {
+                    "label": "Instrucciones por dar al proveedor",
+                    "desc": "el cliente ya respondió"
+                },
+                "giac_open_over_15_days": {
+                    "label": "Giacenzas de más de 15 días",
+                    "desc": "avisa, decide"
+                },
+                "payments_overdue_customers": {
+                    "label": "Clientes con vencido por cobrar",
+                    "desc": "al menos una cuota vencida: reclama"
                 }
             }
         }

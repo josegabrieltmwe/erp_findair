@@ -2,6 +2,7 @@
 import { todayLocal } from "@shared/utils/date";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
 import ListingKpiStrip, {
   type KpiTileDescriptor,
@@ -25,6 +26,7 @@ import type { Pickup, PickupFilters } from "../types";
 
 const { t } = useI18n();
 const confirm = useConfirmStore();
+const route = useRoute();
 
 const today = todayLocal();
 const queue = ref<PickupQueueId>("all");
@@ -222,7 +224,13 @@ const headers = computed(() => [
 ]);
 
 onMounted(() => {
-  void source.refresh();
+  // Llegada desde la home («Prese da affidare»): abre directamente la cola de trabajo pedida.
+  const wanted = String(route.query.queue ?? "");
+  if (PICKUP_QUEUES.some((q) => q.id === wanted) && wanted !== "all") {
+    selectQueue(wanted);
+  } else {
+    void source.refresh();
+  }
   void loadCounts();
 });
 </script>

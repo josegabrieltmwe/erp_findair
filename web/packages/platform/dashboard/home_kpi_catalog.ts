@@ -53,7 +53,7 @@ export interface HomeKpiDescriptor {
   serverFiltered: boolean;
   /** Listing navigation on tile click. */
   link: {
-    page: 'shipment-list' | 'cargo-list' | 'crm-list' | 'giacenze-list';
+    page: 'shipment-list' | 'cargo-list' | 'crm-list' | 'giacenze-list' | 'payments';
     query: Record<string, string>;
   };
 }
@@ -472,6 +472,48 @@ export const HOME_KPI_CATALOG: HomeKpiDescriptor[] = [
         'giacenze_overdue_15',
       ],
       [
+        'giac_to_notify_client',
+        'assist',
+        'assistance',
+        'Giacenze',
+        'mdi-package-variant-closed-plus',
+        'Giacenze da comunicare al cliente',
+        'giacenze-list',
+        'giac_to_notify_client',
+      ],
+      [
+        'giac_to_instruct_supplier',
+        'assist',
+        'assistance',
+        'Giacenze',
+        'mdi-message-reply-text-outline',
+        'Istruzioni da dare al fornitore',
+        'giacenze-list',
+        'giac_to_instruct_supplier',
+      ],
+      [
+        'giac_open_over_15_days',
+        'assist',
+        'assistance',
+        'Giacenze',
+        'mdi-package-variant-closed-alert',
+        'Giacenze aperte da oltre 15 giorni',
+        'giacenze-list',
+        'giac_open_over_15_days',
+      ],
+      [
+        // Sin pestaña propia en la vista de indicadores (la sección «administration» aún no tiene categorías):
+        // la usa la franja «Da fare oggi» de la home.
+        'payments_overdue_customers',
+        'assist',
+        'administration',
+        'Pagamenti',
+        'mdi-cash-clock',
+        'Clienti con scaduto da incassare',
+        'payments',
+        'SC',
+      ],
+      [
         'awaiting_client_response',
         'assist',
         'assistance',
@@ -534,7 +576,7 @@ export const HOME_KPI_CATALOG: HomeKpiDescriptor[] = [
     link: {
       page,
       query: {
-        [page === 'shipment-list' ? 'type' : 'indicator']: filter,
+        [page === 'shipment-list' ? 'type' : page === 'payments' ? 'statop' : 'indicator']: filter,
       },
     },
   })),

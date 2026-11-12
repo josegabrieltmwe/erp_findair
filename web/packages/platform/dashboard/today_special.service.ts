@@ -61,8 +61,4 @@ export const SPECIAL_SOURCES: Readonly<
   },
   pratiche_lav: { keys: ["pratiche_lav"], fetch: countSource("pratiche_lav") },
   chat: { keys: ["chat_express", "chat_cargo"], fetch: chat },
-  giac_dacom: { keys: ["giac_dacom"], fetch: countSource("giac_dacom") },
-  giac_forn: { keys: ["giac_forn"], fetch: countSource("giac_forn") },
-  giac15: { keys: ["giac15"], fetch: countSource("giac15") },
-  incassare: { keys: ["incassare"], fetch: countSource("incassare") },
 };
