@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { pickupColorKind } from "../logic";
 import type { Pickup } from "../types";
 
 /**
@@ -76,8 +77,10 @@ function cellPickups(slot: string, driverId: number): Pickup[] {
               :key="p.id"
               class="cal-chip"
               :class="{
-                'cal-chip--fixed': p.presa_fissa === 'S',
-                'cal-chip--done': p.affidata === 'S',
+                'cal-chip--fixed': pickupColorKind(p) === 'fixed',
+                'cal-chip--ship': pickupColorKind(p) === 'with_shipment',
+                'cal-chip--tri': pickupColorKind(p) === 'triangulation',
+                'cal-chip--done': p.affidata === 'S' && pickupColorKind(p) === 'normal',
               }"
               @click="emit('pick', p)"
             >
@@ -145,6 +148,14 @@ function cellPickups(slot: string, driverId: number): Pickup[] {
 .cal-chip--fixed {
   background: rgba(var(--v-theme-info), 0.16);
   color: rgb(var(--v-theme-info));
+}
+.cal-chip--ship {
+  background: rgba(var(--v-theme-secondary), 0.16);
+  color: rgb(var(--v-theme-secondary));
+}
+.cal-chip--tri {
+  background: rgba(var(--v-theme-warning), 0.2);
+  color: rgb(var(--v-theme-warning));
 }
 .cal-chip--done {
   background: rgba(var(--v-theme-success), 0.16);

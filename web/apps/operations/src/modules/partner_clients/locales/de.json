@@ -457,7 +457,9 @@
         "sec_fatturazione": "Fakturierung",
         "sec_contatto": "Kontakt",
         "sec_terminali": "Cargo-Terminal",
-        "sec_logistica": "Logistik (Abholung / Zustellung)"
+        "sec_logistica": "Logistik (Abholung / Zustellung)",
+        "presa_dias": "Tage der festen Abholung",
+        "presa_dias_hint": "Leer = jeden Tag"
       },
       "contatto": {
         "sigl": "Kürzel",

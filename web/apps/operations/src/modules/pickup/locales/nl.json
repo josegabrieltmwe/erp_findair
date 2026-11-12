@@ -25,7 +25,15 @@
       "new_today": "Nieuw vandaag",
       "overdue": "Te laat",
       "awaiting": "Wacht op klant",
-      "pending": "In behandeling"
+      "pending": "In behandeling",
+      "by_driver": "Ophalingen per chauffeur",
+      "driver": "Chauffeur",
+      "no_drivers": "Geen ophalingen voor deze datum.",
+      "alerts": "Opslagwaarschuwingen (meer dan {days} dagen)",
+      "alert_ldv": "LDV",
+      "alert_dest": "Ontvanger",
+      "alert_since": "In opslag sinds",
+      "no_alerts": "Geen opslagwaarschuwingen."
     },
     "calendar": {
       "title": "Ophaalagenda",
@@ -35,7 +43,16 @@
       "empty": "Geen ophalingen op deze datum.",
       "leg_normal": "Ophaling",
       "leg_fixed": "Vaste ophaling",
-      "leg_done": "Toegewezen"
+      "leg_done": "Toegewezen",
+      "view_day": "Dag",
+      "view_week": "Week",
+      "view_month": "Maand",
+      "all_drivers": "Alle chauffeurs",
+      "driver": "Chauffeur",
+      "more": "+{n} meer",
+      "not_assigned": "Niet toegewezen",
+      "leg_shipment": "Met zending",
+      "leg_triangulation": "Driehoeksroute"
     },
     "list": {
       "title": "Ophalingen",
@@ -61,7 +78,16 @@
         "peso": "Gewicht",
         "fixed": "Vast",
         "affidata": "Toegewezen"
-      }
+      },
+      "fixed_removed": "Vast verwijderd",
+      "adhoc": "Eenmalig",
+      "remove_today": "Alleen vandaag verwijderen",
+      "remove_today_title": "Vaste ophaling alleen vandaag verwijderen",
+      "remove_today_msg": "Vaste ophaling #{id} wordt alleen voor deze dag verwijderd en niet opnieuw aangemaakt. De vaste ophaling van de vestiging blijft actief. Doorgaan?",
+      "recurring": "Vaste ophalingen",
+      "recurring_sede": "Vaste ophaling van de vestiging",
+      "bulk_assign": "Chauffeur toewijzen of vrijgeven",
+      "incoherent": "Inconsistent: toewijzing en chauffeur komen niet overeen"
     },
     "edit": {
       "new_title": "Nieuwe ophaling",
@@ -85,7 +111,13 @@
       "title": "Ophaling #{id} toewijzen",
       "driver": "Chauffeur",
       "assign": "Toewijzen",
-      "unassign": "Toewijzing verwijderen"
+      "unassign": "Toewijzing verwijderen",
+      "close": "Sluiten",
+      "bulk_title": "Chauffeur toewijzen aan {n} ophalingen",
+      "bulk_unassign_title": "Chauffeur vrijgeven",
+      "bulk_unassign_msg": "De chauffeur wordt bij {n} ophalingen verwijderd. Doorgaan?",
+      "bulk_summary": "{ok} gelukt, {failed} mislukt",
+      "bulk_failed": "Fout zonder details"
     },
     "routes": {
       "title": "Chauffeursroutes",
@@ -108,7 +140,13 @@
       "pick_provincia": "Selecteer een provincie.",
       "empty": "Geen gebied toegewezen.",
       "delete_title": "Gebied verwijderen",
-      "delete_msg": "De toewijzing van postcode {cap} verwijderen?"
+      "delete_msg": "De toewijzing van postcode {cap} verwijderen?",
+      "current": "Huidige toewijzing",
+      "new": "Nieuw",
+      "save": "Wijzigingen opslaan",
+      "discard": "Verwerpen",
+      "pending": "{n} openstaande wijzigingen",
+      "save_summary": "{ok} postcodes opgeslagen, {failed} mislukt"
     },
     "pod": {
       "title": "Afleveringsregistratie (POD)",
@@ -125,6 +163,67 @@
       "done": "Aflevering geregistreerd.",
       "no_geo": "Geolocatie niet beschikbaar.",
       "geo_failed": "Kan de locatie niet bepalen."
+    },
+    "queue": {
+      "label": "Werklijst",
+      "all": "Handmatige filters",
+      "to_assign": "Toe te wijzen",
+      "assigned_today": "Vandaag toegewezen",
+      "assigned_30": "Toegewezen (30 dagen)",
+      "unassigned_soon": "Zonder chauffeur vandaag/morgen",
+      "overdue": "Verlopen"
+    },
+    "recurring": {
+      "title": "Vaste ophaling en dagelijkse aanmaak",
+      "sede_section": "Vaste ronde van de vestiging",
+      "sede": "Vestiging-ID",
+      "check": "Controleren",
+      "is_fixed": "Vast actief",
+      "not_fixed": "Geen vaste ronde",
+      "time": "Tijd",
+      "enable": "Vaste ronde activeren",
+      "disable": "Vaste ronde deactiveren",
+      "enable_title": "Vaste ronde activeren",
+      "enable_msg": "Vestiging {id} krijgt elke dag een aangemaakte ophaling. Activeren?",
+      "disable_title": "Vaste ronde deactiveren",
+      "disable_msg": "Vestiging {id} maakt geen vaste ophalingen meer aan. Deactiveren?",
+      "generate_section": "Ophalingen van de dag aanmaken",
+      "date": "Datum",
+      "dry_run": "Alleen simuleren (schrijft niets)",
+      "include_non_business": "Rustdagen van de partner meenemen",
+      "simulate": "Simuleren",
+      "generate": "Aanmaken",
+      "generate_title": "Ophalingen aanmaken",
+      "generate_msg": "De vaste ophalingen van {date} worden echt aangemaakt. Doorgaan?",
+      "locked": "Er loopt al een andere aanmaak: er is niets gedaan.",
+      "result_dry": "Simulatie voor {date}: er is niets geschreven.",
+      "result_live": "Ophalingen van {date} aangemaakt.",
+      "counter": {
+        "generated": "Aangemaakt",
+        "skipped": "Overgeslagen (al aanwezig)",
+        "invalid": "Onbekende of inactieve vestiging",
+        "skipped_courier": "Overgeslagen (koerier)",
+        "skipped_rest_day": "Overgeslagen (rustdag)",
+        "calendar_errors": "Foutieve kalenders (genegeerd)",
+        "skipped_weekday": "Overgeslagen (andere weekdag)"
+      }
+    },
+    "manifest": {
+      "print": "Vrachtlijst afdrukken",
+      "title": "Vrachtlijst chauffeur",
+      "kind": "Type",
+      "address": "Adres",
+      "ldv": "LDV",
+      "colli": "Aantal colli",
+      "collect": "Te innen",
+      "time": "Tijd",
+      "signature": "Handtekening",
+      "delivery": "Levering",
+      "pickup": "Ophaling",
+      "collect_amount": "INNEN {amount} €",
+      "totals": "{pickups} ophalingen en {deliveries} leveringen",
+      "open_maps": "Openen in Google Maps",
+      "open_maps_coords": "Coördinaten"
     }
   }
 }

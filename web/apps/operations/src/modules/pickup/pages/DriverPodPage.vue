@@ -64,7 +64,8 @@ async function register(): Promise<void> {
       ldv: shipment.value.ldv,
       esito: esito.value,
       note: note.value || undefined,
-      firma: firma.value || undefined,
+      // El campo es el nombre de quien recibe; `firma` queda para una imagen (data URI).
+      firma_nome: firma.value || undefined,
       lat: geo.value?.lat ?? null,
       lng: geo.value?.lng ?? null,
     };

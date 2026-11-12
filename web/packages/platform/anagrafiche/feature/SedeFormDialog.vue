@@ -186,6 +186,22 @@
               <v-text-field v-model="form.cons_ora" v-field-help="'cons_ora'" type="time" :label="t('anagrafiche.sede.cons_ora')" density="compact" variant="outlined" />
             </v-col>
           </v-row>
+          <v-select
+            v-model="presaDias"
+            :items="weekdayItems"
+            multiple
+            chips
+            closable-chips
+            :label="t('anagrafiche.sede.presa_dias')"
+            :hint="t('anagrafiche.sede.presa_dias_hint')"
+            persistent-hint
+            :disabled="form.presa_fissa !== 'S'"
+            :error-messages="fieldError('presa_dias')"
+            @update:model-value="clearFieldError('presa_dias')"
+            density="compact"
+            variant="outlined"
+            class="mb-3"
+          />
           <div class="cm-sede-switches">
             <v-switch v-model="form.presa_fissa" v-field-help="'presa_fissa'" :label="t('anagrafiche.sede.presa_fissa')" true-value="S" false-value="N" density="compact" hide-details color="primary" />
             <v-switch v-model="form.unisciprescons" v-field-help="'unisciprescons'" :label="t('anagrafiche.sede.unisciprescons')" true-value="S" false-value="N" density="compact" hide-details color="primary" />
@@ -229,7 +245,7 @@ import CmCittaField from '../components/CmCittaField.vue';
 
 const props = defineProps<{ modelValue: boolean; idAnagrafica: number; sede: SedeRow | null }>();
 const emit = defineEmits<{ 'update:modelValue': [value: boolean]; saved: [] }>();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const toast = useToast();
 const { setFrom: setFieldErrors, clear: clearFieldError, fieldError } = useServerFieldErrors();
 
@@ -264,6 +280,30 @@ async function loadAutisti(): Promise<void> {
 }
 
 const isEdit = computed(() => !!props.sede?.id);
+
+/**
+ * Recurrencia semanal del ritiro fijo (`presa_dias`): días ISO 1=lunes..7=domingo
+ * separados por comas; vacío = todos los días. Puede no venir si el entorno no
+ * tiene la migración: el selector entonces queda vacío (todos los días).
+ */
+const weekdayItems = computed(() => {
+  const fmt = new Intl.DateTimeFormat(locale.value, { weekday: 'long' });
+  // 2024-01-01 fue lunes
+  return Array.from({ length: 7 }, (_, i) => ({
+    value: i + 1,
+    title: fmt.format(new Date(2024, 0, 1 + i)),
+  }));
+});
+const presaDias = computed<number[]>({
+  get: () =>
+    String(form.value.presa_dias ?? '')
+      .split(',')
+      .map((x) => Number(x.trim()))
+      .filter((n) => Number.isInteger(n) && n >= 1 && n <= 7),
+  set: (days) => {
+    form.value.presa_dias = [...new Set(days)].sort((a, b) => a - b).join(',');
+  },
+});
 
 const SN_DEFAULTS = ['presa_fissa', 'unisciprescons', 'logistica', 'ldv_corriere_sepresa'] as const;
 

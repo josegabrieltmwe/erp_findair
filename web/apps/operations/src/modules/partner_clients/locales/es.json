@@ -457,7 +457,9 @@
         "sec_fatturazione": "Facturación",
         "sec_contatto": "Contacto",
         "sec_terminali": "Terminales cargo",
-        "sec_logistica": "Logística (recogida / entrega)"
+        "sec_logistica": "Logística (recogida / entrega)",
+        "presa_dias": "Días de la recogida fija",
+        "presa_dias_hint": "Vacío = todos los días"
       },
       "contatto": {
         "sigl": "Sigla",

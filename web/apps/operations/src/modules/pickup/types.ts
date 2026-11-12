@@ -42,6 +42,10 @@ export interface Pickup {
   note: string | null;
   stato: "A" | "O";
   autogen?: "N" | "S";
+  /** Día en que se hizo el ritiro (fecha cero o nula = aún sin hacer). */
+  data_ritiro?: string | null;
+  /** Expediciones activas cuyo `id_presa_p` es esta presa (solo en el listado). */
+  shipment_ids?: number[];
   insert_datetime?: string;
   insert_user?: number;
   insert_IP?: string;
@@ -53,9 +57,24 @@ export interface PickupFilters {
   affidata?: "N" | "S" | null;
   presa_fissa?: "N" | "S" | "R" | null;
   autogen?: "N" | "S" | null;
+  /** Un solo día (alias `date` en el API); no se combina con `data_da`/`data_a`. */
+  data?: string | null;
   data_da?: string | null;
   data_a?: string | null;
   data_ritiro?: string | null;
+}
+
+/** Resultado por presa de una asignación o liberación masiva. */
+export interface BulkResultItem {
+  pickup_id: number;
+  ok: boolean;
+  error?: string | null;
+}
+
+export interface BulkResult {
+  assigned: number;
+  failed: number;
+  results: BulkResultItem[];
 }
 
 export type PickupWritePayload = Partial<
@@ -142,6 +161,36 @@ export interface RouteStop {
     presa_limite?: string;
   };
   cliente: { id: number; ragsoc: string };
+  /** `R` ritiro, `C` entrega. Ausente en un API anterior a T-21 (se toma como `R`). */
+  kind?: "R" | "C";
+  /** Dirección real donde parar: la sede o la de la expedición (parada a domicilio). */
+  direccion?: StopAddress;
+  /** Expediciones de la parada, con su LDV (código de barras). */
+  shipments?: ManifestShipment[];
+  address_sped?: "N" | "S";
+}
+
+export interface StopAddress {
+  origen: "sede" | "expedicion";
+  nombre?: string;
+  indirizzo?: string;
+  cap?: string;
+  citta?: string;
+  prov?: string;
+  paese?: string;
+  tel?: string;
+}
+
+export interface ManifestShipment {
+  id: number;
+  /** Código de barras de la LDV (id con relleno a 10 cifras). */
+  ldv: string;
+  ref_cliente?: string | null;
+  colli: number;
+  peso: number;
+  /** Importe a cobrar en la entrega (0 = sin contrassegno). */
+  contrassegno: number;
+  contrassegno_incasso?: string | null;
 }
 
 export interface DriverRoute {
@@ -158,14 +207,32 @@ export interface RouteDaySummary {
   unassigned: number;
   total_colli: number;
   total_peso: number;
-  by_driver: Array<{ driver_id: number; driver_nome: string; pickup_count: number; total_colli: number; total_peso: number }>;
+  by_driver: Array<{
+    driver_id: number;
+    driver_nome: string;
+    pickup_count: number;
+    total_colli: number;
+    total_peso: number;
+  }>;
+}
+
+export interface ManifestSummary {
+  total_stops: number;
+  total_colli: number;
+  total_peso: number;
+  /** Campos añadidos por T-21; opcionales para un API anterior. */
+  total_pickups?: number;
+  total_deliveries?: number;
+  total_contrassegno?: number;
+  shipments_colli?: number;
+  shipments_peso?: number;
 }
 
 /** Manifiesto / borderò del autista (api_driver_manifest). */
 export interface Manifest {
   date: string;
   driver: { id: number; nome: string; cell: string; tel: string };
-  summary: { total_stops: number; total_colli: number; total_peso: number };
+  summary: ManifestSummary;
   stops: RouteStop[];
 }
 
@@ -181,6 +248,53 @@ export interface Province {
   id_provincia: string;
 }
 
+/** Opciones de la generación diaria de fijas (T-11). */
+export interface GenerateDailyOptions {
+  dry_run?: boolean;
+  include_non_business_days?: boolean;
+}
+
+export interface GenerateDailyResult {
+  date: string;
+  generated: number;
+  skipped: number;
+  /** Los campos siguientes los añade T-11; opcionales para un API anterior. */
+  invalid?: number;
+  skipped_courier?: number;
+  skipped_rest_day?: number;
+  /** Sedes cuyo día de la semana no está en `presa_dias`. */
+  skipped_weekday?: number;
+  calendar_errors?: number;
+  locked?: boolean;
+  dry_run?: boolean;
+}
+
+/** Resultado por CAP de un guardado en lote de zonas. */
+export interface ZoneSaveItem {
+  cap: string;
+  id_contatto: number;
+  ok: boolean;
+  error?: string;
+}
+
+/** Fila de `api_operations_panel?view=drivers`. */
+export interface OperationsDriverRow {
+  driver_id: number;
+  driver_name: string;
+  pickup_count: number;
+  total_colli: number;
+  total_peso: number;
+}
+
+/** Fila de `api_operations_panel?view=alerts` (giacenza abierta sobre el umbral). */
+export interface GiacenzaAlert {
+  id?: number;
+  id_spedizione?: number;
+  ldv?: number | string | null;
+  dest_nome?: string | null;
+  data_open?: string | null;
+}
+
 /** Config de presa recurrente por sede (api_pickup_recurring). */
 export interface RecurringConfig {
   id_sede: number;
@@ -188,6 +302,13 @@ export interface RecurringConfig {
   id_autista: number;
   presa_ora?: string;
   presa_limite?: string;
+}
+
+/** Respuesta de api_driver_pod / api_driver_delivery (campos aditivos). */
+export interface PodResult {
+  signature_file_id?: number | null;
+  state_updated?: boolean;
+  warnings?: Array<"gps_no_valido" | "firma_imagen_no_almacenada" | string>;
 }
 
 /** Resultado de verify_ldv (api_driver_delivery GET). */
@@ -206,7 +327,10 @@ export interface PodPayload {
   ldv: string;
   esito: string; // 'C' consegnato, 'M' mancata, …
   note?: string;
+  /** Imagen de la firma (data URI png/jpg); el API la guarda como documento. */
   firma?: string;
+  /** Nombre de quien firma. */
+  firma_nome?: string;
   lat?: number | null;
   lng?: number | null;
   data_consegna?: string;

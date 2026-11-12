@@ -5,7 +5,12 @@
  *   view=alerts    → alertas de giacenze sobre un umbral
  */
 import { http } from "@shared/anagrafiche/services/http";
-import type { ApiEnvelope, OperationsOverview } from "../types";
+import type {
+  ApiEnvelope,
+  GiacenzaAlert,
+  OperationsDriverRow,
+  OperationsOverview,
+} from "../types";
 
 export const operationsService = {
   async overview(date?: string): Promise<OperationsOverview> {
@@ -18,21 +23,27 @@ export const operationsService = {
     return r.data;
   },
 
-  async byDriver(date?: string): Promise<unknown> {
+  async byDriver(date?: string): Promise<OperationsDriverRow[]> {
     const query: Record<string, string> = { view: "drivers" };
     if (date) query.date = date;
-    const r = await http<ApiEnvelope<unknown>>("/api_operations_panel", {
-      method: "GET",
-      query,
-    });
+    const r = await http<ApiEnvelope<OperationsDriverRow[]>>(
+      "/api_operations_panel",
+      {
+        method: "GET",
+        query,
+      },
+    );
     return r.data;
   },
 
-  async alerts(threshold = 15): Promise<unknown> {
-    const r = await http<ApiEnvelope<unknown>>("/api_operations_panel", {
-      method: "GET",
-      query: { view: "alerts", threshold: String(threshold) },
-    });
+  async alerts(threshold = 15): Promise<GiacenzaAlert[]> {
+    const r = await http<ApiEnvelope<GiacenzaAlert[]>>(
+      "/api_operations_panel",
+      {
+        method: "GET",
+        query: { view: "alerts", threshold: String(threshold) },
+      },
+    );
     return r.data;
   },
 };

@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useProfile } from "@shared/composables/useProfile";
 import { useI18n } from "vue-i18n";
 import { operationsService } from "../services/operations.service";
-import type { OperationsOverview } from "../types";
+import type {
+  GiacenzaAlert,
+  OperationsDriverRow,
+  OperationsOverview,
+} from "../types";
+
+/** Umbral (días) de las alertas de almacenaje. */
+const ALERT_THRESHOLD = 15;
 
 const { t } = useI18n();
 
@@ -12,6 +20,23 @@ const date = ref(today);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const overview = ref<OperationsOverview | null>(null);
+const drivers = ref<OperationsDriverRow[]>([]);
+const alerts = ref<GiacenzaAlert[]>([]);
+const detailError = ref<string | null>(null);
+
+const { isAdmin, ensureProfile } = useProfile();
+
+/** `adminOnly`: el giro y las zonas exigen administrador (rutas `requiresAdmin`). */
+const allLinks: Array<{ name: string; icon: string; key: string; adminOnly?: boolean }> = [
+  { name: "pickup-list", icon: "mdi-format-list-bulleted", key: "list" },
+  { name: "pickup-calendar", icon: "mdi-calendar-month-outline", key: "calendar" },
+  { name: "pickup-routes", icon: "mdi-routes", key: "routes", adminOnly: true },
+  { name: "pickup-pod", icon: "mdi-clipboard-check-outline", key: "pod" },
+  { name: "settings-driver-zones", icon: "mdi-map-marker-radius-outline", key: "zones", adminOnly: true },
+];
+const links = computed(() =>
+  allLinks.filter((l) => !l.adminOnly || isAdmin.value === true),
+);
 
 async function load(): Promise<void> {
   loading.value = true;
@@ -23,9 +48,23 @@ async function load(): Promise<void> {
   } finally {
     loading.value = false;
   }
+  // El detalle por autista y las alertas son secundarios: un fallo no tapa el resumen.
+  detailError.value = null;
+  const [byDriver, alertRows] = await Promise.allSettled([
+    operationsService.byDriver(date.value),
+    operationsService.alerts(ALERT_THRESHOLD),
+  ]);
+  drivers.value = byDriver.status === "fulfilled" ? byDriver.value : [];
+  alerts.value = alertRows.status === "fulfilled" ? alertRows.value : [];
+  if (byDriver.status === "rejected" || alertRows.status === "rejected") {
+    detailError.value = t("errors.load");
+  }
 }
 
-onMounted(load);
+onMounted(() => {
+  void ensureProfile();
+  void load();
+});
 </script>
 
 <template>
@@ -42,6 +81,19 @@ onMounted(load);
         @update:model-value="load"
       />
     </header>
+
+    <nav class="pk-links mb-4">
+      <v-btn
+        v-for="l in links"
+        :key="l.key"
+        :to="{ name: l.name }"
+        :prepend-icon="l.icon"
+        variant="tonal"
+        size="small"
+      >
+        {{ t(`pickup.nav.${l.key}`) }}
+      </v-btn>
+    </nav>
 
     <v-alert
       v-if="error"
@@ -118,6 +170,62 @@ onMounted(load);
           <span class="pk-stat-lbl">{{ t("pickup.operations.pending") }}</span>
         </div>
       </div>
+
+      <v-alert
+        v-if="detailError"
+        type="warning"
+        variant="tonal"
+        density="compact"
+        class="mt-6"
+      >
+        {{ detailError }}
+      </v-alert>
+
+      <!-- Prese por autista -->
+      <h2 class="pk-section-title mt-6">{{ t("pickup.operations.by_driver") }}</h2>
+      <v-table v-if="drivers.length" density="compact" class="pk-table">
+        <thead>
+          <tr>
+            <th>{{ t("pickup.operations.driver") }}</th>
+            <th class="text-end">{{ t("pickup.operations.pickups") }}</th>
+            <th class="text-end">{{ t("pickup.routes.total_colli") }}</th>
+            <th class="text-end">{{ t("pickup.routes.total_peso") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="d in drivers" :key="d.driver_id">
+            <td>
+              {{ d.driver_id ? d.driver_name : t("pickup.operations.unassigned") }}
+            </td>
+            <td class="text-end">{{ d.pickup_count }}</td>
+            <td class="text-end">{{ d.total_colli }}</td>
+            <td class="text-end">{{ d.total_peso }} kg</td>
+          </tr>
+        </tbody>
+      </v-table>
+      <div v-else class="pk-empty">{{ t("pickup.operations.no_drivers") }}</div>
+
+      <!-- Alertas de almacenaje -->
+      <h2 class="pk-section-title mt-6">
+        {{ t("pickup.operations.alerts", { days: ALERT_THRESHOLD }) }}
+      </h2>
+      <v-table v-if="alerts.length" density="compact" class="pk-table">
+        <thead>
+          <tr>
+            <th>{{ t("pickup.operations.alert_ldv") }}</th>
+            <th>{{ t("pickup.operations.alert_dest") }}</th>
+            <th>{{ t("pickup.operations.alert_since") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(a, i) in alerts" :key="a.id ?? i">
+            <td>{{ a.ldv ?? a.id_spedizione ?? "—" }}</td>
+            <td>{{ a.dest_nome || "—" }}</td>
+            <td>{{ (a.data_open || "").slice(0, 10) || "—" }}</td>
+          </tr>
+        </tbody>
+      </v-table>
+      <div v-else class="pk-empty">{{ t("pickup.operations.no_alerts") }}</div>
     </template>
   </div>
 </template>
@@ -173,5 +281,21 @@ onMounted(load);
   font-size: 0.8rem;
   color: rgba(var(--v-theme-on-surface), 0.6);
   margin-top: 4px;
+}
+.pk-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pk-table {
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
+  border-radius: 8px;
+}
+.pk-empty {
+  padding: 20px;
+  text-align: center;
+  color: rgba(var(--v-theme-on-surface), 0.5);
+  border: 1px dashed rgba(var(--v-theme-on-surface), 0.15);
+  border-radius: 8px;
 }
 </style>

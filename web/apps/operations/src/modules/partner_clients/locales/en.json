@@ -457,7 +457,9 @@
         "sec_fatturazione": "Invoicing",
         "sec_contatto": "Contact",
         "sec_terminali": "Cargo terminals",
-        "sec_logistica": "Logistics (pickup / delivery)"
+        "sec_logistica": "Logistics (pickup / delivery)",
+        "presa_dias": "Fixed pickup days",
+        "presa_dias_hint": "Empty = every day"
       },
       "contatto": {
         "sigl": "Initials",

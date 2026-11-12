@@ -457,7 +457,9 @@
         "sec_fatturazione": "Fatturazione",
         "sec_contatto": "Contatto",
         "sec_terminali": "Terminal cargo",
-        "sec_logistica": "Logistica (ritiro / consegna)"
+        "sec_logistica": "Logistica (ritiro / consegna)",
+        "presa_dias": "Giorni della presa fissa",
+        "presa_dias_hint": "Vuoto = tutti i giorni"
       },
       "contatto": {
         "sigl": "Sigla",

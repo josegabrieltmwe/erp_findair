@@ -29,6 +29,8 @@ export interface SedeRow {
   PEC?: string;
   cod_destin?: string;
   presa_fissa?: string;
+  /** Días ISO (1=lunes..7=domingo) del ritiro fijo, separados por comas; vacío = todos. Opcional. */
+  presa_dias?: string;
   dhl_airport?: string;
   cargo_airport?: string;
   cargo_porto?: string;

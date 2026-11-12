@@ -2,6 +2,8 @@
 import { todayLocal } from "@shared/utils/date";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import DriverManifestSheet from "../components/DriverManifestSheet.vue";
+import { stopAddress, stopKind, stopMapLinks } from "../logic";
 import { driverService } from "../services/driver.service";
 import type { Driver, DriverRoute, Manifest } from "../types";
 
@@ -125,10 +127,35 @@ onMounted(loadDrivers);
         <li v-for="stop in route.stops" :key="stop.pickup_id" class="pk-stop">
           <div class="pk-stop-order">{{ stop.order }}</div>
           <div class="pk-stop-body">
-            <div class="pk-stop-cliente">{{ stop.cliente.ragsoc }}</div>
-            <div class="pk-stop-addr">
-              {{ stop.sede.indirizzo }}, {{ stop.sede.cap }}
-              {{ stop.sede.citta }} ({{ stop.sede.prov }})
+            <div class="pk-stop-cliente">
+              {{ stop.cliente.ragsoc }}
+              <v-chip
+                size="x-small"
+                :color="stopKind(stop) === 'C' ? 'secondary' : 'primary'"
+                class="ml-1"
+                >{{
+                  stopKind(stop) === "C"
+                    ? t("pickup.manifest.delivery")
+                    : t("pickup.manifest.pickup")
+                }}</v-chip
+              >
+            </div>
+            <div class="pk-stop-addr">{{ stopAddress(stop).line }}</div>
+            <div class="pk-stop-links">
+              <a
+                v-if="stopMapLinks(stop).address"
+                :href="stopMapLinks(stop).address"
+                target="_blank"
+                rel="noopener"
+                >{{ t("pickup.manifest.open_maps") }}</a
+              >
+              <a
+                v-if="stopMapLinks(stop).coords"
+                :href="stopMapLinks(stop).coords"
+                target="_blank"
+                rel="noopener"
+                >{{ t("pickup.manifest.open_maps_coords") }}</a
+              >
             </div>
             <div class="pk-stop-meta">
               <span>{{
@@ -155,26 +182,10 @@ onMounted(loadDrivers);
         </li>
       </ol>
 
-      <!-- Manifiesto -->
+      <!-- Borderò imprimible -->
       <v-card v-if="manifest" variant="outlined" class="mt-6">
-        <v-card-title class="text-subtitle-1">
-          {{ t("pickup.routes.manifest") }} — {{ manifest.driver.nome }}
-        </v-card-title>
         <v-card-text>
-          <div class="pk-manifest-sum">
-            <span
-              >{{ t("pickup.routes.total_stops") }}:
-              <b>{{ manifest.summary.total_stops }}</b></span
-            >
-            <span
-              >{{ t("pickup.routes.total_colli") }}:
-              <b>{{ manifest.summary.total_colli }}</b></span
-            >
-            <span
-              >{{ t("pickup.routes.total_peso") }}:
-              <b>{{ manifest.summary.total_peso }} kg</b></span
-            >
-          </div>
+          <DriverManifestSheet :manifest="manifest" />
         </v-card-text>
       </v-card>
     </template>
@@ -247,9 +258,9 @@ onMounted(loadDrivers);
   color: rgba(var(--v-theme-on-surface), 0.6);
   margin-top: 4px;
 }
-.pk-manifest-sum {
+.pk-stop-links {
   display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.8rem;
 }
 </style>

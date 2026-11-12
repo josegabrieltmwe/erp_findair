@@ -25,7 +25,15 @@
       "new_today": "Neu heute",
       "overdue": "Verspätet",
       "awaiting": "Warten auf Kunden",
-      "pending": "Schwebend"
+      "pending": "Schwebend",
+      "by_driver": "Abholungen pro Fahrer",
+      "driver": "Fahrer",
+      "no_drivers": "Keine Abholungen für dieses Datum.",
+      "alerts": "Lagerwarnungen (über {days} Tage)",
+      "alert_ldv": "LDV",
+      "alert_dest": "Empfänger",
+      "alert_since": "Eingelagert seit",
+      "no_alerts": "Keine Lagerwarnungen."
     },
     "calendar": {
       "title": "Abholkalender",
@@ -35,7 +43,16 @@
       "empty": "Keine Abholungen an diesem Datum.",
       "leg_normal": "Abholung",
       "leg_fixed": "Feste Abholung",
-      "leg_done": "Übergeben"
+      "leg_done": "Übergeben",
+      "view_day": "Tag",
+      "view_week": "Woche",
+      "view_month": "Monat",
+      "all_drivers": "Alle Fahrer",
+      "driver": "Fahrer",
+      "more": "+{n} weitere",
+      "not_assigned": "Nicht zugewiesen",
+      "leg_shipment": "Mit Sendung",
+      "leg_triangulation": "Dreiecksabholung"
     },
     "list": {
       "title": "Abholungen",
@@ -61,7 +78,16 @@
         "peso": "Gewicht",
         "fixed": "Fest",
         "affidata": "Übergeben"
-      }
+      },
+      "fixed_removed": "Fest entfernt",
+      "adhoc": "Einmalig",
+      "remove_today": "Nur heute entfernen",
+      "remove_today_title": "Feste Abholung nur heute entfernen",
+      "remove_today_msg": "Die feste Abholung #{id} wird nur für diesen Tag entfernt und nicht neu erzeugt. Die feste Abholung der Filiale bleibt aktiv. Fortfahren?",
+      "recurring": "Feste Abholungen",
+      "recurring_sede": "Feste Abholung der Filiale",
+      "bulk_assign": "Fahrer zuweisen oder freigeben",
+      "incoherent": "Inkonsistent: Zuweisung und Fahrer passen nicht zusammen"
     },
     "edit": {
       "new_title": "Neue Abholung",
@@ -85,7 +111,13 @@
       "title": "Abholung #{id} zuweisen",
       "driver": "Fahrer",
       "assign": "Zuweisen",
-      "unassign": "Zuweisung entfernen"
+      "unassign": "Zuweisung entfernen",
+      "close": "Schließen",
+      "bulk_title": "Fahrer {n} Abholungen zuweisen",
+      "bulk_unassign_title": "Fahrer freigeben",
+      "bulk_unassign_msg": "Der Fahrer wird bei {n} Abholungen entfernt. Fortfahren?",
+      "bulk_summary": "{ok} erfolgreich, {failed} fehlgeschlagen",
+      "bulk_failed": "Fehler ohne Details"
     },
     "routes": {
       "title": "Fahrertouren",
@@ -108,7 +140,13 @@
       "pick_provincia": "Wählen Sie eine Provinz.",
       "empty": "Kein Gebiet zugewiesen.",
       "delete_title": "Gebiet entfernen",
-      "delete_msg": "Die Zuweisung der PLZ {cap} entfernen?"
+      "delete_msg": "Die Zuweisung der PLZ {cap} entfernen?",
+      "current": "Aktuelle Zuweisung",
+      "new": "Neu",
+      "save": "Änderungen speichern",
+      "discard": "Verwerfen",
+      "pending": "{n} ausstehende Änderungen",
+      "save_summary": "{ok} PLZ gespeichert, {failed} fehlgeschlagen"
     },
     "pod": {
       "title": "Zustellerfassung (POD)",
@@ -125,6 +163,67 @@
       "done": "Zustellung erfasst.",
       "no_geo": "Standortbestimmung nicht verfügbar.",
       "geo_failed": "Standort konnte nicht ermittelt werden."
+    },
+    "queue": {
+      "label": "Arbeitsliste",
+      "all": "Manuelle Filter",
+      "to_assign": "Zuzuweisen",
+      "assigned_today": "Heute zugewiesen",
+      "assigned_30": "Zugewiesen (30 Tage)",
+      "unassigned_soon": "Ohne Fahrer heute/morgen",
+      "overdue": "Überfällig"
+    },
+    "recurring": {
+      "title": "Feste Abholung und tägliche Erzeugung",
+      "sede_section": "Feste Tour der Filiale",
+      "sede": "Filial-ID",
+      "check": "Prüfen",
+      "is_fixed": "Fest aktiv",
+      "not_fixed": "Keine feste Tour",
+      "time": "Uhrzeit",
+      "enable": "Feste Tour aktivieren",
+      "disable": "Feste Tour deaktivieren",
+      "enable_title": "Feste Tour aktivieren",
+      "enable_msg": "Für Filiale {id} wird jeden Tag eine Abholung erzeugt. Aktivieren?",
+      "disable_title": "Feste Tour deaktivieren",
+      "disable_msg": "Filiale {id} erzeugt keine festen Abholungen mehr. Deaktivieren?",
+      "generate_section": "Abholungen des Tages erzeugen",
+      "date": "Datum",
+      "dry_run": "Nur simulieren (schreibt nichts)",
+      "include_non_business": "Ruhetage des Partners einbeziehen",
+      "simulate": "Simulieren",
+      "generate": "Erzeugen",
+      "generate_title": "Abholungen erzeugen",
+      "generate_msg": "Die festen Abholungen vom {date} werden tatsächlich angelegt. Fortfahren?",
+      "locked": "Eine andere Erzeugung läuft bereits: nichts wurde getan.",
+      "result_dry": "Simulation für {date}: es wurde nichts geschrieben.",
+      "result_live": "Abholungen vom {date} erzeugt.",
+      "counter": {
+        "generated": "Erzeugt",
+        "skipped": "Übersprungen (schon vorhanden)",
+        "invalid": "Unbekannte oder inaktive Filiale",
+        "skipped_courier": "Übersprungen (Kurierfahrer)",
+        "skipped_rest_day": "Übersprungen (Ruhetag)",
+        "calendar_errors": "Fehlerhafte Kalender (ignoriert)",
+        "skipped_weekday": "Übersprungen (anderer Wochentag)"
+      }
+    },
+    "manifest": {
+      "print": "Bordero drucken",
+      "title": "Fahrer-Bordero",
+      "kind": "Typ",
+      "address": "Adresse",
+      "ldv": "LDV",
+      "colli": "Packstücke",
+      "collect": "Einzuziehen",
+      "time": "Uhrzeit",
+      "signature": "Unterschrift",
+      "delivery": "Zustellung",
+      "pickup": "Abholung",
+      "collect_amount": "KASSIEREN {amount} €",
+      "totals": "{pickups} Abholungen und {deliveries} Zustellungen",
+      "open_maps": "In Google Maps öffnen",
+      "open_maps_coords": "Koordinaten"
     }
   }
 }

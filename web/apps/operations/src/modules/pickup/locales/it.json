@@ -25,7 +25,15 @@
       "new_today": "Nuove oggi",
       "overdue": "In ritardo",
       "awaiting": "Attesa cliente",
-      "pending": "In sospeso"
+      "pending": "In sospeso",
+      "by_driver": "Prese per autista",
+      "driver": "Autista",
+      "no_drivers": "Nessuna presa per questa data.",
+      "alerts": "Allarmi di giacenza (oltre {days} giorni)",
+      "alert_ldv": "LDV",
+      "alert_dest": "Destinatario",
+      "alert_since": "In giacenza dal",
+      "no_alerts": "Nessun allarme di giacenza."
     },
     "calendar": {
       "title": "Calendario prese",
@@ -35,7 +43,16 @@
       "empty": "Nessuna presa in questa data.",
       "leg_normal": "Presa",
       "leg_fixed": "Presa fissa",
-      "leg_done": "Affidata"
+      "leg_done": "Affidata",
+      "view_day": "Giorno",
+      "view_week": "Settimana",
+      "view_month": "Mese",
+      "all_drivers": "Tutti gli autisti",
+      "driver": "Autista",
+      "more": "+{n} altre",
+      "not_assigned": "Non assegnate",
+      "leg_shipment": "Con spedizione",
+      "leg_triangulation": "Triangolazione"
     },
     "list": {
       "title": "Prese",
@@ -61,7 +78,16 @@
         "peso": "Peso",
         "fixed": "Fissa",
         "affidata": "Affidata"
-      }
+      },
+      "fixed_removed": "Fissa ritirata",
+      "adhoc": "Occasionale",
+      "remove_today": "Ritira solo oggi",
+      "remove_today_title": "Ritira la presa fissa solo oggi",
+      "remove_today_msg": "La presa fissa #{id} viene ritirata solo per questo giorno e non verrà rigenerata. La fissa della sede resta attiva. Continuare?",
+      "recurring": "Prese fisse",
+      "recurring_sede": "Presa fissa della sede",
+      "bulk_assign": "Assegna o libera autista",
+      "incoherent": "Incoerente: affidamento e autista non coincidono"
     },
     "edit": {
       "new_title": "Nuova presa",
@@ -85,7 +111,13 @@
       "title": "Assegna presa #{id}",
       "driver": "Autista",
       "assign": "Assegna",
-      "unassign": "Rimuovi assegnazione"
+      "unassign": "Rimuovi assegnazione",
+      "close": "Chiudi",
+      "bulk_title": "Assegna autista a {n} prese",
+      "bulk_unassign_title": "Libera autista",
+      "bulk_unassign_msg": "L'autista verrà rimosso da {n} prese. Continuare?",
+      "bulk_summary": "{ok} riuscite, {failed} con errore",
+      "bulk_failed": "Errore senza dettaglio"
     },
     "routes": {
       "title": "Giri autisti",
@@ -108,7 +140,13 @@
       "pick_provincia": "Seleziona una provincia.",
       "empty": "Nessuna zona assegnata.",
       "delete_title": "Rimuovi zona",
-      "delete_msg": "Rimuovere l'assegnazione del CAP {cap}?"
+      "delete_msg": "Rimuovere l'assegnazione del CAP {cap}?",
+      "current": "Assegnazione attuale",
+      "new": "Nuovo",
+      "save": "Salva modifiche",
+      "discard": "Scarta",
+      "pending": "{n} modifiche in sospeso",
+      "save_summary": "{ok} CAP salvati, {failed} con errore"
     },
     "pod": {
       "title": "Registrazione consegna (POD)",
@@ -125,6 +163,67 @@
       "done": "Consegna registrata.",
       "no_geo": "Geolocalizzazione non disponibile.",
       "geo_failed": "Impossibile rilevare la posizione."
+    },
+    "queue": {
+      "label": "Coda di lavoro",
+      "all": "Filtri manuali",
+      "to_assign": "Da affidare",
+      "assigned_today": "Affidate di oggi",
+      "assigned_30": "Affidate (30 giorni)",
+      "unassigned_soon": "Senza autista oggi/domani",
+      "overdue": "Scadute"
+    },
+    "recurring": {
+      "title": "Presa fissa e generazione giornaliera",
+      "sede_section": "Giro fisso della sede",
+      "sede": "ID sede",
+      "check": "Verifica",
+      "is_fixed": "Fissa attiva",
+      "not_fixed": "Senza giro fisso",
+      "time": "Ora",
+      "enable": "Attiva giro fisso",
+      "disable": "Disattiva giro fisso",
+      "enable_title": "Attiva giro fisso",
+      "enable_msg": "La sede {id} avrà una presa generata ogni giorno. Attivare?",
+      "disable_title": "Disattiva giro fisso",
+      "disable_msg": "La sede {id} non genererà più prese fisse. Disattivare?",
+      "generate_section": "Genera le prese del giorno",
+      "date": "Data",
+      "dry_run": "Solo simulazione (non scrive)",
+      "include_non_business": "Includi i giorni di riposo del partner",
+      "simulate": "Simula",
+      "generate": "Genera",
+      "generate_title": "Genera prese",
+      "generate_msg": "Le prese fisse del {date} verranno create davvero. Continuare?",
+      "locked": "Un'altra generazione è in corso: non è stato fatto nulla.",
+      "result_dry": "Simulazione del {date}: non è stato scritto nulla.",
+      "result_live": "Prese del {date} generate.",
+      "counter": {
+        "generated": "Generate",
+        "skipped": "Saltate (già presenti)",
+        "invalid": "Sede sconosciuta o inattiva",
+        "skipped_courier": "Saltate (autista corriere)",
+        "skipped_rest_day": "Saltate (giorno di riposo)",
+        "calendar_errors": "Calendari scritti male (ignorati)",
+        "skipped_weekday": "Saltate (altro giorno della settimana)"
+      }
+    },
+    "manifest": {
+      "print": "Stampa borderò",
+      "title": "Borderò dell'autista",
+      "kind": "Tipo",
+      "address": "Indirizzo",
+      "ldv": "LDV",
+      "colli": "Colli",
+      "collect": "Da incassare",
+      "time": "Ora",
+      "signature": "Firma",
+      "delivery": "Consegna",
+      "pickup": "Ritiro",
+      "collect_amount": "RITIRARE {amount} €",
+      "totals": "{pickups} ritiri e {deliveries} consegne",
+      "open_maps": "Apri in Google Maps",
+      "open_maps_coords": "Coordinate"
     }
   }
 }

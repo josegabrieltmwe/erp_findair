@@ -25,7 +25,15 @@
       "new_today": "Nuevas hoy",
       "overdue": "Vencidas",
       "awaiting": "Espera cliente",
-      "pending": "Pendientes"
+      "pending": "Pendientes",
+      "by_driver": "Recogidas por chófer",
+      "driver": "Chófer",
+      "no_drivers": "Sin recogidas asignadas en esta fecha.",
+      "alerts": "Alertas de almacenaje (más de {days} días)",
+      "alert_ldv": "LDV",
+      "alert_dest": "Consignatario",
+      "alert_since": "En almacén desde",
+      "no_alerts": "Sin alertas de almacenaje."
     },
     "calendar": {
       "title": "Calendario de recogidas",
@@ -35,7 +43,16 @@
       "empty": "No hay recogidas en esta fecha.",
       "leg_normal": "Recogida",
       "leg_fixed": "Recogida fija",
-      "leg_done": "Entregada"
+      "leg_done": "Entregada",
+      "view_day": "Día",
+      "view_week": "Semana",
+      "view_month": "Mes",
+      "all_drivers": "Todos los chóferes",
+      "driver": "Chófer",
+      "more": "+{n} más",
+      "not_assigned": "Sin asignar",
+      "leg_shipment": "Con expedición",
+      "leg_triangulation": "Triangulación"
     },
     "list": {
       "title": "Recogidas",
@@ -61,7 +78,16 @@
         "peso": "Peso",
         "fixed": "Fija",
         "affidata": "Entregada"
-      }
+      },
+      "fixed_removed": "Fija retirada",
+      "adhoc": "Puntual",
+      "remove_today": "Retirar solo hoy",
+      "remove_today_title": "Retirar la recogida fija solo hoy",
+      "remove_today_msg": "La recogida fija #{id} se retira solo de este día y no se vuelve a generar. La fija de la sede sigue activa. ¿Continuar?",
+      "recurring": "Recogida fija",
+      "recurring_sede": "Recogida fija de la sede",
+      "bulk_assign": "Asignar o liberar chófer",
+      "incoherent": "Incoherente: asignación y chófer no coinciden"
     },
     "edit": {
       "new_title": "Nueva recogida",
@@ -85,7 +111,13 @@
       "title": "Asignar recogida #{id}",
       "driver": "Chófer",
       "assign": "Asignar",
-      "unassign": "Quitar asignación"
+      "unassign": "Quitar asignación",
+      "close": "Cerrar",
+      "bulk_title": "Asignar chófer a {n} recogidas",
+      "bulk_unassign_title": "Liberar chófer",
+      "bulk_unassign_msg": "Se quitará el chófer de {n} recogidas. ¿Continuar?",
+      "bulk_summary": "{ok} correctas, {failed} con error",
+      "bulk_failed": "Error sin detalle"
     },
     "routes": {
       "title": "Giros de chófer",
@@ -108,7 +140,13 @@
       "pick_provincia": "Selecciona una provincia.",
       "empty": "Ninguna zona asignada.",
       "delete_title": "Quitar zona",
-      "delete_msg": "¿Quitar la asignación del CP {cap}?"
+      "delete_msg": "¿Quitar la asignación del CP {cap}?",
+      "current": "Asignación actual",
+      "new": "Nuevo",
+      "save": "Guardar cambios",
+      "discard": "Descartar",
+      "pending": "{n} cambios pendientes",
+      "save_summary": "{ok} CP guardados, {failed} con error"
     },
     "pod": {
       "title": "Registro de entrega (POD)",
@@ -125,6 +163,67 @@
       "done": "Entrega registrada.",
       "no_geo": "Geolocalización no disponible.",
       "geo_failed": "No se pudo capturar la ubicación."
+    },
+    "queue": {
+      "label": "Cola de trabajo",
+      "all": "Filtros manuales",
+      "to_assign": "Por asignar",
+      "assigned_today": "Asignadas hoy",
+      "assigned_30": "Asignadas (30 días)",
+      "unassigned_soon": "Sin chófer hoy/mañana",
+      "overdue": "Vencidas"
+    },
+    "recurring": {
+      "title": "Recogida fija y generación diaria",
+      "sede_section": "Giro fijo de la sede",
+      "sede": "ID Sede",
+      "check": "Consultar",
+      "is_fixed": "Fija activa",
+      "not_fixed": "Sin giro fijo",
+      "time": "Hora",
+      "enable": "Activar giro fijo",
+      "disable": "Desactivar giro fijo",
+      "enable_title": "Activar giro fijo",
+      "enable_msg": "La sede {id} tendrá una recogida generada cada día. ¿Activar?",
+      "disable_title": "Desactivar giro fijo",
+      "disable_msg": "La sede {id} dejará de generar recogidas fijas. ¿Desactivar?",
+      "generate_section": "Generar las recogidas del día",
+      "date": "Fecha",
+      "dry_run": "Solo simular (no escribe)",
+      "include_non_business": "Incluir días de descanso del partner",
+      "simulate": "Simular",
+      "generate": "Generar",
+      "generate_title": "Generar recogidas",
+      "generate_msg": "Se crearán de verdad las recogidas fijas del {date}. ¿Continuar?",
+      "locked": "Hay otra generación en curso: no se ha hecho nada.",
+      "result_dry": "Simulación del {date}: no se ha escrito nada.",
+      "result_live": "Recogidas del {date} generadas.",
+      "counter": {
+        "generated": "Generadas",
+        "skipped": "Omitidas (ya tenían algo)",
+        "invalid": "Sede desconocida o inactiva",
+        "skipped_courier": "Omitidas (chófer courier)",
+        "skipped_rest_day": "Omitidas (día de descanso)",
+        "calendar_errors": "Calendarios mal escritos (ignorados)",
+        "skipped_weekday": "Omitidas (otro día de la semana)"
+      }
+    },
+    "manifest": {
+      "print": "Imprimir borderò",
+      "title": "Borderò del chófer",
+      "kind": "Tipo de parada",
+      "address": "Dirección",
+      "ldv": "LDV",
+      "colli": "Bultos",
+      "collect": "A cobrar",
+      "time": "Hora",
+      "signature": "Firma del receptor",
+      "delivery": "Entrega",
+      "pickup": "Recogida",
+      "collect_amount": "COBRAR {amount} €",
+      "totals": "{pickups} recogidas y {deliveries} entregas",
+      "open_maps": "Abrir en Google Maps",
+      "open_maps_coords": "Coordenadas"
     }
   }
 }

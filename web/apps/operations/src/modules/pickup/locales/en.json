@@ -25,7 +25,15 @@
       "new_today": "New today",
       "overdue": "Overdue",
       "awaiting": "Awaiting client",
-      "pending": "Pending"
+      "pending": "Pending",
+      "by_driver": "Pickups by driver",
+      "driver": "Driver",
+      "no_drivers": "No pickups for this date.",
+      "alerts": "Storage alerts (over {days} days)",
+      "alert_ldv": "LDV",
+      "alert_dest": "Consignee",
+      "alert_since": "In storage since",
+      "no_alerts": "No storage alerts."
     },
     "calendar": {
       "title": "Pickup calendar",
@@ -35,7 +43,16 @@
       "empty": "No pickups on this date.",
       "leg_normal": "Pickup",
       "leg_fixed": "Fixed pickup",
-      "leg_done": "Handed over"
+      "leg_done": "Handed over",
+      "view_day": "Day",
+      "view_week": "Week",
+      "view_month": "Month",
+      "all_drivers": "All drivers",
+      "driver": "Driver",
+      "more": "+{n} more",
+      "not_assigned": "Unassigned",
+      "leg_shipment": "With shipment",
+      "leg_triangulation": "Triangulation"
     },
     "list": {
       "title": "Pickups",
@@ -61,7 +78,16 @@
         "peso": "Weight",
         "fixed": "Fixed",
         "affidata": "Handed"
-      }
+      },
+      "fixed_removed": "Fixed removed",
+      "adhoc": "One-off",
+      "remove_today": "Remove for today only",
+      "remove_today_title": "Remove the fixed pickup for today only",
+      "remove_today_msg": "Fixed pickup #{id} is removed for this day only and will not be generated again. The branch fixed pickup stays active. Continue?",
+      "recurring": "Fixed pickups",
+      "recurring_sede": "Fixed pickup of the branch",
+      "bulk_assign": "Assign or release driver",
+      "incoherent": "Inconsistent: assignment and driver do not match"
     },
     "edit": {
       "new_title": "New pickup",
@@ -85,7 +111,13 @@
       "title": "Assign pickup #{id}",
       "driver": "Driver",
       "assign": "Assign",
-      "unassign": "Unassign"
+      "unassign": "Unassign",
+      "close": "Close",
+      "bulk_title": "Assign driver to {n} pickups",
+      "bulk_unassign_title": "Release driver",
+      "bulk_unassign_msg": "The driver will be removed from {n} pickups. Continue?",
+      "bulk_summary": "{ok} done, {failed} failed",
+      "bulk_failed": "Error without details"
     },
     "routes": {
       "title": "Driver routes",
@@ -108,7 +140,13 @@
       "pick_provincia": "Select a province.",
       "empty": "No zones assigned.",
       "delete_title": "Remove zone",
-      "delete_msg": "Remove CAP {cap} assignment?"
+      "delete_msg": "Remove CAP {cap} assignment?",
+      "current": "Current assignment",
+      "new": "New",
+      "save": "Save changes",
+      "discard": "Discard",
+      "pending": "{n} pending changes",
+      "save_summary": "{ok} CAP saved, {failed} failed"
     },
     "pod": {
       "title": "Delivery registration (POD)",
@@ -125,6 +163,67 @@
       "done": "Delivery registered.",
       "no_geo": "Geolocation unavailable.",
       "geo_failed": "Could not capture location."
+    },
+    "queue": {
+      "label": "Work queue",
+      "all": "Manual filters",
+      "to_assign": "To assign",
+      "assigned_today": "Assigned today",
+      "assigned_30": "Assigned (30 days)",
+      "unassigned_soon": "No driver today/tomorrow",
+      "overdue": "Overdue"
+    },
+    "recurring": {
+      "title": "Fixed pickups and daily generation",
+      "sede_section": "Branch fixed pickup",
+      "sede": "Branch ID",
+      "check": "Check",
+      "is_fixed": "Fixed active",
+      "not_fixed": "No fixed pickup",
+      "time": "Time",
+      "enable": "Enable fixed pickup",
+      "disable": "Disable fixed pickup",
+      "enable_title": "Enable fixed pickup",
+      "enable_msg": "Branch {id} will get a pickup generated every day. Enable?",
+      "disable_title": "Disable fixed pickup",
+      "disable_msg": "Branch {id} will stop generating fixed pickups. Disable?",
+      "generate_section": "Generate the day's pickups",
+      "date": "Date",
+      "dry_run": "Simulate only (writes nothing)",
+      "include_non_business": "Include the partner's rest days",
+      "simulate": "Simulate",
+      "generate": "Generate",
+      "generate_title": "Generate pickups",
+      "generate_msg": "The fixed pickups of {date} will actually be created. Continue?",
+      "locked": "Another generation is running: nothing was done.",
+      "result_dry": "Simulation for {date}: nothing was written.",
+      "result_live": "Pickups of {date} generated.",
+      "counter": {
+        "generated": "Generated",
+        "skipped": "Skipped (already had one)",
+        "invalid": "Unknown or inactive branch",
+        "skipped_courier": "Skipped (courier driver)",
+        "skipped_rest_day": "Skipped (rest day)",
+        "calendar_errors": "Badly written calendars (ignored)",
+        "skipped_weekday": "Skipped (other weekday)"
+      }
+    },
+    "manifest": {
+      "print": "Print manifest",
+      "title": "Driver manifest",
+      "kind": "Type",
+      "address": "Address",
+      "ldv": "LDV",
+      "colli": "Parcels",
+      "collect": "To collect",
+      "time": "Time",
+      "signature": "Signature",
+      "delivery": "Delivery",
+      "pickup": "Pickup",
+      "collect_amount": "COLLECT {amount} €",
+      "totals": "{pickups} pickups and {deliveries} deliveries",
+      "open_maps": "Open in Google Maps",
+      "open_maps_coords": "Coordinates"
     }
   }
 }

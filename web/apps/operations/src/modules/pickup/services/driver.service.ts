@@ -8,6 +8,7 @@
  *   POST             api_driver_pod       (registrar POD)
  */
 import { http } from "@shared/anagrafiche/services/http";
+import type { ZoneChange } from "../logic";
 import type {
   ApiEnvelope,
   Driver,
@@ -16,8 +17,10 @@ import type {
   LdvLookup,
   Manifest,
   PodPayload,
+  PodResult,
   Province,
   RouteDaySummary,
+  ZoneSaveItem,
 } from "../types";
 
 export const driverService = {
@@ -103,6 +106,31 @@ export const driverService = {
     });
   },
 
+  /**
+   * Guarda en lote los cambios de zonas. Cada CAP va en su petición (0 = quitar)
+   * y el resultado es por CAP: un fallo no impide guardar los demás.
+   */
+  async saveZones(changes: ZoneChange[]): Promise<ZoneSaveItem[]> {
+    const settled = await Promise.allSettled(
+      changes.map((c) =>
+        c.id_contatto > 0
+          ? driverService.assignZone(c.cap, c.id_contatto)
+          : driverService.clearZone(c.cap),
+      ),
+    );
+    return settled.map((r, i) => ({
+      cap: changes[i].cap,
+      id_contatto: changes[i].id_contatto,
+      ok: r.status === "fulfilled",
+      ...(r.status === "rejected"
+        ? {
+            error:
+              r.reason instanceof Error ? r.reason.message : String(r.reason),
+          }
+        : {}),
+    }));
+  },
+
   // --- POD / prueba de entrega ---
 
   /** Busca una expedición por su LDV (RIF_cliente o AWB) para confirmar entrega. */
@@ -115,8 +143,8 @@ export const driverService = {
   },
 
   /** Registra la entrega (POD): esito, nota, firma y geolocalización. */
-  async registerPod(payload: PodPayload): Promise<unknown> {
-    const r = await http<ApiEnvelope<unknown>>("/api_driver_pod", {
+  async registerPod(payload: PodPayload): Promise<PodResult> {
+    const r = await http<ApiEnvelope<PodResult>>("/api_driver_pod", {
       method: "POST",
       body: payload,
     });

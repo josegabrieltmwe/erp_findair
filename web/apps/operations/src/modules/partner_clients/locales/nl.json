@@ -457,7 +457,9 @@
         "sec_fatturazione": "Facturatie",
         "sec_contatto": "Contact",
         "sec_terminali": "Cargoterminal",
-        "sec_logistica": "Logistiek (ophalen / afleveren)"
+        "sec_logistica": "Logistiek (ophalen / afleveren)",
+        "presa_dias": "Dagen van de vaste ophaling",
+        "presa_dias_hint": "Leeg = elke dag"
       },
       "contatto": {
         "sigl": "Afkorting",
