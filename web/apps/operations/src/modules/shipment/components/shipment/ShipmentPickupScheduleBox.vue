@@ -225,6 +225,18 @@
               <li>{{ t("shipment.pickup.reserve_alert_step2") }}</li>
             </ol>
           </v-alert>
+          <!-- TNT World books a real collection but has no cancellation path at
+               all (neither shipment nor pickup) via any API — confirmed in the
+               backend, not a UI assumption. Shown regardless of hasAwb. -->
+          <v-alert
+            v-if="isTntWorld"
+            type="error"
+            variant="tonal"
+            density="compact"
+            class="mb-3"
+          >
+            {{ t("shipment.pickup.reserve_alert_tnt_no_cancel") }}
+          </v-alert>
           <p class="text-body-2">
             {{ t("shipment.pickup.reserve_alert_body") }}
           </p>
@@ -344,6 +356,13 @@ const hasAwb = computed<boolean>(() => {
   return a !== "";
 });
 
+// TNT World (id_fornitore 8107, Express Connect) — the only courier whose
+// pickup has no cancellation path at all (shipment nor pickup, confirmed
+// backend-side). Warn before the real booking is sent, not just on cancel.
+const isTntWorld = computed<boolean>(
+  () => Number(shipment.value?.id_fornitore ?? 0) === 8107,
+);
+
 /**
  * Reserve the courier pickup. Flow rule: if the shipment already has an AWB,
  * show the alert with the steps to follow and require explicit confirmation.
@@ -403,6 +422,12 @@ async function onCancelPickup(): Promise<void> {
     if (r.success) {
       toasts.push("success", t("shipment.pickup.toast_cancelled"));
       await store.load(sid.value);
+    } else if (r.error_code === "PICKUP_NOT_SUPPORTED") {
+      // Same weight as cancelAtCourier()'s 'local_only' handling: this isn't a
+      // retryable failure, the courier (tnt/mytnt, always) has no cancel-pickup
+      // API at all — the operator needs to know to contact them directly, not
+      // that something went wrong here.
+      toasts.push("warning", t("shipment.pickup.toast_cancel_not_supported"));
     } else {
       toasts.push("error", r.error ?? t("shipment.pickup.toast_cancel_failed"));
     }
