@@ -692,6 +692,8 @@
         "err_required": "Required field",
         "err_cap_required": "This country requires a postal code",
         "err_prov_required": "This country requires a province/state",
+        "err_phone_invalid": "Invalid phone number (digits, + ( ) . / -, 5–30 characters)",
+        "err_email_invalid": "Invalid email address",
         "err_validation": "Check the highlighted address fields.",
         "saved": "Address saved",
         "save_error": "The address could not be saved."
@@ -1406,7 +1408,9 @@
       "toast_cancelled": "Shipment cancelled",
       "toast_cancel_failed": "Failed to cancel shipment",
       "toast_ldv_emailed": "LDV emailed to {to}",
-      "toast_send_failed": "Send failed"
+      "toast_send_failed": "Send failed",
+      "toast_saved": "Saved",
+      "toast_not_saved_locked": "Not saved (locked): {fields}"
     },
     "ldv_dialog": {
       "title": "Pre-LDV validation",
@@ -1618,6 +1622,8 @@
     "validation": {
       "not_number": "{label}: must be a number",
       "negative": "{label}: cannot be negative",
+      "not_integer": "{label}: must be a whole number",
+      "invalid_date": "{label}: invalid date (e.g. 31/12/2026)",
       "currency_invalid": "{label}: invalid currency code (3 letters, e.g. EUR)",
       "fields": {
         "dogana_imp": "Customs value",
@@ -1630,7 +1636,13 @@
         "peso_fornit_reale": "Supplier actual weight",
         "id_valuta_dogana": "Customs currency",
         "id_valuta_assic": "Insurance currency",
-        "id_valuta_contras": "COD currency"
+        "id_valuta_contras": "COD currency",
+        "carico": "Customer price",
+        "fuel_surc": "Customer fuel",
+        "fuel_surc_cst": "Cost fuel",
+        "costo": "Expected cost",
+        "colli": "Packages",
+        "data_sped1": "Shipping date"
       }
     }
   },

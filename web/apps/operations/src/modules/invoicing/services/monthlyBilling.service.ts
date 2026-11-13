@@ -5,6 +5,7 @@
  *   POST  emisión (fiscal e irreversible; nunca se reintenta)
  */
 import { http } from "./http";
+import { apiErrorText } from "./apiErrorText";
 
 export interface BillingParams {
   dal: string;
@@ -171,7 +172,7 @@ export function classifyEmitError(e: unknown): {
     errorCode?: string;
     message?: string;
   } | null;
-  const message = err?.message ?? "";
+  const message = apiErrorText(err);
   if (err?.status === 422 && err.errorCode === "INVOICE_DATE_NOT_CHRONOLOGICAL")
     return { kind: "date", message };
   if (!err?.status || err.status >= 500)

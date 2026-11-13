@@ -149,7 +149,7 @@ final class UserContextProvider
             'headers' => $headers,
             'http_errors' => false,
             'allow_redirects' => false,
-            'timeout' => 5,
+            'timeout' => $this->settings->contextTimeout,
         ]);
         if ($response->getStatusCode() === 403 && ErpAccessDenied::matches((string) $response->getBody())) {
             throw new ErpAccessDenied();

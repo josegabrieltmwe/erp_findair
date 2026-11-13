@@ -455,8 +455,10 @@ import {
 } from "@cargo/services/booking.service";
 import { idSupportsStage } from "@cargo/services/booking_provider";
 import ModalWrapper from "./ModalWrapper.vue";
+import { useToastStore } from "@cargo/stores/toast.store";
 
 const { t } = useI18n();
+const toasts = useToastStore();
 const ui = useUiStore();
 const store = useCargoFlightManagerStore();
 const cargoStore = useCargoStore();
@@ -601,7 +603,15 @@ function openCancel(): void {
 
 async function refresh(): Promise<void> {
   // "Aggiorna stato" — re-pull the live booking status from the carrier.
-  const changed = await store.refreshBookingStatus();
+  let changed = false;
+  try {
+    changed = await store.refreshBookingStatus();
+  } catch {
+    // Antes el servicio tragaba el error (GET -> 405) y el estado no se
+    // actualizaba sin que nadie lo viese: ahora el operador lo ve.
+    toasts.push("error", t("cargo.booking.refresh_failed"));
+    return;
+  }
   // A confirmed carrier status change can rewrite flight columns/AWB on
   // spedizioni_cargo (useCargoStore, a separate store from the booking
   // lifecycle one above) — reload it so the ficha reflects that outside

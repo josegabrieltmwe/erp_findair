@@ -1,5 +1,5 @@
 <template>
-  <v-form class="cm-form" @submit.prevent="onSave">
+  <v-form ref="formRef" class="cm-form" @submit.prevent="onSave">
     <v-row dense>
       <v-col cols="12" sm="6" md="6">
         <v-text-field
@@ -7,6 +7,7 @@
           v-field-help="'rag_soc'"
           :label="t('anagrafiche.fields.rag_soc')"
           :rules="[ruleRequired]"
+          maxlength="100"
           density="compact"
           variant="outlined"
         />
@@ -155,6 +156,7 @@ const { isTmwe } = useAnagraficaContext();
 
 const form = ref<Record<string, unknown>>({});
 const saving = ref(false);
+const formRef = ref<{ validate: () => Promise<{ valid: boolean }> } | null>(null);
 const original = ref<Record<string, unknown>>({});
 
 function snapshotFields(rec: AnagraficaDetail): Record<string, unknown> {
@@ -237,6 +239,11 @@ onMounted(async () => {
 });
 
 async function onSave(): Promise<void> {
+  // Las reglas del formulario (p. ej. rag_soc obligatoria) eran solo visuales:
+  // onSave no validaba y el API guardaba una razon social vacia (collaudo
+  // 13/11, L10). Sin formulario valido no se emite el guardado.
+  const result = await formRef.value?.validate();
+  if (result && !result.valid) return;
   saving.value = true;
   try {
     emit('save', { ...form.value });

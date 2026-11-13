@@ -50,6 +50,7 @@
             v-model="rifClient"
             :label="t('cargo.clienthdr.client_rif')"
             :readonly="readonly('RIF_cliente')"
+            maxlength="40"
             hide-details
             @blur="commitRif"
           />

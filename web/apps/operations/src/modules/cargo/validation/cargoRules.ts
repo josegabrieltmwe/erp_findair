@@ -55,6 +55,29 @@ function nonNegativeInteger(): Validator {
   };
 }
 
+/**
+ * Fecha de calendario real en `YYYY-MM-DD` o `DD/MM/YYYY` (hora opcional). Un
+ * `2026-02-30` se desbordaba en silencio a marzo y el texto libre acababa como
+ * `0000-00-00` (collaudo 13/11); el backend ahora tambien lo rechaza.
+ */
+function validDate(): Validator {
+  return (value) => {
+    if (isBlank(value)) return null;
+    const s = String(value).trim();
+    if (s.startsWith("0000-00-00")) return null;
+    let y: number, m: number, d: number;
+    const iso = /^(\d{4})-(\d{2})-(\d{2})(?:[ T]\d{2}:\d{2}(?::\d{2})?)?$/.exec(s);
+    const it = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
+    if (iso) [y, m, d] = [+iso[1], +iso[2], +iso[3]];
+    else if (it) [d, m, y] = [+it[1], +it[2], +it[3]];
+    else return "cargo.validation.invalid_date";
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d
+      ? null
+      : "cargo.validation.invalid_date";
+  };
+}
+
 /** ISO 4217 currency code — exactly 3 ASCII letters. */
 function isoCurrency(): Validator {
   return (value) => {
@@ -83,6 +106,9 @@ export const cargoRules: Partial<Record<keyof Cargo, Validator>> = {
   carico_volo: nonNegativeNumber(),
   costo_volo_previsto: nonNegativeNumber(),
   costo_volo_reale: nonNegativeNumber(),
+  carico_extra: nonNegativeNumber(),
+  colli: nonNegativeInteger(),
+  data_sped1: validDate(),
 
   // ISO currency codes (3 letters)
   id_valuta_dogana: isoCurrency(),

@@ -253,10 +253,15 @@ export const useShipmentStore = defineStore("shipment", () => {
       if (notSaved.length > 0) {
         // The server answers 200 but did not store these fields (locked on an
         // invoiced shipment): a plain "Saved" would be false.
-        toasts.push("warning", `Not saved (locked): ${notSaved.join(", ")}`);
+        toasts.push(
+          "warning",
+          i18n.global.t("shipment.detail.toast_not_saved_locked", {
+            fields: notSaved.join(", "),
+          }),
+        );
         return notSaved.length < Object.keys(patch).length;
       }
-      toasts.push("success", "Saved");
+      toasts.push("success", i18n.global.t("shipment.detail.toast_saved"));
       return true;
     } catch (err) {
       toasts.push("error", (err as Error).message);

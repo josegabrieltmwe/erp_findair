@@ -1,5 +1,12 @@
 {
   "invoicing": {
+    "errors": {
+      "IVA_SIN_CAUSAL_SDI": "Exempt VAT rate without an SDI reason: set the N1–N7 nature on the VAT before issuing.",
+      "INVOICE_DATE_IN_THE_FUTURE": "The invoice date cannot be later than today.",
+      "INVOICE_DATE_BEFORE_SERVICE": "The invoice date is earlier than the service period.",
+      "FISCAL_YEAR_CLOSED": "The fiscal year of that date is closed: invoices cannot be issued.",
+      "CURRENCY_RATE_MISSING": "The currency exchange rate for the invoice date is missing."
+    },
     "invoice": {
       "title": "Invoice",
       "title_plural": "Invoices",

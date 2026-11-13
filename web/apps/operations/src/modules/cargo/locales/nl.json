@@ -1284,6 +1284,7 @@
       "city": "Stad",
       "prov": "Prov",
       "country": "Land",
+      "country_needed_for_print": "Vereist om dit blok op de AWB af te drukken",
       "phone": "Telefoon",
       "email": "E-mail",
       "src_dest": "Bestemming",
@@ -1692,6 +1693,7 @@
       "new_hawb": "Nieuw HAWB",
       "pick_label": "Zending voor het HAWB",
       "pick_no_data": "Geen zendingen beschikbaar",
+      "pick_failed": "De zendinglijst kon niet worden geladen. Typ het zendingnummer om die te gebruiken.",
       "use_number": "Zending #{id} gebruiken",
       "pick_hint": "Staat hij er niet bij, typ dan het zendingnummer."
     },
@@ -2064,6 +2066,7 @@
     "booking": {
       "cancel": "Boeking annuleren",
       "refresh_status": "Status vernieuwen",
+      "refresh_failed": "De status van de boeking kon niet worden vernieuwd. Probeer opnieuw of neem contact op met support.",
       "history": "Historie",
       "boarding_pass": "Boarding pass"
     },
@@ -2135,6 +2138,7 @@
       "negative": "{label}: mag niet negatief zijn",
       "currency_invalid": "{label}: ongeldige valutacode (3 letters, bv. EUR)",
       "not_integer": "{label}: moet een geheel getal zijn",
+      "invalid_date": "{label}: ongeldige datum (bv. 31/12/2026)",
       "fields": {
         "dogana_imp": "Waarde bij douane",
         "assicuraz_imp": "Verzekerde waarde",
@@ -2154,7 +2158,10 @@
         "id_sede": "Locatie",
         "id_partner": "Partner",
         "id_ag_export": "Exportagentschap",
-        "id_ag_import": "Importagentschap"
+        "id_ag_import": "Importagentschap",
+        "colli": "Aantal pakketten",
+        "data_sped1": "Verzenddatum",
+        "carico_extra": "Extra kosten"
       }
     }
   },

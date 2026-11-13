@@ -52,6 +52,20 @@
           <span v-if="chat.hasUnread" class="topbar-iconbtn-dot" />
         </button>
 
+        <!-- Visibilidad de partners: antes solo accesible desde una fila de
+             texto dentro de la tarjeta "Acciones", difícil de encontrar. Se
+             sube aquí, junto al chat, porque compartir visibilidad es un
+             prerrequisito del propio chat entre partners. -->
+        <button
+          type="button"
+          class="topbar-iconbtn"
+          :title="t('cargo.azioni.partner_visibility')"
+          @click="ui.openModal('partners')"
+        >
+          <v-icon icon="mdi-account-multiple-outline" size="18" />
+          <span v-if="hasSharedPartners" class="topbar-iconbtn-dot" />
+        </button>
+
         <button
           type="button"
           class="topbar-iconbtn"
@@ -251,6 +265,11 @@ const activeTab = computed({
 
 const currentId = computed<number | null>(() => cargoStore.id);
 const navigator = useRecordNavigator(currentId);
+
+const hasSharedPartners = computed<boolean>(() => {
+  const ids = [cargo.value?.id_partner_show1, cargo.value?.id_partner_show2];
+  return ids.some((x) => x && String(x) !== "0");
+});
 
 const chatButtonTitle = computed<string>(() => {
   if (!chat.hasUnread) return "Chat partner";

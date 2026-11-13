@@ -1,5 +1,12 @@
 {
   "invoicing": {
+    "errors": {
+      "IVA_SIN_CAUSAL_SDI": "Aliquota esente senza causale SDI: imposta la natura N1–N7 sull'IVA prima di emettere.",
+      "INVOICE_DATE_IN_THE_FUTURE": "La data della fattura non può essere successiva a oggi.",
+      "INVOICE_DATE_BEFORE_SERVICE": "La data della fattura è anteriore al periodo del servizio.",
+      "FISCAL_YEAR_CLOSED": "L'esercizio fiscale di quella data è chiuso: non si possono emettere fatture.",
+      "CURRENCY_RATE_MISSING": "Manca il cambio della valuta per la data della fattura."
+    },
     "invoice": {
       "title": "Fattura",
       "title_plural": "Fatture",

@@ -1,5 +1,12 @@
 {
   "invoicing": {
+    "errors": {
+      "IVA_SIN_CAUSAL_SDI": "Steuerbefreiter MwSt-Satz ohne SDI-Grund: Vor der Ausstellung die Natur N1–N7 an der MwSt festlegen.",
+      "INVOICE_DATE_IN_THE_FUTURE": "Das Rechnungsdatum darf nicht nach dem heutigen Datum liegen.",
+      "INVOICE_DATE_BEFORE_SERVICE": "Das Rechnungsdatum liegt vor dem Leistungszeitraum.",
+      "FISCAL_YEAR_CLOSED": "Das Geschäftsjahr dieses Datums ist abgeschlossen: Es können keine Rechnungen ausgestellt werden.",
+      "CURRENCY_RATE_MISSING": "Der Wechselkurs der Währung für das Rechnungsdatum fehlt."
+    },
     "invoice": {
       "title": "Rechnung",
       "title_plural": "Rechnungen",

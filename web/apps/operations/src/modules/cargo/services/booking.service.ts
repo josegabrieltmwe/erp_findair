@@ -367,17 +367,18 @@ export const bookingService = {
     }
   },
 
-  /** Force status refresh from WebCargo (calls GET /booking remote). */
+  /**
+   * Force status refresh from WebCargo (el backend consulta el GET /booking
+   * remoto). El endpoint nuestro es POST: con GET respondia 405 y el catch lo
+   * tragaba, asi que el estado nunca se actualizaba y nadie lo veia.
+   * El error se propaga al llamador para que lo muestre.
+   */
   async refreshStatus(bookingId: string): Promise<BookingSummary | null> {
-    try {
-      const r = await http<{ success: boolean; booking?: BookingSummary }>(
-        "/api_cargo_webcargo_booking_status",
-        { query: { booking_id: bookingId } },
-      );
-      return r?.booking ?? null;
-    } catch {
-      return null;
-    }
+    const r = await http<{ success: boolean; booking?: BookingSummary }>(
+      "/api_cargo_webcargo_booking_status",
+      { method: "POST", body: { booking_id: bookingId } },
+    );
+    return r?.booking ?? null;
   },
 
   async getDetail(bookingId: string): Promise<BookingDetail | null> {

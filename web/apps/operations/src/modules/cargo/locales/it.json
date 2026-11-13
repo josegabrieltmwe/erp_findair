@@ -1284,6 +1284,7 @@
       "city": "Città",
       "prov": "Prov",
       "country": "Paese",
+      "country_needed_for_print": "Necessario per stampare questo blocco sulla AWB",
       "phone": "Telefono",
       "email": "Email",
       "src_dest": "Destino",
@@ -1692,6 +1693,7 @@
       "new_hawb": "Nuovo HAWB",
       "pick_label": "Spedizione dell'HAWB",
       "pick_no_data": "Nessuna spedizione disponibile",
+      "pick_failed": "Impossibile caricare l'elenco delle spedizioni. Digita il numero della spedizione per usarla.",
       "use_number": "Usa la spedizione #{id}",
       "pick_hint": "Se non compare, digita il numero della spedizione."
     },
@@ -2064,6 +2066,7 @@
     "booking": {
       "cancel": "Annulla booking",
       "refresh_status": "Aggiorna stato",
+      "refresh_failed": "Impossibile aggiornare lo stato della prenotazione. Riprova o contatta il supporto.",
       "history": "Storico",
       "boarding_pass": "Boarding pass"
     },
@@ -2135,6 +2138,7 @@
       "negative": "{label}: non può essere negativo",
       "currency_invalid": "{label}: codice valuta non valido (3 lettere, es. EUR)",
       "not_integer": "{label}: deve essere un intero",
+      "invalid_date": "{label}: data non valida (es. 31/12/2026)",
       "fields": {
         "dogana_imp": "Valore in dogana",
         "assicuraz_imp": "Valore assicurato",
@@ -2154,7 +2158,10 @@
         "id_sede": "Sede",
         "id_partner": "Partner",
         "id_ag_export": "Agenzia export",
-        "id_ag_import": "Agenzia import"
+        "id_ag_import": "Agenzia import",
+        "colli": "Colli",
+        "data_sped1": "Data spedizione",
+        "carico_extra": "Carico extra"
       }
     }
   },

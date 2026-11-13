@@ -43,6 +43,8 @@ final class Settings
         /** Fallos de OTP tolerados por IP en la ventana. */
         public readonly int $otpMaxFailuresPerIp = 20,
         public readonly int $otpFailureWindow = 900,
+        /** Plazo total (s) de la consulta del contexto del usuario tras el login; con un API lento (BD remota) debe subirse. */
+        public readonly float $contextTimeout = 5.0,
     ) {
     }
 
@@ -91,6 +93,7 @@ final class Settings
             otpMaxFailuresPerResource: (int) $get('OTP_MAX_FAILURES_PER_RESOURCE', '8'),
             otpMaxFailuresPerIp: (int) $get('OTP_MAX_FAILURES_PER_IP', '20'),
             otpFailureWindow: (int) $get('OTP_FAILURE_WINDOW', '900'),
+            contextTimeout: (float) $get('UPSTREAM_CONTEXT_TIMEOUT', '5'),
             trustedProxies: array_values(array_filter(array_map('trim', explode(',', $get('TRUSTED_PROXIES'))), static fn (string $a): bool => $a !== '')),
             throttlePolicies: [
                 // Copilot de IA: cada turno cuesta tokens y ocupa un worker hasta 120 s.
@@ -136,10 +139,14 @@ final class Settings
                     ratePerUser: (int) $get('EXPORT_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('EXPORT_POLL_RATE_PER_IP_MIN', '360'),
                 ),
-                // Estado común de las peticiones asíncronas (R3): ~1 por segundo mientras se espera.
+                // Estado común de las peticiones asíncronas (R3): ~1 por segundo mientras se espera, pero a
+                // diferencia de las políticas anteriores este cupo lo comparten varias funciones sin relación
+                // entre sí (reconciliación COD, exportación de facturas, listini): 120/min no deja margen ni
+                // para 2 operaciones a la vez (2026-11-13, 429 en el ERP con el fix de api/ ya aplicado). Doble
+                // margen para cubrir 2-3 operaciones simultáneas (varias pestañas) sin perder la protección.
                 'async_request_poll' => new ThrottlePolicy(
-                    ratePerUser: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_MIN', '120'),
-                    ratePerIp: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_IP_MIN', '360'),
+                    ratePerUser: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_MIN', '240'),
+                    ratePerIp: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_IP_MIN', '720'),
                 ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),

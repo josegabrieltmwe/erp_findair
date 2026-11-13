@@ -240,6 +240,8 @@
               v-model="local.tel"
               :label="t('shipment.modals.address.phone')"
               :readonly="isReadonly"
+              maxlength="30"
+              :error-messages="errorFor('tel')"
               density="compact"
               prepend-inner-icon="mdi-phone-outline"
             />
@@ -260,6 +262,8 @@
               v-model="local.email"
               :label="t('shipment.modals.address.email')"
               :readonly="isReadonly"
+              maxlength="100"
+              :error-messages="errorFor('email')"
               density="compact"
               prepend-inner-icon="mdi-email-outline"
             />
@@ -553,6 +557,8 @@ function clientErrors(): AddressErrors {
       city: local.value.city ?? local.value.citta,
       cap: local.value.cap,
       prov: local.value.prov,
+      tel: local.value.tel,
+      email: local.value.email,
     },
     countryRules.value.get(iso) ?? null,
   );

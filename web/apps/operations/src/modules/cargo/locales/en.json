@@ -1284,6 +1284,7 @@
       "city": "City",
       "prov": "Prov",
       "country": "Country",
+      "country_needed_for_print": "Required to print this block on the AWB",
       "phone": "Phone",
       "email": "Email",
       "src_dest": "Destination",
@@ -1692,6 +1693,7 @@
       "new_hawb": "New HAWB",
       "pick_label": "Shipment for the HAWB",
       "pick_no_data": "No shipments available",
+      "pick_failed": "Could not load the shipment list. Type the shipment number to use it.",
       "use_number": "Use shipment #{id}",
       "pick_hint": "If it is not listed, type the shipment number."
     },
@@ -2064,6 +2066,7 @@
     "booking": {
       "cancel": "Cancel booking",
       "refresh_status": "Refresh status",
+      "refresh_failed": "Could not refresh the booking status. Try again or contact support.",
       "history": "History",
       "boarding_pass": "Boarding pass"
     },
@@ -2135,6 +2138,7 @@
       "negative": "{label}: cannot be negative",
       "currency_invalid": "{label}: invalid currency code (3 letters, e.g. EUR)",
       "not_integer": "{label}: must be a whole number",
+      "invalid_date": "{label}: invalid date (e.g. 31/12/2026)",
       "fields": {
         "dogana_imp": "Value in customs",
         "assicuraz_imp": "Insured value",
@@ -2154,7 +2158,10 @@
         "id_sede": "Site",
         "id_partner": "Partner",
         "id_ag_export": "Export agency",
-        "id_ag_import": "Import agency"
+        "id_ag_import": "Import agency",
+        "colli": "Packages",
+        "data_sped1": "Shipping date",
+        "carico_extra": "Extra charge"
       }
     }
   },

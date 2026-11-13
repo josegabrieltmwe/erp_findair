@@ -1284,6 +1284,7 @@
       "city": "Stadt",
       "prov": "Prov",
       "country": "Land",
+      "country_needed_for_print": "Erforderlich, damit dieser Block auf der AWB gedruckt wird",
       "phone": "Telefon",
       "email": "E-Mail",
       "src_dest": "Ziel",
@@ -1692,6 +1693,7 @@
       "new_hawb": "Neues HAWB",
       "pick_label": "Sendung für das HAWB",
       "pick_no_data": "Keine Sendungen verfügbar",
+      "pick_failed": "Die Sendungsliste konnte nicht geladen werden. Geben Sie die Sendungsnummer ein, um sie zu verwenden.",
       "use_number": "Sendung #{id} verwenden",
       "pick_hint": "Falls nicht aufgeführt, die Sendungsnummer eingeben."
     },
@@ -2064,6 +2066,7 @@
     "booking": {
       "cancel": "Buchung stornieren",
       "refresh_status": "Status aktualisieren",
+      "refresh_failed": "Der Buchungsstatus konnte nicht aktualisiert werden. Erneut versuchen oder den Support kontaktieren.",
       "history": "Verlauf",
       "boarding_pass": "Boarding-Pass"
     },
@@ -2135,6 +2138,7 @@
       "negative": "{label}: darf nicht negativ sein",
       "currency_invalid": "{label}: ungültiger Währungscode (3 Buchstaben, z. B. EUR)",
       "not_integer": "{label}: muss eine ganze Zahl sein",
+      "invalid_date": "{label}: ungültiges Datum (z. B. 31.12.2026)",
       "fields": {
         "dogana_imp": "Wert beim Zoll",
         "assicuraz_imp": "Versicherter Wert",
@@ -2154,7 +2158,10 @@
         "id_sede": "Standort",
         "id_partner": "Partner",
         "id_ag_export": "Exportagentur",
-        "id_ag_import": "Importagentur"
+        "id_ag_import": "Importagentur",
+        "colli": "Packstücke",
+        "data_sped1": "Versanddatum",
+        "carico_extra": "Zusatzkosten"
       }
     }
   },

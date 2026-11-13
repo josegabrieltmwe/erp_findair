@@ -13,8 +13,11 @@ export const ldvService = {
     shipment_id: number,
     otp = "",
   ): Promise<SendLdvToMittenteResponse> {
+    // El backend solo acepta POST (405 con GET) y el BFF solo publica
+    // post.api_send_ldv_to_mittente_compat: parametros en el body.
     return http<SendLdvToMittenteResponse>("/api_send_ldv_to_mittente_compat", {
-      query: { shipment_id, otp },
+      method: "POST",
+      body: { shipment_id, otp },
     });
   },
 };

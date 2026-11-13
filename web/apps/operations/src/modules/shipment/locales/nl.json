@@ -692,6 +692,8 @@
         "err_required": "Verplicht veld",
         "err_cap_required": "Dit land vereist een postcode",
         "err_prov_required": "Dit land vereist een provincie/staat",
+        "err_phone_invalid": "Ongeldig telefoonnummer (cijfers, + ( ) . / -, 5–30 tekens)",
+        "err_email_invalid": "Ongeldig e-mailadres",
         "err_validation": "Controleer de gemarkeerde adresvelden.",
         "saved": "Adres opgeslagen",
         "save_error": "Het adres kon niet worden opgeslagen."
@@ -1365,7 +1367,9 @@
       "toast_cancelled": "Zending geannuleerd",
       "toast_cancel_failed": "Annuleren van zending mislukt",
       "toast_ldv_emailed": "LDV gemaild naar {to}",
-      "toast_send_failed": "Verzenden mislukt"
+      "toast_send_failed": "Verzenden mislukt",
+      "toast_saved": "Opgeslagen",
+      "toast_not_saved_locked": "Niet opgeslagen (vergrendeld): {fields}"
     },
     "ldv_dialog": {
       "title": "Pre-LDV-validatie",
@@ -1618,6 +1622,8 @@
     "validation": {
       "not_number": "{label}: moet een getal zijn",
       "negative": "{label}: mag niet negatief zijn",
+      "not_integer": "{label}: moet een geheel getal zijn",
+      "invalid_date": "{label}: ongeldige datum (bv. 31/12/2026)",
       "currency_invalid": "{label}: ongeldige valutacode (3 letters, bv. EUR)",
       "fields": {
         "dogana_imp": "Douanewaarde",
@@ -1630,7 +1636,13 @@
         "peso_fornit_reale": "Werkelijk gewicht leverancier",
         "id_valuta_dogana": "Douanevaluta",
         "id_valuta_assic": "Verzekeringsvaluta",
-        "id_valuta_contras": "Remboursvaluta"
+        "id_valuta_contras": "Remboursvaluta",
+        "carico": "Klantprijs",
+        "fuel_surc": "Brandstof klant",
+        "fuel_surc_cst": "Brandstof kosten",
+        "costo": "Verwachte kosten",
+        "colli": "Aantal pakketten",
+        "data_sped1": "Verzenddatum"
       }
     }
   },

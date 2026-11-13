@@ -37,20 +37,20 @@ async function abrirMawb(page: Page) {
 }
 
 async function esPdf(page: Page, accion: () => Promise<void>, patron: RegExp): Promise<void> {
-  const resp = page.waitForResponse((r) => patron.test(r.url()), { timeout: 60_000 });
+  const resp = page.waitForResponse((r) => patron.test(r.url()), { timeout: 150_000 });
   await accion();
   const r = await resp;
   expect(r.status()).toBe(200);
   expect(r.headers()["content-type"]).toContain("application/pdf");
   // El cuerpo de la respuesta del clic lo consume el visor: se vuelve a pedir la misma URL y se valida el PDF.
-  const pdf = await page.request.get(r.url(), { timeout: 60_000 }); // el PDF tarda 10-14 s en local
+  const pdf = await page.request.get(r.url(), { timeout: 150_000 }); // el PDF del MAWB tarda ~55 s en el sandbox
   const cuerpo = await pdf.body();
   expect(cuerpo.subarray(0, 4).toString()).toBe("%PDF");
   expect(cuerpo.length).toBeGreaterThan(5_000);
 }
 
 test.describe.serial("Cargo del personal interno: MAWB y HAWB", () => {
-  test.setTimeout(150_000); // generar un PDF tarda 10-14 s y el test lo pide dos veces
+  test.setTimeout(420_000); // el PDF del MAWB (16 páginas) tarda ~55 s en el sandbox y el test lo pide dos veces
   let cargo = 0;
   let express = 0;
 

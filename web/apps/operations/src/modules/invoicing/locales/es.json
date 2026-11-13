@@ -1,5 +1,12 @@
 {
   "invoicing": {
+    "errors": {
+      "IVA_SIN_CAUSAL_SDI": "IVA exento sin causal SDI: define la naturaleza N1–N7 en el IVA antes de emitir.",
+      "INVOICE_DATE_IN_THE_FUTURE": "La fecha de la factura no puede ser posterior a hoy.",
+      "INVOICE_DATE_BEFORE_SERVICE": "La fecha de la factura es anterior al periodo del servicio.",
+      "FISCAL_YEAR_CLOSED": "El ejercicio fiscal de esa fecha está cerrado: no se pueden emitir facturas.",
+      "CURRENCY_RATE_MISSING": "Falta el tipo de cambio de la divisa para la fecha de la factura."
+    },
     "invoice": {
       "title": "Factura",
       "title_plural": "Facturas",
