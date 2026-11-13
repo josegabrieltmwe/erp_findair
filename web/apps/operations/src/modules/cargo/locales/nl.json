@@ -1284,6 +1284,7 @@
       "city": "Stad",
       "prov": "Prov",
       "country": "Land",
+      "country_needed_for_print": "Vereist om dit blok op de AWB af te drukken",
       "phone": "Telefoon",
       "email": "E-mail",
       "src_dest": "Bestemming",

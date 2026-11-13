@@ -105,10 +105,16 @@
             (v: string | null) => onLocalChange('prov', v ?? '')
           "
         />
+        <!-- Sin país el PDF del AWB NO imprime este bloque (format_master_party_html lo omite): se avisa mientras
+             haya nombre y falte el país, para que no se descubra al ver el PDF. -->
         <v-text-field
           :model-value="local.id_paese_iso"
           :label="t('cargo.addr.country')"
           :disabled="readonly"
+          :hint="missingCountry ? t('cargo.addr.country_needed_for_print') : undefined"
+          :persistent-hint="missingCountry"
+          :color="missingCountry ? 'warning' : undefined"
+          :base-color="missingCountry ? 'warning' : undefined"
           @change="(e: Event) => onLocalChange('id_paese_iso', fieldValue(e))"
         />
         <v-text-field
@@ -173,6 +179,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 const local = reactive<MawbAddress>({ ...props.modelValue });
+
+/** Hay nombre pero no país: el PDF del AWB omitiría este bloque. */
+const missingCountry = computed(
+  () =>
+    String(local.nome ?? "").trim() !== "" &&
+    String(local.id_paese_iso ?? "").trim() === "",
+);
 
 /**
  * Fields the operator has edited whose save has not been confirmed yet. A

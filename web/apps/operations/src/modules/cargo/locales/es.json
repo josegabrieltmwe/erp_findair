@@ -1284,6 +1284,7 @@
       "city": "Ciudad",
       "prov": "Prov",
       "country": "País",
+      "country_needed_for_print": "Necesario para imprimir este bloque en la AWB",
       "phone": "Teléfono",
       "email": "Email",
       "src_dest": "Destino",
