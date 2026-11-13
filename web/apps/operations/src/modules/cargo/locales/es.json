@@ -1693,6 +1693,7 @@
       "new_hawb": "Nuevo HAWB",
       "pick_label": "Expedición del HAWB",
       "pick_no_data": "No hay expediciones disponibles",
+      "pick_failed": "No se pudo cargar la lista de expediciones. Teclea el número de la expedición para usarla.",
       "use_number": "Usar la expedición #{id}",
       "pick_hint": "Si no aparece, escribe el número de la expedición."
     },

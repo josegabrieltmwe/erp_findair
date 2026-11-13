@@ -1693,6 +1693,7 @@
       "new_hawb": "Neues HAWB",
       "pick_label": "Sendung für das HAWB",
       "pick_no_data": "Keine Sendungen verfügbar",
+      "pick_failed": "Die Sendungsliste konnte nicht geladen werden. Geben Sie die Sendungsnummer ein, um sie zu verwenden.",
       "use_number": "Sendung #{id} verwenden",
       "pick_hint": "Falls nicht aufgeführt, die Sendungsnummer eingeben."
     },

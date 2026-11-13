@@ -1693,6 +1693,7 @@
       "new_hawb": "New HAWB",
       "pick_label": "Shipment for the HAWB",
       "pick_no_data": "No shipments available",
+      "pick_failed": "Could not load the shipment list. Type the shipment number to use it.",
       "use_number": "Use shipment #{id}",
       "pick_hint": "If it is not listed, type the shipment number."
     },

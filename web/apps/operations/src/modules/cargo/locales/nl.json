@@ -1693,6 +1693,7 @@
       "new_hawb": "Nieuw HAWB",
       "pick_label": "Zending voor het HAWB",
       "pick_no_data": "Geen zendingen beschikbaar",
+      "pick_failed": "De zendinglijst kon niet worden geladen. Typ het zendingnummer om die te gebruiken.",
       "use_number": "Zending #{id} gebruiken",
       "pick_hint": "Staat hij er niet bij, typ dan het zendingnummer."
     },

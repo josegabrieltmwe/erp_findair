@@ -25,7 +25,11 @@
           autofocus
           :disabled="hawbStore.saving"
           :label="t('cargo.hawblist.pick_label')"
-          :no-data-text="t('cargo.hawblist.pick_no_data')"
+          :no-data-text="
+            searchFailed
+              ? t('cargo.hawblist.pick_failed')
+              : t('cargo.hawblist.pick_no_data')
+          "
           :hint="t('cargo.hawblist.pick_hint')"
           persistent-hint
           prepend-inner-icon="mdi-magnify"
@@ -127,10 +131,8 @@ import { storeToRefs } from "pinia";
 import { useUiStore } from "@cargo/stores/ui.store";
 import { useCargoStore } from "@cargo/stores/cargo.store";
 import { hawbService, type HawbRow } from "@cargo/services/hawb.service";
-import {
-  consolidationService,
-  type AttachableShipment,
-} from "@cargo/services/consolidation.service";
+import { loadPickItems, type PickItem } from "@cargo/utils/hawbCandidates";
+import { consolidationService } from "@cargo/services/consolidation.service";
 import { cargoActionsService } from "@cargo/services/cargo_actions.service";
 import { useCargoHawbStore } from "@cargo/stores/cargo_hawb.store";
 import ListingDataView from "@shared/listing/ListingDataView.vue";
@@ -213,33 +215,29 @@ async function reload(): Promise<void> {
 const creating = ref(false);
 const searching = ref(false);
 const search = ref("");
-const pickItems = ref<{ id: number; label: string }[]>([]);
+const pickItems = ref<PickItem[]>([]);
+/** La búsqueda de candidatos falló (504, red…): se avisa y se sigue ofreciendo el número tecleado (P130). */
+const searchFailed = ref(false);
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
-
-function labelOf(sh: AttachableShipment): string {
-  const rif = sh.RIF_cliente ? ` · ${sh.RIF_cliente}` : "";
-  return `#${sh.id}${rif} · ${Number(sh.peso).toFixed(1)}kg · ${sh.colli}c`;
-}
+/** La búsqueda tarda 13-18 s: una respuesta antigua no debe pisar la de una búsqueda posterior. */
+let searchSeq = 0;
 
 async function doSearch(q: string): Promise<void> {
   if (!cargoId.value) return;
+  const id = cargoId.value;
+  const seq = ++searchSeq;
   searching.value = true;
-  try {
-    const { items } = await consolidationService.attachable(cargoId.value, q);
-    const found = items.map((sh) => ({
-      id: Number(sh.id),
-      label: labelOf(sh),
-    }));
-    // La lista del API solo trae expediciones del propio usuario; las de sus clientes no salen.
-    // Un número tecleado se ofrece tal cual y el API valida el acceso al crear (P59).
-    const typed = /^\d+$/.test(q.trim()) ? Number(q.trim()) : 0;
-    if (typed > 0 && !found.some((f) => f.id === typed)) {
-      found.push({ id: typed, label: t("cargo.hawblist.use_number", { id: typed }) });
-    }
-    pickItems.value = found;
-  } finally {
-    searching.value = false;
-  }
+  // La lista del API solo trae expediciones del propio usuario; las de sus clientes no salen. Un número tecleado se
+  // ofrece tal cual y el API valida el acceso al crear (P59). Si la búsqueda falla, el número se sigue ofreciendo.
+  const r = await loadPickItems(
+    async () => (await consolidationService.attachable(id, q)).items,
+    q,
+    (n) => t("cargo.hawblist.use_number", { id: n }),
+  );
+  if (seq !== searchSeq) return; // ya hay una búsqueda más reciente
+  pickItems.value = r.items;
+  searchFailed.value = r.failed;
+  searching.value = false;
 }
 
 function onSearch(q: string): void {
@@ -257,6 +255,9 @@ function closeCreate(): void {
   creating.value = false;
   search.value = "";
   pickItems.value = [];
+  searchFailed.value = false;
+  searchSeq++; // descarta la respuesta de una búsqueda aún en vuelo
+  searching.value = false;
 }
 
 async function onPick(spedizId: number | null): Promise<void> {
