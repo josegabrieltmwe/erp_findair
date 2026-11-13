@@ -5,7 +5,14 @@
       "INVOICE_DATE_IN_THE_FUTURE": "La data della fattura non può essere successiva a oggi.",
       "INVOICE_DATE_BEFORE_SERVICE": "La data della fattura è anteriore al periodo del servizio.",
       "FISCAL_YEAR_CLOSED": "L'esercizio fiscale di quella data è chiuso: non si possono emettere fatture.",
-      "CURRENCY_RATE_MISSING": "Manca il cambio della valuta per la data della fattura."
+      "CURRENCY_RATE_MISSING": "Manca il cambio della valuta per la data della fattura.",
+      "BILLING_DATE_REQUIRED": "Indica le date del periodo da fatturare.",
+      "BILLING_DATE_RANGE_INVALID": "La data finale non può essere precedente a quella iniziale.",
+      "BILLING_INVOICE_DATE_INVALID": "La data della fattura non è valida.",
+      "BILLING_INVOICE_DATE_BEFORE_PERIOD": "La data della fattura non può precedere l'inizio del periodo.",
+      "BILLING_NO_PARTNER": "Non è stato possibile identificare il partner.",
+      "CLIENT_NOT_OWNED": "Uno dei clienti selezionati non appartiene a questo emittente.",
+      "INVOICE_DATE_NOT_CHRONOLOGICAL": "La data della fattura non rispetta l'ordine cronologico delle fatture già emesse."
     },
     "invoice": {
       "title": "Fattura",
@@ -1171,6 +1178,7 @@
       "date_required": "Indica la data delle fatture.",
       "date_invalid_range": "Controlla le date del periodo.",
       "date_before_dal": "La data non può precedere l'inizio del periodo.",
+      "date_future": "La data della fattura non può essere futura.",
       "selected_total": "{n} cliente/i selezionati · {total}",
       "emit": "Emetti fatture",
       "confirm_title": "Emettere le fatture?",

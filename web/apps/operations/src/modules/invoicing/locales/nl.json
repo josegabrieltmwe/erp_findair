@@ -5,7 +5,14 @@
       "INVOICE_DATE_IN_THE_FUTURE": "De factuurdatum mag niet later zijn dan vandaag.",
       "INVOICE_DATE_BEFORE_SERVICE": "De factuurdatum ligt vóór de dienstperiode.",
       "FISCAL_YEAR_CLOSED": "Het boekjaar van die datum is afgesloten: er kunnen geen facturen worden uitgegeven.",
-      "CURRENCY_RATE_MISSING": "De wisselkoers van de valuta voor de factuurdatum ontbreekt."
+      "CURRENCY_RATE_MISSING": "De wisselkoers van de valuta voor de factuurdatum ontbreekt.",
+      "BILLING_DATE_REQUIRED": "Geef de data van de te factureren periode op.",
+      "BILLING_DATE_RANGE_INVALID": "De einddatum mag niet vóór de startdatum liggen.",
+      "BILLING_INVOICE_DATE_INVALID": "De factuurdatum is niet geldig.",
+      "BILLING_INVOICE_DATE_BEFORE_PERIOD": "De factuurdatum mag niet vóór het begin van de periode liggen.",
+      "BILLING_NO_PARTNER": "De partner kon niet worden geïdentificeerd.",
+      "CLIENT_NOT_OWNED": "Een van de geselecteerde klanten behoort niet tot deze uitgever.",
+      "INVOICE_DATE_NOT_CHRONOLOGICAL": "De factuurdatum doorbreekt de chronologische volgorde van reeds uitgegeven facturen."
     },
     "invoice": {
       "title": "Factuur",
@@ -1171,6 +1178,7 @@
       "date_required": "Geef de factuurdatum op.",
       "date_invalid_range": "Controleer de data van de periode.",
       "date_before_dal": "De datum mag niet vóór het begin van de periode liggen.",
+      "date_future": "De factuurdatum mag niet in de toekomst liggen.",
       "selected_total": "{n} klant(en) geselecteerd · {total}",
       "emit": "Facturen uitgeven",
       "confirm_title": "Facturen uitgeven?",

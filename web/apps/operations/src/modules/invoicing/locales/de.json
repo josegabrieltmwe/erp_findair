@@ -5,7 +5,14 @@
       "INVOICE_DATE_IN_THE_FUTURE": "Das Rechnungsdatum darf nicht nach dem heutigen Datum liegen.",
       "INVOICE_DATE_BEFORE_SERVICE": "Das Rechnungsdatum liegt vor dem Leistungszeitraum.",
       "FISCAL_YEAR_CLOSED": "Das Geschäftsjahr dieses Datums ist abgeschlossen: Es können keine Rechnungen ausgestellt werden.",
-      "CURRENCY_RATE_MISSING": "Der Wechselkurs der Währung für das Rechnungsdatum fehlt."
+      "CURRENCY_RATE_MISSING": "Der Wechselkurs der Währung für das Rechnungsdatum fehlt.",
+      "BILLING_DATE_REQUIRED": "Geben Sie die Daten des abzurechnenden Zeitraums an.",
+      "BILLING_DATE_RANGE_INVALID": "Das Enddatum darf nicht vor dem Startdatum liegen.",
+      "BILLING_INVOICE_DATE_INVALID": "Das Rechnungsdatum ist ungültig.",
+      "BILLING_INVOICE_DATE_BEFORE_PERIOD": "Das Rechnungsdatum darf nicht vor dem Beginn des Zeitraums liegen.",
+      "BILLING_NO_PARTNER": "Der Partner konnte nicht identifiziert werden.",
+      "CLIENT_NOT_OWNED": "Einer der ausgewählten Kunden gehört nicht zu diesem Aussteller.",
+      "INVOICE_DATE_NOT_CHRONOLOGICAL": "Das Rechnungsdatum verletzt die chronologische Reihenfolge bereits ausgestellter Rechnungen."
     },
     "invoice": {
       "title": "Rechnung",
@@ -1171,6 +1178,7 @@
       "date_required": "Geben Sie das Rechnungsdatum an.",
       "date_invalid_range": "Prüfen Sie die Daten des Zeitraums.",
       "date_before_dal": "Das Datum darf nicht vor dem Beginn des Zeitraums liegen.",
+      "date_future": "Das Rechnungsdatum darf nicht in der Zukunft liegen.",
       "selected_total": "{n} Kunde(n) ausgewählt · {total}",
       "emit": "Rechnungen ausstellen",
       "confirm_title": "Rechnungen ausstellen?",

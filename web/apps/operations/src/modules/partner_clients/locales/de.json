@@ -589,7 +589,7 @@
         "cons_ora": "Zustellzeit — Standard-Zustellzeit",
         "delivered_mail": "Zugestellt per E-Mail — Sendet eine Benachrichtigung an die E-Mail-Adresse des Standorts, sobald die Sendungen zugestellt wurden.",
         "descriz_settore": "Andere Branche — Andere, nicht aufgeführte Branche oder Präzisierung der angegebenen Branche",
-        "diritto_fisso": "Feste Fakturierungsgebühr — Betrag, der für die buchhalterische Bearbeitung sowie die Ausstellung und den Versand der Rechnung berechnet wird.",
+        "diritto_fisso": "Feste Fakturierungsgebühr — Betrag, der für die buchhalterische Bearbeitung sowie die Ausstellung und den Versand der Rechnung berechnet wird. Wird einmal pro Rechnung berechnet (nicht pro Sendung), in der Regel nur bei der ersten Rechnung des Kunden: erscheint nicht im Angebot oder in der Bestätigung einer einzelnen Sendung.",
         "fastlink": "Fastlink verwenden — Wenn ausgewählt, wird der Fastlink des Kunden für die schnelle Erfassung von Abholungen und Sendungen angezeigt.",
         "fatt_lingua": "Rechnungssprache — Sprache für die Anzeige der Rechnungen (gilt nur für die PDFs; die XML-Dateien sind stets ausschließlich auf Italienisch/in der Basissprache)",
         "fatt_sped_fax": "Rechnung per Fax senden — Der Kunde hat den Versand der Rechnung per Fax angefordert",

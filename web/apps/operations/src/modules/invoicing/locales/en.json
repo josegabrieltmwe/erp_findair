@@ -5,7 +5,14 @@
       "INVOICE_DATE_IN_THE_FUTURE": "The invoice date cannot be later than today.",
       "INVOICE_DATE_BEFORE_SERVICE": "The invoice date is earlier than the service period.",
       "FISCAL_YEAR_CLOSED": "The fiscal year of that date is closed: invoices cannot be issued.",
-      "CURRENCY_RATE_MISSING": "The currency exchange rate for the invoice date is missing."
+      "CURRENCY_RATE_MISSING": "The currency exchange rate for the invoice date is missing.",
+      "BILLING_DATE_REQUIRED": "Enter the dates for the period to invoice.",
+      "BILLING_DATE_RANGE_INVALID": "The end date cannot be before the start date.",
+      "BILLING_INVOICE_DATE_INVALID": "The invoice date is not valid.",
+      "BILLING_INVOICE_DATE_BEFORE_PERIOD": "The invoice date cannot be before the start of the period.",
+      "BILLING_NO_PARTNER": "Could not identify the partner.",
+      "CLIENT_NOT_OWNED": "One of the selected clients does not belong to this issuer.",
+      "INVOICE_DATE_NOT_CHRONOLOGICAL": "The invoice date breaks the chronological order of invoices already issued."
     },
     "invoice": {
       "title": "Invoice",
@@ -1171,6 +1178,7 @@
       "date_required": "Enter the invoice date.",
       "date_invalid_range": "Check the period dates.",
       "date_before_dal": "The date cannot be before the start of the period.",
+      "date_future": "The invoice date cannot be in the future.",
       "selected_total": "{n} customer(s) selected · {total}",
       "emit": "Issue invoices",
       "confirm_title": "Issue the invoices?",

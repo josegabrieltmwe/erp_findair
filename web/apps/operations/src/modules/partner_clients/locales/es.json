@@ -589,7 +589,7 @@
         "cons_ora": "Hora de entrega — Hora de entrega por defecto.",
         "delivered_mail": "Enviar un aviso al email de la sede cuando se entreguen los envíos.",
         "descriz_settore": "Otro sector — Otro sector de actividad no listado o aclaraciones sobre el indicado.",
-        "diritto_fisso": "Derecho fijo de facturación — Importe cobrado por la gestión contable y la emisión y envío de la factura.",
+        "diritto_fisso": "Derecho fijo de facturación — Importe cobrado por la gestión contable y la emisión y envío de la factura. Se aplica una vez por factura (no por expedición), normalmente solo en la primera factura del cliente: no aparece en el presupuesto ni en la confirmación de una expedición suelta.",
         "fastlink": "Usar fastlinks — Si se marca, se mostrará el enlace rápido del cliente para insertar recogidas y envíos.",
         "fatt_lingua": "Idioma de facturación — Idioma de visualización de la factura (solo los PDF; el XML siempre en italiano/idioma base).",
         "fatt_sped_fax": "Enviar factura por fax — El cliente ha pedido que la factura se envíe por fax.",

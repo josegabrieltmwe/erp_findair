@@ -589,7 +589,7 @@
         "cons_ora": "Afleveringstijd — Standaard afleveringstijd",
         "delivered_mail": "Afgeleverd per e-mail — Stuurt een melding naar het e-mailadres van de vestiging wanneer de zendingen zijn afgeleverd.",
         "descriz_settore": "Andere bedrijfssector — Andere, niet vermelde bedrijfssector of toelichting op de opgegeven sector",
-        "diritto_fisso": "Vaste factureringskosten — Bedrag dat in rekening wordt gebracht voor de boekhoudkundige verwerking en het opstellen en verzenden van de factuur.",
+        "diritto_fisso": "Vaste factureringskosten — Bedrag dat in rekening wordt gebracht voor de boekhoudkundige verwerking en het opstellen en verzenden van de factuur. Wordt één keer per factuur toegepast (niet per zending), meestal alleen op de eerste factuur van de klant: komt niet voor in de offerte of bevestiging van één losse zending.",
         "fastlink": "Fastlink gebruiken — Indien geselecteerd wordt de fastlink van de klant getoond voor het snel invoeren van ophalingen en zendingen.",
         "fatt_lingua": "Factuurtaal — Taal waarin de facturen worden weergegeven (geldt alleen voor de pdf's; de XML's zijn altijd uitsluitend in het Italiaans/de basistaal)",
         "fatt_sped_fax": "Factuur per fax versturen — De klant heeft verzocht de factuur per fax te versturen",

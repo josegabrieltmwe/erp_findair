@@ -11,6 +11,15 @@ const KNOWN = new Set([
   "INVOICE_DATE_BEFORE_SERVICE",
   "FISCAL_YEAR_CLOSED",
   "CURRENCY_RATE_MISSING",
+  // Collaudo 13/11, item 24: api_invoice_generate devolvia estos mensajes en
+  // espanol sin codigo traducible.
+  "BILLING_DATE_REQUIRED",
+  "BILLING_DATE_RANGE_INVALID",
+  "BILLING_INVOICE_DATE_INVALID",
+  "BILLING_INVOICE_DATE_BEFORE_PERIOD",
+  "BILLING_NO_PARTNER",
+  "CLIENT_NOT_OWNED",
+  "INVOICE_DATE_NOT_CHRONOLOGICAL",
 ]);
 
 /**

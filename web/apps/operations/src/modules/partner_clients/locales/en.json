@@ -589,7 +589,7 @@
         "cons_ora": "Delivery time — Default delivery time",
         "delivered_mail": "Send a notification message to the headquarters email when shipments are delivered.",
         "descriz_settore": "Other sector — Other operating sector not listed or clarifications on the one indicated",
-        "diritto_fisso": "Fixed invoicing fee — Amount charged for accounting management and the issuance and shipment of the invoice.",
+        "diritto_fisso": "Fixed invoicing fee — Amount charged for accounting management and the issuance and shipment of the invoice. Applied once per invoice (not per shipment), usually only on the client's first invoice: it does not show up in a single shipment's quote or confirmation.",
         "fastlink": "Use fastlinks — If selected, the customer's fast link will be shown for quick entry of pickups and shipments.",
         "fatt_lingua": "Billing language — Invoice show language (applies only to PDFs, XML will always and only be in Italian/base language)",
         "fatt_sped_fax": "Send invoice by fax — The customer has requested that the invoice be sent by fax",

@@ -119,9 +119,14 @@ export function buildEmitBody(
   return body;
 }
 
-export type DateIssue = "required" | "invalid_range" | "before_dal" | null;
+export type DateIssue =
+  | "required"
+  | "invalid_range"
+  | "before_dal"
+  | "future"
+  | null;
 
-/** La fecha de factura no puede ser anterior al inicio del periodo. */
+/** La fecha de factura no puede ser anterior al inicio del periodo ni futura. */
 export function validateInvoiceDate(
   dataFattura: string,
   dal: string,
@@ -130,6 +135,7 @@ export function validateInvoiceDate(
   if (!dataFattura) return "required";
   if (!dal || !al || dal > al) return "invalid_range";
   if (dataFattura < dal) return "before_dal";
+  if (dataFattura > new Date().toISOString().slice(0, 10)) return "future";
   return null;
 }
 

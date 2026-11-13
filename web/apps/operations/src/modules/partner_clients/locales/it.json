@@ -589,7 +589,7 @@
         "cons_ora": "Ora di cons — Ora di consegna predefinita",
         "delivered_mail": "Consegnati via mail — Manda un messaggio di avviso al mail della sede quando le spedizioni vengono consegnate.",
         "descriz_settore": "Settore operativo altro — Altro settore operativo non elencato o precisazioni su quello indicato",
-        "diritto_fisso": "Diritto fisso di fatturazione — Importo addebitato per la gestione contabile e l'emissione e la spedizione della fattura.",
+        "diritto_fisso": "Diritto fisso di fatturazione — Importo addebitato per la gestione contabile e l'emissione e la spedizione della fattura. Si applica una volta per fattura (non per spedizione), di norma solo sulla prima fattura del cliente: non compare nel preventivo né nella conferma di una singola spedizione.",
         "fastlink": "Usa fastlink — Se selezionato verrà mostrato il fast link del cliente per inserimenti rapidi di prese e spedizioni.",
         "fatt_lingua": "Lingua fatture — Lingua di visione delle fatture (vale solo per i PDF gli XML saranno sempre e solo in italiano/lingua base)",
         "fatt_sped_fax": "Spedire fattura via fax — Il cliente ha richiesto la spedizione della fattura via fax",

@@ -101,6 +101,15 @@ describe("validateInvoiceDate", () => {
       validateInvoiceDate("2026-10-04", "2026-09-01", "2026-09-30"),
     ).toBeNull();
   });
+
+  it("rechaza una fecha de factura futura (collaudo 13/11, item 15)", () => {
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+    expect(validateInvoiceDate(tomorrow, "2000-01-01", tomorrow)).toBe(
+      "future",
+    );
+  });
 });
 
 describe("clientes", () => {

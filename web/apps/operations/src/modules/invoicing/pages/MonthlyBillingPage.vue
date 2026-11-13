@@ -476,7 +476,10 @@ async function loadPreview(): Promise<void> {
   loadError.value = false;
   try {
     clients.value = await monthlyBillingApi.preview({ ...params });
-    selected.value = selectAllValid(clients.value);
+    // No se preselecciona nada: marcar a todos los "listos" de golpe (collaudo
+    // 13/11, item 1) debe ser una accion explicita del usuario, con el boton
+    // "select_valid" que ya existe junto al listado.
+    selected.value = [];
     locked.value = false;
   } catch {
     loadError.value = true;

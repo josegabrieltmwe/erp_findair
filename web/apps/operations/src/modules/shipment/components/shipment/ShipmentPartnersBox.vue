@@ -290,7 +290,7 @@ async function onPartnerSearch(text: string): Promise<void> {
   const token = ++partnerSearchToken;
   searchingPartners.value = true;
   try {
-    const rows = await anagraficaService.search(q);
+    const rows = await anagraficaService.search(q, 25, 'P');
     if (token === partnerSearchToken) {
       partnerItems.value = rows.map(toPartnerOption);
     }

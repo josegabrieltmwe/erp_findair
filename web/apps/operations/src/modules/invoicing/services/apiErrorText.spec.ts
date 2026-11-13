@@ -2,10 +2,16 @@ import { describe, expect, it, vi } from "vitest";
 
 // Los catalogos se cargan en diferido en la app: aqui se simula el plugin con
 // una clave presente y las demas ausentes.
+const TRANSLATED = new Set([
+  "invoicing.errors.IVA_SIN_CAUSAL_SDI",
+  "invoicing.errors.BILLING_DATE_REQUIRED",
+  "invoicing.errors.BILLING_NO_PARTNER",
+  "invoicing.errors.CLIENT_NOT_OWNED",
+]);
 vi.mock("../../../plugins/i18n", () => ({
   i18n: {
     global: {
-      te: (k: string) => k === "invoicing.errors.IVA_SIN_CAUSAL_SDI",
+      te: (k: string) => TRANSLATED.has(k),
       t: (k: string) => `traducido:${k}`,
     },
   },
@@ -31,5 +37,13 @@ describe("apiErrorText", () => {
     expect(
       apiErrorText({ errorCode: "FISCAL_YEAR_CLOSED", message: "cerrado" }),
     ).toBe("cerrado");
+  });
+
+  // Collaudo 13/11, item 24: api_invoice_generate devolvia estos textos en
+  // espanol sin codigo traducible.
+  it("conoce los codigos nuevos de api_invoice_generate", () => {
+    expect(apiErrorText({ errorCode: "BILLING_DATE_REQUIRED" })).not.toBe("");
+    expect(apiErrorText({ errorCode: "BILLING_NO_PARTNER" })).not.toBe("");
+    expect(apiErrorText({ errorCode: "CLIENT_NOT_OWNED" })).not.toBe("");
   });
 });

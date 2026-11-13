@@ -29,11 +29,16 @@ export const anagraficaService = {
   /**
    * Free-text search of anagrafiche (clients, suppliers, partners). Hits
    * api_anagrafica_crud?search=... per the convention used by admin_config V2.
+   *
+   * `tipo` restringe el resultado a un tipo exacto (p. ej. 'P' para partners,
+   * collaudo 13/11 item 14: el selector "Buscar partner" de Visibilidad de
+   * partners buscaba sin filtro y devolvia clientes/proveedores mezclados).
    */
-  async search(text: string, perPage = 25): Promise<AnagraficaLite[]> {
+  async search(text: string, perPage = 25, tipo?: string): Promise<AnagraficaLite[]> {
     const q = text.trim();
     const params: Record<string, string | number> = { per_page: perPage };
     if (q) params.search = q;
+    if (tipo) params['filters[tipo]'] = tipo;
     const r = await http<AnagraficaListResponse>('/api_anagrafica_crud', { query: params });
     const items = r.data ?? [];
     // Un número puede ser el ID (selector «ID cliente»): la coincidencia exacta va primero; si no,
