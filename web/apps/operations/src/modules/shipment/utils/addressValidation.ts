@@ -10,7 +10,15 @@
  */
 
 /** Campos del buffer del diálogo (claves de ShipmentAddress). */
-export type AddressField = "name" | "address" | "country" | "city" | "cap" | "prov";
+export type AddressField =
+  | "name"
+  | "address"
+  | "country"
+  | "city"
+  | "cap"
+  | "prov"
+  | "tel"
+  | "email";
 
 /** Valor = clave i18n bajo shipment.modals.address, o texto del servidor. */
 export type AddressErrors = Partial<Record<AddressField, string>>;
@@ -22,7 +30,14 @@ export interface AddressInput {
   city?: unknown;
   cap?: unknown;
   prov?: unknown;
+  tel?: unknown;
+  email?: unknown;
 }
+
+/** Telefono: dígitos y + ( ) . / - espacio; 5–30 caracteres (colonna tel varchar(30)). */
+const PHONE_RE = /^[+0-9 ()./-]{5,30}$/;
+/** Email: forma básica local@dominio.tld, sin espacios. */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export interface CountryRules {
   /** usa_cap del catálogo ('N' = sin código postal). undefined = desconocido. */
@@ -42,6 +57,10 @@ export function validateAddress(a: AddressInput, rules?: CountryRules | null): A
   if (!filled(a.address)) e.address = "err_required";
   if (!filled(a.country)) e.country = "err_required";
   if (!filled(a.city)) e.city = "err_required";
+  // Teléfono y email son opcionales, pero si se rellenan deben tener forma válida
+  // (collaudo 13/11: «telefonoABC» y «abc@» se guardaban tal cual).
+  if (filled(a.tel) && !PHONE_RE.test(String(a.tel).trim())) e.tel = "err_phone_invalid";
+  if (filled(a.email) && !EMAIL_RE.test(String(a.email).trim())) e.email = "err_email_invalid";
   // Sin datos del país no se exige CAP/provincia: lo validará el API.
   if (rules) {
     const cap = String(rules.cap_enabled ?? "").toUpperCase();
@@ -69,6 +88,11 @@ const API_FIELD: Record<string, AddressField> = {
   zip: "cap",
   prov: "prov",
   provincia: "prov",
+  tel: "tel",
+  telefono: "tel",
+  phone: "tel",
+  mail: "email",
+  email: "email",
 };
 
 function fieldOf(key: string): AddressField | undefined {

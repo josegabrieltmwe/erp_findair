@@ -200,8 +200,10 @@ export const labelsService = {
    * shipment's sender. Replaces the legacy `spedy_ldv_mitt.php` call.
    */
   sendLdvToMittente(shipment_id: number): Promise<SendLdvToMittenteResponse> {
+    // Solo POST en backend y BFF (con GET: 405). Mismo contrato que ldv.service.ts.
     return http<SendLdvToMittenteResponse>("/api_send_ldv_to_mittente_compat", {
-      query: { shipment_id },
+      method: "POST",
+      body: { shipment_id },
     });
   },
 

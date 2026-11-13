@@ -53,16 +53,31 @@ function fmtMoney(v: unknown, cur: string): string {
   return cur === "EUR" ? `€ ${fixed}` : `${cur} ${fixed}`;
 }
 
+// `id_valuta_dogana` es un FK int a valute.id (1 = EUR), NO una sigla: usarlo
+// crudo imprimia "1 500,00" en vez de "€ 500,00" (collaudo 13/11, L9). El
+// backend devuelve la sigla ya resuelta en `dogana_valuta`; para el seguro la
+// propia columna `id_valuta_assic` es la sigla (varchar). Se descarta cualquier
+// valor numerico que se cuele (id sin resolver) y se cae a EUR, igual que
+// shipment/overview/AccessoriCard.vue.
+function resolveCurrency(resolvedField: string, rawField: string): string {
+  const c = cargo.value as Record<string, unknown> | null | undefined;
+  for (const field of [resolvedField, rawField]) {
+    const v = c?.[field];
+    if (v != null && v !== "" && !/^\d+$/.test(String(v))) return String(v);
+  }
+  return "EUR";
+}
+
 const insLabel = computed<string>(() => {
   const v = cargo.value?.assicuraz_imp;
-  const cur = (cargo.value?.id_valuta_assic as string | undefined) || "EUR";
-  return fmtMoney(v, cur);
+  return fmtMoney(v, resolveCurrency("assic_valuta", "id_valuta_assic"));
 });
 
 const customsLabel = computed<string>(() => {
   const v = Number(cargo.value?.dogana_imp ?? 0);
-  const cur = (cargo.value?.id_valuta_dogana as string | undefined) || "EUR";
-  return v > 0 ? fmtMoney(v, cur) : "—";
+  return v > 0
+    ? fmtMoney(v, resolveCurrency("dogana_valuta", "id_valuta_dogana"))
+    : "—";
 });
 const customsSubtitle = computed<string>(() => {
   const desc = cargo.value?.dogana_descri || cargo.value?.contenuto;

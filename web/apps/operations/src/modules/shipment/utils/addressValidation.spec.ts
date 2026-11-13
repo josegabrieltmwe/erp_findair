@@ -50,4 +50,14 @@ describe("serverFieldErrors", () => {
     expect(serverFieldErrors({ success: false, error: "boom" })).toEqual({});
     expect(serverFieldErrors(undefined)).toEqual({});
   });
+
+  // Collaudo 13/11: «telefonoABC» y «abc@» se guardaban tal cual.
+  it("teléfono y email: opcionales, pero con forma válida si se rellenan", () => {
+    expect(validateAddress({ ...full, tel: "", email: "" }, null)).toEqual({});
+    expect(validateAddress({ ...full, tel: "+39 02 1234-567", email: "a@b.it" }, null)).toEqual({});
+    expect(validateAddress({ ...full, tel: "telefonoABC" }, null)).toEqual({ tel: "err_phone_invalid" });
+    expect(validateAddress({ ...full, tel: "123" }, null)).toEqual({ tel: "err_phone_invalid" });
+    expect(validateAddress({ ...full, email: "abc@" }, null)).toEqual({ email: "err_email_invalid" });
+    expect(validateAddress({ ...full, email: "a b@c.it" }, null)).toEqual({ email: "err_email_invalid" });
+  });
 });

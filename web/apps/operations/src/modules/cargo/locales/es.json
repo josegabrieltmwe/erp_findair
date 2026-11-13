@@ -2065,6 +2065,7 @@
     "booking": {
       "cancel": "Anular booking",
       "refresh_status": "Actualizar estado",
+      "refresh_failed": "No se pudo actualizar el estado de la reserva. Reintenta o contacta con soporte.",
       "history": "Histórico",
       "boarding_pass": "Boarding pass"
     },
@@ -2136,6 +2137,7 @@
       "negative": "{label}: no puede ser negativo",
       "currency_invalid": "{label}: código de moneda no válido (3 letras, p. ej. EUR)",
       "not_integer": "{label}: debe ser un entero",
+      "invalid_date": "{label}: fecha no válida (p. ej. 31/12/2026)",
       "fields": {
         "dogana_imp": "Valor en aduana",
         "assicuraz_imp": "Valor asegurado",
@@ -2155,7 +2157,10 @@
         "id_sede": "Sede",
         "id_partner": "Partner",
         "id_ag_export": "Agencia de exportación",
-        "id_ag_import": "Agencia de importación"
+        "id_ag_import": "Agencia de importación",
+        "colli": "Bultos",
+        "data_sped1": "Fecha de envío",
+        "carico_extra": "Cargo extra"
       }
     }
   },

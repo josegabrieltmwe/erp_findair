@@ -14,6 +14,7 @@ import {
   type EmitResponse,
   type ResultRow,
 } from "./monthlyBilling.service";
+import { apiErrorText } from "./apiErrorText";
 
 export const DEFAULT_BATCH_SIZE = 25;
 
@@ -43,7 +44,7 @@ export interface BatchFailure {
 /** Clasifica el fallo de una tanda. Todos los fallos paran la ejecución. */
 export function classifyBatchFailure(e: unknown): BatchFailure {
   const err = e as { status?: number; errorCode?: string; message?: string } | null;
-  const message = err?.message ?? "";
+  const message = apiErrorText(err);
   if (err?.status === 422 && err.errorCode === "INVOICE_DATE_NOT_CHRONOLOGICAL")
     return { kind: "date", message };
   if (err?.status === 403) return { kind: "forbidden", message };

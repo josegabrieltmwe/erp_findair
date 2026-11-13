@@ -2065,6 +2065,7 @@
     "booking": {
       "cancel": "Annulla booking",
       "refresh_status": "Aggiorna stato",
+      "refresh_failed": "Impossibile aggiornare lo stato della prenotazione. Riprova o contatta il supporto.",
       "history": "Storico",
       "boarding_pass": "Boarding pass"
     },
@@ -2136,6 +2137,7 @@
       "negative": "{label}: non può essere negativo",
       "currency_invalid": "{label}: codice valuta non valido (3 lettere, es. EUR)",
       "not_integer": "{label}: deve essere un intero",
+      "invalid_date": "{label}: data non valida (es. 31/12/2026)",
       "fields": {
         "dogana_imp": "Valore in dogana",
         "assicuraz_imp": "Valore assicurato",
@@ -2155,7 +2157,10 @@
         "id_sede": "Sede",
         "id_partner": "Partner",
         "id_ag_export": "Agenzia export",
-        "id_ag_import": "Agenzia import"
+        "id_ag_import": "Agenzia import",
+        "colli": "Colli",
+        "data_sped1": "Data spedizione",
+        "carico_extra": "Carico extra"
       }
     }
   },

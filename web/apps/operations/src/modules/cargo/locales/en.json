@@ -2065,6 +2065,7 @@
     "booking": {
       "cancel": "Cancel booking",
       "refresh_status": "Refresh status",
+      "refresh_failed": "Could not refresh the booking status. Try again or contact support.",
       "history": "History",
       "boarding_pass": "Boarding pass"
     },
@@ -2136,6 +2137,7 @@
       "negative": "{label}: cannot be negative",
       "currency_invalid": "{label}: invalid currency code (3 letters, e.g. EUR)",
       "not_integer": "{label}: must be a whole number",
+      "invalid_date": "{label}: invalid date (e.g. 31/12/2026)",
       "fields": {
         "dogana_imp": "Value in customs",
         "assicuraz_imp": "Insured value",
@@ -2155,7 +2157,10 @@
         "id_sede": "Site",
         "id_partner": "Partner",
         "id_ag_export": "Export agency",
-        "id_ag_import": "Import agency"
+        "id_ag_import": "Import agency",
+        "colli": "Packages",
+        "data_sped1": "Shipping date",
+        "carico_extra": "Extra charge"
       }
     }
   },

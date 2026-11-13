@@ -692,6 +692,8 @@
         "err_required": "Pflichtfeld",
         "err_cap_required": "Dieses Land erfordert eine Postleitzahl",
         "err_prov_required": "Dieses Land erfordert eine Provinz/einen Bundesstaat",
+        "err_phone_invalid": "Ungültige Telefonnummer (Ziffern, + ( ) . / -, 5–30 Zeichen)",
+        "err_email_invalid": "Ungültige E-Mail-Adresse",
         "err_validation": "Bitte die markierten Adressfelder prüfen.",
         "saved": "Adresse gespeichert",
         "save_error": "Die Adresse konnte nicht gespeichert werden."
@@ -1365,7 +1367,9 @@
       "toast_cancelled": "Sendung storniert",
       "toast_cancel_failed": "Stornierung der Sendung fehlgeschlagen",
       "toast_ldv_emailed": "LDV per E-Mail an {to} gesendet",
-      "toast_send_failed": "Senden fehlgeschlagen"
+      "toast_send_failed": "Senden fehlgeschlagen",
+      "toast_saved": "Gespeichert",
+      "toast_not_saved_locked": "Nicht gespeichert (gesperrt): {fields}"
     },
     "ldv_dialog": {
       "title": "Pre-LDV-Validierung",
@@ -1618,6 +1622,8 @@
     "validation": {
       "not_number": "{label}: muss eine Zahl sein",
       "negative": "{label}: darf nicht negativ sein",
+      "not_integer": "{label}: muss eine ganze Zahl sein",
+      "invalid_date": "{label}: ungültiges Datum (z. B. 31.12.2026)",
       "currency_invalid": "{label}: ungültiger Währungscode (3 Buchstaben, z. B. EUR)",
       "fields": {
         "dogana_imp": "Zollwert",
@@ -1630,7 +1636,13 @@
         "peso_fornit_reale": "Tatsächliches Lieferantengewicht",
         "id_valuta_dogana": "Zollwährung",
         "id_valuta_assic": "Versicherungswährung",
-        "id_valuta_contras": "Nachnahmewährung"
+        "id_valuta_contras": "Nachnahmewährung",
+        "carico": "Kundenpreis",
+        "fuel_surc": "Treibstoff Kunde",
+        "fuel_surc_cst": "Treibstoff Kosten",
+        "costo": "Voraussichtliche Kosten",
+        "colli": "Packstücke",
+        "data_sped1": "Versanddatum"
       }
     }
   },

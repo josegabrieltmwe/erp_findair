@@ -1,5 +1,12 @@
 {
   "invoicing": {
+    "errors": {
+      "IVA_SIN_CAUSAL_SDI": "Vrijgesteld btw-tarief zonder SDI-reden: stel de aard N1–N7 in op de btw voordat je factureert.",
+      "INVOICE_DATE_IN_THE_FUTURE": "De factuurdatum mag niet later zijn dan vandaag.",
+      "INVOICE_DATE_BEFORE_SERVICE": "De factuurdatum ligt vóór de dienstperiode.",
+      "FISCAL_YEAR_CLOSED": "Het boekjaar van die datum is afgesloten: er kunnen geen facturen worden uitgegeven.",
+      "CURRENCY_RATE_MISSING": "De wisselkoers van de valuta voor de factuurdatum ontbreekt."
+    },
     "invoice": {
       "title": "Factuur",
       "title_plural": "Facturen",

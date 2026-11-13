@@ -15,4 +15,16 @@ describe("validateDraft con claves i18n (H23)", () => {
   it("omite los campos bloqueados", () => {
     expect(validateDraft({ peso: -2 } as never, (f) => f === "peso", t)).toEqual({});
   });
+
+  // Collaudo 13/11: colli=0.5, fechas imposibles y carico_extra negativo pasaban.
+  it("colli entero, carico_extra >= 0 y data_sped1 real", () => {
+    expect(validateDraft({ colli: 1.5 } as never, undefined, t).colli).toMatch(/not_integer/);
+    expect(validateDraft({ carico_extra: -1 } as never, undefined, t).carico_extra).toMatch(/negative/);
+    for (const bad of ["2026-02-30", "abc", "31/02/2026"]) {
+      expect(validateDraft({ data_sped1: bad } as never, undefined, t).data_sped1).toMatch(/invalid_date/);
+    }
+    for (const ok of ["2026-11-14", "14/11/2026", ""]) {
+      expect(validateDraft({ data_sped1: ok } as never, undefined, t)).toEqual({});
+    }
+  });
 });

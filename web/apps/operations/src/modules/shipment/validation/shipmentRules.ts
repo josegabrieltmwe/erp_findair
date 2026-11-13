@@ -44,6 +44,39 @@ function nonNegativeNumber(): FieldValidator {
   };
 }
 
+/** Entero >= 0 (colli). */
+function nonNegativeInteger(): FieldValidator {
+  return (value) => {
+    if (isBlank(value)) return null;
+    const n = Number(String(value).replace(",", "."));
+    if (!Number.isFinite(n) || !Number.isInteger(n)) return "shipment.validation.not_integer";
+    if (n < 0) return "shipment.validation.negative";
+    return null;
+  };
+}
+
+/**
+ * Fecha de calendario real (`YYYY-MM-DD` o `DD/MM/YYYY`, hora opcional). El
+ * 30/02 se desbordaba a marzo y el texto libre borraba la fecha (collaudo 13/11).
+ */
+function validDate(): FieldValidator {
+  return (value) => {
+    if (isBlank(value)) return null;
+    const s = String(value).trim();
+    if (s.startsWith("0000-00-00")) return null;
+    let y: number, m: number, d: number;
+    const iso = /^(\d{4})-(\d{2})-(\d{2})(?:[ T]\d{2}:\d{2}(?::\d{2})?)?$/.exec(s);
+    const it = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
+    if (iso) [y, m, d] = [+iso[1], +iso[2], +iso[3]];
+    else if (it) [d, m, y] = [+it[1], +it[2], +it[3]];
+    else return "shipment.validation.invalid_date";
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d
+      ? null
+      : "shipment.validation.invalid_date";
+  };
+}
+
 /** ISO 4217-ish: exactly 3 ASCII letters. */
 function currencyIso(): FieldValidator {
   return (value) => {
@@ -69,6 +102,14 @@ export const SHIPMENT_FIELD_RULES: Partial<
   peso_reale: nonNegativeNumber(),
   peso_fornit: nonNegativeNumber(),
   peso_fornit_reale: nonNegativeNumber(),
+  // Precio al cliente y costes: el colaudo 13/11 guardo carico=-10 y carico='abc'
+  // (→ 0, precio borrado). `costo` es el alias de costo_previsto que usa la SPA.
+  carico: nonNegativeNumber(),
+  fuel_surc: nonNegativeNumber(),
+  fuel_surc_cst: nonNegativeNumber(),
+  costo: nonNegativeNumber(),
+  colli: nonNegativeInteger(),
+  data_sped1: validDate(),
   id_valuta_dogana: currencyIso(),
   id_valuta_assic: currencyIso(),
   id_valuta_contras: currencyIso(),

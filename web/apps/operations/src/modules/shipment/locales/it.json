@@ -692,6 +692,8 @@
         "err_required": "Campo obbligatorio",
         "err_cap_required": "Questo paese richiede il CAP",
         "err_prov_required": "Questo paese richiede la provincia",
+        "err_phone_invalid": "Telefono non valido (cifre, + ( ) . / -, 5–30 caratteri)",
+        "err_email_invalid": "Indirizzo email non valido",
         "err_validation": "Controlla i campi evidenziati dell’indirizzo.",
         "saved": "Indirizzo salvato",
         "save_error": "Impossibile salvare l’indirizzo."
@@ -1406,7 +1408,9 @@
       "toast_cancelled": "Spedizione annullata",
       "toast_cancel_failed": "Impossibile annullare la spedizione",
       "toast_ldv_emailed": "LDV inviata via email a {to}",
-      "toast_send_failed": "Invio non riuscito"
+      "toast_send_failed": "Invio non riuscito",
+      "toast_saved": "Salvato",
+      "toast_not_saved_locked": "Non salvati (bloccati): {fields}"
     },
     "ldv_dialog": {
       "title": "Validazione pre-LDV",
@@ -1618,6 +1622,8 @@
     "validation": {
       "not_number": "{label}: deve essere un numero",
       "negative": "{label}: non può essere negativo",
+      "not_integer": "{label}: deve essere un intero",
+      "invalid_date": "{label}: data non valida (es. 31/12/2026)",
       "currency_invalid": "{label}: codice valuta non valido (3 lettere, es. EUR)",
       "fields": {
         "dogana_imp": "Valore dogana",
@@ -1630,7 +1636,13 @@
         "peso_fornit_reale": "Peso reale fornitore",
         "id_valuta_dogana": "Valuta dogana",
         "id_valuta_assic": "Valuta assicurazione",
-        "id_valuta_contras": "Valuta contrassegno"
+        "id_valuta_contras": "Valuta contrassegno",
+        "carico": "Prezzo cliente",
+        "fuel_surc": "Carburante cliente",
+        "fuel_surc_cst": "Carburante costo",
+        "costo": "Costo previsto",
+        "colli": "Colli",
+        "data_sped1": "Data spedizione"
       }
     }
   },

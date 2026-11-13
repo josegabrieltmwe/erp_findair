@@ -47,6 +47,7 @@
             v-model="rifClient"
             :label="t('shipment.client_header.client_rif')"
             :readonly="readonly('RIF_cliente')"
+            maxlength="60"
             hide-details
             @blur="commitRif"
           />
