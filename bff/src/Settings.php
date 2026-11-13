@@ -43,6 +43,8 @@ final class Settings
         /** Fallos de OTP tolerados por IP en la ventana. */
         public readonly int $otpMaxFailuresPerIp = 20,
         public readonly int $otpFailureWindow = 900,
+        /** Plazo total (s) de la consulta del contexto del usuario tras el login; con un API lento (BD remota) debe subirse. */
+        public readonly float $contextTimeout = 5.0,
     ) {
     }
 
@@ -91,6 +93,7 @@ final class Settings
             otpMaxFailuresPerResource: (int) $get('OTP_MAX_FAILURES_PER_RESOURCE', '8'),
             otpMaxFailuresPerIp: (int) $get('OTP_MAX_FAILURES_PER_IP', '20'),
             otpFailureWindow: (int) $get('OTP_FAILURE_WINDOW', '900'),
+            contextTimeout: (float) $get('UPSTREAM_CONTEXT_TIMEOUT', '5'),
             trustedProxies: array_values(array_filter(array_map('trim', explode(',', $get('TRUSTED_PROXIES'))), static fn (string $a): bool => $a !== '')),
             throttlePolicies: [
                 // Copilot de IA: cada turno cuesta tokens y ocupa un worker hasta 120 s.
