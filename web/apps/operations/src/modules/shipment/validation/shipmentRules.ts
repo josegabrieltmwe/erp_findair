@@ -44,6 +44,20 @@ function nonNegativeNumber(): FieldValidator {
   };
 }
 
+/**
+ * Número de cualquier signo. Precio al cliente, recargo de combustible y coste previsto pueden ser negativos en datos
+ * reales (sandbox 13/11: fuel_surc < 0 en 7.683 expediciones = descuento de combustible, carico < 0 en 39 = abonos,
+ * costo_previsto < 0 en 19), así que no se rechaza el signo; sí el texto, que el servidor convertía en 0 y borraba el
+ * importe.
+ */
+function anyNumber(): FieldValidator {
+  return (value) => {
+    if (isBlank(value)) return null;
+    const n = Number(String(value).replace(",", "."));
+    return Number.isFinite(n) ? null : "shipment.validation.not_number";
+  };
+}
+
 /** Entero >= 0 (colli). */
 function nonNegativeInteger(): FieldValidator {
   return (value) => {
@@ -104,10 +118,11 @@ export const SHIPMENT_FIELD_RULES: Partial<
   peso_fornit_reale: nonNegativeNumber(),
   // Precio al cliente y costes: el colaudo 13/11 guardo carico=-10 y carico='abc'
   // (→ 0, precio borrado). `costo` es el alias de costo_previsto que usa la SPA.
-  carico: nonNegativeNumber(),
-  fuel_surc: nonNegativeNumber(),
+  carico: anyNumber(),
+  fuel_surc: anyNumber(),
+  costo: anyNumber(),
+  // Coste del corriere: la BD real no tiene ningún negativo.
   fuel_surc_cst: nonNegativeNumber(),
-  costo: nonNegativeNumber(),
   colli: nonNegativeInteger(),
   data_sped1: validDate(),
   id_valuta_dogana: currencyIso(),

@@ -22,13 +22,21 @@ describe("validateShipmentPatch con claves i18n (H23)", () => {
     expect(validateShipmentPatch({ peso: "", dogana_imp: "12,5", id_valuta_dogana: "EUR" } as never, t)).toEqual([]);
   });
 
-  // Collaudo 13/11: carico=-10 y carico='abc' (→ 0) se guardaban sin error.
-  it("precio y costes: negativos y texto se rechazan", () => {
-    for (const k of ["carico", "fuel_surc", "fuel_surc_cst", "costo"]) {
-      expect(validateShipmentPatch({ [k]: -10 } as never, t)[0]).toMatch(/^shipment\.validation\.negative/);
+  // Collaudo 13/11: carico='abc' (→ 0) se guardaba sin error. El signo NO se rechaza: sandbox tiene fuel_surc < 0 en
+  // 7.683 expediciones (descuento de combustible), carico < 0 en 39 (abonos) y costo_previsto < 0 en 19.
+  it("precio y recargo: el texto se rechaza, los negativos legítimos no", () => {
+    for (const k of ["carico", "fuel_surc", "costo"]) {
       expect(validateShipmentPatch({ [k]: "abc" } as never, t)[0]).toMatch(/^shipment\.validation\.not_number/);
+      expect(validateShipmentPatch({ [k]: -26 } as never, t)).toEqual([]);
       expect(validateShipmentPatch({ [k]: "12,5" } as never, t)).toEqual([]);
+      expect(validateShipmentPatch({ [k]: "" } as never, t)).toEqual([]);
     }
+  });
+
+  it("coste del corriere (fuel_surc_cst): numérico y no negativo", () => {
+    expect(validateShipmentPatch({ fuel_surc_cst: -1 } as never, t)[0]).toMatch(/negative/);
+    expect(validateShipmentPatch({ fuel_surc_cst: "abc" } as never, t)[0]).toMatch(/not_number/);
+    expect(validateShipmentPatch({ fuel_surc_cst: "1,07" } as never, t)).toEqual([]);
   });
 
   it("colli: entero >= 0", () => {
