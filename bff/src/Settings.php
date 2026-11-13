@@ -139,10 +139,14 @@ final class Settings
                     ratePerUser: (int) $get('EXPORT_POLL_RATE_PER_MIN', '120'),
                     ratePerIp: (int) $get('EXPORT_POLL_RATE_PER_IP_MIN', '360'),
                 ),
-                // Estado común de las peticiones asíncronas (R3): ~1 por segundo mientras se espera.
+                // Estado común de las peticiones asíncronas (R3): ~1 por segundo mientras se espera, pero a
+                // diferencia de las políticas anteriores este cupo lo comparten varias funciones sin relación
+                // entre sí (reconciliación COD, exportación de facturas, listini): 120/min no deja margen ni
+                // para 2 operaciones a la vez (2026-11-13, 429 en el ERP con el fix de api/ ya aplicado). Doble
+                // margen para cubrir 2-3 operaciones simultáneas (varias pestañas) sin perder la protección.
                 'async_request_poll' => new ThrottlePolicy(
-                    ratePerUser: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_MIN', '120'),
-                    ratePerIp: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_IP_MIN', '360'),
+                    ratePerUser: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_MIN', '240'),
+                    ratePerIp: (int) $get('ASYNC_REQUEST_POLL_RATE_PER_IP_MIN', '720'),
                 ),
                 'rate_search_poll' => new ThrottlePolicy(
                     ratePerUser: (int) $get('RATE_SEARCH_POLL_RATE_PER_MIN', '300'),
