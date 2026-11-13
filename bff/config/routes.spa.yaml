@@ -704,43 +704,6 @@ routes:
       body: 1m
       timeout: 30
   -
-    id: get.api_admin_internal_roles
-    method: GET
-    path: /api_admin_internal_roles
-    upstream:
-      action: api_admin_internal_roles
-      forward_query: '*'
-  -
-    id: post.api_admin_internal_roles
-    method: POST
-    path: /api_admin_internal_roles
-    upstream:
-      action: api_admin_internal_roles
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: put.api_admin_internal_roles
-    method: PUT
-    path: /api_admin_internal_roles
-    upstream:
-      action: api_admin_internal_roles
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: delete.api_admin_internal_roles
-    method: DELETE
-    path: /api_admin_internal_roles
-    upstream:
-      action: api_admin_internal_roles
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
     id: get.api_admin_mfa_setup
     method: GET
     path: /api_admin_mfa_setup
@@ -763,80 +726,6 @@ routes:
     path: /api_admin_mfa_setup
     upstream:
       action: api_admin_mfa_setup
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: get.api_admin_module_permissions
-    method: GET
-    path: /api_admin_module_permissions
-    upstream:
-      action: api_admin_module_permissions
-      forward_query: '*'
-  -
-    id: post.api_admin_module_permissions
-    method: POST
-    path: /api_admin_module_permissions
-    upstream:
-      action: api_admin_module_permissions
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: put.api_admin_module_permissions
-    method: PUT
-    path: /api_admin_module_permissions
-    upstream:
-      action: api_admin_module_permissions
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: delete.api_admin_module_permissions
-    method: DELETE
-    path: /api_admin_module_permissions
-    upstream:
-      action: api_admin_module_permissions
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: get.api_admin_module_permissions_bulk
-    method: GET
-    path: /api_admin_module_permissions_bulk
-    upstream:
-      action: api_admin_module_permissions_bulk
-      forward_query: '*'
-  -
-    id: post.api_admin_module_permissions_bulk
-    method: POST
-    path: /api_admin_module_permissions_bulk
-    upstream:
-      action: api_admin_module_permissions_bulk
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: delete.api_admin_module_permissions_bulk
-    method: DELETE
-    path: /api_admin_module_permissions_bulk
-    upstream:
-      action: api_admin_module_permissions_bulk
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: put.api_admin_module_permissions_bulk
-    method: PUT
-    path: /api_admin_module_permissions_bulk
-    upstream:
-      action: api_admin_module_permissions_bulk
       forward_query: '*'
     limits:
       body: 1m
@@ -983,70 +872,6 @@ routes:
     upstream:
       action: api_admin_ups_token_status
       forward_query: '*'
-  -
-    id: get.api_admin_user_endpoint_restrictions
-    method: GET
-    path: /api_admin_user_endpoint_restrictions
-    upstream:
-      action: api_admin_user_endpoint_restrictions
-      forward_query: '*'
-  -
-    id: post.api_admin_user_endpoint_restrictions
-    method: POST
-    path: /api_admin_user_endpoint_restrictions
-    upstream:
-      action: api_admin_user_endpoint_restrictions
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: delete.api_admin_user_endpoint_restrictions
-    method: DELETE
-    path: /api_admin_user_endpoint_restrictions
-    upstream:
-      action: api_admin_user_endpoint_restrictions
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: get.api_admin_user_role_bulk
-    method: GET
-    path: /api_admin_user_role_bulk
-    upstream:
-      action: api_admin_user_role_bulk
-      forward_query: '*'
-  -
-    id: post.api_admin_user_role_bulk
-    method: POST
-    path: /api_admin_user_role_bulk
-    upstream:
-      action: api_admin_user_role_bulk
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: put.api_admin_user_role_bulk
-    method: PUT
-    path: /api_admin_user_role_bulk
-    upstream:
-      action: api_admin_user_role_bulk
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
-  -
-    id: delete.api_admin_user_role_bulk
-    method: DELETE
-    path: /api_admin_user_role_bulk
-    upstream:
-      action: api_admin_user_role_bulk
-      forward_query: '*'
-    limits:
-      body: 1m
-      timeout: 30
   -
     id: get.api_admin_user_roles
     method: GET
@@ -2909,13 +2734,6 @@ routes:
     limits:
       body: 1m
       timeout: 30
-  -
-    id: get.api_cargo_webcargo_booking_status
-    method: GET
-    path: /api_cargo_webcargo_booking_status
-    upstream:
-      action: api_cargo_webcargo_booking_status
-      forward_query: '*'
   -
     id: post.api_cargo_webcargo_booking_status
     method: POST
@@ -6115,13 +5933,6 @@ routes:
       body: 1m
       timeout: 30
   -
-    id: get.cancel_pickup
-    method: GET
-    path: /cancel_pickup
-    upstream:
-      action: cancel_pickup
-      forward_query: '*'
-  -
     id: post.cancel_pickup
     method: POST
     path: /cancel_pickup
@@ -6257,13 +6068,6 @@ routes:
     limits:
       body: 1m
       timeout: 30
-  -
-    id: get.reset_shipment_awb
-    method: GET
-    path: /reset_shipment_awb
-    upstream:
-      action: reset_shipment_awb
-      forward_query: '*'
   -
     id: post.rubrica_add
     method: POST
