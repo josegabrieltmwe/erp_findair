@@ -98,6 +98,14 @@ export function registrarFlujoAwb(perfil: Profile): void {
     async function abrirCargo(page: Page, id: number): Promise<void> {
       await page.goto(`/cargo/${id}`);
       await page.waitForTimeout(3000 * K);
+      // El sandbox responde a veces «Servicio no disponible» al cargar el cargo: la pantalla ofrece «Retry» y se reintenta.
+      for (let intento = 1; intento <= 3; intento++) {
+        const reintentar = page.getByRole("button", { name: /^retry$/i });
+        if (!(await reintentar.isVisible().catch(() => false))) break;
+        test.info().annotations.push({ type: "reintento", description: `El cargo ${id} no cargó (intento ${intento})` });
+        await reintentar.click();
+        await page.waitForTimeout(3000 * K);
+      }
       await cerrarVelo(page);
     }
     const modalMawb = (page: Page) => page.locator(".v-overlay__content", { hasText: "Master Air Waybill" }).last();
@@ -105,7 +113,7 @@ export function registrarFlujoAwb(perfil: Profile): void {
 
     async function abrirMawb(page: Page) {
       await cerrarVelo(page);
-      await page.locator("button", { hasText: /MAWB/i }).first().click();
+      await page.locator("button", { hasText: /MAWB/i }).first().click({ timeout: 60_000 * K });
       const d = modalMawb(page);
       await expect(d).toBeVisible();
       await expect(d.getByRole("tab", { name: "Goods" })).toBeVisible({ timeout: 30_000 * K });
@@ -140,20 +148,34 @@ export function registrarFlujoAwb(perfil: Profile): void {
     async function pedirPdf(page: Page, id: number, tipo: TipoDoc, awbId?: number): Promise<Pdf> {
       const q = new URLSearchParams({ cargo_id: String(id), type: tipo, format: "pdf" });
       if (awbId) q.set("awb_id", String(awbId));
-      const t0 = Date.now();
-      const r = await page.request.get(`/bff/v1/api_awb_documents?${q}`, { timeout: 170_000 });
-      const cuerpo = await r.body();
-      const ms = Date.now() - t0;
-      let codigo: string | null = null;
-      if (r.status() !== 200) {
-        try {
-          codigo = (JSON.parse(cuerpo.toString()) as { code?: string; error_code?: string }).code ?? null;
-        } catch {
-          /* cuerpo que no es JSON */
+      // El generador de PDF falla a veces con 502/503/504 (P62: el PDF del MAWB, de 16 páginas, es el más lento): se
+      // reintenta hasta 3 veces y cada intento queda en el informe y en las anotaciones, para no ocultar el defecto.
+      for (let intento = 1; ; intento++) {
+        const t0 = Date.now();
+        const r = await page.request.get(`/bff/v1/api_awb_documents?${q}`, { timeout: 170_000 });
+        const cuerpo = await r.body();
+        const ms = Date.now() - t0;
+        let codigo: string | null = null;
+        let idPeticion = "";
+        if (r.status() !== 200) {
+          try {
+            const j = JSON.parse(cuerpo.toString()) as { code?: string; request_id?: string };
+            codigo = j.code ?? null;
+            idPeticion = j.request_id ?? ""; // para buscar el fallo en los logs del BFF y del API
+          } catch {
+            /* cuerpo que no es JSON */
+          }
         }
+        tiempos.push(
+          `${tipo}${awbId ? `#${awbId}` : ""} cargo ${id}: ${r.status()} · ${ms} ms · ${cuerpo.length} bytes${idPeticion ? ` · request_id ${idPeticion}` : ""}${intento > 1 ? ` (intento ${intento})` : ""}`,
+        );
+        const transitorio = [502, 503, 504].includes(r.status());
+        if (transitorio && intento < 3) {
+          test.info().annotations.push({ type: "reintento", description: `${tipo}: HTTP ${r.status()} a los ${ms} ms (intento ${intento})` });
+          continue;
+        }
+        return { status: r.status(), ms, cuerpo, cabeceras: r.headers(), codigo };
       }
-      tiempos.push(`${tipo}${awbId ? `#${awbId}` : ""} cargo ${id}: ${r.status()} · ${ms} ms · ${cuerpo.length} bytes`);
-      return { status: r.status(), ms, cuerpo, cabeceras: r.headers(), codigo };
     }
 
     function esPdfValido(p: Pdf): string {
@@ -347,7 +369,7 @@ export function registrarFlujoAwb(perfil: Profile): void {
 
     // ---------- 3. PDF con contenido ----------
     test("PDF del MAWB: se genera y trae el número, el remitente y la mercancía", async ({ page }) => {
-      test.setTimeout(240_000);
+      test.setTimeout(540_000);
       const p = await pedirPdf(page, cargo, "mawb");
       const txt = esPdfValido(p);
       expect(txt).toContain(awb);
@@ -360,7 +382,7 @@ export function registrarFlujoAwb(perfil: Profile): void {
     });
 
     test("PDF del HAWB: el de una casa solo trae sus datos y el general trae las dos", async ({ page }) => {
-      test.setTimeout(300_000);
+      test.setTimeout(540_000);
       const una = await pedirPdf(page, cargo, "hawb", hawb1);
       const t1 = esPdfValido(una);
       expect(t1).toMatch(new RegExp(D.h1.shipper, "i"));
@@ -397,23 +419,13 @@ export function registrarFlujoAwb(perfil: Profile): void {
       ["hawb", "NO_HAWB"],
       ["manifest", "NO_HAWB"],
       ["hawb_colli", "NO_HAWB"],
+      ["pouch", "NO_MAWB"],
+      ["mawb_colli", "NO_MAWB"],
     ] as const) {
       test(`Sin documentos · ${tipo} da ${codigo} (422) y no genera PDF`, async ({ page }) => {
         const p = await pedirPdf(page, cargoVacio, tipo);
         expect(p.status).toBe(422);
         expect(p.codigo).toBe(codigo);
-      });
-    }
-
-    // DEFECTO CONOCIDO (hallazgo 2026-11-13): sin MAWB, pouch y mawb_colli devuelven un PDF vacío con 200 en vez de
-    // NO_MAWB (422), porque sus constructores de datos nunca devuelven un array vacío. Cuando se corrija en el API,
-    // este test pasará y Playwright avisará de que `test.fail` ya no hace falta.
-    for (const tipo of ["pouch", "mawb_colli"] as const) {
-      test(`Sin documentos · ${tipo} debería dar NO_MAWB (422) [defecto conocido]`, async ({ page }) => {
-        test.fail(true, "el API genera un PDF vacío cuando no hay MAWB");
-        const p = await pedirPdf(page, cargoVacio, tipo);
-        expect(p.status).toBe(422);
-        expect(p.codigo).toBe("NO_MAWB");
       });
     }
 

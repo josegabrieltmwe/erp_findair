@@ -296,17 +296,17 @@ Estado a 2026-11-01: `test:anon` pasa (6 de 6) contra la instalación local. El 
 - MAWB por pestañas: número, remitente y consignatario (nombre, dirección, ciudad y país), mercancía y SSR; lo guardado se lee del API.
 - Dos HAWB con datos propios y la vista de consolidación del cargo.
 - Los 6 PDF que genera el servidor (`mawb`, `hawb` de una casa y general, `manifest`, `pouch`, `mawb_colli`, `hawb_colli`), con `pdftotext` (poppler-utils): número de AWB, remitente, consignatario, ciudades, mercancía y SSR en el MAWB; la casa 1 no trae los datos de la casa 2.
-- Un cargo sin MAWB ni HAWB: `mawb`, `hawb`, `manifest` y `hawb_colli` dan 422 `NO_MAWB`/`NO_HAWB`. `pouch` y `mawb_colli` llevan `test.fail` (defecto conocido, P125) y avisarán cuando se despliegue el arreglo.
+- Un cargo sin MAWB ni HAWB: `mawb`, `hawb`, `manifest` y `hawb_colli` dan 422 `NO_MAWB`/`NO_HAWB`. `pouch` y `mawb_colli` también dan 422 `NO_MAWB` (P129, desplegado).
 - La descarga del botón POUCH desde la interfaz (la SPA nombra el fichero `POUCH_<cargo>.pdf`, no con el AWB que sugiere el servidor).
 
-`tests/{staff,partner}/hawb-autorizacion.spec.ts` comprueba que una casa de otro cargo no se edita ni se borra desde la URL del primero (P124). **Falla hoy en el sandbox** (el `PATCH` cruzado responde 200 y cambia la casa) y pasará al desplegar el arreglo de `tmwe_api`.
+`tests/{staff,partner}/hawb-autorizacion.spec.ts` comprueba que una casa de otro cargo no se edita ni se borra desde la URL del primero (P128). Antes del arreglo fallaba en el sandbox (el `PATCH` cruzado respondía 200 y cambiaba la casa); **desde el despliegue del 2026-11-13 pasa** con los dos perfiles.
 
-Estado (sandbox, TMWE `jose` y partner 9069 `DJW13gz078`): el flujo completo pasa con los dos perfiles (12 y 14 pruebas, incluidos los dos fallos esperados). Tiempos de generación medidos: MAWB 13-55 s (16 páginas, 1,5 MB; el límite del BFF es 60 s), HAWB 7-34 s, manifiesto 3 s, pouch 2-3 s, packing lists 1-3 s (P62).
+Estado (sandbox desplegado el 2026-11-13, TMWE `jose` y partner 9069 `DJW13gz078`): el flujo completo pasa con los dos perfiles (14 y 12 pruebas, más 4 de autorización). Tiempos de generación medidos: MAWB 13-154 s (16 páginas, 1,5 MB) con 502 intermitentes en el primer pedido, HAWB 7-34 s (también con algún 502), manifiesto 3 s, pouch 2-3 s, packing lists 1-3 s (P62). El test reintenta los 502/503/504 hasta 3 veces y apunta el `request_id` en el informe.
 
 Notas para ejecutarlo:
 - Usar el **sandbox** (`E2E_BASE_URL=https://sandbox.erp.findair.it`): con el API local y la BD por VPN (~0,3 s por consulta) cada llamada tarda 10-15 s. `E2E_FACTOR_TIEMPO` multiplica los plazos (1 por defecto).
-- La búsqueda de candidatos de «Nuevo HAWB» tarda 13-18 s y a veces da 504 (P126): si no ofrece la expedición, el test crea la casa por API, lo anota en el informe y sigue. Las escrituras por API necesitan la cabecera `Origin` (el BFF responde 403 `origin_not_allowed` sin ella).
-- `E2E_AVISO_PAIS=1` exige el aviso del campo País (P127) cuando la SPA probada ya lo lleva.
+- La búsqueda de candidatos de «Nuevo HAWB» tarda 13-18 s y a veces da 504 (P130): si no ofrece la expedición, el test crea la casa por API, lo anota en el informe y sigue. Las escrituras por API necesitan la cabecera `Origin` (el BFF responde 403 `origin_not_allowed` sin ella).
+- `E2E_AVISO_PAIS=1` exige el aviso del campo País (P131) cuando la SPA probada ya lo lleva.
 - Requiere `pdftotext` instalado.
 
 **Courier del partner: direcciones (SHP-10, 2026-11-01)** (`tests/partner/courier-direcciones.spec.ts`)
