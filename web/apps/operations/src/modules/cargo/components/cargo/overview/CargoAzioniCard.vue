@@ -57,13 +57,9 @@
       clickable
       @click="ui.openCotizacionModal('client')"
     />
-    <InfoRow
-      icon="mdi-account-multiple"
-      :title="t('cargo.azioni.partner_visibility')"
-      :subtitle="partnersSubtitle"
-      clickable
-      @click="ui.openModal('partners')"
-    />
+    <!-- Visibilidad de partners: movida a la topbar (icono junto al chat,
+         con punto si ya hay partners compartidos), más visible que aquí
+         dentro de la tarjeta "Acciones". -->
     <!-- "Envíos express vinculados" se promovió a card propia del overview
          (CargoLinkedExpressBox), con creación in-SPA — ya no es una fila aquí. -->
 
@@ -256,16 +252,6 @@ const offerteSubtitle = computed<string>(() => {
   if (g === "F") return t("cargo.azioni.mgmt_confirmed");
   if (g === "O") return t("cargo.azioni.mgmt_offline");
   return t("cargo.azioni.mgmt_new");
-});
-
-const partnersSubtitle = computed<string>(() => {
-  const ids = [
-    cargo.value?.id_partner_show1,
-    cargo.value?.id_partner_show2,
-  ].filter((x) => x && String(x) !== "0");
-  return ids.length
-    ? t("cargo.azioni.shared_partners", { count: ids.length })
-    : t("cargo.azioni.no_shared_partners");
 });
 </script>
 
