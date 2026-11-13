@@ -156,8 +156,8 @@
             <div><span class="cm-cell-hint">{{ t('carrier_services.f_priority') }}:</span> {{ selected.prioritario }}</div>
             <div><span class="cm-cell-hint">{{ t('carrier_services.f_transit_days') }}:</span> {{ selected.tempi }}</div>
             <div><span class="cm-cell-hint">{{ t('carrier_services.f_cutoff_hour') }}:</span> {{ selected.ore }}:00</div>
-            <div><span class="cm-cell-hint">{{ t('carrier_services.f_fuel_surcharge') }}:</span> {{ selected.fuel_surc }}%</div>
-            <div><span class="cm-cell-hint">{{ t('carrier_services.f_coefficient') }}:</span> {{ selected.coefficiente }}</div>
+            <div v-if="canSeePriceParams"><span class="cm-cell-hint">{{ t('carrier_services.f_fuel_surcharge') }}:</span> {{ selected.fuel_surc }}%</div>
+            <div v-if="canSeePriceParams"><span class="cm-cell-hint">{{ t('carrier_services.f_coefficient') }}:</span> {{ selected.coefficiente }}</div>
             <div><span class="cm-cell-hint">{{ t('carrier_services.f_master') }}:</span> {{ selected.master }}</div>
             <div><span class="cm-cell-hint">{{ t('carrier_services.f_manual') }}:</span> {{ selected.manuale }}</div>
           </div>
@@ -202,8 +202,8 @@
             />
             <v-text-field v-model.number="editForm.tempi" :label="t('carrier_services.f_transit_days')" type="number" density="compact" />
             <v-text-field v-model.number="editForm.ore" :label="t('carrier_services.f_cutoff_hour')" type="number" density="compact" />
-            <v-text-field v-model.number="editForm.fuel_surc" :label="t('carrier_services.f_fuel_surcharge')" type="number" step="0.01" density="compact" />
-            <v-text-field v-model.number="editForm.coefficiente" :label="t('carrier_services.f_coefficient')" type="number" step="0.01" density="compact" />
+            <v-text-field v-if="canSeePriceParams" v-model.number="editForm.fuel_surc" :label="t('carrier_services.f_fuel_surcharge')" type="number" step="0.01" density="compact" />
+            <v-text-field v-if="canSeePriceParams" v-model.number="editForm.coefficiente" :label="t('carrier_services.f_coefficient')" type="number" step="0.01" density="compact" />
           </div>
           <!-- Tarificación por distancia (zona KM) -->
           <div v-if="editMode" class="mt-4 pt-3" style="border-top: 1px solid rgba(0,0,0,0.08)">
@@ -785,6 +785,12 @@ const detailTab = ref<'info' | 'supplements' | 'zones'>('info');
 const editMode = ref(false);
 const savingService = ref(false);
 
+// El backend omite fuel_surc/coefficiente (Supplier_Service_Controller::without_price_parameters) para
+// cualquier actor que no sea TMWE: son las condiciones generales con el transportista, no la tarifa del
+// partner. Sin este guard, `s.fuel_surc ?? 0` en startEdit() mostraba un 0% falso a un partner como si
+// fuera el valor real (hallazgo QA 2026-11-13).
+const canSeePriceParams = computed(() => selected.value != null && (selected.value as { fuel_surc?: number }).fuel_surc !== undefined);
+
 interface ServiceFormState {
   descr: string;
   tipo: ServiceTipo;
@@ -861,8 +867,12 @@ function startEdit(): void {
   editForm.prioritario = s.prioritario || 'N';
   editForm.tempi = s.tempi ?? 0;
   editForm.ore = s.ore ?? 19;
-  editForm.fuel_surc = s.fuel_surc ?? 0;
-  editForm.coefficiente = s.coefficiente ?? 0;
+  // Sin canSeePriceParams los dos campos ni se muestran (ver template): no hay nada que fijar aquí
+  // que pueda confundirse con un valor real.
+  if (canSeePriceParams.value) {
+    editForm.fuel_surc = s.fuel_surc ?? 0;
+    editForm.coefficiente = s.coefficiente ?? 0;
+  }
   editForm.zone_dist_km = (s.zone_dist_km as string) || 'N';
   editForm.zone_km_fasce = (s.zone_km_fasce as string) || '';
   editForm.zone_km_moltipl = (s.zone_km_moltipl as string) || 'N';
