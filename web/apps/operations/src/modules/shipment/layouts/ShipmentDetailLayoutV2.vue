@@ -58,6 +58,20 @@
           <span v-if="chat.hasUnread" class="topbar-iconbtn-dot" />
         </button>
 
+        <!-- Visibilidad de partners: antes solo accesible desde una tarjeta
+             colapsada ("Verifiche"), difícil de encontrar. Se sube aquí, junto
+             al chat, porque compartir visibilidad es un prerrequisito del
+             propio chat entre partners. -->
+        <button
+          type="button"
+          class="topbar-iconbtn"
+          :title="t('shipment.cards.verifiche.partner_visibility')"
+          @click="ui.openModal('partners')"
+        >
+          <v-icon icon="mdi-account-multiple-outline" size="18" />
+          <span v-if="hasSharedPartners" class="topbar-iconbtn-dot" />
+        </button>
+
         <!-- Aviso de comunicación pendiente: RFQ/ofertas enviadas sin
              respuesta. NO duplica el menú (que vive en ServizioCard, junto al
              proveedor que se cotiza): solo señala y lleva hasta él. Mismo
@@ -189,6 +203,12 @@ const { shipment, id: currentIdRef } = storeToRefs(store);
 const activeTab = ref<"overview">("overview");
 
 const currentId = computed<number | null>(() => currentIdRef.value);
+
+const hasSharedPartners = computed<boolean>(() => {
+  const s = shipment.value as unknown as Record<string, unknown> | null;
+  const ids = [s?.id_partner_show1, s?.id_partner_show2];
+  return ids.some((x) => x && String(x) !== "0");
+});
 
 /**
  * Records navigator — promoted from the old off-canvas `ShipmentSidebar`

@@ -34,14 +34,8 @@
         />
         <!-- Notes moved to the dedicated, always-visible NoteCard. -->
         <div class="d-flex flex-wrap ga-2 mt-2">
-          <v-btn
-            size="x-small"
-            variant="tonal"
-            prepend-icon="mdi-account-multiple-outline"
-            @click="ui.openModal('partners')"
-          >
-            {{ t("shipment.cards.verifiche.partner_visibility") }}
-          </v-btn>
+          <!-- Visibilidad de partners: movida a la topbar (icono junto al
+               chat), más visible que aquí dentro de una tarjeta colapsada. -->
           <!-- Flags de gestión (archiviata / esente IVA art.9 / costo por
                verificar / aree remote / fuori misura). Paridad legacy
                spedy_form.php flags inferiores. -->
