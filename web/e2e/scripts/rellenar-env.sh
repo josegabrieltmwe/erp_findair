@@ -11,7 +11,7 @@
 # --allow-write escribe E2E_ALLOW_WRITE=1 (consentimiento a que el test cree datos en ESA base).
 set -euo pipefail
 
-API_ENV="${TMWE_API_ENV:-/var/www/dev/tmwe_api/.env}"
+API_ENV="${TMWE_API_ENV:-/var/www/dev/api/.env}"
 OUT="$(dirname "$0")/../.env.e2e"
 PARTNER=9069; USER_LOGIN=""; CLIENT=""; LIST=0; ALLOW=0
 

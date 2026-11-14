@@ -239,12 +239,12 @@ Las pruebas de navegador viven en `web/e2e/` (Playwright, fuera del workspace pn
 | Pieza | URL / ruta local | Notas |
 |---|---|---|
 | SPA + BFF | `https://erp-findair.php8` | Vhost `deploy/apache/erp-findair.php8.conf` (activo y idéntico a la plantilla). Sirve `web/dist` y publica `bff/public` bajo `/bff` |
-| Backend | `https://tmwe-api.php8` | Vhost `tmwe-api.php8.conf`, raíz `/var/www/dev/tmwe_api`, solo `app.php`. Aloja también la pantalla de login (`#oauth-login-username`, `#oauth-login-password`) |
+| Backend | `https://api.php8` | Vhost `api.php8.conf`, raíz `/var/www/dev/api`, solo `app.php`. Aloja también la pantalla de login (`#oauth-login-username`, `#oauth-login-password`) |
 | Callback OAuth | `https://erp-findair.php8/bff/auth/callback` | Es `OAUTH_REDIRECT_URI` de `bff/.env` y el cliente 527 debe tenerlo registrado |
 | Sesión del BFF | Valkey/Redis en `127.0.0.1:6379` | `REDIS_DSN` de `bff/.env` |
 | Sandbox (referencia) | `https://sandbox.erp.findair.it` | `deploy/apache/sandbox.erp.findair.it.conf`; no es el entorno de estas pruebas |
 
-`/etc/hosts` ya resuelve `erp-findair.php8` y `tmwe-api.php8` a `127.0.0.1`. `tmwe-json.php7` es el backend antiguo y no interviene.
+`/etc/hosts` ya resuelve `erp-findair.php8` y `api.php8` a `127.0.0.1`. `tmwe-json.php7` es el backend antiguo y no interviene.
 
 **Importante: el vhost sirve `web/dist` ya compilado.** Un cambio en la SPA no se ve hasta reconstruirla:
 
