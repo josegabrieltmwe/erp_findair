@@ -26,6 +26,7 @@
       "orphan_already": "Dieses Paket ist bereits ohne Sendung erfasst.",
       "orphan_tag": "Ohne Sendung",
       "duplicate": "Dieser Aufkleber ist bereits erfasst.",
+      "duplicate_scan": "Wiederholter Scan ignoriert: dieser Code wurde gerade eben schon gelesen.",
       "save": "Gewicht speichern",
       "register_orphan": "Paket erfassen",
       "saved": "Gewicht gespeichert.",

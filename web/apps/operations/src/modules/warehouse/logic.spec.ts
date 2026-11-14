@@ -24,16 +24,16 @@ import {
 import type { CompletenessItem } from "./types";
 
 describe("scan guard", () => {
-  it("ignora vacíos y duplicados dentro de 500 ms", () => {
+  it("ignora vacíos y duplicados dentro de 500 ms, cada uno con su motivo", () => {
     let t = 1000;
     const g = createScanGuard(500, () => t);
-    expect(g.accept("  ")).toBeNull();
-    expect(g.accept(" ABC\n")).toBe("ABC");
+    expect(g.accept("  ")).toEqual({ code: null, reason: "empty" });
+    expect(g.accept(" ABC\n")).toEqual({ code: "ABC" });
     t += 200;
-    expect(g.accept("ABC")).toBeNull();
-    expect(g.accept("XYZ")).toBe("XYZ");
+    expect(g.accept("ABC")).toEqual({ code: null, reason: "duplicate" });
+    expect(g.accept("XYZ")).toEqual({ code: "XYZ" });
     t += 600;
-    expect(g.accept("XYZ")).toBe("XYZ");
+    expect(g.accept("XYZ")).toEqual({ code: "XYZ" });
   });
   it("normalizeScan recorta", () => {
     expect(normalizeScan("\t 12 \r\n")).toBe("12");

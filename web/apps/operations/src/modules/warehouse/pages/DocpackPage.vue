@@ -111,7 +111,7 @@ async function loadCompleteness(id: number): Promise<void> {
 }
 
 async function scan(raw?: string): Promise<void> {
-  const c = raw ?? guard.accept(code.value);
+  const c = raw ?? guard.accept(code.value).code;
   if (!c) return;
   code.value = c;
   busy.value = true;

@@ -26,6 +26,7 @@
       "orphan_already": "Dit pakket is al geregistreerd zonder zending.",
       "orphan_tag": "Zonder zending",
       "duplicate": "Dit collinummer is al geregistreerd.",
+      "duplicate_scan": "Herhaalde scan genegeerd: deze code is net al gelezen.",
       "save": "Gewicht opslaan",
       "register_orphan": "Pakket registreren",
       "saved": "Gewicht opgeslagen.",

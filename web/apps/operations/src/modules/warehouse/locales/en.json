@@ -26,6 +26,7 @@
       "orphan_already": "This parcel is already registered without a shipment.",
       "orphan_tag": "No shipment",
       "duplicate": "This marker is already registered.",
+      "duplicate_scan": "Repeated scan ignored: that code was just read a moment ago.",
       "save": "Save weight",
       "register_orphan": "Register parcel",
       "saved": "Weight saved.",

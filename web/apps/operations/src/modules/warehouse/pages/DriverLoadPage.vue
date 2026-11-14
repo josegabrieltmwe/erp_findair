@@ -62,7 +62,7 @@ async function pickDriver(): Promise<void> {
 }
 
 async function scan(): Promise<void> {
-  const c = guard.accept(code.value);
+  const c = guard.accept(code.value).code;
   code.value = "";
   if (!c || !driverId.value || !canWrite) return;
   busy.value = true;

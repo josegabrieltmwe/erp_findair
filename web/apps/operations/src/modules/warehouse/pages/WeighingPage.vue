@@ -59,9 +59,17 @@ function resetForm(): void {
 }
 
 async function scan(): Promise<void> {
-  const c = guard.accept(code.value);
-  if (!c) return;
-  code.value = c;
+  const r = guard.accept(code.value);
+  if (!r.code) {
+    // Collaudo 14/11: el operario no sabia por que "no pasaba nada" si el escaner
+    // leia dos veces el mismo bulto (doble disparo tipico de algunos lectores).
+    // Un Enter sobre el campo vacio (reason "empty") no es un codigo tecleado, no avisa.
+    if (r.reason === "duplicate") {
+      toast.push("warning", t("warehouse.weighing.duplicate_scan"));
+    }
+    return;
+  }
+  code.value = r.code;
   busy.value = true;
   try {
     found.value = await warehouseApi.lookup(c);

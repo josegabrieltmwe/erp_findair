@@ -26,6 +26,7 @@
       "orphan_already": "Questo collo è già registrato senza spedizione.",
       "orphan_tag": "Senza spedizione",
       "duplicate": "Questo segnacollo è già registrato.",
+      "duplicate_scan": "Lettura ripetuta ignorata: questo codice è già stato letto un istante fa.",
       "save": "Salva peso",
       "register_orphan": "Registra collo",
       "saved": "Peso salvato.",

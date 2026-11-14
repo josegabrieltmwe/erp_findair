@@ -17,25 +17,37 @@ export function normalizeScan(raw: string | null | undefined): string {
   return (raw ?? "").replace(/[\r\n\t]+/g, "").trim();
 }
 
+/** Por qué accept() no devolvió un código: vacío, o el mismo repetido dentro de la ventana. */
+export type ScanRejectReason = "empty" | "duplicate";
+
+export interface ScanResult {
+  code: string | null;
+  /** Solo informado cuando code es null. */
+  reason?: ScanRejectReason;
+}
+
 /**
  * Guardia contra lecturas dobles: un mismo código repetido dentro de la
- * ventana se ignora; vacíos también.
+ * ventana se ignora; vacíos también. Collaudo 14/11: el operario no sabía
+ * por qué "no pasaba nada" al pulsar Enter sin código o al leer dos veces
+ * el mismo bulto (escáner que dispara doble); `reason` deja que la pantalla
+ * avise solo del caso "duplicate" (el de "empty" no es un código tecleado).
  */
 export function createScanGuard(
   windowMs = SCAN_DEBOUNCE_MS,
   now: () => number = () => Date.now(),
-): { accept(raw: string): string | null } {
+): { accept(raw: string): ScanResult } {
   let last = "";
   let lastAt = -Infinity;
   return {
-    accept(raw: string): string | null {
+    accept(raw: string): ScanResult {
       const code = normalizeScan(raw);
-      if (!code) return null;
+      if (!code) return { code: null, reason: "empty" };
       const t = now();
-      if (code === last && t - lastAt < windowMs) return null;
+      if (code === last && t - lastAt < windowMs) return { code: null, reason: "duplicate" };
       last = code;
       lastAt = t;
-      return code;
+      return { code };
     },
   };
 }

@@ -26,6 +26,7 @@
       "orphan_already": "Este paquete ya está registrado sin envío.",
       "orphan_tag": "Sin envío",
       "duplicate": "Este segnacollo ya está registrado.",
+      "duplicate_scan": "Lectura repetida ignorada: ese código ya se leyó hace un instante.",
       "save": "Guardar peso",
       "register_orphan": "Registrar paquete",
       "saved": "Peso guardado.",
