@@ -42,7 +42,6 @@ final class CurlBodyStream implements StreamInterface
         $this->closed = true;
         curl_multi_remove_handle($this->multi, $this->handle);
         curl_multi_close($this->multi);
-        curl_close($this->handle);
     }
 
     public function detach()

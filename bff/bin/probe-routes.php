@@ -21,7 +21,7 @@ foreach ($m->all() as $r) {
     if ($r->method !== 'GET' || str_contains($r->path, '{') || $r->response !== 'json' || preg_match($skip, $r->action)) continue;
     $ch = curl_init($base . '/bff/v1' . $r->path . '?per_page=1&page=1');
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_COOKIE => "__Host-sid=$cookie", CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => 0]);
-    $body = curl_exec($ch); $st = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch); $n++;
+    $body = curl_exec($ch); $st = curl_getinfo($ch, CURLINFO_HTTP_CODE); $n++;
     $j = json_decode((string) $body, true); $code = is_array($j) ? ($j['error_code'] ?? $j['code'] ?? '') : '';
     $out[$st][] = $r->action . ($st >= 400 && $code ? "($code)" : '');
 }
