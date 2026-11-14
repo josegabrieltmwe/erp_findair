@@ -95,6 +95,7 @@ import { applyThemeMode, themeMode } from "@shared/platform/themeMode";
 import DashboardShell from "@shared/listing/DashboardShell.vue";
 import { resolveSpaTarget } from "@shared/platform/navTargets";
 import OperationsNav from "@shared/platform/OperationsNav.vue";
+import { navKeyForRoute } from "@shared/platform/navCatalog";
 import AppToaster from "@/shell/AppToaster.vue";
 import AppConfirmHost from "@/shell/AppConfirmHost.vue";
 import BusyHost from "@/shell/BusyHost.vue";
@@ -111,9 +112,13 @@ watch(themeMode, () => applyThemeMode(theme));
 // En modo OTP (una aerolínea con el enlace de un correo) NUNCA hay marco de operador: ni barra, ni chat, ni notificaciones, ni
 // perfil. Al montar, la ruta aún no está resuelta (el componente es perezoso) y `route.meta` llega vacío: sin esto el marco se
 // pintaría un instante y lanzaría peticiones de operador que el BFF rechaza.
-const isFullscreen = computed<boolean>(() => isOtpMode() || route.meta?.fullscreen === true);
+const isFullscreen = computed<boolean>(
+  () => isOtpMode() || route.meta?.fullscreen === true,
+);
 // La landing y las actividades del día llevan su propia cabecera: sin barra de página.
-const isHomeRoute = computed<boolean>(() => route.name === "home" || String(route.name ?? "").startsWith("home-"));
+const isHomeRoute = computed<boolean>(
+  () => route.name === "home" || String(route.name ?? "").startsWith("home-"),
+);
 
 /** ME1 — nombres de componente (inferidos del nombre de archivo SFC) a mantener vivos entre navegaciones. */
 const KEEP_ALIVE_INCLUDE = [
@@ -129,6 +134,7 @@ interface Domain {
   title: string;
   icon: string;
 }
+
 const activeDomain = computed<Domain>(() => {
   const r = router
     .getRoutes()
@@ -141,12 +147,33 @@ const activeDomain = computed<Domain>(() => {
   if (!r) {
     return { title: t("common.operations"), icon: "mdi-apps" };
   }
-  // Título TRADUCIDO por el nombre de la ruta (mismas claves que OperationsNav:
-  // platform.opsnav.<name>); fallback al meta.title (español) si no hay clave.
-  const key = `platform.opsnav.${String(r.name)}`;
+  const routeName = String(r.name);
+  // 1) clave propia de la pagina, cuando hay una mas especifica que su item de
+  //    menu (p.ej. "warehouse-weighing" cuelga del item generico "warehouse" =
+  //    "Almacen", pero la pagina en si es "Pesaje manual"). 2) clave del menu
+  //    (vale para la mayoria: mismo texto que ve el operario en el sidebar).
+  //    3) meta.title espanol, si no hay clave i18n para ninguna de las dos.
+  const pageKey = `platform.page_title.${routeName}`;
+  const navKey = navKeyForRoute(routeName);
+  const key = te(pageKey)
+    ? pageKey
+    : navKey
+      ? `platform.opsnav.${navKey}`
+      : pageKey;
   const title = te(key) ? t(key) : (r.meta.title as string);
   return { title, icon: (r.meta.icon as string) ?? "mdi-apps" };
 });
+
+// Collaudo 14/11: la pestana del navegador quedaba fija en "TMWE — Operaciones"
+// (index.html estatico): no habia ningun watcher que la actualizara con la
+// pagina/idioma activos.
+watch(
+  activeDomain,
+  (d) => {
+    document.title = `TMWE — ${d.title}`;
+  },
+  { immediate: true },
+);
 
 /**
  * Intercepta clics en enlaces (<a>) del chrome de plataforma. Si el href es de

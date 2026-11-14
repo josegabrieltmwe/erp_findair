@@ -324,6 +324,9 @@
       "surcharges": "Supplementi",
       "charge_authorizations": "Autorizzazioni di addebito"
     },
+    "page_title": {
+      "warehouse-weighing": "Pesatura manuale"
+    },
     "email": {
       "recipients": "Destinatari",
       "cc": "Cc",

@@ -19,6 +19,8 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.spec.ts"],
+    // packages/platform es "lógica pura... para poder probarla con vitest" (su propio
+    // docblock, p.ej. navCatalog.ts) pero hasta ahora nada recogía sus *.spec.ts.
+    include: ["src/**/*.spec.ts", "../../packages/platform/**/*.spec.ts"],
   },
 });

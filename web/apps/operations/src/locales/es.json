@@ -324,6 +324,9 @@
       "surcharges": "Recargos",
       "charge_authorizations": "Autorizaciones de cobro"
     },
+    "page_title": {
+      "warehouse-weighing": "Pesaje manual"
+    },
     "email": {
       "recipients": "Destinatarios",
       "cc": "Copia (CC)",

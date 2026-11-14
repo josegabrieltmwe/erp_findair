@@ -47,7 +47,6 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     sectionKey: "operativa",
     items: [
       { key: "home",     icon: "mdi-home-outline",           routeName: "home", daily: true },
-      { key: "indicators", icon: "mdi-chart-box-outline",    routeName: "home-indicators" },
       { key: "cargo",    icon: "mdi-airplane",               routeName: "cargo-list", daily: true, partnerKey: "cargo_partner" },
       { key: "shipment", icon: "mdi-truck-fast-outline",     routeName: "shipment-list", daily: true },
       { key: "tracking", icon: "mdi-radar",                  routeName: "tracking", daily: true, adminOnly: true },
@@ -118,6 +117,23 @@ export const NAV_SECTION_DEFS: NavSectionDef[] = [
     ],
   },
 ];
+
+/**
+ * Clave del menú (`platform.opsnav.<key>`) para el nombre de una ruta del router, si tiene
+ * entrada de menú. Collaudo 14/11: el título de la topbar (OperationsShell) asumía
+ * `key === routeName` (coincidía solo por casualidad en "home"), así que una ruta como
+ * "anagrafiche" (key "clients") o "price-lists" (key "price_lists") nunca encontraba su
+ * clave i18n y se quedaba en el `meta.title` español fijo.
+ */
+const ROUTE_NAME_TO_NAV_KEY: ReadonlyMap<string, string> = new Map(
+  NAV_SECTION_DEFS.flatMap((s) =>
+    s.items.filter((it): it is NavEntryDef & { routeName: string } => !!it.routeName).map((it) => [it.routeName, it.key] as const),
+  ),
+);
+
+export function navKeyForRoute(routeName: string): string | undefined {
+  return ROUTE_NAME_TO_NAV_KEY.get(routeName);
+}
 
 /** ¿Ve este acceso un usuario con ese rol? (`isAdmin` = anagrafica TMWE, id 1; `access` = scopes del token). */
 export function isNavEntryVisible(

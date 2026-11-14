@@ -324,6 +324,9 @@
       "surcharges": "Surcharges",
       "charge_authorizations": "Charge authorizations"
     },
+    "page_title": {
+      "warehouse-weighing": "Manual weighing"
+    },
     "email": {
       "recipients": "Recipients",
       "cc": "Cc",
