@@ -309,6 +309,9 @@ export interface ListinoAssignment {
   tipo?: string;
   coefficiente?: number | string;
   fuel_surc?: number | string;
+  /** Fuel del servicio (sf.fuel_surc, JOIN de get_assignments_with_listino_details): el total que se
+   * factura es este + fuel_surc (ajuste del cliente, aditivo), nunca solo fuel_surc. Collaudo 14/11. */
+  servizio_fuel?: number | string;
   [k: string]: unknown;
 }
 

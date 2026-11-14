@@ -63,7 +63,7 @@
                 </v-chip>
               </td>
               <td class="text-right cm-mono">{{ fmt(a.coefficiente) }}</td>
-              <td class="text-right cm-mono">{{ fmt(a.fuel_surc) }}</td>
+              <td class="text-right cm-mono" :title="fuelBreakdown(a)">{{ fmt(effectiveFuel(a)) }}</td>
               <td class="text-right">
                 <v-btn
                   size="x-small"
@@ -147,12 +147,13 @@
             <v-text-field
               v-model.number="form.fuel_surc"
               :label="t('price_lists.assignments_fuel')"
+              :hint="t('price_lists.assignments_fuel_field_hint')"
+              persistent-hint
               type="number"
               step="0.01"
               min="0"
               density="compact"
               variant="outlined"
-              hide-details
             />
           </div>
         </v-card-text>
@@ -216,6 +217,23 @@ function fmt(v: unknown): string {
   if (v === '' || v === null || v === undefined) return '—';
   const n = Number(v);
   return Number.isNaN(n) ? String(v) : n.toFixed(2);
+}
+
+/**
+ * Total de fuel que de verdad se aplica (collaudo 14/11): Fuel_Surcharge_Calculator suma siempre el
+ * fuel del servicio (servizio_fuel) con el ajuste del cliente (fuel_surc), aunque este sea 0. Mostrar
+ * solo fuel_surc hacía parecer que un cliente con ajuste 0 pagaba 0% de fuel.
+ */
+function effectiveFuel(a: ListinoAssignment): number {
+  return Number(a.servizio_fuel ?? 0) + Number(a.fuel_surc ?? 0);
+}
+
+function fuelBreakdown(a: ListinoAssignment): string {
+  return t('price_lists.assignments_fuel_breakdown', {
+    service: fmt(a.servizio_fuel ?? 0),
+    adjustment: fmt(a.fuel_surc ?? 0),
+    total: fmt(effectiveFuel(a)),
+  });
 }
 
 async function onClientPick(id: number | null): Promise<void> {

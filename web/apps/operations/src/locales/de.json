@@ -486,6 +486,8 @@
     "assignments_type_p": "Individuell (%)",
     "assignments_coef": "Koeffizient",
     "assignments_fuel": "Treibstoffzuschlag",
+    "assignments_fuel_breakdown": "Service {service}% + Kundenanpassung {adjustment}% = {total}%",
+    "assignments_fuel_field_hint": "Anpassung zum Treibstoffzuschlag des Services. Ein Wert von 0 hebt den Zuschlag des Services nicht auf.",
     "assignments_saved": "Zuweisung gespeichert",
     "assignments_deleted": "Zuweisung gelöscht",
     "assignments_delete_title": "Zuweisung löschen",

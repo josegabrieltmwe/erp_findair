@@ -440,6 +440,8 @@
     "assignments_type_p": "Personalizzato (%)",
     "assignments_coef": "Coefficiente",
     "assignments_fuel": "Fuel surcharge",
+    "assignments_fuel_breakdown": "Servizio {service}% + rettifica {adjustment}% = {total}%",
+    "assignments_fuel_field_hint": "Rettifica sul fuel del servizio. Una rettifica a 0 non annulla il fuel del servizio.",
     "assignments_saved": "Assegnazione salvata",
     "assignments_deleted": "Assegnazione eliminata",
     "assignments_delete_title": "Elimina assegnazione",
