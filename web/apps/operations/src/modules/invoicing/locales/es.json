@@ -21,6 +21,8 @@
       "new": "Nueva factura",
       "detail": "Detalle de factura",
       "not_found": "Factura no encontrada",
+      "edit_numero_alfanum": "Editar identificador alfanumérico (p. ej. 1938/A)",
+      "numero_alfanum_placeholder": "p. ej. 1938/A",
       "number": "Número",
       "date": "Fecha",
       "client": "Cliente",

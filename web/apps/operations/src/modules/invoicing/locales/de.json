@@ -21,6 +21,8 @@
       "new": "Neue Rechnung",
       "detail": "Rechnungsdetail",
       "not_found": "Rechnung nicht gefunden",
+      "edit_numero_alfanum": "Alphanumerische Kennung bearbeiten (z. B. 1938/A)",
+      "numero_alfanum_placeholder": "z. B. 1938/A",
       "number": "Nummer",
       "date": "Datum",
       "client": "Kunde",

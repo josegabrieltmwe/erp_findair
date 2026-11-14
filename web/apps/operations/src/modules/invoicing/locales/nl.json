@@ -21,6 +21,8 @@
       "new": "Nieuwe factuur",
       "detail": "Factuurdetail",
       "not_found": "Factuur niet gevonden",
+      "edit_numero_alfanum": "Alfanumerieke identificatie bewerken (bijv. 1938/A)",
+      "numero_alfanum_placeholder": "bijv. 1938/A",
       "number": "Nummer",
       "date": "Datum",
       "client": "Klant",

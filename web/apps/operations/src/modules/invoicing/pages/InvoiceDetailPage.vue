@@ -20,6 +20,51 @@
           <span class="text-h6 mb-0"
             >{{ t("invoicing.invoice.title") }} {{ inv?.numero ?? "" }}</span
           >
+          <!-- Identificador alfanumerico manual (collaudo 13/11, item 10):
+               p. ej. "1938/A" tras reemitir la factura; una nota de credito
+               lo usa despues para referenciarla (en vez de caer siempre al
+               numero plano). Paridad legacy fatt_f_form.php. -->
+          <template v-if="!editingAlfanum">
+            <span
+              v-if="inv?.numero_alfanum"
+              class="text-medium-emphasis text-body-2"
+            >
+              ({{ inv.numero_alfanum }})
+            </span>
+            <v-btn
+              v-if="caps.canWrite && !store.locked"
+              variant="text"
+              icon="mdi-pencil-outline"
+              size="x-small"
+              :title="t('invoicing.invoice.edit_numero_alfanum')"
+              @click="openAlfanumEdit"
+            />
+          </template>
+          <template v-else>
+            <v-text-field
+              v-model="alfanumDraft"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="max-width: 160px"
+              :placeholder="t('invoicing.invoice.numero_alfanum_placeholder')"
+              @keyup.enter="saveAlfanum"
+              @keyup.esc="editingAlfanum = false"
+            />
+            <v-btn
+              variant="text"
+              icon="mdi-check"
+              size="x-small"
+              :loading="store.saving"
+              @click="saveAlfanum"
+            />
+            <v-btn
+              variant="text"
+              icon="mdi-close"
+              size="x-small"
+              @click="editingAlfanum = false"
+            />
+          </template>
           <v-chip :color="sdiColor(inv?.stato_sdi ?? 'N')" size="small" label>
             {{ store.sdi?.stato_label ?? t(`sdi.${inv?.stato_sdi ?? "N"}`) }}
           </v-chip>
@@ -449,6 +494,18 @@ const paymentsCaps = paymentsCapabilities();
 
 const creditNoteOpen = ref(false);
 const busy = reactive({ pdf: false, einvoice: false, remediate: false });
+
+// Edición inline del identificador alfanumérico manual (item 10).
+const editingAlfanum = ref(false);
+const alfanumDraft = ref("");
+function openAlfanumEdit(): void {
+  alfanumDraft.value = store.invoice?.numero_alfanum ?? "";
+  editingAlfanum.value = true;
+}
+async function saveAlfanum(): Promise<void> {
+  const ok = await store.updateNumeroAlfanum(alfanumDraft.value);
+  if (ok) editingAlfanum.value = false;
+}
 
 // Listado de expediciones (riepilogo) — colapsable, carga lazy al expandir.
 const recapOpen = ref<number | undefined>(undefined);

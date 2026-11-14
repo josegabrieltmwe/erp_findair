@@ -75,6 +75,28 @@ export const useInvoiceStore = defineStore("invoice", () => {
     }
   }
 
+  /**
+   * Collaudo 13/11, item 10: antes nadie podia poner un identificador manual
+   * (p. ej. "1938/A") en una factura activa — la nota de credito que
+   * referencia la original caia siempre al numero plano.
+   */
+  async function updateNumeroAlfanum(value: string): Promise<boolean> {
+    if (!id.value || locked.value) return false;
+    const trimmed = value.trim();
+    saving.value = true;
+    try {
+      await invoiceService.update(id.value, { numero_alfanum: trimmed });
+      await load(id.value);
+      toasts.push("success", "Guardado");
+      return true;
+    } catch (e) {
+      toasts.push("error", String(e));
+      return false;
+    } finally {
+      saving.value = false;
+    }
+  }
+
   function reset(): void {
     ctrl?.abort();
     invoice.value = null;
@@ -93,6 +115,7 @@ export const useInvoiceStore = defineStore("invoice", () => {
     load,
     recalculate,
     transmit,
+    updateNumeroAlfanum,
     reset,
   };
 });

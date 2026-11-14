@@ -21,6 +21,8 @@
       "new": "New invoice",
       "detail": "Invoice detail",
       "not_found": "Invoice not found",
+      "edit_numero_alfanum": "Edit alphanumeric identifier (e.g. 1938/A)",
+      "numero_alfanum_placeholder": "e.g. 1938/A",
       "number": "Number",
       "date": "Date",
       "client": "Customer",

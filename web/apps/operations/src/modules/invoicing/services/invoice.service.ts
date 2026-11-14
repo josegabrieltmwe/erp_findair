@@ -227,6 +227,24 @@ export const invoiceService = {
   },
 
   /**
+   * Campos de cabecera editables de una factura activa (whitelist del
+   * backend: data_fattura, valuta_sigla, id_valuta, cambio_metodo,
+   * elettronica, descriz, note, numero_alfanum — collaudo 13/11, item 10).
+   * Por ahora solo se usa para numero_alfanum (identificador manual, p. ej.
+   * "1938/A", que una nota de credito referencia despues).
+   */
+  async update(
+    id: number,
+    patch: Partial<Pick<Invoice, "numero_alfanum">>,
+  ): Promise<Invoice> {
+    const res = await http<ApiEnvelope<Invoice>>(`/api_invoices_crud`, {
+      method: "PATCH",
+      body: { id, ...patch },
+    });
+    return res.data;
+  },
+
+  /**
    * Spedizioni facturables para un cliente (paso previo a generar batch).
    * El backend devuelve `{success, data:[{id_anagrafica, rag_soc, total,
    * shipment_count, shipments[]}]}` filtrado por el cliente.
