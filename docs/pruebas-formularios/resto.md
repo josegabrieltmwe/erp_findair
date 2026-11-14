@@ -4,7 +4,7 @@
 
 ## RESTO (prefijo OTR): consolidata, pickup, crm, warehouse, email_templates, tickets, copilot, bulk, home, listing/ui/email/dashboard/shell/hub/presence, shared-frontend y entrada/sesión
 
-Rutas base de código: `web/apps/operations/src/modules/<modulo>` (abreviado `M/`) y `web/packages/platform/<paquete>` (abreviado `P/`). Backend citado como `tmwe_api:` (= `/var/www/dev/tmwe_api`).
+Rutas base de código: `web/apps/operations/src/modules/<modulo>` (abreviado `M/`) y `web/packages/platform/<paquete>` (abreviado `P/`). Backend citado como `tmwe_api:` (= `/var/www/dev/api`).
 
 Resumen: 45 fichas (OTR-01 a OTR-45). Los de mayor riesgo son: OTR-21 (CRM, envío real de email/SMS/fax al cliente), OTR-27 (manifiestos BRT, genera y envía un manifiesto al transportista), OTR-24 (Doctor Pack: imprimir LDV usa `ajax_tmwe_label`), OTR-34 (Copilot: confirma creación/edición/cancelación de expediciones y cargos), OTR-35 (importación masiva, hasta 250 filas), OTR-03/04/07 (Consolidata: precio, respuesta al cliente y conversión a cargo) y OTR-38 (suplantación de partner). Home (`M/home`), `P/dashboard`, `P/presence`, `P/shell` y `P/hub` salvo el buscador no tienen formularios propios: son navegación, tarjetas KPI y latidos. En el SPA no existen pantallas de login ni de "no autorizado": la entrada la resuelve el BFF por redirección (ver OTR-39).
 

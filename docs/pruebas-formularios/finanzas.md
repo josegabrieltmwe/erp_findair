@@ -4,7 +4,7 @@
 
 ## Grupo DINERO (prefijo FIN): invoicing, payments, proforma, cod_assegni
 
-Rutas base: `web/apps/operations/src/modules/{invoicing,payments,proforma,cod_assegni}` (en adelante `M/`). Backend citado: `/var/www/dev/tmwe_api` (en adelante `API/`).
+Rutas base: `web/apps/operations/src/modules/{invoicing,payments,proforma,cod_assegni}` (en adelante `M/`). Backend citado: `/var/www/dev/api` (en adelante `API/`).
 
 Resumen: 32 formularios (diálogos, asistente, filtros, subidas y ediciones masivas). Los de mayor riesgo son los que crean o cierran dinero o documentos fiscales: cobro y cierre masivo (FIN-01, FIN-02), conciliación bancaria (FIN-06), alta manual de factura (FIN-07), nota de crédito (FIN-10), factura pasiva manual y XML (FIN-11, FIN-12), facturación mensual por lotes (FIN-15), conciliación de transportistas (FIN-16..18), numeración (FIN-19, FIN-20), envíos al Estado (FIN-21), reglas fiscales con vigencias (FIN-22..25) y aprobación de lote COD (FIN-29). Los envíos reales (SDI, recordatorios por email, cobros contra banco) solo se prueban con `UPSTREAM_DENY_ACTIONS` activo o en sandbox.
 
