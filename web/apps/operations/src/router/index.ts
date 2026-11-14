@@ -74,21 +74,22 @@ const routes: RouteRecordRaw[] = [
     meta: { fullscreen: true, otp: true },
   },
 
-  // ── Inicio (landing) — fusiona el dashboard de KPIs (antes en
-  //    /home/activities) con los accesos rápidos. El fetch de KPIs del
-  //    cockpit es no bloqueante (cola propia, máx. 3 en paralelo, cliente
-  //    `ofetch` propio) y el router nunca lo espera, así que navegar a otra
-  //    pantalla (p. ej. buscar una expedición) no se retrasa aunque los KPIs
-  //    sigan cargando en segundo plano. ──────────
+  // ── Inicio (landing) — es el cuadro de mando completo de indicadores
+  //    (antes vivía solo en /home/indicators). El fetch de KPIs del cockpit
+  //    es no bloqueante (cola propia, máx. 3 en paralelo, cliente `ofetch`
+  //    propio) y el router nunca lo espera, así que navegar a otra pantalla
+  //    (p. ej. buscar una expedición) no se retrasa aunque los KPIs sigan
+  //    cargando en segundo plano. ──────────
   {
     path: "/home",
     name: "home",
-    component: () => import("@/modules/home/pages/HomeLandingPage.vue"),
+    component: () => import("@/modules/home/pages/HomeIndicatorsPage.vue"),
     // Content-only: se muestra dentro del DashboardShell de operations (con la
     // nav de dominios). Ya no es fullscreen.
     meta: { title: "Inicio", icon: "mdi-home-outline" },
   },
-  // Cuadro de mando completo (antes ocupaba la home). Solo lanza sus peticiones si se visita.
+  // Compatibilidad: /home/indicators vivía como ruta propia del cuadro de
+  // mando; ahora es la misma pantalla que la home, conservada por enlaces/favoritos.
   {
     path: "/home/indicators",
     name: "home-indicators",

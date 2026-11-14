@@ -1,6 +1,6 @@
 # Propuesta: home minimalista del ERP
 
-> **Estado:** vigente (home implementada; ver «Actualización 2026-11-12») · **Última modificación:** 2026-11-12
+> **Estado:** obsoleto (revertido; ver «Actualización 2026-11-13: se revierte la home minimalista») · **Última modificación:** 2026-11-13
 
 Motivo: el cliente dice que la home actual tiene demasiados botones y el usuario no sabe por dónde empezar. Se analizó `web/apps/operations/src/modules/home/pages/HomeLandingPage.vue` (versión local, tras `git pull` de `sandbox`) y el cockpit de KPIs (`web/packages/platform/dashboard/`). No se midió la página desplegada en sandbox porque exige login; los tiempos son por lectura de código.
 
@@ -123,3 +123,9 @@ Se sustituyó el bloque «Requiere tu atención» (6 avisos) por la franja **«D
 El buscador (con el selector Expediciones/Cargo) y los botones «Nuevo cargo» / «Nueva expedición» de la home duplicaban la barra superior (`PlatformTopBar`: `PlatformSearch` y `PlatformNewShipment`, este último con Cargo, Courier y Nuevo cliente). Se eliminaron de `HomeLandingPage.vue`, junto con sus textos (`home.landing.title`, `search_*`, `home.home.cta`). La home queda en «Da fare oggi» + enlace a Indicadores.
 
 Corrección a §2.1: **sí existe un buscador global** (`PlatformSearch`, `/api_platform_search`, atajo `/`; devuelve cargo, expedición y anagrafica). Lo único que se pierde es ir a la lista filtrada por texto (`?search=`): ahora se abre un resultado concreto, o se filtra desde la propia lista.
+
+## Actualización 2026-11-13: se revierte la home minimalista
+
+El cliente pidió lo contrario de esta propuesta: la home debe ser el cuadro de mando completo de indicadores (antes solo en `/home/indicators`), para todos los roles, no solo «Da fare oggi» + enlace. La ruta `home` pasa a montar `HomeIndicatorsPage.vue` (antes `HomeLandingPage.vue`); `/home/indicators` se conserva como alias por compatibilidad de enlaces, apuntando al mismo componente. El ítem «Indicadores» se retira de `NAV_SECTION_DEFS` (`navCatalog.ts`): ya no hace falta, la home ya es esa pantalla.
+
+`HomeLandingPage.vue` y `TodayBoard.vue` (franja «Da fare oggi») quedan sin usar — no se borraron en este cambio, por si se quiere recuperar la franja dentro del nuevo home; valorar limpiarlos en otro cambio si no.

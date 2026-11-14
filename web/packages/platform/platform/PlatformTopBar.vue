@@ -37,7 +37,6 @@
       <v-icon icon="mdi-menu" size="20" />
     </button>
 
-    <!-- Logo + breadcrumb -->
     <RouterLink class="ptb-logo" :to="{ name: 'home' }" :title="t('platform.topbar.home_title')">
       <!-- Partner branding: show the logged-in partner's logo when the
            backend resolved one; otherwise fall back to the TMWE mark. -->
@@ -53,31 +52,6 @@
         <span class="ptb-logo-text">TMWE</span>
       </template>
     </RouterLink>
-
-    <nav class="ptb-breadcrumb" :aria-label="t('platform.topbar.breadcrumb')">
-      <template v-for="(c, idx) in breadcrumb" :key="c.href">
-        <span v-if="idx > 0" class="ptb-breadcrumb-sep">
-          <v-icon icon="mdi-chevron-right" size="14" />
-        </span>
-        <RouterLink
-          v-if="idx < breadcrumb.length - 1 && crumbRouteName(c)"
-          class="ptb-breadcrumb-item"
-          :to="{ name: crumbRouteName(c)! }"
-        >
-          {{ crumbLabel(c) }}
-        </RouterLink>
-        <a
-          v-else-if="idx < breadcrumb.length - 1"
-          class="ptb-breadcrumb-item"
-          :href="c.href"
-        >
-          {{ crumbLabel(c) }}
-        </a>
-        <span v-else class="ptb-breadcrumb-item ptb-breadcrumb-item--current">
-          {{ crumbLabel(c) }}
-        </span>
-      </template>
-    </nav>
 
     <!-- Page title block (optional) -->
     <div v-if="title || subtitle || $slots.title" class="ptb-title">
@@ -111,7 +85,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { usePlatformContext, type BreadcrumbCrumb } from './usePlatformContext';
 import { useProfile } from '../composables/useProfile';
 import PlatformSearch from './PlatformSearch.vue';
 import PlatformNewShipment from './PlatformNewShipment.vue';
@@ -139,38 +112,6 @@ const emit = defineEmits<{ 'toggle-sidebar': [] }>();
 const canImpersonate = isRealTmweUser();
 
 const { t } = useI18n();
-const { breadcrumb } = usePlatformContext();
-
-/** Resolve a breadcrumb crumb: translate its i18n key, or show the raw
- *  label verbatim (non-translatable crumbs like `#123`). */
-function crumbLabel(c: BreadcrumbCrumb): string {
-  return c.labelKey ? (t(c.labelKey) as string) : (c.label ?? '');
-}
-
-/**
- * ME3: PlatformTopBar solo se monta dentro de la SPA `operations` (vía
- * DashboardShell/DetailShell), que siempre tiene su propio router — a
- * diferencia de `usePlatformContext` (shared/, deliberadamente sin asumir
- * router, ver su comentario de cabecera), aquí sí podemos resolver a un
- * nombre de ruta interno. Antes el logo y el breadcrumb eran `<a href>`
- * planos: SIEMPRE recargaban la página completa al volver a Home/Cargo/
- * Shipment/Clientes, anulando el KeepAlive de listados (ME1) y el store de
- * Home (ME2) cada vez que el usuario usaba ese atajo habitual de
- * navegación. Mapea solo los módulos que YA viven en el router de
- * operations; `admin` (admin_config) no está migrado todavía y sigue
- * cayendo al `<a href>` legacy (recarga, como antes).
- */
-const HREF_TO_ROUTE_NAME: Record<string, string> = {
-  '/home': 'home',
-  '/cargo/list': 'cargo-list',
-  '/shipment/list': 'shipment-list',
-  '/clients': 'anagrafiche',
-  '/settings': 'settings',
-};
-
-function crumbRouteName(c: BreadcrumbCrumb): string | null {
-  return HREF_TO_ROUTE_NAME[c.href] ?? null;
-}
 
 // Partner branding logo for the top-left mark. Resolved by the backend
 // (`Partner_Logo_Service`); empty for TMWE/admin or a partner with no
@@ -235,39 +176,6 @@ onMounted(async () => {
   object-fit: contain;
 }
 
-.ptb-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-  overflow: hidden;
-}
-.ptb-breadcrumb-sep {
-  color: rgb(var(--v-theme-on-surface-variant));
-  opacity: 0.55;
-  display: inline-flex;
-  align-items: center;
-}
-.ptb-breadcrumb-item {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgb(var(--v-theme-on-surface-variant));
-  text-decoration: none;
-  padding: 4px 6px;
-  border-radius: 6px;
-  transition: background .12s, color .12s;
-  white-space: nowrap;
-}
-.ptb-breadcrumb-item:not(.ptb-breadcrumb-item--current):hover {
-  background: rgb(var(--v-theme-surface-variant));
-  color: rgb(var(--v-theme-on-surface));
-}
-.ptb-breadcrumb-item--current {
-  color: rgb(var(--v-theme-primary));
-  font-weight: 700;
-  cursor: default;
-}
-
 .ptb-title {
   display: flex;
   flex-direction: column;
@@ -320,7 +228,6 @@ onMounted(async () => {
 }
 
 @media (max-width: 720px) {
-  .ptb-breadcrumb { display: none; }
   .ptb-title { display: none; }
 }
 </style>

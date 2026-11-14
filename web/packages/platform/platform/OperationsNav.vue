@@ -165,24 +165,13 @@ const roleSections = computed<NavSection[]>(() =>
 );
 
 // Vista de partner: solo el trabajo diario (más la pantalla actual) hasta pulsar «Ver más».
-// El personal TMWE ve siempre el menú completo. La preferencia se recuerda en el navegador.
-const SHOW_ALL_KEY = "tmwe:nav-show-all";
-function readShowAll(): boolean {
-  try {
-    return window.localStorage.getItem(SHOW_ALL_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-const showAll = ref<boolean>(readShowAll());
+// El personal TMWE ve siempre el menú completo. No se recuerda entre sesiones: cada
+// carga de la SPA (cada login) arranca en la vista reducida, aunque el partner haya
+// pulsado «Ver más» antes.
+const showAll = ref<boolean>(false);
 
 function toggleAll(): void {
   showAll.value = !showAll.value;
-  try {
-    window.localStorage.setItem(SHOW_ALL_KEY, showAll.value ? "1" : "0");
-  } catch {
-    // Sin almacenamiento (ventana privada): el cambio vale solo para esta carga.
-  }
 }
 
 /** Claves de los accesos que corresponden a la pantalla actual. */

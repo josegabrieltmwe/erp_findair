@@ -1,7 +1,7 @@
 import { computed, type ComputedRef } from 'vue';
 
 /**
- * Platform context — derives the current module + breadcrumb from
+ * Platform context — derives the current module from
  * `window.location.pathname`. We intentionally do NOT use vue-router
  * here: each SPA has its own router instance, so the platform chrome
  * (which lives in shared/) can't assume any router shape.
@@ -19,20 +19,8 @@ import { computed, type ComputedRef } from 'vue';
 
 export type PlatformModule = 'home' | 'cargo' | 'shipment' | 'clients' | 'admin' | 'settings' | 'unknown';
 
-export interface BreadcrumbCrumb {
-  /** i18n key resolved by the renderer (PlatformTopBar) via t(). When absent
-   *  the raw `label` is shown verbatim (e.g. the `#id` detail crumb). */
-  labelKey?: string;
-  /** Verbatim label — used for non-translatable crumbs like `#123`. */
-  label?: string;
-  /** Absolute URL — full page reload between modules is the agreed flow. */
-  href: string;
-}
-
 interface PlatformContext {
   module: ComputedRef<PlatformModule>;
-  /** Breadcrumb starting with Home → … → current. */
-  breadcrumb: ComputedRef<BreadcrumbCrumb[]>;
   /** True when the path matches a detail page (id segment present). */
   isDetail: ComputedRef<boolean>;
   /** Numeric id captured from the path, when the route is a detail. */
@@ -46,7 +34,7 @@ export function usePlatformContext(): PlatformContext {
 
   // QW3: la SPA `operations` monta su router bajo `/`
   // (ver router/index.ts, createWebHistory), pero estos regex solo conocían
-  // las rutas legacy sin ese prefijo — el breadcrumb caía siempre a "Home" en
+  // las rutas legacy sin ese prefijo — `module` caía siempre a `unknown` en
   // cualquier página real de la app consolidada. `(?:ops\/)?` tolera ambas
   // sin duplicar la lista.
   const module = computed<PlatformModule>(() => {
@@ -73,56 +61,5 @@ export function usePlatformContext(): PlatformContext {
     return Number.isFinite(n) ? n : null;
   });
 
-  const breadcrumb = computed<BreadcrumbCrumb[]>(() => {
-    const crumbs: BreadcrumbCrumb[] = [
-      { labelKey: 'platform.nav.home', href: '/home' },
-    ];
-    switch (module.value) {
-      case 'cargo':
-        crumbs.push({ labelKey: 'platform.nav.cargo', href: '/cargo/list' });
-        if (detailId.value) {
-          crumbs.push({
-            label: `#${detailId.value}`,
-            href: `/cargo/${detailId.value}`,
-          });
-        }
-        break;
-      case 'shipment':
-        crumbs.push({ labelKey: 'platform.nav.shipment', href: '/shipment/list' });
-        if (detailId.value) {
-          crumbs.push({
-            label: `#${detailId.value}`,
-            href: `/shipment/${detailId.value}`,
-          });
-        }
-        break;
-      case 'clients':
-        crumbs.push({ labelKey: 'platform.nav.clients', href: '/clients' });
-        if (detailId.value) {
-          crumbs.push({
-            label: `#${detailId.value}`,
-            href: `/clients/${detailId.value}`,
-          });
-        }
-        break;
-      case 'admin':
-        crumbs.push({ labelKey: 'platform.nav.admin', href: '/erp/tmwe_json/admin_config' });
-        break;
-      case 'settings':
-        // Sin equivalente en la app legacy (es una página nueva de
-        // `operations`); reusa la traducción ya existente del sidebar
-        // (`platform.opsnav.settings`) en vez de duplicar la clave.
-        crumbs.push({ labelKey: 'platform.opsnav.settings', href: '/settings' });
-        break;
-      case 'home':
-        // Just the Home crumb itself — no extra hop.
-        break;
-      default:
-        // Unknown route — leave the Home crumb only.
-        break;
-    }
-    return crumbs;
-  });
-
-  return { module, breadcrumb, isDetail, detailId };
+  return { module, isDetail, detailId };
 }
