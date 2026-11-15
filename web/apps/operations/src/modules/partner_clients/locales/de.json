@@ -240,6 +240,8 @@
         "prio_e": "Economy",
         "from_type": "Herkunft-Typ",
         "serv_fuel": "Fuel Service",
+        "fuel_efectivo": "Effektiver Fuel",
+        "fuel_breakdown": "Fuel Service: {servizio}% + Kunden-Delta: {delta}% = Effektiver Fuel: {efectivo}%",
         "lock_all": "Alle sperren",
         "unlock_all": "Alle entsperren",
         "show_price_list": "Preisliste ansehen",

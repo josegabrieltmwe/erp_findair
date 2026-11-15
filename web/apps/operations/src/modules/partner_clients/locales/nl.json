@@ -240,6 +240,8 @@
         "prio_e": "Economy",
         "from_type": "Herkomst-type",
         "serv_fuel": "Fuel service",
+        "fuel_efectivo": "Effectieve fuel",
+        "fuel_breakdown": "Fuel service: {servizio}% + klantdelta: {delta}% = Effectieve fuel: {efectivo}%",
         "lock_all": "Alles blokkeren",
         "unlock_all": "Alles deblokkeren",
         "show_price_list": "Tarief bekijken",

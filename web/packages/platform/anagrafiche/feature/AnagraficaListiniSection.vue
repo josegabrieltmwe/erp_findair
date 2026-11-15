@@ -111,6 +111,21 @@
         <span class="text-medium-emphasis">{{ fmtPct((item as ServiceConfigRow).servizio_fuel) }}</span>
       </template>
 
+      <!-- Fuel efectivo: lo que realmente se cobra (servizio + delta cliente,
+           con suelo en 0). Informativo: el delta editable sigue en la columna
+           "config"; esto no lo sustituye. El 0 (suelo) es un dato relevante
+           -> formatFuelEfectivo (fuelDisplay.ts) en vez de fmtPct, que oculta
+           los ceros. -->
+      <template #item.fuel_efectivo="{ item }">
+        <span
+          class="font-weight-medium"
+          :class="(item as ServiceConfigRow).fuel_efectivo === 0 ? 'text-warning' : 'text-high-emphasis'"
+          :title="fuelBreakdownTitle(item as ServiceConfigRow)"
+        >
+          {{ formatFuelEfectivo((item as ServiceConfigRow).fuel_efectivo) }}
+        </span>
+      </template>
+
       <!-- Tipo L/P: chip de solo lectura -->
       <template #item.tipo="{ item }">
         <v-chip size="small" variant="tonal"
@@ -355,6 +370,7 @@ import {
   type ServiceConfigRow,
   type ListinoType,
 } from '../services/serviceConfig.service';
+import { formatFuelEfectivo, fuelBreakdownParts } from '../services/fuelDisplay';
 import { useToast } from '../composables/useToast';
 import CmSectionHeader from '../components/CmSectionHeader.vue';
 import CmAsyncSection from '../components/CmAsyncSection.vue';
@@ -396,6 +412,15 @@ const fPriority = ref<string | null>(null);
 function fmtPct(v: unknown): string {
   const n = Number(v);
   return Number.isFinite(n) && n !== 0 ? `${n.toFixed(2)} %` : '—';
+}
+
+/**
+ * Desglose "servizio + delta cliente = efectivo" para el tooltip de la
+ * columna Fuel efectivo. La aritmética (incl. el +4% por defecto cuando el
+ * cliente no tiene fila propia) vive en fuelDisplay.ts, donde se prueba.
+ */
+function fuelBreakdownTitle(row: ServiceConfigRow): string {
+  return t('anagrafiche.listini.fuel_breakdown', fuelBreakdownParts(row)) as string;
 }
 
 /**
@@ -540,6 +565,7 @@ const headers = computed(() => [
   { title: t('anagrafiche.listini.from_type'), key: 'from_type', value: 'servizio_paese', width: 110, sortable: true },
   { title: t('anagrafiche.listini.service'), key: 'servizio_descr', width: 200, sortable: true },
   { title: t('anagrafiche.listini.serv_fuel'), key: 'servizio_fuel', width: 90, align: 'end' as const, sortable: true },
+  { title: t('anagrafiche.listini.fuel_efectivo'), key: 'fuel_efectivo', width: 100, align: 'end' as const, sortable: true },
   { title: t('anagrafiche.listini.tipo'), key: 'tipo', width: 100, align: 'center' as const, sortable: true },
   { title: t('anagrafiche.listini.config'), key: 'config', value: 'listino_nome', sortable: true },
   { title: t('anagrafiche.listini.blocked'), key: 'blocked', width: 110, align: 'center' as const, sortable: true },
