@@ -63,7 +63,8 @@
       "detail_title": "Dettaglio avanzamento #{id}",
       "add": "Aggiungi",
       "empty": "Nessun evento",
-      "delete_confirm": "Eliminare questo avanzamento? L'operazione non si può annullare."
+      "delete_confirm": "Eliminare questo avanzamento? L'operazione non si può annullare.",
+      "notify_customer": "Avvisa il cliente"
     },
     "messaggi": {
       "title": "Messaggi inviati",
