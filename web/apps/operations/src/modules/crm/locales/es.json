@@ -63,7 +63,8 @@
       "detail_title": "Detalle del avance #{id}",
       "add": "Añadir",
       "empty": "Sin eventos todavía",
-      "delete_confirm": "¿Eliminar este avance? No se puede deshacer."
+      "delete_confirm": "¿Eliminar este avance? No se puede deshacer.",
+      "notify_client": "Avisar al cliente"
     },
     "messaggi": {
       "title": "Mensajes enviados",

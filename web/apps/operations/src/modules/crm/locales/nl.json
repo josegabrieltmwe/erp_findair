@@ -63,7 +63,8 @@
       "data": "Datum en tijd",
       "view": "Details bekijken",
       "detail_title": "Details voortgang #{id}",
-      "delete_confirm": "Deze voortgangsregel verwijderen? Dit kan niet ongedaan worden gemaakt."
+      "delete_confirm": "Deze voortgangsregel verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "notify_client": "Klant informeren"
     },
     "messaggi": {
       "title": "Verzonden berichten",

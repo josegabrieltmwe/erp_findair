@@ -152,14 +152,32 @@ export const crmService = {
     return res.data ?? [];
   },
 
+  /**
+   * N24 (collaudo): crear un avance NO debe mandar email al cliente salvo que
+   * el operador lo decida explícitamente en el interruptor "Avisar al
+   * cliente" del formulario (apagado por defecto, ver CrmEventiSection.vue).
+   *
+   * `notifyClient` se manda siempre como booleano explícito con el nombre
+   * `notify_client` — confirmado contra `api_crm_events`
+   * (fix/n24-crm-notify-toggle-api, repo `api`, commit `26040da34`): el
+   * parámetro ya existía desde "Contract 2.10" (`Abstract_Crm_Controller::
+   * notify_client_flag()`), con default `true`; ese commit lo cambió a
+   * `false` solo para este endpoint. Ausente o `false` ⇒ no se avisa.
+   */
   async addEvent(
     idCrm: number,
     descriz: string,
     statoPratica: StatoPratica,
+    notifyClient: boolean = false,
   ): Promise<CrmEvento> {
     const res = await http<SingleEnvelope<CrmEvento>>("/api_crm_events", {
       method: "POST",
-      body: { id_crm: idCrm, descriz, stato_pratica: statoPratica },
+      body: {
+        id_crm: idCrm,
+        descriz,
+        stato_pratica: statoPratica,
+        notify_client: notifyClient,
+      },
     });
     return res.data;
   },

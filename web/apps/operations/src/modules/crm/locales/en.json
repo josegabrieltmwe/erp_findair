@@ -63,7 +63,8 @@
       "detail_title": "Step details #{id}",
       "add": "Add",
       "empty": "No events yet",
-      "delete_confirm": "Delete this progress entry? This cannot be undone."
+      "delete_confirm": "Delete this progress entry? This cannot be undone.",
+      "notify_client": "Notify customer"
     },
     "messaggi": {
       "title": "Sent messages",

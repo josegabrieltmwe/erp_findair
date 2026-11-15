@@ -389,9 +389,15 @@ export const useCrmStore = defineStore("crm", () => {
     id: number,
     descriz: string,
     stato: StatoPratica,
+    notifyClient: boolean = false,
   ): Promise<void> {
     const context = captureMutationContext(id);
-    const created = await crmService.addEvent(id, descriz, stato);
+    const created = await crmService.addEvent(
+      id,
+      descriz,
+      stato,
+      notifyClient,
+    );
     if (
       !context ||
       Number(created.id_crm) !== context.id ||
