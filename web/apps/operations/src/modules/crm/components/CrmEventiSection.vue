@@ -18,9 +18,9 @@ const newDescriz = ref("");
 const newStato = ref<StatoPratica>("A");
 // N24 (collaudo): antes, crear un avance mandaba email al cliente SIEMPRE,
 // sin que el operador lo supiera ni lo decidiera. Interruptor "Avisar al
-// cliente", apagado por defecto — ver comentario en crm.service.ts#addEvent
-// sobre el nombre `notify_customer` a reconciliar con la API.
-const notifyCustomer = ref(false);
+// cliente", apagado por defecto — nombre `notify_client` confirmado contra
+// api_crm_events, ver comentario en crm.service.ts#addEvent.
+const notifyClient = ref(false);
 const adding = ref(false);
 const detailOpen = ref(false);
 const selected = ref<CrmEvento | null>(null);
@@ -67,11 +67,11 @@ async function addEvent(): Promise<void> {
       props.idCrm,
       newDescriz.value.trim(),
       newStato.value,
-      notifyCustomer.value,
+      notifyClient.value,
     );
     newDescriz.value = "";
     newStato.value = "A";
-    notifyCustomer.value = false;
+    notifyClient.value = false;
   } finally {
     adding.value = false;
   }
@@ -176,8 +176,8 @@ async function deleteSelected(): Promise<void> {
       <!-- N24: apagado por defecto, el operador decide si este avance manda
            email al cliente. -->
       <v-switch
-        v-model="notifyCustomer"
-        :label="t('crm.eventi.notify_customer')"
+        v-model="notifyClient"
+        :label="t('crm.eventi.notify_client')"
         color="primary"
         density="compact"
         hide-details

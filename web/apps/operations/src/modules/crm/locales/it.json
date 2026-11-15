@@ -64,7 +64,7 @@
       "add": "Aggiungi",
       "empty": "Nessun evento",
       "delete_confirm": "Eliminare questo avanzamento? L'operazione non si può annullare.",
-      "notify_customer": "Avvisa il cliente"
+      "notify_client": "Avvisa il cliente"
     },
     "messaggi": {
       "title": "Messaggi inviati",

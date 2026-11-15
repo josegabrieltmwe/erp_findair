@@ -6,10 +6,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * "Avisar al cliente" de CrmEventiSection.vue (apagado por defecto).
  *
  * Este spec cubre la capa de servicio: `crmService.addEvent` debe mandar
- * SIEMPRE el campo `notify_customer` como booleano explícito en el body de
+ * SIEMPRE el campo `notify_client` como booleano explícito en el body de
  * `POST /api_crm_events` — true cuando el operador marca el interruptor,
  * false en caso contrario (incluido el valor por defecto si se omite el
- * argumento). `notify_customer` es el nombre más razonable dado el contexto
+ * argumento). `notify_client` es el nombre más razonable dado el contexto
  * (N24) pero el parámetro real lo añade en paralelo otro agente en
  * `api_crm_events` (rama fix/n24-crm-notify-toggle-api, repo `api`, nombre
  * aún no confirmado): si difiere, reconciliar aquí y en crm.service.ts.
@@ -31,8 +31,8 @@ beforeEach(() => {
   replies = [{ success: true, data: { id: 1, id_crm: 10 } }];
 });
 
-describe("crmService.addEvent: payload de notify_customer", () => {
-  it("manda notify_customer: true cuando el operador marca el interruptor", async () => {
+describe("crmService.addEvent: payload de notify_client", () => {
+  it("manda notify_client: true cuando el operador marca el interruptor", async () => {
     await crmService.addEvent(10, "Llamada al cliente", "A", true);
 
     expect(calls).toHaveLength(1);
@@ -43,24 +43,24 @@ describe("crmService.addEvent: payload de notify_customer", () => {
         id_crm: 10,
         descriz: "Llamada al cliente",
         stato_pratica: "A",
-        notify_customer: true,
+        notify_client: true,
       },
     });
   });
 
-  it("manda notify_customer: false cuando el interruptor está apagado", async () => {
+  it("manda notify_client: false cuando el interruptor está apagado", async () => {
     await crmService.addEvent(10, "Nota interna", "A", false);
 
     expect(calls[0].opts).toMatchObject({
-      body: { notify_customer: false },
+      body: { notify_client: false },
     });
   });
 
-  it("por defecto (sin pasar el argumento) manda notify_customer: false", async () => {
+  it("por defecto (sin pasar el argumento) manda notify_client: false", async () => {
     await crmService.addEvent(10, "Nota interna", "A");
 
     expect(calls[0].opts).toMatchObject({
-      body: { notify_customer: false },
+      body: { notify_client: false },
     });
   });
 });

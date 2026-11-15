@@ -17,8 +17,8 @@ import * as directives from "vuetify/directives";
  * `environmentMatchGlobs` en apps/operations/vitest.config.ts): comprueba
  * que el v-switch REALMENTE aparece desmarcado en el DOM y que, al enviar el
  * formulario, el valor del interruptor llega tal cual al store como el 4º
- * argumento de `addEvent` (idCrm, descriz, stato, notifyCustomer) — ese
- * valor es el que crm.service.ts manda como `notify_customer` en el body de
+ * argumento de `addEvent` (idCrm, descriz, stato, notifyClient) — ese
+ * valor es el que crm.service.ts manda como `notify_client` en el body de
  * POST /api_crm_events (ver crm.service.spec.ts para el payload exacto).
  *
  * Se mockea useCrmStore completo: el objetivo aquí es la UI (el switch y su
@@ -58,7 +58,7 @@ const i18n = createI18n({
           add: "Añadir",
           empty: "Sin eventos todavía",
           delete_confirm: "¿Eliminar este avance? No se puede deshacer.",
-          notify_customer: "Avisar al cliente",
+          notify_client: "Avisar al cliente",
         },
       },
       common: { delete: "Eliminar", cancel: "Cancelar", save: "Guardar" },
@@ -109,7 +109,7 @@ describe("CrmEventiSection: interruptor 'Avisar al cliente' (N24)", () => {
     expect((switchInput.element as HTMLInputElement).checked).toBe(false);
   });
 
-  it("marcado y enviado: el store.addEvent recibe notifyCustomer=true (payload notify_customer: true)", async () => {
+  it("marcado y enviado: el store.addEvent recibe notifyClient=true (payload notify_client: true)", async () => {
     const wrapper = mountSection();
 
     await findNotifySwitch(wrapper).setValue(true);
@@ -121,7 +121,7 @@ describe("CrmEventiSection: interruptor 'Avisar al cliente' (N24)", () => {
     expect(addEvent).toHaveBeenCalledWith(10, "Llamada al cliente", "A", true);
   });
 
-  it("sin marcar: el store.addEvent recibe notifyCustomer=false (payload notify_customer: false, no se omite)", async () => {
+  it("sin marcar: el store.addEvent recibe notifyClient=false (payload notify_client: false, no se omite)", async () => {
     const wrapper = mountSection();
 
     await findDescrizInput(wrapper).setValue("Nota interna");

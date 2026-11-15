@@ -64,7 +64,7 @@
       "add": "Añadir",
       "empty": "Sin eventos todavía",
       "delete_confirm": "¿Eliminar este avance? No se puede deshacer.",
-      "notify_customer": "Avisar al cliente"
+      "notify_client": "Avisar al cliente"
     },
     "messaggi": {
       "title": "Mensajes enviados",

@@ -64,7 +64,7 @@
       "view": "Details anzeigen",
       "detail_title": "Details zum Fortschritt #{id}",
       "delete_confirm": "Diesen Fortschrittseintrag löschen? Das kann nicht rückgängig gemacht werden.",
-      "notify_customer": "Kunden benachrichtigen"
+      "notify_client": "Kunden benachrichtigen"
     },
     "messaggi": {
       "title": "Gesendete Nachrichten",
