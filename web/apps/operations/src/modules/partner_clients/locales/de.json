@@ -69,7 +69,7 @@
         "pi_cf": "VAT",
         "cf": "Steuernummer",
         "esente_IVA": "MwSt.-befreit",
-        "legale": "Rechtsform",
+        "legale": "Laufender Rechtsfall",
         "id_settore_cliente": "Branche",
         "descriz_settore": "Beschreibung der Branche",
         "scelta_forn": "Lieferantenauswahl",
