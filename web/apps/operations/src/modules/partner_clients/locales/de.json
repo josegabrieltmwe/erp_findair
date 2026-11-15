@@ -552,7 +552,8 @@
         "role_removed": "Rolle entfernt",
         "role_changed_base": "Basisrolle aktualisiert",
         "confirm_remove_role": "Rolle „{role}“ entfernen? Die Person verliert ihre Berechtigungen bei der nächsten Anmeldung.",
-        "confirm_remove_role_title": "Rolle entfernen"
+        "confirm_remove_role_title": "Rolle entfernen",
+        "cannot_create_shipments_warning": "Dieser Kontakt hat Findair-Zugang, kann aber KEINE Sendungen erstellen (auth_19 deaktiviert): die Sendungserstellung antwortet mit 403."
       },
       "contatti_filters": {
         "search": "Suchen (Name, E-Mail, Login…)",

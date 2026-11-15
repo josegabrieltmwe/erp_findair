@@ -552,7 +552,8 @@
         "role_removed": "Rol retirado",
         "role_changed_base": "Rol base actualizado",
         "confirm_remove_role": "¿Retirar el rol «{role}»? La persona perderá sus permisos en su próximo acceso.",
-        "confirm_remove_role_title": "Retirar rol"
+        "confirm_remove_role_title": "Retirar rol",
+        "cannot_create_shipments_warning": "Este contacto tiene acceso Findair pero NO puede crear envíos (auth_19 desactivado): el alta de envíos responderá 403."
       },
       "contatti_filters": {
         "search": "Buscar (nombre, email, login…)",

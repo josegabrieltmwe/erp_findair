@@ -65,6 +65,13 @@ export interface ApiRoleState {
    * `Role_Assignment_Policy`). Vacío = no puede cambiar roles. La UI ofrece solo estos.
    */
   grantable_roles: ApiRoleRef[];
+  /**
+   * Veto de alta de envíos (`contatti.auth_19`). El backend pone `auth_19='S'` solo en la
+   * primera concesión de acceso FindAir; si alguien lo quitó después a propósito, no lo
+   * vuelve a poner. `false` con `enabled=true` significa que el contacto tiene acceso
+   * FindAir pero el alta de envíos le responde 403 `SHIPMENT_CREATION_VETOED`.
+   */
+  can_create_shipments: boolean;
 }
 
 function normalizeRoleRefs(list: unknown): ApiRoleRef[] {
@@ -92,7 +99,7 @@ type RawApiRole = Partial<Omit<ApiRoleState, 'addon_roles' | 'grantable_roles'>>
   grantable_roles?: unknown;
 };
 
-function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
+export function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
   const roleId = data?.role_id == null ? null : Number(data.role_id);
   return {
     enabled: Boolean(data?.enabled),
@@ -101,7 +108,21 @@ function normalizeApiRole(data: RawApiRole | null | undefined): ApiRoleState {
     role_name: typeof data?.role_name === 'string' && data.role_name ? data.role_name : null,
     addon_roles: normalizeRoleRefs(data?.addon_role_details),
     grantable_roles: normalizeRoleRefs(data?.grantable_roles),
+    // Solo `false` explícito es veto; ausente/undefined (API vieja, roles no-findair) = true.
+    can_create_shipments: data?.can_create_shipments !== false,
   };
+}
+
+/**
+ * True cuando el contacto tiene acceso FindAir habilitado pero el veto de alta de envíos
+ * (`auth_19`) está activo: puede entrar a FindAir pero el alta de envíos le responde 403
+ * `SHIPMENT_CREATION_VETOED`. `ContattoPermissionsDialog` lo usa para avisar al operador
+ * (junto al checkbox de `auth_19`) antes de que sea el cliente quien se queje.
+ */
+export function hasFindairAccessWithoutShipmentCreation(
+  state: ApiRoleState | null | undefined,
+): boolean {
+  return state?.enabled === true && state?.can_create_shipments === false;
 }
 
 /** Roles aditivos conocidos (espejo de Contatti_Oauth_Role_Model::ADDON_ROLE_NAMES) para no ofrecerlos como rol base. */

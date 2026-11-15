@@ -552,7 +552,8 @@
         "role_removed": "Rol verwijderd",
         "role_changed_base": "Basisrol bijgewerkt",
         "confirm_remove_role": "De rol \"{role}\" verwijderen? De persoon verliest de rechten bij de volgende aanmelding.",
-        "confirm_remove_role_title": "Rol verwijderen"
+        "confirm_remove_role_title": "Rol verwijderen",
+        "cannot_create_shipments_warning": "Dit contact heeft Findair-toegang, maar kan GEEN zendingen aanmaken (auth_19 uitgeschakeld): het aanmaken van zendingen geeft 403 terug."
       },
       "contatti_filters": {
         "search": "Zoeken (naam, e-mail, login…)",

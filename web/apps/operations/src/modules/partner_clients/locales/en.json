@@ -552,7 +552,8 @@
         "role_removed": "Role removed",
         "role_changed_base": "Base role updated",
         "confirm_remove_role": "Remove the role \"{role}\"? The person will lose its permissions the next time they sign in.",
-        "confirm_remove_role_title": "Remove role"
+        "confirm_remove_role_title": "Remove role",
+        "cannot_create_shipments_warning": "This contact has Findair access but CANNOT create shipments (auth_19 is off): shipment creation will respond 403."
       },
       "contatti_filters": {
         "search": "Search (name, email, login…)",
