@@ -69,7 +69,7 @@
         "pi_cf": "VAT",
         "cf": "Tax ID",
         "esente_IVA": "VAT exempt",
-        "legale": "Legal form",
+        "legale": "Ongoing legal matter",
         "id_settore_cliente": "Sector",
         "descriz_settore": "Sector description",
         "scelta_forn": "Carrier selection",
