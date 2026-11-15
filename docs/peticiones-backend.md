@@ -1,6 +1,6 @@
 # Peticiones al backend (tmwe_json)
 
-> **Estado:** vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en `tmwe_api`). Lista única y verificada: `contrato-con-api.md` · **Última modificación:** 2026-11-04 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
+> **Estado:** vigente como detalle técnico; la cabecera de abajo está desfasada (P01, P02 y casi P21 ya están resueltas en `tmwe_api`). Lista única y verificada: `contrato-con-api.md` · **Última modificación:** 2026-11-15 · **Clasificación:** automática 2026-10-31, pendiente de revisión humana
 
 > **Estado 2026-10-18.** Este documento es el detalle técnico y su historia. La lista vigente y ordenada
 > está en `prompt-agente-tmwe-json.md`; el plan, en `plan-migracion.md`. Ya resuelto en el backend:
@@ -167,6 +167,18 @@ Peticiones (ruta, síntoma, cambio esperado):
    respuesta con 502 `effective_partner_mismatch`. Solo se comprueba en respuestas JSON 2xx (no 204, 3xx, errores, binarias ni stream); una ruta cuyo controlador no lo emita se marca con `check_effective_partner: false` en `routes.bff.yaml`. Confirmar que lo emiten todos los controladores que se alcanzan con Bearer
    (también los que no heredan de `Abstract_Api_Controller`); si alguno no lo emite, la suplantación fallará en esa ruta.
    Comprobado 2026-11-04 recorriendo la UI suplantando un partner: solo fallaba `get-api-countries` (`Country_Controller`, público con `is_secured() = false`, no autentica ni emite la cabecera). Al ser un catálogo global se marcó `check_effective_partner: false`; el resto de rutas visitadas sí la emiten.
+   **Revisado 2026-11-15 (P1, 502 al trabajar "como partner"):** el recorrido del 11-04 no cubrió todas las rutas con
+   `is_secured() = false` de `tmwe_api` (saltan `is_authorized()` entero y por tanto nunca emiten la cabecera; ver
+   `tmwe_api/bin/check_public_oauth_authz.php::$NOAUTH_ALLOWLIST`, grupo "catálogos sin datos de cliente"). Además de
+   `get-api-countries`, también fallaban `cap_city_prov` (`Cap_City_Prov_Controller`), `api_cargo_terminals`
+   (`Terminal_Controller`, terminales), `api_airport_search` (`Airport_Search_Controller`, aeropuertos) y
+   `currencies/day`→`api_currency_day` (`Currency_Day_Controller`, tasa de cambio del día): las cuatro son catálogos
+   globales, iguales para cualquier partner, así que se marcaron `check_effective_partner: false` en `routes.bff.yaml`
+   (fix del lado BFF; no sustituye el trabajo pendiente en la API de emitir la cabecera también desde controladores
+   `is_secured() = false`, que lo resolvería en la fuente). `get-api-currencies` (`Currency_Controller`) sigue
+   exigiéndola: ese controlador sí autentica (`is_secured() = true`) y sí la emite. Quedan sin ruta en el BFF, y por
+   tanto sin marcar (no hace falta hasta que se expongan): `get-api-airports` (`Airport_Controller`),
+   `api_remote_zone_check` (`Remote_Zone_Check_Controller`) y `generate_qr` (`Qr_Code_Generator_Controller`).
 6. **`navigateTo`: filtros.** La SPA traduce `period` (`today|yesterday|this_week|this_month`) a `date_from/date_to` locales
    con semana de lunes a hoy y mes natural hasta hoy. Los listados de la SPA no leen `status` de la URL, así que no se reenvía.
    Petición: que el backend envíe ya `date_from/date_to` resueltos (misma definición que usan `listShipments/countShipments`)

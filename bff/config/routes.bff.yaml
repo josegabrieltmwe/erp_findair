@@ -134,6 +134,46 @@ routes:
     upstream:
       action: get-api-currencies
       forward_query: '*'
+    # A diferencia de get-api-countries: Currency_Controller SÍ es is_secured() = true (autentica normal), así
+    # que emite X-Effective-Partner-Id como cualquier ruta protegida. No lleva check_effective_partner: false.
+
+  # --- Catálogos is_secured() = false sin datos de partner (P1, 502 effective_partner_mismatch al actuar como
+  # partner) -----------------------------------------------------------------------------------------------------
+  # Estos controladores de tmwe_api saltan handle_request()/is_authorized() entero (is_secured() = false) y por
+  # tanto nunca emiten X-Effective-Partner-Id, aunque se suplante a un partner; ProxyController descartaba la
+  # respuesta con 502 porque exigía esa cabecera incluso cuando el catálogo es el mismo para todos los partners.
+  # Lista de referencia (tmwe_api/bin/check_public_oauth_authz.php::$NOAUTH_ALLOWLIST, grupo "catálogos sin datos
+  # de cliente"): Country_Controller (-> get-api-countries, arriba), Airport_Controller (get-api-airports, aún sin
+  # ruta en el BFF), Airport_Search_Controller (api_airport_search), Cap_City_Prov_Controller (cap_city_prov),
+  # Terminal_Controller (api_cargo_terminals), Remote_Zone_Check_Controller (api_remote_zone_check, aún sin ruta en
+  # el BFF), Currency_Day_Controller (api_currency_day, ver currency.day más abajo), Qr_Code_Generator_Controller
+  # (generate_qr, aún sin ruta en el BFF). Criterio para añadir una ruta nueva aquí: su upstream.action resuelve a
+  # un controlador de ese grupo (catálogo/referencia, no self-data ni gate propio por token/OTP) y la respuesta no
+  # lleva datos específicos de un partner. Sustituyen a las rutas generadas de routes.spa.yaml (mismo id): el
+  # generador (bin/gen-spa-manifest.php) no conoce is_secured() y nunca pone check_effective_partner.
+  - id: get.cap_city_prov
+    method: GET
+    path: /cap_city_prov
+    upstream:
+      action: cap_city_prov
+      forward_query: '*'
+    check_effective_partner: false
+
+  - id: get.api_cargo_terminals
+    method: GET
+    path: /api_cargo_terminals
+    upstream:
+      action: api_cargo_terminals
+      forward_query: '*'
+    check_effective_partner: false
+
+  - id: get.api_airport_search
+    method: GET
+    path: /api_airport_search
+    upstream:
+      action: api_airport_search
+      forward_query: '*'
+    check_effective_partner: false
 
   # "Nueva expedición" crea con POST /unified_shipment a través de useEntityCreate, que recibe el
   # endpoint como parámetro: el generador no lo ve y solo emite el GET. Mismo límite que
@@ -170,6 +210,10 @@ routes:
     upstream:
       action: api_currency_day
       forward_query: [currency, date]
+    # Currency_Day_Controller es is_secured() = false (grupo "catálogos" de check_public_oauth_authz.php): no
+    # autentica y no emite X-Effective-Partner-Id. Tasa del día, global para todos los partners (P1, ver el bloque
+    # de catálogos is_secured()=false más arriba).
+    check_effective_partner: false
 
   # Latido de presencia. El aviso al cerrar pestaña no puede llevar X-CSRF-Token, así que se
   # confía en OriginMiddleware (Origin / Sec-Fetch-Site), que sigue activo para métodos no seguros.
