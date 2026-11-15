@@ -99,6 +99,13 @@ export interface ListFornitoreResponse {
   error?: string;
 }
 
+/** `supplier.changed` true = el proveedor cambió de verdad (no LDV fija). */
+export interface SupplierChangeInfo {
+  before: number | null;
+  after: number | null;
+  changed: boolean;
+}
+
 export interface SelectServiceResponse {
   success: boolean;
   data?: {
@@ -108,6 +115,13 @@ export interface SelectServiceResponse {
     price_locked: boolean;
     supplements_applied?: number;
     snapshot?: Record<string, unknown>;
+    supplier?: SupplierChangeInfo | null;
+    /**
+     * true cuando el proveedor cambió de verdad: el coste guardado
+     * (costo_previsto) sigue siendo el del proveedor anterior porque el
+     * backend NO lo recalcula automáticamente — el operador debe revisarlo.
+     */
+    cost_needs_review?: boolean;
   };
   error?: string;
   error_code?: string;

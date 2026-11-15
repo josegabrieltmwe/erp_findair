@@ -1350,6 +1350,8 @@
       "load_error": "Error al cargar la expedición",
       "readonly_title": "Solo lectura",
       "readonly_body": "Esta expedición es de solo lectura y no se puede modificar.",
+      "cost_review_title": "Revisar coste",
+      "cost_review_body": "El proveedor cambió (#{before} → #{after}): el coste guardado es del proveedor anterior y no se recalculó automáticamente. Revísalo manualmente.",
       "tab_overview": "Resumen",
       "tab_addresses": "Direcciones",
       "tab_packages": "Bultos",

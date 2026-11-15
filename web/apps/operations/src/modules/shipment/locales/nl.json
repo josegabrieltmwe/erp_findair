@@ -1350,6 +1350,8 @@
       "load_error": "Fout bij het laden van de zending",
       "readonly_title": "Alleen-lezen",
       "readonly_body": "Deze zending is alleen-lezen en kan niet worden gewijzigd.",
+      "cost_review_title": "Kosten controleren",
+      "cost_review_body": "De leverancier is gewijzigd (#{before} → #{after}): de opgeslagen kosten horen nog bij de vorige leverancier en zijn niet automatisch herberekend. Controleer dit handmatig.",
       "tab_overview": "Overzicht",
       "tab_addresses": "Adressen",
       "tab_packages": "Colli",

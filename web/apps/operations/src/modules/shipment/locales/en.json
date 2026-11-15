@@ -1391,6 +1391,8 @@
       "load_error": "Error loading shipment",
       "readonly_title": "Read-only",
       "readonly_body": "This shipment is read-only and cannot be modified.",
+      "cost_review_title": "Review cost",
+      "cost_review_body": "The supplier changed (#{before} → #{after}): the saved cost still belongs to the previous supplier and was not recalculated automatically. Please review it manually.",
       "tab_overview": "Overview",
       "tab_addresses": "Addresses",
       "tab_packages": "Packages",

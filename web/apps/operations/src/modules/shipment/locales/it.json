@@ -1391,6 +1391,8 @@
       "load_error": "Errore nel caricamento della spedizione",
       "readonly_title": "Sola lettura",
       "readonly_body": "Questa spedizione è in sola lettura e non può essere modificata.",
+      "cost_review_title": "Verificare il costo",
+      "cost_review_body": "Il fornitore è cambiato (#{before} → #{after}): il costo salvato appartiene ancora al fornitore precedente e non è stato ricalcolato automaticamente. Verificalo manualmente.",
       "tab_overview": "Riepilogo",
       "tab_addresses": "Indirizzi",
       "tab_packages": "Colli",

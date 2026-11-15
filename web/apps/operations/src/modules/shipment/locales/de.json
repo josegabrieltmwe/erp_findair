@@ -1350,6 +1350,8 @@
       "load_error": "Fehler beim Laden der Sendung",
       "readonly_title": "Nur Lesen",
       "readonly_body": "Diese Sendung ist schreibgeschützt und kann nicht geändert werden.",
+      "cost_review_title": "Kosten prüfen",
+      "cost_review_body": "Der Lieferant hat sich geändert (#{before} → #{after}): Die gespeicherten Kosten gehören noch zum vorherigen Lieferanten und wurden nicht automatisch neu berechnet. Bitte manuell prüfen.",
       "tab_overview": "Übersicht",
       "tab_addresses": "Adressen",
       "tab_packages": "Packstücke",

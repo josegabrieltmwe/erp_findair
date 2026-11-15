@@ -5,6 +5,7 @@ import {
   type ClientServiceOption,
   type FornitoreServiceOption,
   type RateDebugTrace,
+  type SupplierChangeInfo,
 } from "@shipment/services/service_selection.service";
 import { fornitoriService } from "@shipment/services/fornitori.service";
 import { useShipmentStore } from "./shipment.store";
@@ -30,6 +31,12 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
   const loadingFornitore = ref(false);
   const selecting = ref(false);
   const error = ref<string | null>(null);
+
+  // Aviso persistente de cambio de proveedor (N28): el backend NO recalcula
+  // el coste cuando el proveedor cambia de verdad (no por LDV fija) y marca
+  // `cost_needs_review`. Se mantiene aquí (no en un toast que desaparece)
+  // hasta que el operador lo revise y lo descarte explícitamente.
+  const costReviewNotice = ref<SupplierChangeInfo | null>(null);
 
   const shipmentStore = useShipmentStore();
   const toasts = useToastStore();
@@ -139,6 +146,18 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
             "Carico bloqueado por lock — precio cliente no recalculado",
           );
         }
+        // El proveedor cambió de verdad (no por LDV fija): el coste guardado
+        // es todavía el del proveedor anterior — avisar y dejar el aviso
+        // visible hasta que el operador lo revise.
+        if (r.data?.cost_needs_review) {
+          const supplier = r.data.supplier ?? null;
+          costReviewNotice.value = supplier;
+          toasts.push(
+            "warning",
+            `Proveedor cambiado (#${supplier?.before ?? "?"} → #${supplier?.after ?? "?"}): revisa el coste manualmente`,
+            0,
+          );
+        }
         await shipmentStore.load(shipment_id);
         return true;
       }
@@ -217,10 +236,16 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     }
   }
 
+  /** El operador ya revisó el coste tras el cambio de proveedor: descarta el aviso. */
+  function dismissCostReview(): void {
+    costReviewNotice.value = null;
+  }
+
   function reset(): void {
     clientServices.value = [];
     fornitoreServices.value = [];
     error.value = null;
+    costReviewNotice.value = null;
   }
 
   // ─── Price-derivation trace (legacy DebugPrezzo) ──────────────────────────
@@ -301,10 +326,12 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     loadingFornitore,
     selecting,
     error,
+    costReviewNotice,
     loadClient,
     loadFornitore,
     selectAndCascade,
     assignFornitoreService,
+    dismissCostReview,
     clear,
     reset,
     debugOpen,
