@@ -63,6 +63,33 @@
         <code>{{ store.shipment.AWB_forn }}</code>
       </v-alert>
 
+      <!-- Cost review banner (N28): the backend does NOT recalculate the
+           cost when the supplier really changes (not a fixed LDV) — it
+           flags `cost_needs_review` instead. We keep this visible (not just
+           a toast that disappears) until the operator explicitly dismisses
+           it, since costo_previsto on screen still belongs to the OLD
+           supplier. -->
+      <v-alert
+        v-if="costReviewNotice"
+        type="warning"
+        variant="tonal"
+        density="compact"
+        class="mb-3"
+        prepend-icon="mdi-truck-alert-outline"
+        closable
+        @click:close="serviceSelectionStore.dismissCostReview()"
+      >
+        <span class="font-weight-medium">{{
+          t("shipment.detail.cost_review_title")
+        }}</span>
+        {{
+          t("shipment.detail.cost_review_body", {
+            before: costReviewNotice.before ?? "—",
+            after: costReviewNotice.after ?? "—",
+          })
+        }}
+      </v-alert>
+
       <v-card border flat class="mb-3" rounded="lg">
         <v-tabs
           v-model="tab"
@@ -228,6 +255,7 @@ import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
+import { useServiceSelectionStore } from "@shipment/stores/service_selection.store";
 import { ldvService } from "@shipment/services/ldv.service";
 import { shipmentService } from "@shipment/services/shipment.service";
 import type { ShipmentTab } from "@shipment/services/shipment.types";
@@ -267,6 +295,8 @@ const { t } = useI18n();
 const route = useRoute();
 const store = useShipmentStore();
 const toasts = useToastStore();
+const serviceSelectionStore = useServiceSelectionStore();
+const { costReviewNotice } = storeToRefs(serviceSelectionStore);
 
 // Expose the legacy `giafatt` guard to the template so the operator
 // sees a banner explaining why most fields are locked when the
