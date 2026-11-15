@@ -3,6 +3,19 @@
     <v-card>
       <v-card-title>Permessi — {{ contatto?.nome }}</v-card-title>
       <v-card-text>
+        <!-- Aviso: el contacto tiene acceso FindAir pero el veto de alta de envíos
+             (auth_19) está activo. Sin esto, el operador no se entera hasta que el
+             cliente se queja de que no puede crear envíos desde FindAir. -->
+        <v-alert
+          v-if="cannotCreateShipments"
+          type="warning"
+          variant="tonal"
+          density="compact"
+          class="mb-4"
+        >
+          {{ t('anagrafiche.findair.cannot_create_shipments_warning') }}
+        </v-alert>
+
         <!-- Auth flags vía el editor compartido (capabilities tipadas, i18n,
              tooltips, dirty-tracking) — ya no se hardcodean las claves auth_*.
              El backend filtra auth_10..16 para partners (WS2.5). -->
@@ -34,7 +47,12 @@
         <!-- Roles API (rol base + aditivos). El editor ofrece solo lo que el API deja conceder a quien mira (un
              administrador de cuenta ve los roles de cliente; TMWE, casi todos). Aplica al momento. -->
         <p class="text-caption mb-2">{{ t('anagrafiche.findair.api_role') }}</p>
-        <ContactApiRolesEditor v-if="contatto?.id" :key="contatto.id" :contatto-id="contatto.id" />
+        <ContactApiRolesEditor
+          v-if="contatto?.id"
+          :key="contatto.id"
+          :contatto-id="contatto.id"
+          @changed="onApiRoleChanged"
+        />
         <RouterLink v-if="userDetailRoute" :to="userDetailRoute" class="cm-api-role-link">
           {{ t('anagrafiche.findair.manage_in_user') }}
         </RouterLink>
@@ -70,7 +88,11 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink, useRouter, type RouteLocationRaw } from 'vue-router';
 import type { ContattoRow } from '../services/anagrafica.service';
-import { contattiService } from '../services/contatti.service';
+import {
+  contattiService,
+  hasFindairAccessWithoutShipmentCreation,
+  type ApiRoleState,
+} from '../services/contatti.service';
 import { useAnagraficaContext } from '../composables/useAnagraficaContext';
 import { useToast } from '../composables/useToast';
 import AuthFlagsEditor from '../components/AuthFlagsEditor.vue';
@@ -94,6 +116,10 @@ const userDetailRoute = computed<RouteLocationRaw | null>(() => {
 
 const authFlags = ref<Record<string, 'S' | 'N'>>({});
 const alerts = ref<Record<string, string>>({});
+// Estado del rol API/acceso FindAir del contacto (incl. can_create_shipments), solo para
+// mostrar el aviso de veto de alta de envíos; no participa en el guardado del diálogo.
+const apiRoleState = ref<ApiRoleState | null>(null);
+const cannotCreateShipments = computed(() => hasFindairAccessWithoutShipmentCreation(apiRoleState.value));
 // Login por app (enum S/N) — antes no editables en la UI moderna.
 const appAccess = ref<Record<'erp_login_app' | 'b2b_login_app', 'S' | 'N'>>({
   erp_login_app: 'N',
@@ -119,7 +145,17 @@ watch(() => props.modelValue, (v) => {
     erp_login_app: row.erp_login_app === 'S' ? 'S' : 'N',
     b2b_login_app: row.b2b_login_app === 'S' ? 'S' : 'N',
   };
+  // Estado inicial del rol API/acceso FindAir, solo para el aviso del veto de alta de
+  // envíos; ContactApiRolesEditor lo mantiene al día luego vía @changed.
+  apiRoleState.value = null;
+  void contattiService.getApiRole(props.contatto.id).then((state) => {
+    apiRoleState.value = state;
+  });
 });
+
+function onApiRoleChanged(state: ApiRoleState): void {
+  apiRoleState.value = state;
+}
 
 function onClose(): void {
   emit('update:modelValue', false);

@@ -554,7 +554,8 @@
         "role_removed": "Ruolo rimosso",
         "role_changed_base": "Ruolo base aggiornato",
         "confirm_remove_role": "Rimuovere il ruolo «{role}»? La persona perderà i relativi permessi al prossimo accesso.",
-        "confirm_remove_role_title": "Rimuovi ruolo"
+        "confirm_remove_role_title": "Rimuovi ruolo",
+        "cannot_create_shipments_warning": "Questo contatto ha accesso Findair ma NON può creare spedizioni (auth_19 disattivato): l'inserimento spedizioni risponderà 403."
       },
       "contatti_filters": {
         "search": "Cerca (nome, email, login…)",

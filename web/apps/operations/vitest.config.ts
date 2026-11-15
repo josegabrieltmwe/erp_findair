@@ -1,11 +1,11 @@
 import { defineConfig } from "vitest/config";
-import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
+import { fileURLToPath, URL } from "node:url";
 
 // Specs de lógica pura (servicios, stores, modelos): sin plugins de Vue/Vuetify,
-// entorno "node" (rápido). El plugin de Vue solo entra en juego para los specs
-// que de verdad importan un .vue (ver environmentMatchGlobs más abajo); no
-// afecta ni ralentiza el resto.
+// entorno "node" (rápido). Los specs de MONTAJE DOM (sufijo `.mount.spec.ts`,
+// ver `environmentMatchGlobs` más abajo) sí necesitan el plugin de Vue para
+// compilar los `.vue` montados; no afecta ni ralentiza el resto.
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -35,8 +35,21 @@ export default defineConfig({
     // de `test.projects`; se mantiene esta opción (más simple para un único
     // patrón) mientras siga soportada — revisar si se migra el resto del
     // monorepo a `projects`.
+    // Convención del repo: `*.spec.ts` es lógica pura (entorno "node", rápido,
+    // sin DOM). `*.mount.spec.ts` es un test de MONTAJE real con
+    // `@vue/test-utils` (`mount()`) que necesita un DOM: solo esos ficheros
+    // pagan el coste de happy-dom + los plugins de Vue/Vuetify. No usar
+    // `environment: "happy-dom"` global: ralentizaría los ~150 specs de lógica
+    // pura del paquete sin necesidad.
+    //
+    // OJO: vitest resuelve cada patrón contra `root` (esta carpeta,
+    // apps/operations) con `path.resolve`, igual que `include` abajo — por
+    // eso hace falta el prefijo `../../` para los specs de montaje que viven
+    // en packages/platform (si el patrón fuera solo "**/*.mount.spec.ts" no
+    // matchearía nada fuera de apps/operations y el test correría igualmente
+    // en "node", fallando con "document is not defined").
     environmentMatchGlobs: [
-      ["**/*.mount.spec.ts", "happy-dom"],
+      ["src/**/*.mount.spec.ts", "happy-dom"],
       ["../../packages/platform/**/*.mount.spec.ts", "happy-dom"],
     ],
     // packages/platform es "lógica pura... para poder probarla con vitest" (su propio
@@ -44,14 +57,19 @@ export default defineConfig({
     include: ["src/**/*.spec.ts", "../../packages/platform/**/*.spec.ts"],
     server: {
       deps: {
-        // `vuetify/components` (barrel usado por los *.mount.spec.ts) importa
-        // un .css por componente; sin inline, Vitest externaliza el paquete y
-        // Node intenta cargar ese .css con su loader nativo ESM y revienta
-        // ("Unknown file extension .css"). Inline fuerza a pasarlo por Vite,
-        // que sí sabe tratar CSS (no-op en los specs, ver test.css). No afecta
-        // a los specs de lógica pura, que no importan vuetify.
+        // Vuetify se externaliza por defecto (vive en node_modules): sin esto,
+        // `vuetify/components` importa un .css por componente y Node (no Vite)
+        // intenta cargarlo con su loader nativo ESM y revienta ("Unknown file
+        // extension .css"). Inline fuerza a pasarlo por Vite, que sí sabe
+        // tratar CSS (no-op en los specs). No afecta a los specs de lógica
+        // pura, que no importan vuetify.
         inline: ["vuetify"],
       },
     },
+    // Polyfills que solo hacen falta para montar componentes Vuetify bajo
+    // happy-dom (p.ej. VOverlay/VDialog usan window.visualViewport, que
+    // happy-dom no implementa). El guard `typeof window` del propio fichero lo
+    // hace no-op en los specs de lógica pura, que corren en entorno "node".
+    setupFiles: ["src/test/vuetifyMountPolyfills.ts"],
   },
 });
