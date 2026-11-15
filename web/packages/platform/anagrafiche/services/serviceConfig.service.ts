@@ -14,6 +14,18 @@ export interface ServiceConfigRow {
   servizio_livello?: number;
   /** Fuel surcharge base del servizio (read-only, distinto del fuel_surc del cliente). */
   servizio_fuel?: number;
+  /**
+   * Delta de fuel del cliente (al.fuel_surc crudo, puede ser negativo = descuento).
+   * `null`/`undefined` = el cliente no tiene fila propia (el motor usa +4 por
+   * defecto al calcular `fuel_efectivo`). NO es lo que se cobra: ver `fuel_efectivo`.
+   */
+  fuel_cliente?: number | null;
+  /**
+   * Fuel que realmente se cobra: servizio_fuel + fuel_cliente, con suelo en 0
+   * (nunca negativo). Lo calcula el backend (Anagrafiche_Listvol::get_service_grid_for_client);
+   * es el dato informativo que debe verse junto al delta editable, no un sustituto.
+   */
+  fuel_efectivo?: number;
   id_listino_nome?: number;
   listino_nome?: string;
   /**

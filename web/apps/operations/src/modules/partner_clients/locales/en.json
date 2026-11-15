@@ -240,6 +240,8 @@
         "prio_e": "Economy",
         "from_type": "From-Type",
         "serv_fuel": "Serv.Fuel",
+        "fuel_efectivo": "Effective fuel",
+        "fuel_breakdown": "Service fuel: {servizio}% + client delta: {delta}% = Effective fuel: {efectivo}%",
         "lock_all": "Block all",
         "unlock_all": "Unblock all",
         "show_price_list": "Show price list",
