@@ -1290,6 +1290,7 @@
     },
     "layout": {
       "tracking_events": "Eventi di tracking",
+      "documents": "Documenti",
       "audit_trail": "Registro delle modifiche"
     },
     "detail_page": {

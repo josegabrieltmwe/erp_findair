@@ -1249,6 +1249,7 @@
     },
     "layout": {
       "tracking_events": "Trackinggebeurtenissen",
+      "documents": "Documenten",
       "audit_trail": "Audittrail"
     },
     "detail_page": {

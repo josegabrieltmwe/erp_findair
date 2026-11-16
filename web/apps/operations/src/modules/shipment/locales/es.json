@@ -1249,6 +1249,7 @@
     },
     "layout": {
       "tracking_events": "Eventos de seguimiento",
+      "documents": "Documentos",
       "audit_trail": "Registro de auditoría"
     },
     "detail_page": {

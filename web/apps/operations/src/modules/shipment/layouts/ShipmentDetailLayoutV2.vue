@@ -90,7 +90,7 @@
         <button
           type="button"
           class="topbar-iconbtn"
-          title="Tracking events"
+          :title="t('shipment.layout.tracking_events')"
           @click="ui.openTracking()"
         >
           <v-icon icon="mdi-truck-fast" size="18" />
@@ -101,7 +101,7 @@
         <button
           type="button"
           class="topbar-iconbtn"
-          title="Documenti"
+          :title="t('shipment.layout.documents')"
           @click="ui.openDoc()"
         >
           <v-icon icon="mdi-file-document-multiple-outline" size="18" />
@@ -110,7 +110,7 @@
         <button
           type="button"
           class="topbar-iconbtn"
-          title="Audit trail"
+          :title="t('shipment.layout.audit_trail')"
           @click="ui.openAudit()"
         >
           <v-icon icon="mdi-history" size="18" />

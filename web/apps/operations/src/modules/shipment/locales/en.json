@@ -1290,6 +1290,7 @@
     },
     "layout": {
       "tracking_events": "Tracking events",
+      "documents": "Documents",
       "audit_trail": "Audit trail"
     },
     "detail_page": {
