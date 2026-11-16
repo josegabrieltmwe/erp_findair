@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Findair\Bff\Tests;
 
 use Findair\Bff\Auth\TokenSet;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Request as UpstreamRequest;
 use GuzzleHttp\Psr7\Response as UpstreamResponse;
 
 final class ProxyTest extends AppTestCase
@@ -119,6 +121,37 @@ final class ProxyTest extends AppTestCase
         self::assertSame(502, $response->getStatusCode());
         self::assertStringNotContainsString('SQLSTATE', (string) $response->getBody());
         self::assertSame('upstream_error', $this->json($response)['code']);
+    }
+
+    public function testConnectExceptionIsRetriedOnceAndSucceeds(): void
+    {
+        // N49 (collaudo 16/11): tras una pausa, el primer connect al json puede fallar
+        // y el siguiente intento ya funciona -- sendWithConnectRetry reintenta una vez
+        // dentro de la misma peticion en vez de devolver 504 directamente al usuario.
+        $this->boot([
+            new ConnectException('boom', new UpstreamRequest('GET', 'http://x')),
+            $this->upstreamOk('{"id":1}'),
+        ]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/things/1', $sid));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('{"id":1}', (string) $response->getBody());
+        self::assertCount(2, $this->history);
+    }
+
+    public function testConnectExceptionStillReturns504AfterRetryFails(): void
+    {
+        $this->boot([
+            new ConnectException('boom', new UpstreamRequest('GET', 'http://x')),
+            new ConnectException('boom', new UpstreamRequest('GET', 'http://x')),
+        ]);
+        $sid = $this->loginSession();
+        $response = $this->send($this->request('GET', '/bff/v1/things/1', $sid));
+
+        self::assertSame(504, $response->getStatusCode());
+        self::assertSame('upstream_unreachable', $this->json($response)['code']);
+        self::assertCount(2, $this->history);
     }
 
     public function testUpstreamClientErrorIsNormalized(): void

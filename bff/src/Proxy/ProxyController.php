@@ -146,7 +146,7 @@ final class ProxyController
         $url = $this->urls->internal($route->action, $query);
 
         try {
-            $upstream = $this->send($request, $route, $url, $tokens, $body, $requestId, $impersonate);
+            $upstream = $this->sendWithConnectRetry($request, $route, $url, $tokens, $body, $requestId, $impersonate);
             if ($upstream->getStatusCode() === 401) {
                 // ¿Token muerto o ruta que rechaza al usuario? Solo en el primer caso se renueva o se cierra la sesión.
                 if (!$tokens->expiresWithin(60, time()) && $this->probe->accepts($tokens->accessToken, $requestId)) {
@@ -166,7 +166,7 @@ final class ProxyController
 
                     return ProblemDetails::response(401, 'session_expired', 'Sesión no válida', 'Vuelva a iniciar sesión.', $requestId);
                 }
-                $upstream = $this->send($request, $route, $url, $renewed, $body, $requestId, $impersonate);
+                $upstream = $this->sendWithConnectRetry($request, $route, $url, $renewed, $body, $requestId, $impersonate);
                 if ($upstream->getStatusCode() === 401) {
                     return $this->routeDenied($route, $requestId);
                 }
@@ -249,6 +249,28 @@ final class ProxyController
         }
 
         return false;
+    }
+
+    /**
+     * N49 (collaudo 16/11): tras una pausa, la primera conexion al json puede fallar
+     * con ConnectException (504 "upstream_unreachable") y la siguiente ya funciona.
+     * El fallo ocurre en el *connect*, antes de enviar nada, asi que reintentar una
+     * vez es seguro incluso para escrituras (POST). No arregla la causa de fondo
+     * (sin confirmar: posible connect/DNS intermitente via el hostname publico del
+     * upstream), solo evita que el usuario vea el 504 cuando un segundo intento basta.
+     */
+    private function sendWithConnectRetry(Request $request, Route $route, string $url, TokenSet $tokens, string $body, string $requestId, ?int $impersonate, bool $isRetry = false): ResponseInterface
+    {
+        try {
+            return $this->send($request, $route, $url, $tokens, $body, $requestId, $impersonate);
+        } catch (ConnectException $e) {
+            if ($isRetry) {
+                throw $e;
+            }
+            $this->logger->warning('upstream_connect_retry', ['route' => $route->id, 'request_id' => $requestId]);
+
+            return $this->sendWithConnectRetry($request, $route, $url, $tokens, $body, $requestId, $impersonate, true);
+        }
     }
 
     private function send(Request $request, Route $route, string $url, TokenSet $tokens, string $body, string $requestId, ?int $impersonate = null): ResponseInterface

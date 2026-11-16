@@ -378,7 +378,14 @@ final class CopilotRoutesTest extends AppTestCase
     public function testSlotIsReleasedWhenUpstreamFails(): void
     {
         $this->extraEnv = ['COPILOT_CHAT_RATE_PER_MIN' => '0', 'COPILOT_CHAT_RATE_PER_IP_MIN' => '0'];
-        $this->boot([new ConnectException('boom', new UpstreamRequest('POST', 'http://x')), $this->upstreamOk()]);
+        // N49: un solo ConnectException ya no basta -- ProxyController reintenta una vez
+        // antes de dar 504 (sendWithConnectRetry), asi que la primera peticion consume 2
+        // fallos seguidos para agotar el reintento y confirmar que el hueco se libera igual.
+        $this->boot([
+            new ConnectException('boom', new UpstreamRequest('POST', 'http://x')),
+            new ConnectException('boom', new UpstreamRequest('POST', 'http://x')),
+            $this->upstreamOk(),
+        ]);
         $sid = $this->loginSession();
 
         self::assertSame(504, $this->send($this->request('POST', '/bff/v1/chat', $sid, $this->unsafeHeaders(), '{}'))->getStatusCode());
