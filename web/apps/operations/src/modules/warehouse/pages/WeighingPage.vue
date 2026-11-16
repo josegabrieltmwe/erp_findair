@@ -72,7 +72,7 @@ async function scan(): Promise<void> {
   code.value = r.code;
   busy.value = true;
   try {
-    found.value = await warehouseApi.lookup(c);
+    found.value = await warehouseApi.lookup(r.code);
     const p = found.value.parcel;
     if (found.value.found && p) {
       if (p.peso) kg.value = String(p.peso);
