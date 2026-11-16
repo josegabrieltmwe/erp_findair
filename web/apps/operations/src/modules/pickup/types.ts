@@ -49,6 +49,10 @@ export interface Pickup {
   insert_datetime?: string;
   insert_user?: number;
   insert_IP?: string;
+  /** Sede resuelta (N61: antes solo venía id_sede y la lista/calendario pintaban el número). */
+  sede?: { id: number; label: string };
+  /** Autista resuelto; null si id_contatti=0 (sin asignar). */
+  driver?: { id: number; nome: string } | null;
 }
 
 export interface PickupFilters {

@@ -39,8 +39,19 @@ const drivers = computed(() => {
   return Array.from(ids).sort((a, b) => a - b);
 });
 
+/** Nombre resuelto por autista (N61: antes se pintaba #id). Cae a #id si el nombre no llegó. */
+const driverNames = computed(() => {
+  const map = new Map<number, string>();
+  for (const p of props.pickups) {
+    const id = p.id_contatti || 0;
+    if (id && p.driver?.nome) map.set(id, p.driver.nome);
+  }
+  return map;
+});
+
 function driverLabel(id: number): string {
-  return id === 0 ? t("pickup.calendar.unassigned") : `#${id}`;
+  if (id === 0) return t("pickup.calendar.unassigned");
+  return driverNames.value.get(id) ?? `#${id}`;
 }
 
 /** Media-hora de una presa: "HH:00" o "HH:30" según los minutos. */

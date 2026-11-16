@@ -335,9 +335,11 @@ onMounted(() => {
       </template>
       <template #[`cell.id`]="{ item: raw }">{{ row(raw).id }}</template>
       <template #[`cell.data`]="{ item: raw }">{{ row(raw).data }}</template>
-      <template #[`cell.id_sede`]="{ item: raw }">{{ row(raw).id_sede }}</template>
+      <template #[`cell.id_sede`]="{ item: raw }">{{
+        row(raw).sede?.label || row(raw).id_sede
+      }}</template>
       <template #[`cell.id_contatti`]="{ item: raw }">
-        {{ row(raw).id_contatti || "—" }}
+        {{ row(raw).driver?.nome || row(raw).id_contatti || "—" }}
         <v-icon
           v-if="isIncoherent(row(raw))"
           icon="mdi-alert-outline"
