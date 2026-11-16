@@ -17,7 +17,7 @@
             class="partner-logo"
           />
           <v-icon v-else icon="mdi-receipt-text" size="22" color="primary" />
-          <span class="text-h6 mb-0"
+          <span class="invoice-head__title"
             >{{ t("invoicing.invoice.title") }} {{ inv?.numero ?? "" }}</span
           >
           <!-- Identificador alfanumerico manual (collaudo 13/11, item 10):
@@ -78,7 +78,7 @@
             {{ t("invoicing.invoice.locked") }}
           </v-chip>
         </div>
-        <div class="text-medium-emphasis text-body-2 invoice-head__meta">
+        <div class="text-medium-emphasis invoice-head__meta">
           {{ inv?.data_fattura }} · {{ inv?.cliente?.rag_soc }}
         </div>
       </div>
@@ -886,14 +886,27 @@ onBeforeUnmount(() => store.reset());
 }
 
 /* Cabecera del topbar: título en una línea, fecha·cliente como subtítulo
-   con aire, en vez de todo apretado en una sola fila. */
+   debajo. DetailShell fija `.dsh-topbar` a 96px (no min-height, ver
+   DetailShell.vue): con `text-h6` + `text-body-2` (interlineado de Vuetify,
+   ~32px + 20px) el bloque no cabía en la fila de 48px y el texto desbordaba
+   visualmente hacia el cuerpo (collaudo 16/11, N38b-bis). Interlineado
+   ajustado a 1.2, igual que PlatformTopBar (.ptb-title-main/-sub) y el
+   patrón de CargoDetailLayoutV2. */
 .invoice-head {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-block: 2px;
+  gap: 0;
+  padding-block: 0;
+}
+.invoice-head__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 .invoice-head__meta {
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
   padding-left: 4px;
 }
 .partner-logo {
