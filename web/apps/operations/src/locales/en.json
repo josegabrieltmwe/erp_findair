@@ -325,7 +325,11 @@
       "charge_authorizations": "Charge authorizations"
     },
     "page_title": {
-      "warehouse-weighing": "Manual weighing"
+      "warehouse-weighing": "Manual weighing",
+      "payments-aging": "Aging of balances",
+      "payments-reminders": "Payment reminders",
+      "payments-pending-invoices": "Invoices awaiting payment",
+      "payments-reconciliation": "Bank reconciliation"
     },
     "email": {
       "recipients": "Recipients",

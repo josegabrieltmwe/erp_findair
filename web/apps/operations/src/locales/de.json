@@ -325,7 +325,11 @@
       "charge_authorizations": "Einzugsermächtigungen"
     },
     "page_title": {
-      "warehouse-weighing": "Manuelles Wiegen"
+      "warehouse-weighing": "Manuelles Wiegen",
+      "payments-aging": "Altersstruktur der Forderungen",
+      "payments-reminders": "Zahlungserinnerungen",
+      "payments-pending-invoices": "Offene Rechnungen zum Einzug",
+      "payments-reconciliation": "Bankabstimmung"
     },
     "email": {
       "recipients": "Empfänger",

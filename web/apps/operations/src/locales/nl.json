@@ -325,7 +325,11 @@
       "charge_authorizations": "Incassomachtigingen"
     },
     "page_title": {
-      "warehouse-weighing": "Handmatig wegen"
+      "warehouse-weighing": "Handmatig wegen",
+      "payments-aging": "Ouderdom van openstaande bedragen",
+      "payments-reminders": "Betalingsherinneringen",
+      "payments-pending-invoices": "Openstaande facturen",
+      "payments-reconciliation": "Bankafstemming"
     },
     "email": {
       "recipients": "Geadresseerden",

@@ -325,7 +325,11 @@
       "charge_authorizations": "Autorizaciones de cobro"
     },
     "page_title": {
-      "warehouse-weighing": "Pesaje manual"
+      "warehouse-weighing": "Pesaje manual",
+      "payments-aging": "Antigüedad de saldos",
+      "payments-reminders": "Recordatorios de cobro",
+      "payments-pending-invoices": "Facturas pendientes de cobro",
+      "payments-reconciliation": "Conciliación bancaria"
     },
     "email": {
       "recipients": "Destinatarios",

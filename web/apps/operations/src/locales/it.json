@@ -325,7 +325,11 @@
       "charge_authorizations": "Autorizzazioni di addebito"
     },
     "page_title": {
-      "warehouse-weighing": "Pesatura manuale"
+      "warehouse-weighing": "Pesatura manuale",
+      "payments-aging": "Anzianità dei saldi",
+      "payments-reminders": "Solleciti di pagamento",
+      "payments-pending-invoices": "Fatture da incassare",
+      "payments-reconciliation": "Riconciliazione bancaria"
     },
     "email": {
       "recipients": "Destinatari",
