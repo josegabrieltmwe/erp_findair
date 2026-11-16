@@ -17,7 +17,7 @@
             class="partner-logo"
           />
           <v-icon v-else icon="mdi-receipt-text" size="22" color="primary" />
-          <span class="text-h6 mb-0"
+          <span class="invoice-head__title"
             >{{ t("invoicing.invoice.title") }} {{ inv?.numero ?? "" }}</span
           >
           <!-- Identificador alfanumerico manual (collaudo 13/11, item 10):
@@ -78,7 +78,7 @@
             {{ t("invoicing.invoice.locked") }}
           </v-chip>
         </div>
-        <div class="text-medium-emphasis text-body-2 invoice-head__meta">
+        <div class="text-medium-emphasis invoice-head__meta">
           {{ inv?.data_fattura }} · {{ inv?.cliente?.rag_soc }}
         </div>
       </div>
@@ -443,6 +443,68 @@
         </v-card-text>
       </v-card>
 
+      <!-- Notas de credito relacionadas (N55 collaudo 16/11): si esta factura
+           NO es TD04, lista las TD04 emitidas sobre ella; si lo ES, un
+           bloque unico con la factura original. Mismo patron visual que
+           ShipmentRelationsCard.vue (rel-item/rel-count/rel-empty). -->
+      <v-card
+        v-if="inv?.cod_sdi_TD === 'TD04' || (inv?.note_credito?.length ?? 0) > 0"
+        variant="flat"
+        class="invoice-list-card mt-4 credit-notes-card"
+      >
+        <v-card-text class="py-3">
+          <div class="text-overline text-medium-emphasis mb-1">
+            {{ t("invoicing.invoice.credit_notes.title") }}
+            <span v-if="inv?.note_credito?.length" class="rel-count">{{
+              inv.note_credito.length
+            }}</span>
+          </div>
+
+          <div v-if="inv?.cod_sdi_TD === 'TD04'" class="rel-block">
+            <div class="rel-block__label">
+              {{ t("invoicing.invoice.credit_notes.of_invoice") }}
+            </div>
+            <div class="rel-block__value">
+              <router-link
+                v-if="inv.nota_credito_di"
+                :to="{
+                  name: 'invoicing-detail',
+                  params: { id: String(inv.nota_credito_di) },
+                }"
+              >
+                #{{ inv.nota_credito_di }}
+              </router-link>
+              <span v-else>—</span>
+            </div>
+          </div>
+
+          <div v-else-if="inv?.note_credito?.length" class="rel-items">
+            <router-link
+              v-for="nc in inv.note_credito"
+              :key="nc.id"
+              :to="{ name: 'invoicing-detail', params: { id: String(nc.id) } }"
+              class="rel-item"
+            >
+              <v-icon
+                icon="mdi-receipt-text-minus-outline"
+                size="15"
+                class="rel-item__icon"
+              />
+              <span class="rel-item__text">
+                <span class="rel-item__title">{{
+                  nc.numero_alfanum || `#${nc.numero}`
+                }}</span>
+                <span class="rel-item__amount">{{
+                  money(nc.importo_netto)
+                }}</span>
+              </span>
+              <v-icon icon="mdi-chevron-right" size="12" class="rel-item__ext" />
+            </router-link>
+          </div>
+          <div v-else class="rel-empty">—</div>
+        </v-card-text>
+      </v-card>
+
       <!-- «Por qué»: reglas fiscales que produjeron cada línea (F6b) -->
       <WhyPanel v-if="store.id" :invoice-id="store.id" />
     </v-container>
@@ -745,15 +807,106 @@ onBeforeUnmount(() => store.reset());
   overflow: hidden;
 }
 
-/* Cabecera del topbar: título en una línea, fecha·cliente como subtítulo
-   con aire, en vez de todo apretado en una sola fila. */
-.invoice-head {
+/* Notas de credito relacionadas (N55): mismo patron visual que
+   ShipmentRelationsCard.vue (rel-item/rel-count/rel-empty), copiado aqui
+   porque ese bloque de estilos esta scoped a su propio componente. */
+.rel-count {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(var(--v-theme-primary), 0.12);
+  color: rgb(var(--v-theme-primary));
+}
+.rel-block__label {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.rel-block__value {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.rel-items {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-block: 2px;
+  margin-top: 4px;
+}
+.rel-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: rgb(var(--v-theme-on-surface));
+  transition: background-color 0.12s ease;
+}
+.rel-item:hover {
+  background: rgba(var(--v-theme-on-surface), 0.06);
+}
+.rel-item__icon {
+  flex: 0 0 auto;
+  color: rgb(var(--v-theme-primary));
+  opacity: 0.85;
+}
+.rel-item__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  font-size: 12.5px;
+}
+.rel-item__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rel-item__amount {
+  font-size: 11px;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+.rel-item__ext {
+  flex: 0 0 auto;
+  opacity: 0;
+  color: rgb(var(--v-theme-primary));
+  transition: opacity 0.12s ease;
+}
+.rel-item:hover .rel-item__ext {
+  opacity: 0.7;
+}
+.rel-empty {
+  font-size: 12px;
+  opacity: 0.35;
+  margin-top: 4px;
+  padding-left: 2px;
+}
+
+/* Cabecera del topbar: título en una línea, fecha·cliente como subtítulo
+   debajo. DetailShell fija `.dsh-topbar` a 96px (no min-height, ver
+   DetailShell.vue): con `text-h6` + `text-body-2` (interlineado de Vuetify,
+   ~32px + 20px) el bloque no cabía en la fila de 48px y el texto desbordaba
+   visualmente hacia el cuerpo (collaudo 16/11, N38b-bis). Interlineado
+   ajustado a 1.2, igual que PlatformTopBar (.ptb-title-main/-sub) y el
+   patrón de CargoDetailLayoutV2. */
+.invoice-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-block: 0;
+}
+.invoice-head__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 .invoice-head__meta {
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
   padding-left: 4px;
 }
 .partner-logo {

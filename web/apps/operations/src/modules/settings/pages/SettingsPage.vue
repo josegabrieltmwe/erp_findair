@@ -117,6 +117,7 @@ import { useProfile } from '@shared/composables/useProfile';
 import { useAccess } from '@shared/composables/useAccess';
 import { canOpenAdminRoute } from '../settingsAccess';
 import { canSeeAiScope } from '@shared/ai_admin/composables/useAiScopes';
+import { isTmweWithoutImpersonation } from '@shared/platform/tmweSession';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -173,6 +174,10 @@ const groups = computed<ResolvedGroup[]>(() =>
       .filter((it) => !it.aiScope || canSeeAiScope(profile.value, isAdmin.value, it.aiScope))
       // Quien no es TMWE solo ve las tarjetas que puede abrir por scope (TMWE las ve todas).
       .filter((it) => it.aiScope || !it.routeName || canOpenAdminRoute(it.routeName, { isAdmin: isAdmin.value, access: access.value }))
+      // N15: tarjetas de autoservicio de partner (partnerOnly) — TMWE solo las ve
+      // suplantando a un partner; de lo contrario el backend siempre rechaza con
+      // su propia anagrafica (not_a_partner), un callejon sin salida garantizado.
+      .filter((it) => !it.partnerOnly || !isTmweWithoutImpersonation())
       .map((it) => {
       const title = t('settings.settings.catalog.' + it.i18nKey + '.title');
       const description = t('settings.settings.catalog.' + it.i18nKey + '.description');

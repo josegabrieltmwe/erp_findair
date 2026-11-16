@@ -36,6 +36,20 @@ export interface Invoice {
   lingua_fattura?: string;
   dettagli?: InvoiceLine[];
   pagamenti?: unknown[];
+  /** Notas de credito (TD04) emitidas sobre esta factura. Solo si esta factura NO es TD04. */
+  note_credito?: InvoiceCreditNoteRef[];
+  /** Factura original que esta nota de credito anula/reduce. Solo si esta factura ES TD04. */
+  nota_credito_di?: number | null;
+}
+
+export interface InvoiceCreditNoteRef {
+  id: number;
+  numero: string | number;
+  numero_alfanum?: string;
+  data_fattura: string;
+  importo_netto: number;
+  importo_iva: number;
+  stato_sdi: string;
 }
 
 export interface InvoiceListItem {

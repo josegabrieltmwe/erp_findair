@@ -55,6 +55,11 @@ describe('canOpenAdminRoute', () => {
     expect(canOpenAdminRoute('settings-customers-without-margin', ctx(false, ['config:read']))).toBe(false);
   });
 
+  it('agente de voz del partner: entra quien tiene partner_agent:read, no quien solo tiene config:read', () => {
+    expect(canOpenAdminRoute('settings-elevenlabs-my-agent', ctx(false, ['partner_agent:read']))).toBe(true);
+    expect(canOpenAdminRoute('settings-elevenlabs-my-agent', ctx(false, ['config:read']))).toBe(false);
+  });
+
   it('falla cerrado: perfil desconocido o backend sin access', () => {
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(null))).toBe(false);
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(false))).toBe(false);

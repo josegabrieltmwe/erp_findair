@@ -108,6 +108,10 @@
       },
       "popup_blocked": "Sta pop-ups toe om de factuur te bekijken",
       "doc_warnings": "Document met waarschuwingen",
+      "credit_notes": {
+        "title": "Credit-facturen",
+        "of_invoice": "Credit-factuur van factuur"
+      },
       "credit": {
         "motivo": "Reden",
         "note": "Notitie",

@@ -255,9 +255,11 @@ onMounted(async () => {
   }
 });
 
+// N38b (collaudo 16/11): campo de texto libre, no selector; mensaje genérico
+// de "obligatorio" en vez de "selectors.required" (pensado para un select).
 function ruleRequired(v: unknown): true | string {
   if (typeof v === 'string' && v.trim().length > 0) return true;
-  return t('selectors.required') as string;
+  return t('common.required') as string;
 }
 
 // Solo TMWE da de alta partners: para el resto el tipo P no se ofrece.

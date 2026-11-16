@@ -48,6 +48,15 @@ interface SettingsCardBase {
   /** Scope de IA (contrato ai-admin/1) que hace visible la tarjeta. Sin campo =
    *  visible para todos. Es solo UX; la API autoriza. */
   aiScope?: AiScope;
+  /**
+   * N15 (collaudo 16/11): la ruta es autoservicio de un PARTNER y el backend
+   * rechaza a TMWE con la propia anagrafica (tipo!='P'), sin excepcion — a
+   * diferencia del resto de tarjetas, para las que TMWE es un respaldo valido.
+   * Con este flag, TMWE solo ve la tarjeta mientras esta suplantando a un
+   * partner (ver isTmweWithoutImpersonation() en tmweSession.ts); de lo
+   * contrario seria un callejon sin salida garantizado (siempre 403).
+   */
+  partnerOnly?: boolean;
 }
 
 /** Navega SIN recarga (`router.push`): la sección ya vive en
@@ -534,6 +543,7 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         routeName: 'settings-elevenlabs-my-agent',
         subgroup: 'ai_integrations',
         aliases: ['My voice agent', 'Own ElevenLabs agent', 'Partner voice agent'],
+        partnerOnly: true,
       },
       // Administracion de IA (contrato ai-admin/1).
       {

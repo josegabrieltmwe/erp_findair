@@ -394,6 +394,15 @@ onBeforeUnmount(() => {
  * Recompute one supplement amount via /supplcalcola (legacy parity
  * with the "P" icon on spedy_form). Writes the result back into the
  * local row + flags it as manual-locked so the user sees the override.
+ *
+ * N26 (collaudo 16/11): escribia en `original.prezzo`, un alias que ni la
+ * tabla (pinta fix_priceC/fix_priceF) ni el guardado (Shipment_Supplements_
+ * Controller lee fix_priceC/fix_priceF) usan -- resto de antes de separar el
+ * precio en dos columnas. Ademas nunca llamaba a saveSupplements, as; que
+ * aunque escribiera en el campo correcto no se habria persistido. El boton
+ * calculaba bien (se veia en el toast) pero la columna "Prezzo cliente"
+ * seguia vacia siempre. calculate() sin tercer argumento siempre cotiza el
+ * lado cliente (quale='C'), por eso aqui se escribe fix_priceC.
  */
 async function recalc(item: ShipmentSupplement): Promise<void> {
   if (!store.id) return;
@@ -406,13 +415,13 @@ async function recalc(item: ShipmentSupplement): Promise<void> {
     if (r.success && typeof r.prezzo === "number") {
       const original = localList.value.find((s) => s.id === item.id);
       if (original) {
-        original.prezzo = String(r.prezzo);
-        original.prezzo_lk = "N";
+        original.fix_priceC = String(r.prezzo);
       }
       toasts.push(
         "success",
         `${item.descrizione || t("shipment.modals.supplements.supplement")}: ${formatMoney(r.prezzo)}`,
       );
+      await store.saveSupplements(localList.value);
     } else {
       toasts.push(
         "error",
