@@ -108,6 +108,10 @@
       },
       "popup_blocked": "Allow pop-ups to view the invoice",
       "doc_warnings": "Document with warnings",
+      "credit_notes": {
+        "title": "Credit notes",
+        "of_invoice": "Credit note of invoice"
+      },
       "credit": {
         "motivo": "Reason",
         "note": "Note",

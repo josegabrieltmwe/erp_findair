@@ -108,6 +108,10 @@
       },
       "popup_blocked": "Pop-ups zulassen, um die Rechnung anzuzeigen",
       "doc_warnings": "Dokument mit Hinweisen",
+      "credit_notes": {
+        "title": "Gutschriften",
+        "of_invoice": "Gutschrift zur Rechnung"
+      },
       "credit": {
         "motivo": "Grund",
         "note": "Notiz",

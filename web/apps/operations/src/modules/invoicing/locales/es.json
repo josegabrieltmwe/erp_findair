@@ -108,6 +108,10 @@
       },
       "popup_blocked": "Permite las ventanas emergentes para ver la factura",
       "doc_warnings": "Documento con avisos",
+      "credit_notes": {
+        "title": "Notas de crédito",
+        "of_invoice": "Nota de crédito de la factura"
+      },
       "credit": {
         "motivo": "Motivo",
         "note": "Nota",
