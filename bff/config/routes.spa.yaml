@@ -6280,7 +6280,9 @@ routes:
       forward_query: '*'
     limits:
       body: 1m
-      timeout: 30
+      # 45 s: con options.tempi_certi=true el API añade +4-18 s (DHL/FedEx/UPS/TNT
+      # en paralelo) al cálculo normal; 30 s no dejaba margen.
+      timeout: 45
   -
     id: post.unified_rate_fornitore
     method: POST

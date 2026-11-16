@@ -209,7 +209,19 @@
                       }}</span>
                     </div>
                   </td>
-                  <td class="forn-td--del">{{ formatDelivery(svc) }}</td>
+                  <td class="forn-td--del">
+                    {{ formatDelivery(svc) }}
+                    <v-chip
+                      v-if="deliveryKind(svc)"
+                      size="x-small"
+                      variant="tonal"
+                      :color="deliveryKind(svc) === 'real' ? 'success' : 'grey'"
+                      class="ms-1"
+                      :title="deliveryHint(svc)"
+                      data-testid="delivery-kind"
+                      >{{ deliveryLabel(svc) }}</v-chip
+                    >
+                  </td>
                   <td class="forn-td--num text-right text-medium-emphasis">
                     {{
                       fmt(svc.cost - (svc.fuel_surcharge ?? 0), svc.currency)
@@ -292,7 +304,21 @@
                     </div>
                   </div>
                 </td>
-                <td class="forn-td--del">{{ formatDelivery(row.svc) }}</td>
+                <td class="forn-td--del">
+                  {{ formatDelivery(row.svc) }}
+                  <v-chip
+                    v-if="deliveryKind(row.svc)"
+                    size="x-small"
+                    variant="tonal"
+                    :color="
+                      deliveryKind(row.svc) === 'real' ? 'success' : 'grey'
+                    "
+                    class="ms-1"
+                    :title="deliveryHint(row.svc)"
+                    data-testid="delivery-kind"
+                    >{{ deliveryLabel(row.svc) }}</v-chip
+                  >
+                </td>
                 <td class="forn-td--num text-right text-medium-emphasis">
                   {{
                     fmt(
@@ -423,7 +449,21 @@
                         cleanDescription(svc.description)
                       }}</span>
                     </td>
-                    <td class="forn-td--del">{{ formatDelivery(svc) }}</td>
+                    <td class="forn-td--del">
+                      {{ formatDelivery(svc) }}
+                      <v-chip
+                        v-if="deliveryKind(svc)"
+                        size="x-small"
+                        variant="tonal"
+                        :color="
+                          deliveryKind(svc) === 'real' ? 'success' : 'grey'
+                        "
+                        class="ms-1"
+                        :title="deliveryHint(svc)"
+                        data-testid="delivery-kind"
+                        >{{ deliveryLabel(svc) }}</v-chip
+                      >
+                    </td>
                     <td class="forn-td--num text-right text-medium-emphasis">
                       {{
                         fmt(svc.cost - (svc.fuel_surcharge ?? 0), svc.currency)
@@ -820,6 +860,27 @@ function formatDelivery(
     if (tm !== "00:00" && tm !== "23:59") label += ` · ${tm}`;
   }
   return label;
+}
+
+/** Fecha real (respuesta del courier) o estimada (cálculo interno); null si no hay fecha. */
+function deliveryKind(
+  svc: FornitoreServiceOption["services"][number],
+): "real" | "estimated" | null {
+  const d = svc.delivery_date;
+  if (!d || d === "0000-00-00") return null;
+  return svc.is_estimated_delivery ? "estimated" : "real";
+}
+function deliveryLabel(
+  svc: FornitoreServiceOption["services"][number],
+): string {
+  return deliveryKind(svc) === "estimated"
+    ? t("shipment.service.delivery_estimated")
+    : t("shipment.service.delivery_real");
+}
+function deliveryHint(svc: FornitoreServiceOption["services"][number]): string {
+  return deliveryKind(svc) === "estimated"
+    ? t("shipment.service.delivery_estimated_hint")
+    : t("shipment.service.delivery_real_hint");
 }
 
 function svcKey(

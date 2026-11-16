@@ -29,6 +29,57 @@ export interface RateDebugTrace {
   total_steps?: number | null;
 }
 
+/** Opción de «tiempos garantizados» (consulta en vivo al courier). Audiencia admin. */
+export interface TempiCertiOption {
+  /** servizi_fornitori.id del servicio exacto del courier. */
+  idsrvfrnt: number;
+  /** 3 DHL, 5 FedEx, 7 UPS, 8 TNT. */
+  fornitore_id: number;
+  courier: string;
+  /** YYYY-MM-DD */
+  datacr: string;
+  /** HH:MM */
+  orac: string;
+  /** Coste del courier sin fuel. */
+  prezzo: number;
+  /** Fuel del courier. */
+  prezzof: number;
+  pricing_mode?: "listino" | "margine" | string;
+  /** Precio total (con fuel) de esta opción para el cliente. */
+  price_total: number;
+}
+
+export interface TempiCertiVariant extends TempiCertiOption {
+  /** "19/11 - 18:00" */
+  datatxt: string;
+  /** "-1 day" | "-2 days" | "Same day" */
+  datadtxt: string;
+  zona?: string;
+  price_delta_applies?: boolean;
+  delta?: number;
+  /** Informativo para el operador, p. ej. "+14.20 EUR". */
+  sctmin?: string;
+  idservmin?: number;
+}
+
+export interface TempiCerti {
+  cheapest: TempiCertiOption;
+  variants: TempiCertiVariant[];
+}
+
+/** Resumen de la consulta en vivo a los couriers (`meta.live_courier`). */
+export interface LiveCourierSummary {
+  requested?: boolean;
+  enabled?: boolean;
+  collected?: boolean;
+  success?: boolean;
+  wait_ms?: number;
+  from_cache?: boolean;
+  couriers?: string[];
+  errors?: unknown;
+  error?: string | null;
+}
+
 export interface ClientServiceOption {
   service_id: number;
   description: string;
@@ -41,7 +92,10 @@ export interface ClientServiceOption {
   id_servizio_fornitore?: number;
   delivery_date?: string | null;
   priority?: boolean;
+  is_priority?: boolean;
   zone?: string;
+  /** Solo con options.tempi_certi=true y si el servicio tiene variantes. */
+  tempi_certi?: TempiCerti;
   /** Step-by-step pricing derivation; only present when listed with debug=true. */
   debug_trace?: RateDebugTrace;
   [k: string]: unknown;
@@ -85,7 +139,10 @@ export interface ListClientResponse {
     services: ClientServiceOption[];
     total_services: number;
     cached?: boolean;
+    meta?: { live_courier?: LiveCourierSummary; [k: string]: unknown };
   };
+  /** Algunos controllers dejan el resumen live en la raíz. */
+  meta?: { live_courier?: LiveCourierSummary; [k: string]: unknown };
   error?: string;
 }
 
@@ -136,6 +193,8 @@ export const serviceSelectionService = {
       force_recalculate?: boolean;
       use_live_rates?: boolean;
       debug?: boolean;
+      /** Acción explícita del operador: pide servicios prioritarios y variantes. */
+      tempi_certi?: boolean;
     } = {},
   ): Promise<ListClientResponse> {
     return http<ListClientResponse>(
@@ -152,6 +211,9 @@ export const serviceSelectionService = {
               opts.force_recalculate || opts.debug ? true : false,
             use_live_rates: opts.use_live_rates ?? true,
             debug: opts.debug ?? false,
+            // Solo se envía cuando se pide: sin la opción la petición es
+            // idéntica a la de siempre (y comparte caché de servidor).
+            ...(opts.tempi_certi ? { tempi_certi: true } : {}),
           },
         },
       },

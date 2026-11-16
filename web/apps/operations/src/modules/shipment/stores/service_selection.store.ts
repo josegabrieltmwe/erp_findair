@@ -4,6 +4,7 @@ import {
   serviceSelectionService,
   type ClientServiceOption,
   type FornitoreServiceOption,
+  type LiveCourierSummary,
   type RateDebugTrace,
   type SupplierChangeInfo,
 } from "@shipment/services/service_selection.service";
@@ -41,28 +42,74 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
   const shipmentStore = useShipmentStore();
   const toasts = useToastStore();
 
+  // «Tiempos garantizados» (options.tempi_certi): acción EXPLÍCITA del operador
+  // en cada búsqueda. Nunca se activa por defecto ni persiste: cualquier carga
+  // normal (apertura del modal, cambio de envío, reset) la desactiva.
+  const tempiCertiActive = ref(false);
+  const tempiCertiError = ref<string | null>(null);
+  const liveCourier = ref<LiveCourierSummary | null>(null);
+  /** Clave de lo que contiene `clientServices` (envío + con/sin tiempos garantizados). */
+  const clientListKey = ref<string | null>(null);
+  // Descarta respuestas obsoletas (p. ej. la lenta de tiempos garantizados que
+  // llega después de volver a la lista normal o de cambiar de envío).
+  let clientSeq = 0;
+
   async function loadClient(
     shipment_id: number,
     includeUnavailable = false,
+    tempiCerti = false,
   ): Promise<void> {
+    const seq = ++clientSeq;
     loadingClient.value = true;
     error.value = null;
+    tempiCertiError.value = null;
+    if (!tempiCerti) {
+      tempiCertiActive.value = false;
+      liveCourier.value = null;
+    }
     try {
       const r = await serviceSelectionService.listClient(shipment_id, {
         include_unavailable: includeUnavailable,
+        tempi_certi: tempiCerti,
       });
+      if (seq !== clientSeq) return;
       if (r.success && r.data) {
         clientServices.value = r.data.services;
+        clientListKey.value = `${shipment_id}:${tempiCerti ? "tc" : "std"}`;
+        tempiCertiActive.value = tempiCerti;
+        liveCourier.value = tempiCerti
+          ? (r.data.meta?.live_courier ?? r.meta?.live_courier ?? null)
+          : null;
+      } else if (tempiCerti) {
+        // Se mantiene la lista anterior: el fallo solo afecta a la opción.
+        tempiCertiActive.value = false;
+        tempiCertiError.value = r.error ?? "tempi_certi_failed";
       } else {
         error.value = r.error ?? "Failed to load client services";
         clientServices.value = [];
+        clientListKey.value = null;
       }
     } catch (e) {
-      error.value = (e as Error).message;
-      clientServices.value = [];
+      if (seq !== clientSeq) return;
+      if (tempiCerti) {
+        tempiCertiActive.value = false;
+        tempiCertiError.value = (e as Error).message || "tempi_certi_failed";
+      } else {
+        error.value = (e as Error).message;
+        clientServices.value = [];
+        clientListKey.value = null;
+      }
     } finally {
-      loadingClient.value = false;
+      if (seq === clientSeq) loadingClient.value = false;
     }
+  }
+
+  /** Pide la lista con «tiempos garantizados» (mantiene la anterior hasta que llegue). */
+  function loadClientTempiCerti(
+    shipment_id: number,
+    includeUnavailable = false,
+  ): Promise<void> {
+    return loadClient(shipment_id, includeUnavailable, true);
   }
 
   async function loadFornitore(
@@ -236,6 +283,15 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     }
   }
 
+  /** Apaga «tiempos garantizados» sin tocar la lista (cierre del modal). */
+  function resetTempiCerti(): void {
+    clientSeq++;
+    loadingClient.value = false;
+    tempiCertiActive.value = false;
+    tempiCertiError.value = null;
+    liveCourier.value = null;
+  }
+
   /** El operador ya revisó el coste tras el cambio de proveedor: descarta el aviso. */
   function dismissCostReview(): void {
     costReviewNotice.value = null;
@@ -246,6 +302,12 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     fornitoreServices.value = [];
     error.value = null;
     costReviewNotice.value = null;
+    clientSeq++; // invalida cualquier petición en vuelo
+    loadingClient.value = false;
+    tempiCertiActive.value = false;
+    tempiCertiError.value = null;
+    liveCourier.value = null;
+    clientListKey.value = null;
   }
 
   // ─── Price-derivation trace (legacy DebugPrezzo) ──────────────────────────
@@ -327,7 +389,13 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     selecting,
     error,
     costReviewNotice,
+    tempiCertiActive,
+    tempiCertiError,
+    liveCourier,
+    clientListKey,
     loadClient,
+    loadClientTempiCerti,
+    resetTempiCerti,
     loadFornitore,
     selectAndCascade,
     assignFornitoreService,

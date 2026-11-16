@@ -42,8 +42,82 @@
         />
       </div>
 
+      <!-- «Mostrar tiempos garantizados» (legacy snpri): acción explícita en
+           cada búsqueda; no está activa por defecto ni persiste. -->
+      <div class="svc-tc-bar" data-testid="tc-bar">
+        <template v-if="store.tempiCertiActive">
+          <v-chip
+            size="small"
+            color="primary"
+            variant="tonal"
+            prepend-icon="mdi-clock-check-outline"
+            data-testid="tc-active"
+          >
+            {{ t("shipment.service.tempi_certi.active") }}
+          </v-chip>
+          <v-btn
+            variant="text"
+            size="small"
+            :disabled="store.loadingClient"
+            data-testid="tc-back"
+            @click="onBackToNormal"
+          >
+            {{ t("shipment.service.tempi_certi.back") }}
+          </v-btn>
+        </template>
+        <v-btn
+          v-else
+          variant="text"
+          size="small"
+          color="primary"
+          prepend-icon="mdi-clock-fast"
+          :disabled="store.loadingClient"
+          :title="t('shipment.service.tempi_certi.hint')"
+          data-testid="tc-show"
+          @click="onShowTempiCerti"
+        >
+          {{ t("shipment.service.tempi_certi.show") }}
+        </v-btn>
+        <span
+          v-if="tempiLoading"
+          class="text-caption text-medium-emphasis"
+          data-testid="tc-loading"
+        >
+          {{ t("shipment.service.tempi_certi.loading") }}
+        </span>
+      </div>
+      <v-progress-linear
+        v-if="tempiLoading"
+        indeterminate
+        height="2"
+        data-testid="tc-progress"
+      />
+      <v-alert
+        v-if="store.tempiCertiError"
+        type="warning"
+        density="compact"
+        variant="tonal"
+        class="mt-2"
+        data-testid="tc-error"
+      >
+        {{ t("shipment.service.tempi_certi.error") }}
+      </v-alert>
+      <v-alert
+        v-if="liveFailed"
+        type="info"
+        density="compact"
+        variant="tonal"
+        class="mt-2"
+        data-testid="tc-live-failed"
+      >
+        {{ t("shipment.service.tempi_certi.live_failed") }}
+      </v-alert>
+
       <div class="svc-modal__content">
-        <v-skeleton-loader v-if="store.loadingClient" type="table-row@6" />
+        <v-skeleton-loader
+          v-if="store.loadingClient && !tempiLoading"
+          type="table-row@6"
+        />
 
         <v-alert
           v-else-if="store.error"
@@ -91,87 +165,168 @@
               </tr>
             </thead>
             <tbody>
-              <tr
+              <template
                 v-for="s in availableRows"
                 :key="`${s.service_id}-${s.fornitore_id ?? 0}`"
-                class="svc-row svc-row--avail"
-                :class="{
-                  'svc-row--current': isCurrent(s),
-                  'svc-row--loading':
-                    store.selecting && selectedId === s.service_id,
-                }"
-                @click="onPick(s)"
               >
-                <td class="svc-td--svc">
-                  <div class="d-flex align-center">
-                    <v-icon
-                      v-if="s.priority"
-                      icon="mdi-star-circle"
-                      size="14"
-                      color="amber-darken-2"
-                      class="me-1"
-                      :title="t('shipment.service.priority')"
-                    />
-                    <span class="svc-name">{{
-                      cleanDescription(s.description)
-                    }}</span>
-                    <v-chip
-                      v-if="isCurrent(s)"
-                      size="x-small"
-                      color="primary"
-                      variant="tonal"
-                      class="ms-2"
+                <tr
+                  class="svc-row svc-row--avail"
+                  :class="{
+                    'svc-row--current': isCurrent(s),
+                    'svc-row--loading':
+                      store.selecting && selectedId === s.service_id,
+                  }"
+                  @click="onPick(s)"
+                >
+                  <td class="svc-td--svc">
+                    <div class="d-flex align-center">
+                      <v-icon
+                        v-if="s.priority"
+                        icon="mdi-star-circle"
+                        size="14"
+                        color="amber-darken-2"
+                        class="me-1"
+                        :title="t('shipment.service.priority')"
+                      />
+                      <span class="svc-name">{{
+                        cleanDescription(s.description)
+                      }}</span>
+                      <v-chip
+                        v-if="isPriority(s)"
+                        size="x-small"
+                        color="amber-darken-2"
+                        variant="tonal"
+                        class="ms-2"
+                        data-testid="priority-badge"
+                      >
+                        {{ t("shipment.service.priority_badge") }}
+                      </v-chip>
+                      <v-chip
+                        v-if="isCurrent(s)"
+                        size="x-small"
+                        color="primary"
+                        variant="tonal"
+                        class="ms-2"
+                      >
+                        <v-icon icon="mdi-check" size="12" start />
+                        {{ t("shipment.service.current") }}
+                      </v-chip>
+                    </div>
+                  </td>
+                  <td class="svc-td--del">
+                    {{ s.delivery_date ?? "—" }}
+                    <div
+                      v-if="s.tempi_certi?.cheapest"
+                      class="text-caption text-medium-emphasis"
+                      data-testid="tc-cheapest"
+                      :title="t('shipment.service.tempi_certi.cheapest')"
                     >
-                      <v-icon icon="mdi-check" size="12" start />
-                      {{ t("shipment.service.current") }}
+                      {{ formatOption(s.tempi_certi.cheapest) }}
+                    </div>
+                  </td>
+                  <td class="svc-td--forn">
+                    <v-chip
+                      v-if="s.fornitore_name || s.fornitore_id"
+                      size="x-small"
+                      variant="tonal"
+                    >
+                      {{ s.fornitore_name || `#${s.fornitore_id}` }}
                     </v-chip>
-                  </div>
-                </td>
-                <td class="svc-td--del">{{ s.delivery_date ?? "—" }}</td>
-                <td class="svc-td--forn">
-                  <v-chip
-                    v-if="s.fornitore_name || s.fornitore_id"
-                    size="x-small"
-                    variant="tonal"
-                  >
-                    {{ s.fornitore_name || `#${s.fornitore_id}` }}
-                  </v-chip>
-                  <span v-else class="text-medium-emphasis">—</span>
-                </td>
-                <td class="svc-td--num text-right text-medium-emphasis">
-                  {{
-                    fmt((s.price ?? 0) - (s.fuel_surcharge ?? 0), s.currency)
-                  }}
-                </td>
-                <td class="svc-td--num text-right text-medium-emphasis">
-                  {{ fmt(s.fuel_surcharge, s.currency) }}
-                </td>
-                <td class="svc-td--tot text-right">
-                  <span class="svc-total">{{ fmt(s.price, s.currency) }}</span>
-                  <!-- Explain this price (legacy DebugPrezzo): step-by-step trace. -->
-                  <v-btn
-                    icon="mdi-calculator-variant-outline"
-                    variant="text"
-                    size="x-small"
-                    density="comfortable"
-                    class="ms-1 svc-explain"
-                    :title="t('shipment.service.explain_price')"
-                    @click.stop="onExplain(s)"
-                  />
-                  <v-icon
-                    v-if="store.selecting && selectedId === s.service_id"
-                    icon="mdi-loading"
-                    size="14"
-                    class="ms-1 svc-spin"
-                  />
-                  <v-icon
-                    v-else
-                    icon="mdi-chevron-right"
-                    size="16"
-                    class="ms-1 svc-arrow"
-                  />
-                </td>
-              </tr>
+                    <span v-else class="text-medium-emphasis">—</span>
+                  </td>
+                  <td class="svc-td--num text-right text-medium-emphasis">
+                    {{
+                      fmt((s.price ?? 0) - (s.fuel_surcharge ?? 0), s.currency)
+                    }}
+                  </td>
+                  <td class="svc-td--num text-right text-medium-emphasis">
+                    {{ fmt(s.fuel_surcharge, s.currency) }}
+                  </td>
+                  <td class="svc-td--tot text-right">
+                    <span class="svc-total">{{
+                      fmt(s.price, s.currency)
+                    }}</span>
+                    <!-- Explain this price (legacy DebugPrezzo): step-by-step trace. -->
+                    <v-btn
+                      icon="mdi-calculator-variant-outline"
+                      variant="text"
+                      size="x-small"
+                      density="comfortable"
+                      class="ms-1 svc-explain"
+                      :title="t('shipment.service.explain_price')"
+                      @click.stop="onExplain(s)"
+                    />
+                    <v-icon
+                      v-if="store.selecting && selectedId === s.service_id"
+                      icon="mdi-loading"
+                      size="14"
+                      class="ms-1 svc-spin"
+                    />
+                    <v-icon
+                      v-else
+                      icon="mdi-chevron-right"
+                      size="16"
+                      class="ms-1 svc-arrow"
+                    />
+                  </td>
+                </tr>
+                <!-- Variantes «llega antes» (tempi_certi), bajo su servicio. -->
+                <tr
+                  v-for="(v, vi) in s.tempi_certi?.variants ?? []"
+                  :key="`v-${s.service_id}-${v.idsrvfrnt}-${vi}`"
+                  class="svc-row svc-row--variant"
+                  :class="{ 'svc-row--pickable': canPickVariant(s) }"
+                  :title="
+                    canPickVariant(s)
+                      ? t('shipment.service.tempi_certi.pick_hint')
+                      : t('shipment.service.tempi_certi.pick_service_first')
+                  "
+                  data-testid="tc-variant"
+                  @click="onPickVariant(s, v)"
+                >
+                  <td class="svc-td--svc svc-td--variant">
+                    <v-icon icon="mdi-subdirectory-arrow-right" size="14" />
+                    <v-chip
+                      size="x-small"
+                      color="success"
+                      variant="tonal"
+                      class="ms-1"
+                      data-testid="tc-gain"
+                    >
+                      {{ gainLabel(v.datadtxt) }}
+                    </v-chip>
+                    <div class="text-caption text-medium-emphasis">
+                      <v-chip size="x-small" variant="outlined" class="me-1">{{
+                        courierLabel(v)
+                      }}</v-chip>
+                      {{
+                        t("shipment.service.tempi_certi.courier_cost", {
+                          cost: fmt(v.prezzo, s.currency),
+                          fuel: fmt(v.prezzof, s.currency),
+                        })
+                      }}
+                      <span v-if="v.sctmin"> · {{ v.sctmin }}</span>
+                    </div>
+                  </td>
+                  <td class="svc-td--del">
+                    {{ v.datatxt || formatOption(v) }}
+                  </td>
+                  <td class="svc-td--forn" />
+                  <td class="svc-td--num" />
+                  <td class="svc-td--num" />
+                  <td class="svc-td--tot text-right">
+                    <span class="svc-total" data-testid="tc-variant-total">{{
+                      fmt(v.price_total, s.currency)
+                    }}</span>
+                    <v-icon
+                      v-if="canPickVariant(s)"
+                      icon="mdi-chevron-right"
+                      size="16"
+                      class="ms-1 svc-arrow"
+                    />
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </v-table>
 
@@ -333,6 +488,47 @@
     </template>
   </AppDialog>
 
+  <!-- Confirm assigning the courier of a «tempi certi» variant (setService,
+       same path as clicking a row of the fornitore modal). -->
+  <AppDialog
+    :open="variantConfirmOpen"
+    :title="t('shipment.service.tempi_certi.confirm_title')"
+    icon="mdi-alert-outline"
+    icon-color="warning"
+    size="confirm"
+    @close="variantConfirmOpen = false"
+  >
+    <p v-if="pendingVariant" class="text-body-2" data-testid="tc-confirm-body">
+      {{
+        t("shipment.service.tempi_certi.confirm_body", {
+          courier: courierLabel(pendingVariant),
+          id: pendingVariant.idsrvfrnt,
+          cost: fmt(pendingVariant.prezzo),
+          fuel: fmt(pendingVariant.prezzof),
+          date: pendingVariant.datatxt || formatOption(pendingVariant),
+        })
+      }}
+    </p>
+    <template #actions>
+      <v-btn
+        variant="text"
+        :disabled="store.selecting"
+        @click="variantConfirmOpen = false"
+        >{{ t("common.cancel") }}</v-btn
+      >
+      <v-spacer />
+      <v-btn
+        color="warning"
+        variant="flat"
+        :loading="store.selecting"
+        data-testid="tc-confirm-ok"
+        @click="confirmPickVariant"
+      >
+        {{ t("shipment.service.tempi_certi.confirm_action") }}
+      </v-btn>
+    </template>
+  </AppDialog>
+
   <!-- Price derivation trace panel (legacy DebugPrezzo). -->
   <RateDebugPanel
     v-model="store.debugOpen"
@@ -350,7 +546,11 @@ import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useServiceSelectionStore } from "@shipment/stores/service_selection.store";
-import type { ClientServiceOption } from "@shipment/services/service_selection.service";
+import type {
+  ClientServiceOption,
+  TempiCertiOption,
+  TempiCertiVariant,
+} from "@shipment/services/service_selection.service";
 import RateDebugPanel from "./RateDebugPanel.vue";
 import { formatMoney } from "@shipment/utils/currency";
 
@@ -398,6 +598,102 @@ const availableCount = computed<number>(() => availableRows.value.length);
 async function load(): Promise<void> {
   if (!id.value) return;
   await store.loadClient(Number(id.value), true);
+}
+
+// ─── «Tiempos garantizados» (options.tempi_certi) ─────────────────────────
+const tempiLoading = ref(false);
+
+/** Vuelve a pedir la lista con la opción; la anterior sigue visible hasta que llegue. */
+async function onShowTempiCerti(): Promise<void> {
+  if (!id.value || store.loadingClient) return;
+  tempiLoading.value = true;
+  try {
+    await store.loadClientTempiCerti(Number(id.value), true);
+  } finally {
+    tempiLoading.value = false;
+  }
+}
+
+async function onBackToNormal(): Promise<void> {
+  await load();
+}
+
+/** Los couriers no respondieron: la lista muestra solo tiempos estimados. */
+const liveFailed = computed<boolean>(
+  () =>
+    store.tempiCertiActive &&
+    store.liveCourier != null &&
+    store.liveCourier.success === false,
+);
+
+function isPriority(s: ClientServiceOption): boolean {
+  return !!(s.priority || s.is_priority);
+}
+
+const COURIER_NAMES: Record<number, string> = {
+  3: "DHL",
+  5: "FedEx",
+  7: "UPS",
+  8: "TNT",
+};
+function courierLabel(o: TempiCertiOption): string {
+  return (
+    COURIER_NAMES[o.fornitore_id] ??
+    (o.courier || `#${o.fornitore_id}`).toUpperCase()
+  );
+}
+
+/** "YYYY-MM-DD" + "HH:MM" → "DD/MM - HH:MM". */
+function formatOption(o: TempiCertiOption): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(o.datacr ?? "");
+  if (!m) return "—";
+  return `${m[3]}/${m[2]}${o.orac ? ` - ${o.orac}` : ""}`;
+}
+
+/** "-1 day" / "-2 days" / "Same day" → texto i18n; si no se reconoce, el crudo. */
+function gainLabel(raw?: string): string {
+  const txt = String(raw ?? "").trim();
+  if (/^same day$/i.test(txt))
+    return t("shipment.service.tempi_certi.same_day");
+  const m = /^-?(\d+)\s*days?$/i.exec(txt);
+  if (m) {
+    return t("shipment.service.tempi_certi.days_earlier", Number(m[1]));
+  }
+  return txt;
+}
+
+// Elegir una variante = asignar su courier con el mismo camino que el modal de
+// fornitori (api_shipment_set_service). Solo si el servicio padre ya es el del
+// envío: setService no cambia el servicio comercial.
+function canPickVariant(s: ClientServiceOption): boolean {
+  return isCurrent(s) && !store.selecting;
+}
+
+const variantConfirmOpen = ref(false);
+const pendingVariant = ref<TempiCertiVariant | null>(null);
+
+function onPickVariant(s: ClientServiceOption, v: TempiCertiVariant): void {
+  if (!id.value || !canPickVariant(s)) return;
+  pendingVariant.value = v;
+  variantConfirmOpen.value = true;
+}
+
+async function confirmPickVariant(): Promise<void> {
+  const v = pendingVariant.value;
+  if (!v || !id.value) return;
+  const ok = await store.assignFornitoreService(
+    Number(id.value),
+    v.fornitore_id,
+    {
+      id_servizio_fornitore: v.idsrvfrnt,
+      cost: v.prezzo,
+      fuel_surcharge: v.prezzof,
+      zone_code: v.zona,
+    },
+  );
+  variantConfirmOpen.value = false;
+  pendingVariant.value = null;
+  if (ok) emit("update:open", false);
 }
 
 /** Open the price-derivation trace for a service (legacy DebugPrezzo). */
@@ -450,6 +746,8 @@ function fmt(v?: number, currency = "EUR"): string {
   return formatMoney(v, currency);
 }
 
+// La opción no persiste: cada apertura, cada cierre y cada cambio de envío
+// vuelven a la lista normal (equivalente a CheckModif del legacy).
 watch(
   () => props.open,
   (v) => {
@@ -457,9 +755,17 @@ watch(
       query.value = "";
       unavailableOpen.value = false;
       void load();
+    } else {
+      tempiLoading.value = false;
+      store.resetTempiCerti();
     }
   },
 );
+
+watch(id, () => {
+  store.reset();
+  if (props.open) void load();
+});
 </script>
 
 <style scoped>
@@ -679,6 +985,25 @@ watch(
 
 .svc-table--unavail {
   margin-top: 4px;
+}
+
+.svc-tc-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 4px;
+}
+.svc-row--variant {
+  background: rgba(var(--v-theme-on-surface), 0.02);
+}
+.svc-row--pickable {
+  cursor: pointer;
+}
+.svc-row--pickable:hover {
+  background: rgba(var(--v-theme-primary), 0.06);
+}
+.svc-td--variant {
+  padding-left: 24px !important;
 }
 
 .svc-empty-search {
