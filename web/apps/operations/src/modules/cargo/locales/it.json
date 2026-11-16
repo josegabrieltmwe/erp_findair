@@ -1925,7 +1925,7 @@
       "send_failed": "Invio non riuscito"
     },
     "audit": {
-      "title": "Audit trail",
+      "title": "Registro delle modifiche",
       "filter_field": "Filtra per campo",
       "no_matches": "Nessuna voce corrisponde al filtro.",
       "no_changes": "Nessuna modifica registrata per questo cargo.",

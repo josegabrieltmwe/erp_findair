@@ -1202,7 +1202,7 @@
       "no_data": "Nessun dato di prezzo disponibile — apri il supplemento e ricalcola."
     },
     "audit": {
-      "title": "Audit trail",
+      "title": "Registro delle modifiche",
       "reload": "Ricarica",
       "filter_by_field": "Filtra per campo",
       "no_entries": "Nessuna voce di audit"
@@ -1290,7 +1290,7 @@
     },
     "layout": {
       "tracking_events": "Eventi di tracking",
-      "audit_trail": "Audit trail"
+      "audit_trail": "Registro delle modifiche"
     },
     "detail_page": {
       "unable_load": "Impossibile caricare la spedizione",
