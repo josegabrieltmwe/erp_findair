@@ -81,11 +81,18 @@ const note = useFieldBinding("note", "");
 const noteOperative = useFieldBinding("note_operative", "");
 const noteXdestin = useFieldBinding("note_x_destin", "");
 
+// La columna `note` es la nota para el CORRIER (Express_Booking_Service la
+// guarda ahí; no es interna), y `note_operative` es la nota interna de
+// staff, no visible al cliente (Shipment_Management_Service::
+// append_internal_note). Las etiquetas estaban cruzadas: "note" se
+// mostraba como "Nota interna" y "note_operative" como "Nota operativa",
+// así que la nota que el cliente escribe para el transportista aparecía
+// bajo el título "Nota interna" (colaudo 16/11, punto 2).
 const noteFields = computed(() => [
-  { key: "note", label: t("shipment.modals.note.internal"), binding: note },
+  { key: "note", label: t("shipment.modals.note.courier"), binding: note },
   {
     key: "note_operative",
-    label: t("shipment.modals.note.operative"),
+    label: t("shipment.modals.note.internal"),
     binding: noteOperative,
   },
   {

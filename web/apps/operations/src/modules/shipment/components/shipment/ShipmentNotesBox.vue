@@ -13,7 +13,7 @@
         <v-col cols="12" md="6">
           <v-textarea
             v-model="note.local"
-            :label="t('shipment.modals.note.internal')"
+            :label="t('shipment.modals.note.courier')"
             rows="3"
             auto-grow
             @blur="note.commit"
@@ -22,7 +22,7 @@
         <v-col cols="12" md="6">
           <v-textarea
             v-model="noteOperative.local"
-            :label="t('shipment.modals.note.operative')"
+            :label="t('shipment.modals.note.internal')"
             rows="3"
             auto-grow
             @blur="noteOperative.commit"

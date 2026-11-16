@@ -711,8 +711,8 @@
       "note": {
         "title": "Notas",
         "box_title": "Notas",
+        "courier": "Nota para el transportista",
         "internal": "Nota interna",
-        "operative": "Nota operativa",
         "destination": "Nota para el destino"
       },
       "partners": {

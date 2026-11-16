@@ -711,8 +711,8 @@
       "note": {
         "title": "Notities",
         "box_title": "Notities",
+        "courier": "Notitie voor de vervoerder",
         "internal": "Interne notitie",
-        "operative": "Operationele notitie",
         "destination": "Notitie voor bestemming"
       },
       "partners": {
