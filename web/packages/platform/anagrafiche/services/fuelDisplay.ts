@@ -45,6 +45,8 @@ export interface FuelBreakdownParts {
   servizio: string;
   delta: string;
   efectivo: string;
+  /** Firma de índice: los parámetros de interpolación de `t()` exigen Record<string, unknown>. */
+  [key: string]: unknown;
 }
 
 export function fuelBreakdownParts(row: FuelDisplayRow): FuelBreakdownParts {

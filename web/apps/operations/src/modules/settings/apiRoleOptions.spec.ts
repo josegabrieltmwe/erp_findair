@@ -4,7 +4,8 @@ import type { ApiRoleRef, ApiRoleState } from '@shared/anagrafiche/services/cont
 
 const ref = (id: number, name: string, addon: boolean): ApiRoleRef => ({ id, name, display_name: name, addon });
 const state = (over: Partial<ApiRoleState>): ApiRoleState => ({
-  enabled: true, level: null, role_id: 1, role_name: 'findair_basic', addon_roles: [], grantable_roles: [], ...over,
+  enabled: true, level: null, role_id: 1, role_name: 'findair_basic', addon_roles: [], grantable_roles: [],
+  can_create_shipments: true, ...over,
 });
 
 describe('apiRoleOptions', () => {
