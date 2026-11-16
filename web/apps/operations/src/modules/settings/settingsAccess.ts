@@ -18,7 +18,9 @@ import { hasScope, type AccessSnapshot } from '@shared/composables/useAccess';
 
 // `margins:read` (módulo margenes_clientes) lo tienen solo tmwe_staff_portal/_impersonator, app_internal_erp(_staff) y el
 // aditivo partner_pricing («solo personal de partner; nunca clientes finales», rbac_seed.yml, 2026-11-06).
-export const STAFF_ONLY_SCOPES: ReadonlySet<string> = new Set(['config:read', 'suppliers:read', 'margins:read']);
+// `partner_agent:read` (N15, collaudo 16/11): solo partner_staff/partner_staff_ai_admin y los techos
+// app_internal_erp(_staff)/app_partner_erp lo llevan (rbac_seed.yml) — ningún rol de cliente final.
+export const STAFF_ONLY_SCOPES: ReadonlySet<string> = new Set(['config:read', 'suppliers:read', 'margins:read', 'partner_agent:read']);
 
 export const SETTINGS_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = {
   'settings-carrier-services': ['suppliers:read'],
@@ -34,6 +36,10 @@ export const SETTINGS_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> 
   'settings-site-notices': ['config:read'],
   // Clientes sin margen: Customers_Without_Margin (módulo margenes_clientes); el partner ve solo los suyos.
   'settings-customers-without-margin': ['margins:read'],
+  // Agente de voz propio del partner (N15): sin esta entrada, el personal real
+  // de un partner (no TMWE, sin suplantación) nunca veía la tarjeta en su propio
+  // hub de Ajustes aunque el backend sí le permitiera usar la pantalla.
+  'settings-elevenlabs-my-agent': ['partner_agent:read'],
 };
 
 export interface AccessContext {

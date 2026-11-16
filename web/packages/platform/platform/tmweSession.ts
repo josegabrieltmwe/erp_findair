@@ -22,6 +22,16 @@ export function isRealTmweUser(): boolean {
 }
 
 /**
+ * TMWE viendo como TMWE (sin suplantar a ningun partner ahora mismo). Para
+ * pantallas de autoservicio de partner (N15, collaudo 16/11): el backend las
+ * rechaza siempre a TMWE con su propia anagrafica, suplante o no es lo que
+ * decide si TMWE puede llegar a usarlas.
+ */
+export function isTmweWithoutImpersonation(): boolean {
+  return isRealTmweUser() && bootstrap()?.impersonating !== true;
+}
+
+/**
  * `view_mode` de los listados (api_courier_shipments / api_cargo_shipments).
  * `erp` = el personal TMWE ve toda su red; sin él el API filtra por la
  * anagrafica del usuario (b2b). Suplantando NO se envía: el operador quiere
