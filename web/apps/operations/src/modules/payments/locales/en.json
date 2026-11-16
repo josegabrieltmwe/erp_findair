@@ -168,7 +168,13 @@
       "type_BLOCCO": "Block",
       "action_compensated": "offset by a credit balance",
       "action_no_recipient": "no recipient",
-      "action_no_template": "no message template"
+      "action_no_template": "no message template",
+      "warning": {
+        "NO_TEMPLATE": "No {tipo} message template for partner {partner}",
+        "NO_RECIPIENT": "Client {client} ({rag_soc}) has no recipients for {tipo}",
+        "ACCOUNTING_CONTACTS_MISSING": "Client {client} has no accounting contacts: using the billing site's email",
+        "PEC_MISSING": "Client {client} requires a PEC, but the billing site has none"
+      }
     },
     "online": {
       "title": "Collect by card",

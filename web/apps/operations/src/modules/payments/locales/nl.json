@@ -168,7 +168,13 @@
       "type_BLOCCO": "Blokkade",
       "action_compensated": "verrekend met tegoed",
       "action_no_recipient": "geen ontvanger",
-      "action_no_template": "geen berichtsjabloon"
+      "action_no_template": "geen berichtsjabloon",
+      "warning": {
+        "NO_TEMPLATE": "Geen sjabloon voor {tipo} voor partner {partner}",
+        "NO_RECIPIENT": "Klant {client} ({rag_soc}) heeft geen ontvangers voor {tipo}",
+        "ACCOUNTING_CONTACTS_MISSING": "Klant {client} heeft geen contactpersonen voor boekhouding: het e-mailadres van de factuurvestiging wordt gebruikt",
+        "PEC_MISSING": "Klant {client} heeft een PEC nodig, maar de factuurvestiging heeft er geen"
+      }
     },
     "online": {
       "title": "Met kaart incasseren",

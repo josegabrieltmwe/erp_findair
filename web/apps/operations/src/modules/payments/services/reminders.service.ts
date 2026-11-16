@@ -52,10 +52,23 @@ export interface ReminderTotals {
   no_template?: number;
 }
 
+/**
+ * Aviso estructurado (code + parámetros) del backend — N60(b): antes era una frase ya construida en
+ * español (Dunning_Service.php), y ReminderPage.vue la volcaba literal sin traducir. El ERP ahora la
+ * traduce con `payments.reminders.warning.<code>` (ver reminderWarningText en este fichero).
+ */
+export interface ReminderWarning {
+  code: "NO_TEMPLATE" | "NO_RECIPIENT" | "ACCOUNTING_CONTACTS_MISSING" | "PEC_MISSING" | string;
+  tipo?: string;
+  partner?: number;
+  client?: number;
+  rag_soc?: string;
+}
+
 export interface ReminderResult {
   items: ReminderItem[];
   totals: ReminderTotals;
-  warnings: string[];
+  warnings: ReminderWarning[];
 }
 
 interface Envelope<T> {
@@ -107,6 +120,19 @@ export function groupByClient(items: ReminderItem[]): ClientGroup[] {
 
 export function sendableIds(groups: ClientGroup[]): number[] {
   return groups.filter((g) => g.sendable).map((g) => g.client_id);
+}
+
+/** Texto traducido de un aviso del backend (`payments.reminders.warning.<code>`). */
+export function reminderWarningText(
+  t: (key: string, params?: Record<string, unknown>) => string,
+  w: ReminderWarning,
+): string {
+  return t(`payments.reminders.warning.${w.code}`, {
+    tipo: w.tipo ?? "",
+    partner: w.partner ?? "",
+    client: w.client ?? "",
+    rag_soc: w.rag_soc ?? "",
+  });
 }
 
 /** Envío activo y con permiso; en prueba (DRY_RUN) el servidor no enviaría nada. */

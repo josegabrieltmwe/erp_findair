@@ -168,7 +168,13 @@
       "type_BLOCCO": "Blocco",
       "action_compensated": "compensato con credito",
       "action_no_recipient": "senza destinatario",
-      "action_no_template": "senza modello di messaggio"
+      "action_no_template": "senza modello di messaggio",
+      "warning": {
+        "NO_TEMPLATE": "Nessun modello di messaggio {tipo} per il partner {partner}",
+        "NO_RECIPIENT": "Cliente {client} ({rag_soc}) senza destinatari per {tipo}",
+        "ACCOUNTING_CONTACTS_MISSING": "Cliente {client} senza contatti di contabilità: si usa l'email della sede di fatturazione",
+        "PEC_MISSING": "Cliente {client} richiede una PEC, ma la sede di fatturazione non ne ha una"
+      }
     },
     "online": {
       "title": "Incassa con carta",

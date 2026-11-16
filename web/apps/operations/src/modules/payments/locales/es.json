@@ -168,7 +168,13 @@
       "type_BLOCCO": "Bloqueo",
       "action_compensated": "compensado con saldo a favor",
       "action_no_recipient": "sin destinatario",
-      "action_no_template": "sin plantilla de mensaje"
+      "action_no_template": "sin plantilla de mensaje",
+      "warning": {
+        "NO_TEMPLATE": "Sin plantilla de mensaje {tipo} para el partner {partner}",
+        "NO_RECIPIENT": "Cliente {client} ({rag_soc}) sin destinatarios para {tipo}",
+        "ACCOUNTING_CONTACTS_MISSING": "Cliente {client} sin contactos de contabilidad: se usa el email de la sede de facturación",
+        "PEC_MISSING": "Cliente {client} requiere PEC, pero la sede de facturación no tiene"
+      }
     },
     "online": {
       "title": "Cobrar con tarjeta",

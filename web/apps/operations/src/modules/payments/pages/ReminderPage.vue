@@ -69,7 +69,7 @@
       variant="tonal"
       density="compact"
     >
-      {{ w }}
+      {{ reminderWarningText(t, w) }}
     </v-alert>
 
     <!-- Resultado del envío -->
@@ -243,6 +243,7 @@ import {
   groupByClient,
   isDryRun,
   remindersApi,
+  reminderWarningText,
   sendableIds,
   type ReminderPhase,
   type ReminderResult,

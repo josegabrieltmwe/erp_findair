@@ -168,7 +168,13 @@
       "type_BLOCCO": "Sperre",
       "action_compensated": "mit Guthaben verrechnet",
       "action_no_recipient": "kein Empfänger",
-      "action_no_template": "keine Nachrichtenvorlage"
+      "action_no_template": "keine Nachrichtenvorlage",
+      "warning": {
+        "NO_TEMPLATE": "Keine Vorlage für {tipo} für Partner {partner}",
+        "NO_RECIPIENT": "Kunde {client} ({rag_soc}) hat keine Empfänger für {tipo}",
+        "ACCOUNTING_CONTACTS_MISSING": "Kunde {client} hat keine Buchhaltungskontakte: Es wird die E-Mail des Rechnungssitzes verwendet",
+        "PEC_MISSING": "Kunde {client} benötigt eine PEC, aber der Rechnungssitz hat keine"
+      }
     },
     "online": {
       "title": "Per Karte einziehen",
