@@ -175,9 +175,11 @@ watch(() => props.modelValue, (rec) => {
 
 const dirty = computed(() => JSON.stringify(form.value) !== JSON.stringify(original.value));
 
+// N38b (collaudo 16/11): campo de texto libre, no selector; mensaje genérico
+// de "obligatorio" en vez de "selectors.required" (pensado para un select).
 function ruleRequired(v: unknown): true | string {
   if (typeof v === 'string' && v.trim().length > 0) return true;
-  return t('selectors.required') as string;
+  return t('common.required') as string;
 }
 
 // anagrafiche.tipo = enum('CV','C','P','F','T','TP','I','A'). El backend no
