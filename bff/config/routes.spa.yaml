@@ -2965,6 +2965,14 @@ routes:
       body: 1m
       timeout: 30
   -
+    # Collaudo 16/11 N57: sondeo en vez de la SSE (cada conexion larga retenia un worker de Apache).
+    id: get.api_communication_poll
+    method: GET
+    path: /api_communication_poll
+    upstream:
+      action: api_communication_poll
+      forward_query: '*'
+  -
     id: get.api_contact_types_web
     method: GET
     path: /api_contact_types_web

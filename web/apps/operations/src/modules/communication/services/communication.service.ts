@@ -7,7 +7,8 @@
  * hybrid auth sesión+Bearer):
  *   api_communication_conversations  GET lista / POST abrir / PUT cerrar
  *   api_communication_messages       GET lista / POST enviar / PUT marcar leído
- *   api_communication_stream_token   POST (SSE, contrato 2.4)
+ *   api_communication_poll           GET (collaudo 16/11 N57: sondeo en vez de la SSE de api_communication_stream_token,
+ *                                     que cada pestaña abierta retenía un worker de Apache mientras durase)
  */
 import { http } from "@shared/anagrafiche/services/http";
 import type {
@@ -17,8 +18,8 @@ import type {
   MessagesListResult,
   OpenTicketPayload,
   OpenTicketResult,
+  PollResult,
   SendMessageResult,
-  StreamTokenResult,
 } from "../types";
 
 export interface ConversationsListFilters {
@@ -115,12 +116,17 @@ export const communicationService = {
     });
   },
 
-  /** `scope`: "all" (badge global) o un conversation_id concreto (hilo abierto). */
-  async issueStreamToken(scope: string = "all"): Promise<StreamTokenResult> {
-    const res = await http<Envelope<StreamTokenResult>>(
-      "/api_communication_stream_token",
-      { method: "POST", body: { scope } },
-    );
+  /**
+   * `since`: cursor de la llamada anterior (`undefined` en la primera, igual que SSE sin `last_event_id`).
+   * `scope`: "all" (default) o un conversation_id concreto.
+   */
+  async pollEvents(since?: number, scope: string = "all"): Promise<PollResult> {
+    const query: Record<string, string> = { scope };
+    if (since !== undefined) query.since = String(since);
+    const res = await http<Envelope<PollResult>>("/api_communication_poll", {
+      method: "GET",
+      query,
+    });
     return res.data;
   },
 };

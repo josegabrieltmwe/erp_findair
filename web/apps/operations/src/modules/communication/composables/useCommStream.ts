@@ -1,21 +1,16 @@
 /**
- * Conexión SSE real contra el daemon de comunicación (`/comm_stream`, puerto 8091
- * en el servidor, contrato 2.4/2.5). Aparte y SIN relación con `useChatRealtime.ts`
- * (shipment/cargo): ese es el chat viejo (`web_chat_*`), *polling* puro pese al
- * nombre. Esto es tiempo real de verdad.
+ * Sondeo de `api_communication_poll` en vez de EventSource/SSE contra el daemon de comunicación.
  *
- * El token de `api_communication_stream_token` es de UN SOLO USO y expira a los
- * 60s (Comm_Stream_Token_Service) — el EventSource nativo del navegador NO puede
- * reconectar solo a la misma URL (el segundo intento siempre fallaría). Por eso
- * la reconexión es manual: en cada `open()` se pide un token nuevo, y al perder
- * la conexión se cierra el EventSource ANTES de que el navegador programe su
- * propio reintento (ver MDN: `close()` dentro de `onerror` cancela esa reconexión
- * nativa) y se abre uno nuevo con backoff exponencial, pasando `last_event_id`
- * para no perder eventos (el daemon los repone desde `comm_event`).
+ * Motivo (collaudo 16/11, N57): cada conexión SSE retenía un proceso worker entero de Apache
+ * (mpm_prefork) mientras la pestaña estuviera abierta; con varias pestañas de chat abiertas se
+ * agotaba `MaxRequestWorkers` y el servidor respondía 503 a peticiones sin relación con el chat.
+ * `api_communication_poll` es un GET corto, normal, con la sesión/Bearer de siempre: no retiene
+ * ningún worker más tiempo que cualquier otra petición del API.
  *
- * Sin tiempo real en el servidor (`communication.realtime.public_url` sin configurar, el token responde 501
- * COMM_NOT_IMPLEMENTED) no se reintenta: no es una caída y no se va a arreglar sola. Se pasa a `poll` cada
- * POLL_FALLBACK_MS con la pestaña visible, para que lleguen mensajes y no leídos igualmente.
+ * El cursor (`since`) viaja de sondeo en sondeo, igual que `last_event_id` hacía en el SSE.
+ * `reset: true` en la respuesta significa que el cursor ya no se puede reproducir (purgado o
+ * nunca existió): se olvida y se dispara un refresco completo (`poll`) una vez, igual que el
+ * `resync` que el SSE emitía tras un `event: reconnect {reset:true}`.
  */
 import { onUnmounted, ref } from "vue";
 
@@ -24,151 +19,114 @@ import type {
   CommConversationClosedEvent,
   CommMessageCreatedEvent,
   CommUnreadChangedEvent,
+  PollEvent,
 } from "../types";
 
 export interface CommStreamHandlers {
   onMessageCreated?: (event: CommMessageCreatedEvent) => void;
   onUnreadChanged?: (event: CommUnreadChangedEvent) => void;
   onConversationClosed?: (event: CommConversationClosedEvent) => void;
-  /** Refresco silencioso cuando el servidor no tiene tiempo real (501). Sin él solo se deja de reintentar. */
+  /** Red de seguridad: refresco completo cada POLL_FALLBACK_MS, y también tras un `reset`. */
   poll?: () => unknown;
 }
 
-const INITIAL_RECONNECT_MS = 2000;
-const MAX_RECONNECT_MS = 30000;
+/** Cadencia del sondeo de eventos — suficientemente rápida para un chat humano, sin abrir nada largo. */
+const POLL_INTERVAL_MS = 4000;
+/** Cadencia del refresco completo de respaldo (antes: único sondeo cuando no había SSE). */
 export const POLL_FALLBACK_MS = 30000;
 
-/** ¿El servidor dice que el tiempo real no existe (501), en vez de un fallo pasajero? */
-export function isRealtimeUnavailable(e: unknown): boolean {
-  // Por el estado, no por la clase: el http de @shared/anagrafiche tiene su propio ApiError.
-  return typeof e === "object" && e !== null && (e as { status?: unknown }).status === 501;
+function hidden(): boolean {
+  return typeof document !== "undefined" && document.visibilityState === "hidden";
+}
+
+function dispatch(handlers: CommStreamHandlers, e: PollEvent): void {
+  switch (e.event) {
+    case "message.created":
+      handlers.onMessageCreated?.(e.data as CommMessageCreatedEvent);
+      break;
+    case "unread.changed":
+      handlers.onUnreadChanged?.(e.data as CommUnreadChangedEvent);
+      break;
+    case "conversation.closed":
+      handlers.onConversationClosed?.(e.data as CommConversationClosedEvent);
+      break;
+    default:
+    // Tipo desconocido (p. ej. uno nuevo del contrato que este cliente aún no entiende): se
+    // ignora, igual que un frame SSE sin listener no rompía el stream.
+  }
 }
 
 export function useCommStream(handlers: CommStreamHandlers) {
   const connected = ref(false);
-  /** false cuando el servidor no tiene tiempo real: la página funciona con `poll`. */
+  /** Siempre true: el sondeo no depende de ninguna configuración del servidor (a diferencia del SSE con 501). */
   const realtimeAvailable = ref(true);
 
-  let source: EventSource | null = null;
-  let lastEventId: string | null = null;
-  let reconnectDelay = INITIAL_RECONNECT_MS;
-  let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  let stopped = false;
-  let pollTimer: ReturnType<typeof setInterval> | null = null;
+  let cursor: number | undefined;
+  let stopped = true;
+  let inFlight = false;
+  let pollTimer: ReturnType<typeof setTimeout> | null = null;
+  let safetyTimer: ReturnType<typeof setInterval> | null = null;
 
-  function startPolling(): void {
-    if (pollTimer !== null || !handlers.poll) return;
-    pollTimer = setInterval(() => {
-      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
-      try {
-        void Promise.resolve(handlers.poll?.()).catch(() => {});
-      } catch {
-        // un refresco fallido no para el siguiente
-      }
-    }, POLL_FALLBACK_MS);
-  }
-
-  function clearReconnectTimer(): void {
-    if (reconnectTimer !== null) {
-      clearTimeout(reconnectTimer);
-      reconnectTimer = null;
-    }
-  }
-
-  function closeCurrent(): void {
-    if (source) {
-      source.close();
-      source = null;
-    }
-    connected.value = false;
-  }
-
-  function scheduleReconnect(): void {
+  function schedule(delayMs: number): void {
     if (stopped) return;
-    clearReconnectTimer();
-    reconnectTimer = setTimeout(() => void open(), reconnectDelay);
-    reconnectDelay = Math.min(reconnectDelay * 2, MAX_RECONNECT_MS);
+    if (pollTimer !== null) clearTimeout(pollTimer);
+    pollTimer = setTimeout(() => void tick(), delayMs);
   }
 
-  function parsePayload<T>(raw: string): T | null {
-    try {
-      return JSON.parse(raw) as T;
-    } catch {
-      return null; // frame malformado: se ignora, no se rompe el stream.
-    }
-  }
-
-  async function open(): Promise<void> {
-    if (stopped) return;
-    closeCurrent();
-
-    let streamUrl: string;
-    try {
-      const issued = await communicationService.issueStreamToken("all");
-      streamUrl = issued.stream_url;
-    } catch (e) {
-      if (isRealtimeUnavailable(e)) {
-        realtimeAvailable.value = false;
-        startPolling();
-        return;
-      }
-      scheduleReconnect();
+  async function tick(): Promise<void> {
+    pollTimer = null;
+    if (stopped || inFlight) return;
+    if (hidden()) {
+      schedule(POLL_INTERVAL_MS);
       return;
     }
-    if (stopped) return;
-
-    const url = lastEventId
-      ? `${streamUrl}&last_event_id=${encodeURIComponent(lastEventId)}`
-      : streamUrl;
-    const es = new EventSource(url);
-    source = es;
-
-    es.addEventListener("connected", () => {
+    inFlight = true;
+    try {
+      const res = await communicationService.pollEvents(cursor);
       connected.value = true;
-      reconnectDelay = INITIAL_RECONNECT_MS;
-    });
+      if (res.reset) {
+        cursor = res.cursor;
+        void Promise.resolve(handlers.poll?.()).catch(() => {});
+      } else {
+        for (const e of res.events) dispatch(handlers, e);
+        cursor = res.cursor;
+      }
+    } catch {
+      // Fallo pasajero (red, 5xx): no es distinto de cualquier otra petición del API que falle;
+      // el siguiente sondeo ya lo intenta de nuevo, sin backoff — no hay tormenta de reconexión
+      // que evitar, es una sola petición corta cada vez.
+      connected.value = false;
+    } finally {
+      inFlight = false;
+      schedule(POLL_INTERVAL_MS);
+    }
+  }
 
-    es.addEventListener("message.created", (evt) => {
-      const e = evt as MessageEvent<string>;
-      if (e.lastEventId) lastEventId = e.lastEventId;
-      const payload = parsePayload<CommMessageCreatedEvent>(e.data);
-      if (payload) handlers.onMessageCreated?.(payload);
-    });
-
-    es.addEventListener("unread.changed", (evt) => {
-      const e = evt as MessageEvent<string>;
-      if (e.lastEventId) lastEventId = e.lastEventId;
-      const payload = parsePayload<CommUnreadChangedEvent>(e.data);
-      if (payload) handlers.onUnreadChanged?.(payload);
-    });
-
-    es.addEventListener("conversation.closed", (evt) => {
-      const e = evt as MessageEvent<string>;
-      if (e.lastEventId) lastEventId = e.lastEventId;
-      const payload = parsePayload<CommConversationClosedEvent>(e.data);
-      if (payload) handlers.onConversationClosed?.(payload);
-    });
-
-    // Conexión caída (red, daemon reiniciado, proxy): cerrar YA (cancela el
-    // reintento nativo a la URL vieja, que fallaría siempre por el token de
-    // un solo uso) y reconectar con un token fresco.
-    es.onerror = () => {
-      closeCurrent();
-      scheduleReconnect();
-    };
+  function start(): Promise<void> {
+    stopped = false;
+    if (safetyTimer === null) {
+      safetyTimer = setInterval(() => {
+        if (hidden()) return;
+        void Promise.resolve(handlers.poll?.()).catch(() => {});
+      }, POLL_FALLBACK_MS);
+    }
+    return tick();
   }
 
   function stop(): void {
     stopped = true;
-    clearReconnectTimer();
     if (pollTimer !== null) {
-      clearInterval(pollTimer);
+      clearTimeout(pollTimer);
       pollTimer = null;
     }
-    closeCurrent();
+    if (safetyTimer !== null) {
+      clearInterval(safetyTimer);
+      safetyTimer = null;
+    }
+    connected.value = false;
   }
 
   onUnmounted(stop);
 
-  return { connected, realtimeAvailable, start: open, stop };
+  return { connected, realtimeAvailable, start, stop };
 }

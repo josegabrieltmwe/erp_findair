@@ -112,10 +112,19 @@ export interface SendMessageResult {
   duplicate: boolean;
 }
 
-export interface StreamTokenResult {
-  token: string;
-  expires_in: number;
-  stream_url: string;
+/** `api_communication_poll` (collaudo 16/11 N57): alternativa a la SSE, sin conexión larga. */
+export interface PollEvent {
+  id: number;
+  event: "message.created" | "unread.changed" | "conversation.closed" | string;
+  data: unknown;
+}
+
+export interface PollResult {
+  cursor: number;
+  /** El cursor ya no se puede reproducir (purgado o nunca existió): olvidarlo y recargar por GET. */
+  reset: boolean;
+  events: PollEvent[];
+  user_id: number;
 }
 
 /** Envelope estándar de `api_communication_*` ({success, data}). */
