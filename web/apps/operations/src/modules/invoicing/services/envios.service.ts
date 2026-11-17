@@ -69,7 +69,7 @@ export interface EnvioRow {
   intermediario_modo?: string | null;
   cert_resultado?: string | null;
   validacion_estado?: string | null;
-  es_primero: boolean;
+  is_first: boolean;
   /** FACTURA (por defecto) | AUTOFACTURA (TD17/TD18/TD28; id_fattura = pasiva de origen). */
   tipo_documento?: "FACTURA" | "AUTOFACTURA";
   id_autofattura?: number;

@@ -271,7 +271,7 @@
           <template v-else-if="nextData">
             <ul class="pl-4">
               <li v-for="(n, i) in nextData.siguientes" :key="i">
-                <code>{{ n.numero_completo }}</code>
+                <code>{{ n.full_number }}</code>
               </li>
             </ul>
             <p class="text-caption text-medium-emphasis mt-2">

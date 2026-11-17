@@ -47,7 +47,7 @@ export interface RangePreview {
   hasta?: string | null;
   formato?: string;
   primer_numero?: string;
-  siguientes?: Array<{ numero?: number; numero_completo: string }> | string[];
+  siguientes?: Array<{ numero?: number; full_number: string }> | string[];
 }
 
 export interface RangeSaveResult {
@@ -63,7 +63,7 @@ export interface NextNumberPreview {
   id_engine: number;
   fecha: string;
   primer_numero_rango: string;
-  siguientes: Array<{ numero: number; numero_completo: string }>;
+  siguientes: Array<{ numero: number; full_number: string }>;
   orientativo: boolean;
 }
 

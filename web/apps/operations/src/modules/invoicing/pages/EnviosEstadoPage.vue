@@ -177,7 +177,7 @@
         <template #[`item.numero`]="{ item }">
           <span class="text-no-wrap">
             <v-icon
-              v-if="item.es_primero"
+              v-if="item.is_first"
               icon="mdi-star"
               color="amber-darken-2"
               size="14"
