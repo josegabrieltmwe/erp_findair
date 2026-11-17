@@ -216,7 +216,12 @@ function toggleSidebar(): void {
   /* minmax(0, 1fr): un `1fr` a secas no baja del ancho minimo del contenido (cabecera, tarjetas) y la ficha se
      salia por la derecha a 1030 px. Igual que en DashboardShell. */
   grid-template-columns: var(--dsh-sidebar-w, 220px) minmax(0, 1fr);
-  grid-template-rows: var(--dsh-topbar-h, 96px) auto 1fr;
+  /* `minmax(…, auto)`, no una longitud fija: collaudo 17/11 (N67/N69-informe) — con un numero de factura
+     largo o ambos chips (SDI + bloqueada) la fila de titulo de `.dsh-topbar` hacia `flex-wrap` a 2 lineas,
+     el topbar media 96px FIJOS y el overflow (visible por defecto) se pintaba, con su z-index:30, por encima
+     de la primera fila del contenido (las cards Imponibile/IVA/Totale). Con `auto` el grid crece con el
+     contenido real en vez de recortarlo encima de lo que hay debajo. */
+  grid-template-rows: minmax(var(--dsh-topbar-h, 96px), auto) auto 1fr;
   /* El rail ocupa las TRES filas: banda vertical continua de borde a borde,
      como en el mockup de referencia. Simétrico a DashboardShell. */
   grid-template-areas:
@@ -246,7 +251,9 @@ function toggleSidebar(): void {
   flex-direction: column;
   background: rgb(var(--v-theme-surface));
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  height: var(--dsh-topbar-h, 96px);
+  /* `min-height`, no `height`: deja crecer la caja cuando su contenido necesita mas de 96px (ver comentario
+     de `grid-template-rows` mas arriba), en vez de desbordar con overflow visible sobre el contenido. */
+  min-height: var(--dsh-topbar-h, 96px);
 }
 .dsh-topbar-row {
   display: flex;

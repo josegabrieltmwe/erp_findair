@@ -886,12 +886,17 @@ onBeforeUnmount(() => store.reset());
 }
 
 /* Cabecera del topbar: título en una línea, fecha·cliente como subtítulo
-   debajo. DetailShell fija `.dsh-topbar` a 96px (no min-height, ver
-   DetailShell.vue): con `text-h6` + `text-body-2` (interlineado de Vuetify,
-   ~32px + 20px) el bloque no cabía en la fila de 48px y el texto desbordaba
+   debajo. Con `text-h6` + `text-body-2` (interlineado de Vuetify, ~32px +
+   20px) el bloque no cabía en la fila de 48px y el texto desbordaba
    visualmente hacia el cuerpo (collaudo 16/11, N38b-bis). Interlineado
    ajustado a 1.2, igual que PlatformTopBar (.ptb-title-main/-sub) y el
-   patrón de CargoDetailLayoutV2. */
+   patrón de CargoDetailLayoutV2. Esto cubre el caso de UNA sola línea por
+   fila; cuando el número de factura o el cliente son largos, o aparecen
+   ambos chips (SDI + bloqueada), la fila de arriba (`flex-wrap`, ver
+   template) puede envolver a 2 líneas e igualmente superar los 96px — la
+   caja ya no desborda sobre el contenido porque `.dsh-topbar` usa
+   `min-height` y su fila del grid usa `minmax(…, auto)` (ver DetailShell.vue,
+   collaudo 17/11, N67). */
 .invoice-head {
   display: flex;
   flex-direction: column;
