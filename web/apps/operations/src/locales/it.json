@@ -329,7 +329,12 @@
       "payments-aging": "Anzianità dei saldi",
       "payments-reminders": "Solleciti di pagamento",
       "payments-pending-invoices": "Fatture da incassare",
-      "payments-reconciliation": "Riconciliazione bancaria"
+      "payments-reconciliation": "Riconciliazione bancaria",
+      "home-indicators": "Indicatori",
+      "warehouse-driver-load": "Giro autista",
+      "warehouse-deliveries": "Firme di consegna",
+      "warehouse-manifests": "Manifesti corrieri",
+      "cod-reconciliation": "Riconciliazione contrassegni"
     },
     "email": {
       "recipients": "Destinatari",

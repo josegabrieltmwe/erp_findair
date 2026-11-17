@@ -329,7 +329,12 @@
       "payments-aging": "Ouderdom van openstaande bedragen",
       "payments-reminders": "Betalingsherinneringen",
       "payments-pending-invoices": "Openstaande facturen",
-      "payments-reconciliation": "Bankafstemming"
+      "payments-reconciliation": "Bankafstemming",
+      "home-indicators": "Indicatoren",
+      "warehouse-driver-load": "Ritlijst chauffeur",
+      "warehouse-deliveries": "Afleverhandtekeningen",
+      "warehouse-manifests": "Koerierbordereaux",
+      "cod-reconciliation": "Rembours afstemmen"
     },
     "email": {
       "recipients": "Geadresseerden",

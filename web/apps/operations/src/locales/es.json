@@ -329,7 +329,12 @@
       "payments-aging": "Antigüedad de saldos",
       "payments-reminders": "Recordatorios de cobro",
       "payments-pending-invoices": "Facturas pendientes de cobro",
-      "payments-reconciliation": "Conciliación bancaria"
+      "payments-reconciliation": "Conciliación bancaria",
+      "home-indicators": "Indicadores",
+      "warehouse-driver-load": "Giro del autista",
+      "warehouse-deliveries": "Firmas de entrega",
+      "warehouse-manifests": "Manifiestos de transportistas",
+      "cod-reconciliation": "Conciliación de contrareembolsos"
     },
     "email": {
       "recipients": "Destinatarios",

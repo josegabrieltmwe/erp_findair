@@ -641,7 +641,7 @@ const routes: RouteRecordRaw[] = [
     name: "settings-anagrafiche-admin",
     component: () =>
       import("@shared/anagrafiche/feature/AnagraficaListPage.vue"),
-    meta: { requiresAdmin: true, title: "Anagráfica" },
+    meta: { requiresAdmin: true, title: "Anagrafica" },
   },
   // Card "Partners" en Settings > Anagráfica — mismo componente compartido,
   // pero con `lockTipo: "P"` (tipo='P' FORZADO server-side,
@@ -1192,6 +1192,7 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@shared/anagrafiche/feature/AnagraficaDetailPage.vue"),
     props: true,
+    meta: { title: "Anagrafica" },
   },
   // `props` inyecta `extraTabs` además de `id` (route.params): gestión de
   // credenciales de proveedores API (KLM/AF, WebCargo, courier genérico)
@@ -1207,6 +1208,7 @@ const routes: RouteRecordRaw[] = [
       id: route.params.id,
       extraTabs: anagraficaExtraTabs(),
     }),
+    meta: { title: "Anagrafica" },
   },
   {
     path: "/anagrafica/:id(\\d+)/:tab",
@@ -1218,6 +1220,7 @@ const routes: RouteRecordRaw[] = [
       tab: route.params.tab,
       extraTabs: anagraficaExtraTabs(),
     }),
+    meta: { title: "Anagrafica" },
   },
   // Redirects desde los paths viejos (/clients/new, /clients/:id, /clients/:id/:tab)
   // para no romper enlaces o favoritos guardados con la URL anterior.

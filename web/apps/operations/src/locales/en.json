@@ -329,7 +329,12 @@
       "payments-aging": "Aging of balances",
       "payments-reminders": "Payment reminders",
       "payments-pending-invoices": "Invoices awaiting payment",
-      "payments-reconciliation": "Bank reconciliation"
+      "payments-reconciliation": "Bank reconciliation",
+      "home-indicators": "Indicators",
+      "warehouse-driver-load": "Driver delivery list",
+      "warehouse-deliveries": "Delivery signatures",
+      "warehouse-manifests": "Courier manifests",
+      "cod-reconciliation": "COD reconciliation"
     },
     "email": {
       "recipients": "Recipients",

@@ -329,7 +329,12 @@
       "payments-aging": "Altersstruktur der Forderungen",
       "payments-reminders": "Zahlungserinnerungen",
       "payments-pending-invoices": "Offene Rechnungen zum Einzug",
-      "payments-reconciliation": "Bankabstimmung"
+      "payments-reconciliation": "Bankabstimmung",
+      "home-indicators": "Kennzahlen",
+      "warehouse-driver-load": "Fahrertour",
+      "warehouse-deliveries": "Lieferunterschriften",
+      "warehouse-manifests": "Kuriermanifeste",
+      "cod-reconciliation": "Nachnahme-Abstimmung"
     },
     "email": {
       "recipients": "Empfänger",
