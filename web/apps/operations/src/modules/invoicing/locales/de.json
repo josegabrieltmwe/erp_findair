@@ -11,6 +11,7 @@
       "BILLING_INVOICE_DATE_INVALID": "Das Rechnungsdatum ist ungültig.",
       "BILLING_INVOICE_DATE_BEFORE_PERIOD": "Das Rechnungsdatum darf nicht vor dem Beginn des Zeitraums liegen.",
       "BILLING_NO_PARTNER": "Der Partner konnte nicht identifiziert werden.",
+      "BILLING_PAYMENT_METHOD_EXPIRED": "Die Zahlungsmethode des Kunden ist abgelaufen: Bitte vor der Rechnungsstellung aktualisieren.",
       "CLIENT_NOT_OWNED": "Einer der ausgewählten Kunden gehört nicht zu diesem Aussteller.",
       "INVOICE_DATE_NOT_CHRONOLOGICAL": "Das Rechnungsdatum verletzt die chronologische Reihenfolge bereits ausgestellter Rechnungen."
     },

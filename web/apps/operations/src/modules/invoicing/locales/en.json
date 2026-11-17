@@ -11,6 +11,7 @@
       "BILLING_INVOICE_DATE_INVALID": "The invoice date is not valid.",
       "BILLING_INVOICE_DATE_BEFORE_PERIOD": "The invoice date cannot be before the start of the period.",
       "BILLING_NO_PARTNER": "Could not identify the partner.",
+      "BILLING_PAYMENT_METHOD_EXPIRED": "The client's payment method has expired: update it before invoicing.",
       "CLIENT_NOT_OWNED": "One of the selected clients does not belong to this issuer.",
       "INVOICE_DATE_NOT_CHRONOLOGICAL": "The invoice date breaks the chronological order of invoices already issued."
     },

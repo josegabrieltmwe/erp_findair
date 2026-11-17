@@ -18,6 +18,9 @@ const KNOWN = new Set([
   "BILLING_INVOICE_DATE_INVALID",
   "BILLING_INVOICE_DATE_BEFORE_PERIOD",
   "BILLING_NO_PARTNER",
+  // Collaudo 17/11 (N66): Invoice_Batch_Generation_Service devolvia este
+  // mensaje en espanol, de forma literal, sin error_code.
+  "BILLING_PAYMENT_METHOD_EXPIRED",
   "CLIENT_NOT_OWNED",
   "INVOICE_DATE_NOT_CHRONOLOGICAL",
 ]);

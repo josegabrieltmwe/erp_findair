@@ -11,6 +11,7 @@
       "BILLING_INVOICE_DATE_INVALID": "La fecha de la factura no es válida.",
       "BILLING_INVOICE_DATE_BEFORE_PERIOD": "La fecha de la factura no puede ser anterior al inicio del periodo.",
       "BILLING_NO_PARTNER": "No se ha podido identificar el partner.",
+      "BILLING_PAYMENT_METHOD_EXPIRED": "El método de pago del cliente está caducado: actualízalo antes de facturar.",
       "CLIENT_NOT_OWNED": "Alguno de los clientes seleccionados no pertenece a este emisor.",
       "INVOICE_DATE_NOT_CHRONOLOGICAL": "La fecha de la factura no respeta el orden cronológico de las facturas ya emitidas."
     },

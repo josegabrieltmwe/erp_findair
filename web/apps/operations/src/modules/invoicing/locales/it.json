@@ -11,6 +11,7 @@
       "BILLING_INVOICE_DATE_INVALID": "La data della fattura non è valida.",
       "BILLING_INVOICE_DATE_BEFORE_PERIOD": "La data della fattura non può precedere l'inizio del periodo.",
       "BILLING_NO_PARTNER": "Non è stato possibile identificare il partner.",
+      "BILLING_PAYMENT_METHOD_EXPIRED": "Il metodo di pagamento del cliente è scaduto: aggiornalo prima di fatturare.",
       "CLIENT_NOT_OWNED": "Uno dei clienti selezionati non appartiene a questo emittente.",
       "INVOICE_DATE_NOT_CHRONOLOGICAL": "La data della fattura non rispetta l'ordine cronologico delle fatture già emesse."
     },

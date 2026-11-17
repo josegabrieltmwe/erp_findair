@@ -11,6 +11,7 @@
       "BILLING_INVOICE_DATE_INVALID": "De factuurdatum is niet geldig.",
       "BILLING_INVOICE_DATE_BEFORE_PERIOD": "De factuurdatum mag niet vóór het begin van de periode liggen.",
       "BILLING_NO_PARTNER": "De partner kon niet worden geïdentificeerd.",
+      "BILLING_PAYMENT_METHOD_EXPIRED": "De betaalmethode van de klant is verlopen: werk deze bij voordat u factureert.",
       "CLIENT_NOT_OWNED": "Een van de geselecteerde klanten behoort niet tot deze uitgever.",
       "INVOICE_DATE_NOT_CHRONOLOGICAL": "De factuurdatum doorbreekt de chronologische volgorde van reeds uitgegeven facturen."
     },
