@@ -420,7 +420,8 @@
       },
       "method": {
         "card": "Carta",
-        "sepa_debit": "Addebito SEPA"
+        "sepa_debit": "Addebito SEPA",
+        "expired_hint": "La data di scadenza stampata è già passata"
       },
       "create": {
         "open": "Nuova autorizzazione",

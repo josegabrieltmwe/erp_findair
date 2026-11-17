@@ -420,7 +420,8 @@
       },
       "method": {
         "card": "Kaart",
-        "sepa_debit": "SEPA-incasso"
+        "sepa_debit": "SEPA-incasso",
+        "expired_hint": "De afgedrukte vervaldatum is al verstreken"
       },
       "create": {
         "open": "Nieuwe machtiging",

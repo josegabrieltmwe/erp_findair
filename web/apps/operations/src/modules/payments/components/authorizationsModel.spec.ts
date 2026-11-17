@@ -5,6 +5,7 @@ import {
   availableAuthorizationActions,
   describeMethod,
   isAuthorizationSettled,
+  isPastExpiry,
   newAuthorizationKey,
 } from "./authorizationsModel";
 
@@ -56,5 +57,33 @@ describe("authorizationStatusColor", () => {
     expect(authorizationStatusColor("active")).toBe("success");
     expect(authorizationStatusColor("failed")).toBe("error");
     expect(authorizationStatusColor("nuevo")).toBe("default");
+  });
+
+  // Escenario N69 (collaudo 17/11): el backend solo marca `expired` tras un cobro fallido; una tarjeta vieja sin
+  // cargos recientes puede seguir en `active`. `pastExpiry` repinta esa fila a aviso sin tocar estados ya definitivos.
+  it("repinta a aviso una fila activa/pendiente con la fecha ya pasada, sin tocar estados definitivos", () => {
+    expect(authorizationStatusColor("active", true)).toBe("warning");
+    expect(authorizationStatusColor("pending", true)).toBe("warning");
+    expect(authorizationStatusColor("active", false)).toBe("success");
+    expect(authorizationStatusColor("expired", true)).toBe("grey");
+    expect(authorizationStatusColor("revoked", true)).toBe("grey");
+  });
+});
+
+describe("isPastExpiry", () => {
+  const today = new Date(2026, 10, 17); // 17/11/2026, mes 0-based => noviembre
+
+  it("tarjeta caducada antes de hoy", () => {
+    expect(isPastExpiry({ exp_month: 6, exp_year: 2023 }, today)).toBe(true);
+    expect(isPastExpiry({ exp_month: 10, exp_year: 2026 }, today)).toBe(true);
+  });
+
+  it("tarjeta vigente hoy o en el futuro", () => {
+    expect(isPastExpiry({ exp_month: 11, exp_year: 2026 }, today)).toBe(false);
+    expect(isPastExpiry({ exp_month: 1, exp_year: 2027 }, today)).toBe(false);
+  });
+
+  it("sin datos de caducidad (aun pending) no se marca como pasada", () => {
+    expect(isPastExpiry({ exp_month: null, exp_year: null }, today)).toBe(false);
   });
 });

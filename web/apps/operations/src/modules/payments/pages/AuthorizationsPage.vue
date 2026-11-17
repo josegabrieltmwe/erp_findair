@@ -74,9 +74,23 @@
           <tr v-for="r in rows" :key="r.public_id" :data-testid="`authorization-row-${r.public_id}`">
             <td class="aut-mono">{{ r.public_id }}</td>
             <td>{{ r.customer_name || '' }} <span class="text-medium-emphasis">#{{ r.customer_id }}</span></td>
-            <td>{{ describeMethod(r, t("payments.authorizations.method.card")) }}</td>
             <td>
-              <v-chip :color="authorizationStatusColor(r.status)" size="small" label variant="tonal">
+              {{ describeMethod(r, t("payments.authorizations.method.card")) }}
+              <v-tooltip v-if="isPastExpiry(r)" :text="t('payments.authorizations.method.expired_hint')" location="top">
+                <template #activator="{ props: tip }">
+                  <v-icon
+                    v-bind="tip"
+                    icon="mdi-alert-circle-outline"
+                    color="warning"
+                    size="16"
+                    class="ms-1"
+                    :data-testid="`authorization-past-expiry-${r.public_id}`"
+                  />
+                </template>
+              </v-tooltip>
+            </td>
+            <td>
+              <v-chip :color="authorizationStatusColor(r.status, isPastExpiry(r))" size="small" label variant="tonal">
                 {{ t(`payments.authorizations.status.${r.status}`) }}
               </v-chip>
               <div v-if="r.failure_code" class="text-caption text-error">{{ r.failure_code }}</div>
@@ -173,6 +187,7 @@ import {
   authorizationStatusColor,
   availableAuthorizationActions,
   describeMethod,
+  isPastExpiry,
   type AuthorizationAction,
 } from "../components/authorizationsModel";
 import {

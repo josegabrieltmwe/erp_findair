@@ -420,7 +420,8 @@
       },
       "method": {
         "card": "Tarjeta",
-        "sepa_debit": "Adeudo SEPA"
+        "sepa_debit": "Adeudo SEPA",
+        "expired_hint": "La fecha de caducidad impresa ya ha pasado"
       },
       "create": {
         "open": "Nueva autorización",

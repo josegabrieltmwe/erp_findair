@@ -420,7 +420,8 @@
       },
       "method": {
         "card": "Card",
-        "sepa_debit": "SEPA direct debit"
+        "sepa_debit": "SEPA direct debit",
+        "expired_hint": "The printed expiry date has already passed"
       },
       "create": {
         "open": "New authorization",

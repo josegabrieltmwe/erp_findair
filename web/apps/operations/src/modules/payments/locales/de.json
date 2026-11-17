@@ -420,7 +420,8 @@
       },
       "method": {
         "card": "Karte",
-        "sepa_debit": "SEPA-Lastschrift"
+        "sepa_debit": "SEPA-Lastschrift",
+        "expired_hint": "Das aufgedruckte Ablaufdatum ist bereits überschritten"
       },
       "create": {
         "open": "Neue Ermächtigung",

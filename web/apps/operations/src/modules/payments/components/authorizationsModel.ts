@@ -50,8 +50,29 @@ export function availableAuthorizationActions(row: Pick<PayAuthorization, "statu
   return row.status === "active" || row.status === "pending" ? ["revoke"] : [];
 }
 
-/** Color del chip de estado. */
-export function authorizationStatusColor(status: PayAuthorizationStatus | string): string {
+/**
+ * ¿Ya pasó el mes/año impreso en la tarjeta? Collaudo 17/11 (N69): `status` solo lo cambia el webhook de la pasarela
+ * cuando un cobro falla (ver cabecera del fichero); una tarjeta sin intentos de cobro desde que caducó se queda en
+ * `active` indefinidamente, aunque el calendario ya la haya superado. Esta función es solo una señal VISUAL para no
+ * mostrarla como una tarjeta normal — nunca decide si se puede revocar o cobrar, eso sigue siendo del servidor.
+ */
+export function isPastExpiry(
+  row: Pick<PayAuthorization, "exp_month" | "exp_year">,
+  today: Date = new Date(),
+): boolean {
+  if (!row.exp_month || !row.exp_year) return false;
+  const y = today.getFullYear();
+  const m = today.getMonth() + 1;
+  return row.exp_year < y || (row.exp_year === y && row.exp_month < m);
+}
+
+/**
+ * Color del chip de estado. `pastExpiry` (ver `isPastExpiry`) solo repinta a aviso una fila que el backend aún
+ * reporta como `active`/`pending` pero cuyo mes/año ya pasó — no cambia el color de `failed`/`revoked`/`expired`,
+ * que ya son definitivos.
+ */
+export function authorizationStatusColor(status: PayAuthorizationStatus | string, pastExpiry = false): string {
+  if (pastExpiry && (status === "active" || status === "pending")) return "warning";
   switch (status) {
     case "active":
       return "success";
