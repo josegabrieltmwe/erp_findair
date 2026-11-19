@@ -69,6 +69,26 @@ const totalAvailable = ref<number>(0);
 const loadedPages = ref<number>(0);
 const loading = ref(false);
 let cacheKey: string | null = null;
+/**
+ * Serializa toda operación que toque `cache`/`loadedPages`/`cacheKey`
+ * (carga inicial de la página 1 y cada prefetch de página siguiente).
+ * Sin esto, un `goNext()` que llega al borde del bloque cacheado
+ * mientras ya hay un prefetch en background en vuelo competía por el
+ * mismo `loading` como mutex: la segunda llamada veía `loading=true`
+ * y retornaba al instante sin esperar nada, así que el click en
+ * "Next" no hacía nada. Encolar cada operación aquí hace que esperen
+ * su turno de verdad en vez de pisarse.
+ */
+let pending: Promise<void> | null = null;
+function runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+  const run = (): Promise<T> => fn();
+  const result = (pending ?? Promise.resolve()).then(run, run);
+  pending = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
 /** Snapshot of the listing query that produced the cache — used to
  *  fetch additional pages and to compose the "back to list" URL. */
 let cacheBaseQuery: Record<string, string | number> = {};
@@ -155,17 +175,10 @@ async function fetchPage(page: number): Promise<ApiListResponse | null> {
   }
 }
 
-async function ensureLoaded(routeQuery: LocationQuery): Promise<void> {
-  if (loading.value) return;
-  const state = parseShipmentListQuery(routeQuery as Record<string, unknown>);
-  if (!shipmentListHasActiveFilters(state)) {
-    clearCache();
-    return;
-  }
-  const query = stateToNavigatorQuery(state);
-  const key = keyOf(query);
+async function loadFirstPage(key: string, query: Record<string, string | number>): Promise<void> {
+  // Re-check dentro del lock: otra llamada encolada puede haber cargado
+  // ya este mismo filtro mientras esperábamos nuestro turno.
   if (key === cacheKey) return;
-
   loading.value = true;
   try {
     cacheBaseQuery = query;
@@ -186,21 +199,64 @@ async function ensureLoaded(routeQuery: LocationQuery): Promise<void> {
 /**
  * Append the next page to the cache without blocking the UI. Called
  * automatically by `goNext()` when the operator approaches the tail
- * of the local cache.
+ * of the local cache, and from `ensureRecordLoaded()` to page forward
+ * until a specific record shows up.
  */
 async function prefetchNextPage(): Promise<void> {
-  if (loading.value) return;
-  if (cache.value.length >= totalAvailable.value) return;
-  loading.value = true;
-  try {
-    const nextPage = loadedPages.value + 1;
-    const res = await fetchPage(nextPage);
-    if (res && Array.isArray(res.data) && res.data.length > 0) {
-      cache.value = [...cache.value, ...res.data.map(projectRow)];
-      loadedPages.value = nextPage;
+  return runExclusive(async () => {
+    if (cache.value.length >= totalAvailable.value) return;
+    loading.value = true;
+    try {
+      const nextPage = loadedPages.value + 1;
+      const res = await fetchPage(nextPage);
+      if (res && Array.isArray(res.data) && res.data.length > 0) {
+        cache.value = [...cache.value, ...res.data.map(projectRow)];
+        loadedPages.value = nextPage;
+      }
+    } finally {
+      loading.value = false;
     }
-  } finally {
-    loading.value = false;
+  });
+}
+
+/**
+ * Si `id` no está en el bloque ya cargado pero sigue existiendo en el
+ * filtro activo (más allá del primer `PAGE_SIZE`), pide páginas
+ * adicionales hasta encontrarlo o agotar `totalAvailable`. Sin esto,
+ * `index` resolvía a -1 para cualquier registro fuera del primer
+ * bloque de 50 (p. ej. desde la página 3 de un listado paginado de
+ * 25 en 25) y el contador/flechas de `.sdo-nav` se apagaban en
+ * silencio.
+ */
+async function ensureRecordLoaded(id: number | string): Promise<void> {
+  while (
+    !cache.value.some((r) => String(r.id) === String(id)) &&
+    cache.value.length < totalAvailable.value
+  ) {
+    const before = cache.value.length;
+    await prefetchNextPage();
+    if (cache.value.length === before) break; // sin progreso: evita bucle infinito
+  }
+}
+
+async function ensureLoaded(
+  routeQuery: LocationQuery,
+  targetId?: number | string | null,
+): Promise<void> {
+  const state = parseShipmentListQuery(routeQuery as Record<string, unknown>);
+  if (!shipmentListHasActiveFilters(state)) {
+    clearCache();
+    return;
+  }
+  const query = stateToNavigatorQuery(state);
+  const key = keyOf(query);
+
+  if (key !== cacheKey) {
+    await runExclusive(() => loadFirstPage(key, query));
+  }
+
+  if (targetId != null) {
+    await ensureRecordLoaded(targetId);
   }
 }
 
@@ -223,7 +279,10 @@ export function useRecordNavigator(
   hasPrev: ComputedRef<boolean>;
   hasNext: ComputedRef<boolean>;
   loading: ComputedRef<boolean>;
-  ensureLoaded: (routeQuery: LocationQuery) => Promise<void>;
+  ensureLoaded: (
+    routeQuery: LocationQuery,
+    targetId?: number | string | null,
+  ) => Promise<void>;
   goPrev: () => void;
   goNext: () => void;
   goTo: (id: number | string) => void;

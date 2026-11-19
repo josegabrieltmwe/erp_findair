@@ -175,7 +175,7 @@ watch(
   () => props.modelValue,
   (open) => {
     if (open) {
-      void navigator.ensureLoaded(route.query);
+      void navigator.ensureLoaded(route.query, props.viewId);
       void loadView();
     } else {
       ui.closeModal(); // cierra cualquier sub-modal que quedara abierto
@@ -205,7 +205,7 @@ function onKey(e: KeyboardEvent): void {
 onMounted(() => {
   document.addEventListener("keydown", onKey);
   if (props.modelValue) {
-    void navigator.ensureLoaded(route.query);
+    void navigator.ensureLoaded(route.query, props.viewId);
     void loadView();
   }
 });

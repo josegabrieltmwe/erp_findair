@@ -259,7 +259,7 @@ onMounted(() => {
   // `ensureLoaded` requires the current route query to parse list filters —
   // calling it bare with no argument bubbled an "undefined.type" TypeError
   // through Vue's onMounted, leaving the whole tree in a skeleton state.
-  void navigator.ensureLoaded(route.query);
+  void navigator.ensureLoaded(route.query, currentId.value);
 });
 
 // Al salir se vuelve a la paleta base con el mismo modo.

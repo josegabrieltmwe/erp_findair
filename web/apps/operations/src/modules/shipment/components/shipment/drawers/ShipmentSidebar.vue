@@ -98,12 +98,12 @@ function isDelivered(label: string | undefined): boolean {
 }
 
 onMounted(() => {
-  if (ui.sidebarOpen) void navigator.ensureLoaded(route.query);
+  if (ui.sidebarOpen) void navigator.ensureLoaded(route.query, currentId.value);
 });
 watch(
   () => ui.sidebarOpen,
   (open) => {
-    if (open) void navigator.ensureLoaded(route.query);
+    if (open) void navigator.ensureLoaded(route.query, currentId.value);
   },
 );
 </script>

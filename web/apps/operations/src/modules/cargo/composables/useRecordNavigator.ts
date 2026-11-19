@@ -58,6 +58,18 @@ const loading = ref(false);
 let cacheKey: string | null = null;
 let cacheBaseQuery: Record<string, string | number> = {};
 
+/** Mirror of the shipment navigator's lock — see its comment. */
+let pending: Promise<void> | null = null;
+function runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+  const run = (): Promise<T> => fn();
+  const result = (pending ?? Promise.resolve()).then(run, run);
+  pending = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
+
 function stateToNavigatorQuery(
   s: CargoListUrlState,
 ): Record<string, string | number> {
@@ -138,17 +150,8 @@ async function fetchPage(page: number): Promise<ApiListResponse | null> {
   }
 }
 
-async function ensureLoaded(routeQuery: LocationQuery): Promise<void> {
-  if (loading.value) return;
-  const state = parseCargoListQuery(routeQuery as Record<string, unknown>);
-  if (!cargoListHasActiveFilters(state)) {
-    clearCache();
-    return;
-  }
-  const query = stateToNavigatorQuery(state);
-  const key = keyOf(query);
+async function loadFirstPage(key: string, query: Record<string, string | number>): Promise<void> {
   if (key === cacheKey) return;
-
   loading.value = true;
   try {
     cacheBaseQuery = query;
@@ -167,18 +170,52 @@ async function ensureLoaded(routeQuery: LocationQuery): Promise<void> {
 }
 
 async function prefetchNextPage(): Promise<void> {
-  if (loading.value) return;
-  if (cache.value.length >= totalAvailable.value) return;
-  loading.value = true;
-  try {
-    const nextPage = loadedPages.value + 1;
-    const res = await fetchPage(nextPage);
-    if (res && Array.isArray(res.data) && res.data.length > 0) {
-      cache.value = [...cache.value, ...res.data.map(projectRow)];
-      loadedPages.value = nextPage;
+  return runExclusive(async () => {
+    if (cache.value.length >= totalAvailable.value) return;
+    loading.value = true;
+    try {
+      const nextPage = loadedPages.value + 1;
+      const res = await fetchPage(nextPage);
+      if (res && Array.isArray(res.data) && res.data.length > 0) {
+        cache.value = [...cache.value, ...res.data.map(projectRow)];
+        loadedPages.value = nextPage;
+      }
+    } finally {
+      loading.value = false;
     }
-  } finally {
-    loading.value = false;
+  });
+}
+
+/** Mirror of the shipment navigator's `ensureRecordLoaded` — see its comment. */
+async function ensureRecordLoaded(id: number | string): Promise<void> {
+  while (
+    !cache.value.some((r) => String(r.id) === String(id)) &&
+    cache.value.length < totalAvailable.value
+  ) {
+    const before = cache.value.length;
+    await prefetchNextPage();
+    if (cache.value.length === before) break;
+  }
+}
+
+async function ensureLoaded(
+  routeQuery: LocationQuery,
+  targetId?: number | string | null,
+): Promise<void> {
+  const state = parseCargoListQuery(routeQuery as Record<string, unknown>);
+  if (!cargoListHasActiveFilters(state)) {
+    clearCache();
+    return;
+  }
+  const query = stateToNavigatorQuery(state);
+  const key = keyOf(query);
+
+  if (key !== cacheKey) {
+    await runExclusive(() => loadFirstPage(key, query));
+  }
+
+  if (targetId != null) {
+    await ensureRecordLoaded(targetId);
   }
 }
 
@@ -193,7 +230,10 @@ export function useRecordNavigator(
   hasPrev: ComputedRef<boolean>;
   hasNext: ComputedRef<boolean>;
   loading: ComputedRef<boolean>;
-  ensureLoaded: (routeQuery: LocationQuery) => Promise<void>;
+  ensureLoaded: (
+    routeQuery: LocationQuery,
+    targetId?: number | string | null,
+  ) => Promise<void>;
   goPrev: () => void;
   goNext: () => void;
   goTo: (id: number | string) => void;

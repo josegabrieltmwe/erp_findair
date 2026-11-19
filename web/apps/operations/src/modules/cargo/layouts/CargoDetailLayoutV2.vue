@@ -304,7 +304,7 @@ const subtitle = computed<string>(() => {
 onMounted(() => {
   // Paleta de la ficha con el modo que eligió el usuario: entrar en la ficha no cambia claro/oscuro.
   applyThemeMode(theme, "shipmentV2");
-  void navigator.ensureLoaded(route.query);
+  void navigator.ensureLoaded(route.query, currentId.value);
   document.addEventListener("keydown", onKey);
 });
 onBeforeUnmount(() => {

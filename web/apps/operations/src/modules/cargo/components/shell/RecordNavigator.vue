@@ -178,7 +178,7 @@ function onKey(e: KeyboardEvent): void {
 }
 
 onMounted(() => {
-  void navigator.ensureLoaded(route.query);
+  void navigator.ensureLoaded(route.query, currentId.value);
   document.addEventListener("keydown", onKey);
 });
 onBeforeUnmount(() => {
