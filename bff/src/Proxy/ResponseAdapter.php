@@ -316,7 +316,13 @@ final class ResponseAdapter
             return [];
         }
         $decoded = json_decode((string) $body, true);
-        $body->rewind();
+        // Solo rebobinar si el cuerpo se va a reenviar tal cual (legacyRejection() lo reutiliza para la
+        // respuesta final). Las rutas binarias/stream (etiquetas, PDFs) piden el cuerpo a Guzzle con
+        // `stream: true`: ese stream NO es "seekable", y rewind() lanzaba RuntimeException sin capturar
+        // en cuanto el backend devolvia un error (p. ej. 404 por falta de fichero) en una de esas rutas.
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
 
         return is_array($decoded) ? $decoded : [];
     }

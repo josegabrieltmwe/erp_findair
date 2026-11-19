@@ -6,7 +6,9 @@ namespace Findair\Bff\Tests;
 
 use Findair\Bff\Proxy\ResponseAdapter;
 use Findair\Bff\Proxy\Route;
+use GuzzleHttp\Psr7\FnStream;
 use GuzzleHttp\Psr7\Response as UpstreamResponse;
+use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -68,5 +70,28 @@ final class ResponseAdapterTest extends TestCase
 
         self::assertSame('private, max-age=3600', $response->getHeaderLine('Cache-Control'));
         self::assertSame('"label-etag"', $response->getHeaderLine('Etag'));
+    }
+
+    /**
+     * Las rutas binarias/stream (etiquetas, PDFs combinados) piden el cuerpo a Guzzle con `stream: true`: ese
+     * stream NO es "seekable". Cuando el backend responde con un error (p. ej. 404 porque no hay fichero
+     * guardado para ese shipment) `decode()` intentaba `rewind()` ese cuerpo igualmente y lanzaba
+     * RuntimeException sin capturar — visto en produccion contra api_label_combined_pdf (shipment 1001088879,
+     * sin PDF guardado): la peticion devolvia 500 en vez de un 404 limpio.
+     */
+    public function testBinaryRouteErrorWithNonSeekableBodyDoesNotThrow(): void
+    {
+        $adapter = new ResponseAdapter(new NullLogger());
+        $body = FnStream::decorate(Utils::streamFor('[]'), [
+            'isSeekable' => static fn (): bool => false,
+            'rewind' => static function (): void {
+                throw new \RuntimeException('Stream is not seekable');
+            },
+        ]);
+        $upstream = new UpstreamResponse(404, ['Content-Type' => 'application/json'], $body);
+
+        $response = $adapter->adapt($upstream, $this->route('binary'), 'req-3');
+
+        self::assertSame(404, $response->getStatusCode());
     }
 }
