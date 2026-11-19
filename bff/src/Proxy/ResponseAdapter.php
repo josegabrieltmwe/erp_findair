@@ -16,7 +16,16 @@ use Slim\Psr7\Response;
  */
 final class ResponseAdapter
 {
-    private const FORWARDED_HEADERS = ['content-type', 'content-disposition', 'content-length', 'cache-control', 'etag', 'last-modified', 'retry-after'];
+    private const FORWARDED_HEADERS = ['content-type', 'content-disposition', 'content-length', 'retry-after'];
+
+    /**
+     * Cabeceras de cacheo: solo se reenvian para rutas binarias/stream (etiquetas PDF, descargas), donde un
+     * Cache-Control del backend es intencional. Para JSON se ignoran — tmwe_json pone un Cache-Control de
+     * infraestructura (nivel de servidor, no por ruta) que llega igual en /auth que en el detalle de una
+     * expedicion; reenviarlo hacia el navegador dejaba cacheado hasta 24h el estado de una expedicion que
+     * cambia en background (p. ej. AWB/pickup asignados por el consumer de RabbitMQ) sin que la SPA lo notara.
+     */
+    private const CACHE_HEADERS = ['cache-control', 'etag', 'last-modified'];
 
     /**
      * Códigos de error de la IA que tmwe_json publica en las rutas copilot (Ai_Request_Exception) y el texto
@@ -93,6 +102,15 @@ final class ResponseAdapter
             if ($upstream->hasHeader($name)) {
                 $response = $response->withHeader($name, $upstream->getHeader($name));
             }
+        }
+        if ($route->isBinaryOrStream()) {
+            foreach (self::CACHE_HEADERS as $name) {
+                if ($upstream->hasHeader($name)) {
+                    $response = $response->withHeader($name, $upstream->getHeader($name));
+                }
+            }
+        } else {
+            $response = $response->withHeader('Cache-Control', 'no-store');
         }
         if ($route->response === 'stream') {
             // Sin búfer ni transformaciones intermedias; StreamingEmitter retira el marcador.
