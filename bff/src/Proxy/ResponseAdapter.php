@@ -19,13 +19,17 @@ final class ResponseAdapter
     private const FORWARDED_HEADERS = ['content-type', 'content-disposition', 'content-length', 'retry-after'];
 
     /**
-     * Cabeceras de cacheo: solo se reenvian para rutas binarias/stream (etiquetas PDF, descargas), donde un
-     * Cache-Control del backend es intencional. Para JSON se ignoran — tmwe_json pone un Cache-Control de
-     * infraestructura (nivel de servidor, no por ruta) que llega igual en /auth que en el detalle de una
-     * expedicion; reenviarlo hacia el navegador dejaba cacheado hasta 24h el estado de una expedicion que
-     * cambia en background (p. ej. AWB/pickup asignados por el consumer de RabbitMQ) sin que la SPA lo notara.
+     * Validadores de cacheo (no el propio Cache-Control): se reenvian si el backend los pone explicitamente,
+     * para no descartar un ETag/Last-Modified real si algun dia una ruta binaria lo usa. El Cache-Control en si
+     * NUNCA se reenvia (ver forceNoStore más abajo) — ni en JSON ni en binario/stream — porque tmwe_json pone uno
+     * de infraestructura (nivel de servidor, no por ruta) que llega igual en /auth que en un PDF de etiqueta;
+     * confiar en el para JSON dejaba cacheado hasta 24h el estado de una expedicion que cambia en background
+     * (p. ej. AWB/pickup asignados por el consumer de RabbitMQ) sin que la SPA lo notara, y confiar en el para
+     * binarios (etiquetas, PDFs combinados) dejaba viendo la etiqueta de un courier anterior tras regenerarla con
+     * otro courier, porque la URL no cambia entre generaciones (solo shipment_id/packages) y ningun controlador de
+     * tmwe_api pone su propio Cache-Control/ETag en estas rutas.
      */
-    private const CACHE_HEADERS = ['cache-control', 'etag', 'last-modified'];
+    private const CACHE_HEADERS = ['etag', 'last-modified'];
 
     /**
      * Códigos de error de la IA que tmwe_json publica en las rutas copilot (Ai_Request_Exception) y el texto
@@ -109,9 +113,8 @@ final class ResponseAdapter
                     $response = $response->withHeader($name, $upstream->getHeader($name));
                 }
             }
-        } else {
-            $response = $response->withHeader('Cache-Control', 'no-store');
         }
+        $response = $response->withHeader('Cache-Control', 'no-store');
         if ($route->response === 'stream') {
             // Sin búfer ni transformaciones intermedias; StreamingEmitter retira el marcador.
             $response = $response

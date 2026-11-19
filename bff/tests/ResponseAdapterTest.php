@@ -14,10 +14,14 @@ use Psr\Log\NullLogger;
 
 /**
  * tmwe_json pone un Cache-Control de infraestructura (nivel de servidor, no por ruta: llega igual en /auth que en
- * el detalle de una expedicion). Reenviarlo tal cual a rutas JSON dejaba cacheado en el navegador hasta 24h el
- * estado de una expedicion que cambia en background (AWB/pickup asignados por el consumer de RabbitMQ) sin que
- * la SPA lo notara — visto en produccion con el shipment 1001088879 (AWB y pickup confirmados en el backend,
- * invisibles en la UI por la respuesta cacheada).
+ * el detalle de una expedicion o en un PDF de etiqueta). Reenviarlo tal cual:
+ * - en rutas JSON dejaba cacheado en el navegador hasta 24h el estado de una expedicion que cambia en background
+ *   (AWB/pickup asignados por el consumer de RabbitMQ) sin que la SPA lo notara — visto en produccion con el
+ *   shipment 1001088879 (AWB y pickup confirmados en el backend, invisibles en la UI por la respuesta cacheada).
+ * - en rutas binarias (etiquetas/PDFs) dejaba viendo la etiqueta de un courier ya reemplazado: la URL de
+ *   api_label_combined_pdf no cambia entre generaciones (solo shipment_id/packages), asi que el navegador servia
+ *   el PDF del courier anterior desde cache — visto en produccion con el shipment 1001088987 (DHL seguido de
+ *   FedEx: numero de tracking correcto, pero la imagen de la etiqueta seguia siendo la de DHL).
  */
 final class ResponseAdapterTest extends TestCase
 {
@@ -57,7 +61,7 @@ final class ResponseAdapterTest extends TestCase
         self::assertSame('', $response->getHeaderLine('Etag'));
     }
 
-    public function testBinaryRouteStillForwardsUpstreamCacheHeaders(): void
+    public function testBinaryRouteNeverForwardsUpstreamCacheControlButKeepsEtag(): void
     {
         $adapter = new ResponseAdapter(new NullLogger());
         $upstream = new UpstreamResponse(200, [
@@ -68,7 +72,7 @@ final class ResponseAdapterTest extends TestCase
 
         $response = $adapter->adapt($upstream, $this->route('binary'), 'req-2');
 
-        self::assertSame('private, max-age=3600', $response->getHeaderLine('Cache-Control'));
+        self::assertSame('no-store', $response->getHeaderLine('Cache-Control'));
         self::assertSame('"label-etag"', $response->getHeaderLine('Etag'));
     }
 
