@@ -117,12 +117,14 @@
       "CONTACT_FALLBACK_EMAIL": "Die E-Mail des {side} fehlt: es wird die E-Mail {source} gesendet.",
       "COURIER_INVALID_POSTAL_CODE": "{courier} akzeptiert die Postleitzahl einer der Adressen nicht.",
       "COURIER_INVALID_PHONE": "{courier} benötigt eine gültige Telefonnummer von Absender und Empfänger.",
-      "COURIER_UNAVAILABLE": "{courier} hat nicht rechtzeitig geantwortet. Es wurde nichts gebucht."
+      "COURIER_UNAVAILABLE": "{courier} hat nicht rechtzeitig geantwortet. Es wurde nichts gebucht.",
+      "READONLY_SHIPMENT": "Der Lieferant dieser Sendung ist gesperrt: er kann nicht geändert werden."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Teile es auf mehrere Packstücke auf oder wähle einen Frachtservice.",
       "COURIER_REJECTED": "Korrigiere die vom Kurier genannte Angabe und versuche es erneut.",
       "COURIER_UNAVAILABLE": "Versuche es in ein paar Minuten erneut.",
+      "READONLY_SHIPMENT": "Klicke auf das Schloss neben „Service & Spediteur“, um den Lieferanten zu entsperren.",
       "category_internal": "Wenn es wieder passiert, kopiere die Details und sende sie an den Support."
     }
   },

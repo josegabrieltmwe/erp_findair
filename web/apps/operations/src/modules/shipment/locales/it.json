@@ -107,6 +107,8 @@
       "no_results_title": "Nessun risultato",
       "no_results_text": "Nessun servizio corrisponde a «{query}».",
       "current": "Attuale",
+      "locked_banner": "Fornitore bloccato: non è possibile cambiare vettore finché non viene sbloccato (lucchetto accanto a «Servizio e vettore»).",
+      "locked_row_hint": "Fornitore bloccato — sbloccalo per scegliere un altro vettore.",
       "priority": "Servizio prioritario",
       "explain_price": "Spiega prezzo",
       "unavailable": "Non disponibile",

@@ -107,6 +107,8 @@
       "no_results_title": "Keine Ergebnisse",
       "no_results_text": "Kein Service entspricht «{query}».",
       "current": "Aktuell",
+      "locked_banner": "Lieferant gesperrt: der Spediteur kann erst nach Entsperrung geändert werden (Schloss neben „Service & Spediteur“).",
+      "locked_row_hint": "Lieferant gesperrt — entsperre ihn, um einen anderen Spediteur zu wählen.",
       "priority": "Prioritätsservice",
       "explain_price": "Preis erläutern",
       "unavailable": "Nicht verfügbar",

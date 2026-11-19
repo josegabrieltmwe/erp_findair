@@ -41,6 +41,20 @@
       />
     </div>
 
+    <!-- Candado de proveedor (fornitore_lk='S'): el backend rechaza cualquier
+         cambio salvo a la fila actual. Aviso explícito en vez de dejar que el
+         operador lo descubra tras un 409. -->
+    <v-alert
+      v-if="fornitoreLk"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      icon="mdi-lock"
+      class="forn-modal__locked-banner"
+    >
+      {{ t("shipment.service.locked_banner") }}
+    </v-alert>
+
     <!-- Servicio económico (id_servforn_eco): id del servicio de courier más
          barato retenido para recálculos. En el legacy es un campo numérico
          simple (spedy_form Cmp("id_servforn_eco")), fijado normalmente al
@@ -191,11 +205,24 @@
                   :class="{
                     'forn-row--current': isCurrentService(grp, svc),
                     'forn-row--loading': selectedKey === svcKey(grp, svc),
+                    'forn-row--locked': isLockedRow(grp, svc),
                   }"
+                  :title="
+                    isLockedRow(grp, svc)
+                      ? t('shipment.service.locked_row_hint')
+                      : undefined
+                  "
                   @click="onPick(grp, svc)"
                 >
                   <td class="forn-td--svc">
                     <div class="d-flex align-center">
+                      <v-icon
+                        v-if="isLockedRow(grp, svc)"
+                        icon="mdi-lock-outline"
+                        size="13"
+                        class="me-1 text-medium-emphasis"
+                        :title="t('shipment.service.locked_row_hint')"
+                      />
                       <v-icon
                         v-if="svc.prioritario"
                         icon="mdi-star-circle"
@@ -270,11 +297,24 @@
                 :class="{
                   'forn-row--current': isCurrentService(row.grp, row.svc),
                   'forn-row--loading': selectedKey === svcKey(row.grp, row.svc),
+                  'forn-row--locked': isLockedRow(row.grp, row.svc),
                 }"
+                :title="
+                  isLockedRow(row.grp, row.svc)
+                    ? t('shipment.service.locked_row_hint')
+                    : undefined
+                "
                 @click="onPick(row.grp, row.svc)"
               >
                 <td class="forn-td--svc">
                   <div class="d-flex align-center">
+                    <v-icon
+                      v-if="isLockedRow(row.grp, row.svc)"
+                      icon="mdi-lock-outline"
+                      size="13"
+                      class="me-1 text-medium-emphasis"
+                      :title="t('shipment.service.locked_row_hint')"
+                    />
                     <v-icon
                       v-if="row.svc.prioritario"
                       icon="mdi-star-circle"
@@ -680,6 +720,19 @@ const currentFornitoreId = computed<number>(() =>
 const currentServiceForn = computed<number>(() =>
   Number(shipment.value?.id_servizio_fornitore ?? 0),
 );
+// Candado manual (api_shipment_set_service lo fija tras una asignacion manual,
+// ver Shipment_Set_Service_Controller::blocked_by_state): con el puesto, el
+// backend rechaza cambiar a cualquier fila que no sea la actual (409
+// READONLY_SHIPMENT). Antes de este flag la fila bloqueada se veia igual de
+// clicable que el resto y solo se sabia al intentarlo.
+const fornitoreLk = computed<boolean>(() => shipment.value?.fornitore_lk === "S");
+
+function isLockedRow(
+  grp: FornitoreServiceOption,
+  svc: FornitoreServiceOption["services"][number],
+): boolean {
+  return fornitoreLk.value && !isCurrentService(grp, svc);
+}
 
 function isCurrentService(
   grp: FornitoreServiceOption,
@@ -1159,6 +1212,19 @@ watch(
 .forn-row--loading {
   background: rgba(var(--v-theme-primary), 0.06);
   pointer-events: none;
+}
+
+.forn-row--locked:not(.forn-row--current) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.forn-row--locked:not(.forn-row--current):hover {
+  background: transparent;
+}
+
+.forn-modal__locked-banner {
+  margin-bottom: 12px;
 }
 
 .forn-row--unavail {

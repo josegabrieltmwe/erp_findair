@@ -107,6 +107,8 @@
       "no_results_title": "No results",
       "no_results_text": "No service matches «{query}».",
       "current": "Current",
+      "locked_banner": "Supplier locked: the carrier cannot be changed until it is unlocked (lock next to \"Service & carrier\").",
+      "locked_row_hint": "Supplier locked — unlock it to pick another carrier.",
       "priority": "Priority service",
       "explain_price": "Explain price",
       "unavailable": "Unavailable",

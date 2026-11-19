@@ -9,6 +9,8 @@ import {
   type SupplierChangeInfo,
 } from "@shipment/services/service_selection.service";
 import { fornitoriService } from "@shipment/services/fornitori.service";
+import { localizedErrorText } from "@shared/utils/apiError";
+import { i18n } from "@shipment/plugins/i18n";
 import { useShipmentStore } from "./shipment.store";
 import { useToastStore } from "./toast.store";
 
@@ -257,7 +259,17 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
       toasts.push("error", r.etxt || r.error || "Selection failed");
       return false;
     } catch (e) {
-      toasts.push("error", (e as Error).message);
+      // 409 READONLY_SHIPMENT (fornitore_lk='S'): el backend manda texto tecnico
+      // en ingles ("Supplier is locked (fornitore_lk)..."); localizedErrorText lo
+      // sustituye por errors.api.READONLY_SHIPMENT si el codigo trae traduccion.
+      toasts.push(
+        "error",
+        localizedErrorText(
+          e,
+          { t: i18n.global.t, te: i18n.global.te },
+          (e as Error).message,
+        ),
+      );
       return false;
     } finally {
       selecting.value = false;

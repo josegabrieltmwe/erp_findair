@@ -107,6 +107,8 @@
       "no_results_title": "Geen resultaten",
       "no_results_text": "Geen dienst komt overeen met «{query}».",
       "current": "Huidig",
+      "locked_banner": "Leverancier vergrendeld: de vervoerder kan niet worden gewijzigd totdat deze wordt ontgrendeld (slotje naast \"Service & vervoerder\").",
+      "locked_row_hint": "Leverancier vergrendeld — ontgrendel om een andere vervoerder te kiezen.",
       "priority": "Prioritaire dienst",
       "explain_price": "Prijs uitleggen",
       "unavailable": "Niet beschikbaar",

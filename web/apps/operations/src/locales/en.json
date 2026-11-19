@@ -117,12 +117,14 @@
       "CONTACT_FALLBACK_EMAIL": "The {side} email is missing: the one of {source} will be sent.",
       "COURIER_INVALID_POSTAL_CODE": "{courier} does not accept the postal code of one of the addresses.",
       "COURIER_INVALID_PHONE": "{courier} needs a valid phone number for sender and recipient.",
-      "COURIER_UNAVAILABLE": "{courier} did not answer in time. Nothing has been booked."
+      "COURIER_UNAVAILABLE": "{courier} did not answer in time. Nothing has been booked.",
+      "READONLY_SHIPMENT": "The supplier for this shipment is locked: it cannot be changed."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Split it into more packages or choose a freight service.",
       "COURIER_REJECTED": "Fix the data the courier points out and try again.",
       "COURIER_UNAVAILABLE": "Try again in a few minutes.",
+      "READONLY_SHIPMENT": "Click the lock next to \"Service & carrier\" to unlock the supplier.",
       "category_internal": "If it happens again, copy the details and send them to support."
     }
   },

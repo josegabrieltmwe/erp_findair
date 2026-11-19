@@ -107,6 +107,8 @@
       "no_results_title": "Sin resultados",
       "no_results_text": "Ningún servicio coincide con «{query}».",
       "current": "Actual",
+      "locked_banner": "Proveedor bloqueado: no se puede cambiar de transportista hasta desbloquearlo (candado junto a «Servicio y transportista»).",
+      "locked_row_hint": "Proveedor bloqueado — desbloquéalo para elegir otro transportista.",
       "priority": "Servicio prioritario",
       "explain_price": "Explicar precio",
       "unavailable": "No disponible",

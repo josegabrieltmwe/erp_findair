@@ -117,12 +117,14 @@
       "CONTACT_FALLBACK_EMAIL": "Falta el email del {side}: se enviará el de {source}.",
       "COURIER_INVALID_POSTAL_CODE": "{courier} no acepta el código postal de una de las direcciones.",
       "COURIER_INVALID_PHONE": "{courier} necesita un teléfono válido del remitente y del destinatario.",
-      "COURIER_UNAVAILABLE": "{courier} no ha contestado a tiempo. No se ha reservado nada."
+      "COURIER_UNAVAILABLE": "{courier} no ha contestado a tiempo. No se ha reservado nada.",
+      "READONLY_SHIPMENT": "El proveedor de este envío está bloqueado: no se puede cambiar."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Divídelo en más bultos o elige un servicio de carga.",
       "COURIER_REJECTED": "Corrige el dato que indica el courier y vuelve a intentarlo.",
       "COURIER_UNAVAILABLE": "Vuelve a intentarlo en unos minutos.",
+      "READONLY_SHIPMENT": "Pulsa el candado junto a «Servicio y transportista» para desbloquear el proveedor.",
       "category_internal": "Si se repite, copia el detalle y envíalo a soporte."
     }
   },

@@ -117,12 +117,14 @@
       "CONTACT_FALLBACK_EMAIL": "Het e-mailadres van de {side} ontbreekt: dat van {source} wordt verstuurd.",
       "COURIER_INVALID_POSTAL_CODE": "{courier} accepteert de postcode van een van de adressen niet.",
       "COURIER_INVALID_PHONE": "{courier} heeft een geldig telefoonnummer van afzender en ontvanger nodig.",
-      "COURIER_UNAVAILABLE": "{courier} heeft niet op tijd geantwoord. Er is niets geboekt."
+      "COURIER_UNAVAILABLE": "{courier} heeft niet op tijd geantwoord. Er is niets geboekt.",
+      "READONLY_SHIPMENT": "De leverancier van deze zending is vergrendeld: deze kan niet worden gewijzigd."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Verdeel het over meer colli of kies een vrachtdienst.",
       "COURIER_REJECTED": "Corrigeer het gegeven dat de koerier aangeeft en probeer opnieuw.",
       "COURIER_UNAVAILABLE": "Probeer het over een paar minuten opnieuw.",
+      "READONLY_SHIPMENT": "Klik op het slotje naast \"Service & vervoerder\" om de leverancier te ontgrendelen.",
       "category_internal": "Gebeurt het opnieuw, kopieer de details en stuur ze naar support."
     }
   },
