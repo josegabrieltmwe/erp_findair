@@ -73,6 +73,10 @@ Propuesta: `GET ?action=get_ops_bootstrap` (tier `api`/`web`, cualquier usuario 
 Al publicarlo basta `UPSTREAM_CONTEXT_ACTION=get_ops_bootstrap` en `bff/.env`: el BFF lo llama
 una vez en el login y lo devuelve en `/bff/auth/session`.
 
+**Verificado en producción (2026-11-18): la acción no funciona hoy en `erp.tmwe.it`**, aunque el
+endpoint existe en la rama `sandbox` de `tmwe_api` (ver detalle, estados y workaround aplicado en
+`contrato-con-api.md` P02 — esa es la lista vigente, este documento queda como historial).
+
 ## 3. Permisos con Bearer vs. sesión
 
 Con token OAuth el acceso lo deciden los scopes (rol del cliente ∩ rol del usuario), no los
