@@ -25,6 +25,7 @@
         "carrier_credentials": "Vervoerder-inloggegevens",
         "google_maps": "Google Maps",
         "ai_integrations": "AI-integraties",
+        "api_access": "API-toegang",
         "b2b_templates": "B2B & sjablonen",
         "translations": "Vertalingen",
         "cargo_catalogs": "Catalogi",
@@ -327,6 +328,10 @@
         "forward_air_my_accounts": {
           "title": "Mijn Forward Air-accounts",
           "description": "De Forward Air-inloggegevens van uw bedrijf"
+        },
+        "portal_my_oauth_clients": {
+          "title": "Mijn OAuth-apps",
+          "description": "Maak en beheer je eigen API-inloggegevens (client_id / client_secret)"
         }
       }
     }
@@ -2499,6 +2504,49 @@
     "subtitle_self": "Uw Forward Air LTL-accounts per omgeving. Inloggegevens zijn alleen schrijfbaar en worden versleuteld opgeslagen.",
     "verify_status_ok": "Geverifieerd",
     "verify_status_failed": "Mislukt"
+  },
+  "portal_my_clients": {
+    "title": "Mijn OAuth-apps",
+    "subtitle": "Maak en beheer je eigen API-inloggegevens. Alleen beschikbaar in testomgevingen.",
+    "new_client": "Nieuwe app",
+    "empty_title": "Je hebt nog geen OAuth-app",
+    "unnamed": "Zonder naam",
+    "limits_total": "{count} / {max} apps",
+    "limits_rate": "max. {max} nieuwe per uur",
+    "cap_reached": "Limiet bereikt",
+    "never": "Nooit",
+    "col_client": "App",
+    "col_contact": "Contact",
+    "col_status": "Status",
+    "col_created": "Aangemaakt",
+    "col_last_activity": "Laatste activiteit",
+    "col_actions": "Acties",
+    "status_active": "Actief",
+    "status_disabled": "Uitgeschakeld",
+    "rotate": "Secret vernieuwen",
+    "disable": "Uitschakelen",
+    "enable": "Inschakelen",
+    "dialog_create": "Nieuwe OAuth-app",
+    "form_client_name": "Naam van de app",
+    "form_client_name_hint": "Zodat je 'm herkent — bv. \"Zapier-integratie\" of \"CI/CD\"",
+    "form_company_name": "Bedrijf (optioneel)",
+    "form_contact_email": "Contact-e-mail (optioneel)",
+    "dialog_edit": "App bewerken",
+    "confirm_rotate_title": "Secret vernieuwen",
+    "confirm_rotate_message": "Er wordt een nieuwe client_secret gegenereerd voor \"{name}\". Met de oude kunnen geen nieuwe tokens meer worden aangevraagd; al uitgegeven tokens blijven geldig tot ze verlopen.",
+    "confirm_disable_title": "App uitschakelen",
+    "confirm_disable_message": "\"{name}\" kan geen nieuwe tokens meer aanvragen totdat je de app opnieuw inschakelt. Al uitgegeven tokens blijven geldig tot ze verlopen.",
+    "created": "App aangemaakt",
+    "updated": "App bijgewerkt",
+    "rotated": "Secret vernieuwd",
+    "disabled": "App uitgeschakeld",
+    "enabled": "App ingeschakeld",
+    "secret_title": "Bewaar dit secret nu",
+    "secret_warning": "De client_secret wordt niet opnieuw getoond. Kopieer en bewaar deze op een veilige plek voordat je dit venster sluit.",
+    "field_client_id": "client_id",
+    "field_client_secret": "client_secret",
+    "secret_done": "Ik heb het bewaard",
+    "production_disabled_fallback": "Zelfbeheer van OAuth-apps is niet beschikbaar op dit ERP."
   },
   "pay_gateways": {
     "title": "Betaalgateways",

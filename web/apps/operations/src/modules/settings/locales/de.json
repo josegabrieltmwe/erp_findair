@@ -25,6 +25,7 @@
         "carrier_credentials": "Frachtführer-Zugangsdaten",
         "google_maps": "Google Maps",
         "ai_integrations": "KI-Integrationen",
+        "api_access": "API-Zugänge",
         "b2b_templates": "B2B & Vorlagen",
         "translations": "Übersetzungen",
         "cargo_catalogs": "Kataloge",
@@ -327,6 +328,10 @@
         "forward_air_my_accounts": {
           "title": "Meine Forward-Air-Konten",
           "description": "Die Forward-Air-Zugangsdaten Ihres Unternehmens"
+        },
+        "portal_my_oauth_clients": {
+          "title": "Meine OAuth-Apps",
+          "description": "Erstellen und verwalten Sie Ihre eigenen API-Zugangsdaten (client_id / client_secret)"
         }
       }
     }
@@ -2499,6 +2504,49 @@
     "subtitle_self": "Ihre Forward-Air-LTL-Konten je Umgebung. Zugangsdaten sind nur schreibbar und werden verschlüsselt gespeichert.",
     "verify_status_ok": "Geprüft",
     "verify_status_failed": "Fehlgeschlagen"
+  },
+  "portal_my_clients": {
+    "title": "Meine OAuth-Apps",
+    "subtitle": "Erstellen und verwalten Sie Ihre eigenen API-Zugangsdaten. Nur in Testumgebungen verfügbar.",
+    "new_client": "Neue App",
+    "empty_title": "Sie haben noch keine OAuth-App",
+    "unnamed": "Ohne Namen",
+    "limits_total": "{count} / {max} Apps",
+    "limits_rate": "max. {max} neue pro Stunde",
+    "cap_reached": "Limit erreicht",
+    "never": "Nie",
+    "col_client": "App",
+    "col_contact": "Kontakt",
+    "col_status": "Status",
+    "col_created": "Erstellt",
+    "col_last_activity": "Letzte Aktivität",
+    "col_actions": "Aktionen",
+    "status_active": "Aktiv",
+    "status_disabled": "Deaktiviert",
+    "rotate": "Secret erneuern",
+    "disable": "Deaktivieren",
+    "enable": "Aktivieren",
+    "dialog_create": "Neue OAuth-App",
+    "form_client_name": "Name der App",
+    "form_client_name_hint": "Damit Sie sie wiedererkennen — z. B. „Zapier-Integration“ oder „CI/CD“",
+    "form_company_name": "Unternehmen (optional)",
+    "form_contact_email": "Kontakt-E-Mail (optional)",
+    "dialog_edit": "App bearbeiten",
+    "confirm_rotate_title": "Secret erneuern",
+    "confirm_rotate_message": "Für „{name}“ wird ein neues client_secret erzeugt. Mit dem alten können keine neuen Token mehr angefordert werden; bereits ausgestellte Token bleiben bis zum Ablauf gültig.",
+    "confirm_disable_title": "App deaktivieren",
+    "confirm_disable_message": "„{name}“ kann keine neuen Token mehr anfordern, bis Sie die App wieder aktivieren. Bereits ausgestellte Token bleiben bis zum Ablauf gültig.",
+    "created": "App erstellt",
+    "updated": "App aktualisiert",
+    "rotated": "Secret erneuert",
+    "disabled": "App deaktiviert",
+    "enabled": "App aktiviert",
+    "secret_title": "Speichern Sie dieses Secret jetzt",
+    "secret_warning": "Das client_secret wird nicht erneut angezeigt. Kopieren Sie es und bewahren Sie es sicher auf, bevor Sie dieses Fenster schließen.",
+    "field_client_id": "client_id",
+    "field_client_secret": "client_secret",
+    "secret_done": "Ich habe es gespeichert",
+    "production_disabled_fallback": "Die Selbstverwaltung eigener OAuth-Apps ist auf diesem ERP nicht verfügbar."
   },
   "pay_gateways": {
     "title": "Zahlungs-Gateways",

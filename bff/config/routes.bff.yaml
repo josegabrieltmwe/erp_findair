@@ -203,6 +203,27 @@ routes:
       action: get_my_profile
     legacy_envelope: true
 
+  # Autoservicio de aplicaciones OAuth2 propias (Portal_My_Clients_Controller, policy public_oauth: cualquier
+  # cliente OAuth autenticado, sin scope ni admin_only — ver docs/contrato-con-api.md). Entradas manuales (no
+  # generadas) porque bin/gen-spa-manifest.php no conoce body_enum: el POST añade aquí la lista cerrada de
+  # `action` como defensa en profundidad, redundante con el switch del propio controlador. Sin legacy_envelope:
+  # los rechazos son HTTP 4xx (400/403/404/429) con {success:false, error:{code,message}}, nunca 200 con
+  # success:false. Sin check_effective_partner: false -- el controlador SÍ autentica (is_secured()=true) y por
+  # tanto emite X-Effective-Partner-Id como cualquier ruta protegida (igual que currency.day más abajo).
+  - id: get.portal_my_clients
+    method: GET
+    path: /portal_my_clients
+    upstream:
+      action: portal_my_clients
+
+  - id: post.portal_my_clients
+    method: POST
+    path: /portal_my_clients
+    upstream:
+      action: portal_my_clients
+    body_enum:
+      action: [create, rotate, disable, enable, update_metadata]
+
   # Ejemplos de nivel api con Bearer puro (rutas reales de config/routes del backend):
   - id: currency.day
     method: GET
