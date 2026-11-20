@@ -133,6 +133,8 @@
         "loading": "Consultando a los couriers (puede tardar unos segundos)…",
         "error": "No se pudieron obtener los tiempos garantizados; se mantiene la lista anterior.",
         "live_failed": "Los couriers no respondieron; se muestran los tiempos estimados.",
+        "late_couriers": "Algunos couriers ({couriers}) aún no han respondido.",
+        "late_reload": "Recargar",
         "days_earlier": "1 día antes | {count} días antes",
         "same_day": "El mismo día",
         "cheapest": "Opción más barata",

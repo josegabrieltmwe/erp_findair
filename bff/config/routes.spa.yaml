@@ -4969,6 +4969,43 @@ routes:
       body: 20m
       timeout: 120
   -
+    id: get.api_partner_forward_air_accounts
+    method: GET
+    path: /api_partner_forward_air_accounts
+    upstream:
+      action: api_partner_forward_air_accounts
+      forward_query: '*'
+  -
+    id: post.api_partner_forward_air_accounts
+    method: POST
+    path: /api_partner_forward_air_accounts
+    upstream:
+      action: api_partner_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: put.api_partner_forward_air_accounts
+    method: PUT
+    path: /api_partner_forward_air_accounts
+    upstream:
+      action: api_partner_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
+    id: delete.api_partner_forward_air_accounts
+    method: DELETE
+    path: /api_partner_forward_air_accounts
+    upstream:
+      action: api_partner_forward_air_accounts
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: get.api_partner_offers
     method: GET
     path: /api_partner_offers

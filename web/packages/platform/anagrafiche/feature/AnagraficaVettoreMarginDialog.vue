@@ -2,7 +2,7 @@
   <v-dialog v-model="model" max-width="820" persistent scrollable>
     <v-card>
       <v-card-title class="d-flex align-center ga-2">
-        <CmAirlineTail v-if="vettore" :code="vettore" :size="28" />
+        <CmAirlineTail v-if="vettore && tipo === 'A'" :code="vettore" :size="28" />
         <v-icon v-else :icon="mdiAirplaneCog" />
         <span>
           {{

@@ -133,6 +133,8 @@
         "loading": "Interrogazione dei corrieri in corso (può richiedere alcuni secondi)…",
         "error": "Impossibile ottenere i tempi garantiti; si mantiene l'elenco precedente.",
         "live_failed": "I corrieri non hanno risposto; vengono mostrati i tempi stimati.",
+        "late_couriers": "Alcuni corrieri ({couriers}) non hanno ancora risposto.",
+        "late_reload": "Ricarica",
         "days_earlier": "1 giorno prima | {count} giorni prima",
         "same_day": "Stesso giorno",
         "cheapest": "Opzione più economica",

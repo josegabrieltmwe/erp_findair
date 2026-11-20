@@ -323,6 +323,10 @@
         "pay_refunds": {
           "title": "Rimborsi",
           "description": "Approvazione dei rimborsi e rate stornate"
+        },
+        "forward_air_my_accounts": {
+          "title": "I miei account Forward Air",
+          "description": "Le credenziali Forward Air della tua azienda"
         }
       }
     }
@@ -2401,12 +2405,14 @@
   "partner_dgr": {
     "title": "Merci pericolose: contatto di emergenza",
     "title_admin": "Merci pericolose: contatto di emergenza per partner",
-    "subtitle": "La tua azienda accompagna il trasporto: questo contatto viene dichiarato a UPS, FedEx e DHL nelle spedizioni con merci pericolose.",
+    "subtitle": "La tua azienda accompagna il trasporto: questo contatto viene dichiarato a UPS, FedEx, DHL e Forward Air nelle spedizioni con merci pericolose.",
     "filter_partner": "Partner",
     "not_configured": "Senza un contatto proprio si usa il telefono della sede della tua azienda e, se manca, quello di TMWE. Quel telefono potrebbe non essere presidiato 24 h: configura qui il contatto di emergenza.",
     "emergency_title": "Contatto di emergenza 24 h",
     "emergency_phone": "Telefono 24 h",
     "emergency_contact": "Persona o servizio",
+    "emergency_email": "Email di emergenza",
+    "emergency_email_hint": "Obbligatoria per Forward Air",
     "emergency_reference": "Contratto o registrazione",
     "signatory_title": "Firmatario della dichiarazione",
     "signatory_name": "Nome",
@@ -2488,7 +2494,11 @@
       "FORWARD_AIR_ACCOUNT_ENCRYPT_FAILED": "Impossibile cifrare o decifrare il segreto. Non è stato salvato nulla",
       "FORWARD_AIR_ACCOUNT_SAVE_FAILED": "Impossibile salvare la modifica",
       "FORWARD_AIR_ACCOUNT_VERIFY_RATE_LIMITED": "Attendi qualche secondo prima di verificare di nuovo questo account"
-    }
+    },
+    "title_self": "Account Forward Air",
+    "subtitle_self": "I tuoi account LTL di Forward Air per ambiente. Le credenziali sono in sola scrittura e restano cifrate.",
+    "verify_status_ok": "Verificato",
+    "verify_status_failed": "Fallito"
   },
   "pay_gateways": {
     "title": "Gateway di pagamento",

@@ -186,11 +186,23 @@
           <div class="cm-vettori-block">
             <div class="cm-vettori-block__head">
               <div>
+                <!-- Modalidad de los pactos por vettore: aerolíneas (A) o transportistas Express (E, p. ej. Forward Air). -->
+                <v-btn-toggle
+                  v-model="vettoreTipo"
+                  mandatory
+                  density="compact"
+                  variant="outlined"
+                  divided
+                  class="mb-2"
+                >
+                  <v-btn value="A" size="small">{{ t('anagrafiche.scaglioni_vettore.mode_a') }}</v-btn>
+                  <v-btn value="E" size="small">{{ t('anagrafiche.scaglioni_vettore.mode_e') }}</v-btn>
+                </v-btn-toggle>
                 <div class="cm-vettori-block__title">
-                  {{ t('anagrafiche.scaglioni_vettore.section_title') }}
+                  {{ vettoreTipo === 'E' ? t('anagrafiche.scaglioni_vettore.section_title_e') : t('anagrafiche.scaglioni_vettore.section_title') }}
                 </div>
                 <div class="cm-vettori-block__hint">
-                  {{ t('anagrafiche.scaglioni_vettore.section_hint') }}
+                  {{ vettoreTipo === 'E' ? t('anagrafiche.scaglioni_vettore.section_hint_e') : t('anagrafiche.scaglioni_vettore.section_hint') }}
                 </div>
               </div>
               <v-btn
@@ -200,7 +212,7 @@
                 :disabled="!hasSelectableVettori"
                 @click="openVettoreDialog()"
               >
-                {{ t('anagrafiche.scaglioni_vettore.add') }}
+                {{ vettoreTipo === 'E' ? t('anagrafiche.scaglioni_vettore.add_e') : t('anagrafiche.scaglioni_vettore.add') }}
               </v-btn>
             </div>
 
@@ -230,7 +242,7 @@
             </v-autocomplete>
 
             <div v-if="!vettoreConfigs.length" class="cm-vettori-empty">
-              {{ t('anagrafiche.scaglioni_vettore.empty') }}
+              {{ vettoreTipo === 'E' ? t('anagrafiche.scaglioni_vettore.empty_e') : t('anagrafiche.scaglioni_vettore.empty') }}
             </div>
 
             <!-- El filtro no encuentra nada: distinto de "no hay pactos". -->
@@ -247,7 +259,8 @@
                 <!-- Identidad: cola + nombre + código, ancho fijo para que
                      todas las fichas alineen su columna de tramos. -->
                 <header class="cm-vettore-card__id">
-                  <CmAirlineTail :code="cfg.vettore" :size="32" />
+                  <CmAirlineTail v-if="vettoreTipo === 'A'" :code="cfg.vettore" :size="32" />
+                  <v-icon v-else :icon="mdiTruckFast" size="32" />
                   <div class="cm-vettore-card__names">
                     <span class="cm-vettore-card__name">{{ cfg.vettore_label }}</span>
                     <span class="cm-vettore-card__code">{{ cfg.vettore }}</span>
@@ -304,7 +317,7 @@
     <AnagraficaVettoreMarginDialog
       v-model="vettoreDialogOpen"
       :id-anagrafica="props.idAnagrafica"
-      tipo="A"
+      :tipo="vettoreTipo"
       :available-vettori="availableVettori"
       :edit-vettore="editingVettore"
       :edit-brackets="editingBrackets"
@@ -377,6 +390,8 @@ function initialTipo(): ScaglioniTipo {
 // --- Márgenes por vettore (aerolínea / proveedor de quote) -----------------
 // Solo aplican al modo aéreo: son el nivel 1 de la cascada de márgenes y
 // sustituyen a los escalones generales SOLO para el proveedor configurado.
+/** Modalidad de los pactos por vettore que se está viendo: 'A' aerolíneas, 'E' transportistas Express. */
+const vettoreTipo = ref<'A' | 'E'>('A');
 const vettoreConfigs = ref<VettoreConfiguration[]>([]);
 const availableVettori = ref<AvailableVettore[]>([]);
 const vettoreDialogOpen = ref(false);
@@ -443,7 +458,7 @@ function definedTiers(
 async function reloadVettori(): Promise<void> {
   if (!props.idAnagrafica) return;
   try {
-    const res = await scaglioniVettoreService.list(props.idAnagrafica, 'A');
+    const res = await scaglioniVettoreService.list(props.idAnagrafica, vettoreTipo.value);
     vettoreConfigs.value = res.configurations;
     availableVettori.value = res.available_vettori;
   } catch {
@@ -480,7 +495,7 @@ function openVettoreDialog(cfg?: VettoreConfiguration): void {
 async function removeVettore(cfg: VettoreConfiguration): Promise<void> {
   deletingVettore.value = cfg.vettore;
   try {
-    await scaglioniVettoreService.remove(props.idAnagrafica, cfg.vettore, 'A');
+    await scaglioniVettoreService.remove(props.idAnagrafica, cfg.vettore, vettoreTipo.value);
     await reloadVettori();
     toast.success(t('anagrafiche.scaglioni_vettore.removed') as string);
   } catch (e) {
@@ -627,6 +642,10 @@ async function convertUnit(): Promise<void> {
 }
 
 watch(unit, reload);
+watch(vettoreTipo, () => {
+  vettoreFilter.value = null;
+  void reloadVettori();
+});
 onMounted(() => {
   void reload();
   void loadPresets();

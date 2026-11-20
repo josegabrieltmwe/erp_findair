@@ -163,6 +163,12 @@
         "preset_hint": "Wendet die 10 Staffeln und die Versicherungswerte der Voreinstellung an und überschreibt die aktuellen."
       },
       "scaglioni_vettore": {
+        "mode_a": "Luftfracht",
+        "mode_e": "Express (Straße)",
+        "section_title_e": "Margen je Frachtführer (Express)",
+        "section_hint_e": "Spezielle Vereinbarungen mit einem Straßenfrachtführer wie Forward Air. Sie ersetzen die Express-Staffeln nur für diesen Frachtführer; alle anderen Services nutzen weiterhin die allgemeinen Express-Staffeln.",
+        "add_e": "Frachtführer hinzufügen",
+        "empty_e": "Keine Margen je Frachtführer. Alle Express-Services nutzen die allgemeinen Staffeln.",
         "section_title": "Margen pro Fluggesellschaft",
         "section_hint": "Spezifische Vereinbarungen mit einer Fluggesellschaft oder einem Angebotsanbieter. Sie ersetzen die obigen Staffeln nur für diesen Anbieter; alle anderen nutzen weiterhin die allgemeinen Staffeln.",
         "add": "Fluggesellschaft hinzufügen",

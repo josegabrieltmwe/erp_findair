@@ -6,6 +6,7 @@ vi.mock('@shared/anagrafiche/services/http', () => ({ http: (...args: unknown[])
 
 import {
   forwardAirAccountsService,
+  forwardAirPartnerAccountsService,
   forwardAirErrorCode,
   isAccountUsable,
   isAuthorizationCurrent,
@@ -77,5 +78,24 @@ describe('utilizable', () => {
     expect(isAccountUsable(account({ authorization_status: 'received' }), '2026-10-29')).toBe(true);
     expect(isAuthorizationCurrent(account({ authorization_status: 'received', authorization_expires_at: '2026-10-28' }), '2026-10-29')).toBe(false);
     expect(isAuthorizationCurrent(account({ authorization_status: 'received', authorization_expires_at: '2026-10-29' }), '2026-10-29')).toBe(true);
+  });
+});
+
+describe('forwardAirPartnerAccountsService', () => {
+  beforeEach(() => httpMock.mockReset());
+
+  it('usa el endpoint del partner y declara la carta con set_authorization', async () => {
+    httpMock.mockResolvedValue({ success: true, data: account({ authorization_status: 'received' }) });
+    await forwardAirPartnerAccountsService.setAuthorization({ id: 1, authorization_status: 'received', authorization_ref: 'C-1' });
+    const [url, options] = httpMock.mock.calls[0];
+    expect(url).toBe('/api_partner_forward_air_accounts');
+    expect(options.method).toBe('PUT');
+    expect(options.body).toMatchObject({ action: 'set_authorization', id: 1 });
+  });
+
+  it('lista las cuentas propias sin enviar partner_id', async () => {
+    httpMock.mockResolvedValue({ success: true, data: [account()] });
+    await forwardAirPartnerAccountsService.list({ environment: 'sandbox' });
+    expect(httpMock).toHaveBeenCalledWith('/api_partner_forward_air_accounts', { query: { environment: 'sandbox' } });
   });
 });
