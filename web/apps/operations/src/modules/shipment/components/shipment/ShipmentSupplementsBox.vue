@@ -104,6 +104,7 @@
       <template #item.attivo="{ item, index }">
         <v-switch
           :model-value="item.attivo === 'S'"
+          :disabled="item.supplierOnly"
           color="success"
           hide-details
           density="compact"
@@ -111,13 +112,27 @@
         />
       </template>
       <template #item.descrizione="{ item }">
-        <div class="text-body-2">
+        <div class="text-body-2 d-flex align-center">
           {{
             item.descrizione ||
             t("shipment.modals.supplements.suppl_n", {
               id: item.id_supplementi,
             })
           }}
+          <v-tooltip v-if="item.supplierOnly" location="top" max-width="320">
+            <template #activator="{ props: tipProps }">
+              <v-chip
+                v-bind="tipProps"
+                size="x-small"
+                variant="tonal"
+                color="warning"
+                class="ms-2"
+              >
+                {{ t("shipment.modals.supplements.supplier_only_badge") }}
+              </v-chip>
+            </template>
+            {{ t("shipment.modals.supplements.supplier_only_tooltip") }}
+          </v-tooltip>
         </div>
       </template>
       <!-- Un suplemento, DOS precios: lo que cuesta (fornitore) y lo que se
@@ -126,6 +141,7 @@
       <template #item.fix_priceF="{ item, index }">
         <v-text-field
           :model-value="item.fix_priceF ?? ''"
+          :disabled="item.supplierOnly"
           type="number"
           min="0"
           step="0.01"
@@ -141,6 +157,7 @@
       <template #item.fix_priceC="{ item, index }">
         <v-text-field
           :model-value="item.fix_priceC ?? ''"
+          :disabled="item.supplierOnly"
           type="number"
           min="0"
           step="0.01"
@@ -168,6 +185,7 @@
       </template>
       <template #item.recalc="{ item }">
         <v-btn
+          v-if="!item.supplierOnly"
           icon="mdi-calculator-variant-outline"
           size="x-small"
           variant="text"
@@ -272,6 +290,10 @@ watch(
   { immediate: true },
 );
 
+/** A row shown in this box that only exists on the supplier/courier axis
+ *  (no `delta='N'` counterpart) — read-only here, see `clientSupplements`. */
+type ClientRow = ShipmentSupplement & { supplierOnly?: boolean };
+
 /**
  * One row per supplement — a supplement is a single thing carrying two prices
  * (cost and client), not two entries.
@@ -280,39 +302,57 @@ watch(
  * the client axis, delta='S' for the supplier one); 1.357 shipments still look
  * like that against 376.041 with a single row. Those legacy pairs are merged
  * here so the operator sees one line, with the supplier row contributing its
- * `fix_priceF`. Filtering `delta !== 'S'` instead would silently hide a cost
- * that was already recorded.
+ * `fix_priceF`.
+ *
+ * A supplement that exists ONLY on the supplier axis (added from the COURIER
+ * tab, no client counterpart) is still shown here — dropping it would hide a
+ * cost that was already recorded — but flagged `supplierOnly` so the template
+ * renders it read-only. Collaudo 20/11: antes se mostraba como una fila normal
+ * y editable; activarla desde esta caja (pestaña Cliente) escribía `attivo`
+ * sobre esa misma fila `delta='S'`, sin crear nunca el eje cliente — quedaba
+ * registrada como suplemento de courier/postfacturación aunque el operador
+ * creyera estar marcando algo "de cara al cliente".
  */
-const clientSupplements = computed(() => {
-  const bySupplement = new Map<string, ShipmentSupplement>();
-
+const clientSupplements = computed<ClientRow[]>(() => {
+  const byId = new Map<string, ShipmentSupplement[]>();
   for (const row of localList.value) {
     const key = String(row.id_supplementi);
-    const existing = bySupplement.get(key);
-
-    if (!existing) {
-      bySupplement.set(key, { ...row });
-      continue;
-    }
-    // Merge the pair: keep the client row as the canonical one (it owns the id
-    // the write path updates) and graft whichever amounts the other row holds.
-    const client = existing.delta === "S" ? { ...row } : existing;
-    const other = existing.delta === "S" ? existing : row;
-    if (client.fix_priceC === null || client.fix_priceC === undefined) {
-      client.fix_priceC = other.fix_priceC;
-    }
-    if (client.fix_priceF === null || client.fix_priceF === undefined) {
-      client.fix_priceF = other.fix_priceF;
-    }
-    // Active on either axis means the supplement applies.
-    if (other.attivo === "S") client.attivo = "S";
-    bySupplement.set(key, client);
+    if (!byId.has(key)) byId.set(key, []);
+    byId.get(key)!.push(row);
   }
 
-  return Array.from(bySupplement.values());
+  const out: ClientRow[] = [];
+  for (const rows of byId.values()) {
+    const clientRow = rows.find((r) => r.delta !== "S");
+    const supplierRow = rows.find((r) => r.delta === "S");
+
+    if (!clientRow) {
+      // Solo existe en el eje fornitore: visible por el coste, no editable.
+      if (supplierRow) out.push({ ...supplierRow, supplierOnly: true });
+      continue;
+    }
+
+    const merged: ClientRow = { ...clientRow };
+    if (supplierRow) {
+      if (merged.fix_priceC === null || merged.fix_priceC === undefined) {
+        merged.fix_priceC = supplierRow.fix_priceC;
+      }
+      if (merged.fix_priceF === null || merged.fix_priceF === undefined) {
+        merged.fix_priceF = supplierRow.fix_priceF;
+      }
+      // Active on either axis means the supplement applies.
+      if (supplierRow.attivo === "S") merged.attivo = "S";
+    }
+    out.push(merged);
+  }
+  return out;
 });
+/** Counts only genuine client-axis rows — a supplier-only row being active
+ *  on the courier side doesn't mean a client supplement is active. */
 const activeCount = computed(
-  () => clientSupplements.value.filter((s) => s.attivo === "S").length,
+  () =>
+    clientSupplements.value.filter((s) => s.attivo === "S" && !s.supplierOnly)
+      .length,
 );
 const dirty = computed(
   () => JSON.stringify(localList.value) !== initialSnapshot.value,
@@ -331,6 +371,11 @@ async function toggleAt(_idx: number, active: boolean): Promise<void> {
   // Find the underlying entry by id_supplementi instead.
   const target = clientSupplements.value[_idx];
   if (!target) return;
+  // Guard, in case the disabled switch is ever bypassed: a supplier-only row
+  // has no client (delta='N') counterpart, so toggling it here would just
+  // flip `attivo` on the delta='S' row — persisting as a courier supplement,
+  // not a client one. Use the COURIER tab for this row instead.
+  if (target.supplierOnly) return;
   const original = localList.value.find((s) => s.id === target.id);
   if (!original) return;
 
@@ -363,6 +408,7 @@ let priceTimer: ReturnType<typeof setTimeout> | null = null;
 function updatePriceAt(_idx: number, raw: string, side: "C" | "F"): void {
   const target = clientSupplements.value[_idx];
   if (!target) return;
+  if (target.supplierOnly) return; // read-only here — see toggleAt.
   const original = localList.value.find((s) => s.id === target.id);
   if (!original) return;
 
@@ -404,8 +450,8 @@ onBeforeUnmount(() => {
  * seguia vacia siempre. calculate() sin tercer argumento siempre cotiza el
  * lado cliente (quale='C'), por eso aqui se escribe fix_priceC.
  */
-async function recalc(item: ShipmentSupplement): Promise<void> {
-  if (!store.id) return;
+async function recalc(item: ClientRow): Promise<void> {
+  if (!store.id || item.supplierOnly) return;
   recalcLoading.value = item.id_supplementi;
   try {
     const r = await supplementsService.calculate(

@@ -864,6 +864,8 @@
         "recompute_failed": "Herberekening mislukt",
         "none_title": "Geen toeslagen",
         "none_client_text": "Er zijn geen klanttoeslagen beschikbaar voor deze zending.",
+        "supplier_only_badge": "Alleen courier",
+        "supplier_only_tooltip": "Deze toeslag bestaat alleen op de courier-as (tabblad COURIER). Hier getoond als kostenreferentie, maar kan niet worden geactiveerd of bewerkt vanuit het tabblad Klant.",
         "none_supplier_title": "Geen leverancierstoeslagen",
         "none_supplier_text": "Geen van de koerierstoeslagen is van toepassing.",
         "col_active": "Actief",

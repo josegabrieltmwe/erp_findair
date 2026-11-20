@@ -864,6 +864,8 @@
         "recompute_failed": "Ricalcolo fallito",
         "none_title": "Nessun supplemento",
         "none_client_text": "Nessun supplemento cliente disponibile per questa spedizione.",
+        "supplier_only_badge": "Solo courier",
+        "supplier_only_tooltip": "Questo supplemento esiste solo sull'asse courier (scheda COURIER). Mostrato qui come riferimento di costo, ma non può essere attivato o modificato dalla scheda Cliente.",
         "none_supplier_title": "Nessun supplemento fornitore",
         "none_supplier_text": "Nessun supplemento del corriere è applicabile.",
         "col_active": "Attivo",

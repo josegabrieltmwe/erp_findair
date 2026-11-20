@@ -864,6 +864,8 @@
         "recompute_failed": "Error al recalcular",
         "none_title": "Sin suplementos",
         "none_client_text": "No hay suplementos de cliente disponibles para este envío.",
+        "supplier_only_badge": "Solo courier",
+        "supplier_only_tooltip": "Este suplemento solo existe en el eje courier (pestaña COURIER). Se muestra aquí como referencia de coste, pero no se puede activar ni editar desde la pestaña Cliente.",
         "none_supplier_title": "Sin suplementos de proveedor",
         "none_supplier_text": "Ninguno de los suplementos del mensajero es aplicable.",
         "col_active": "Activo",

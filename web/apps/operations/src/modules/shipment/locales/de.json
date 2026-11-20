@@ -864,6 +864,8 @@
         "recompute_failed": "Fehler bei der Neuberechnung",
         "none_title": "Keine Zuschläge",
         "none_client_text": "Keine Kundenzuschläge für diese Sendung verfügbar.",
+        "supplier_only_badge": "Nur Courier",
+        "supplier_only_tooltip": "Dieser Zuschlag existiert nur auf der Courier-Achse (Tab COURIER). Wird hier zur Kostenübersicht angezeigt, kann aber im Tab Kunde nicht aktiviert oder bearbeitet werden.",
         "none_supplier_title": "Keine Lieferantenzuschläge",
         "none_supplier_text": "Keiner der Kurierzuschläge ist anwendbar.",
         "col_active": "Aktiv",

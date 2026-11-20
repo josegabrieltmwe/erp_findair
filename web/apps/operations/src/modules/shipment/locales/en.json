@@ -864,6 +864,8 @@
         "recompute_failed": "Recompute failed",
         "none_title": "No supplements",
         "none_client_text": "No client supplements are available for this shipment.",
+        "supplier_only_badge": "Courier only",
+        "supplier_only_tooltip": "This supplement only exists on the courier axis (COURIER tab). Shown here for cost reference, but it cannot be activated or edited from the Client tab.",
         "none_supplier_title": "No supplier supplements",
         "none_supplier_text": "None of the courier supplements are applicable.",
         "col_active": "Active",
