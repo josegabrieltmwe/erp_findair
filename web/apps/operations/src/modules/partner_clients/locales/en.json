@@ -163,6 +163,12 @@
         "preset_hint": "Applies the preset's 10 tiers and insurance values, overwriting the current ones."
       },
       "scaglioni_vettore": {
+        "mode_a": "Air cargo",
+        "mode_e": "Express (ground)",
+        "section_title_e": "Per-carrier margins (Express)",
+        "section_hint_e": "Specific agreements with a ground carrier such as Forward Air. They replace the Express brackets for that carrier only; every other service keeps using the general Express brackets.",
+        "add_e": "Add carrier",
+        "empty_e": "No per-carrier margins. All Express services use the general brackets.",
         "section_title": "Per-airline margins",
         "section_hint": "Specific agreements with an airline or quote provider. They replace the brackets above for that provider only; every other carrier keeps using the general brackets.",
         "add": "Add airline",

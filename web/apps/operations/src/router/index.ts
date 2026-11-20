@@ -857,6 +857,15 @@ const routes: RouteRecordRaw[] = [
       import("@shared/forward_air_accounts/feature/ForwardAirAccountsPage.vue"),
     meta: { requiresAdmin: true },
   },
+  // Cuentas de Forward Air del propio partner. NO es requiresAdmin: la autoriza el servidor (scopes
+  // forward_air_accounts:* del rol partner_admin).
+  {
+    path: "/settings/forward-air-my-accounts",
+    name: "settings-forward-air-my-accounts",
+    component: () =>
+      import("@shared/forward_air_accounts/feature/ForwardAirAccountsPage.vue"),
+    props: { scope: "self" },
+  },
   // Fase 6 / L20: estado del token OAuth de UPS, solo lectura. Backend NUEVO
   // (Ups_Token_Status_Controller) — lee ups_auth_token (módulo tmwe_ups)
   // directamente, sin exponer el token/refresh_token. Sin renovar/revocar,

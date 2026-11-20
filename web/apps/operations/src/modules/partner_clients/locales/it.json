@@ -163,6 +163,12 @@
         "preset_hint": "Applica i 10 scaglioni e i valori assicurativi del preset, sovrascrivendo quelli attuali."
       },
       "scaglioni_vettore": {
+        "mode_a": "Cargo aereo",
+        "mode_e": "Express (via terra)",
+        "section_title_e": "Margini per vettore (Express)",
+        "section_hint_e": "Accordi specifici con un vettore via terra come Forward Air. Sostituiscono gli scaglioni Express solo per quel vettore; gli altri servizi continuano a usare gli scaglioni Express generali.",
+        "add_e": "Aggiungi vettore",
+        "empty_e": "Nessun margine per vettore. Tutti i servizi Express usano gli scaglioni generali.",
         "section_title": "Margini per compagnia aerea",
         "section_hint": "Accordi specifici con una compagnia aerea o un fornitore di quotazioni. Sostituiscono gli scaglioni sopra solo per quel fornitore; gli altri continuano a usare gli scaglioni generali.",
         "add": "Aggiungi compagnia",

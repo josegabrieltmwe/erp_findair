@@ -163,6 +163,12 @@
         "preset_hint": "Past de 10 schijven en de verzekeringswaarden van de voorinstelling toe en overschrijft de huidige."
       },
       "scaglioni_vettore": {
+        "mode_a": "Luchtvracht",
+        "mode_e": "Express (over land)",
+        "section_title_e": "Marges per vervoerder (Express)",
+        "section_hint_e": "Specifieke afspraken met een wegvervoerder zoals Forward Air. Ze vervangen de Express-schalen alleen voor die vervoerder; alle andere diensten blijven de algemene Express-schalen gebruiken.",
+        "add_e": "Vervoerder toevoegen",
+        "empty_e": "Geen marges per vervoerder. Alle Express-diensten gebruiken de algemene schalen.",
         "section_title": "Marges per luchtvaartmaatschappij",
         "section_hint": "Specifieke afspraken met een luchtvaartmaatschappij of offerteleverancier. Ze vervangen de bovenstaande schijven alleen voor die leverancier; de rest blijft de algemene schijven gebruiken.",
         "add": "Maatschappij toevoegen",

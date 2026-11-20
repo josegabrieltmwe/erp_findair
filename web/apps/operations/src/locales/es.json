@@ -6,7 +6,8 @@
     "fornitori_accnt": "Credenciales courier",
     "elevenlabs_credentials": "Credenciales ElevenLabs",
     "datos_fiscales": "Datos fiscales",
-    "partner_smtp": "SMTP (correo saliente)"
+    "partner_smtp": "SMTP (correo saliente)",
+    "forward_air_accounts": "Forward Air"
   },
   "common": {
     "cancel": "Cancelar",

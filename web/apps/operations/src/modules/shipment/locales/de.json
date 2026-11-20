@@ -133,6 +133,8 @@
         "loading": "Kuriere werden abgefragt (dies kann einige Sekunden dauern)…",
         "error": "Die garantierten Laufzeiten konnten nicht abgerufen werden; die vorherige Liste bleibt erhalten.",
         "live_failed": "Die Kuriere haben nicht geantwortet; geschätzte Laufzeiten werden angezeigt.",
+        "late_couriers": "Einige Kuriere ({couriers}) haben noch nicht geantwortet.",
+        "late_reload": "Neu laden",
         "days_earlier": "1 Tag früher | {count} Tage früher",
         "same_day": "Am selben Tag",
         "cheapest": "Günstigste Option",

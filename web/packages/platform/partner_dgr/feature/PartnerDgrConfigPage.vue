@@ -40,6 +40,18 @@
         <v-col cols="12" md="4">
           <v-text-field v-model="form.emergency_reference" :label="t('partner_dgr.emergency_reference')" density="compact" />
         </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+            v-model="form.emergency_email"
+            :label="t('partner_dgr.emergency_email')"
+            :hint="t('partner_dgr.emergency_email_hint')"
+            :error-messages="errors.emergency_email"
+            persistent-hint
+            type="email"
+            density="compact"
+            data-testid="dgr-emergency-email"
+          />
+        </v-col>
       </v-row>
 
       <div class="text-subtitle-2 mb-2 mt-2">{{ t('partner_dgr.signatory_title') }}</div>
@@ -82,7 +94,7 @@ import { getPartnerDgrConfig, savePartnerDgrConfig } from '../../services/dgr.se
 
 /**
  * Contacto de emergencia 24 h y firmante de mercancía peligrosa del partner (api_partner_dgr_config). El partner es el
- * especialista que acompaña el transporte: su contacto viaja en la declaración a UPS, FedEx y DHL, y sin él no se crean
+ * especialista que acompaña el transporte: su contacto viaja en la declaración a UPS, FedEx, DHL y Forward Air (esta además exige el email), y sin él no se crean
  * etiquetas de régimen completo. `self`: el propio partner; `admin`: TMWE con selector de partner.
  */
 const props = defineProps<{ scope: 'self' | 'admin' }>();
@@ -94,6 +106,7 @@ const partnerId = ref<number | null>(null);
 const empty = {
   emergency_phone: '',
   emergency_contact: '',
+  emergency_email: '',
   emergency_reference: '',
   signatory_name: '',
   signatory_title: '',

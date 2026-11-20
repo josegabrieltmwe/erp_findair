@@ -38,7 +38,7 @@ describe("dgr.service — requisitos del courier y contacto de emergencia del pa
     await getPartnerDgrConfig();
     expect(calls[0].url).toBe("/api_partner_dgr_config");
     expect(calls[0].opts.query).toEqual({});
-    const cfg = { emergency_phone: "+39 02 1", emergency_contact: null, emergency_reference: null, signatory_name: null, signatory_title: null, signatory_place: null };
+    const cfg = { emergency_phone: "+39 02 1", emergency_contact: null, emergency_reference: null, emergency_email: null, signatory_name: null, signatory_title: null, signatory_place: null };
     await savePartnerDgrConfig(cfg, 77);
     expect(calls[1].opts.method).toBe("POST");
     expect(calls[1].opts.query).toEqual({ anagrafica_id: 77 });

@@ -6,6 +6,7 @@ import WebcargoCredentialsPartnerTab from "@shared/webcargo_key/feature/Webcargo
 import FornitoriAccntPartnerTab from "@shared/fornitori_accnt/feature/FornitoriAccntPartnerTab.vue";
 import AiCredentialsPartnerTab from "@shared/ai_credentials/feature/AiCredentialsPartnerTab.vue";
 import PartnerSmtpPartnerTab from "@shared/partner_smtp/feature/PartnerSmtpPartnerTab.vue";
+import ForwardAirAccountsPartnerTab from "@shared/forward_air_accounts/feature/ForwardAirAccountsPartnerTab.vue";
 import DatosFiscalesAnagraficaTab from "@/modules/invoicing/components/fiscal/DatosFiscalesAnagraficaTab.vue";
 
 /**
@@ -95,6 +96,17 @@ export function anagraficaExtraTabs(): AnagraficaExtraTab[] {
       label: t("anagrafica_tabs.partner_smtp") as string,
       icon: "mdi-email-fast-outline",
       component: markRaw(PartnerSmtpPartnerTab),
+      group: "integrations",
+      visible: (record) =>
+        ["P", "I"].includes(String(record.tipo ?? "").toUpperCase()),
+    },
+    {
+      // Cuentas de Forward Air del partner (administración de TMWE sobre api_admin_forward_air_accounts). Solo partners
+      // y la casa TMWE: un cliente final no gestiona credenciales de transportista.
+      key: "forward_air_accounts",
+      label: t("anagrafica_tabs.forward_air_accounts") as string,
+      icon: "mdi-truck-fast-outline",
+      component: markRaw(ForwardAirAccountsPartnerTab),
       group: "integrations",
       visible: (record) =>
         ["P", "I"].includes(String(record.tipo ?? "").toUpperCase()),

@@ -1,8 +1,8 @@
 <template>
   <div>
     <CmSectionHeader
-      :title="t('forward_air_accounts.title')"
-      :subtitle="t('forward_air_accounts.subtitle')"
+      :title="isSelf ? t('forward_air_accounts.title_self') : t('forward_air_accounts.title')"
+      :subtitle="isSelf ? t('forward_air_accounts.subtitle_self') : t('forward_air_accounts.subtitle')"
     >
       <template #actions>
         <v-btn color="primary" :prepend-icon="mdiPlus" @click="openCreate">
@@ -14,6 +14,7 @@
     <v-card class="pa-4 mb-4" variant="outlined">
       <div class="cm-filters">
         <CmAnagraficaAutocomplete
+          v-if="showPartner"
           v-model="filterPartner"
           :label="t('forward_air_accounts.filter_partner')"
           clearable
@@ -88,6 +89,15 @@
         </div>
       </template>
       <template #cell.last_verified_at="{ item }">
+        <v-chip
+          v-if="(item as ForwardAirAccount).last_verify_status"
+          size="x-small"
+          variant="flat"
+          :color="(item as ForwardAirAccount).last_verify_status === 'ok' ? 'success' : 'error'"
+          class="mr-1"
+        >
+          {{ t(`forward_air_accounts.verify_status_${(item as ForwardAirAccount).last_verify_status}`) }}
+        </v-chip>
         <span class="cm-cell-hint">{{ (item as ForwardAirAccount).last_verified_at || t('forward_air_accounts.never') }}</span>
       </template>
       <template #cell.actions="{ item }">
@@ -129,6 +139,7 @@
         <v-card-text>
           <div class="cm-grid">
             <CmAnagraficaAutocomplete
+              v-if="showPartner"
               v-model="form.partner_id"
               :label="t('forward_air_accounts.form_partner')"
               :disabled="formMode === 'edit'"
@@ -274,9 +285,12 @@
 import { todayLocal } from '../../utils/date';
 /**
  * Cuentas de Forward Air (LTL) por partner y entorno: alta, edición, cuenta
- * principal, carta de autorización del cliente, verificación y baja. Solo TMWE.
- * Backend: /api_admin_forward_air_accounts. Los secretos son de solo escritura:
- * vacíos al editar significan «sin cambios».
+ * principal, carta de autorización del cliente, verificación y baja.
+ * `scope="admin"` (por defecto): TMWE sobre cualquier partner (/api_admin_forward_air_accounts), con selector de
+ * partner o, si llega `partnerId` (pestaña de la ficha), fijo a ese partner.
+ * `scope="self"`: el administrador del partner gestiona las SUYAS (/api_partner_forward_air_accounts); el partner
+ * sale de la sesión.
+ * Los secretos son de solo escritura: vacíos al editar significan «sin cambios».
  */
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -294,6 +308,7 @@ import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { useConfirm } from '../../anagrafiche/composables/useConfirm';
 import {
   forwardAirAccountsService,
+  forwardAirPartnerAccountsService,
   forwardAirErrorCode,
   isAuthorizationCurrent,
   type ForwardAirAccount,
@@ -304,6 +319,15 @@ import {
   type ForwardAirVerifyResult,
 } from '../services/forwardAirAccounts.service';
 
+const props = withDefaults(defineProps<{ scope?: 'self' | 'admin'; partnerId?: number | null }>(), {
+  scope: 'admin',
+  partnerId: null,
+});
+const isSelf = computed(() => props.scope === 'self');
+/** El selector de partner solo existe para TMWE sin partner fijo. */
+const showPartner = computed(() => !isSelf.value && !props.partnerId);
+const api = computed(() => (isSelf.value ? forwardAirPartnerAccountsService : forwardAirAccountsService));
+
 const { t } = useI18n();
 const toast = useToastStore();
 const confirm = useConfirm();
@@ -312,14 +336,14 @@ const items = ref<ForwardAirAccount[]>([]);
 const loading = ref(false);
 const saving = ref(false);
 const error = ref<string | null>(null);
-const filterPartner = ref<number | null>(null);
+const filterPartner = ref<number | null>(props.partnerId ?? null);
 const filterEnvironment = ref<ForwardAirEnvironment | null>(null);
 const selected = ref<{ id: number }[]>([]);
 const verifyingId = ref<number | null>(null);
 
 const listSource = useClientSideListSource(items, { loading });
 const tableHeaders: DataTableHeader[] = [
-  { title: t('forward_air_accounts.col_partner') as string, key: 'partner_name' },
+  ...(showPartner.value ? [{ title: t('forward_air_accounts.col_partner') as string, key: 'partner_name' }] : []),
   { title: t('forward_air_accounts.col_alias') as string, key: 'account_alias' },
   { title: t('forward_air_accounts.col_environment') as string, key: 'environment' },
   { title: t('forward_air_accounts.col_ids') as string, key: 'ids', sortable: false },
@@ -366,8 +390,8 @@ async function load(): Promise<void> {
   loading.value = true;
   error.value = null;
   try {
-    items.value = await forwardAirAccountsService.list({
-      partner_id: filterPartner.value,
+    items.value = await api.value.list({
+      partner_id: isSelf.value ? null : filterPartner.value,
       environment: filterEnvironment.value ?? '',
     });
   } catch (e) {
@@ -402,7 +426,7 @@ const formValid = computed(() => {
   const ids = form.customer_id.trim() !== '' || form.bill_to_account.trim() !== '';
   const billTo = form.bill_to_account.trim() === '' || /^\d{7}$/.test(form.bill_to_account.trim());
   const secrets = formMode.value === 'edit' || (form.api_user.trim() !== '' && form.api_password.trim() !== '');
-  return !!form.partner_id && form.account_alias.trim() !== '' && ids && billTo && secrets;
+  return (isSelf.value || !!form.partner_id) && form.account_alias.trim() !== '' && ids && billTo && secrets;
 });
 
 function resetForm(): void {
@@ -443,14 +467,14 @@ async function save(): Promise<void> {
     if (form.api_password.trim()) payload.api_password = form.api_password.trim();
 
     if (formMode.value === 'create') {
-      payload.partner_id = form.partner_id ?? undefined;
+      if (!isSelf.value) payload.partner_id = form.partner_id ?? undefined;
       payload.environment = form.environment;
       if (form.principal) payload.principale = 'S';
-      await forwardAirAccountsService.create(payload);
+      await api.value.create(payload);
       toast.success(t('forward_air_accounts.created'));
     } else {
       payload.id = form.id;
-      await forwardAirAccountsService.update(payload);
+      await api.value.update(payload);
       toast.success(t('forward_air_accounts.updated'));
     }
     formDialog.value = false;
@@ -466,7 +490,7 @@ async function save(): Promise<void> {
 
 async function makePrincipal(a: ForwardAirAccount): Promise<void> {
   try {
-    await forwardAirAccountsService.setPrincipal(a.id);
+    await api.value.setPrincipal(a.id);
     toast.success(t('forward_air_accounts.principal_set'));
     await load();
   } catch (e) {
@@ -507,7 +531,7 @@ function openAuthorization(a: ForwardAirAccount): void {
 async function saveAuthorization(): Promise<void> {
   saving.value = true;
   try {
-    await forwardAirAccountsService.setAuthorization({
+    await api.value.setAuthorization({
       id: authForm.id,
       authorization_status: authForm.authorization_status,
       authorization_ref: authForm.authorization_ref.trim(),
@@ -550,7 +574,7 @@ const verifyRows = computed(() => {
 async function runVerify(a: ForwardAirAccount): Promise<void> {
   verifyingId.value = a.id;
   try {
-    verifyResult.value = await forwardAirAccountsService.verify(a.id);
+    verifyResult.value = await api.value.verify(a.id);
     verifyAlias.value = a.account_alias;
     verifyDialog.value = true;
     await load();
@@ -570,7 +594,7 @@ async function openDelete(a: ForwardAirAccount): Promise<void> {
   );
   if (!ok) return;
   try {
-    await forwardAirAccountsService.remove(a.id);
+    await api.value.remove(a.id);
     toast.success(t('forward_air_accounts.deleted'));
     await load();
   } catch (e) {

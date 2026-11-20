@@ -6,7 +6,8 @@
     "fornitori_accnt": "Vervoerder-inloggegevens",
     "elevenlabs_credentials": "ElevenLabs-inloggegevens",
     "datos_fiscales": "Fiscale gegevens",
-    "partner_smtp": "SMTP (uitgaande e-mail)"
+    "partner_smtp": "SMTP (uitgaande e-mail)",
+    "forward_air_accounts": "Forward Air"
   },
   "common": {
     "cancel": "Annuleren",

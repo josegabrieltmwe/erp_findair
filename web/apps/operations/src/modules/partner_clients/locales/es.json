@@ -163,6 +163,12 @@
         "preset_hint": "Aplica los 10 escalones y valores de seguro del preset, sobrescribiendo los actuales."
       },
       "scaglioni_vettore": {
+        "mode_a": "Cargo aéreo",
+        "mode_e": "Express (terrestre)",
+        "section_title_e": "Márgenes por transportista (Express)",
+        "section_hint_e": "Pactos específicos con un transportista terrestre como Forward Air. Sustituyen a los escalones Express solo para ese transportista; el resto de servicios sigue con los escalones Express generales.",
+        "add_e": "Añadir transportista",
+        "empty_e": "Sin márgenes por transportista. Todos los servicios Express usan los escalones generales.",
         "section_title": "Márgenes por aerolínea",
         "section_hint": "Pactos específicos con una aerolínea o proveedor de cotización. Sustituyen a los escalones de arriba solo para ese proveedor; el resto sigue usando los escalones generales.",
         "add": "Añadir aerolínea",

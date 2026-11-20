@@ -2,10 +2,13 @@ import { http } from '../../anagrafiche/services/http';
 import { ApiError } from '../../anagrafiche/services/api.types';
 
 /**
- * Cuentas de Forward Air (LTL) por partner y entorno. Backend:
- * /api_admin_forward_air_accounts (Forward_Air_Accounts_Admin_Controller),
- * solo TMWE. api_user y api_password son de solo escritura: el backend nunca
- * los devuelve, solo has_user / has_password.
+ * Cuentas de Forward Air (LTL) por partner y entorno. Dos backends con el mismo contrato:
+ *  - `forwardAirAccountsService`: /api_admin_forward_air_accounts (Forward_Air_Accounts_Admin_Controller),
+ *    TMWE sobre cualquier partner.
+ *  - `forwardAirPartnerAccountsService`: /api_partner_forward_air_accounts
+ *    (Forward_Air_Partner_Accounts_Controller), el administrador del partner gestiona las SUYAS; el partner sale
+ *    de la sesión, nunca del cliente.
+ * api_user y api_password son de solo escritura: el backend nunca los devuelve, solo has_user / has_password.
  */
 
 export type ForwardAirEnvironment = 'sandbox' | 'production';
@@ -27,6 +30,9 @@ export interface ForwardAirAccount {
   authorization_received_at: string | null;
   authorization_expires_at: string | null;
   last_verified_at: string | null;
+  /** Resultado de la última verificación (null = nunca). */
+  last_verify_status?: 'ok' | 'failed' | null;
+  last_verify_error_code?: string | null;
   has_user: boolean;
   has_password: boolean;
 }
@@ -75,7 +81,8 @@ interface Envelope<T> {
   message?: string;
 }
 
-const ENDPOINT = '/api_admin_forward_air_accounts';
+const ADMIN_ENDPOINT = '/api_admin_forward_air_accounts';
+const PARTNER_ENDPOINT = '/api_partner_forward_air_accounts';
 
 /** Códigos FORWARD_AIR_ACCOUNT_* del backend. */
 export const FORWARD_AIR_ERROR_CODES = [
@@ -104,50 +111,55 @@ function unwrap<T>(raw: Envelope<T> | undefined, fallback: string): T {
   return raw.data;
 }
 
-export const forwardAirAccountsService = {
-  async list(filters: { partner_id?: number | null; environment?: ForwardAirEnvironment | '' } = {}): Promise<ForwardAirAccount[]> {
-    const query: Record<string, string> = {};
-    if (filters.partner_id) query.partner_id = String(filters.partner_id);
-    if (filters.environment) query.environment = filters.environment;
-    const raw = await http<Envelope<ForwardAirAccount[]>>(ENDPOINT, { query });
-    const data = unwrap(raw, 'Failed to load Forward Air accounts');
-    return Array.isArray(data) ? data : [];
-  },
+function createForwardAirAccountsService(ENDPOINT: string) {
+  return {
+    async list(filters: { partner_id?: number | null; environment?: ForwardAirEnvironment | '' } = {}): Promise<ForwardAirAccount[]> {
+      const query: Record<string, string> = {};
+      if (filters.partner_id) query.partner_id = String(filters.partner_id);
+      if (filters.environment) query.environment = filters.environment;
+      const raw = await http<Envelope<ForwardAirAccount[]>>(ENDPOINT, { query });
+      const data = unwrap(raw, 'Failed to load Forward Air accounts');
+      return Array.isArray(data) ? data : [];
+    },
 
-  async create(payload: ForwardAirAccountPayload): Promise<ForwardAirAccount> {
-    return unwrap(await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'POST', body: payload }), 'Create failed');
-  },
+    async create(payload: ForwardAirAccountPayload): Promise<ForwardAirAccount> {
+      return unwrap(await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'POST', body: payload }), 'Create failed');
+    },
 
-  async update(payload: ForwardAirAccountPayload): Promise<ForwardAirAccount> {
-    return unwrap(await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: payload }), 'Update failed');
-  },
+    async update(payload: ForwardAirAccountPayload): Promise<ForwardAirAccount> {
+      return unwrap(await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: payload }), 'Update failed');
+    },
 
-  async remove(id: number): Promise<void> {
-    const raw = await http<Envelope<unknown>>(ENDPOINT, { method: 'DELETE', body: { id } });
-    if (raw?.success === false) throw new Error(raw.message || 'Delete failed');
-  },
+    async remove(id: number): Promise<void> {
+      const raw = await http<Envelope<unknown>>(ENDPOINT, { method: 'DELETE', body: { id } });
+      if (raw?.success === false) throw new Error(raw.message || 'Delete failed');
+    },
 
-  async setPrincipal(id: number): Promise<ForwardAirAccount> {
-    return unwrap(
-      await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: { action: 'set_principal', id } }),
-      'Update failed',
-    );
-  },
+    async setPrincipal(id: number): Promise<ForwardAirAccount> {
+      return unwrap(
+        await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: { action: 'set_principal', id } }),
+        'Update failed',
+      );
+    },
 
-  async setAuthorization(payload: ForwardAirAuthorizationPayload): Promise<ForwardAirAccount> {
-    return unwrap(
-      await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: { action: 'set_authorization', ...payload } }),
-      'Update failed',
-    );
-  },
+    async setAuthorization(payload: ForwardAirAuthorizationPayload): Promise<ForwardAirAccount> {
+      return unwrap(
+        await http<Envelope<ForwardAirAccount>>(ENDPOINT, { method: 'PUT', body: { action: 'set_authorization', ...payload } }),
+        'Update failed',
+      );
+    },
 
-  async verify(id: number): Promise<ForwardAirVerifyResult> {
-    return unwrap(
-      await http<Envelope<ForwardAirVerifyResult>>(ENDPOINT, { method: 'POST', body: { action: 'verify', id } }),
-      'Verify failed',
-    );
-  },
-};
+    async verify(id: number): Promise<ForwardAirVerifyResult> {
+      return unwrap(
+        await http<Envelope<ForwardAirVerifyResult>>(ENDPOINT, { method: 'POST', body: { action: 'verify', id } }),
+        'Verify failed',
+      );
+    },
+  };
+}
+
+export const forwardAirAccountsService = createForwardAirAccountsService(ADMIN_ENDPOINT);
+export const forwardAirPartnerAccountsService = createForwardAirAccountsService(PARTNER_ENDPOINT);
 
 /** ¿La carta de autorización está recibida y no vencida a `today` (YYYY-MM-DD)? */
 export function isAuthorizationCurrent(a: Pick<ForwardAirAccount, 'authorization_status' | 'authorization_expires_at'>, today: string): boolean {

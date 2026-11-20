@@ -27,6 +27,15 @@ import { useToastStore } from "./toast.store";
  *   - the current shipment id (read from useShipmentStore)
  *   - the toast notifications (delegates to useToastStore)
  */
+/** Claves de `meta.live_courier.errors` cuyo valor indica TIMEOUT (mapa courier => código). */
+function timedOutCouriers(live: LiveCourierSummary | null): string[] {
+  const errs = live?.errors;
+  if (!errs || typeof errs !== "object" || Array.isArray(errs)) return [];
+  return Object.entries(errs as Record<string, unknown>)
+    .filter(([, v]) => /TIMEOUT/i.test(typeof v === "string" ? v : JSON.stringify(v ?? "")))
+    .map(([k]) => k);
+}
+
 export const useServiceSelectionStore = defineStore("service_selection", () => {
   const clientServices = ref<ClientServiceOption[]>([]);
   const fornitoreServices = ref<FornitoreServiceOption[]>([]);
@@ -50,6 +59,8 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
   const tempiCertiActive = ref(false);
   const tempiCertiError = ref<string | null>(null);
   const liveCourier = ref<LiveCourierSummary | null>(null);
+  /** Couriers de la lista normal que no respondieron en plazo (p. ej. forward_air: TIMEOUT). */
+  const lateCouriers = ref<string[]>([]);
   /** Clave de lo que contiene `clientServices` (envío + con/sin tiempos garantizados). */
   const clientListKey = ref<string | null>(null);
   // Descarta respuestas obsoletas (p. ej. la lenta de tiempos garantizados que
@@ -68,6 +79,7 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     if (!tempiCerti) {
       tempiCertiActive.value = false;
       liveCourier.value = null;
+      lateCouriers.value = [];
     }
     try {
       const r = await serviceSelectionService.listClient(shipment_id, {
@@ -79,6 +91,11 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
         clientServices.value = r.data.services;
         clientListKey.value = `${shipment_id}:${tempiCerti ? "tc" : "std"}`;
         tempiCertiActive.value = tempiCerti;
+        if (!tempiCerti) {
+          lateCouriers.value = timedOutCouriers(
+            r.data.meta?.live_courier ?? r.meta?.live_courier ?? null,
+          );
+        }
         liveCourier.value = tempiCerti
           ? (r.data.meta?.live_courier ?? r.meta?.live_courier ?? null)
           : null;
@@ -103,6 +120,34 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
       }
     } finally {
       if (seq === clientSeq) loadingClient.value = false;
+    }
+  }
+
+  /**
+   * Recarga la lista normal y AÑADE los servicios de los couriers que llegaron
+   * tarde (fusión por fornitore_id; no toca los que ya estaban). La respuesta
+   * tardía la deja el API en caché, así que normalmente llega al instante.
+   */
+  async function loadLateCouriers(shipment_id: number): Promise<void> {
+    const seq = ++clientSeq;
+    try {
+      const r = await serviceSelectionService.listClient(shipment_id, {
+        include_unavailable: false,
+        tempi_certi: false,
+      });
+      if (seq !== clientSeq || !r.success || !r.data) return;
+      const have = new Set(
+        clientServices.value.map((s) => Number(s.fornitore_id ?? 0)),
+      );
+      const added = r.data.services.filter(
+        (s) => !have.has(Number(s.fornitore_id ?? 0)),
+      );
+      clientServices.value = [...clientServices.value, ...added];
+      lateCouriers.value = timedOutCouriers(
+        r.data.meta?.live_courier ?? r.meta?.live_courier ?? null,
+      );
+    } catch {
+      // se mantiene la lista actual
     }
   }
 
@@ -404,8 +449,10 @@ export const useServiceSelectionStore = defineStore("service_selection", () => {
     tempiCertiActive,
     tempiCertiError,
     liveCourier,
+    lateCouriers,
     clientListKey,
     loadClient,
+    loadLateCouriers,
     loadClientTempiCerti,
     resetTempiCerti,
     loadFornitore,

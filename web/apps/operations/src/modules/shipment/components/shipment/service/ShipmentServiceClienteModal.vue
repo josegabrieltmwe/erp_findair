@@ -103,6 +103,26 @@
         {{ t("shipment.service.tempi_certi.error") }}
       </v-alert>
       <v-alert
+        v-if="store.lateCouriers.length && !store.tempiCertiActive"
+        type="info"
+        density="compact"
+        variant="tonal"
+        class="mt-2"
+        data-testid="late-couriers"
+      >
+        {{ t("shipment.service.tempi_certi.late_couriers", { couriers: store.lateCouriers.join(", ") }) }}
+        <v-btn
+          size="small"
+          variant="text"
+          class="ml-2"
+          :loading="store.loadingClient"
+          data-testid="late-couriers-reload"
+          @click="store.loadLateCouriers(Number(id))"
+        >
+          {{ t("shipment.service.tempi_certi.late_reload") }}
+        </v-btn>
+      </v-alert>
+      <v-alert
         v-if="liveFailed"
         type="info"
         density="compact"
@@ -635,6 +655,7 @@ const COURIER_NAMES: Record<number, string> = {
   5: "FedEx",
   7: "UPS",
   8: "TNT",
+  6: "Forward Air",
 };
 function courierLabel(o: TempiCertiOption): string {
   return (

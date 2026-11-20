@@ -135,6 +135,8 @@ export interface PartnerDgrConfig {
   configured: boolean;
   emergency_phone: string | null;
   emergency_contact: string | null;
+  /** Email del contacto de emergencia: lo exige Forward Air para mercancía peligrosa. */
+  emergency_email: string | null;
   emergency_reference: string | null;
   signatory_name: string | null;
   signatory_title: string | null;

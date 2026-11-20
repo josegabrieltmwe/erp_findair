@@ -133,6 +133,8 @@
         "loading": "Querying the couriers (this may take a few seconds)…",
         "error": "Could not get the guaranteed times; the previous list is kept.",
         "live_failed": "The couriers did not respond; estimated times are shown.",
+        "late_couriers": "Some couriers ({couriers}) have not answered yet.",
+        "late_reload": "Reload",
         "days_earlier": "1 day earlier | {count} days earlier",
         "same_day": "Same day",
         "cheapest": "Cheapest option",

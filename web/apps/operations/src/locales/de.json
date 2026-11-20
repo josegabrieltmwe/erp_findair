@@ -6,7 +6,8 @@
     "fornitori_accnt": "Kurier-Zugangsdaten",
     "elevenlabs_credentials": "ElevenLabs-Zugangsdaten",
     "datos_fiscales": "Steuerdaten",
-    "partner_smtp": "SMTP (ausgehende E-Mail)"
+    "partner_smtp": "SMTP (ausgehende E-Mail)",
+    "forward_air_accounts": "Forward Air"
   },
   "common": {
     "cancel": "Abbrechen",

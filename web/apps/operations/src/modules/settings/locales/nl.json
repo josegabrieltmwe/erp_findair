@@ -323,6 +323,10 @@
         "pay_refunds": {
           "title": "Terugbetalingen",
           "description": "Goedkeuring van terugbetalingen en teruggedraaide termijnen"
+        },
+        "forward_air_my_accounts": {
+          "title": "Mijn Forward Air-accounts",
+          "description": "De Forward Air-inloggegevens van uw bedrijf"
         }
       }
     }
@@ -2401,12 +2405,14 @@
   "partner_dgr": {
     "title": "Gevaarlijke goederen: noodcontact",
     "title_admin": "Gevaarlijke goederen: noodcontact per partner",
-    "subtitle": "Uw bedrijf begeleidt het transport: dit contact wordt aan UPS, FedEx en DHL opgegeven bij zendingen met gevaarlijke goederen.",
+    "subtitle": "Uw bedrijf begeleidt het transport: dit contact wordt aan UPS, FedEx, DHL en Forward Air opgegeven bij zendingen met gevaarlijke goederen.",
     "filter_partner": "Partner",
     "not_configured": "Zonder eigen contact wordt het telefoonnummer van uw vestiging gebruikt en anders dat van TMWE. Dat nummer is mogelijk niet 24 uur bemand: stel hier het noodcontact in.",
     "emergency_title": "24-uurs noodcontact",
     "emergency_phone": "24-uurs telefoon",
     "emergency_contact": "Persoon of dienst",
+    "emergency_email": "Nood-e-mailadres",
+    "emergency_email_hint": "Vereist voor Forward Air",
     "emergency_reference": "Contract of registratie",
     "signatory_title": "Ondertekenaar van de verklaring",
     "signatory_name": "Naam",
@@ -2488,7 +2494,11 @@
       "FORWARD_AIR_ACCOUNT_ENCRYPT_FAILED": "Het geheim kon niet worden versleuteld of ontsleuteld. Er is niets opgeslagen",
       "FORWARD_AIR_ACCOUNT_SAVE_FAILED": "De wijziging kon niet worden opgeslagen",
       "FORWARD_AIR_ACCOUNT_VERIFY_RATE_LIMITED": "Wacht een paar seconden voordat u dit account opnieuw controleert"
-    }
+    },
+    "title_self": "Forward Air-accounts",
+    "subtitle_self": "Uw Forward Air LTL-accounts per omgeving. Inloggegevens zijn alleen schrijfbaar en worden versleuteld opgeslagen.",
+    "verify_status_ok": "Geverifieerd",
+    "verify_status_failed": "Mislukt"
   },
   "pay_gateways": {
     "title": "Betaalgateways",

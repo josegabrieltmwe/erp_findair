@@ -133,6 +133,8 @@
         "loading": "Koeriers worden bevraagd (dit kan enkele seconden duren)…",
         "error": "De gegarandeerde levertijden konden niet worden opgehaald; de vorige lijst blijft behouden.",
         "live_failed": "De koeriers hebben niet gereageerd; geschatte levertijden worden getoond.",
+        "late_couriers": "Sommige koeriers ({couriers}) hebben nog niet gereageerd.",
+        "late_reload": "Opnieuw laden",
         "days_earlier": "1 dag eerder | {count} dagen eerder",
         "same_day": "Dezelfde dag",
         "cheapest": "Goedkoopste optie",
