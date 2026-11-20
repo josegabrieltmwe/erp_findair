@@ -480,6 +480,19 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@shared/elevenlabs_agents/feature/ElevenlabsPartnerAgentPage.vue"),
   },
+  // Autoservicio de aplicaciones OAuth2 propias (Portal_My_Clients_Controller,
+  // policy `public_oauth`: cualquier cliente OAuth autenticado, SIN scope ni
+  // is_admin). NO es `requiresAdmin` -- mismo patrón que elevenlabs-my-agent
+  // arriba: el servidor es el único gate. A diferencia de ese caso, aquí no
+  // hace falta ni siquiera un scope STAFF_ONLY_SCOPES en settingsAccess.ts,
+  // porque el backend tampoco exige ninguno -- ver
+  // SETTINGS_ROUTES_OPEN_TO_ANY_USER en settingsAccess.ts.
+  {
+    path: "/settings/my-oauth-clients",
+    name: "settings-my-oauth-clients",
+    component: () =>
+      import("@shared/portal_my_clients/feature/PortalMyClientsPage.vue"),
+  },
   // Cuentas SMTP por partner. La del partner NO es requiresAdmin: la autoriza el servidor (scopes smtp:*
   // y administrador del partner, authx_18). La de TMWE sobre cualquier partner si lo es.
   {

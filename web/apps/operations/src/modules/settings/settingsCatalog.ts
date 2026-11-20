@@ -457,6 +457,10 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
       { key: 'carrier_credentials', i18nKey: 'carrier_credentials', icon: 'mdi-key-variant' },
       { key: 'google_maps', i18nKey: 'google_maps', icon: 'mdi-map-marker' },
       { key: 'ai_integrations', i18nKey: 'ai_integrations', icon: 'mdi-robot-outline' },
+      // Autoservicio de credenciales OAuth2 PROPIAS (portal_my_clients) — distinto de
+      // carrier_credentials (credenciales de UN transportista concreto): aquí la persona
+      // gestiona sus propias apps OAuth2 para consumir la API de Findair en general.
+      { key: 'api_access', i18nKey: 'api_access', icon: 'mdi-api' },
     ],
     items: [
       {
@@ -491,6 +495,20 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         routeName: 'settings-forward-air-my-accounts',
         subgroup: 'carrier_credentials',
         aliases: ['Forward Air', 'LTL', 'Forward Air credentials'],
+      },
+      // Autoservicio de apps OAuth2 propias (Portal_My_Clients_Controller, policy
+      // `public_oauth`: CUALQUIER usuario autenticado, no solo TMWE ni partner_admin).
+      // Visible para cualquiera (ver SETTINGS_ROUTES_OPEN_TO_ANY_USER en
+      // settingsAccess.ts) — no es `partnerOnly` (no exige ser contacto de un partner)
+      // ni admin-only. Solo en sandbox/dev: en producción la propia página muestra el
+      // 403 explicativo del backend (portal_self_service.enabled).
+      {
+        key: 'portal_my_oauth_clients',
+        i18nKey: 'portal_my_oauth_clients',
+        icon: 'mdi-api',
+        routeName: 'settings-my-oauth-clients',
+        subgroup: 'api_access',
+        aliases: ['OAuth', 'client_id', 'client_secret', 'API client', 'My OAuth apps', 'Mis aplicaciones'],
       },
       // Fase 6 / L20: estado del token OAuth de UPS, solo lectura, backend
       // NUEVO (Ups_Token_Status_Controller). Sin renovar/revocar.

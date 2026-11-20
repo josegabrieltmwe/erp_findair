@@ -4,6 +4,7 @@ import {
   canEnterSettingsHub,
   canOpenAdminRoute,
   SETTINGS_ROUTE_SCOPES,
+  SETTINGS_ROUTES_OPEN_TO_ANY_USER,
   STAFF_ONLY_SCOPES,
 } from './settingsAccess';
 
@@ -64,12 +65,28 @@ describe('canOpenAdminRoute', () => {
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(null))).toBe(false);
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(false))).toBe(false);
   });
+
+  it('autoservicio OAuth (SETTINGS_ROUTES_OPEN_TO_ANY_USER): entra cualquiera, sin scope ni admin ni access conocido', () => {
+    expect(canOpenAdminRoute('settings-my-oauth-clients', ctx(false, []))).toBe(true);
+    expect(canOpenAdminRoute('settings-my-oauth-clients', ctx(false))).toBe(true);
+    expect(canOpenAdminRoute('settings-my-oauth-clients', ctx(null))).toBe(true);
+  });
 });
 
 describe('canEnterSettingsHub', () => {
-  it('TMWE sí; un cliente no; personal con config:read sí', () => {
+  it('TMWE sí; personal con config:read sí', () => {
     expect(canEnterSettingsHub(ctx(true))).toBe(true);
-    expect(canEnterSettingsHub(ctx(false, ['shipment:read', 'contacts:read', 'profile:write']))).toBe(false);
     expect(canEnterSettingsHub(ctx(false, ['config:read']))).toBe(true);
+  });
+
+  // Antes de SETTINGS_ROUTES_OPEN_TO_ANY_USER, un cliente sin ningún scope de
+  // STAFF_ONLY_SCOPES no entraba al hub. Desde que existe al menos una ruta
+  // abierta a cualquiera (autoservicio OAuth, portal_my_clients), el hub se
+  // abre para cualquier usuario autenticado — esa tarjeta sola lo justifica,
+  // aunque el resto de pestañas le queden vacías.
+  it('un cliente sin scopes de personal entra igualmente por la ruta abierta a cualquiera', () => {
+    expect(canEnterSettingsHub(ctx(false, ['shipment:read', 'contacts:read', 'profile:write']))).toBe(true);
+    expect(canEnterSettingsHub(ctx(false, []))).toBe(true);
+    expect(SETTINGS_ROUTES_OPEN_TO_ANY_USER.has('settings-my-oauth-clients')).toBe(true);
   });
 });

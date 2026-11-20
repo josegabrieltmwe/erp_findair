@@ -25,6 +25,7 @@
         "carrier_credentials": "Credenziali corriere",
         "google_maps": "Google Maps",
         "ai_integrations": "Integrazioni IA",
+        "api_access": "Accessi API",
         "b2b_templates": "B2B e modelli",
         "translations": "Traduzioni",
         "cargo_catalogs": "Cataloghi",
@@ -327,6 +328,10 @@
         "forward_air_my_accounts": {
           "title": "I miei account Forward Air",
           "description": "Le credenziali Forward Air della tua azienda"
+        },
+        "portal_my_oauth_clients": {
+          "title": "Le mie app OAuth",
+          "description": "Crea e gestisci le tue credenziali API (client_id / client_secret)"
         }
       }
     }
@@ -2499,6 +2504,49 @@
     "subtitle_self": "I tuoi account LTL di Forward Air per ambiente. Le credenziali sono in sola scrittura e restano cifrate.",
     "verify_status_ok": "Verificato",
     "verify_status_failed": "Fallito"
+  },
+  "portal_my_clients": {
+    "title": "Le mie app OAuth",
+    "subtitle": "Crea e gestisci le tue credenziali API. Disponibile solo negli ambienti di test.",
+    "new_client": "Nuova app",
+    "empty_title": "Non hai ancora nessuna app OAuth",
+    "unnamed": "Senza nome",
+    "limits_total": "{count} / {max} app",
+    "limits_rate": "massimo {max} nuove all'ora",
+    "cap_reached": "Limite raggiunto",
+    "never": "Mai",
+    "col_client": "App",
+    "col_contact": "Contatto",
+    "col_status": "Stato",
+    "col_created": "Creata",
+    "col_last_activity": "Ultima attività",
+    "col_actions": "Azioni",
+    "status_active": "Attiva",
+    "status_disabled": "Disabilitata",
+    "rotate": "Ruota secret",
+    "disable": "Disabilita",
+    "enable": "Abilita",
+    "dialog_create": "Nuova app OAuth",
+    "form_client_name": "Nome dell'app",
+    "form_client_name_hint": "Per riconoscerla tu — es. «Integrazione Zapier» o «CI/CD»",
+    "form_company_name": "Azienda (opzionale)",
+    "form_contact_email": "Email di contatto (opzionale)",
+    "dialog_edit": "Modifica app",
+    "confirm_rotate_title": "Ruota secret",
+    "confirm_rotate_message": "Verrà generato un nuovo client_secret per «{name}». Quello precedente non potrà più richiedere nuovi token; i token già emessi restano validi finché non scadono.",
+    "confirm_disable_title": "Disabilita app",
+    "confirm_disable_message": "«{name}» non potrà richiedere nuovi token finché non la riabiliti. I token già emessi restano validi finché non scadono.",
+    "created": "App creata",
+    "updated": "App aggiornata",
+    "rotated": "Secret ruotato",
+    "disabled": "App disabilitata",
+    "enabled": "App abilitata",
+    "secret_title": "Salva ora questo secret",
+    "secret_warning": "Il client_secret non verrà mostrato di nuovo. Copialo e conservalo in un luogo sicuro prima di chiudere questa finestra.",
+    "field_client_id": "client_id",
+    "field_client_secret": "client_secret",
+    "secret_done": "L'ho già salvato",
+    "production_disabled_fallback": "La gestione delle app OAuth personali non è disponibile su questo ERP."
   },
   "pay_gateways": {
     "title": "Gateway di pagamento",

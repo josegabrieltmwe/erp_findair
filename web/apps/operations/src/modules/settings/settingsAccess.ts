@@ -42,6 +42,25 @@ export const SETTINGS_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> 
   'settings-elevenlabs-my-agent': ['partner_agent:read'],
 };
 
+/**
+ * Rutas de Settings que CUALQUIER usuario autenticado puede abrir, sin exigir
+ * `is_admin` NI ningún scope — porque el endpoint que consumen declara una
+ * política `public_oauth` sin requisito de scope (literalmente cualquier
+ * cliente OAuth autenticado). A diferencia de `SETTINGS_ROUTE_SCOPES` (que
+ * exige un scope de `STAFF_ONLY_SCOPES`, pensado para pantallas de personal, o
+ * uno que también tienen clientes pero acotado a un recurso concreto), aquí no
+ * hay ningún scope que exigir: el backend ya es el único filtro real.
+ *
+ * Primer caso: autoservicio de aplicaciones OAuth2 propias
+ * (`Portal_My_Clients_Controller`, policy `public_oauth`, ver
+ * docs/contrato-con-api.md → "portal_my_clients"). Antes de añadir una ruta
+ * aquí, confirma que su policy en el backend es realmente pública (sin scope)
+ * — si exige alguno, va en SETTINGS_ROUTE_SCOPES, no aquí.
+ */
+export const SETTINGS_ROUTES_OPEN_TO_ANY_USER: ReadonlySet<string> = new Set([
+  'settings-my-oauth-clients',
+]);
+
 export interface AccessContext {
   /** `is_admin` del perfil: `true` solo para TMWE (anagrafica 1). */
   isAdmin: boolean | null;
@@ -51,13 +70,17 @@ export interface AccessContext {
 /** ¿Puede abrir esta ruta marcada `requiresAdmin`? Falla cerrado si el perfil no se conoce. */
 export function canOpenAdminRoute(routeName: string, ctx: AccessContext): boolean {
   if (ctx.isAdmin === true) return true;
+  if (SETTINGS_ROUTES_OPEN_TO_ANY_USER.has(routeName)) return true;
   const scopes = SETTINGS_ROUTE_SCOPES[routeName];
   if (!scopes || !ctx.access.known) return false;
   return hasScope(ctx.access, scopes, 'all');
 }
 
-/** El hub se abre si TMWE o si hay al menos una tarjeta que la persona pueda abrir. */
+/** El hub se abre si TMWE, si hay al menos una tarjeta que la persona pueda abrir por
+ *  scope, o si existe alguna ruta abierta a cualquiera (SETTINGS_ROUTES_OPEN_TO_ANY_USER):
+ *  esa tarjeta sola ya justifica entrar, sin exigir ningún scope de personal. */
 export function canEnterSettingsHub(ctx: AccessContext): boolean {
   if (ctx.isAdmin === true) return true;
+  if (SETTINGS_ROUTES_OPEN_TO_ANY_USER.size > 0) return true;
   return Object.keys(SETTINGS_ROUTE_SCOPES).some((name) => canOpenAdminRoute(name, ctx));
 }
