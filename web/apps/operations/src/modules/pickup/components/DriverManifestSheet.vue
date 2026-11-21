@@ -6,8 +6,8 @@ import type { Manifest } from "../types";
 
 /**
  * Borderò del autista, en pantalla y para imprimir con `window.print()` (mismo
- * patrón que `warehouse/pages/DriverLoadPage.vue`). Sin librería de códigos de
- * barras en el proyecto: la LDV sale como texto monoespaciado.
+ * patrón que `warehouse/pages/DriverLoadPage.vue`). El barcode de la LDV viene
+ * ya renderizado del API (SVG data URI, misma regla que la etiqueta real).
  */
 const { t, locale } = useI18n();
 const props = defineProps<{ manifest: Manifest }>();
@@ -60,7 +60,8 @@ function print(): void {
             ><br />{{ r.address }}
           </td>
           <td class="ldv">
-            {{ r.ldv || "—" }}<span v-if="r.ref"><br />{{ r.ref }}</span>
+            <img v-if="r.ldvBarcode" :src="r.ldvBarcode" class="pk-barcode" alt="" />
+            <div>{{ r.ldv || "—" }}<span v-if="r.ref"><br />{{ r.ref }}</span></div>
           </td>
           <td class="num">{{ r.colli }}</td>
           <td class="num">{{ r.peso }}</td>
@@ -114,6 +115,12 @@ function print(): void {
 .pk-print-table .ldv {
   font-family: ui-monospace, "Courier New", monospace;
   letter-spacing: 0.04em;
+}
+.pk-print-table .pk-barcode {
+  display: block;
+  max-width: 140px;
+  height: 28px;
+  margin-bottom: 2px;
 }
 .pk-print-table .cod {
   font-weight: 700;

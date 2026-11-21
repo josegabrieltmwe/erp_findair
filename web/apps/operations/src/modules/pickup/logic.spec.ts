@@ -315,6 +315,7 @@ describe("borderò", () => {
           {
             id: 11,
             ldv: "0000000011",
+            ldv_barcode: "data:image/svg+xml;base64,AAA=",
             ref_cliente: "REF-1",
             colli: 2,
             peso: 3.5,
@@ -329,13 +330,15 @@ describe("borderò", () => {
     expect(rows[0]).toMatchObject({
       kind: "C",
       ldv: "0000000011",
+      ldvBarcode: "data:image/svg+xml;base64,AAA=",
       ref: "REF-1",
       colli: 2,
       cod: 120.5,
       time: "09:30",
     });
+    expect(rows[1].ldvBarcode).toBe("");
     expect(rows[1].cod).toBe(0);
-    expect(rows[2]).toMatchObject({ kind: "R", ldv: "", colli: 4, peso: 9 });
+    expect(rows[2]).toMatchObject({ kind: "R", ldv: "", ldvBarcode: "", colli: 4, peso: 9 });
   });
   it("totales: los del API si vienen, si no los calcula", () => {
     const stops = [

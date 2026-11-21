@@ -189,6 +189,8 @@ export interface ManifestShipment {
   id: number;
   /** Código de barras de la LDV (id con relleno a 10 cifras). */
   ldv: string;
+  /** CODE128 de `ldv` como data URI SVG, listo para `<img src>` (vacío en manifests de API anterior). */
+  ldv_barcode?: string;
   ref_cliente?: string | null;
   colli: number;
   peso: number;

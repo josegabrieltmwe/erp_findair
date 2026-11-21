@@ -417,6 +417,8 @@ export interface ManifestRow {
   address: string;
   /** Código de barras en texto (vacío si la parada no trae expediciones). */
   ldv: string;
+  /** CODE128 de `ldv` como data URI SVG (vacío si no viene del API o no hay expediciones). */
+  ldvBarcode: string;
   ref: string;
   colli: number;
   peso: number;
@@ -447,6 +449,7 @@ export function manifestRows(stops: readonly RouteStop[]): ManifestRow[] {
         ...base,
         key: `p${stop.pickup_id}`,
         ldv: "",
+        ldvBarcode: "",
         ref: "",
         colli: Number(stop.n_colli) || 0,
         peso: Number(stop.peso) || 0,
@@ -459,6 +462,7 @@ export function manifestRows(stops: readonly RouteStop[]): ManifestRow[] {
         ...base,
         key: `p${stop.pickup_id}-s${s.id}`,
         ldv: s.ldv || String(s.id),
+        ldvBarcode: s.ldv_barcode ?? "",
         ref: s.ref_cliente ?? "",
         colli: Number(s.colli) || 0,
         peso: Number(s.peso) || 0,
