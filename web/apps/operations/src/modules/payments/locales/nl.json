@@ -28,7 +28,10 @@
       "export_csv": "CSV exporteren",
       "load_failed": "De termijnen konden niet worden geladen.",
       "empty": "Geen termijnen gevonden",
-      "days_overdue": "{days} dagen achterstallig"
+      "days_overdue": "{days} dagen achterstallig",
+      "customer_legal": "Klant in juridische incasso",
+      "customer_blocked": "Klant geblokkeerd",
+      "legal_amount": "In juridische incasso"
     },
     "statop": {
       "O": "Open",

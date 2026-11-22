@@ -31,6 +31,8 @@ const row = (id: number, data_close = "0000-00-00") => ({
   rag_soc: "ACME",
   days_overdue: 0,
   status: "pending",
+  legale: false,
+  bloccato: false,
 });
 
 beforeEach(() => {
@@ -40,6 +42,7 @@ beforeEach(() => {
     rows: [row(1), row(2, "2026-01-05")],
     total: 2,
     totalAmount: 200,
+    amountLegal: 0,
   });
 });
 
@@ -95,6 +98,24 @@ describe("usePaymentsStore", () => {
     });
     expect(s.total).toBe(2);
     expect(s.totalAmount).toBe(200);
+    expect(s.amountLegal).toBe(0);
+  });
+
+  // F9 (paridad visual legacy pagam_list.php:138-146).
+  it("load expone el subtotal legal y lo limpia si falla la carga", async () => {
+    listMock.mockResolvedValueOnce({
+      rows: [row(1)],
+      total: 1,
+      totalAmount: 100,
+      amountLegal: 45.5,
+    });
+    const s = usePaymentsStore();
+    await s.load();
+    expect(s.amountLegal).toBe(45.5);
+
+    listMock.mockRejectedValueOnce(new Error("boom"));
+    await s.load();
+    expect(s.amountLegal).toBe(0);
   });
 
   it("cambiar filtros vuelve a la página 1 y vacía la selección", async () => {

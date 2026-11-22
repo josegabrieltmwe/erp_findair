@@ -43,6 +43,7 @@ export const usePaymentsStore = defineStore("payments", () => {
   const rows = ref<PaymentRow[]>([]);
   const total = ref(0);
   const totalAmount = ref(0);
+  const amountLegal = ref(0);
   const page = ref(1);
   const perPage = ref(25);
   const sort = ref<PaymentSortKey>("scadenza");
@@ -84,6 +85,7 @@ export const usePaymentsStore = defineStore("payments", () => {
       rows.value = res.rows;
       total.value = res.total;
       totalAmount.value = res.totalAmount;
+      amountLegal.value = res.amountLegal;
       // La selección solo conserva filas todavía visibles y abiertas.
       selected.value = selected.value.filter((id) =>
         res.rows.some((r) => r.id === id && isOpenRow(r)),
@@ -94,6 +96,7 @@ export const usePaymentsStore = defineStore("payments", () => {
       rows.value = [];
       total.value = 0;
       totalAmount.value = 0;
+      amountLegal.value = 0;
     } finally {
       if (!signal.aborted) loading.value = false;
     }
@@ -167,6 +170,7 @@ export const usePaymentsStore = defineStore("payments", () => {
     rows,
     total,
     totalAmount,
+    amountLegal,
     page,
     perPage,
     sort,

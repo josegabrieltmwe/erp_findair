@@ -207,6 +207,15 @@
             money(store.totalAmount)
           }}</strong>
         </span>
+        <span
+          v-if="store.amountLegal"
+          class="ms-4 text-error"
+          :title="t('payments.list.customer_legal')"
+        >
+          <v-icon icon="mdi-gavel" size="small" class="me-1" />
+          {{ t("payments.list.legal_amount") }}:
+          <strong>{{ money(store.amountLegal) }}</strong>
+        </span>
       </div>
       <v-spacer />
       <v-btn
@@ -269,6 +278,32 @@
         <div class="text-caption text-medium-emphasis">
           {{ item.data_fattura }}
         </div>
+      </template>
+      <template #[`item.rag_soc`]="{ item }">
+        <span
+          :class="{
+            'text-error': item.legale || item.bloccato,
+            'font-weight-bold': item.legale,
+          }"
+        >
+          {{ item.legale ? "* " : "" }}{{ item.rag_soc }}
+        </span>
+        <v-icon
+          v-if="item.legale"
+          icon="mdi-gavel"
+          color="error"
+          size="small"
+          class="ms-1"
+          :title="t('payments.list.customer_legal')"
+        />
+        <v-icon
+          v-if="item.bloccato"
+          icon="mdi-lock-alert-outline"
+          color="error"
+          size="small"
+          class="ms-1"
+          :title="t('payments.list.customer_blocked')"
+        />
       </template>
       <template #[`item.importo`]="{ item }">{{ rowAmount(item) }}</template>
       <template #[`item.scadenza`]="{ item }">

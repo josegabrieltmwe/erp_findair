@@ -28,7 +28,10 @@
       "export_csv": "CSV exportieren",
       "load_failed": "Die Raten konnten nicht geladen werden.",
       "empty": "Keine Raten vorhanden",
-      "days_overdue": "{days} Tage überfällig"
+      "days_overdue": "{days} Tage überfällig",
+      "customer_legal": "Kunde in rechtlichem Inkasso",
+      "customer_blocked": "Kunde gesperrt",
+      "legal_amount": "In rechtlichem Inkasso"
     },
     "statop": {
       "O": "Offen",

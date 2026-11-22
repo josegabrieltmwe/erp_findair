@@ -28,7 +28,10 @@
       "export_csv": "Export CSV",
       "load_failed": "The installments could not be loaded.",
       "empty": "No installments found",
-      "days_overdue": "{days} days overdue"
+      "days_overdue": "{days} days overdue",
+      "customer_legal": "Customer in legal debt recovery",
+      "customer_blocked": "Customer blocked",
+      "legal_amount": "In legal recovery"
     },
     "statop": {
       "O": "Open",

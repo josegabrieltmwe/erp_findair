@@ -28,7 +28,10 @@
       "export_csv": "Exportar CSV",
       "load_failed": "No se pudieron cargar las cuotas.",
       "empty": "No hay cuotas que mostrar",
-      "days_overdue": "{days} días de retraso"
+      "days_overdue": "{days} días de retraso",
+      "customer_legal": "Cliente en gestión legal de deuda",
+      "customer_blocked": "Cliente bloqueado",
+      "legal_amount": "En gestión legal"
     },
     "statop": {
       "O": "Abiertas",

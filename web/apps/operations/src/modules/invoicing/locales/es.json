@@ -28,6 +28,9 @@
       "date": "Fecha",
       "client": "Cliente",
       "country": "País",
+      "agent": "Agente",
+      "cost": "Costo",
+      "margin": "Margen",
       "net": "Imponible",
       "vat": "IVA",
       "total": "Total",
@@ -37,6 +40,13 @@
       "lines": "Líneas",
       "payments": "Pagos",
       "timeline": "Historial",
+      "summary": {
+        "title": "Resumen del filtro",
+        "count": "{count} facturas",
+        "currency": "Divisa",
+        "by_agent": "Por agente",
+        "by_client": "Por cliente"
+      },
       "filters": {
         "date_from": "Desde",
         "date_to": "Hasta",

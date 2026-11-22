@@ -28,6 +28,9 @@
       "date": "Datum",
       "client": "Klant",
       "country": "Land",
+      "agent": "Agent",
+      "cost": "Kosten",
+      "margin": "Marge",
       "net": "Belastbaar bedrag",
       "vat": "VAT",
       "total": "Totaal",
@@ -37,6 +40,13 @@
       "lines": "Rijen",
       "payments": "Betalingen",
       "timeline": "Geschiedenis",
+      "summary": {
+        "title": "Samenvatting van het filter",
+        "count": "{count} facturen",
+        "currency": "Valuta",
+        "by_agent": "Per agent",
+        "by_client": "Per klant"
+      },
       "filters": {
         "date_from": "Van",
         "date_to": "To",

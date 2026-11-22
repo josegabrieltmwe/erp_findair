@@ -4,6 +4,7 @@ import {
   invoiceService,
   type InvoiceListItem,
   type InvoiceListFilters,
+  type InvoiceListAggregates,
 } from "../services/invoice.service";
 import {
   supplierInvoiceApi,
@@ -50,8 +51,16 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
   /** A = emitidas, P = recibidas (de proveedor). */
   const tab = ref<"A" | "P">("A");
 
+  // Paridad visual legacy (fatt_list.php): totales del filtro completo +
+  // "Riepilogo per cliente/agente". Solo existe para emitidas (ver hallazgo
+  // de paridad: fatt_f_list.php nunca tuvo esto). Se pide una vez por cambio
+  // de filtro/tab, no por cada página/orden, así que vive aparte de fetchPage.
+  const aggregates = ref<InvoiceListAggregates | undefined>(undefined);
+  const aggregatesLoading = ref(false);
+
   const toasts = useToastStore();
   let ctrl: AbortController | null = null;
+  let aggCtrl: AbortController | null = null;
 
   /**
    * Carga una página. Con `append=true` (scroll infinito) acumula las filas
@@ -102,6 +111,36 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
     }
   }
 
+  /** Totales/desgloses del filtro actual (mismo `$where`, sin paginar). */
+  async function fetchAggregates(): Promise<void> {
+    aggCtrl?.abort();
+    if (tab.value !== "A") {
+      aggregates.value = undefined;
+      return;
+    }
+    aggCtrl = new AbortController();
+    const signal = aggCtrl.signal;
+    aggregatesLoading.value = true;
+    try {
+      const res = await invoiceService.list(
+        {
+          ...filters.value,
+          page: 1,
+          per_page: 1,
+          include: "summary,by_client,by_agent",
+        },
+        signal,
+      );
+      if (signal.aborted) return;
+      aggregates.value = res.aggregates;
+    } catch (e) {
+      if (isAbortLikeError(e, signal)) return;
+      aggregates.value = undefined;
+    } finally {
+      if (!signal.aborted) aggregatesLoading.value = false;
+    }
+  }
+
   // ── Contrato ListSource ──────────────────────────────────────────────
   async function loadPage(p: number): Promise<void> {
     page.value = p;
@@ -116,7 +155,7 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
 
   async function refresh(): Promise<void> {
     page.value = 1;
-    await fetchPage(false);
+    await Promise.all([fetchPage(false), fetchAggregates()]);
   }
 
   function setSort(s: string, dir: "ASC" | "DESC"): void {
@@ -143,6 +182,7 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
     if (typeof pp === "number") perPage.value = pp;
     page.value = 1;
     void fetchPage(false);
+    void fetchAggregates();
   }
 
   /** Cambia entre emitidas y recibidas; los filtros no se comparten. */
@@ -153,12 +193,13 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
     sort.value = "";
     page.value = 1;
     void fetchPage(false);
+    void fetchAggregates();
   }
 
   // Compat: arranque inicial.
   async function fetch(): Promise<void> {
     page.value = 1;
-    await fetchPage(false);
+    await Promise.all([fetchPage(false), fetchAggregates()]);
   }
 
   return {
@@ -175,6 +216,9 @@ export const useInvoiceListStore = defineStore("invoice_list", () => {
     tab,
     setTab,
     filters,
+    // paridad visual legacy: totales + desglose por cliente/agente
+    aggregates,
+    aggregatesLoading,
     // métodos (ListSource)
     loadPage,
     loadMore,

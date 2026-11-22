@@ -68,6 +68,37 @@ export interface InvoiceListItem {
   controllo_stato?: string | null;
   /** Resumen de cobros/pagos de la factura. */
   pagos?: PaymentSummary | null;
+  /** Agente comercial del cliente y margen % (paridad visual legacy fatt_list.php; solo emitidas). */
+  id_agente?: number | null;
+  agente_nombre?: string | null;
+  costo_netto?: number | string | null;
+  margine_pct?: number | null;
+}
+
+/**
+ * Totales/desglose de un grupo (una divisa del resumen global, o una fila de
+ * "por cliente"/"por agente"). Nunca se suman importes de divisas distintas
+ * entre sí (paridad visual legacy fatt_list.php): cada grupo es de UNA sola
+ * divisa, así que `summary` es una lista (una fila por divisa en juego), no
+ * un único total.
+ */
+export interface InvoiceAggregateGroup {
+  valuta_sigla: string;
+  count: number;
+  costo_netto: number;
+  importo_netto: number;
+  importo_iva: number;
+  margine_pct: number | null;
+  id_anagrafica?: number;
+  rag_soc?: string;
+  id_agente?: number | null;
+  agente_nombre?: string | null;
+}
+
+export interface InvoiceListAggregates {
+  summary?: InvoiceAggregateGroup[];
+  by_client?: InvoiceAggregateGroup[];
+  by_agent?: InvoiceAggregateGroup[];
 }
 
 export type PaymentSummaryStatus = "paid" | "pending" | "overdue" | "none";
@@ -113,6 +144,8 @@ export interface InvoiceListFilters {
   per_page?: number;
   sort?: string;
   sort_dir?: "ASC" | "DESC";
+  /** "summary,by_client,by_agent" — paridad visual legacy fatt_list.php. */
+  include?: string;
 }
 
 /**
@@ -131,6 +164,7 @@ interface ApiEnvelope<T> {
     has_next: boolean;
     has_previous: boolean;
   };
+  aggregates?: InvoiceListAggregates;
   error?: string;
 }
 
@@ -218,7 +252,11 @@ export const invoiceService = {
   async list(
     filters: InvoiceListFilters = {},
     signal?: AbortSignal,
-  ): Promise<{ items: InvoiceListItem[]; total: number }> {
+  ): Promise<{
+    items: InvoiceListItem[];
+    total: number;
+    aggregates?: InvoiceListAggregates;
+  }> {
     const qs = buildInvoiceListQuery(filters);
     const res = await http<ApiEnvelope<InvoiceListItem[]>>(
       `/api_invoices_crud?${qs.toString()}`,
@@ -229,6 +267,7 @@ export const invoiceService = {
       total:
         res.pagination?.total ??
         (Array.isArray(res.data) ? res.data.length : 0),
+      aggregates: res.aggregates,
     };
   },
 

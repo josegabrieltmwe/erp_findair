@@ -28,6 +28,9 @@
       "date": "Datum",
       "client": "Kunde",
       "country": "Land",
+      "agent": "Vertreter",
+      "cost": "Kosten",
+      "margin": "Marge",
       "net": "Bemessungsgrundlage",
       "vat": "VAT",
       "total": "Gesamt",
@@ -37,6 +40,13 @@
       "lines": "Zeilen",
       "payments": "Zahlungen",
       "timeline": "Verlauf",
+      "summary": {
+        "title": "Zusammenfassung des Filters",
+        "count": "{count} Rechnungen",
+        "currency": "Währung",
+        "by_agent": "Nach Vertreter",
+        "by_client": "Nach Kunde"
+      },
       "filters": {
         "date_from": "Von",
         "date_to": "To",

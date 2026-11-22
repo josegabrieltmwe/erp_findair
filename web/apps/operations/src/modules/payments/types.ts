@@ -33,6 +33,10 @@ export interface PaymentRow {
   rag_soc: string;
   days_overdue: number;
   status: PaymentStatus;
+  /** Cliente en gestión legal de deuda (paridad visual legacy pagam_list.php:114). */
+  legale: boolean;
+  /** Cliente bloqueado (paridad visual legacy pagam_list.php:115). */
+  bloccato: boolean;
 }
 
 /** Cuota dentro de una factura (GET api_payments?id_fattura=). */
@@ -81,6 +85,8 @@ export interface PaymentListResult {
   rows: PaymentRow[];
   total: number;
   totalAmount: number;
+  /** Subtotal de cuotas de clientes en gestión legal (paridad visual legacy pagam_list.php:138-146). */
+  amountLegal: number;
 }
 
 export interface PaymentMethod {

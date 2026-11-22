@@ -28,6 +28,9 @@
       "date": "Data",
       "client": "Cliente",
       "country": "Paese",
+      "agent": "Agente",
+      "cost": "Costo",
+      "margin": "Margine",
       "net": "Imponibile",
       "vat": "IVA",
       "total": "Totale",
@@ -37,6 +40,13 @@
       "lines": "Righe",
       "payments": "Pagamenti",
       "timeline": "Cronologia",
+      "summary": {
+        "title": "Riepilogo del filtro",
+        "count": "{count} fatture",
+        "currency": "Valuta",
+        "by_agent": "Per agente",
+        "by_client": "Per cliente"
+      },
       "filters": {
         "date_from": "Da",
         "date_to": "A",

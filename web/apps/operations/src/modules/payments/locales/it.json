@@ -28,7 +28,10 @@
       "export_csv": "Esporta CSV",
       "load_failed": "Impossibile caricare le rate.",
       "empty": "Nessuna rata da mostrare",
-      "days_overdue": "{days} giorni di ritardo"
+      "days_overdue": "{days} giorni di ritardo",
+      "customer_legal": "Cliente in gestione legale del credito",
+      "customer_blocked": "Cliente bloccato",
+      "legal_amount": "In gestione legale"
     },
     "statop": {
       "O": "Aperte",

@@ -39,7 +39,7 @@ interface Envelope<T> {
     per_page: number;
     total_pages: number;
   };
-  summary?: { total_amount?: number | string };
+  summary?: { total_amount?: number | string; amount_legal?: number | string };
   error?: string;
 }
 
@@ -115,11 +115,14 @@ export const paymentsApi = {
       ...r,
       importo: num(r.importo),
       days_overdue: num(r.days_overdue),
+      legale: Boolean(r.legale),
+      bloccato: Boolean(r.bloccato),
     }));
     return {
       rows,
       total: res.pagination?.total ?? rows.length,
       totalAmount: num(res.summary?.total_amount),
+      amountLegal: num(res.summary?.amount_legal),
     };
   },
 

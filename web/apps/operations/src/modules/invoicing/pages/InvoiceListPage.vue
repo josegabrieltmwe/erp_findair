@@ -356,6 +356,26 @@
             }}
           </button>
         </template>
+        <template #cell.agente_nombre="{ item }">
+          {{ (item as InvoiceListItem).agente_nombre || "—" }}
+        </template>
+        <template #cell.costo_netto="{ item }">
+          {{
+            (item as InvoiceListItem).costo_netto
+              ? money(
+                  (item as InvoiceListItem).costo_netto!,
+                  (item as InvoiceListItem).valuta_sigla,
+                )
+              : "—"
+          }}
+        </template>
+        <template #cell.margine_pct="{ item }">
+          {{
+            (item as InvoiceListItem).margine_pct != null
+              ? `${(item as InvoiceListItem).margine_pct}%`
+              : "—"
+          }}
+        </template>
         <template #cell.stato_sdi="{ item }">
           <button
             type="button"
@@ -401,6 +421,11 @@
           </v-btn>
         </template>
       </ListingDataView>
+      <InvoiceListSummaryFooter
+        v-if="!isSupplier"
+        :aggregates="store.aggregates"
+        @filter-by-client="onFilterByClientGroup"
+      />
     </div>
 
     <!-- Modal de generación (en vez de página /new). prefill-* viene de los query
@@ -454,12 +479,16 @@ import InvoiceFilterPanel, {
   type InvoiceFilters,
 } from "../components/invoice/InvoiceFilterPanel.vue";
 import ExportDialog from "../components/invoice/ExportDialog.vue";
+import InvoiceListSummaryFooter from "../components/invoice/InvoiceListSummaryFooter.vue";
 import ManualInvoiceDialog from "../components/invoice/ManualInvoiceDialog.vue";
 import SupplierInvoiceDialog from "../components/invoice/SupplierInvoiceDialog.vue";
 import { useToastStore } from "../stores/toast.store";
 import { useInvoiceListStore } from "../stores/invoice_list.store";
 import { capabilities, can } from "../services/http";
-import type { InvoiceListItem } from "../services/invoice.service";
+import type {
+  InvoiceListItem,
+  InvoiceAggregateGroup,
+} from "../services/invoice.service";
 import {
   CONTROL_COLOR,
   CONTROL_STATES,
@@ -633,6 +662,31 @@ const headers = computed<DataTableHeader[]>(() => {
       key: "rag_soc",
       sortable: !sup,
     },
+    // Paridad visual legacy (fatt_list.php): Agente/Costo/Margen %, solo emitidas.
+    ...(sup
+      ? []
+      : ([
+          {
+            title: t("invoicing.invoice.agent"),
+            key: "agente_nombre",
+            width: 150,
+            sortable: false,
+          },
+          {
+            title: t("invoicing.invoice.cost"),
+            key: "costo_netto",
+            align: "end",
+            width: 120,
+            sortable: false,
+          },
+          {
+            title: t("invoicing.invoice.margin"),
+            key: "margine_pct",
+            align: "center",
+            width: 90,
+            sortable: false,
+          },
+        ] as DataTableHeader[])),
     {
       title: t("invoicing.invoice.net"),
       key: "importo_netto",
@@ -823,6 +877,15 @@ function filterByClient(item: InvoiceListItem): void {
   if (!id) return;
   if (item.rag_soc) clientNameById.value[id] = item.rag_soc;
   setFilter("id_anagrafica", id);
+}
+
+/** "Riepilogo per cliente" (paridad visual legacy fatt_list.php:348-397): mismo filtro por cliente. */
+function onFilterByClientGroup(group: InvoiceAggregateGroup): void {
+  if (group.id_anagrafica == null) return;
+  filterByClient({
+    id_anagrafica: group.id_anagrafica,
+    rag_soc: group.rag_soc,
+  } as InvoiceListItem);
 }
 
 onMounted(() => {

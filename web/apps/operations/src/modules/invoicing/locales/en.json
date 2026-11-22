@@ -28,6 +28,9 @@
       "date": "Date",
       "client": "Customer",
       "country": "Country",
+      "agent": "Agent",
+      "cost": "Cost",
+      "margin": "Margin",
       "net": "Taxable",
       "vat": "VAT",
       "total": "Total",
@@ -37,6 +40,13 @@
       "lines": "Lines",
       "payments": "Payments",
       "timeline": "History",
+      "summary": {
+        "title": "Filter summary",
+        "count": "{count} invoices",
+        "currency": "Currency",
+        "by_agent": "By agent",
+        "by_client": "By customer"
+      },
       "filters": {
         "date_from": "From",
         "date_to": "To",

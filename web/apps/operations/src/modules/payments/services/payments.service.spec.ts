@@ -62,6 +62,28 @@ describe("paymentsApi", () => {
     expect(res.rows[0].importo).toBe(10.5);
   });
 
+  // F9 (paridad visual legacy pagam_list.php:114-115,138-146).
+  it("list: normaliza legale/bloccato a booleano y lee el subtotal legal", async () => {
+    httpMock.mockResolvedValue({
+      success: true,
+      data: [
+        { id: 1, importo: "10", days_overdue: "0", legale: true, bloccato: false },
+        { id: 2, importo: "20", days_overdue: "0", legale: false, bloccato: true },
+        { id: 3, importo: "30", days_overdue: "0" },
+      ],
+      pagination: { total: 3 },
+      summary: { total_amount: "60", amount_legal: "10" },
+    });
+    const res = await paymentsApi.list({}, { page: 1, perPage: 25 });
+    expect(res.amountLegal).toBe(10);
+    expect(res.rows[0].legale).toBe(true);
+    expect(res.rows[0].bloccato).toBe(false);
+    expect(res.rows[1].legale).toBe(false);
+    expect(res.rows[1].bloccato).toBe(true);
+    expect(res.rows[2].legale).toBe(false);
+    expect(res.rows[2].bloccato).toBe(false);
+  });
+
   it("register: omite amount cuando es cobro total", async () => {
     httpMock.mockResolvedValue({ success: true, data: {} });
     await paymentsApi.register({ id: 5, date: "2026-01-31" });
