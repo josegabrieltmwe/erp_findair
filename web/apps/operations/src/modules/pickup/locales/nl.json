@@ -187,6 +187,14 @@
       "enable_msg": "Vestiging {id} krijgt elke dag een aangemaakte ophaling. Activeren?",
       "disable_title": "Vaste ronde deactiveren",
       "disable_msg": "Vestiging {id} maakt geen vaste ophalingen meer aan. Deactiveren?",
+      "exceptions_section": "Incidentele uitzonderingen en vakantie",
+      "no_exceptions": "Geen uitzonderingen of vakantie geregistreerd.",
+      "exception_from": "Van",
+      "exception_to": "Tot (optioneel)",
+      "exception_reason": "Reden (optioneel)",
+      "add_exception": "Toevoegen",
+      "delete_exception_title": "Uitzondering verwijderen",
+      "delete_exception_msg": "Uitzondering van {from} tot {to} verwijderen?",
       "generate_section": "Ophalingen van de dag aanmaken",
       "date": "Datum",
       "dry_run": "Alleen simuleren (schrijft niets)",
@@ -205,7 +213,8 @@
         "skipped_courier": "Overgeslagen (koerier)",
         "skipped_rest_day": "Overgeslagen (rustdag)",
         "calendar_errors": "Foutieve kalenders (genegeerd)",
-        "skipped_weekday": "Overgeslagen (andere weekdag)"
+        "skipped_weekday": "Overgeslagen (andere weekdag)",
+        "skipped_exception": "Overgeslagen (uitzondering of vakantie)"
       }
     },
     "manifest": {

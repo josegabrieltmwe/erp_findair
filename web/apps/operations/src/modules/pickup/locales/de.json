@@ -187,6 +187,14 @@
       "enable_msg": "Für Filiale {id} wird jeden Tag eine Abholung erzeugt. Aktivieren?",
       "disable_title": "Feste Tour deaktivieren",
       "disable_msg": "Filiale {id} erzeugt keine festen Abholungen mehr. Deaktivieren?",
+      "exceptions_section": "Punktuelle Ausnahmen und Betriebsurlaub",
+      "no_exceptions": "Keine Ausnahmen oder Betriebsurlaub erfasst.",
+      "exception_from": "Von",
+      "exception_to": "Bis (optional)",
+      "exception_reason": "Grund (optional)",
+      "add_exception": "Hinzufügen",
+      "delete_exception_title": "Ausnahme löschen",
+      "delete_exception_msg": "Ausnahme von {from} bis {to} löschen?",
       "generate_section": "Abholungen des Tages erzeugen",
       "date": "Datum",
       "dry_run": "Nur simulieren (schreibt nichts)",
@@ -205,7 +213,8 @@
         "skipped_courier": "Übersprungen (Kurierfahrer)",
         "skipped_rest_day": "Übersprungen (Ruhetag)",
         "calendar_errors": "Fehlerhafte Kalender (ignoriert)",
-        "skipped_weekday": "Übersprungen (anderer Wochentag)"
+        "skipped_weekday": "Übersprungen (anderer Wochentag)",
+        "skipped_exception": "Übersprungen (Ausnahme oder Urlaub)"
       }
     },
     "manifest": {

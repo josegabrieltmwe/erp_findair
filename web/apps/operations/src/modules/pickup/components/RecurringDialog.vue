@@ -4,21 +4,31 @@ import { useConfirmStore } from "@shared/anagrafiche/stores/confirm.store";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { pickupsService } from "../services/pickups.service";
-import type { GenerateDailyResult, RecurringConfig } from "../types";
+import type {
+  GenerateDailyResult,
+  PickupException,
+  RecurringConfig,
+} from "../types";
 
 const { t } = useI18n();
 const confirm = useConfirmStore();
 
 /**
- * Ritiro fijo (presa fissa): activar o desactivar el giro fijo de una sede y
- * generar las presas del día (con simulación). Usa `recurringConfig`,
- * `toggleRecurring` y `generateDaily` de `pickups.service.ts`.
+ * Ritiro fijo (presa fissa): activar o desactivar el giro fijo de una sede,
+ * gestionar sus excepciones puntuales y vacaciones (G19, T-42), y generar las
+ * presas del día (con simulación). Usa `recurringConfig`, `toggleRecurring`,
+ * `listExceptions`/`createException`/`deleteException` y `generateDaily` de
+ * `pickups.service.ts`.
  */
 const props = defineProps<{ modelValue: boolean; sedeId?: number | null }>();
 const emit = defineEmits<{ "update:modelValue": [boolean]; changed: [] }>();
 
 const sede = ref<number | null>(null);
 const config = ref<RecurringConfig | null>(null);
+const exceptions = ref<PickupException[]>([]);
+const newExceptionFrom = ref("");
+const newExceptionTo = ref("");
+const newExceptionReason = ref("");
 const date = ref(todayLocal());
 const dryRun = ref(true);
 const includeNonBusiness = ref(false);
@@ -32,6 +42,10 @@ watch(
     if (!open) return;
     sede.value = props.sedeId ?? null;
     config.value = null;
+    exceptions.value = [];
+    newExceptionFrom.value = "";
+    newExceptionTo.value = "";
+    newExceptionReason.value = "";
     result.value = null;
     error.value = null;
     date.value = todayLocal();
@@ -62,10 +76,46 @@ async function loadConfig(): Promise<void> {
   const id = sede.value;
   await guarded(async () => {
     config.value = await pickupsService.recurringConfig(id);
+    exceptions.value = await pickupsService.listExceptions(id);
   });
 }
 
 const isFixed = computed(() => config.value?.presa_fissa === "S");
+
+async function addException(): Promise<void> {
+  if (!sede.value || !newExceptionFrom.value) return;
+  const id = sede.value;
+  await guarded(async () => {
+    await pickupsService.createException({
+      id_sede: id,
+      fecha_desde: newExceptionFrom.value,
+      fecha_hasta: newExceptionTo.value || undefined,
+      motivo: newExceptionReason.value || undefined,
+    });
+    newExceptionFrom.value = "";
+    newExceptionTo.value = "";
+    newExceptionReason.value = "";
+    exceptions.value = await pickupsService.listExceptions(id);
+  });
+}
+
+async function removeException(exception: PickupException): Promise<void> {
+  const ok = await confirm.ask({
+    title: t("pickup.recurring.delete_exception_title"),
+    message: t("pickup.recurring.delete_exception_msg", {
+      from: exception.fecha_desde,
+      to: exception.fecha_hasta,
+    }),
+    variant: "danger",
+  });
+  if (!ok) return;
+  const id = sede.value;
+  if (!id) return;
+  await guarded(async () => {
+    await pickupsService.deleteException(exception.id);
+    exceptions.value = await pickupsService.listExceptions(id);
+  });
+}
 
 async function toggle(): Promise<void> {
   if (!sede.value || !config.value) return;
@@ -113,6 +163,7 @@ const counters = computed(() => {
     { key: "skipped_courier", value: r.skipped_courier },
     { key: "skipped_rest_day", value: r.skipped_rest_day },
     { key: "skipped_weekday", value: r.skipped_weekday },
+    { key: "skipped_exception", value: r.skipped_exception },
     { key: "calendar_errors", value: r.calendar_errors },
   ].filter((c) => c.value !== undefined);
 });
@@ -160,6 +211,68 @@ const counters = computed(() => {
             {{ isFixed ? t("pickup.recurring.disable") : t("pickup.recurring.enable") }}
           </v-btn>
         </div>
+
+        <template v-if="sede">
+          <v-divider class="my-4" />
+
+          <h3 class="pk-sub">{{ t("pickup.recurring.exceptions_section") }}</h3>
+          <ul v-if="exceptions.length" class="pk-exceptions mb-3">
+            <li v-for="ex in exceptions" :key="ex.id">
+              <span class="pk-exceptions__dates">
+                {{ ex.fecha_desde }}<template v-if="ex.fecha_hasta !== ex.fecha_desde"> — {{ ex.fecha_hasta }}</template>
+              </span>
+              <span v-if="ex.motivo" class="pk-exceptions__reason">{{ ex.motivo }}</span>
+              <v-btn
+                size="x-small"
+                variant="text"
+                icon="mdi-close"
+                :title="t('pickup.recurring.delete_exception_title')"
+                :disabled="busy"
+                @click="removeException(ex)"
+              />
+            </li>
+          </ul>
+          <p v-else class="text-body-2 text-medium-emphasis mb-3">
+            {{ t("pickup.recurring.no_exceptions") }}
+          </p>
+
+          <div class="d-flex ga-2 align-end flex-wrap mb-4">
+            <v-text-field
+              v-model="newExceptionFrom"
+              :label="t('pickup.recurring.exception_from')"
+              type="date"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="max-width: 170px"
+            />
+            <v-text-field
+              v-model="newExceptionTo"
+              :label="t('pickup.recurring.exception_to')"
+              type="date"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="max-width: 170px"
+            />
+            <v-text-field
+              v-model="newExceptionReason"
+              :label="t('pickup.recurring.exception_reason')"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="max-width: 220px"
+            />
+            <v-btn
+              variant="tonal"
+              :disabled="!newExceptionFrom"
+              :loading="busy"
+              @click="addException"
+            >
+              {{ t("pickup.recurring.add_exception") }}
+            </v-btn>
+          </div>
+        </template>
 
         <v-divider class="my-4" />
 
@@ -249,5 +362,25 @@ const counters = computed(() => {
   justify-content: space-between;
   gap: 12px;
   font-size: 0.9rem;
+}
+.pk-exceptions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.pk-exceptions li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+.pk-exceptions__dates {
+  font-weight: 500;
+}
+.pk-exceptions__reason {
+  color: rgba(var(--v-theme-on-surface), 0.6);
+  flex: 1;
 }
 </style>

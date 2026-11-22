@@ -187,6 +187,14 @@
       "enable_msg": "La sede {id} tendrá una recogida generada cada día. ¿Activar?",
       "disable_title": "Desactivar giro fijo",
       "disable_msg": "La sede {id} dejará de generar recogidas fijas. ¿Desactivar?",
+      "exceptions_section": "Excepciones puntuales y vacaciones",
+      "no_exceptions": "Sin excepciones ni vacaciones registradas.",
+      "exception_from": "Desde",
+      "exception_to": "Hasta (opcional)",
+      "exception_reason": "Motivo (opcional)",
+      "add_exception": "Añadir",
+      "delete_exception_title": "Borrar excepción",
+      "delete_exception_msg": "¿Borrar la excepción del {from} al {to}?",
       "generate_section": "Generar las recogidas del día",
       "date": "Fecha",
       "dry_run": "Solo simular (no escribe)",
@@ -205,7 +213,8 @@
         "skipped_courier": "Omitidas (chófer courier)",
         "skipped_rest_day": "Omitidas (día de descanso)",
         "calendar_errors": "Calendarios mal escritos (ignorados)",
-        "skipped_weekday": "Omitidas (otro día de la semana)"
+        "skipped_weekday": "Omitidas (otro día de la semana)",
+        "skipped_exception": "Omitidas (excepción o vacación)"
       }
     },
     "manifest": {

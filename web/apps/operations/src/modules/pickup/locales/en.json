@@ -187,6 +187,14 @@
       "enable_msg": "Branch {id} will get a pickup generated every day. Enable?",
       "disable_title": "Disable fixed pickup",
       "disable_msg": "Branch {id} will stop generating fixed pickups. Disable?",
+      "exceptions_section": "Punctual exceptions and vacations",
+      "no_exceptions": "No exceptions or vacations registered.",
+      "exception_from": "From",
+      "exception_to": "To (optional)",
+      "exception_reason": "Reason (optional)",
+      "add_exception": "Add",
+      "delete_exception_title": "Delete exception",
+      "delete_exception_msg": "Delete the exception from {from} to {to}?",
       "generate_section": "Generate the day's pickups",
       "date": "Date",
       "dry_run": "Simulate only (writes nothing)",
@@ -205,7 +213,8 @@
         "skipped_courier": "Skipped (courier driver)",
         "skipped_rest_day": "Skipped (rest day)",
         "calendar_errors": "Badly written calendars (ignored)",
-        "skipped_weekday": "Skipped (other weekday)"
+        "skipped_weekday": "Skipped (other weekday)",
+        "skipped_exception": "Skipped (exception or vacation)"
       }
     },
     "manifest": {

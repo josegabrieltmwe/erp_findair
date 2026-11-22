@@ -270,9 +270,34 @@ export interface GenerateDailyResult {
   skipped_rest_day?: number;
   /** Sedes cuyo día de la semana no está en `presa_dias`. */
   skipped_weekday?: number;
+  /** Sedes con una excepción puntual o vacación activa ese día (G19, T-42). */
+  skipped_exception?: number;
   calendar_errors?: number;
   locked?: boolean;
   dry_run?: boolean;
+}
+
+/**
+ * Excepción puntual o vacación del giro fijo de una sede (G19, T-42,
+ * `api_pickup_exceptions`). Un rango de fechas inclusive; una excepción de un
+ * solo día tiene `fecha_hasta === fecha_desde`.
+ */
+export interface PickupException {
+  id: number;
+  id_sede: number;
+  fecha_desde: string;
+  fecha_hasta: string;
+  motivo: string | null;
+  stato: "A" | "O";
+  insert_datetime?: string;
+}
+
+export interface PickupExceptionPayload {
+  id_sede: number;
+  fecha_desde: string;
+  /** Omitida = excepción de un solo día (fecha_hasta = fecha_desde). */
+  fecha_hasta?: string;
+  motivo?: string | null;
 }
 
 /** Resultado por CAP de un guardado en lote de zonas. */

@@ -7,6 +7,7 @@
  *   GET                  api_pickup_calendar
  *   GET/POST/DELETE      api_pickup_driver_assignment
  *   GET/POST/PUT         api_pickup_recurring
+ *   GET/POST/DELETE      api_pickup_exceptions (G19, T-42)
  */
 import { http } from "@shared/anagrafiche/services/http";
 import { BULK_LIMIT, chunk, mergeBulkResults } from "../logic";
@@ -19,6 +20,8 @@ import type {
   GenerateDailyResult,
   Paginated,
   Pickup,
+  PickupException,
+  PickupExceptionPayload,
   PickupFilters,
   PickupWritePayload,
   RecurringConfig,
@@ -206,5 +209,31 @@ export const pickupsService = {
       { method: "POST", body },
     );
     return r.data;
+  },
+
+  /** Excepciones/vacaciones activas de una sede, más próximas primero (G19, T-42). */
+  async listExceptions(idSede: number): Promise<PickupException[]> {
+    const r = await http<ApiEnvelope<PickupException[]>>(
+      "/api_pickup_exceptions",
+      { method: "GET", query: { id_sede: String(idSede) } },
+    );
+    return r.data;
+  },
+
+  async createException(
+    payload: PickupExceptionPayload,
+  ): Promise<PickupException> {
+    const r = await http<ApiEnvelope<PickupException>>(
+      "/api_pickup_exceptions",
+      { method: "POST", body: payload },
+    );
+    return r.data;
+  },
+
+  async deleteException(id: number): Promise<void> {
+    await http<ApiEnvelope<{ deleted: boolean }>>("/api_pickup_exceptions", {
+      method: "DELETE",
+      query: { id: String(id) },
+    });
   },
 };

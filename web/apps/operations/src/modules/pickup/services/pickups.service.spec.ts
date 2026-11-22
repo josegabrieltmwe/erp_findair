@@ -199,4 +199,53 @@ describe("pickupsService", () => {
       await pickupsService.generateDaily("2030-03-06", { dry_run: true }),
     ).toEqual(data);
   });
+
+  // G19, T-42 — excepciones puntuales y vacaciones de sede.
+  it("listExceptions pide api_pickup_exceptions por id_sede", async () => {
+    const data = [
+      { id: 1, id_sede: 7, fecha_desde: "2030-08-01", fecha_hasta: "2030-08-31", motivo: "Ferie", stato: "A" },
+    ];
+    replies = [{ success: true, data }];
+    expect(await pickupsService.listExceptions(7)).toEqual(data);
+    expect(calls[0]).toMatchObject({
+      url: "/api_pickup_exceptions",
+      opts: { method: "GET", query: { id_sede: "7" } },
+    });
+  });
+
+  it("createException manda solo los campos informados", async () => {
+    await pickupsService.createException({
+      id_sede: 7,
+      fecha_desde: "2030-12-25",
+    });
+    await pickupsService.createException({
+      id_sede: 7,
+      fecha_desde: "2030-08-01",
+      fecha_hasta: "2030-08-31",
+      motivo: "Ferie estive",
+    });
+    expect(calls[0]).toMatchObject({
+      url: "/api_pickup_exceptions",
+      opts: { method: "POST", body: { id_sede: 7, fecha_desde: "2030-12-25" } },
+    });
+    expect(calls[1]).toMatchObject({
+      opts: {
+        method: "POST",
+        body: {
+          id_sede: 7,
+          fecha_desde: "2030-08-01",
+          fecha_hasta: "2030-08-31",
+          motivo: "Ferie estive",
+        },
+      },
+    });
+  });
+
+  it("deleteException borra por id en la query", async () => {
+    await pickupsService.deleteException(9);
+    expect(calls[0]).toMatchObject({
+      url: "/api_pickup_exceptions",
+      opts: { method: "DELETE", query: { id: "9" } },
+    });
+  });
 });

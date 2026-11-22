@@ -187,6 +187,14 @@
       "enable_msg": "La sede {id} avrà una presa generata ogni giorno. Attivare?",
       "disable_title": "Disattiva giro fisso",
       "disable_msg": "La sede {id} non genererà più prese fisse. Disattivare?",
+      "exceptions_section": "Eccezioni puntuali e ferie",
+      "no_exceptions": "Nessuna eccezione o ferie registrata.",
+      "exception_from": "Da",
+      "exception_to": "A (opzionale)",
+      "exception_reason": "Motivo (opzionale)",
+      "add_exception": "Aggiungi",
+      "delete_exception_title": "Elimina eccezione",
+      "delete_exception_msg": "Eliminare l'eccezione dal {from} al {to}?",
       "generate_section": "Genera le prese del giorno",
       "date": "Data",
       "dry_run": "Solo simulazione (non scrive)",
@@ -205,7 +213,8 @@
         "skipped_courier": "Saltate (autista corriere)",
         "skipped_rest_day": "Saltate (giorno di riposo)",
         "calendar_errors": "Calendari scritti male (ignorati)",
-        "skipped_weekday": "Saltate (altro giorno della settimana)"
+        "skipped_weekday": "Saltate (altro giorno della settimana)",
+        "skipped_exception": "Saltate (eccezione o ferie)"
       }
     },
     "manifest": {
