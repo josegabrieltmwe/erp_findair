@@ -8,10 +8,15 @@ import { useChatStore } from "@shared/stores/chat.store";
  * byte-identical between the two, same as the chat store it depends on).
  *
  * History: this used to open a long-lived SSE connection to the
- * web_chat_realtime_stream endpoint. With PHP-FPM pm.max_children=5 each
- * open SSE permanently parked one worker. Two browser tabs of the SPA
- * consumed 2 of the 5 workers and a third tab couldn't get served,
- * making the whole UI hang. We swapped the SSE for plain polling
+ * web_chat_realtime_stream endpoint. Apache serves this app with mod_php
+ * (mpm_prefork), so each open SSE permanently parked one worker for as
+ * long as the tab stayed open (the "pm.max_children=5" figure in older
+ * versions of this comment described the environment where the incident
+ * was first reproduced, not this vhost's real worker budget — the actual
+ * ceiling here is shared mpm_prefork workers across every vhost on the
+ * box, plus the separate, much smaller tmwe-api PHP-FPM pool behind it).
+ * A couple of browser tabs was already enough to start starving other
+ * requests. We swapped the SSE for plain polling
  * against `/web_chat_unread_counter` (cheap ~50ms call), which keeps
  * the badge fresh without blocking workers. The SSE endpoint itself was
  * later removed from the BFF whitelist (routes.bff.yaml `exclude:`) —
