@@ -12,6 +12,13 @@
 #   legacy_envelope  true si el controlador responde 200 con {"success": false}
 #   limits           body (p. ej. 64k, 20m) y timeout en segundos
 #   csrf             por defecto true para métodos que cambian estado
+#
+# Control de acceso por recurso (que un usuario no vea chats/tickets/expediciones ajenos)
+# lo resuelve tmwe_api (hoy Shipment_Access_Validation_Trait / Comm_Conversation_Service::
+# resolve_ticket()), nunca este fichero: el BFF reenvía shipment_id/conversation_id tal
+# cual. Antes de dar por buena una ruta nueva bajo web_chat_*/api_communication_*,
+# confirma con el backend que el endpoint declara ese trait — aquí no hay nada que lo
+# detecte si lo olvida.
 # Rutas de la SPA (módulos cargo y shipment), generadas con bin/gen-spa-manifest.php.
 include:
   - routes.spa.yaml
