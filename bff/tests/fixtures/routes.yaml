@@ -144,6 +144,21 @@ routes:
     upstream:
       action: api_pay_surcharges
     limits: { body: 16k, timeout: 30 }
+  - id: fixture.presence_heartbeat
+    method: POST
+    path: /presence
+    csrf: false
+    upstream:
+      action: api_presence
+    limits: { body: 4k, timeout: 5 }
+    throttle: presence_heartbeat
+  - id: fixture.web_chat_message
+    method: POST
+    path: /chatmsg
+    upstream:
+      action: api_chatmsg
+    limits: { body: 1m, timeout: 30 }
+    throttle: web_chat
 include:
   - routes.extra.yaml
 exclude:

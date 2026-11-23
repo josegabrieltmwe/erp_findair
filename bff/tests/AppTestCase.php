@@ -152,4 +152,34 @@ abstract class AppTestCase extends TestCase
     {
         return new UpstreamResponse($status, ['Content-Type' => 'application/json'], $body);
     }
+
+    /**
+     * Una petición POST cuyo cuerpo se lee en trozos de 8 KiB sin `getSize()` conocido —
+     * simula cómo entrega `php://input` un cuerpo grande, para probar que el límite de
+     * tamaño se respeta aunque el `Content-Length` no esté disponible de antemano.
+     */
+    protected function shortReadRequest(string $path, string $sid, string $body): ServerRequestInterface
+    {
+        $request = $this->request('POST', $path, $sid, $this->unsafeHeaders());
+        $inner = (new \Slim\Psr7\Factory\StreamFactory())->createStream($body);
+        $stream = new class ($inner) implements \Psr\Http\Message\StreamInterface {
+            use \GuzzleHttp\Psr7\StreamDecoratorTrait;
+
+            public function __construct(private \Psr\Http\Message\StreamInterface $stream)
+            {
+            }
+
+            public function read(int $length): string
+            {
+                return $this->stream->read(min($length, 8192));
+            }
+
+            public function getSize(): ?int
+            {
+                return null;
+            }
+        };
+
+        return $request->withBody($stream);
+    }
 }

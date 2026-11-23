@@ -194,31 +194,6 @@ final class CopilotRoutesTest extends AppTestCase
 
     // ---- Lectura del cuerpo (php://input entrega ~8 KiB por lectura y sin tamaño conocido) ----
 
-    private function shortReadRequest(string $path, string $sid, string $body): \Psr\Http\Message\ServerRequestInterface
-    {
-        $request = $this->request('POST', $path, $sid, $this->unsafeHeaders());
-        $inner = (new \Slim\Psr7\Factory\StreamFactory())->createStream($body);
-        $stream = new class ($inner) implements \Psr\Http\Message\StreamInterface {
-            use \GuzzleHttp\Psr7\StreamDecoratorTrait;
-
-            public function __construct(private \Psr\Http\Message\StreamInterface $stream)
-            {
-            }
-
-            public function read(int $length): string
-            {
-                return $this->stream->read(min($length, 8192));
-            }
-
-            public function getSize(): ?int
-            {
-                return null;
-            }
-        };
-
-        return $request->withBody($stream);
-    }
-
     public function testBodiesLargerThanOneReadChunkAreForwardedIntact(): void
     {
         $body = json_encode(['message' => str_repeat('é', 20000)], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
