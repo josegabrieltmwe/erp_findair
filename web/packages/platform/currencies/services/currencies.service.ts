@@ -34,7 +34,16 @@ export interface CurrencyEditablePayload {
   dogana: 'S' | 'N';
 }
 
+export interface CurrencyRefreshResult {
+  success: boolean;
+  updated: number;
+  inserted_history: number;
+  skipped: number;
+  error: string | null;
+}
+
 const ENDPOINT = '/api_master_currencies';
+const REFRESH_ENDPOINT = '/api_admin_currency_refresh';
 
 interface RawWrite {
   success?: boolean;
@@ -65,5 +74,14 @@ export const currenciesService = {
       body: { id, ...payload },
     });
     assertOk(raw, 'Update failed');
+  },
+
+  /**
+   * Fuerza el ciclo diario de actualización (Currency_Rate_Update_Service)
+   * sin esperar al cron de las ~7:10. admin_only lo exige la API
+   * (Currency_Refresh_Controller); un usuario sin ese rol recibe 403.
+   */
+  async refresh(): Promise<CurrencyRefreshResult> {
+    return http<CurrencyRefreshResult>(REFRESH_ENDPOINT, { method: 'POST' });
   },
 };

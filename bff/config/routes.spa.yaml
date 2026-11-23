@@ -371,6 +371,16 @@ routes:
       action: api_admin_config_section_usage
       forward_query: '*'
   -
+    id: post.api_admin_currency_refresh
+    method: POST
+    path: /api_admin_currency_refresh
+    upstream:
+      action: api_admin_currency_refresh
+      forward_query: '*'
+    limits:
+      body: 1m
+      timeout: 30
+  -
     id: post.api_admin_dhl_airport_import
     method: POST
     path: /api_admin_dhl_airport_import

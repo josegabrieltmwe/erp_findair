@@ -612,7 +612,11 @@
     "cambio_readonly_hint": "Updated automatically every morning — not editable",
     "data_cron": "Last update",
     "empty": "No currencies",
-    "total": "{n} currencies"
+    "total": "{n} currencies",
+    "refresh_button": "Force update",
+    "refresh_tooltip": "Asks the provider for today's exchange rate again. Usually not needed: it updates automatically every morning.",
+    "refresh_success": "Updated: {updated} currencies, {inserted} new history rows, {skipped} skipped",
+    "refresh_error": "Could not update: {error}"
   },
   "fiscal_settings": {
     "subtitle": "Italian fiscal sectors (studi di settore) used by Billing",

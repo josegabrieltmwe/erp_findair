@@ -612,7 +612,11 @@
     "cambio_readonly_hint": "Actualizado automáticamente cada mañana — no editable",
     "data_cron": "Última actualización",
     "empty": "No hay monedas",
-    "total": "{n} monedas"
+    "total": "{n} monedas",
+    "refresh_button": "Forzar actualización",
+    "refresh_tooltip": "Vuelve a pedir el tipo de cambio de hoy al proveedor. No suele ser necesario: se actualiza solo cada mañana.",
+    "refresh_success": "Actualizado: {updated} monedas, {inserted} históricos nuevos, {skipped} omitidas",
+    "refresh_error": "No se pudo actualizar: {error}"
   },
   "fiscal_settings": {
     "subtitle": "Categorías fiscales italianas (studi di settore) usadas por Facturación",

@@ -612,7 +612,11 @@
     "cambio_readonly_hint": "Elke ochtend automatisch bijgewerkt — niet bewerkbaar",
     "data_cron": "Laatste update",
     "empty": "Geen valuta's",
-    "total": "{n} valuta's"
+    "total": "{n} valuta's",
+    "refresh_button": "Update afdwingen",
+    "refresh_tooltip": "Vraagt de koers van vandaag opnieuw op bij de leverancier. Meestal niet nodig: wordt elke ochtend automatisch bijgewerkt.",
+    "refresh_success": "Bijgewerkt: {updated} valuta's, {inserted} nieuwe historische rijen, {skipped} overgeslagen",
+    "refresh_error": "Bijwerken mislukt: {error}"
   },
   "fiscal_settings": {
     "subtitle": "Italiaanse fiscale sectoren (studi di settore), gebruikt door Facturatie",

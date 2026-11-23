@@ -612,7 +612,11 @@
     "cambio_readonly_hint": "Aggiornato automaticamente ogni mattina — non modificabile",
     "data_cron": "Ultimo aggiornamento",
     "empty": "Nessuna valuta",
-    "total": "{n} valute"
+    "total": "{n} valute",
+    "refresh_button": "Forza aggiornamento",
+    "refresh_tooltip": "Richiede di nuovo il cambio di oggi al fornitore. Di solito non serve: si aggiorna da solo ogni mattina.",
+    "refresh_success": "Aggiornate: {updated} valute, {inserted} nuove righe storico, {skipped} saltate",
+    "refresh_error": "Aggiornamento non riuscito: {error}"
   },
   "fiscal_settings": {
     "subtitle": "Studi di settore italiani usati dalla Fatturazione",

@@ -1,6 +1,19 @@
 <template>
   <div>
-    <CmSectionHeader :title="t('sections.currencies')" :subtitle="t('currencies.subtitle')" />
+    <CmSectionHeader :title="t('sections.currencies')" :subtitle="t('currencies.subtitle')">
+      <template #actions>
+        <v-btn
+          :prepend-icon="mdiRefresh"
+          variant="outlined"
+          size="small"
+          :loading="refreshing"
+          :title="t('currencies.refresh_tooltip')"
+          @click="doRefresh"
+        >
+          {{ t('currencies.refresh_button') }}
+        </v-btn>
+      </template>
+    </CmSectionHeader>
 
     <v-alert type="info" variant="tonal" density="compact" class="mb-4">
       {{ t('currencies.cron_notice') }}
@@ -93,7 +106,7 @@
 import { ref, reactive, h, onMounted, defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
-  mdiCurrencyUsd, mdiPencil, mdiCheck, mdiClose, mdiCheckCircle, mdiCircleOutline,
+  mdiCurrencyUsd, mdiPencil, mdiCheck, mdiClose, mdiCheckCircle, mdiCircleOutline, mdiRefresh,
 } from '@mdi/js';
 import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmAsyncSection from '../../anagrafiche/components/CmAsyncSection.vue';
@@ -123,6 +136,7 @@ const rows = ref<Currency[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const saving = ref(false);
+const refreshing = ref(false);
 
 const flagItems = [
   { title: t('common.yes'), value: 'S' },
@@ -182,6 +196,28 @@ async function doSave(id: number) {
     toast.error(e instanceof Error ? e.message : String(e));
   } finally {
     saving.value = false;
+  }
+}
+
+// ── Forzar actualización: dispara Currency_Rate_Update_Service ya, sin esperar al cron de las ~7:10 ──
+async function doRefresh() {
+  refreshing.value = true;
+  try {
+    const result = await currenciesService.refresh();
+    if (result.success) {
+      toast.success(t('currencies.refresh_success', {
+        updated: result.updated,
+        inserted: result.inserted_history,
+        skipped: result.skipped,
+      }));
+      await load();
+    } else {
+      toast.error(t('currencies.refresh_error', { error: result.error || 'unknown' }));
+    }
+  } catch (e) {
+    toast.error(t('currencies.refresh_error', { error: e instanceof Error ? e.message : String(e) }));
+  } finally {
+    refreshing.value = false;
   }
 }
 

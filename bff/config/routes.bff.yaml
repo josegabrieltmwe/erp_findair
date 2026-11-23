@@ -236,6 +236,17 @@ routes:
     # de catálogos is_secured()=false más arriba).
     check_effective_partner: false
 
+  # Forzar la actualización diaria de tipos de cambio (reemplaza el disparo manual que el legacy
+  # hacía desde valute_exe_ajax.php al crear una divisa nueva). admin_only lo exige la API
+  # (Currency_Refresh_Controller::get_authz_policy); el BFF no reimplementa ese techo, solo
+  # reenvía el Bearer. Sin body: Currency_Rate_Update_Service::run() no toma parámetros.
+  - id: currency.refresh.post
+    method: POST
+    path: /api_admin_currency_refresh
+    upstream:
+      action: api_admin_currency_refresh
+    limits: { timeout: 30 }
+
   # Latido de presencia. El aviso al cerrar pestaña no puede llevar X-CSRF-Token, así que se
   # confía en OriginMiddleware (Origin / Sec-Fetch-Site), que sigue activo para métodos no seguros.
   - id: presence.heartbeat

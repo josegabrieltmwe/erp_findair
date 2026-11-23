@@ -612,7 +612,11 @@
     "cambio_readonly_hint": "Automatisch jeden Morgen aktualisiert — nicht bearbeitbar",
     "data_cron": "Letzte Aktualisierung",
     "empty": "Keine Währungen",
-    "total": "{n} Währungen"
+    "total": "{n} Währungen",
+    "refresh_button": "Aktualisierung erzwingen",
+    "refresh_tooltip": "Fragt den heutigen Wechselkurs erneut beim Anbieter ab. Normalerweise nicht nötig: er wird jeden Morgen automatisch aktualisiert.",
+    "refresh_success": "Aktualisiert: {updated} Währungen, {inserted} neue Verlaufszeilen, {skipped} übersprungen",
+    "refresh_error": "Aktualisierung fehlgeschlagen: {error}"
   },
   "fiscal_settings": {
     "subtitle": "Italienische Steuersektoren (studi di settore), verwendet in der Abrechnung",
