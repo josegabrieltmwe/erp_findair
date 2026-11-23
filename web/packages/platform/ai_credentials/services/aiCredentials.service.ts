@@ -15,10 +15,17 @@ import { aiAdminCall } from '../../ai_admin/services/aiAdmin.service';
 export const AI_PROVIDERS = ['openai', 'anthropic'] as const;
 export type AiProvider = (typeof AI_PROVIDERS)[number];
 
-/** Sugerencias para el combobox de modelo (el campo admite texto libre). */
+/**
+ * Sugerencias para el combobox de modelo (el campo admite texto libre).
+ * Lista curada a mano, no la devuelve ninguna API: revisar contra el catálogo
+ * vigente de cada proveedor antes de añadir un modelo nuevo (2026-11-23: la
+ * de OpenAI llevaba desde el lanzamiento solo con gpt-4o/gpt-4o-mini; se
+ * actualizó a la gama gpt-6/gpt-6.x vigente a esa fecha). gpt-4o/gpt-4o-mini
+ * se mantienen al final solo por compatibilidad con credenciales existentes.
+ */
 export const AI_MODEL_SUGGESTIONS: Record<AiProvider, string[]> = {
-  anthropic: ['claude-sonnet-5', 'claude-haiku-4-5'],
-  openai: ['gpt-4o', 'gpt-4o-mini'],
+  anthropic: ['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-haiku-5-5'],
+  openai: ['gpt-6.2-astra', 'gpt-6.2-sol', 'gpt-6.1-terra', 'gpt-6-luna', 'gpt-4o', 'gpt-4o-mini'],
 };
 
 export interface AiCredential {
