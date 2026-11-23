@@ -157,6 +157,27 @@ final class Settings
                     ratePerIp: (int) $get('COPILOT_CONFIRM_RATE_PER_IP_MIN', '60'),
                     concurrencyPerUser: (int) $get('COPILOT_CONFIRM_MAX_PER_USER', '1'),
                 ),
+                // Chat por expedición (mensajes + contador de no leídos): el cliente legítimo
+                // sondea cada 15s (badge) y cada 60s (PlatformChatBadge global), más el tráfico
+                // humano de abrir/enviar/marcar leído. Margen holgado para varias pestañas a la vez.
+                'web_chat' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('WEB_CHAT_RATE_PER_MIN', '60'),
+                    ratePerIp: (int) $get('WEB_CHAT_RATE_PER_IP_MIN', '180'),
+                ),
+                // Latido de presencia: el cliente llama cada 60s por pestaña (web_presence_heartbeat,
+                // sin CSRF por el beforeunload). Sin este freno, una sesión propia podía llamarlo sin
+                // límite del lado BFF — cada llamada cuesta un worker de Apache hasta 5s.
+                'presence_heartbeat' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('PRESENCE_HEARTBEAT_RATE_PER_MIN', '20'),
+                    ratePerIp: (int) $get('PRESENCE_HEARTBEAT_RATE_PER_IP_MIN', '60'),
+                ),
+                // Sondeo de comunicación/CRM (collaudo 16/11 N57, alternativa a la SSE del daemon):
+                // GET corto cada 4s con la pestaña visible, + respaldo cada 30s. Mismo margen que el
+                // resto de pollers asíncronos (modelli_assist_poll, tact_poll, export_poll).
+                'communication_poll' => new ThrottlePolicy(
+                    ratePerUser: (int) $get('COMMUNICATION_POLL_RATE_PER_MIN', '120'),
+                    ratePerIp: (int) $get('COMMUNICATION_POLL_RATE_PER_IP_MIN', '360'),
+                ),
             ],
         );
     }

@@ -58,6 +58,11 @@ exclude:
   - GET /unified_express_service_list_by_shipment
   - GET /unified_rate_fornitore
   - GET /web_chat_typing
+  # El cliente solo llama POST (presence.ts); GET era un falso positivo del generador.
+  - GET /web_presence_heartbeat
+  # El cliente solo lee el contador con GET (chat.service.ts); nadie llama POST/PUT.
+  - POST /web_chat_unread_counter
+  - PUT /web_chat_unread_counter
 
 routes:
   # PDF de MAWB/HAWB: el generador tarda 10-14 s en local y con el límite por defecto (15 s) daba 504 (P62).
@@ -259,6 +264,7 @@ routes:
 
   # Latido de presencia. El aviso al cerrar pestaña no puede llevar X-CSRF-Token, así que se
   # confía en OriginMiddleware (Origin / Sec-Fetch-Site), que sigue activo para métodos no seguros.
+  # Por eso necesita throttle propio: sin CSRF, el único freno que le quedaba era este límite.
   - id: presence.heartbeat
     method: POST
     path: /web_presence_heartbeat
@@ -266,6 +272,49 @@ routes:
     upstream:
       action: web_presence_heartbeat
     limits: { body: 4k, timeout: 5 }
+    throttle: presence_heartbeat
+
+  # Chat por expedición: sin esto, nada en el BFF frenaba un sondeo o un envío en bucle.
+  # Sustituyen a las generadas de routes.spa.yaml (mismos id) solo para añadir throttle.
+  - id: get.web_chat_messages
+    method: GET
+    path: /web_chat_messages
+    upstream:
+      action: web_chat_messages
+      forward_query: '*'
+    throttle: web_chat
+  - id: post.web_chat_messages
+    method: POST
+    path: /web_chat_messages
+    upstream:
+      action: web_chat_messages
+      forward_query: '*'
+    limits: { body: 1m, timeout: 30 }
+    throttle: web_chat
+  - id: put.web_chat_messages
+    method: PUT
+    path: /web_chat_messages
+    upstream:
+      action: web_chat_messages
+      forward_query: '*'
+    limits: { body: 1m, timeout: 30 }
+    throttle: web_chat
+  - id: get.web_chat_unread_counter
+    method: GET
+    path: /web_chat_unread_counter
+    upstream:
+      action: web_chat_unread_counter
+      forward_query: '*'
+    throttle: web_chat
+
+  # Sondeo de comunicación/CRM (collaudo 16/11 N57): mismo motivo, sin throttle propio hoy.
+  - id: get.api_communication_poll
+    method: GET
+    path: /api_communication_poll
+    upstream:
+      action: api_communication_poll
+      forward_query: '*'
+    throttle: communication_poll
 
   - id: admin.my_permissions
     method: GET
