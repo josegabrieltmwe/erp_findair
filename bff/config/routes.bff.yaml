@@ -17,7 +17,17 @@ include:
   - routes.spa.yaml
 
 # Métodos que tmwe_json rechaza con 405 (el generador deduce de más). Sondeo: bin/probe-routes.php.
+# También se usa para retirar de la lista blanca rutas vivas en el backend que el
+# generador seguiría detectando (p. ej. por una mención en comentarios) pero que no
+# debe exponer el BFF.
 exclude:
+  # web_chat_realtime_stream: SSE heredado, sin cliente desde que shipment/cargo
+  # migraron a polling (ver useChatRealtime en packages/platform/composables).
+  # El backend lo mantiene vivo y respondiendo; cada conexión retiene un worker de
+  # Apache (mismo mecanismo que agotó pm.max_children con el chat antiguo). Sin
+  # ningún consumidor real, es solo superficie de DoS — se retira hasta que haya un
+  # rediseño que saque los streams del ciclo request/worker (invariante 7).
+  - GET /web_chat_realtime_stream
   # partner_switch lo sustituye /bff/impersonation: el backend guarda el partner en $_SESSION
   - GET /partner_switch
   # El copilot lo llama la SPA con POST (postJson); el generador solo veía un GET
