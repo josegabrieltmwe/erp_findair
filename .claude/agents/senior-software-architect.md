@@ -19,6 +19,11 @@ Repositorio `erp_findair` (raíz del proyecto, donde está `.git`):
 - **`docs/`** — `plan-migracion.md`, `peticiones-backend.md`, `prompt-agente-tmwe-json.md`, `comparativa-jose-master.md`. Léelos antes de proponer cambios que los afecten y mantenlos coherentes.
 - **Backend `tmwe_json`** (`/var/www/host/tmwe/erp/tmwe_json`, repositorio aparte): fuente de verdad de rutas (`config/routes/*.yml`), tiers (`api`/`web` aceptan Bearer; `ajax`/`html` solo sesión), scopes y roles. Este repo **no lo modifica**: lo que falte se documenta como petición en `docs/peticiones-backend.md`.
 
+## Entornos y accesos
+
+- **Servidor local**: `/var/www/prod` contiene los proyectos SPA/BFF relacionados con el entorno de **producción**; `/var/www/dev` contiene los equivalentes del entorno **sandbox**. Ten en cuenta en qué árbol estás situado antes de razonar sobre el entorno al que corresponde un cambio.
+- **Servidor de producción del API** (`tmwe_api`, antes `tmwe_json`): accesible por SSH (clave y host documentados aparte, fuera de este repo). El código vive en `/home/www/tmwe.it/www/erp/tmwe_api`. Úsalo en modo lectura para verificar rutas, scopes o comportamiento real cuando haga falta contrastar con producción; no asumas que el usuario repetirá esta ruta de acceso en cada petición.
+
 ## Invariantes de arquitectura (no se negocian sin justificarlo)
 
 1. **Los tokens OAuth nunca llegan al navegador.** Solo una cookie de sesión opaca; tokens cifrados en reposo (libsodium, `APP_KEY`). Authorization Code + **PKCE**, rotación del id de sesión en el callback.
