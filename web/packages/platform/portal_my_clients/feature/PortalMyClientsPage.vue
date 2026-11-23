@@ -38,6 +38,7 @@
         v-else
         :source="listSource"
         :headers="tableHeaders"
+        :sort-key-map="sortKeyMap"
         :selected="selected"
         mode="infinite"
         :selectable="false"
@@ -221,6 +222,9 @@ const tableHeaders: DataTableHeader[] = [
   { title: t('portal_my_clients.col_last_activity') as string, key: 'last_activity_at' },
   { title: t('portal_my_clients.col_actions') as string, key: 'actions', sortable: false, align: 'end' },
 ];
+const sortKeyMap: Record<string, string> = {
+  client_name: 'client_name', status: 'status', created_at: 'created_at', last_activity_at: 'last_activity_at',
+};
 
 function messageOf(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
