@@ -4,12 +4,14 @@ import { buildAccess } from "@shared/composables/useAccess";
 import {
   amountForRequest,
   canPayOnline,
+  formatMinorAmount,
   classifyPayError,
   isCheckoutExpired,
   isSafeCheckoutUrl,
   isTerminalStatus,
   newIdempotencyKey,
   normalizeAmount,
+  parsePayReturn,
   pollDelay,
   toMinor,
   validatePayAmount,
@@ -20,7 +22,9 @@ describe("canPayOnline", () => {
   it("exige payment_gateways:write", () => {
     const acc = (scopes: string[]) => buildAccess({ access: { scopes } });
     expect(canPayOnline(acc(["payment_gateways:write"]))).toBe(true);
-    expect(canPayOnline(acc(["payment_gateways:read", "payments:read"]))).toBe(false);
+    expect(canPayOnline(acc(["payment_gateways:read", "payments:read"]))).toBe(
+      false,
+    );
     expect(canPayOnline(buildAccess(null))).toBe(false);
   });
 });
@@ -34,7 +38,16 @@ describe("normalizeAmount / toMinor", () => {
     expect(normalizeAmount("007.25")).toBe("7.25");
   });
   it("rechaza vacíos, negativos, notación científica y más de 2 decimales", () => {
-    for (const bad of ["", "abc", "-1", "1e3", "1.234", "1.2.3", null, undefined]) {
+    for (const bad of [
+      "",
+      "abc",
+      "-1",
+      "1e3",
+      "1.234",
+      "1.2.3",
+      null,
+      undefined,
+    ]) {
       expect(normalizeAmount(bad as string)).toBeNull();
     }
   });
@@ -83,19 +96,36 @@ describe("newIdempotencyKey", () => {
 describe("classifyPayError", () => {
   // Escenario: cada estado del contrato de api_pay_payments se agrupa en su clase.
   it("agrupa 402, 409 y 422 por estado", () => {
-    expect(classifyPayError(new ApiError("x", 402, "PAYMENT_DECLINED")).kind).toBe("declined");
-    expect(classifyPayError(new ApiError("x", 409, "IDEMPOTENCY_KEY_REUSED")).kind).toBe("conflict");
-    expect(classifyPayError(new ApiError("x", 422, "VALIDATION_ERROR")).kind).toBe("invalid");
+    expect(
+      classifyPayError(new ApiError("x", 402, "PAYMENT_DECLINED")).kind,
+    ).toBe("declined");
+    expect(
+      classifyPayError(new ApiError("x", 409, "IDEMPOTENCY_KEY_REUSED")).kind,
+    ).toBe("conflict");
+    expect(
+      classifyPayError(new ApiError("x", 422, "VALIDATION_ERROR")).kind,
+    ).toBe("invalid");
   });
   // Escenario: en 503 http() pone code SERVER_ERROR; el código real va en el cuerpo (error_code o error.code).
   it("detecta PAYMENT_GATEWAYS_NOT_ACTIVE en el cuerpo del 503", () => {
-    const a = new ApiError("x", 503, "SERVER_ERROR", { error_code: "PAYMENT_GATEWAYS_NOT_ACTIVE" });
-    const b = new ApiError("x", 503, "SERVER_ERROR", { error: { code: "PAYMENT_GATEWAYS_NOT_ACTIVE" } });
-    expect(classifyPayError(a)).toEqual({ kind: "not_active", code: "PAYMENT_GATEWAYS_NOT_ACTIVE" });
+    const a = new ApiError("x", 503, "SERVER_ERROR", {
+      error_code: "PAYMENT_GATEWAYS_NOT_ACTIVE",
+    });
+    const b = new ApiError("x", 503, "SERVER_ERROR", {
+      error: { code: "PAYMENT_GATEWAYS_NOT_ACTIVE" },
+    });
+    expect(classifyPayError(a)).toEqual({
+      kind: "not_active",
+      code: "PAYMENT_GATEWAYS_NOT_ACTIVE",
+    });
     expect(classifyPayError(b).kind).toBe("not_active");
   });
   it("un 503 con otro código o un error ajeno es other", () => {
-    expect(classifyPayError(new ApiError("x", 503, "SERVER_ERROR", { error_code: "OTRO" })).kind).toBe("other");
+    expect(
+      classifyPayError(
+        new ApiError("x", 503, "SERVER_ERROR", { error_code: "OTRO" }),
+      ).kind,
+    ).toBe("other");
     expect(classifyPayError(new Error("boom")).kind).toBe("other");
   });
 });
@@ -103,8 +133,10 @@ describe("classifyPayError", () => {
 describe("estado y sondeo", () => {
   // Escenario: succeeded/failed/canceled/expired cierran el sondeo; processing y desconocidos lo mantienen.
   it("reconoce estados terminales", () => {
-    for (const s of ["succeeded", "failed", "canceled", "expired"]) expect(isTerminalStatus(s)).toBe(true);
-    for (const s of ["pending", "processing", "nuevo", null, undefined]) expect(isTerminalStatus(s as string)).toBe(false);
+    for (const s of ["succeeded", "failed", "canceled", "expired"])
+      expect(isTerminalStatus(s)).toBe(true);
+    for (const s of ["pending", "processing", "nuevo", null, undefined])
+      expect(isTerminalStatus(s as string)).toBe(false);
   });
   it("espacia el sondeo tras los primeros intentos", () => {
     expect(pollDelay(0)).toBe(3000);
@@ -121,10 +153,66 @@ describe("estado y sondeo", () => {
 describe("isSafeCheckoutUrl", () => {
   // Escenario: solo se navega a URLs https.
   it("acepta https y rechaza otros esquemas o basura", () => {
-    expect(isSafeCheckoutUrl("https://checkout.stripe.com/c/pay/cs_test_1")).toBe(true);
+    expect(
+      isSafeCheckoutUrl("https://checkout.stripe.com/c/pay/cs_test_1"),
+    ).toBe(true);
     expect(isSafeCheckoutUrl("http://x.test")).toBe(false);
     expect(isSafeCheckoutUrl("javascript:alert(1)")).toBe(false);
     expect(isSafeCheckoutUrl("no es url")).toBe(false);
     expect(isSafeCheckoutUrl(null)).toBe(false);
+  });
+});
+
+describe("parsePayReturn", () => {
+  // Escenario: Stripe devuelve a /payments/return?payment_id=pay_…&pay_result=success.
+  it("lee el id y el resultado de la URL de retorno", () => {
+    expect(
+      parsePayReturn({ payment_id: "pay_abc123", pay_result: "success" }),
+    ).toEqual({
+      paymentId: "pay_abc123",
+      result: "success",
+    });
+    expect(
+      parsePayReturn({ payment_id: "pay_abc123", pay_result: "cancel" }).result,
+    ).toBe("cancel");
+  });
+
+  // Escenario: la URL la puede editar cualquiera; un id mal formado no llega a la consulta.
+  it("descarta un id sin forma de pay_… y un resultado desconocido", () => {
+    expect(parsePayReturn({ payment_id: "../etc", pay_result: "ok" })).toEqual({
+      paymentId: null,
+      result: null,
+    });
+    expect(parsePayReturn({ payment_id: "123" }).paymentId).toBeNull();
+    expect(parsePayReturn({ payment_id: "pay_" }).paymentId).toBeNull();
+    expect(parsePayReturn({}).paymentId).toBeNull();
+    expect(parsePayReturn(null)).toEqual({ paymentId: null, result: null });
+  });
+
+  // Escenario: vue-router entrega un array si el parámetro se repite; se toma el primero.
+  it("acepta parámetros repetidos tomando el primero", () => {
+    expect(
+      parsePayReturn({
+        payment_id: ["pay_x1", "pay_y2"],
+        pay_result: ["cancel"],
+      }),
+    ).toEqual({
+      paymentId: "pay_x1",
+      result: "cancel",
+    });
+  });
+});
+
+describe("formatMinorAmount", () => {
+  // Escenario: 12550 céntimos en EUR se muestran con el formato del idioma activo.
+  it("formatea céntimos con divisa y idioma", () => {
+    expect(formatMinorAmount(12550, "EUR", "es")).toContain("125,50");
+    expect(formatMinorAmount(12550, "EUR", "en")).toContain("125.50");
+  });
+
+  it("devuelve null sin importe y no falla con una divisa inválida", () => {
+    expect(formatMinorAmount(null, "EUR", "es")).toBeNull();
+    expect(formatMinorAmount(undefined, "EUR", "es")).toBeNull();
+    expect(formatMinorAmount(1000, "no-es-divisa", "en")).toContain("10.00");
   });
 });

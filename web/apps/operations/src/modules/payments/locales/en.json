@@ -446,6 +446,22 @@
           "expired": "The authorization expired without being completed."
         }
       }
+    },
+    "return": {
+      "title": "Payment result",
+      "invalid": "The return link is not valid. Check the payment status in the payments list.",
+      "checking": "Checking the payment…",
+      "checking_hint": "Stripe confirms the payment to TMWE a few seconds after you pay. This page updates by itself.",
+      "succeeded": "Payment received. The invoice will update in a moment.",
+      "failed": "The payment was not completed. Nothing was charged; you can start a new payment.",
+      "canceled": "You came back without completing the payment. Nothing was charged.",
+      "expired": "The payment session has expired. Start a new payment.",
+      "gave_up": "No confirmation yet. If you already paid, it can take a few minutes: press Refresh to check again.",
+      "load_error": "The payment status could not be read. Press Refresh or check the payments list.",
+      "amount": "Amount",
+      "reference": "Reference",
+      "refresh": "Refresh status",
+      "back": "Back to collections and payments"
     }
   }
 }

@@ -446,6 +446,22 @@
           "expired": "L'autorizzazione è scaduta senza essere completata."
         }
       }
+    },
+    "return": {
+      "title": "Esito del pagamento",
+      "invalid": "Il link di ritorno non è valido. Controlla lo stato dell'incasso nell'elenco incassi.",
+      "checking": "Verifica del pagamento in corso…",
+      "checking_hint": "Stripe conferma il pagamento a TMWE qualche secondo dopo il pagamento. Questa pagina si aggiorna da sola.",
+      "succeeded": "Pagamento ricevuto. La fattura si aggiornerà a breve.",
+      "failed": "Il pagamento non è stato completato. Non è stato addebitato nulla; puoi avviare un nuovo pagamento.",
+      "canceled": "Sei tornato senza completare il pagamento. Non è stato addebitato nulla.",
+      "expired": "La sessione di pagamento è scaduta. Avvia un nuovo pagamento.",
+      "gave_up": "Ancora nessuna conferma. Se hai già pagato, può richiedere qualche minuto: premi Aggiorna per controllare di nuovo.",
+      "load_error": "Impossibile leggere lo stato del pagamento. Premi Aggiorna o consulta l'elenco incassi.",
+      "amount": "Importo",
+      "reference": "Riferimento",
+      "refresh": "Aggiorna stato",
+      "back": "Torna a incassi e pagamenti"
     }
   }
 }

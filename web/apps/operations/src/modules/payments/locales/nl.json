@@ -446,6 +446,22 @@
           "expired": "De machtiging is verlopen zonder te zijn voltooid."
         }
       }
+    },
+    "return": {
+      "title": "Resultaat van de betaling",
+      "invalid": "De terugkeerlink is ongeldig. Controleer de status van de betaling in de lijst met betalingen.",
+      "checking": "Betaling controleren…",
+      "checking_hint": "Stripe bevestigt de betaling bij TMWE enkele seconden nadat u hebt betaald. Deze pagina wordt vanzelf bijgewerkt.",
+      "succeeded": "Betaling ontvangen. De factuur wordt zo bijgewerkt.",
+      "failed": "De betaling is niet voltooid. Er is niets afgeschreven; u kunt een nieuwe betaling starten.",
+      "canceled": "U bent teruggekeerd zonder de betaling te voltooien. Er is niets afgeschreven.",
+      "expired": "De betaalsessie is verlopen. Start een nieuwe betaling.",
+      "gave_up": "Nog geen bevestiging. Als u al hebt betaald, kan dit enkele minuten duren: druk op Vernieuwen om opnieuw te controleren.",
+      "load_error": "De betaalstatus kon niet worden gelezen. Druk op Vernieuwen of bekijk de lijst met betalingen.",
+      "amount": "Bedrag",
+      "reference": "Referentie",
+      "refresh": "Status vernieuwen",
+      "back": "Terug naar inkomsten en betalingen"
     }
   }
 }

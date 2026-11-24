@@ -446,6 +446,22 @@
           "expired": "Die Ermächtigung ist abgelaufen, ohne abgeschlossen zu werden."
         }
       }
+    },
+    "return": {
+      "title": "Zahlungsergebnis",
+      "invalid": "Der Rücksprung-Link ist ungültig. Prüfen Sie den Zahlungsstatus in der Zahlungsliste.",
+      "checking": "Zahlung wird geprüft…",
+      "checking_hint": "Stripe bestätigt die Zahlung wenige Sekunden nach der Bezahlung an TMWE. Diese Seite aktualisiert sich selbst.",
+      "succeeded": "Zahlung eingegangen. Die Rechnung wird in Kürze aktualisiert.",
+      "failed": "Die Zahlung wurde nicht abgeschlossen. Es wurde nichts abgebucht; Sie können eine neue Zahlung starten.",
+      "canceled": "Sie sind zurückgekehrt, ohne die Zahlung abzuschließen. Es wurde nichts abgebucht.",
+      "expired": "Die Zahlungssitzung ist abgelaufen. Starten Sie eine neue Zahlung.",
+      "gave_up": "Noch keine Bestätigung. Wenn Sie bereits bezahlt haben, kann es einige Minuten dauern: Klicken Sie auf Aktualisieren, um erneut zu prüfen.",
+      "load_error": "Der Zahlungsstatus konnte nicht gelesen werden. Klicken Sie auf Aktualisieren oder prüfen Sie die Zahlungsliste.",
+      "amount": "Betrag",
+      "reference": "Referenz",
+      "refresh": "Status aktualisieren",
+      "back": "Zurück zu Zahlungseingängen und Zahlungen"
     }
   }
 }

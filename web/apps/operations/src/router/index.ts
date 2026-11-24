@@ -1076,6 +1076,15 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
   },
   {
+    // Retorno del Checkout de Stripe (PAY_RETURN_URL_ERP = /payments/return?payment_id=pay_…&pay_result=success|cancel).
+    // Solo consulta el estado del cobro (GET api_pay_payments?id=); no inicia ni confirma nada.
+    path: "/payments/return",
+    name: "payments-return",
+    component: () => import("@/modules/payments/pages/PaymentReturnPage.vue"),
+    meta: { title: "Resultado del pago", icon: "mdi-credit-card-check-outline" },
+    beforeEnter: () => (paymentsCan.read() ? true : { name: "home" }),
+  },
+  {
     // Facturas pendientes de cobro (api_pay_pending_invoices): personal y partner con invoices:read + payment_gateways:read
     // (guard en moduleAccess.ts, semántica «todos»). Cuelga de Cobros porque es la cola de trabajo de cobro online.
     path: "/payments/pending-invoices",
