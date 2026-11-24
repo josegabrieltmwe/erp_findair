@@ -14,7 +14,13 @@
       "assistant": "Copilot",
       "error": "Er is iets misgegaan. Probeer het opnieuw.",
       "tools_used": "Geraadpleegd: {tools}",
-      "clear": "Nieuw gesprek"
+      "clear": "Nieuw gesprek",
+      "attach": "Document bijvoegen",
+      "remove_attachment": "Bijlage verwijderen",
+      "extracting": "Document wordt gelezen…",
+      "long_text_hint": "Een lange tekst kan ook: ik kan proberen de zending hiermee voor te bereiden.",
+      "attachment_too_large": "Het bestand is groter dan de maximale omvang (10 MB).",
+      "attachment_unsupported_type": "Dit bestandstype wordt niet ondersteund. Gebruik PDF, een afbeelding, Word (.docx) of platte tekst."
     },
     "voice_agent": {
       "idle": "Spraakassistent",
@@ -38,7 +44,8 @@
       "disabled": "De Copilot is uitgeschakeld voor je organisatie.",
       "ai_not_configured": "AI is niet geconfigureerd voor je account. Neem contact op met je beheerder.",
       "ai_unavailable": "De AI-dienst is momenteel niet beschikbaar. Probeer het over een paar minuten opnieuw.",
-      "ai_budget": "Het AI-budget is op. Probeer het later opnieuw of neem contact op met je beheerder."
+      "ai_budget": "Het AI-budget is op. Probeer het later opnieuw of neem contact op met je beheerder.",
+      "extract_no_data": "Er konden geen nuttige gegevens uit dat document worden gelezen."
     },
     "tools": {
       "listShipments": "zendingenlijst",

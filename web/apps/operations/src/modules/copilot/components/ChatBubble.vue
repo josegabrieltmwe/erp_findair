@@ -18,18 +18,23 @@
           color="primary"
         />
         <span class="ml-2 text-medium-emphasis">{{
-          t("copilot.chat.thinking")
+          t(bubble.pendingLabelKey ?? "copilot.chat.thinking")
         }}</span>
       </div>
 
       <template v-else>
+        <div v-if="bubble.attachment" class="attachment-chip">
+          <v-icon icon="mdi-paperclip" size="14" class="mr-1" />
+          <span>{{ bubble.attachment.filename }}</span>
+        </div>
+
         <!-- Plain text only (textContent): no raw HTML, no markdown, no auto-links. -->
         <div
           v-if="bubble.errorKey"
           class="bubble-text"
           v-text="t(bubble.errorKey)"
         />
-        <div v-else class="bubble-text" v-text="bubble.text" />
+        <div v-else-if="bubble.text" class="bubble-text" v-text="bubble.text" />
 
         <ProposalCard
           v-if="bubble.proposal"
@@ -103,6 +108,13 @@ const toolNames = computed(() =>
 .pending {
   display: flex;
   align-items: center;
+}
+.attachment-chip {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 4px;
 }
 .tools {
   margin-top: 8px;

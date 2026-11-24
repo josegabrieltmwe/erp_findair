@@ -61,6 +61,36 @@ final class CopilotRoutesTest extends AppTestCase
         self::assertNull($this->manifest()->match('GET', '/api_copilot_memory_context'));
     }
 
+    public function testAiExtractRouteAllowsBigBodyWithoutThrottleOrMultipart(): void
+    {
+        $manifest = $this->manifest();
+        $hit = $manifest->match('POST', '/api_ai_extract');
+
+        self::assertNotNull($hit);
+        $route = $hit['route'];
+        self::assertSame('copilot.ai_extract', $route->id);
+        self::assertSame('api_ai_extract', $route->action);
+        self::assertSame(20 * 1024 * 1024, $route->maxBody, 'fichero en base64, no multipart: necesita cuerpo grande');
+        self::assertSame(300.0, $route->timeout);
+        self::assertFalse($route->multipart, 'el fichero viaja en JSON base64, no multipart/form-data');
+        self::assertNull($route->throttle, 'el presupuesto de IA (feature=extract) lo aplica el backend');
+        self::assertNull($manifest->match('GET', '/api_ai_extract'));
+    }
+
+    public function testAiExtractStateRouteIsGetOnlyAndForwardsRequestId(): void
+    {
+        $manifest = $this->manifest();
+        $hit = $manifest->match('GET', '/api_ai_extract_status');
+
+        self::assertNotNull($hit);
+        $route = $hit['route'];
+        self::assertSame('copilot.ai_extract.state', $route->id);
+        self::assertSame('api_ai_extract_status', $route->action);
+        self::assertSame(['request_id'], $route->forwardQuery);
+        self::assertSame(30.0, $route->timeout);
+        self::assertNull($manifest->match('POST', '/api_ai_extract_status'));
+    }
+
     public function testProductionRoutesDeclareKnownThrottlePolicies(): void
     {
         $this->boot();

@@ -75,12 +75,18 @@
       </div>
 
       <!-- Composer -->
+      <div v-if="attachError" class="attach-error text-caption text-error">
+        {{ t(attachError) }}
+      </div>
       <ChatComposer
         :disabled="store.sending"
         :voice-supported="voice.sttSupported.value"
         :listening="voice.listening.value"
+        :attachment="store.pendingAttachment"
         @send="onSend"
         @mic="onMic"
+        @attach="onAttach"
+        @remove-attachment="onRemoveAttachment"
       />
     </div>
   </div>
@@ -174,9 +180,29 @@ function chatContext() {
   return { locale: locale.value, currentRoute: route.path, router };
 }
 
+const attachError = ref<string | undefined>();
+
 async function onSend(message: string): Promise<void> {
   voiceTurn.value = false;
-  await store.send(message, chatContext());
+  if (store.pendingAttachment) {
+    await store.sendWithAttachment(message, chatContext());
+  } else {
+    await store.send(message, chatContext());
+  }
+}
+
+async function onAttach(file: File): Promise<void> {
+  attachError.value = undefined;
+  const err = await store.attachFile(file);
+  if (err === "too_large")
+    attachError.value = "copilot.chat.attachment_too_large";
+  else if (err === "unsupported_type")
+    attachError.value = "copilot.chat.attachment_unsupported_type";
+}
+
+function onRemoveAttachment(): void {
+  attachError.value = undefined;
+  store.clearAttachment();
 }
 
 async function onMic(): Promise<void> {
@@ -252,5 +278,8 @@ watch(
   align-items: center;
   gap: 8px;
   padding: 4px 16px;
+}
+.attach-error {
+  padding: 0 16px 4px;
 }
 </style>

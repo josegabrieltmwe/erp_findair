@@ -6,6 +6,9 @@
  * Los errores NO se capturan aquí: el store hace try/catch + toast.
  */
 import { http } from "./http";
+import { fileToBase64 } from "@tmwe/shared-frontend/files/fileToBase64";
+
+export { fileToBase64 };
 
 export type EnviosTab =
   | "listas"
@@ -310,17 +313,3 @@ export const enviosService = {
     return res.data;
   },
 };
-
-/** Lee un File del navegador como base64 (sin el prefijo data:). */
-export function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result ?? "");
-      const comma = result.indexOf(",");
-      resolve(comma >= 0 ? result.slice(comma + 1) : result);
-    };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}

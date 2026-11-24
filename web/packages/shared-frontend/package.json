@@ -7,6 +7,7 @@
   "exports": {
     "./http": "./src/http/index.ts",
     "./http/ApiError": "./src/http/ApiError.ts",
+    "./files/*": "./src/files/*.ts",
     "./composables/*": "./src/composables/*.ts",
     "./store/*": "./src/store/*.ts",
     "./router/*": "./src/router/*.ts",

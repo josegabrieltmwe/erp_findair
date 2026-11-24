@@ -102,9 +102,27 @@ export interface ChatBubble {
   /** i18n key for a known error (rate limit, busy…); `text` keeps the raw message as fallback. */
   errorKey?: string;
   pending?: boolean;
+  /** i18n key for the "pending" label; defaults to copilot.chat.thinking (see ChatBubble.vue). */
+  pendingLabelKey?: string;
   /** Confirmation card state for this assistant turn. */
   proposal?: ProposalView;
+  /** Metadata of the file this turn attached (AI Extract, docs/plan-extraccion-ia-erp.md §2.3). Content is never kept here. */
+  attachment?: { filename: string; mimeType: string };
 }
+
+/**
+ * A file read client-side and waiting to be sent with the next chat turn (AI Extract,
+ * docs/plan-extraccion-ia-erp.md §2.3). `base64` has no `data:` prefix.
+ */
+export interface PendingAttachment {
+  filename: string;
+  mimeType: string;
+  base64: string;
+  sizeBytes: number;
+}
+
+/** Why `attachFile()` refused a file (validated client-side before reading it). */
+export type AttachError = "too_large" | "unsupported_type";
 
 export type ProposalStatus =
   | "pending"

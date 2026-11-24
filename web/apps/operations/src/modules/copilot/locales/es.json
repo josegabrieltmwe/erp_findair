@@ -14,7 +14,13 @@
       "assistant": "Copilot",
       "error": "Algo salió mal. Inténtalo de nuevo.",
       "tools_used": "Consultado: {tools}",
-      "clear": "Nueva conversación"
+      "clear": "Nueva conversación",
+      "attach": "Adjuntar documento",
+      "remove_attachment": "Quitar adjunto",
+      "extracting": "Leyendo el documento…",
+      "long_text_hint": "Un texto largo también vale: puedo intentar prepararte la expedición con esto.",
+      "attachment_too_large": "El fichero supera el tamaño máximo (10 MB).",
+      "attachment_unsupported_type": "Ese tipo de fichero no está soportado. Usa PDF, imagen, Word (.docx) o texto."
     },
     "voice_agent": {
       "idle": "Asistente de voz",
@@ -38,7 +44,8 @@
       "disabled": "El Copilot está desactivado para tu organización.",
       "ai_not_configured": "La IA no está configurada para tu cuenta. Contacta con tu administrador.",
       "ai_unavailable": "El servicio de IA no está disponible en este momento. Inténtalo de nuevo en unos minutos.",
-      "ai_budget": "Se ha agotado el presupuesto de IA. Inténtalo más tarde o contacta con tu administrador."
+      "ai_budget": "Se ha agotado el presupuesto de IA. Inténtalo más tarde o contacta con tu administrador.",
+      "extract_no_data": "No se ha podido leer ningún dato útil de ese documento."
     },
     "tools": {
       "listShipments": "listado de envíos",

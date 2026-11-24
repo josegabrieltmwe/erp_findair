@@ -14,7 +14,13 @@
       "assistant": "Copilot",
       "error": "Something went wrong. Please try again.",
       "tools_used": "Looked up: {tools}",
-      "clear": "New conversation"
+      "clear": "New conversation",
+      "attach": "Attach document",
+      "remove_attachment": "Remove attachment",
+      "extracting": "Reading the document…",
+      "long_text_hint": "A long text works too: I can try to prepare the shipment from it.",
+      "attachment_too_large": "The file exceeds the maximum size (10 MB).",
+      "attachment_unsupported_type": "That file type is not supported. Use PDF, an image, Word (.docx) or plain text."
     },
     "voice_agent": {
       "idle": "Voice assistant",
@@ -38,7 +44,8 @@
       "disabled": "The Copilot is disabled for your organization.",
       "ai_not_configured": "AI is not configured for your account. Contact your administrator.",
       "ai_unavailable": "The AI service is not available right now. Try again in a few minutes.",
-      "ai_budget": "The AI budget has been used up. Try again later or contact your administrator."
+      "ai_budget": "The AI budget has been used up. Try again later or contact your administrator.",
+      "extract_no_data": "No useful data could be read from that document."
     },
     "tools": {
       "listShipments": "shipment list",

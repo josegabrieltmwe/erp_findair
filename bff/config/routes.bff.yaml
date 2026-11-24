@@ -577,6 +577,25 @@ routes:
       action: api_copilot_elevenlabs_credential
     limits: { body: 64k, timeout: 30 }
 
+  # Extracción por IA para un adjunto del Copilot (foto/PDF/docx): docs/plan-extraccion-ia-erp.md §2.2.
+  # JSON con el fichero en base64 (no multipart: eso solo existe para rutas `otp`). Sin throttle propio: el
+  # presupuesto de IA (feature=extract) lo aplica el backend; aquí solo se abre la lista blanca.
+  - id: copilot.ai_extract
+    method: POST
+    path: /api_ai_extract
+    upstream:
+      action: api_ai_extract
+    limits: { body: 20m, timeout: 300 }
+
+  # Estado de una extracción encargada en asíncrono (202 + request_id): mismo patrón que copilot.chat.state.
+  - id: copilot.ai_extract.state
+    method: GET
+    path: /api_ai_extract_status
+    upstream:
+      action: api_ai_extract_status
+      forward_query: [request_id]
+    limits: { timeout: 30 }
+
   # QR de login: el escritorio (con Bearer) genera un QR y el móvil abre sesión al escanearlo. El destino del móvil
   # se informa aquí ({client_id, redirect} o {return_to}); tmwe_api lo valida al generar (origen registrado del client).
   - id: qr_login.generate

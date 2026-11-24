@@ -14,7 +14,13 @@
       "assistant": "Copilot",
       "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
       "tools_used": "Abgefragt: {tools}",
-      "clear": "Neue Unterhaltung"
+      "clear": "Neue Unterhaltung",
+      "attach": "Dokument anhängen",
+      "remove_attachment": "Anhang entfernen",
+      "extracting": "Dokument wird gelesen…",
+      "long_text_hint": "Ein langer Text geht auch: Ich kann versuchen, daraus die Sendung vorzubereiten.",
+      "attachment_too_large": "Die Datei überschreitet die maximale Größe (10 MB).",
+      "attachment_unsupported_type": "Dieser Dateityp wird nicht unterstützt. Verwende PDF, ein Bild, Word (.docx) oder Text."
     },
     "voice_agent": {
       "idle": "Sprachassistent",
@@ -38,7 +44,8 @@
       "disabled": "Der Copilot ist für deine Organisation deaktiviert.",
       "ai_not_configured": "Die KI ist für dein Konto nicht konfiguriert. Wende dich an deinen Administrator.",
       "ai_unavailable": "Der KI-Dienst ist derzeit nicht verfügbar. Versuche es in ein paar Minuten erneut.",
-      "ai_budget": "Das KI-Budget ist aufgebraucht. Versuche es später erneut oder wende dich an deinen Administrator."
+      "ai_budget": "Das KI-Budget ist aufgebraucht. Versuche es später erneut oder wende dich an deinen Administrator.",
+      "extract_no_data": "Aus diesem Dokument konnten keine verwertbaren Daten gelesen werden."
     },
     "tools": {
       "listShipments": "Sendungsliste",
