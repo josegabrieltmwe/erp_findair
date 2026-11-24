@@ -608,6 +608,12 @@
       "open_full_page": "Open full page",
       "close": "Close (Esc)"
     },
+    "home_page": {
+      "redirecting": "Redirecting to global home…"
+    },
+    "pdf_overlay": {
+      "rendering_hint": "Rendering — usually takes 2-8 seconds."
+    },
     "badge": {
       "invoiced": "Invoiced #{id}",
       "invoiced_hint": "Invoice issued — form fields are locked",

@@ -8,6 +8,7 @@
       "calendar": "Calendario",
       "list": "Recogidas",
       "routes": "Giros",
+      "schedule": "Tablero",
       "zones": "Zonas CP",
       "pod": "Entregas (POD)"
     },
@@ -125,10 +126,19 @@
       "pick_driver": "Selecciona un chófer para ver el giro.",
       "stops": "{n} paradas",
       "manifest": "Manifiesto",
+      "open_full_route": "Abrir giro completo en Maps",
       "colli": "bultos",
       "total_stops": "Paradas totales",
       "total_colli": "Bultos totales",
       "total_peso": "Peso total"
+    },
+    "schedule": {
+      "title": "Tablero de asignación",
+      "unassigned": "Sin asignar",
+      "empty_unassigned": "Nada sin asignar para este día.",
+      "no_drivers": "No hay autistas disponibles.",
+      "assign_title": "Asignar recogida #{id}",
+      "time": "Hora"
     },
     "zones": {
       "title": "Zonas CP → chófer",

@@ -26,7 +26,7 @@
           />
           <div class="pdf-overlay-title">{{ store.currentLabel }}</div>
           <div class="pdf-overlay-sub">
-            Rendering — usually takes 2-8 seconds.
+            {{ t("cargo.pdf_overlay.rendering_hint") }}
           </div>
         </div>
       </div>
@@ -35,8 +35,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { usePdfLoadingStore } from "@cargo/stores/pdf_loading.store";
 
+const { t } = useI18n();
 const store = usePdfLoadingStore();
 </script>
 

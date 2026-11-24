@@ -1,7 +1,7 @@
 {
-  "total": 2,
+  "total": 0,
   "perApp": {
-    "operations": 2
+    "operations": 0
   },
   "note": "Congelado por check_raw_text.ts --update. Solo puede bajar: si sube, es regresión."
 }

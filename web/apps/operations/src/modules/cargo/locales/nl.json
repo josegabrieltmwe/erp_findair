@@ -608,6 +608,12 @@
       "open_full_page": "Volledige pagina openen",
       "close": "Sluiten (Esc)"
     },
+    "home_page": {
+      "redirecting": "Doorverwijzen naar globale home…"
+    },
+    "pdf_overlay": {
+      "rendering_hint": "Wordt gegenereerd — duurt meestal 2-8 seconden."
+    },
     "badge": {
       "invoiced": "Gefactureerd #{id}",
       "invoiced_hint": "Factuur uitgegeven — formuliervelden zijn vergrendeld",

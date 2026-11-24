@@ -8,6 +8,7 @@
       "calendar": "Calendar",
       "list": "Pickups",
       "routes": "Driver routes",
+      "schedule": "Schedule board",
       "zones": "CAP zones",
       "pod": "Deliveries (POD)"
     },
@@ -125,10 +126,19 @@
       "pick_driver": "Select a driver to see the route.",
       "stops": "{n} stops",
       "manifest": "Manifest",
+      "open_full_route": "Open full route in Maps",
       "colli": "parcels",
       "total_stops": "Total stops",
       "total_colli": "Total parcels",
       "total_peso": "Total weight"
+    },
+    "schedule": {
+      "title": "Assignment board",
+      "unassigned": "Unassigned",
+      "empty_unassigned": "Nothing unassigned for this day.",
+      "no_drivers": "No drivers available.",
+      "assign_title": "Assign pickup #{id}",
+      "time": "Time"
     },
     "zones": {
       "title": "CAP zones → driver",

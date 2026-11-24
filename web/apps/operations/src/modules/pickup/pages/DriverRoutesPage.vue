@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import DriverManifestSheet from "../components/DriverManifestSheet.vue";
-import { stopAddress, stopKind, stopMapLinks } from "../logic";
+import {
+  fullRouteMapsUrl,
+  stopAddress,
+  stopKind,
+  stopMapLinks,
+} from "../logic";
 import { driverService } from "../services/driver.service";
 import type { Driver, DriverRoute, Manifest } from "../types";
 
@@ -61,6 +66,10 @@ async function loadManifest(): Promise<void> {
   }
 }
 
+const fullRouteUrl = computed(() =>
+  route.value ? fullRouteMapsUrl(route.value.stops) : "",
+);
+
 onMounted(loadDrivers);
 </script>
 
@@ -113,14 +122,27 @@ onMounted(loadDrivers);
         <span class="text-medium-emphasis">{{
           t("pickup.routes.stops", { n: route.total })
         }}</span>
-        <v-btn
-          size="small"
-          variant="tonal"
-          prepend-icon="mdi-file-document-outline"
-          @click="loadManifest"
-        >
-          {{ t("pickup.routes.manifest") }}
-        </v-btn>
+        <div class="d-flex ga-2">
+          <v-btn
+            v-if="fullRouteUrl"
+            size="small"
+            variant="tonal"
+            prepend-icon="mdi-map-marker-path"
+            :href="fullRouteUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ t("pickup.routes.open_full_route") }}
+          </v-btn>
+          <v-btn
+            size="small"
+            variant="tonal"
+            prepend-icon="mdi-file-document-outline"
+            @click="loadManifest"
+          >
+            {{ t("pickup.routes.manifest") }}
+          </v-btn>
+        </div>
       </div>
 
       <ol class="pk-stops">

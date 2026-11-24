@@ -2,7 +2,7 @@
   <div class="redirecting">
     <v-progress-circular indeterminate color="primary" size="22" />
     <span class="ms-3 text-body-2 text-medium-emphasis">
-      Redirecting to global home…
+      {{ t("cargo.home_page.redirecting") }}
     </span>
   </div>
 </template>
@@ -15,8 +15,10 @@
  * bookmarks antiguos (/cargo/home).
  */
 import { onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+const { t } = useI18n();
 const router = useRouter();
 
 onMounted(() => {
