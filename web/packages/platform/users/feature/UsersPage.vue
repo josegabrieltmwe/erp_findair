@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cm-users-page">
     <CmSectionHeader :title="t('users.title')" :subtitle="t('users.subtitle')">
       <template #actions>
         <v-btn color="primary" :prepend-icon="mdiAccountPlus" @click="openCreate">
@@ -442,6 +442,20 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell, ya flex-column +
+   min-height:0) y `.sdv-card` (ListingDataView): sin esto, este root `<div>`
+   (display:block por defecto) no pasaba ningún alto acotado a la tabla, que
+   entonces crecía con todas las filas. `.dsh-main:has(.sdv-card){overflow:hidden}`
+   SÍ se activaba (hay `.sdv-card` en el DOM) pero sin nada que scrollear dentro:
+   el resultado era "no hay scroll" a secas, ni de página ni de tabla. Mismo
+   patrón que `.cm-anagrafiche-page` en AnagraficaListPage.vue, que esta página
+   nunca adoptó al portarse desde admin_config. */
+.cm-users-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 .cm-filters {
   display: flex;
   align-items: center;

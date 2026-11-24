@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cm-detail-page">
     <EntityHeader
       v-if="!isCreate"
       :title="headerTitle"
@@ -77,7 +77,7 @@
           </div>
         </v-card>
 
-        <v-card v-else>
+        <v-card v-else class="cm-detail-card">
           <div class="cm-detail-shell" :class="{ 'cm-detail-shell--compact': isCompactNav }">
             <!--
               Navegación de secciones responsive (§7.3):
@@ -544,16 +544,51 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell, ya flex-column +
+   min-height:0) y `.sdv-card` (ListingDataView, dentro de los tabs con
+   listado: sedi/contatti/banche/lettint/causali_iva) — mismo patrón que
+   `.cm-anagrafiche-page` en AnagraficaListPage.vue. `.cm-async` es el root de
+   CmAsyncSection: Vue aplica también el atributo de scope del padre a la raíz
+   de un componente hijo, así que esta regla puede dirigirse a esa instancia
+   concreta sin tocar el componente compartido.
+   Sin esto, `.cm-detail-shell` no heredaba el alto REAL disponible y había
+   que adivinarlo con un offset fijo (`calc(100vh - 200px)`, retirado más
+   abajo): ese offset no coincidía con el chrome real (EntityHeader + tabs
+   varían con idioma/ancho, y más en el selector móvil <=720px) y provocaba
+   que, cuando `.dsh-main:has(.sdv-card) { overflow: hidden }` entraba en
+   juego, parte de la tabla quedara recortada sin que ningún ancestro
+   pudiera scrollearla — el mismo síntoma que ya forzó a quitar el offset
+   fijo en AnagraficaListPage.vue (.cm-anagrafiche-page) y en los
+   `.cm-sublist-viewport` de cada sección. */
+.cm-detail-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.cm-detail-page .cm-async {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.cm-detail-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 .cm-detail-shell {
   display: flex;
   align-items: stretch;
-  min-height: 600px;
-  /* ACOTA la altura para que el scroll ocurra DENTRO de la tabla del tab
-     (ListingDataView scrollea en su propio wrapper) en vez de estirar la
-     página. Sin esto, un tab con lista larga (p. ej. 20 contactos) crecía hasta
-     ~1400px: las filas existían pero quedaban fuera de pantalla y ningún
-     ancestro scrolleaba, así que eran inalcanzables. */
-  max-height: calc(100vh - 200px);
+  /* El scroll ocurre DENTRO de la tabla del tab (ListingDataView en su propio
+     wrapper) o, en tabs de formulario sin listado, en `.cm-detail-window`
+     (ver más abajo) — ambos heredan el alto ya acotado por la cadena flex de
+     arriba. NO fijar aquí una altura calculada a mano (ver comentario de
+     `.cm-detail-page`); `min-height: 0` (en vez de un suelo fijo) es lo que
+     permite encoger por debajo del contenido cuando el ancestro acota. */
+  flex: 1 1 auto;
+  min-height: 0;
 }
 /* 721-1200px y <=720px (§7.3): la columna deja de tener sentido — las tabs
    horizontales/el selector van ARRIBA del contenido, no al lado. La altura
