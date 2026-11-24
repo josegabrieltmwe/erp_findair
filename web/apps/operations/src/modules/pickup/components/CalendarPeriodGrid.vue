@@ -32,6 +32,12 @@ const weekdays = computed(() => {
 function dayNumber(iso: string): number {
   return Number(iso.slice(8, 10));
 }
+
+/** Nombre del autista del chip (mismo patrón que CalendarGrid: #id si no llegó el nombre). */
+function driverLabel(p: Pickup): string {
+  if (!p.id_contatti) return t("pickup.calendar.unassigned");
+  return p.driver?.nome ?? `#${p.id_contatti}`;
+}
 </script>
 
 <template>
@@ -58,9 +64,10 @@ function dayNumber(iso: string): number {
           :key="p.id"
           class="cp-chip"
           :class="`cp-chip--${pickupColorKind(p)}`"
+          :title="`#${p.id} · ${driverLabel(p)}`"
           @click="emit('pick', p)"
         >
-          #{{ p.id }}
+          <span class="cp-chip-driver">{{ driverLabel(p) }}</span>
           <span class="cp-chip-time">{{ (p.data.split(" ")[1] ?? "").slice(0, 5) }}</span>
         </button>
         <button
@@ -154,8 +161,15 @@ function dayNumber(iso: string): number {
   background: rgba(var(--v-theme-warning), 0.2);
   color: rgb(var(--v-theme-warning));
 }
+.cp-chip-driver {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
 .cp-chip-time {
   opacity: 0.8;
+  flex-shrink: 0;
 }
 .cp-more {
   border: none;
