@@ -446,6 +446,22 @@
           "expired": "La autorización caducó sin completarse."
         }
       }
+    },
+    "return": {
+      "title": "Resultado del pago",
+      "invalid": "El enlace de retorno no es válido. Consulte el estado del cobro en la lista de cobros.",
+      "checking": "Comprobando el pago…",
+      "checking_hint": "Stripe confirma el pago a TMWE unos segundos después de pagar. Esta página se actualiza sola.",
+      "succeeded": "Pago recibido. La factura se actualizará en unos instantes.",
+      "failed": "El pago no se ha completado. No se ha cobrado nada; puede iniciar un cobro nuevo.",
+      "canceled": "Volvió sin completar el pago. No se ha cobrado nada.",
+      "expired": "La sesión de pago ha caducado. Inicie un cobro nuevo.",
+      "gave_up": "Todavía no hay confirmación. Si ya pagó, puede tardar unos minutos: pulse Actualizar para comprobarlo de nuevo.",
+      "load_error": "No se pudo leer el estado del pago. Pulse Actualizar o consulte la lista de cobros.",
+      "amount": "Importe",
+      "reference": "Referencia",
+      "refresh": "Actualizar estado",
+      "back": "Volver a cobros y pagos"
     }
   }
 }

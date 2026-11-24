@@ -18,21 +18,32 @@ export function canPayOnline(access: AccessSnapshot): boolean {
   return hasScope(access, PAY_ONLINE_SCOPE);
 }
 
-export type PayAmountError = "required" | "invalid" | "not_positive" | "exceeds" | null;
+export type PayAmountError =
+  | "required"
+  | "invalid"
+  | "not_positive"
+  | "exceeds"
+  | null;
 
 /**
  * Convierte lo escrito por la persona en texto decimal con 2 decimales ("12.5" o "12,5" -> "12.50"), que es lo que
  * exige la API (nunca un número flotante). Devuelve null si no es un importe con a lo sumo 2 decimales.
  */
-export function normalizeAmount(input: string | number | null | undefined): string | null {
-  const raw = String(input ?? "").trim().replace(",", ".");
+export function normalizeAmount(
+  input: string | number | null | undefined,
+): string | null {
+  const raw = String(input ?? "")
+    .trim()
+    .replace(",", ".");
   if (!/^\d+(\.\d{1,2})?$/.test(raw)) return null;
   const [int, dec = ""] = raw.split(".");
   return `${int.replace(/^0+(?=\d)/, "")}.${dec.padEnd(2, "0")}`;
 }
 
 /** Importe a unidades menores (céntimos) sin errores de coma flotante; null si el texto no es válido. */
-export function toMinor(input: string | number | null | undefined): number | null {
+export function toMinor(
+  input: string | number | null | undefined,
+): number | null {
   const n = normalizeAmount(input);
   return n === null ? null : Number(n.replace(".", ""));
 }
@@ -132,9 +143,16 @@ export function classifyPayError(err: unknown): PayErrorInfo {
 }
 
 /** Estados en los que el cobro ya no cambiará: se deja de sondear. */
-const TERMINAL: ReadonlySet<string> = new Set(["succeeded", "failed", "canceled", "expired"]);
+const TERMINAL: ReadonlySet<string> = new Set([
+  "succeeded",
+  "failed",
+  "canceled",
+  "expired",
+]);
 
-export function isTerminalStatus(status: PayPaymentStatus | null | undefined): boolean {
+export function isTerminalStatus(
+  status: PayPaymentStatus | null | undefined,
+): boolean {
   return !!status && TERMINAL.has(status);
 }
 
@@ -142,7 +160,9 @@ export function isTerminalStatus(status: PayPaymentStatus | null | undefined): b
  * Solo se abre una `checkout_url` https: la URL viene de la API, pero se valida antes de navegar a ella para no
  * ejecutar nunca un esquema `javascript:` o `data:` por un dato inesperado.
  */
-export function isSafeCheckoutUrl(url: string | null | undefined): url is string {
+export function isSafeCheckoutUrl(
+  url: string | null | undefined,
+): url is string {
   if (!url) return false;
   try {
     return new URL(url).protocol === "https:";
@@ -160,8 +180,68 @@ export function pollDelay(attempt: number): number {
 export const POLL_MAX_ATTEMPTS = 60;
 
 /** ¿La sesión de Checkout ya caducó? Sin fecha se asume vigente. */
-export function isCheckoutExpired(expiresAt: string | null | undefined, now: number = Date.now()): boolean {
+export function isCheckoutExpired(
+  expiresAt: string | null | undefined,
+  now: number = Date.now(),
+): boolean {
   if (!expiresAt) return false;
   const t = Date.parse(expiresAt);
   return Number.isFinite(t) && t <= now;
+}
+
+/** `pay_result` que la API añade a la URL de retorno del Checkout (`PAY_RETURN_URL_ERP`). */
+export type PayReturnResult = "success" | "cancel" | null;
+
+export interface PayReturnParams {
+  /** Id público del cobro (`pay_…`), o null si falta o no tiene forma de id. */
+  paymentId: string | null;
+  /** Lo que dice la URL de retorno: solo orientativo, el estado real lo fija el webhook y se consulta a la API. */
+  result: PayReturnResult;
+}
+
+const PAYMENT_ID_RE = /^pay_[A-Za-z0-9_-]{1,64}$/;
+
+function firstQueryValue(v: unknown): string {
+  const raw = Array.isArray(v) ? v[0] : v;
+  return typeof raw === "string" ? raw.trim() : "";
+}
+
+/**
+ * Lee `payment_id` y `pay_result` de la URL a la que Stripe devuelve a la persona. Se valida la forma del id antes de
+ * usarlo en una consulta (la URL la puede editar cualquiera) y un `pay_result` desconocido se trata como ausente.
+ */
+export function parsePayReturn(
+  query: Record<string, unknown> | null | undefined,
+): PayReturnParams {
+  const id = firstQueryValue(query?.payment_id);
+  const res = firstQueryValue(query?.pay_result);
+  return {
+    paymentId: PAYMENT_ID_RE.test(id) ? id : null,
+    result: res === "success" || res === "cancel" ? res : null,
+  };
+}
+
+/** Importe en unidades menores a texto con la divisa y el formato del idioma; sin divisa válida, solo el número. */
+export function formatMinorAmount(
+  minor: number | null | undefined,
+  currency: string | null | undefined,
+  locale: string,
+): string | null {
+  if (typeof minor !== "number" || !Number.isFinite(minor)) return null;
+  const value = minor / 100;
+  try {
+    return currency
+      ? new Intl.NumberFormat(locale, { style: "currency", currency }).format(
+          value,
+        )
+      : new Intl.NumberFormat(locale, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(value);
+  } catch {
+    return new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
 }
