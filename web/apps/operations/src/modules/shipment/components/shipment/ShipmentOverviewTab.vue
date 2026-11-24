@@ -232,7 +232,6 @@ const COURIER_NAMES: Record<number, string> = {
   5: "FedEx",
   7: "UPS",
   8: "TNT",
-  6: "Forward Air",
   20: "TMWE",
 };
 const courierLabel = computed(() => {

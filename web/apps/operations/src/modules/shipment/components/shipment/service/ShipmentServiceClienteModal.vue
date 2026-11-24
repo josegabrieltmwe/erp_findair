@@ -655,7 +655,6 @@ const COURIER_NAMES: Record<number, string> = {
   5: "FedEx",
   7: "UPS",
   8: "TNT",
-  6: "Forward Air",
 };
 function courierLabel(o: TempiCertiOption): string {
   return (
