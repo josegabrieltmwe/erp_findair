@@ -123,6 +123,12 @@ export const chatService = {
   /**
    * Publish a "is typing…" indicator to the fanout exchange.
    * Caller MUST debounce to at most one call every 2 seconds.
+   *
+   * `X-Busy: off`: best-effort background ping fired on every keystroke —
+   * without it, the shell's global "processing…" modal (installBffFetch's
+   * busy counter, shared-frontend/src/http/bff.ts) flashed open/closed on
+   * every debounced call, interrupting the user mid-typing. Same opt-out
+   * the copilot chat already uses via BUSY_IGNORED.
    */
   typing(
     shipment_id: number,
@@ -130,6 +136,7 @@ export const chatService = {
   ): Promise<ChatTypingResponse> {
     return http('/web_chat_typing', {
       method: 'POST',
+      headers: { 'X-Busy': 'off' },
       body: { shipment_id, shipment_type },
     });
   },
