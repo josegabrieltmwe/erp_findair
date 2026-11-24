@@ -62,6 +62,11 @@ export interface ChatTypingResponse {
   data: { status: 'sent' };
 }
 
+export interface ChatTranslateResponse {
+  success: boolean;
+  data: { translated_body: string; target_lang: string };
+}
+
 export interface UnreadCounter {
   express: number;
   cargo: number;
@@ -93,6 +98,11 @@ export const chatService = {
   /**
    * Persist a new message. Body is trimmed and limited to 4000 chars
    * server-side; the client should mirror that for nicer UX.
+   *
+   * `X-Busy: off`: the drawer has its own `sending` spinner on the send
+   * button, so this doesn't need the shell's global "processing…" modal
+   * (same reasoning as `typing()` above) — a full-screen scrim just to
+   * send a chat line is more interruption than the action warrants.
    */
   send(
     shipment_id: number,
@@ -101,6 +111,7 @@ export const chatService = {
   ): Promise<ChatSendResponse> {
     return http('/web_chat_messages', {
       method: 'POST',
+      headers: { 'X-Busy': 'off' },
       body: { shipment_id, shipment_type, body },
     });
   },
@@ -147,5 +158,30 @@ export const chatService = {
    */
   unreadCounter(): Promise<UnreadCounterResponse> {
     return http('/web_chat_unread_counter');
+  },
+
+  /**
+   * Translate a single message on demand. `target_lang` is whatever the
+   * caller picked in the UI (not tied to session/interface language) —
+   * see docs/contrato-con-api.md §X (P146). Pending backend: this calls
+   * an action that doesn't exist in tmwe_api/the BFF manifest yet, so it
+   * 404s until P146 ships; the caller's error handling already surfaces
+   * that as a toast.
+   *
+   * `X-Busy: off`: this is a per-message action with its own local
+   * spinner (same reasoning as `typing()`/`send()`) — not worth the
+   * shell's global "processing…" modal.
+   */
+  translate(
+    message_id: number,
+    shipment_id: number,
+    target_lang: string,
+    shipment_type: ShipmentType = 'express',
+  ): Promise<ChatTranslateResponse> {
+    return http('/web_chat_translate_message', {
+      method: 'POST',
+      headers: { 'X-Busy': 'off' },
+      body: { message_id, shipment_id, shipment_type, target_lang },
+    });
   },
 };

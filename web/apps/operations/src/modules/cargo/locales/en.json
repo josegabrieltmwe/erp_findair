@@ -1928,7 +1928,12 @@
       "loading": "Loading messages…",
       "empty": "No chat messages.",
       "typing": "the other party is typing…",
-      "send_failed": "Send failed"
+      "send_failed": "Send failed",
+      "translate": "Translate",
+      "translate_to": "Translate to",
+      "translate_failed": "Translation failed",
+      "show_original": "Show original",
+      "show_translation": "Show translation"
     },
     "audit": {
       "title": "Audit trail",

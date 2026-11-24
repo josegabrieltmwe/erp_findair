@@ -1928,7 +1928,12 @@
       "loading": "Cargando mensajes…",
       "empty": "No hay mensajes en el chat.",
       "typing": "la otra parte está escribiendo…",
-      "send_failed": "Error al enviar"
+      "send_failed": "Error al enviar",
+      "translate": "Traducir",
+      "translate_to": "Traducir a",
+      "translate_failed": "No se pudo traducir",
+      "show_original": "Ver original",
+      "show_translation": "Ver traducción"
     },
     "audit": {
       "title": "Registro de auditoría",

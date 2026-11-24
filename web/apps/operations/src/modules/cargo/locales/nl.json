@@ -1928,7 +1928,12 @@
       "loading": "Berichten laden…",
       "empty": "Geen chatberichten.",
       "typing": "de andere partij typt…",
-      "send_failed": "Verzenden mislukt"
+      "send_failed": "Verzenden mislukt",
+      "translate": "Vertalen",
+      "translate_to": "Vertalen naar",
+      "translate_failed": "Vertaling mislukt",
+      "show_original": "Origineel weergeven",
+      "show_translation": "Vertaling weergeven"
     },
     "audit": {
       "title": "Audittrail",

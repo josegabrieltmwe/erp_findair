@@ -1041,7 +1041,12 @@
       "partner_title": "Partnerchat",
       "loading": "Berichten laden…",
       "typing": "de andere partij typt…",
-      "send_failed": "Verzenden mislukt"
+      "send_failed": "Verzenden mislukt",
+      "translate": "Vertalen",
+      "translate_to": "Vertalen naar",
+      "translate_failed": "Vertaling mislukt",
+      "show_original": "Origineel weergeven",
+      "show_translation": "Vertaling weergeven"
     },
     "checkforn": {
       "supplier_check": "Leverancierscontrole",

@@ -16,6 +16,15 @@
         <div class="chat-h">
           <v-icon icon="mdi-chat-outline" size="16" />
           <h3>{{ t("cargo.chat.title") }}</h3>
+          <select
+            v-model="targetLang"
+            class="chat-lang-select"
+            :title="t('cargo.chat.translate_to')"
+          >
+            <option v-for="l in SUPPORTED_LANGS" :key="l.code" :value="l.code">
+              {{ l.label }}
+            </option>
+          </select>
           <button
             type="button"
             class="mclose"
@@ -41,7 +50,33 @@
           >
             <div class="cfrom">{{ author(m) }}</div>
             {{ m.body }}
-            <div class="ctime">{{ formatWhen(m.sent_at) }}</div>
+            <div v-if="translations[m.id]?.visible" class="ctranslated">
+              {{ translations[m.id]!.text }}
+            </div>
+            <div class="cmeta">
+              <button
+                type="button"
+                class="ctranslate-btn"
+                :disabled="translations[m.id]?.loading"
+                @click="onTranslate(m)"
+              >
+                <v-progress-circular
+                  v-if="translations[m.id]?.loading"
+                  indeterminate
+                  size="12"
+                  width="2"
+                />
+                <template v-else-if="translations[m.id]">
+                  {{
+                    translations[m.id]!.visible
+                      ? t("cargo.chat.show_original")
+                      : t("cargo.chat.show_translation")
+                  }}
+                </template>
+                <template v-else>{{ t("cargo.chat.translate") }}</template>
+              </button>
+              <div class="ctime">{{ formatWhen(m.sent_at) }}</div>
+            </div>
           </div>
           <div v-if="remoteTyping" class="cmsg them chat-typing">
             <span class="chat-typing-dots"><i /><i /><i /></span>
@@ -64,7 +99,8 @@
             :title="t('common.send')"
             :disabled="sending || !draft.trim() || !cargoId"
           >
-            <v-icon icon="mdi-send" size="16" />
+            <v-progress-circular v-if="sending" indeterminate size="16" width="2" />
+            <v-icon v-else icon="mdi-send" size="16" />
           </button>
         </form>
       </aside>
@@ -115,6 +151,66 @@ const draft = ref("");
 const sending = ref(false);
 const loading = ref(false);
 const msgsRef = ref<HTMLDivElement | null>(null);
+
+/** Punto de partida práctico, no un límite: el backend (P146) acepta
+ *  cualquier idioma, esta lista es solo la del selector de la UI. */
+const SUPPORTED_LANGS = [
+  { code: "en", label: "English" },
+  { code: "it", label: "Italiano" },
+  { code: "es", label: "Español" },
+  { code: "de", label: "Deutsch" },
+  { code: "nl", label: "Nederlands" },
+];
+const targetLang = ref(SUPPORTED_LANGS[0].code);
+
+interface MessageTranslation {
+  lang: string;
+  text: string;
+  loading: boolean;
+  visible: boolean;
+}
+/** Traducción a demanda por mensaje — no viaja en ChatMessage, es puro
+ *  estado local del drawer (ver docs/plan-traduccion-chat.md §3.3). */
+const translations = ref<Record<number, MessageTranslation>>({});
+
+async function onTranslate(m: ChatMessage): Promise<void> {
+  const existing = translations.value[m.id];
+  if (existing?.loading) return;
+  if (existing && existing.lang === targetLang.value) {
+    translations.value = {
+      ...translations.value,
+      [m.id]: { ...existing, visible: !existing.visible },
+    };
+    return;
+  }
+  translations.value = {
+    ...translations.value,
+    [m.id]: { lang: targetLang.value, text: "", loading: true, visible: true },
+  };
+  try {
+    const r = await chatService.translate(
+      m.id,
+      m.shipment_id,
+      targetLang.value,
+      shipmentType,
+    );
+    if (!r.success) throw new Error();
+    translations.value = {
+      ...translations.value,
+      [m.id]: {
+        lang: r.data.target_lang,
+        text: r.data.translated_body,
+        loading: false,
+        visible: true,
+      },
+    };
+  } catch {
+    const rest = { ...translations.value };
+    delete rest[m.id];
+    translations.value = rest;
+    toasts.push("error", t("cargo.chat.translate_failed"));
+  }
+}
 
 const TYPING_DEBOUNCE_MS = 2000;
 let typingTimer: number | null = null;

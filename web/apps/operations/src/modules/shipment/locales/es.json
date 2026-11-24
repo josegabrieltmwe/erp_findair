@@ -1041,7 +1041,12 @@
       "partner_title": "Chat partner",
       "loading": "Cargando mensajes…",
       "typing": "la otra parte está escribiendo…",
-      "send_failed": "Envío fallido"
+      "send_failed": "Envío fallido",
+      "translate": "Traducir",
+      "translate_to": "Traducir a",
+      "translate_failed": "No se pudo traducir",
+      "show_original": "Ver original",
+      "show_translation": "Ver traducción"
     },
     "checkforn": {
       "supplier_check": "Verificación proveedor",

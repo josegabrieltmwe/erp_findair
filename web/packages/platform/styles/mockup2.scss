@@ -990,6 +990,17 @@ $col-gap: 12px !default;           // shipment: 8px
   font-weight: 800;
   margin: 0;
 }
+.shipment-v2 .chat-lang-select {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgb(var(--v-theme-surface-variant));
+  color: rgb(var(--v-theme-on-surface-variant));
+  border: 0;
+  border-radius: 7px;
+  padding: 4px 6px;
+  cursor: pointer;
+  max-width: 88px;
+}
 .shipment-v2 .mclose {
   width: 30px;
   height: 30px;
@@ -1031,6 +1042,37 @@ $col-gap: 12px !default;           // shipment: 8px
   color: rgb(var(--v-theme-on-surface-variant));
   opacity: .8;
   margin-top: 3px;
+}
+.shipment-v2 .cmsg .cmeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 3px;
+}
+.shipment-v2 .cmsg .cmeta .ctime { margin-top: 0; }
+.shipment-v2 .cmsg .ctranslate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: inherit;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-decoration: underline;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  opacity: .8;
+}
+.shipment-v2 .cmsg .ctranslate-btn:disabled { cursor: default; opacity: .6; }
+.shipment-v2 .cmsg .ctranslated {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: .9;
+  font-style: italic;
 }
 .shipment-v2 .cmsg.them {
   background: rgb(var(--v-theme-surface-variant));

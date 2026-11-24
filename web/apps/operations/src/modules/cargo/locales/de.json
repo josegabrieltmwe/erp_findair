@@ -1928,7 +1928,12 @@
       "loading": "Nachrichten werden geladen…",
       "empty": "Keine Chat-Nachrichten.",
       "typing": "die Gegenseite tippt…",
-      "send_failed": "Senden fehlgeschlagen"
+      "send_failed": "Senden fehlgeschlagen",
+      "translate": "Übersetzen",
+      "translate_to": "Übersetzen nach",
+      "translate_failed": "Übersetzung fehlgeschlagen",
+      "show_original": "Original anzeigen",
+      "show_translation": "Übersetzung anzeigen"
     },
     "audit": {
       "title": "Audit-Trail",
