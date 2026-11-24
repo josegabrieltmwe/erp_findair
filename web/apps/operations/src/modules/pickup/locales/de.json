@@ -8,6 +8,7 @@
       "calendar": "Kalender",
       "list": "Abholungen",
       "routes": "Fahrertouren",
+      "schedule": "Zeitplan",
       "zones": "PLZ-Gebiete",
       "pod": "Zustellungen (POD)"
     },
@@ -125,10 +126,19 @@
       "pick_driver": "Wählen Sie einen Fahrer, um die Tour zu sehen.",
       "stops": "{n} Stopps",
       "manifest": "Bordero",
+      "open_full_route": "Gesamte Tour in Maps öffnen",
       "colli": "Kolli",
       "total_stops": "Stopps gesamt",
       "total_colli": "Kolli gesamt",
       "total_peso": "Gesamtgewicht"
+    },
+    "schedule": {
+      "title": "Zuweisungstafel",
+      "unassigned": "Nicht zugewiesen",
+      "empty_unassigned": "Für diesen Tag nichts Unzugewiesenes.",
+      "no_drivers": "Keine Fahrer verfügbar.",
+      "assign_title": "Abholung #{id} zuweisen",
+      "time": "Uhrzeit"
     },
     "zones": {
       "title": "PLZ-Gebiete → Fahrer",

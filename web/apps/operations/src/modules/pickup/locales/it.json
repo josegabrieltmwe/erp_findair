@@ -8,6 +8,7 @@
       "calendar": "Calendario",
       "list": "Prese",
       "routes": "Giri autisti",
+      "schedule": "Pianificazione",
       "zones": "Zone CAP",
       "pod": "Consegne (POD)"
     },
@@ -125,10 +126,19 @@
       "pick_driver": "Seleziona un autista per vedere il giro.",
       "stops": "{n} fermate",
       "manifest": "Borderò",
+      "open_full_route": "Apri giro completo in Maps",
       "colli": "colli",
       "total_stops": "Fermate totali",
       "total_colli": "Colli totali",
       "total_peso": "Peso totale"
+    },
+    "schedule": {
+      "title": "Pianificazione assegnazioni",
+      "unassigned": "Da assegnare",
+      "empty_unassigned": "Niente da assegnare in questo giorno.",
+      "no_drivers": "Nessun autista disponibile.",
+      "assign_title": "Assegna ritiro #{id}",
+      "time": "Ora"
     },
     "zones": {
       "title": "Zone CAP → autista",

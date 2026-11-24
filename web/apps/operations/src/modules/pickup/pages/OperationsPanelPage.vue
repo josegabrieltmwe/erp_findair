@@ -27,12 +27,32 @@ const detailError = ref<string | null>(null);
 const { isAdmin, ensureProfile } = useProfile();
 
 /** `adminOnly`: el giro y las zonas exigen administrador (rutas `requiresAdmin`). */
-const allLinks: Array<{ name: string; icon: string; key: string; adminOnly?: boolean }> = [
+const allLinks: Array<{
+  name: string;
+  icon: string;
+  key: string;
+  adminOnly?: boolean;
+}> = [
   { name: "pickup-list", icon: "mdi-format-list-bulleted", key: "list" },
-  { name: "pickup-calendar", icon: "mdi-calendar-month-outline", key: "calendar" },
+  {
+    name: "pickup-calendar",
+    icon: "mdi-calendar-month-outline",
+    key: "calendar",
+  },
   { name: "pickup-routes", icon: "mdi-routes", key: "routes", adminOnly: true },
+  {
+    name: "pickup-schedule",
+    icon: "mdi-table-clock",
+    key: "schedule",
+    adminOnly: true,
+  },
   { name: "pickup-pod", icon: "mdi-clipboard-check-outline", key: "pod" },
-  { name: "settings-driver-zones", icon: "mdi-map-marker-radius-outline", key: "zones", adminOnly: true },
+  {
+    name: "settings-driver-zones",
+    icon: "mdi-map-marker-radius-outline",
+    key: "zones",
+    adminOnly: true,
+  },
 ];
 const links = computed(() =>
   allLinks.filter((l) => !l.adminOnly || isAdmin.value === true),
@@ -182,7 +202,9 @@ onMounted(() => {
       </v-alert>
 
       <!-- Prese por autista -->
-      <h2 class="pk-section-title mt-6">{{ t("pickup.operations.by_driver") }}</h2>
+      <h2 class="pk-section-title mt-6">
+        {{ t("pickup.operations.by_driver") }}
+      </h2>
       <v-table v-if="drivers.length" density="compact" class="pk-table">
         <thead>
           <tr>
@@ -195,7 +217,9 @@ onMounted(() => {
         <tbody>
           <tr v-for="d in drivers" :key="d.driver_id">
             <td>
-              {{ d.driver_id ? d.driver_name : t("pickup.operations.unassigned") }}
+              {{
+                d.driver_id ? d.driver_name : t("pickup.operations.unassigned")
+              }}
             </td>
             <td class="text-end">{{ d.pickup_count }}</td>
             <td class="text-end">{{ d.total_colli }}</td>

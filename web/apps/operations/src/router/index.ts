@@ -274,6 +274,15 @@ const routes: RouteRecordRaw[] = [
     name: "pickup-pod",
     component: () => import("@/modules/pickup/pages/DriverPodPage.vue"),
   },
+  // Tablero de asignación por franja horaria (U-14, G29): mismo guard que el
+  // giro (requiresAdmin), es trabajo de despacho.
+  {
+    path: "/pickup/schedule",
+    name: "pickup-schedule",
+    component: () =>
+      import("@/modules/pickup/pages/DriverScheduleBoardPage.vue"),
+    meta: { requiresAdmin: true },
+  },
   {
     path: "/crm",
     name: "crm",

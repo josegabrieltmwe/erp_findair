@@ -260,6 +260,66 @@ export function buildPeriodCells(
   return cells;
 }
 
+// ---------------------------------------------------- tablero de franjas (U-14)
+
+/** Franja por defecto del tablero: 07:00-19:00 cada 30 min, como el grid de `gest_oper`. */
+export const SCHEDULE_START_HOUR = 7;
+export const SCHEDULE_END_HOUR = 19;
+export const SCHEDULE_STEP_MINUTES = 30;
+
+function pad2(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+/** Franjas `HH:MM` del tablero, de `startHour` a `endHour` (exclusivo). */
+export function buildTimeSlots(
+  startHour: number = SCHEDULE_START_HOUR,
+  endHour: number = SCHEDULE_END_HOUR,
+  stepMinutes: number = SCHEDULE_STEP_MINUTES,
+): string[] {
+  const slots: string[] = [];
+  for (let m = startHour * 60; m < endHour * 60; m += stepMinutes) {
+    slots.push(`${pad2(Math.floor(m / 60))}:${pad2(m % 60)}`);
+  }
+  return slots;
+}
+
+/** Franja `HH:MM` a la que cae la hora de una presa (redondeo hacia abajo al paso). */
+export function slotOf(
+  pickupDatetime: string,
+  stepMinutes: number = SCHEDULE_STEP_MINUTES,
+): string {
+  const time = pickupDatetime.split(" ")[1] ?? "";
+  const [hh, mm] = time.split(":").map(Number);
+  if (!Number.isFinite(hh) || !Number.isFinite(mm)) return "";
+  const total = Math.floor((hh * 60 + mm) / stepMinutes) * stepMinutes;
+  return `${pad2(Math.floor(total / 60))}:${pad2(total % 60)}`;
+}
+
+/** Clave de celda del tablero (autista × franja). */
+export function scheduleCellKey(driverId: number, slot: string): string {
+  return `${driverId}|${slot}`;
+}
+
+/**
+ * Agrupa las presas ya asignadas por celda (autista × franja) para pintar el
+ * tablero sin recorrer la lista en cada render.
+ */
+export function buildScheduleCells(
+  pickups: readonly Pick<Pickup, "id_contatti" | "data">[],
+  stepMinutes: number = SCHEDULE_STEP_MINUTES,
+): Map<string, number[]> {
+  const cells = new Map<string, number[]>();
+  pickups.forEach((p, index) => {
+    if (!p.id_contatti) return;
+    const key = scheduleCellKey(p.id_contatti, slotOf(p.data, stepMinutes));
+    const list = cells.get(key) ?? [];
+    list.push(index);
+    cells.set(key, list);
+  });
+  return cells;
+}
+
 /** Filtra las presas por autista (0 = sin asignar); `null` = todas. */
 export function filterByDriver<T extends Pick<Pickup, "id_contatti">>(
   pickups: readonly T[],
@@ -399,6 +459,42 @@ export function stopMapLinks(stop: RouteStop): {
     address: mapsSearchUrl(stopAddress(stop).query),
     coords: atSede ? mapsCoordsUrl(stop.sede?.lat, stop.sede?.lng) : "",
   };
+}
+
+/** Ubicación de una parada para una ruta multi-punto: coordenadas si son de la sede, si no la dirección. */
+function stopLocationToken(stop: RouteStop): string {
+  const atSede = stop.direccion ? stop.direccion.origen !== "expedicion" : true;
+  const lat = stop.sede?.lat;
+  const lng = stop.sede?.lng;
+  const hasCoords =
+    atSede &&
+    lat != null &&
+    lng != null &&
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    !(lat === 0 && lng === 0);
+  return hasCoords ? `${lat},${lng}` : stopAddress(stop).query;
+}
+
+/**
+ * Enlace de Google Maps con el giro completo como ruta multi-parada (navegación
+ * real, no un mapa estático): cierra la paridad con el mapa único del legacy
+ * (`mappagiro.php`+`googlemap.php`) sin añadir ninguna librería de mapas.
+ * Vacío si ninguna parada tiene ubicación utilizable.
+ */
+export function fullRouteMapsUrl(stops: readonly RouteStop[]): string {
+  const tokens = stops.map(stopLocationToken).filter((t) => t.trim() !== "");
+  if (tokens.length === 0) return "";
+  const destination = tokens[tokens.length - 1];
+  const waypoints = tokens.slice(0, -1);
+  let url =
+    `https://www.google.com/maps/dir/?api=1` +
+    `&destination=${encodeURIComponent(destination)}` +
+    `&travelmode=driving`;
+  if (waypoints.length > 0) {
+    url += `&waypoints=${encodeURIComponent(waypoints.join("|"))}`;
+  }
+  return url;
 }
 
 /** Importe con dos decimales (la moneda la pone la plantilla). */

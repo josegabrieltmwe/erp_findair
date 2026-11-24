@@ -8,6 +8,7 @@
       "calendar": "Agenda",
       "list": "Ophalingen",
       "routes": "Chauffeursroutes",
+      "schedule": "Planbord",
       "zones": "Postcodegebieden",
       "pod": "Afleveringen (POD)"
     },
@@ -125,10 +126,19 @@
       "pick_driver": "Selecteer een chauffeur om de route te zien.",
       "stops": "{n} stops",
       "manifest": "Vrachtbrief",
+      "open_full_route": "Volledige route openen in Maps",
       "colli": "colli",
       "total_stops": "Totaal stops",
       "total_colli": "Totaal colli",
       "total_peso": "Totaalgewicht"
+    },
+    "schedule": {
+      "title": "Toewijzingsbord",
+      "unassigned": "Niet toegewezen",
+      "empty_unassigned": "Niets niet-toegewezen voor deze dag.",
+      "no_drivers": "Geen chauffeurs beschikbaar.",
+      "assign_title": "Ophaling #{id} toewijzen",
+      "time": "Tijd"
     },
     "zones": {
       "title": "Postcodegebieden → chauffeur",

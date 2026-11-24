@@ -123,10 +123,24 @@ export const pickupsService = {
     return r.data.drivers;
   },
 
-  async assignDriver(pickupId: number, driverId: number): Promise<Pickup> {
+  /**
+   * `scheduledTime` (`H:i`, G29/T-43b) fija también la hora de la presa en la
+   * misma llamada — el tablero de franjas (U-14) lo usa para asignar autista+hora
+   * en una sola acción, como el grid del legado.
+   */
+  async assignDriver(
+    pickupId: number,
+    driverId: number,
+    scheduledTime?: string,
+  ): Promise<Pickup> {
+    const body: Record<string, unknown> = {
+      pickup_id: pickupId,
+      driver_id: driverId,
+    };
+    if (scheduledTime) body.scheduled_time = scheduledTime;
     const r = await http<ApiEnvelope<Pickup>>("/api_pickup_driver_assignment", {
       method: "POST",
-      body: { pickup_id: pickupId, driver_id: driverId },
+      body,
     });
     return r.data;
   },

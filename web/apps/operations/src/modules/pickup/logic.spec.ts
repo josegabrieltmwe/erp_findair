@@ -3,11 +3,14 @@ import {
   PICKUP_QUEUES,
   addDays,
   buildPeriodCells,
+  buildScheduleCells,
+  buildTimeSlots,
   calendarRange,
   chunk,
   failedItems,
   filterByDriver,
   formatAmount,
+  fullRouteMapsUrl,
   isIncoherent,
   isOverdueOpen,
   isValidCap,
@@ -19,7 +22,9 @@ import {
   pickupColorKind,
   queueFilters,
   rangeCovers,
+  scheduleCellKey,
   shiftReference,
+  slotOf,
   startOfWeek,
   stopAddress,
   stopKind,
@@ -338,7 +343,13 @@ describe("borderò", () => {
     });
     expect(rows[1].ldvBarcode).toBe("");
     expect(rows[1].cod).toBe(0);
-    expect(rows[2]).toMatchObject({ kind: "R", ldv: "", ldvBarcode: "", colli: 4, peso: 9 });
+    expect(rows[2]).toMatchObject({
+      kind: "R",
+      ldv: "",
+      ldvBarcode: "",
+      colli: 4,
+      peso: 9,
+    });
   });
   it("totales: los del API si vienen, si no los calcula", () => {
     const stops = [
@@ -408,5 +419,80 @@ describe("enlaces de mapa", () => {
     const links = stopMapLinks(home);
     expect(links.coords).toBe("");
     expect(links.address).toContain("Via%20Otra%209");
+  });
+});
+
+describe("mapa del giro completo", () => {
+  it("sin paradas no genera enlace", () => {
+    expect(fullRouteMapsUrl([])).toBe("");
+  });
+  it("una sola parada: solo destination, sin waypoints", () => {
+    const url = fullRouteMapsUrl([stop()]);
+    expect(url).toBe(
+      "https://www.google.com/maps/dir/?api=1&destination=41.5%2C12.5&travelmode=driving",
+    );
+  });
+  it("varias paradas: la última es destination, el resto waypoints en orden", () => {
+    const url = fullRouteMapsUrl([
+      stop({ pickup_id: 1, sede: { ...stop().sede, lat: 41.1, lng: 12.1 } }),
+      stop({ pickup_id: 2, sede: { ...stop().sede, lat: 41.2, lng: 12.2 } }),
+      stop({ pickup_id: 3, sede: { ...stop().sede, lat: 41.3, lng: 12.3 } }),
+    ]);
+    expect(url).toBe(
+      "https://www.google.com/maps/dir/?api=1&destination=41.3%2C12.3&travelmode=driving" +
+        "&waypoints=41.1%2C12.1%7C41.2%2C12.2",
+    );
+  });
+  it("parada a domicilio (sin coords de sede válidas) usa la dirección", () => {
+    const url = fullRouteMapsUrl([
+      stop({
+        direccion: {
+          origen: "expedicion",
+          indirizzo: "Via Otra 9",
+          citta: "X",
+        },
+      }),
+    ]);
+    expect(url).toContain("destination=Via%20Otra%209%2C%20X");
+  });
+});
+
+describe("tablero de franjas (U-14)", () => {
+  it("franjas de 07:00 a 18:30 cada 30 min por defecto", () => {
+    const slots = buildTimeSlots();
+    expect(slots[0]).toBe("07:00");
+    expect(slots[slots.length - 1]).toBe("18:30");
+    expect(slots).toHaveLength(24);
+  });
+  it("franjas con parámetros propios", () => {
+    expect(buildTimeSlots(9, 10, 15)).toEqual([
+      "09:00",
+      "09:15",
+      "09:30",
+      "09:45",
+    ]);
+  });
+  it("slotOf redondea hacia abajo al paso", () => {
+    expect(slotOf("2026-11-23 09:12:00")).toBe("09:00");
+    expect(slotOf("2026-11-23 09:29:00")).toBe("09:00");
+    expect(slotOf("2026-11-23 09:30:00")).toBe("09:30");
+    expect(slotOf("2026-11-23 09:45:00", 15)).toBe("09:45");
+  });
+  it("slotOf sin hora valida devuelve vacío", () => {
+    expect(slotOf("2026-11-23")).toBe("");
+  });
+  it("scheduleCellKey combina autista y franja", () => {
+    expect(scheduleCellKey(4, "09:00")).toBe("4|09:00");
+  });
+  it("buildScheduleCells agrupa por autista+franja e ignora sin asignar", () => {
+    const cells = buildScheduleCells([
+      { id_contatti: 4, data: "2026-11-23 09:10:00" },
+      { id_contatti: 4, data: "2026-11-23 09:20:00" },
+      { id_contatti: 4, data: "2026-11-23 10:00:00" },
+      { id_contatti: 0, data: "2026-11-23 09:10:00" },
+    ]);
+    expect(cells.get("4|09:00")).toEqual([0, 1]);
+    expect(cells.get("4|10:00")).toEqual([2]);
+    expect(cells.has("0|09:00")).toBe(false);
   });
 });
