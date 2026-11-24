@@ -61,6 +61,21 @@ export function i18nGate(severity = 'warn', localeDir = './src/locales/*.json') 
               'M (kg)', 'I (Lb)',
               // Nomenclatura de la casa que no se traduce.
               'CO2e', '1 EUR =',
+              // Mas transportistas (marca, igual en todos los idiomas).
+              'BRT',
+              // Prefijo de mercancia peligrosa (UN number), igual en todos los idiomas.
+              'UN',
+              // Glifo decorativo junto a un :title traducido (ver 🖷/✆ al lado, sin marcar).
+              '✉︎',
+              // Pistas de depuracion con el nombre literal de la columna/campo de BD, a
+              // proposito sin traducir: son identificadores, no prosa (mismo criterio que
+              // check_i18n.ts al descartar nombres de BD como texto visible traducible).
+              'debug_valori', 'controllo_fatt =',
+              'spedizioni_colli.id', 'segnac_cliente', 'RIF_cliente',
+              '(data_sped0)', '(data_sped1)', '(data_consegna_prevista)', '(data_corriere)',
+              // Formula con nombres de columna literales (tooltip de CargoProfitCard).
+              'previsto = carico_volo − costo_volo_previsto',
+              'reale = carico_volo − costo_volo_reale',
             ],
           },
         ],

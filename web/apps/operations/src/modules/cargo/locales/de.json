@@ -608,6 +608,12 @@
       "open_full_page": "Ganze Seite öffnen",
       "close": "Schließen (Esc)"
     },
+    "home_page": {
+      "redirecting": "Weiterleitung zur globalen Startseite…"
+    },
+    "pdf_overlay": {
+      "rendering_hint": "Rendering läuft — dauert meist 2-8 Sekunden."
+    },
     "badge": {
       "invoiced": "Berechnet #{id}",
       "invoiced_hint": "Rechnung erstellt — Formularfelder sind gesperrt",

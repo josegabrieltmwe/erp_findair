@@ -608,6 +608,12 @@
       "open_full_page": "Abrir página completa",
       "close": "Cerrar (Esc)"
     },
+    "home_page": {
+      "redirecting": "Redirigiendo al inicio global…"
+    },
+    "pdf_overlay": {
+      "rendering_hint": "Generando — normalmente tarda 2-8 segundos."
+    },
     "badge": {
       "invoiced": "Facturado #{id}",
       "invoiced_hint": "Factura emitida — los campos del formulario están bloqueados",
