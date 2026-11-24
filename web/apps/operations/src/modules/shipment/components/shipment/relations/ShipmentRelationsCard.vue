@@ -205,6 +205,7 @@ import CrmContextDialog, {
 } from "@/modules/crm/components/CrmContextDialog.vue";
 import type { CrmPratica } from "@/modules/crm/types";
 import { giacenzeService } from "@/modules/giacenze/services/giacenze.service";
+import { detailHref } from "@shared/platform/navTargets";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -274,13 +275,15 @@ function formatAmount(amount: number): string {
 }
 
 // Linked cargo (legacy spedy_form.php spedcrg button → pp=spedyc).
+//
+// Ruta de la SPA (router en "/"), no del BFF: `window.__TMWE_SHIPMENT__.basePath`
+// es el prefijo de las llamadas JSON (/bff/v1) y nunca el de esta app montada
+// en la raíz (mismo bug ya documentado en CostiCard.vue:billUrl). Reusarlo
+// aquí abría `/bff/v1/cargo/:id` (la respuesta JSON del proxy, no la ficha)
+// en una pestaña nueva en vez de la página real del cargo. `detailHref` es el
+// helper centralizado para enlaces cross-módulo (ver navTargets.ts).
 const cargoId = computed<number>(() => Number(shipment.value?.id_cargo ?? 0));
-const cargoUrl = computed<string>(() => {
-  const base =
-    (typeof window !== "undefined" && window.__TMWE_SHIPMENT__?.basePath) ||
-    "/bff/v1";
-  return `${base}/cargo/${cargoId.value}`;
-});
+const cargoUrl = computed<string>(() => detailHref("cargo", cargoId.value));
 
 // CRM status colour (legacy: A=aperta→red, C/closed→green, else→grey).
 const crmStatusClass = computed<string>(() => {
