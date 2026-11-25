@@ -20,7 +20,7 @@ Empezar por `contrato-con-api.md`. Los READMEs de código están junto al códig
 | [plan-giacenze-ux.md](plan-giacenze-ux.md) | Plan: acceso y ficha de giacenza más simples (colas, ciclo guiado, mensajes) a partir del legado y Jose_master | borrador |
 | [plan-listados-de-trabajo.md](plan-listados-de-trabajo.md) | Plan para migrar las colas de trabajo con filtros por defecto y acciones por lote de Jose_master al SPA | borrador |
 | [plan-traduccion-chat.md](plan-traduccion-chat.md) | Plan: traducción a demanda de mensajes del chat de expedición (P146) | borrador |
-| [plan-autoregistro.md](plan-autoregistro.md) | Plan: auto-registro de clientes en FindAir, parte del ERP (cola de aprobación, configuración por titular) | borrador |
+| [plan-autoregistro.md](plan-autoregistro.md) | Plan: auto-registro de clientes en FindAir, parte del ERP (cola de aprobación, configuración por titular) | vigente |
 | [cargo-paneles-tramos.md](cargo-paneles-tramos.md) | Ficha de cargo: tramos de recogida (panel izquierdo) y entrega (panel derecho) con el detalle de expedición | vigente |
 | [plan-pruebas-ui.md](plan-pruebas-ui.md) | Plan de pruebas de la UI | borrador |
 | [plan-pruebas-formularios.md](plan-pruebas-formularios.md) | Plan de pruebas de formularios de la UI (índice; fichas en `pruebas-formularios/`) | borrador |

@@ -1,6 +1,6 @@
 # Plan: auto-registro de clientes en FindAir (parte del ERP)
 
-> **Estado:** borrador · **Última modificación:** 2026-11-25
+> **Estado:** vigente · **Última modificación:** 2026-11-25
 
 El plan completo, con decisiones, modelo de datos, seguridad y fases, está en el api: `tmwe_api/docs/03-diseno/autoregistro/PLAN_AUTOREGISTRO.md` (rama `feat/autoregistro`). Este documento solo recoge lo que toca al ERP; si los dos se contradicen, manda el del api.
 
@@ -18,10 +18,24 @@ El plan completo, con decisiones, modelo de datos, seguridad y fases, está en e
 - **Campana:** la notificación de solicitud nueva enlaza a la ficha.
 - **i18n:** 5 idiomas, formato local de fechas, `check:i18n`.
 - **BFF:** rutas manuales en `bff/config/routes.bff.yaml`.
-- **Contrato:** los endpoints `api_self_registration*` se piden como **P147** en `contrato-con-api.md` cuando se aborden.
+- **Contrato:** los endpoints `api_self_registration*` están en **P147** de [contrato-con-api.md](contrato-con-api.md).
 
 ## Fases que tocan este repo
 
 | Fase | Contenido | Depende de |
 |---|---|---|
 | 3. Aprobación | Cola, aprobar y rechazar, configuración, recordatorios, ficha de credencial, P147 | Fase 1 del api |
+
+## Estado (2026-11-25, rama `feat/autoregistro`)
+
+Fase 3 hecha en el ERP, sin probar todavía contra un api desplegado:
+
+- [x] **BFF:** `api_self_registration_admin` (GET/POST) y `api_self_registration_config` (GET/PUT) en `bff/config/routes.bff.yaml`, con prueba (`bff/tests/SelfRegistrationRoutesTest.php`).
+- [x] **Cola** `/settings/anagrafica/registrations`: filtros por estado (por defecto, pendientes de decisión), fechas y búsqueda; TMWE puede acotar por titular; aviso "+48 h".
+- [x] **Ficha** `/settings/anagrafica/registrations/<id>` (destino de la campana): datos, trazabilidad (IP, navegador, consentimiento y versiones), cuenta creada, VIES ("Comprobar VIES" con `api_anagrafica_vies`), posibles duplicados, aprobar con correcciones y rechazar con motivo interno y mensaje opcional.
+- [x] **Configuración** del titular `/settings/anagrafica/registrations/config`, solo TMWE o `partner:manage`.
+- [x] **Menú de Ajustes:** tarjetas en Anagrafica; la cola con `erp:view` y la configuración con `partner:manage`.
+- [x] **Ficha del contacto:** distintivo "Credencial segura (solo FindAir)", sin enviar perfil, regenerar contraseña ni acceso B2B; mensaje claro ante 409 `HASHED_CREDENTIAL`.
+- [x] **i18n:** 5 idiomas, fechas y horas en formato local (el api manda UTC); `check:i18n` igual que antes de empezar (381 frente a 377 del baseline, deuda previa).
+- [ ] **Pendiente del api** (ver P147): país de la IP y cotizaciones desde el alta en la ficha; `vies_result` de la solicitud nunca se rellena.
+- [ ] **Pendiente:** probar el flujo completo contra un api con la rama `feat/autoregistro` desplegada.
