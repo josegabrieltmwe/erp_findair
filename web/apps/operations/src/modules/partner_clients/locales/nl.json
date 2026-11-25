@@ -746,7 +746,11 @@
       "col_sped_24m": "2Y",
       "col_sped_12m": "1Y",
       "col_importi_12m": "Bedrag 1A",
-      "col_last_srv": "Laatste service"
+      "col_last_srv": "Laatste service",
+      "secure_credential": {
+        "label": "Veilige inloggegevens (alleen FindAir)",
+        "hint": "Versleuteld wachtwoord: het kan niet worden bekeken, opnieuw gegenereerd of verzonden. Stuur de toegangslink om het te wijzigen."
+      }
     },
     "sections": {
       "users": "Gebruikers",

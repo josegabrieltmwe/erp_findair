@@ -60,6 +60,11 @@ export interface ContattoRow {
   /** Estado de acceso findair, incluido por el backend en el listado (batch). */
   findair_enabled?: boolean;
   findair_level?: 'basic' | 'full' | null;
+  /**
+   * Credencial segura (hash en contatti_credential, p. ej. auto-registrado en FindAir): solo FindAir, sin contraseña
+   * en claro. Regenerar/ver/enviar la contraseña y el acceso directo al B2B responden 409 HASHED_CREDENTIAL (P147).
+   */
+  secure_credential?: boolean;
   [k: string]: unknown;
 }
 

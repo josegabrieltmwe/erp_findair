@@ -119,7 +119,8 @@
       "COURIER_INVALID_POSTAL_CODE": "{courier} accepteert de postcode van een van de adressen niet.",
       "COURIER_INVALID_PHONE": "{courier} heeft een geldig telefoonnummer van afzender en ontvanger nodig.",
       "COURIER_UNAVAILABLE": "{courier} heeft niet op tijd geantwoord. Er is niets geboekt.",
-      "READONLY_SHIPMENT": "De leverancier van deze zending is vergrendeld: deze kan niet worden gewijzigd."
+      "READONLY_SHIPMENT": "De leverancier van deze zending is vergrendeld: deze kan niet worden gewijzigd.",
+      "HASHED_CREDENTIAL": "Dit contact heeft veilige inloggegevens (alleen FindAir): het wachtwoord kan niet worden bekeken, opnieuw gegenereerd of verzonden. Stuur de toegangslink om het te wijzigen."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Verdeel het over meer colli of kies een vrachtdienst.",

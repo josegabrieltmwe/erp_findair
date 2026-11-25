@@ -119,7 +119,8 @@
       "COURIER_INVALID_POSTAL_CODE": "{courier} no acepta el código postal de una de las direcciones.",
       "COURIER_INVALID_PHONE": "{courier} necesita un teléfono válido del remitente y del destinatario.",
       "COURIER_UNAVAILABLE": "{courier} no ha contestado a tiempo. No se ha reservado nada.",
-      "READONLY_SHIPMENT": "El proveedor de este envío está bloqueado: no se puede cambiar."
+      "READONLY_SHIPMENT": "El proveedor de este envío está bloqueado: no se puede cambiar.",
+      "HASHED_CREDENTIAL": "Este contacto tiene credencial segura (solo FindAir): su contraseña no se puede ver, regenerar ni enviar. Envíale el enlace de acceso para que la cambie."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Divídelo en más bultos o elige un servicio de carga.",

@@ -119,7 +119,8 @@
       "COURIER_INVALID_POSTAL_CODE": "{courier} akzeptiert die Postleitzahl einer der Adressen nicht.",
       "COURIER_INVALID_PHONE": "{courier} benötigt eine gültige Telefonnummer von Absender und Empfänger.",
       "COURIER_UNAVAILABLE": "{courier} hat nicht rechtzeitig geantwortet. Es wurde nichts gebucht.",
-      "READONLY_SHIPMENT": "Der Lieferant dieser Sendung ist gesperrt: er kann nicht geändert werden."
+      "READONLY_SHIPMENT": "Der Lieferant dieser Sendung ist gesperrt: er kann nicht geändert werden.",
+      "HASHED_CREDENTIAL": "Dieser Kontakt hat sichere Zugangsdaten (nur FindAir): Das Passwort kann weder angezeigt noch neu erzeugt oder gesendet werden. Sende den Zugangslink, um es zu ändern."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Teile es auf mehrere Packstücke auf oder wähle einen Frachtservice.",

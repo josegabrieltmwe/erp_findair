@@ -119,7 +119,8 @@
       "COURIER_INVALID_POSTAL_CODE": "{courier} does not accept the postal code of one of the addresses.",
       "COURIER_INVALID_PHONE": "{courier} needs a valid phone number for sender and recipient.",
       "COURIER_UNAVAILABLE": "{courier} did not answer in time. Nothing has been booked.",
-      "READONLY_SHIPMENT": "The supplier for this shipment is locked: it cannot be changed."
+      "READONLY_SHIPMENT": "The supplier for this shipment is locked: it cannot be changed.",
+      "HASHED_CREDENTIAL": "This contact has a secure credential (FindAir only): the password cannot be viewed, regenerated or sent. Send them the access link to change it."
     },
     "hint": {
       "COURIER_PACKAGE_OVERWEIGHT": "Split it into more packages or choose a freight service.",

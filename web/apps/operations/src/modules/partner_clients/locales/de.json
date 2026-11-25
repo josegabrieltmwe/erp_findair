@@ -746,7 +746,11 @@
       "col_sped_24m": "2Y",
       "col_sped_12m": "1Y",
       "col_importi_12m": "Betrag 1A",
-      "col_last_srv": "Letzter Service"
+      "col_last_srv": "Letzter Service",
+      "secure_credential": {
+        "label": "Sichere Zugangsdaten (nur FindAir)",
+        "hint": "Verschlüsseltes Passwort: Es kann weder angezeigt noch neu erzeugt oder gesendet werden. Zum Ändern den Zugangslink senden."
+      }
     },
     "sections": {
       "users": "Benutzer",
