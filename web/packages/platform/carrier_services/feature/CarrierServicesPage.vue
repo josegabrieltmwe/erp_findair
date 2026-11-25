@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="carrier-services-page">
     <CmSectionHeader
       :title="t('sections.carrier_services')"
       :subtitle="t('carrier_services.subtitle')"
@@ -1384,5 +1384,16 @@ onMounted(() => {
   grid-template-columns: 1fr 1fr;
   gap: 8px 24px;
   font-size: 13px;
+}
+
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.carrier-services-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>

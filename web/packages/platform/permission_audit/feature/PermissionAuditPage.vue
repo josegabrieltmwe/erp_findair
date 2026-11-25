@@ -361,6 +361,14 @@ function colorForAction(action: string): string {
 <style scoped>
 .permission-audit-page {
   max-width: 1200px;
+  /* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+     (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+     estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+     .cm-users-page). */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .pap-diff-header {

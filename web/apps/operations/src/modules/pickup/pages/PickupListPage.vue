@@ -427,6 +427,18 @@ onMounted(() => {
 <style scoped>
 .pk-page {
   padding: 24px;
+  /* Completa la cadena flex entre `.dsh-main` (DashboardShell, ya flex-column
+     + min-height:0) y `.sdv-card` (ListingDataView). `display:flex` sola NO
+     basta: sin `flex:1 1 auto; min-height:0` este root tampoco se estira
+     dentro de `.dsh-main`, que entonces no le pasa ningun alto acotado a la
+     tabla (crece con todas las filas) y `.dsh-main:has(.sdv-card){overflow:
+     hidden}` la recorta sin dar scroll de ningun tipo, ni de pagina ni de
+     tabla. Mismo patron documentado en .cm-users-page (UsersPage.vue) y
+     .cm-anagrafiche-page (AnagraficaListPage.vue). */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 .pk-page-head {
   display: flex;

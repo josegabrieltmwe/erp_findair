@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="payment-config-page">
     <CmSectionHeader
       :title="t('sections.payment_config')"
       :subtitle="t('payment_config.subtitle')"
@@ -537,3 +537,16 @@ onMounted(() => {
   void loadSchedules();
 });
 </script>
+
+<style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.payment-config-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="oauth-clients-page">
     <CmSectionHeader
       :title="t('oauth_clients.title')"
       :subtitle="t('oauth_clients.subtitle')"
@@ -645,5 +645,16 @@ onMounted(() => {
 .cm-detail-readonly dd {
   margin: 0;
   overflow-wrap: anywhere;
+}
+
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.oauth-clients-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>

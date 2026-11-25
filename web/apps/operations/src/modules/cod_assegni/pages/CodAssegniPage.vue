@@ -230,7 +230,7 @@ function stateOf(session: CaptureSession): { label: string; color: string } {
 </script>
 
 <template>
-  <v-container fluid class="pa-6">
+  <v-container fluid class="pa-6 cod-assegni-page">
     <header class="mb-6">
       <h1 class="text-h5 mb-1">{{ t("cod_assegni.title") }}</h1>
       <p class="text-body-2 text-medium-emphasis">
@@ -604,5 +604,16 @@ function stateOf(session: CaptureSession): { label: string; color: string } {
 .queue-switch :deep(.v-label) {
   white-space: nowrap;
   padding-inline-start: 14px;
+}
+
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). Vuetify's v-container es display:block por defecto. */
+.cod-assegni-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 </style>

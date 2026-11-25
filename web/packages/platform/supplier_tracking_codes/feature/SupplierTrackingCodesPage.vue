@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="supplier-tracking-page">
     <CmSectionHeader
       :title="t('sections.supplier_tracking_codes')"
       :subtitle="t('supplier_tracking_codes.subtitle')"
@@ -494,4 +494,15 @@ async function reloadBoth() {
   color: var(--cm-tone-accent-text, #1648b4);
 }
 .cm-btn-accent { background: var(--cm-accent, #1648b4) !important; color: #fff !important; }
+
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.supplier-tracking-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 </style>

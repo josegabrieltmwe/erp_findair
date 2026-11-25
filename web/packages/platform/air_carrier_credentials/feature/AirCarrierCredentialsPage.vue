@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="air-carrier-credentials-page">
     <CmSectionHeader
       :title="t('sections.air_carrier_credentials')"
       :subtitle="t('air_carrier_credentials.subtitle')"
@@ -443,3 +443,16 @@ onMounted(() => {
   void load();
 });
 </script>
+
+<style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.air-carrier-credentials-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+</style>

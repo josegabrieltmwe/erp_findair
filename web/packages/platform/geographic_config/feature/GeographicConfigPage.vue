@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="geo-config-page">
     <CmSectionHeader
       :title="t('sections.geographic_config')"
       :subtitle="t('geographic_config.subtitle')"
@@ -1522,3 +1522,16 @@ onMounted(() => {
   void loadRemoteAreas();
 });
 </script>
+
+<style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.geo-config-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="issuer-bank-accounts-page">
     <CmSectionHeader
       :title="t('sections.issuer_bank_accounts')"
       :subtitle="t('issuer_bank_accounts.subtitle')"
@@ -212,3 +212,16 @@ async function confirmRemove(item: IssuerBankAccount): Promise<void> {
 
 onMounted(load);
 </script>
+
+<style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.issuer-bank-accounts-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+</style>

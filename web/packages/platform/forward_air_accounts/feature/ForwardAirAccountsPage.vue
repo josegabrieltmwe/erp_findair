@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="forward-air-accounts-page">
     <CmSectionHeader
       :title="isSelf ? t('forward_air_accounts.title_self') : t('forward_air_accounts.title')"
       :subtitle="isSelf ? t('forward_air_accounts.subtitle_self') : t('forward_air_accounts.subtitle')"
@@ -606,3 +606,16 @@ onMounted(() => {
   void load();
 });
 </script>
+
+<style scoped>
+/* Completa la cadena flex entre `.dsh-main` (DashboardShell) y `.sdv-card`
+   (ListingDataView); sin flex:1 1 auto + min-height:0 este root no se
+   estira y la tabla no tiene scroll interno (ver fix de PickupListPage /
+   .cm-users-page). */
+.forward-air-accounts-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+</style>
