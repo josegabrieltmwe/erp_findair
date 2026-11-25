@@ -24,7 +24,7 @@ vi.mock("@shipment/plugins/i18n", () => ({
 import { useServiceSelectionStore } from "./service_selection.store";
 
 const dhl = { service_id: 1, description: "DHL", available: true, fornitore_id: 3 };
-const fa = { service_id: 9, description: "FA", available: true, fornitore_id: 8705, currency: "USD" };
+const fa = { service_id: 9, description: "FA", available: true, fornitore_id: 6, currency: "USD" };
 
 describe("service_selection.store: couriers tardíos (Forward Air)", () => {
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe("service_selection.store: couriers tardíos (Forward Air)", () => {
 
     listClient.mockResolvedValueOnce({ success: true, data: { services: [dhl, fa], meta: {} } });
     await s.loadLateCouriers(7);
-    expect(s.clientServices.map((x) => x.fornitore_id)).toEqual([3, 8705]);
+    expect(s.clientServices.map((x) => x.fornitore_id)).toEqual([3, 6]);
     expect(s.lateCouriers).toEqual([]);
   });
 
