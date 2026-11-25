@@ -313,6 +313,14 @@ routes:
       action: web_chat_unread_counter
       forward_query: '*'
     throttle: web_chat
+  - id: post.web_chat_translate_message
+    method: POST
+    path: /web_chat_translate_message
+    upstream:
+      action: web_chat_translate_message
+      forward_query: '*'
+    limits: { body: 8k, timeout: 30 } # llamada sincrona al LLM; mismo orden de magnitud que el POST de web_chat_messages
+    throttle: web_chat
 
   # Sondeo de comunicación/CRM (collaudo 16/11 N57): mismo motivo, sin throttle propio hoy.
   - id: get.api_communication_poll
