@@ -736,6 +736,40 @@ routes:
       forward_query: [anagrafica_id]
     limits: { body: 16k, timeout: 30 }
 
+  # Auto-registro de clientes de FindAir, revisión por el titular (P147). api_self_registration_admin: cola, ficha,
+  # aprobar y rechazar; personal del ERP (TMWE o erp:view, módulo anagrafiche), cada partner solo las suyas (la API
+  # responde 404 a las ajenas) y TMWE puede acotar con id_anagr_titolare. api_self_registration_config: TMWE o
+  # administrador del partner (partner:manage); TMWE puede pedir otro titular con id_anagr_titolare (también en el PUT,
+  # que la API lee de la query). Lo autoriza todo la API; aquí solo la lista blanca.
+  - id: self_registration_admin.get
+    method: GET
+    path: /api_self_registration_admin
+    upstream:
+      action: api_self_registration_admin
+      forward_query: [id, status, date_from, date_to, q, page, per_page, id_anagr_titolare]
+
+  - id: self_registration_admin.post
+    method: POST
+    path: /api_self_registration_admin
+    upstream:
+      action: api_self_registration_admin
+    limits: { body: 16k, timeout: 30 } # aprobar escribe anagrafica, sede, rol y política y envía un correo
+
+  - id: self_registration_config.get
+    method: GET
+    path: /api_self_registration_config
+    upstream:
+      action: api_self_registration_config
+      forward_query: [id_anagr_titolare]
+
+  - id: self_registration_config.put
+    method: PUT
+    path: /api_self_registration_config
+    upstream:
+      action: api_self_registration_config
+      forward_query: [id_anagr_titolare]
+    limits: { body: 16k, timeout: 15 }
+
   # Cuentas SMTP por partner. api_partner_smtp: el administrador del partner gestiona las suyas (el partner sale
   # de la sesión, nunca del cliente); api_admin_partner_smtp: TMWE sobre cualquier partner. Scopes smtp:read/write y
   # "administrador del partner" los aplica la API. POST puede ser {action:'test'}: abre una conexión SMTP real.
