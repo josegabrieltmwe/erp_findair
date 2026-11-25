@@ -61,6 +61,14 @@ describe('canOpenAdminRoute', () => {
     expect(canOpenAdminRoute('settings-elevenlabs-my-agent', ctx(false, ['config:read']))).toBe(false);
   });
 
+  it('auto-registro (P147): la cola con erp:view; la configuración solo con partner:manage', () => {
+    expect(canOpenAdminRoute('settings-self-registrations', ctx(false, ['erp:view']))).toBe(true);
+    expect(canOpenAdminRoute('settings-self-registration-detail', ctx(false, ['erp:view']))).toBe(true);
+    expect(canOpenAdminRoute('settings-self-registrations', ctx(false, ['contacts:read']))).toBe(false);
+    expect(canOpenAdminRoute('settings-self-registration-config', ctx(false, ['erp:view']))).toBe(false);
+    expect(canOpenAdminRoute('settings-self-registration-config', ctx(false, ['partner:manage']))).toBe(true);
+  });
+
   it('falla cerrado: perfil desconocido o backend sin access', () => {
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(null))).toBe(false);
     expect(canOpenAdminRoute('settings-cargo-carriers', ctx(false))).toBe(false);

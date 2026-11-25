@@ -332,6 +332,14 @@
         "portal_my_oauth_clients": {
           "title": "My OAuth apps",
           "description": "Create and manage your own API credentials (client_id / client_secret)"
+        },
+        "self_registrations": {
+          "title": "Sign-up requests",
+          "description": "Customer sign-ups from FindAir: review, approve or reject"
+        },
+        "self_registration_config": {
+          "title": "Self sign-up: settings",
+          "description": "Enable FindAir sign-up, links, notifications and card payment"
         }
       }
     }
@@ -2646,5 +2654,182 @@
     "reason_fraudulent": "Fraudulent",
     "reason_surcharge_waived": "Surcharge waived",
     "reason_other": "Other"
+  },
+  "self_registration": {
+    "cancel": "Cancel",
+    "queue": {
+      "title": "Sign-up requests",
+      "subtitle": "Customer sign-ups from FindAir. A verified account can get quotes but cannot book until you approve it.",
+      "reload": "Refresh",
+      "filter_status": "Status",
+      "filter_date_from": "From",
+      "filter_date_to": "To",
+      "filter_search": "Search by company, name, email or VAT number",
+      "filter_titolare": "Owner",
+      "empty": "No requests match these filters.",
+      "overdue": "+48 h",
+      "overdue_hint": "Waiting for a decision for {hours} h",
+      "total": "{n} requests"
+    },
+    "fields": {
+      "id": "No.",
+      "created_at": "Received",
+      "company_name": "Company",
+      "person": "Person",
+      "email": "Email address",
+      "country": "Country",
+      "vat_number": "VAT number",
+      "status": "Status",
+      "phone": "Phone",
+      "language": "Language",
+      "channel": "Channel",
+      "vies_result": "VIES at sign-up",
+      "verified_at": "Email verified",
+      "consent_at": "Consent",
+      "versions": "Accepted versions",
+      "ip": "IP address",
+      "user_agent": "Browser",
+      "reviewed_at": "Decided",
+      "reviewed_by": "Decided by",
+      "review_notes": "Internal reason",
+      "customer_message": "Message to the customer",
+      "customer": "Customer",
+      "pi_cf": "VAT / tax code",
+      "tipo": "Type",
+      "bloccato": "Blocked",
+      "vies_check": "VIES status",
+      "reason": "Match",
+      "rag_soc": "Company name",
+      "indirizzo": "Address",
+      "cap": "Postcode",
+      "citta": "City",
+      "prov": "Province"
+    },
+    "status": {
+      "pending_verification": "Not verified",
+      "verified": "Awaiting decision",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "expired": "Expired",
+      "blocked_config": "Blocked by settings"
+    },
+    "duplicate_reason": {
+      "vat": "Same VAT number",
+      "company_name": "Same company name",
+      "email_domain": "Same email domain"
+    },
+    "detail": {
+      "back": "Back",
+      "title": "Request {id} · {company}",
+      "subtitle": "Received on {date}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "state_hint": {
+        "pending_verification": "The customer has not confirmed their email yet: there is no account to review.",
+        "verified": "The request is verified but has no account: it cannot be decided.",
+        "approved": "Request approved: the customer books paying by card.",
+        "rejected": "Request rejected: the account is blocked.",
+        "expired": "The activation link expired unused.",
+        "blocked_config": "Self sign-up was disabled or over the daily limit when the request arrived."
+      },
+      "waiting": "This request has been waiting for a decision for {hours} h.",
+      "section_request": "Request details",
+      "section_trace": "Audit trail",
+      "section_review": "Decision",
+      "section_account": "Account created",
+      "no_account": "No account yet: it is created when the customer activates their email.",
+      "yes": "Yes",
+      "no": "No",
+      "vies_check": "Check VIES",
+      "vies_name": "Name in VIES",
+      "vies_address": "Address in VIES",
+      "billing_address": "Billing address",
+      "contact": "Contact (login)",
+      "secure_credential": "Secure credential (FindAir only)",
+      "section_duplicates": "Possible duplicates",
+      "duplicates_hint": "Your customers with the same VAT number, company name or email domain.",
+      "no_duplicates": "No matches found.",
+      "versions": "Privacy {privacy} · Terms {terms}"
+    },
+    "vies": {
+      "OK": "Valid",
+      "KO": "Not valid",
+      "X": "Not checked",
+      "NN": "Not applicable",
+      "none": "Not checked",
+      "ACCESS_DENIED": "Not allowed to check",
+      "MISSING_DATA": "Country or VAT number missing",
+      "result_ok": "VIES: valid VAT number"
+    },
+    "approve": {
+      "title": "Approve the account",
+      "hint": "Confirm or correct the tax details and the billing address. Once approved, the account becomes a customer with the basic FindAir role, books only paying by card and receives the “Account approved” email.",
+      "notes": "Internal note (optional)",
+      "notes_hint": "Only your team sees it.",
+      "confirm": "Approve",
+      "done": "Account approved. The customer has been notified."
+    },
+    "reject": {
+      "title": "Reject the request",
+      "hint": "The account is blocked and the customer receives a neutral email.",
+      "notes": "Internal reason",
+      "notes_hint": "Only your team sees it.",
+      "customer_message": "Message to the customer (optional)",
+      "customer_message_hint": "Added to the email the customer receives.",
+      "confirm": "Reject",
+      "done": "Request rejected."
+    },
+    "field_error": {
+      "required": "Required",
+      "invalid": "Invalid value",
+      "too_long": "Too long",
+      "https_url_required": "Must be an https URL",
+      "required_when_enabled": "Required when self sign-up is enabled",
+      "unknown_client": "Application not found for this owner",
+      "unknown_payment_method": "Payment method not available for this owner",
+      "out_of_range": "Out of range (0-10000)",
+      "turnstile_not_configured_on_server": "Turnstile is not configured on the server"
+    },
+    "errors": {
+      "generic": "The operation could not be completed.",
+      "NOT_FOUND": "The request does not exist or is not your company's.",
+      "NOT_REVIEWABLE": "Only verified requests can be approved or rejected.",
+      "ALREADY_REVIEWED": "Someone else has already decided this request.",
+      "VALIDATION_ERROR": "Check the highlighted fields.",
+      "ERP_STAFF_REQUIRED": "Only ERP staff can review sign-up requests.",
+      "PARTNER_ADMIN_REQUIRED": "Only TMWE or your company administrator can change these settings.",
+      "APPROVAL_FAILED": "The approval was left incomplete: check the customer record.",
+      "REJECTION_FAILED": "The rejection was left incomplete: check the customer record."
+    },
+    "config": {
+      "title": "Customer self sign-up",
+      "subtitle": "How your company's customers sign up from FindAir.",
+      "titolare": "Owner",
+      "titolare_hint": "Empty: your own company's settings.",
+      "enabled": "Self sign-up enabled",
+      "enabled_hint": "When disabled, the FindAir sign-up form creates no requests for your company.",
+      "section_links": "Links",
+      "activation_base_url": "Activation URL",
+      "activation_base_url_hint": "FindAir page the activation email links to (https).",
+      "login_client_id": "Login application (client_id)",
+      "login_client_id_hint": "Your company's OAuth application the customer logs in with after activating.",
+      "section_legal": "Privacy and terms",
+      "privacy_url": "Privacy policy URL",
+      "privacy_version": "Privacy version",
+      "terms_version": "Terms version",
+      "versions_hint": "Each request stores the version the customer accepted.",
+      "section_review": "Review",
+      "notify_emails": "Notification emails",
+      "notify_emails_hint": "They get a notice for every new request. Press Enter after each address.",
+      "id_pagam_met_card": "Card payment method",
+      "id_pagam_met_card_hint": "Assigned to the account when it is approved.",
+      "section_abuse": "Protection",
+      "turnstile_required": "Require Turnstile",
+      "turnstile_required_hint": "Anti-bot check on the sign-up form.",
+      "daily_limit": "Daily request limit",
+      "daily_limit_hint": "Above it, requests are blocked by settings.",
+      "save": "Save",
+      "saved": "Settings saved."
+    }
   }
 }
