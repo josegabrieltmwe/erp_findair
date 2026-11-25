@@ -59,6 +59,14 @@ export interface Cargo {
   id: string | number;
   id_cargo?: string | number;
 
+  /**
+   * Derivado (no columna): true cuando el shipment todavía no tiene ninguna
+   * línea activa en `spedizioni_cargo_dett` — nadie completó el paso de
+   * buscar y elegir tarifa/vuelo tras crear la cabecera. Mientras sea true,
+   * la pantalla legada (`spedyc_dettaglio_box.php`) se ve vacía sin aviso.
+   */
+  rate_pending?: boolean;
+
   // Client / partner
   id_cliente?: string;
   id_sede?: string;

@@ -629,7 +629,9 @@
       "not_checked": "Niet gecontroleerd",
       "archived": "Gearchiveerd",
       "bad_address": "Onjuist adres",
-      "webcargo_rate": "WebCargo-tarief"
+      "webcargo_rate": "WebCargo-tarief",
+      "rate_pending": "Tarief in behandeling",
+      "rate_pending_hint": "Er is nog geen vlucht/tarief gezocht of gekozen voor deze zending"
     },
     "lifecycle": {
       "in_progress": "in uitvoering"

@@ -629,7 +629,9 @@
       "not_checked": "No verificado",
       "archived": "Archivado",
       "bad_address": "Dirección incorrecta",
-      "webcargo_rate": "Tarifa WebCargo"
+      "webcargo_rate": "Tarifa WebCargo",
+      "rate_pending": "Pendiente de tarifa",
+      "rate_pending_hint": "Todavía no se ha buscado ni elegido un vuelo/tarifa para esta expedición"
     },
     "lifecycle": {
       "in_progress": "en curso"

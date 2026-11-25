@@ -166,6 +166,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useCargoStore } from "@cargo/stores/cargo.store";
+import type { Cargo } from "@cargo/services/cargo.types";
 import { useCargoFlightManagerStore } from "@cargo/stores/cargo_flight_manager.store";
 import { useUiStore } from "@cargo/stores/ui.store";
 import CardHeader from "@cargo/components/shell/CardHeader.vue";
@@ -238,6 +239,15 @@ const destSubtitle = computed<string>(() => {
  * flight_airp1..5 / flight_datad1..5 / flight_aird1..5). We render only
  * the legs that have a flight number set.
  */
+/**
+ * Lee un campo dinámico flight_*N de Cargo como string. Pasa por `unknown`
+ * porque Cargo ya no tiene solo campos string|number (rate_pending es
+ * boolean), así que TS no acepta un cast directo a Record<string, ...>.
+ */
+function dynField(c: Cargo, key: string): string | undefined {
+  return (c as unknown as Record<string, string | undefined>)[key];
+}
+
 const legs = computed(() => {
   const c = cargo.value;
   if (!c) return [];
@@ -249,16 +259,12 @@ const legs = computed(() => {
     value: string;
   }> = [];
   for (let i = 1; i <= 5; i++) {
-    const num = (c as Record<string, string | undefined>)[`flight_num${i}`];
+    const num = dynField(c, `flight_num${i}`);
     if (!num || !String(num).trim()) continue;
-    const fromAirport =
-      (c as Record<string, string | undefined>)[`flight_airp${i}`] ?? "";
-    const toAirport =
-      (c as Record<string, string | undefined>)[`flight_aird${i}`] ?? "";
-    const dep =
-      (c as Record<string, string | undefined>)[`flight_data${i}`] ?? "";
-    const arr =
-      (c as Record<string, string | undefined>)[`flight_datad${i}`] ?? "";
+    const fromAirport = dynField(c, `flight_airp${i}`) ?? "";
+    const toAirport = dynField(c, `flight_aird${i}`) ?? "";
+    const dep = dynField(c, `flight_data${i}`) ?? "";
+    const arr = dynField(c, `flight_datad${i}`) ?? "";
     out.push({
       index: i,
       icon: i === 1 ? "mdi-airplane-takeoff" : "mdi-airplane",

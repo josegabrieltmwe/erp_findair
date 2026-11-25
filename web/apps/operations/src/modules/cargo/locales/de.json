@@ -629,7 +629,9 @@
       "not_checked": "Nicht geprüft",
       "archived": "Archiviert",
       "bad_address": "Falsche Adresse",
-      "webcargo_rate": "WebCargo-Tarif"
+      "webcargo_rate": "WebCargo-Tarif",
+      "rate_pending": "Tarif ausstehend",
+      "rate_pending_hint": "Für diese Sendung wurde noch kein Flug/Tarif gesucht oder ausgewählt"
     },
     "lifecycle": {
       "in_progress": "in Bearbeitung"

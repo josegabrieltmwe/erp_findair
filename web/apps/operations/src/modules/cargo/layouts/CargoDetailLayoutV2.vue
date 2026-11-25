@@ -22,6 +22,7 @@
         </button>
 
         <BookingStatusBadge />
+        <RatePendingBadge />
         <CargoOwnerChip class="ms-2" />
         <!-- Mini-estado (barra de progreso + "En proceso") movido aquí desde la
              fila de tabs: vive en la barra de título junto al cliente/estado. -->
@@ -145,6 +146,7 @@ import CargoMiniStatusBar from "@cargo/components/shell/CargoMiniStatusBar.vue";
 import CargoPrintMenu from "@cargo/components/cargo/CargoPrintMenu.vue";
 import CargoQuoteMenu from "@cargo/components/cargo/CargoQuoteMenu.vue";
 import BookingStatusBadge from "@cargo/components/cargo/booking/BookingStatusBadge.vue";
+import RatePendingBadge from "@cargo/components/cargo/booking/RatePendingBadge.vue";
 import CargoOwnerChip from "@cargo/components/cargo/owner/CargoOwnerChip.vue";
 import DetailShell from "@shared/detail/DetailShell.vue";
 import OperationsNav from "@shared/platform/OperationsNav.vue";

@@ -629,7 +629,9 @@
       "not_checked": "Not checked",
       "archived": "Archived",
       "bad_address": "Bad address",
-      "webcargo_rate": "WebCargo rate"
+      "webcargo_rate": "WebCargo rate",
+      "rate_pending": "Rate pending",
+      "rate_pending_hint": "No flight/rate has been searched or selected for this shipment yet"
     },
     "lifecycle": {
       "in_progress": "in progress"

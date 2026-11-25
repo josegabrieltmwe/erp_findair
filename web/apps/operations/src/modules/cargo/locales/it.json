@@ -629,7 +629,9 @@
       "not_checked": "Non controllato",
       "archived": "Archiviato",
       "bad_address": "Indirizzo errato",
-      "webcargo_rate": "Tariffa WebCargo"
+      "webcargo_rate": "Tariffa WebCargo",
+      "rate_pending": "Tariffa in sospeso",
+      "rate_pending_hint": "Non è stato ancora cercato né scelto un volo/tariffa per questa spedizione"
     },
     "lifecycle": {
       "in_progress": "in corso"
