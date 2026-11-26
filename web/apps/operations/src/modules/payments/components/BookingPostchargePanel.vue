@@ -269,8 +269,11 @@ async function load(): Promise<void> {
   if (!props.shipmentId || !canViewSurcharges(access.value)) return;
   loading.value = true;
   try {
-    current.value = await bookingPostcharges.get(props.kind, props.shipmentId);
+    const found = await bookingPostcharges.lookup(props.kind, props.shipmentId);
+    current.value = found.postcharge;
     if (current.value) standard.value = false;
+    // P149: cliente con postfacturación normal y nada que enseñar: el panel no aplica a este envío.
+    else if (found.cardCustomer === false) hidden.value = true;
   } catch (e) {
     const kind = classifyPostchargeError(e);
     // Sin permiso o envío que no es suyo: el panel no aplica a esta persona.

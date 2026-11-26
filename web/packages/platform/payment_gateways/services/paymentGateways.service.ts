@@ -828,6 +828,13 @@ export interface BookingPostcharge {
   replayed?: boolean;
 }
 
+/** Resultado de `bookingPostcharges.lookup`. */
+export interface BookingPostchargeLookup {
+  postcharge: BookingPostcharge | null;
+  /** true: el cliente paga con tarjeta; false: postfacturación normal (no se ofrece la acción); null: el API no lo dice. */
+  cardCustomer: boolean | null;
+}
+
 /**
  * Postfacturación de un envío. Lectura con `payment_gateways:read`; iniciar con `payment_gateways:write`.
  * Errores del POST: 409 `NOT_CARD_CUSTOMER` (se usa la postfacturación normal) / `NOT_INVOICED` / `ALREADY_POSTBILLED`,
@@ -838,6 +845,18 @@ export const bookingPostcharges = {
   async get(kind: BookingPostchargeKind, shipmentId: number): Promise<BookingPostcharge | null> {
     const raw = await http<Envelope<BookingPostcharge | null>>(POSTCHARGE, { query: { kind, shipment_id: shipmentId } });
     return unwrap(raw, 'No se pudo consultar la postfacturación') ?? null;
+  },
+
+  /**
+   * Última postfacturación del envío y si su cliente paga con tarjeta (P149: `card_customer` del GET). `cardCustomer`
+   * es `null` si el API no lo dice (versión anterior): entonces el panel ofrece el botón y se guía por el 409.
+   */
+  async lookup(kind: BookingPostchargeKind, shipmentId: number): Promise<BookingPostchargeLookup> {
+    const raw = await http<Envelope<BookingPostcharge | null> & { card_customer?: boolean }>(POSTCHARGE, {
+      query: { kind, shipment_id: shipmentId },
+    });
+    const postcharge = unwrap(raw, 'No se pudo consultar la postfacturación') ?? null;
+    return { postcharge, cardCustomer: typeof raw?.card_customer === 'boolean' ? raw.card_customer : null };
   },
 
   /** La manda cobrar. Idempotente: si ya hay una viva, la devuelve con `replayed: true`. */

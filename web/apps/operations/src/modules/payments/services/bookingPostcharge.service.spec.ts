@@ -61,6 +61,16 @@ describe("bookingPostcharges", () => {
     expect(res?.status).toBe("notified");
   });
 
+  // P149: el GET dice si el cliente paga con tarjeta; un API anterior que no lo dice da null.
+  it("lookup devuelve la postfacturación y card_customer", async () => {
+    reply = { success: true, data: null, card_customer: false };
+    expect(await bookingPostcharges.lookup("express", 1001)).toEqual({ postcharge: null, cardCustomer: false });
+    reply = { success: true, data: ROW };
+    const res = await bookingPostcharges.lookup("cargo", 55);
+    expect(res.postcharge?.total).toBe("23.79");
+    expect(res.cardCustomer).toBeNull();
+  });
+
   // Escenario: POST nuevo y POST repetido (ya había una viva): `replayed` distingue los dos.
   it("POST manda {kind, shipment_id} y expone replayed", async () => {
     reply = { success: true, data: { ...ROW, replayed: false } };

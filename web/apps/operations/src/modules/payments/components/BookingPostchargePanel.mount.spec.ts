@@ -14,12 +14,15 @@ import { ApiError } from "@shared/anagrafiche/services/api.types";
  */
 const get = vi.fn();
 const start = vi.fn();
+/** `card_customer` del GET (P149); null = API que no lo dice. */
+let cardCustomer: boolean | null = true;
 vi.mock(
   "@shared/payment_gateways/services/paymentGateways.service",
   async (orig) => ({
     ...(await orig<Record<string, unknown>>()),
     bookingPostcharges: {
       get: (...a: unknown[]) => get(...a),
+      lookup: async (...a: unknown[]) => ({ postcharge: await get(...a), cardCustomer }),
       start: (...a: unknown[]) => start(...a),
     },
   }),
@@ -93,6 +96,7 @@ beforeEach(() => {
   start.mockReset();
 });
 afterEach(() => {
+  cardCustomer = true;
   forgetStandardCustomers();
   document.body.innerHTML = "";
 });
@@ -163,7 +167,17 @@ describe("BookingPostchargePanel", () => {
     );
   });
 
-  it("NOT_CARD_CUSTOMER: lo explica y no vuelve a ofrecer el botón a ese cliente", async () => {
+  it("P149: cliente con postfacturación normal (card_customer false) y sin postfacturación: no pinta el panel", async () => {
+    cardCustomer = false;
+    get.mockResolvedValue(null);
+    const w = mountPanel();
+    await flushPromises();
+    expect(w.find('[data-testid="postcharge-panel"]').exists()).toBe(false);
+    expect(start).not.toHaveBeenCalled();
+  });
+
+  it("NOT_CARD_CUSTOMER con un API que no dice card_customer: lo explica y no vuelve a ofrecer el botón", async () => {
+    cardCustomer = null;
     get.mockResolvedValue(null);
     start.mockRejectedValue(
       new ApiError("x", 409, "NOT_CARD_CUSTOMER", {

@@ -19,7 +19,7 @@ El plan completo, con decisiones, modelo de datos, seguridad y fases, está en e
 - **i18n:** 5 idiomas, formato local de fechas, `check:i18n`.
 - **BFF:** rutas manuales en `bff/config/routes.bff.yaml`.
 - **Contrato:** los endpoints `api_self_registration*` están en **P147** de [contrato-con-api.md](contrato-con-api.md).
-- **Postfacturación con tarjeta:** «Cobrar postfacturación» en la caja de postfacturación del envío express y cargo (`api_booking_postcharge`, **P148**; pendiente del api: **P149**).
+- **Postfacturación con tarjeta:** «Cobrar postfacturación» en la caja de postfacturación del envío express y cargo (`api_booking_postcharge`, **P148**; con **P149** el panel solo aparece para clientes que pagan con tarjeta).
 
 ## Fases que tocan este repo
 
@@ -40,5 +40,5 @@ Fase 3 hecha en el ERP, sin probar todavía contra un api desplegado:
 - [x] **i18n:** 5 idiomas, fechas y horas en formato local (el api manda UTC); `check:i18n` igual que antes de empezar (381 frente a 377 del baseline, deuda previa).
 - [ ] **Pendiente del api** (ver P147): país de la IP y cotizaciones desde el alta en la ficha; `vies_result` de la solicitud nunca se rellena.
 - [x] **Postfacturación con tarjeta (P148):** panel en la caja de postfacturación del envío (express y cargo), ruta del BFF y textos en 5 idiomas.
-- [ ] **Pendiente del api** (ver P149): saber si el cliente de un envío paga con tarjeta, para no ofrecer el botón a los clientes normales.
+- [x] P149: el api dice si el cliente de un envío paga con tarjeta (`card_customer`); el botón no se ofrece a los clientes normales.
 - [ ] **Pendiente:** probar el flujo completo contra un api con la rama `feat/autoregistro` desplegada.
