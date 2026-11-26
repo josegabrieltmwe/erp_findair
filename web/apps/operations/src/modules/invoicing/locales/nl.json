@@ -43,7 +43,7 @@
       "summary": {
         "title": "Samenvatting van het filter",
         "count": "{count} facturen",
-        "currency": "Valuta",
+        "currency": "Munteenheid",
         "by_agent": "Per agent",
         "by_client": "Per klant"
       },
