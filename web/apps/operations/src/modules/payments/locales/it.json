@@ -397,7 +397,7 @@
       "back": "Incassi",
       "title": "Autorizzazioni di addebito",
       "refresh": "Aggiorna",
-      "intro": "Permesso che ogni cliente firma una sola volta affinché tu possa addebitargli supplementi con il metodo salvato (carta o addebito SEPA) senza che sia presente. I dati di pagamento li digita il cliente sulla pagina del gateway: qui vedi solo marca e ultime 4 cifre.",
+      "intro": "Permesso che ogni cliente firma una sola volta affinché tu possa addebitargli supplementi con il metodo salvato (carta o addebito SEPA) senza che sia presente. I dati di pagamento li digita il cliente sulla pagina del gateway e non vengono salvati: qui vedi solo il tipo di metodo e i dati dell'autorizzazione.",
       "empty": "Nessuna autorizzazione da mostrare.",
       "per_month": "{amount} al mese",
       "terms_days": "Preavviso {notice} g · Contestare {dispute} g",
@@ -405,6 +405,7 @@
       "revoke_title": "Revoca l'autorizzazione",
       "revoke_body": "Non sarà più possibile addebitare nuovi supplementi a questo cliente con questa autorizzazione. Ritirare il permesso è un diritto del cliente e non muove denaro.",
       "revoked_done": "Autorizzazione revocata.",
+      "revoked_on": "Revocata il {date}",
       "col": {
         "id": "Autorizzazione",
         "method": "Mezzo di pagamento",
@@ -423,8 +424,7 @@
       },
       "method": {
         "card": "Carta",
-        "sepa_debit": "Addebito SEPA",
-        "expired_hint": "La data di scadenza stampata è già passata"
+        "sepa_debit": "Addebito SEPA"
       },
       "create": {
         "open": "Nuova autorizzazione",
@@ -462,6 +462,67 @@
       "reference": "Riferimento",
       "refresh": "Aggiorna stato",
       "back": "Torna a incassi e pagamenti"
+    },
+    "postcharge": {
+      "title": "Incasso della postfatturazione (clienti che pagano con carta)",
+      "intro": "Solo per i clienti che pagano con carta: la loro postfattura non esce nel lotto mensile. Incassala qui quando l'importo è definitivo.",
+      "start": "Incassa postfatturazione",
+      "net_vat": "Imponibile {net} + IVA {vat}",
+      "block": {
+        "not_invoiced": "La spedizione non ha ancora la prima fattura.",
+        "post_billed": "La spedizione ha già la seconda fattura.",
+        "no_amount": "Nessun importo di postfatturazione sulla spedizione."
+      },
+      "confirm": {
+        "title": "Incassare la postfatturazione",
+        "amount": "Importo sulla spedizione: {amount}. Si incassa quanto risulta dalla postfattura (IVA e regole di fatturazione incluse).",
+        "with_auth": "Se il cliente ha un'autorizzazione di addebito attiva: viene avvisato per email, addebitato alla fine del periodo di preavviso e, una volta incassato, viene emessa la postfattura.",
+        "without_auth": "Se non ce l'ha (o l'importo supera i suoi limiti): la postfattura viene emessa subito, inviata per email e il cliente deve pagarla su FindAir prima di prenotare di nuovo.",
+        "submit": "Incassa"
+      },
+      "done": {
+        "notified": "Cliente avvisato. Verrà addebitato alla fine del preavviso.",
+        "invoiced": "Postfattura emessa. Il cliente deve pagarla prima di prenotare di nuovo.",
+        "replayed": "Questa spedizione aveva già una postfatturazione in corso."
+      },
+      "status": {
+        "notified": "Avvisato, da incassare",
+        "charged": "Incassato",
+        "invoiced": "Incassato e fatturato",
+        "invoice_pending": "Postfattura da emettere",
+        "awaiting_payment": "In attesa del pagamento del cliente",
+        "paid": "Pagato",
+        "disputed": "Contestato",
+        "waived": "Condonato",
+        "other": "Stato sconosciuto"
+      },
+      "method": {
+        "authorization": "Autorizzazione di addebito",
+        "invoice": "Postfattura pagata dal cliente",
+        "other": "Sconosciuta"
+      },
+      "field": {
+        "method": "Modalità",
+        "description": "Motivo",
+        "invoice": "Postfattura",
+        "crm": "Pratica CRM",
+        "created": "Avviata",
+        "updated": "Aggiornata",
+        "error": "Anomalia"
+      },
+      "errors": {
+        "not_card": "Questo cliente viene fatturato nel modo abituale: usa la postfatturazione normale.",
+        "not_invoiced": "La spedizione non ha ancora la prima fattura.",
+        "already_postbilled": "La spedizione ha già la seconda fattura.",
+        "no_amount": "Nessun importo di postfatturazione sulla spedizione.",
+        "preview_failed": "Impossibile calcolare la postfattura. Controlla l'importo e i dati di fatturazione della spedizione.",
+        "invalid": "I dati della richiesta non sono validi.",
+        "invoice_failed": "Impossibile emettere la postfattura. Riprova o avvisa l'amministrazione.",
+        "forbidden": "Non hai il permesso di incassare postfatturazioni.",
+        "not_found": "Spedizione non trovata o non appartiene alla tua azienda.",
+        "conflict": "Lo stato della spedizione non consente questa operazione. Aggiorna e riprova.",
+        "other": "Impossibile consultare o avviare la postfatturazione. Riprova."
+      }
     }
   }
 }

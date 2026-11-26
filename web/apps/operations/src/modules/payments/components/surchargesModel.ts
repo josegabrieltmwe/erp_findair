@@ -57,6 +57,13 @@ export function parseApiDate(value: string | null | undefined): number | null {
   return Number.isFinite(t) ? t : null;
 }
 
+/** Fecha y hora de la API en el formato del idioma de la interfaz (`dateStyle/timeStyle: short`); «—» si no hay. */
+export function formatApiDateTime(value: string | null | undefined, locale: string): string {
+  const t = parseApiDate(value);
+  if (t === null) return value ? String(value) : "—";
+  return new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(new Date(t));
+}
+
 /** ¿Ya pasó el plazo de aviso (`notice_due_at`)? Sin fecha, no (nunca se avisó). Es solo una pista: el API decide (409). */
 export function isNoticeElapsed(row: Pick<PaySurcharge, "notice_due_at">, now: number = Date.now()): boolean {
   const due = parseApiDate(row.notice_due_at);
@@ -122,11 +129,14 @@ export function eurosToMinor(input: string | number | null | undefined): number 
   return toMinor(input);
 }
 
-/** Céntimos a texto para mostrar, p. ej. 4200 -> "42,00 EUR". Solo presentación: el entero es la fuente. */
-export function formatMinor(minor: number | null | undefined, currency = "EUR"): string {
+/**
+ * Céntimos a texto para mostrar, p. ej. 4200 -> "42,00 EUR". Solo presentación: el entero es la fuente. `locale` es el
+ * idioma de la interfaz; sin él se mantiene el formato italiano histórico de estas pantallas.
+ */
+export function formatMinor(minor: number | null | undefined, currency = "EUR", locale = "it-IT"): string {
   const n = Number(minor ?? 0);
   if (!Number.isFinite(n)) return "—";
-  const euros = (n / 100).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const euros = (n / 100).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return `${euros} ${currency}`.trim();
 }
 
@@ -195,7 +205,7 @@ const TRANSPORT_CODES: ReadonlySet<string> = new Set(["SERVER_ERROR", "FORBIDDEN
  * API y lo conserva el BFF para estas rutas) y, solo si el cuerpo no trae ninguno, `ApiError.code` siempre que no sea uno
  * de los genéricos de transporte.
  */
-function codeOf(err: ApiError): string | undefined {
+export function codeOf(err: ApiError): string | undefined {
   const body = err.details as { error_code?: unknown; code?: unknown; error?: { code?: unknown } } | undefined;
   for (const c of [body?.error_code, body?.error?.code, body?.code]) {
     if (typeof c === "string" && c) return c;

@@ -3,9 +3,9 @@ import { buildAccess } from "@shared/composables/useAccess";
 import {
   authorizationStatusColor,
   availableAuthorizationActions,
-  describeMethod,
   isAuthorizationSettled,
-  isPastExpiry,
+  methodIcon,
+  methodLabelKey,
   newAuthorizationKey,
 } from "./authorizationsModel";
 
@@ -40,15 +40,14 @@ describe("availableAuthorizationActions", () => {
   });
 });
 
-describe("describeMethod", () => {
-  // Escenario: solo marca, últimos 4 y caducidad; sin últimos 4 aún no hay medio guardado.
-  it("formatea tarjeta, SEPA y pendiente", () => {
-    expect(describeMethod({ method_type: "card", brand: "visa", last4: "4242", exp_month: 3, exp_year: 2028 })).toBe("VISA ····4242 (03/2028)");
-    expect(describeMethod({ method_type: "sepa_debit", brand: null, last4: "1234", exp_month: null, exp_year: null })).toBe("SEPA ····1234");
-    expect(describeMethod({ method_type: "card", brand: null, last4: null, exp_month: null, exp_year: null })).toBe("—");
-    // Sin marca se usa la etiqueta traducida que pasa la pantalla (no un texto español fijo).
-    expect(describeMethod({ method_type: "card", brand: null, last4: "0001", exp_month: 3, exp_year: 2027 }, "Card")).toBe("Card ····0001 (03/2027)");
-    expect(describeMethod({ method_type: "card", brand: null, last4: "0001", exp_month: null, exp_year: null }, "Carta")).toBe("Carta ····0001");
+describe("methodLabelKey / methodIcon", () => {
+  // Escenario (decisión 2026-11-26): el API ya no devuelve marca, últimos 4 ni caducidad; del medio solo se muestra el tipo.
+  it("tarjeta y SEPA con su clave i18n e icono; un tipo desconocido cae en tarjeta", () => {
+    expect(methodLabelKey("card")).toBe("payments.authorizations.method.card");
+    expect(methodLabelKey("sepa_debit")).toBe("payments.authorizations.method.sepa_debit");
+    expect(methodLabelKey("otro")).toBe("payments.authorizations.method.card");
+    expect(methodIcon("sepa_debit")).toBe("mdi-bank-outline");
+    expect(methodIcon("card")).toBe("mdi-credit-card-outline");
   });
 });
 
@@ -57,33 +56,5 @@ describe("authorizationStatusColor", () => {
     expect(authorizationStatusColor("active")).toBe("success");
     expect(authorizationStatusColor("failed")).toBe("error");
     expect(authorizationStatusColor("nuevo")).toBe("default");
-  });
-
-  // Escenario N69 (collaudo 17/11): el backend solo marca `expired` tras un cobro fallido; una tarjeta vieja sin
-  // cargos recientes puede seguir en `active`. `pastExpiry` repinta esa fila a aviso sin tocar estados ya definitivos.
-  it("repinta a aviso una fila activa/pendiente con la fecha ya pasada, sin tocar estados definitivos", () => {
-    expect(authorizationStatusColor("active", true)).toBe("warning");
-    expect(authorizationStatusColor("pending", true)).toBe("warning");
-    expect(authorizationStatusColor("active", false)).toBe("success");
-    expect(authorizationStatusColor("expired", true)).toBe("grey");
-    expect(authorizationStatusColor("revoked", true)).toBe("grey");
-  });
-});
-
-describe("isPastExpiry", () => {
-  const today = new Date(2026, 10, 17); // 17/11/2026, mes 0-based => noviembre
-
-  it("tarjeta caducada antes de hoy", () => {
-    expect(isPastExpiry({ exp_month: 6, exp_year: 2023 }, today)).toBe(true);
-    expect(isPastExpiry({ exp_month: 10, exp_year: 2026 }, today)).toBe(true);
-  });
-
-  it("tarjeta vigente hoy o en el futuro", () => {
-    expect(isPastExpiry({ exp_month: 11, exp_year: 2026 }, today)).toBe(false);
-    expect(isPastExpiry({ exp_month: 1, exp_year: 2027 }, today)).toBe(false);
-  });
-
-  it("sin datos de caducidad (aun pending) no se marca como pasada", () => {
-    expect(isPastExpiry({ exp_month: null, exp_year: null }, today)).toBe(false);
   });
 });

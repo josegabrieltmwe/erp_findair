@@ -1,6 +1,6 @@
 # Plan: auto-registro de clientes en FindAir (parte del ERP)
 
-> **Estado:** vigente · **Última modificación:** 2026-11-25
+> **Estado:** vigente · **Última modificación:** 2026-11-26
 
 El plan completo, con decisiones, modelo de datos, seguridad y fases, está en el api: `tmwe_api/docs/03-diseno/autoregistro/PLAN_AUTOREGISTRO.md` (rama `feat/autoregistro`). Este documento solo recoge lo que toca al ERP; si los dos se contradicen, manda el del api.
 
@@ -19,6 +19,7 @@ El plan completo, con decisiones, modelo de datos, seguridad y fases, está en e
 - **i18n:** 5 idiomas, formato local de fechas, `check:i18n`.
 - **BFF:** rutas manuales en `bff/config/routes.bff.yaml`.
 - **Contrato:** los endpoints `api_self_registration*` están en **P147** de [contrato-con-api.md](contrato-con-api.md).
+- **Postfacturación con tarjeta:** «Cobrar postfacturación» en la caja de postfacturación del envío express y cargo (`api_booking_postcharge`, **P148**; pendiente del api: **P149**).
 
 ## Fases que tocan este repo
 
@@ -38,4 +39,6 @@ Fase 3 hecha en el ERP, sin probar todavía contra un api desplegado:
 - [x] **Ficha del contacto:** distintivo "Credencial segura (solo FindAir)", sin enviar perfil, regenerar contraseña ni acceso B2B; mensaje claro ante 409 `HASHED_CREDENTIAL`.
 - [x] **i18n:** 5 idiomas, fechas y horas en formato local (el api manda UTC); `check:i18n` igual que antes de empezar (381 frente a 377 del baseline, deuda previa).
 - [ ] **Pendiente del api** (ver P147): país de la IP y cotizaciones desde el alta en la ficha; `vies_result` de la solicitud nunca se rellena.
+- [x] **Postfacturación con tarjeta (P148):** panel en la caja de postfacturación del envío (express y cargo), ruta del BFF y textos en 5 idiomas.
+- [ ] **Pendiente del api** (ver P149): saber si el cliente de un envío paga con tarjeta, para no ofrecer el botón a los clientes normales.
 - [ ] **Pendiente:** probar el flujo completo contra un api con la rama `feat/autoregistro` desplegada.

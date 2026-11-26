@@ -953,6 +953,25 @@ routes:
       action: api_pay_surcharges
     limits: { body: 16k, timeout: 30 }
 
+  # Postfacturación de los clientes que pagan con tarjeta (P148). api_booking_postcharge: GET ?kind=express|cargo
+  # &shipment_id=N = la última del envío o null (payment_gateways:read); POST {kind, shipment_id} = «Cobrar
+  # postfacturación» (payment_gateways:write): recargo avisado con la autorización de cobro o postfactura que paga el
+  # cliente. Solo personal del vendedor (cliente final 403, envío de otro partner 404). 409/422 conservan el code por el
+  # camino normal; el 502 POSTCHARGE_INVOICE_FAILED se conserva en ResponseAdapter::postchargeProblem.
+  - id: booking_postcharge.get
+    method: GET
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+      forward_query: [kind, shipment_id]
+
+  - id: booking_postcharge.post
+    method: POST
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+    limits: { body: 4k, timeout: 60 } # calcula la vista previa de la postfactura y puede emitirla
+
   # Clientes sin margen configurado (P91). Añadida a mano: no regenerar el manifiesto (quita rutas en uso).
   # Mismo modelo que get.api_anagrafica_scaglioni (routes.spa.yaml): el BFF solo deja pasar; el API autoriza con el
   # módulo margenes_clientes (margins:read) y acota por partner (TMWE todos; partner solo id_anagr_titolare = el suyo).

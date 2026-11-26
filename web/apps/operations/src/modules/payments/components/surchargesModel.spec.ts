@@ -9,6 +9,7 @@ import {
   chargeResultKey,
   classifySurchargeError,
   eurosToMinor,
+  formatApiDateTime,
   formatMinor,
   isDisputeWindowOpen,
   isNoticeElapsed,
@@ -114,6 +115,17 @@ describe("importes", () => {
     expect(formatMinor(4200)).toMatch(/^42,00 EUR$/);
     expect(formatMinor(5)).toMatch(/^0,05 EUR$/);
     expect(formatMinor(null)).toMatch(/^0,00 EUR$/);
+    // Con el idioma de la interfaz: separadores del locale.
+    expect(formatMinor(123456, "EUR", "en")).toBe("1,234.56 EUR");
+    expect(formatMinor(123456, "EUR", "de")).toBe("1.234,56 EUR");
+  });
+  it("formatApiDateTime usa el idioma de la interfaz y «—» sin fecha", () => {
+    expect(formatApiDateTime(null, "es")).toBe("—");
+    expect(formatApiDateTime("basura", "es")).toBe("basura");
+    const d = new Date(2026, 10, 26, 9, 5);
+    expect(formatApiDateTime("2026-11-26 09:05:00", "de")).toBe(
+      new Intl.DateTimeFormat("de", { dateStyle: "short", timeStyle: "short" }).format(d),
+    );
   });
 });
 

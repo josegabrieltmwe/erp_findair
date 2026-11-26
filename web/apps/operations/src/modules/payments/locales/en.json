@@ -397,7 +397,7 @@
       "back": "Payments",
       "title": "Charge authorizations",
       "refresh": "Refresh",
-      "intro": "Permission each customer signs once so you can charge them surcharges with the saved method (card or SEPA debit) without them being present. The customer types the payment details on the gateway page: here you only see the brand and last 4.",
+      "intro": "Permission each customer signs once so you can charge them surcharges with the saved method (card or SEPA debit) without them being present. The customer types the payment details on the gateway page and they are not stored: here you only see the method type and the authorization details.",
       "empty": "There are no authorizations to show.",
       "per_month": "{amount} per month",
       "terms_days": "Notice {notice} d · Dispute {dispute} d",
@@ -405,6 +405,7 @@
       "revoke_title": "Revoke the authorization",
       "revoke_body": "No new surcharges can be charged to this customer with this authorization. Withdrawing permission is the customer's right and no money moves.",
       "revoked_done": "Authorization revoked.",
+      "revoked_on": "Revoked on {date}",
       "col": {
         "id": "Authorization",
         "method": "Payment method",
@@ -423,8 +424,7 @@
       },
       "method": {
         "card": "Card",
-        "sepa_debit": "SEPA direct debit",
-        "expired_hint": "The printed expiry date has already passed"
+        "sepa_debit": "SEPA direct debit"
       },
       "create": {
         "open": "New authorization",
@@ -462,6 +462,67 @@
       "reference": "Reference",
       "refresh": "Refresh status",
       "back": "Back to collections and payments"
+    },
+    "postcharge": {
+      "title": "Post-invoicing charge (customers who pay by card)",
+      "intro": "Only for customers who pay by card: their post-invoice is not part of the monthly run. Charge it here once the amount is final.",
+      "start": "Charge post-invoicing",
+      "net_vat": "Net {net} + VAT {vat}",
+      "block": {
+        "not_invoiced": "The shipment has no first invoice yet.",
+        "post_billed": "The shipment already has a second invoice.",
+        "no_amount": "There is no post-invoicing amount on the shipment."
+      },
+      "confirm": {
+        "title": "Charge the post-invoicing",
+        "amount": "Amount on the shipment: {amount}. What is charged is the post-invoice total (VAT and billing rules included).",
+        "with_auth": "If the customer has an active charge authorization: they are notified by email, charged when the notice period ends and, once charged, the post-invoice is issued.",
+        "without_auth": "If not (or the amount is above their caps): the post-invoice is issued now and emailed, and the customer must pay it in FindAir before booking again.",
+        "submit": "Charge"
+      },
+      "done": {
+        "notified": "Customer notified. They will be charged when the notice period ends.",
+        "invoiced": "Post-invoice issued. The customer must pay it before booking again.",
+        "replayed": "This shipment already had a post-invoicing in progress."
+      },
+      "status": {
+        "notified": "Notified, charge pending",
+        "charged": "Charged",
+        "invoiced": "Charged and invoiced",
+        "invoice_pending": "Post-invoice pending",
+        "awaiting_payment": "Awaiting customer payment",
+        "paid": "Paid",
+        "disputed": "Disputed",
+        "waived": "Waived",
+        "other": "Unknown status"
+      },
+      "method": {
+        "authorization": "Charge authorization",
+        "invoice": "Post-invoice paid by the customer",
+        "other": "Unknown"
+      },
+      "field": {
+        "method": "Method",
+        "description": "Reason",
+        "invoice": "Post-invoice",
+        "crm": "CRM case",
+        "created": "Started",
+        "updated": "Updated",
+        "error": "Issue"
+      },
+      "errors": {
+        "not_card": "This customer is invoiced the usual way: use the normal post-invoicing.",
+        "not_invoiced": "The shipment has no first invoice yet.",
+        "already_postbilled": "The shipment already has a second invoice.",
+        "no_amount": "There is no post-invoicing amount on the shipment.",
+        "preview_failed": "The post-invoice could not be calculated. Check the amount and the billing details of the shipment.",
+        "invalid": "The request data is not valid.",
+        "invoice_failed": "The post-invoice could not be issued. Try again or tell accounting.",
+        "forbidden": "You are not allowed to charge post-invoicing.",
+        "not_found": "The shipment was not found or does not belong to your company.",
+        "conflict": "The shipment status does not allow this operation. Refresh and try again.",
+        "other": "The post-invoicing could not be loaded or started. Try again."
+      }
     }
   }
 }

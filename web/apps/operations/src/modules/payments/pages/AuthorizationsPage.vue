@@ -74,31 +74,24 @@
           <tr v-for="r in rows" :key="r.public_id" :data-testid="`authorization-row-${r.public_id}`">
             <td class="aut-mono">{{ r.public_id }}</td>
             <td>{{ r.customer_name || '' }} <span class="text-medium-emphasis">#{{ r.customer_id }}</span></td>
-            <td>
-              {{ describeMethod(r, t("payments.authorizations.method.card")) }}
-              <v-tooltip v-if="isPastExpiry(r)" :text="t('payments.authorizations.method.expired_hint')" location="top">
-                <template #activator="{ props: tip }">
-                  <v-icon
-                    v-bind="tip"
-                    icon="mdi-alert-circle-outline"
-                    color="warning"
-                    size="16"
-                    class="ms-1"
-                    :data-testid="`authorization-past-expiry-${r.public_id}`"
-                  />
-                </template>
-              </v-tooltip>
+            <!-- Solo el tipo de medio: el API no guarda ni devuelve datos de la tarjeta (decisión 2026-11-26). -->
+            <td :data-testid="`authorization-method-${r.public_id}`">
+              <v-icon :icon="methodIcon(r.method_type)" size="16" class="me-1" />
+              {{ t(methodLabelKey(r.method_type)) }}
             </td>
             <td>
-              <v-chip :color="authorizationStatusColor(r.status, isPastExpiry(r))" size="small" label variant="tonal">
+              <v-chip :color="authorizationStatusColor(r.status)" size="small" label variant="tonal">
                 {{ t(`payments.authorizations.status.${r.status}`) }}
               </v-chip>
               <div v-if="r.failure_code" class="text-caption text-error">{{ r.failure_code }}</div>
+              <div v-if="r.revoked_at" class="text-caption text-medium-emphasis">
+                {{ t("payments.authorizations.revoked_on", { date: fmtDate(r.revoked_at) }) }}
+              </div>
             </td>
             <td class="text-end text-caption">
-              {{ formatMinor(r.max_charge_minor, r.currency) }}
+              {{ formatMinor(r.max_charge_minor, r.currency, String(locale)) }}
               <br />
-              {{ t("payments.authorizations.per_month", { amount: formatMinor(r.max_month_minor, r.currency) }) }}
+              {{ t("payments.authorizations.per_month", { amount: formatMinor(r.max_month_minor, r.currency, String(locale)) }) }}
             </td>
             <td class="text-caption">
               {{ t("payments.authorizations.terms_days", { notice: r.notice_days, dispute: r.dispute_days }) }}
@@ -106,7 +99,7 @@
             <td class="text-caption">
               {{ r.consent_text_version }}
               <br />
-              {{ r.consent_at || "—" }}
+              {{ fmtDate(r.consent_at) }}
             </td>
             <td class="text-end">
               <v-btn
@@ -160,9 +153,10 @@
  * firman sus clientes para que el vendedor les cobre después recargos (sobrepeso, oversize u otros) sin que estén presentes.
  *
  * Datos: `GET api_pay_authorizations` paginado (servidor), con filtro por estado y por cliente. El partner sale del token; el
- * filtro de cliente solo estrecha su propia cartera. El personal ve marca, últimos 4, caducidad, topes y plazos aceptados,
- * versión y fecha del consentimiento, `failure_code` y el estado; NUNCA referencias del proveedor, cuenta de pasarela, IP ni
- * user agent (la API no los envía).
+ * filtro de cliente solo estrecha su propia cartera. El personal ve el tipo de medio (tarjeta o SEPA), topes y plazos
+ * aceptados, versión y fecha del consentimiento, fecha de revocación, `failure_code` y el estado; NUNCA datos de la tarjeta
+ * (marca, últimos 4, caducidad: el sistema guarda solo la autorización desde el 2026-11-26), referencias del proveedor,
+ * cuenta de pasarela, IP ni user agent (la API no los envía).
  *
  * Permisos (solo UX; el API autoriza): ver exige `payment_gateways:read` (guard de ruta); dar de alta y revocar exigen
  * `payment_gateways:write`, y sin él no se pinta ningún botón. El alta es el diálogo `AuthorizationCreateDialog`
@@ -186,20 +180,21 @@ import { useToastStore } from "../stores/toast.store";
 import {
   authorizationStatusColor,
   availableAuthorizationActions,
-  describeMethod,
-  isPastExpiry,
+  methodIcon,
+  methodLabelKey,
   type AuthorizationAction,
 } from "../components/authorizationsModel";
 import {
   SURCHARGE_PER_PAGE,
   canWriteSurcharges,
   classifySurchargeError,
+  formatApiDateTime,
   formatMinor,
   pageCount,
   type SurchargeErrorKind,
 } from "../components/surchargesModel";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { access } = useAccess();
 const toasts = useToastStore();
 
@@ -222,6 +217,11 @@ const revokeOpen = ref(false);
 const revokeTarget = ref<PayAuthorization | null>(null);
 const revoking = ref(false);
 const revokeError = ref<SurchargeErrorKind | null>(null);
+
+/** Fechas con el formato del idioma de la interfaz. */
+function fmtDate(value: string | null | undefined): string {
+  return formatApiDateTime(value, String(locale.value));
+}
 
 function actionsOf(r: PayAuthorization): AuthorizationAction[] {
   return availableAuthorizationActions(r, access.value);

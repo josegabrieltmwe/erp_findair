@@ -16,6 +16,8 @@ import { ApiError } from '../../anagrafiche/services/api.types';
  *    revocación. Al final del fichero, junto con sus tipos.
  *  - `paySurcharges`: recargos por sobrepeso, oversize u otros (/api_pay_surcharges): listar, proponer, avisar,
  *    impugnar en nombre del cliente y, solo con `payment_gateways:admin`, perdonar, rechazar una impugnación y cobrar.
+ *  - `bookingPostcharges`: «Cobrar postfacturación» de un envío de un cliente que paga con tarjeta
+ *    (/api_booking_postcharge, P148). Al final del fichero.
  * `secret` y `webhook_secret` son de solo escritura: la API devuelve `secret_hint` (últimos 4) y `has_webhook_secret`,
  * nunca el valor. Los ids son públicos (`pga_…`, `prf_…`).
  */
@@ -448,15 +450,15 @@ export type PayAuthorizationMethod = (typeof PAY_AUTHORIZATION_METHODS)[number];
  * Autorización de cobro (`pau_…`) tal como la ve el PERSONAL: la lista blanca del cliente más `customer_id`,
  * `failure_code` y `account_source`. Nunca llegan referencias del proveedor, cuenta de pasarela, IP ni user agent.
  * `checkout_url` y `expires_at` solo vienen en la respuesta del alta (`checkout_url` es `null` en un reintento).
+ *
+ * Sin datos de la tarjeta (decisión 2026-11-26, commit 057db3265 de `tmwe_api`): el sistema guarda solo la autorización,
+ * no marca, últimos 4 ni caducidad. Del medio de pago solo se sabe el tipo (`method_type`). Ver
+ * `tmwe_api/docs/03-diseno/pasarelas_pago/autorizacion_y_recargos.md` («Qué se guarda»).
  */
 export interface PayAuthorization {
   /** Id público `pau_…`. */
   public_id: string;
   method_type: PayAuthorizationMethod;
-  brand: string | null;
-  last4: string | null;
-  exp_month: number | null;
-  exp_year: number | null;
   currency: string;
   /** Tope por cobro que el cliente aceptó, en céntimos. */
   max_charge_minor: number;
@@ -762,3 +764,89 @@ async function paySurchargeAction(body: { action: string; id: string; reason?: s
     replayed: raw?.replayed === true,
   };
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Postfacturación de los clientes que pagan con tarjeta (P148, docs/contrato-con-api.md). Diseño en tmwe_api:
+// docs/03-diseno/autoregistro/POSTFACTURACION_COBRO_TARJETA.md. Solo personal del vendedor (TMWE o el partner titular
+// del cliente): un cliente final recibe 403 y el envío de otro partner, 404. El importe es el que el personal ya puso en
+// el envío (riaddebito/`postfatt`, reconsegna de giacenza o `carico_extra`); este endpoint no lo cambia.
+// ---------------------------------------------------------------------------------------------------------------------
+
+const POSTCHARGE = '/api_booking_postcharge';
+
+/** Tipo de envío: express (`spedizioni`) o cargo (`spedizioni_cargo`). */
+export type BookingPostchargeKind = 'express' | 'cargo';
+
+/**
+ * Estados de una postfacturación:
+ *  - `notified`: recargo avisado; se cobra con la autorización al terminar el preaviso.
+ *  - `charged`: cobrado, postfactura aún por emitir.
+ *  - `invoiced`: cobrado y con la postfactura emitida por lo cobrado.
+ *  - `invoice_pending`: cobrado (o debido) pero la postfactura no salió: práctica CRM y reintento diario.
+ *  - `awaiting_payment`: postfactura emitida; la paga el cliente en FindAir y hasta entonces no puede reservar.
+ *  - `paid`: postfactura pagada. `disputed`: el cliente impugnó el recargo. `waived`: perdonado (no se factura nada).
+ */
+export const BOOKING_POSTCHARGE_STATUSES = [
+  'notified',
+  'charged',
+  'invoiced',
+  'invoice_pending',
+  'awaiting_payment',
+  'paid',
+  'disputed',
+  'waived',
+] as const;
+export type BookingPostchargeStatus = (typeof BOOKING_POSTCHARGE_STATUSES)[number];
+
+/** Vía del cobro: recargo con la autorización de cobro, o postfactura que paga el cliente. */
+export type BookingPostchargeMethod = 'authorization' | 'invoice';
+
+/** Vista del personal (`Booking_Postcharge_Service::present()`). Importes en euros como texto con punto (`"23.79"`). */
+export interface BookingPostcharge {
+  postcharge_id: string;
+  kind: BookingPostchargeKind;
+  shipment_id: number;
+  customer_id: number;
+  status: BookingPostchargeStatus | string;
+  method: BookingPostchargeMethod | string;
+  description: string;
+  net: string;
+  vat: string;
+  total: string;
+  currency: string;
+  /** Id público del recargo (`psu_…`) si se cobra con la autorización. */
+  surcharge_id: string | null;
+  /** Id de la postfactura (`fatture.id`) cuando ya se emitió. */
+  invoice_id: number | null;
+  /** Práctica CRM abierta si la postfactura no se pudo emitir. */
+  crm_id: number | null;
+  /** Motivo técnico (p. ej. por qué se pasó a factura); vacío si nada. */
+  error: string;
+  created_at: string;
+  updated_at: string | null;
+  /** Solo en el POST: true si ya había una viva y se devuelve esa. */
+  replayed?: boolean;
+}
+
+/**
+ * Postfacturación de un envío. Lectura con `payment_gateways:read`; iniciar con `payment_gateways:write`.
+ * Errores del POST: 409 `NOT_CARD_CUSTOMER` (se usa la postfacturación normal) / `NOT_INVOICED` / `ALREADY_POSTBILLED`,
+ * 422 `NO_POST_AMOUNT` / `POSTCHARGE_PREVIEW_FAILED` / `PAYMENT_INVALID`, 502 `POSTCHARGE_INVOICE_FAILED`, 403, 404.
+ */
+export const bookingPostcharges = {
+  /** Última postfacturación del envío, o `null` si no hay ninguna. No dice si el cliente paga con tarjeta. */
+  async get(kind: BookingPostchargeKind, shipmentId: number): Promise<BookingPostcharge | null> {
+    const raw = await http<Envelope<BookingPostcharge | null>>(POSTCHARGE, { query: { kind, shipment_id: shipmentId } });
+    return unwrap(raw, 'No se pudo consultar la postfacturación') ?? null;
+  },
+
+  /** La manda cobrar. Idempotente: si ya hay una viva, la devuelve con `replayed: true`. */
+  async start(kind: BookingPostchargeKind, shipmentId: number): Promise<BookingPostcharge> {
+    const raw = await http<Envelope<BookingPostcharge>>(POSTCHARGE, {
+      method: 'POST',
+      body: { kind, shipment_id: shipmentId },
+    });
+    const data = unwrap(raw, 'No se pudo iniciar la postfacturación');
+    return { ...data, replayed: data?.replayed === true || raw?.replayed === true };
+  },
+};

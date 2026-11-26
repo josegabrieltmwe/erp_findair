@@ -397,7 +397,7 @@
       "back": "Zahlungen",
       "title": "Einzugsermächtigungen",
       "refresh": "Aktualisieren",
-      "intro": "Berechtigung, die jeder Kunde einmalig unterschreibt, damit Sie ihm Zuschläge mit der gespeicherten Methode (Karte oder SEPA-Lastschrift) ohne sein Beisein belasten können. Die Zahlungsdaten gibt der Kunde auf der Seite des Gateways ein: hier sehen Sie nur Marke und die letzten 4 Ziffern.",
+      "intro": "Berechtigung, die jeder Kunde einmalig unterschreibt, damit Sie ihm Zuschläge mit der gespeicherten Methode (Karte oder SEPA-Lastschrift) ohne sein Beisein belasten können. Die Zahlungsdaten gibt der Kunde auf der Seite des Gateways ein und sie werden nicht gespeichert: hier sehen Sie nur die Art der Methode und die Daten der Berechtigung.",
       "empty": "Keine Ermächtigungen vorhanden.",
       "per_month": "{amount} pro Monat",
       "terms_days": "Vorankündigung {notice} T · Widerspruch {dispute} T",
@@ -405,6 +405,7 @@
       "revoke_title": "Ermächtigung widerrufen",
       "revoke_body": "Mit dieser Ermächtigung können diesem Kunden keine neuen Zuschläge mehr belastet werden. Das Zurückziehen ist ein Recht des Kunden und bewegt kein Geld.",
       "revoked_done": "Ermächtigung widerrufen.",
+      "revoked_on": "Widerrufen am {date}",
       "col": {
         "id": "Ermächtigung",
         "method": "Zahlungsmittel",
@@ -423,8 +424,7 @@
       },
       "method": {
         "card": "Karte",
-        "sepa_debit": "SEPA-Lastschrift",
-        "expired_hint": "Das aufgedruckte Ablaufdatum ist bereits überschritten"
+        "sepa_debit": "SEPA-Lastschrift"
       },
       "create": {
         "open": "Neue Ermächtigung",
@@ -462,6 +462,67 @@
       "reference": "Referenz",
       "refresh": "Status aktualisieren",
       "back": "Zurück zu Zahlungseingängen und Zahlungen"
+    },
+    "postcharge": {
+      "title": "Einzug der Nachberechnung (Kunden, die per Karte zahlen)",
+      "intro": "Nur für Kunden, die per Karte zahlen: ihre Nachrechnung ist nicht Teil des Monatslaufs. Ziehen Sie sie hier ein, sobald der Betrag feststeht.",
+      "start": "Nachberechnung einziehen",
+      "net_vat": "Netto {net} + MwSt. {vat}",
+      "block": {
+        "not_invoiced": "Die Sendung hat noch keine erste Rechnung.",
+        "post_billed": "Die Sendung hat bereits eine zweite Rechnung.",
+        "no_amount": "Die Sendung hat keinen Nachberechnungsbetrag."
+      },
+      "confirm": {
+        "title": "Nachberechnung einziehen",
+        "amount": "Betrag in der Sendung: {amount}. Eingezogen wird der Betrag der Nachrechnung (inkl. MwSt. und Abrechnungsregeln).",
+        "with_auth": "Hat der Kunde eine aktive Abbuchungsermächtigung: Er wird per E-Mail benachrichtigt, nach Ablauf der Ankündigungsfrist belastet und nach dem Einzug wird die Nachrechnung ausgestellt.",
+        "without_auth": "Hat er keine (oder übersteigt der Betrag seine Limits): Die Nachrechnung wird sofort ausgestellt und per E-Mail gesendet; der Kunde muss sie in FindAir bezahlen, bevor er wieder buchen kann.",
+        "submit": "Einziehen"
+      },
+      "done": {
+        "notified": "Kunde benachrichtigt. Er wird nach Ablauf der Ankündigungsfrist belastet.",
+        "invoiced": "Nachrechnung ausgestellt. Der Kunde muss sie bezahlen, bevor er wieder buchen kann.",
+        "replayed": "Für diese Sendung lief bereits eine Nachberechnung."
+      },
+      "status": {
+        "notified": "Benachrichtigt, Einzug ausstehend",
+        "charged": "Eingezogen",
+        "invoiced": "Eingezogen und abgerechnet",
+        "invoice_pending": "Nachrechnung ausstehend",
+        "awaiting_payment": "Wartet auf Zahlung des Kunden",
+        "paid": "Bezahlt",
+        "disputed": "Angefochten",
+        "waived": "Erlassen",
+        "other": "Unbekannter Status"
+      },
+      "method": {
+        "authorization": "Abbuchungsermächtigung",
+        "invoice": "Nachrechnung, vom Kunden bezahlt",
+        "other": "Unbekannt"
+      },
+      "field": {
+        "method": "Weg",
+        "description": "Grund",
+        "invoice": "Nachrechnung",
+        "crm": "CRM-Vorgang",
+        "created": "Gestartet",
+        "updated": "Aktualisiert",
+        "error": "Problem"
+      },
+      "errors": {
+        "not_card": "Dieser Kunde wird wie üblich abgerechnet: Verwenden Sie die normale Nachberechnung.",
+        "not_invoiced": "Die Sendung hat noch keine erste Rechnung.",
+        "already_postbilled": "Die Sendung hat bereits eine zweite Rechnung.",
+        "no_amount": "Die Sendung hat keinen Nachberechnungsbetrag.",
+        "preview_failed": "Die Nachrechnung konnte nicht berechnet werden. Prüfen Sie den Betrag und die Rechnungsdaten der Sendung.",
+        "invalid": "Die Daten der Anfrage sind ungültig.",
+        "invoice_failed": "Die Nachrechnung konnte nicht ausgestellt werden. Versuchen Sie es erneut oder informieren Sie die Buchhaltung.",
+        "forbidden": "Sie haben keine Berechtigung, Nachberechnungen einzuziehen.",
+        "not_found": "Die Sendung wurde nicht gefunden oder gehört nicht zu Ihrem Unternehmen.",
+        "conflict": "Der Status der Sendung erlaubt diesen Vorgang nicht. Aktualisieren und erneut versuchen.",
+        "other": "Die Nachberechnung konnte nicht geladen oder gestartet werden. Versuchen Sie es erneut."
+      }
     }
   }
 }

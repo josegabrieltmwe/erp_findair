@@ -69,6 +69,15 @@
             />
           </v-col>
         </v-row>
+        <!-- P148: clientes que pagan con tarjeta (auto-registro): la postfactura no sale en el lote mensual. -->
+        <BookingPostchargePanel
+          kind="express"
+          :shipment-id="id"
+          :customer-id="Number(shipment?.id_cliente) || null"
+          :invoice-id="shipment?.id_fattura_a"
+          :post-invoice-id="shipment?.id_fattura_a2"
+          :post-amount="postAmount"
+        />
       </FormSection>
 
       <!-- 2. Datos reales del proveedor (reconciliación post-booking). -->
@@ -178,6 +187,8 @@ import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useShipmentState } from "@shipment/composables/useShipmentState";
 import { useFieldBinding } from "@shipment/composables/useFieldBinding";
 import { useUiStore } from "@shipment/stores/ui.store";
+import BookingPostchargePanel from "@/modules/payments/components/BookingPostchargePanel.vue";
+import { sumAmounts } from "@/modules/payments/components/bookingPostchargeModel";
 
 defineProps<{ embedded?: boolean }>();
 
@@ -193,6 +204,13 @@ const ui = useUiStore();
 const postfatt = useFieldBinding("postfatt" as never, "0" as never);
 const postFuelSurc = useFieldBinding("post_fuel_surc" as never, "0" as never);
 const postfattTxt = useFieldBinding("postfatt_txt" as never, "" as never);
+
+// Importe pendiente de postfacturar tal como lo calcula el API (`post_billing_state`): postfatt + reconsegna de
+// giacenza tras la factura. Se leen los valores guardados del envío, no lo que se está tecleando.
+const postAmount = computed(() => {
+  const s = shipment.value as Record<string, unknown> | null;
+  return sumAmounts(s?.postfatt as string, s?.giac_ric_postfatt as string);
+});
 
 const costoReale = useFieldBinding("costo_reale" as never, "0" as never);
 const fuelSurcCst = useFieldBinding("fuel_surc_cst" as never, "0" as never);

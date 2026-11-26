@@ -144,6 +144,18 @@ routes:
     upstream:
       action: api_pay_surcharges
     limits: { body: 16k, timeout: 30 }
+  - id: booking_postcharge.get
+    method: GET
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+      forward_query: [kind, shipment_id]
+  - id: booking_postcharge.post
+    method: POST
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+    limits: { body: 4k, timeout: 60 }
   - id: fixture.presence_heartbeat
     method: POST
     path: /presence
