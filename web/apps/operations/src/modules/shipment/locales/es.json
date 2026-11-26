@@ -224,6 +224,13 @@
       "dalle_alt_hint": "Ventana alternativa - inicio",
       "alle_alt": "Hasta alt. (HH:MM)",
       "alle_alt_hint": "Ventana alternativa - fin",
+      "time": {
+        "hour": "Hora",
+        "minute": "Min",
+        "use_24h": "24h",
+        "use_ampm": "AM/PM",
+        "invalid_format": "Hora no válida"
+      },
       "invio_mitt": "Envío al remitente",
       "invio_mitt_hint": "Fecha de envío de la LDV al remitente",
       "fornitore": "Recogida efectuada por el proveedor",

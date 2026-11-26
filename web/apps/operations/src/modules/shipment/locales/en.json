@@ -224,6 +224,13 @@
       "dalle_alt_hint": "Alternative window - start",
       "alle_alt": "To alt. (HH:MM)",
       "alle_alt_hint": "Alternative window - end",
+      "time": {
+        "hour": "Hour",
+        "minute": "Min",
+        "use_24h": "24h",
+        "use_ampm": "AM/PM",
+        "invalid_format": "Invalid time"
+      },
       "invio_mitt": "Send to sender",
       "invio_mitt_hint": "Date the LDV is sent to the sender",
       "fornitore": "Pickup done by the supplier",

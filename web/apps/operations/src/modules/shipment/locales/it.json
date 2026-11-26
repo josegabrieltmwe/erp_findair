@@ -224,6 +224,13 @@
       "dalle_alt_hint": "Finestra alternativa - inizio",
       "alle_alt": "Alle alt. (HH:MM)",
       "alle_alt_hint": "Finestra alternativa - fine",
+      "time": {
+        "hour": "Ora",
+        "minute": "Min",
+        "use_24h": "24h",
+        "use_ampm": "AM/PM",
+        "invalid_format": "Ora non valida"
+      },
       "invio_mitt": "Invio mittente",
       "invio_mitt_hint": "Data invio LDV al mittente",
       "fornitore": "Presa effettuata dal fornitore",

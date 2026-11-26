@@ -224,6 +224,13 @@
       "dalle_alt_hint": "Alternatief venster - begin",
       "alle_alt": "Tot alt. (HH:MM)",
       "alle_alt_hint": "Alternatief venster - einde",
+      "time": {
+        "hour": "Uur",
+        "minute": "Min",
+        "use_24h": "24u",
+        "use_ampm": "AM/PM",
+        "invalid_format": "Ongeldige tijd"
+      },
       "invio_mitt": "Verzenden naar afzender",
       "invio_mitt_hint": "Datum waarop de LDV naar de afzender wordt verzonden",
       "fornitore": "Ophaling uitgevoerd door de leverancier",

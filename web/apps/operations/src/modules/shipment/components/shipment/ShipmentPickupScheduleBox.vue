@@ -65,24 +65,26 @@
       <v-row dense>
         <v-col cols="12" md="6">
           <FieldHelpTooltip :text="help('presa_dalle')">
-            <v-text-field
+            <TimeOfDayField
               v-model="presaDalle.local"
               :label="t('shipment.pickup.dalle')"
               placeholder="08:00"
               density="compact"
               :readonly="readonly('presa_dalle')"
+              v-bind="timeFieldLabels"
               @blur="presaDalle.commit"
             />
           </FieldHelpTooltip>
         </v-col>
         <v-col cols="12" md="6">
           <FieldHelpTooltip :text="help('presa_alle')">
-            <v-text-field
+            <TimeOfDayField
               v-model="presaAlle.local"
               :label="t('shipment.pickup.alle')"
               placeholder="12:00"
               density="compact"
               :readonly="readonly('presa_alle')"
+              v-bind="timeFieldLabels"
               @blur="presaAlle.commit"
             />
           </FieldHelpTooltip>
@@ -90,24 +92,26 @@
 
         <v-col cols="12" md="6">
           <FieldHelpTooltip :text="help('presap_dalle')">
-            <v-text-field
+            <TimeOfDayField
               v-model="presapDalle.local"
               :label="t('shipment.pickup.dalle_alt')"
               placeholder="14:00"
               density="compact"
               :readonly="readonly('presap_dalle')"
+              v-bind="timeFieldLabels"
               @blur="presapDalle.commit"
             />
           </FieldHelpTooltip>
         </v-col>
         <v-col cols="12" md="6">
           <FieldHelpTooltip :text="help('presap_alle')">
-            <v-text-field
+            <TimeOfDayField
               v-model="presapAlle.local"
               :label="t('shipment.pickup.alle_alt')"
               placeholder="18:00"
               density="compact"
               :readonly="readonly('presap_alle')"
+              v-bind="timeFieldLabels"
               @blur="presapAlle.commit"
             />
           </FieldHelpTooltip>
@@ -156,8 +160,13 @@
           cols="12"
           class="d-flex ga-2"
         >
+          <!-- Forward Air reserva transporte + recogida en una sola llamada (al generar la
+               guia, no despues): no hay un "solo reservar pickup" independiente que el worker
+               pueda atender (sin cola RabbitMQ para esa accion), asi que el boton se oculta
+               para no colgarse. Cancelar si funciona (anula la reserva entera, ver
+               Cancel_Pickup_Controller) y se deja visible. -->
           <v-btn
-            v-if="!hasBookedPickup"
+            v-if="!hasBookedPickup && !isForwardAir"
             size="small"
             color="primary"
             variant="tonal"
@@ -274,15 +283,29 @@ import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useShipmentState } from "@shipment/composables/useShipmentState";
 import { useFieldBinding } from "@shipment/composables/useFieldBinding";
 import { useToastStore } from "@shipment/stores/toast.store";
+import { useUiStore } from "@shipment/stores/ui.store";
 import { pickupService } from "@shipment/services/pickup.service";
 import FormSection from "@shared/ui/FormSection.vue";
 import FieldHelpTooltip from "@shared/ui/FieldHelpTooltip.vue";
+import TimeOfDayField from "@shared/ui/TimeOfDayField.vue";
 
 const { t, te } = useI18n();
 const store = useShipmentStore();
 const { shipment } = storeToRefs(store);
 const { readonly } = useShipmentState(shipment);
 const toasts = useToastStore();
+const ui = useUiStore();
+
+// Shared labels for every TimeOfDayField on this box.
+const timeFieldLabels = computed(() => ({
+  hourLabel: t("shipment.pickup.time.hour"),
+  minuteLabel: t("shipment.pickup.time.minute"),
+  clearLabel: t("common.clear"),
+  applyLabel: t("common.apply"),
+  toggle24hLabel: t("shipment.pickup.time.use_24h"),
+  toggleAmpmLabel: t("shipment.pickup.time.use_ampm"),
+  invalidFormatMessage: t("shipment.pickup.time.invalid_format"),
+}));
 
 // Per-field help text shown as a hover tooltip (FieldHelpTooltip). Sourced
 // from i18n under `shipment.pickup.help.<campo>` (translated in all 5 locales,
@@ -363,9 +386,20 @@ const isTntWorld = computed<boolean>(
   () => Number(shipment.value?.id_fornitore ?? 0) === 8107,
 );
 
+// Forward Air (id_fornitore 6, Forward_Air_Constants::FORNITORE_ID) — pickup
+// is booked together with the AWB in the same call, never as a later,
+// standalone step; see the "Reservar pickup" button above.
+const isForwardAir = computed<boolean>(
+  () => Number(shipment.value?.id_fornitore ?? 0) === 6,
+);
+
 /**
  * Reserve the courier pickup. Flow rule: if the shipment already has an AWB,
- * show the alert with the steps to follow and require explicit confirmation.
+ * or the courier is TNT World (no cancellation path at all), show the alert
+ * with the steps/warning and require explicit confirmation. Otherwise (the
+ * common case: pickup requested before labelling, nothing special to warn
+ * about) book it on the first click — the extra "Confirmar reserva" click
+ * only used to repeat a blank dialog.
  * (When there is no AWB yet the pickup is reserved together with the AWB from
  * the LDV/AWB hub, so this button targets the already-labelled case.)
  */
@@ -378,14 +412,27 @@ function onReservePickup(): void {
     toasts.push("error", t("shipment.pickup.toast_reserve_missing_address"));
     return;
   }
+  // Default to the shipment's own date, not today — a label can be generated
+  // days after the shipment was created, so "today" is the wrong fallback.
+  if (!presaInvioMitt.local) {
+    presaInvioMitt.local = shipment.value?.data_sped0 ?? "";
+  }
   if (!presaInvioMitt.local || isBeforeToday(presaInvioMitt.local)) {
     toasts.push("error", t("shipment.pickup.toast_reserve_invalid_date"));
     return;
   }
-  reserveAlertOpen.value = true;
+  if (hasAwb.value || isTntWorld.value) {
+    reserveAlertOpen.value = true;
+    return;
+  }
+  void doReservePickup();
 }
 
 async function confirmReservePickup(): Promise<void> {
+  await doReservePickup();
+}
+
+async function doReservePickup(): Promise<void> {
   if (!sid.value) return;
   busy.value = true;
   try {
@@ -401,6 +448,7 @@ async function confirmReservePickup(): Promise<void> {
       );
       reserveAlertOpen.value = false;
       await store.load(sid.value);
+      ui.closeModal();
     } else {
       toasts.push(
         "error",

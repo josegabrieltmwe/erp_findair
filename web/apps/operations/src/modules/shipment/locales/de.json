@@ -224,6 +224,13 @@
       "dalle_alt_hint": "Alternatives Fenster - Beginn",
       "alle_alt": "Bis alt. (HH:MM)",
       "alle_alt_hint": "Alternatives Fenster - Ende",
+      "time": {
+        "hour": "Stunde",
+        "minute": "Min",
+        "use_24h": "24h",
+        "use_ampm": "AM/PM",
+        "invalid_format": "Ungültige Uhrzeit"
+      },
       "invio_mitt": "Versand an Absender",
       "invio_mitt_hint": "Datum des Versands des Frachtbriefs an den Absender",
       "fornitore": "Abholung durch den Lieferanten durchgeführt",

@@ -73,30 +73,34 @@
         </v-col>
 
         <v-col cols="12" md="3">
-          <v-text-field
+          <TimeOfDayField
             v-model="presaDalle.local"
             :label="t('shipment.pickup.dalle')"
+            v-bind="timeFieldLabels"
             @blur="presaDalle.commit"
           />
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field
+          <TimeOfDayField
             v-model="presaAlle.local"
             :label="t('shipment.pickup.alle')"
+            v-bind="timeFieldLabels"
             @blur="presaAlle.commit"
           />
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field
+          <TimeOfDayField
             v-model="presapDalle.local"
             :label="t('shipment.pickup.secondary_from')"
+            v-bind="timeFieldLabels"
             @blur="presapDalle.commit"
           />
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field
+          <TimeOfDayField
             v-model="presapAlle.local"
             :label="t('shipment.pickup.secondary_to')"
+            v-bind="timeFieldLabels"
             @blur="presapAlle.commit"
           />
         </v-col>
@@ -116,17 +120,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from "pinia";
 import { useShipmentStore } from "@shipment/stores/shipment.store";
 import { useFieldBinding } from "@shipment/composables/useFieldBinding";
 import { pickupIdService } from "@shipment/services/pickup_id.service";
 import type { FieldBinding } from "@shipment/composables/useFieldBinding";
+import TimeOfDayField from "@shared/ui/TimeOfDayField.vue";
 
 const { t } = useI18n();
 const store = useShipmentStore();
 const { shipment } = storeToRefs(store);
+
+// Shared labels for every TimeOfDayField on this card — resolved once so
+// each v-bind="timeFieldLabels" picks up the picker's texts and error.
+const timeFieldLabels = computed(() => ({
+  hourLabel: t("shipment.pickup.time.hour"),
+  minuteLabel: t("shipment.pickup.time.minute"),
+  clearLabel: t("common.clear"),
+  applyLabel: t("common.apply"),
+  toggle24hLabel: t("shipment.pickup.time.use_24h"),
+  toggleAmpmLabel: t("shipment.pickup.time.use_ampm"),
+  invalidFormatMessage: t("shipment.pickup.time.invalid_format"),
+}));
 
 // C3 — pickup-id existence check (legacy gest_presa_id_ajax.php). On blur we
 // commit the field then verify the id exists and is active in `prese`,
