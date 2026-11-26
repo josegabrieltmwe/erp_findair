@@ -332,6 +332,14 @@
         "portal_my_oauth_clients": {
           "title": "Mis aplicaciones OAuth",
           "description": "Crea y gestiona tus propias credenciales de API (client_id / client_secret)"
+        },
+        "self_registrations": {
+          "title": "Solicitudes de registro",
+          "description": "Altas de clientes desde FindAir: revisar, aprobar o rechazar"
+        },
+        "self_registration_config": {
+          "title": "Auto-registro: configuración",
+          "description": "Activar el alta desde FindAir, enlaces, avisos y pago con tarjeta"
         }
       }
     }
@@ -2646,5 +2654,201 @@
     "reason_fraudulent": "Fraudulento",
     "reason_surcharge_waived": "Recargo perdonado",
     "reason_other": "Otro"
+  },
+  "self_registration": {
+    "cancel": "Cancelar",
+    "queue": {
+      "title": "Solicitudes de registro",
+      "subtitle": "Altas de clientes desde FindAir. Una cuenta verificada puede cotizar pero no reservar hasta que la apruebes.",
+      "reload": "Actualizar",
+      "filter_status": "Estado",
+      "filter_date_from": "Desde",
+      "filter_date_to": "Hasta",
+      "filter_search": "Buscar por empresa, nombre, email o NIF-IVA",
+      "filter_titolare": "Titular",
+      "empty": "No hay solicitudes con estos filtros.",
+      "overdue": "+48 h",
+      "overdue_hint": "Espera decisión desde hace {hours} h",
+      "total": "{n} solicitudes"
+    },
+    "fields": {
+      "id": "N.º",
+      "created_at": "Recibida",
+      "company_name": "Empresa",
+      "person": "Solicitante",
+      "email": "Correo electrónico",
+      "country": "País",
+      "vat_number": "NIF-IVA",
+      "status": "Estado",
+      "phone": "Teléfono",
+      "language": "Idioma",
+      "channel": "Canal",
+      "vies_result": "VIES al registrarse",
+      "verified_at": "Correo verificado",
+      "consent_at": "Consentimiento",
+      "versions": "Versiones aceptadas",
+      "ip": "Dirección IP",
+      "user_agent": "Navegador",
+      "reviewed_at": "Decidida",
+      "reviewed_by": "Decidida por",
+      "review_notes": "Razón interna",
+      "customer_message": "Mensaje al cliente",
+      "customer": "Cuenta de cliente",
+      "pi_cf": "NIF-IVA / CF",
+      "tipo": "Tipo de cuenta",
+      "bloccato": "Bloqueado",
+      "vies_check": "Estado VIES",
+      "reason": "Coincidencia",
+      "rag_soc": "Razón social",
+      "indirizzo": "Dirección",
+      "cap": "Código postal",
+      "citta": "Ciudad",
+      "prov": "Provincia/estado",
+      "cod_destin": "Código destinatario SDI",
+      "PEC": "PEC"
+    },
+    "status": {
+      "pending_verification": "Sin verificar",
+      "verified": "Pendiente de decisión",
+      "approved": "Aprobada",
+      "rejected": "Rechazada",
+      "expired": "Caducada",
+      "blocked_config": "Bloqueada por configuración"
+    },
+    "duplicate_reason": {
+      "vat": "Mismo NIF-IVA",
+      "company_name": "Misma razón social",
+      "email_domain": "Mismo dominio de correo"
+    },
+    "detail": {
+      "back": "Volver",
+      "title": "Solicitud {id} · {company}",
+      "subtitle": "Recibida el {date}",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "state_hint": {
+        "pending_verification": "El cliente aún no ha confirmado su correo: no hay cuenta que revisar.",
+        "verified": "La solicitud está verificada pero no tiene cuenta creada: no se puede decidir.",
+        "approved": "Solicitud aprobada: el cliente reserva pagando con tarjeta.",
+        "rejected": "Solicitud rechazada: la cuenta está bloqueada.",
+        "expired": "El enlace de activación caducó sin usarse.",
+        "blocked_config": "El auto-registro estaba desactivado o al límite diario cuando llegó la solicitud."
+      },
+      "waiting": "Esta solicitud espera decisión desde hace {hours} h.",
+      "section_request": "Datos de la solicitud",
+      "section_trace": "Trazabilidad",
+      "section_review": "Decisión",
+      "section_account": "Cuenta creada",
+      "no_account": "Todavía no hay cuenta: se crea cuando el cliente activa su correo.",
+      "yes": "Sí",
+      "no": "No",
+      "vies_check": "Comprobar VIES",
+      "vies_name": "Nombre en VIES",
+      "vies_address": "Dirección en VIES",
+      "billing_address": "Sede de facturación",
+      "contact": "Contacto (acceso)",
+      "secure_credential": "Credencial segura (solo FindAir)",
+      "section_duplicates": "Posibles duplicados",
+      "duplicates_hint": "Clientes tuyos con el mismo NIF-IVA, la misma razón social o el mismo dominio de correo.",
+      "no_duplicates": "No se han encontrado coincidencias.",
+      "versions": "Privacidad {privacy} · Condiciones {terms}"
+    },
+    "vies": {
+      "OK": "Válido",
+      "KO": "No válido",
+      "X": "Sin comprobar",
+      "NN": "No aplica",
+      "none": "Sin comprobar",
+      "ACCESS_DENIED": "Sin permiso para comprobar",
+      "MISSING_DATA": "Faltan país o NIF-IVA",
+      "result_ok": "VIES: NIF-IVA válido"
+    },
+    "approve": {
+      "title": "Aprobar la cuenta",
+      "hint": "Confirma o corrige los datos fiscales y la sede de facturación. Al aprobar, la cuenta pasa a cliente con el rol FindAir básico, reserva solo pagando con tarjeta y recibe el correo «Cuenta aprobada».",
+      "notes": "Nota interna (opcional)",
+      "notes_hint": "Solo la ve tu equipo.",
+      "confirm": "Aprobar",
+      "done": "Cuenta aprobada. Se ha avisado al cliente."
+    },
+    "reject": {
+      "title": "Rechazar la solicitud",
+      "hint": "La cuenta queda bloqueada y el cliente recibe un correo neutro.",
+      "notes": "Razón interna",
+      "notes_hint": "Solo la ve tu equipo.",
+      "customer_message": "Mensaje para el cliente (opcional)",
+      "customer_message_hint": "Se añade al correo que recibe el cliente.",
+      "confirm": "Rechazar",
+      "done": "Solicitud rechazada."
+    },
+    "field_error": {
+      "required": "Obligatorio",
+      "invalid": "Valor no válido",
+      "too_long": "Demasiado largo",
+      "https_url_required": "Debe ser una URL https",
+      "required_when_enabled": "Obligatorio con el auto-registro activado",
+      "unknown_client": "Aplicación no encontrada para este titular",
+      "unknown_payment_method": "Método de pago no disponible para este titular",
+      "out_of_range": "Fuera de rango (0-10000)",
+      "turnstile_not_configured_on_server": "Turnstile no está configurado en el servidor",
+      "unknown_payment_schedule": "Vencimiento no disponible para este titular"
+    },
+    "errors": {
+      "generic": "No se pudo completar la operación.",
+      "NOT_FOUND": "La solicitud no existe o no es de tu empresa.",
+      "NOT_REVIEWABLE": "Solo se pueden aprobar o rechazar solicitudes verificadas.",
+      "ALREADY_REVIEWED": "Otra persona ya ha decidido esta solicitud.",
+      "VALIDATION_ERROR": "Revisa los campos marcados.",
+      "ERP_STAFF_REQUIRED": "Solo el personal del ERP puede revisar solicitudes de registro.",
+      "PARTNER_ADMIN_REQUIRED": "Solo TMWE o el administrador de tu empresa pueden cambiar esta configuración.",
+      "APPROVAL_FAILED": "La aprobación quedó a medias: revisa la ficha del cliente.",
+      "REJECTION_FAILED": "El rechazo quedó a medias: revisa la ficha del cliente.",
+      "BILLING_DATA_INCOMPLETE": "No se puede aprobar: faltan datos de facturación."
+    },
+    "config": {
+      "title": "Auto-registro de clientes",
+      "subtitle": "Cómo se dan de alta los clientes de tu empresa desde FindAir.",
+      "titolare": "Titular",
+      "titolare_hint": "Vacío: la configuración de tu propia empresa.",
+      "enabled": "Auto-registro activado",
+      "enabled_hint": "Desactivado, el formulario de alta de FindAir no crea solicitudes para tu empresa.",
+      "section_links": "Enlaces",
+      "activation_base_url": "URL de activación",
+      "activation_base_url_hint": "Página de FindAir a la que lleva el correo de activación (https).",
+      "login_client_id": "Aplicación de acceso (client_id)",
+      "login_client_id_hint": "Aplicación OAuth de tu empresa con la que entra el cliente tras activar.",
+      "section_legal": "Privacidad y condiciones",
+      "privacy_url": "URL de la política de privacidad",
+      "privacy_version": "Versión de privacidad",
+      "terms_version": "Versión de las condiciones",
+      "versions_hint": "Se guarda con cada solicitud la versión que el cliente aceptó.",
+      "section_review": "Revisión",
+      "notify_emails": "Correos de aviso",
+      "notify_emails_hint": "Reciben un aviso por cada solicitud nueva. Pulsa Intro tras cada dirección.",
+      "id_pagam_met_card": "Método de pago con tarjeta",
+      "id_pagam_met_card_hint": "Se asigna a la cuenta al aprobarla.",
+      "id_pagam_scad_card": "Vencimiento de pago",
+      "id_pagam_scad_card_hint": "Se asigna a la cuenta al aprobarla. Sin él el cliente no es facturable.",
+      "section_abuse": "Protección",
+      "turnstile_required": "Exigir Turnstile",
+      "turnstile_required_hint": "Comprobación anti-robots en el formulario de alta.",
+      "daily_limit": "Límite diario de solicitudes",
+      "daily_limit_hint": "Por encima, las solicitudes quedan bloqueadas por configuración.",
+      "save": "Guardar",
+      "saved": "Configuración guardada."
+    },
+    "billing": {
+      "missing_intro": "Si se aprueba así no se le podrá facturar. Falta:",
+      "sdi_hint": "Clientes italianos: código SDI de 7 caracteres o PEC.",
+      "codes": {
+        "rag_soc": "razón social",
+        "pi_cf": "NIF-IVA o CF",
+        "indirizzo": "dirección",
+        "citta": "ciudad",
+        "sdi_or_pec": "código SDI o PEC",
+        "id_pagam_met": "método de pago (configuración)",
+        "id_pagam_scad": "vencimiento de pago (configuración)"
+      }
+    }
   }
 }

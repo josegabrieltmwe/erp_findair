@@ -332,6 +332,14 @@
         "portal_my_oauth_clients": {
           "title": "Meine OAuth-Apps",
           "description": "Erstellen und verwalten Sie Ihre eigenen API-Zugangsdaten (client_id / client_secret)"
+        },
+        "self_registrations": {
+          "title": "Registrierungsanfragen",
+          "description": "Kundenanmeldungen über FindAir: prüfen, freigeben oder ablehnen"
+        },
+        "self_registration_config": {
+          "title": "Selbstregistrierung: Einstellungen",
+          "description": "Anmeldung über FindAir aktivieren, Links, Benachrichtigungen und Kartenzahlung"
         }
       }
     }
@@ -2646,5 +2654,201 @@
     "reason_fraudulent": "Betrügerisch",
     "reason_surcharge_waived": "Zuschlag erlassen",
     "reason_other": "Sonstiges"
+  },
+  "self_registration": {
+    "cancel": "Abbrechen",
+    "queue": {
+      "title": "Registrierungsanfragen",
+      "subtitle": "Kundenanmeldungen über FindAir. Ein verifiziertes Konto kann Angebote einholen, aber erst nach deiner Freigabe buchen.",
+      "reload": "Aktualisieren",
+      "filter_status": "Status",
+      "filter_date_from": "Von",
+      "filter_date_to": "Bis",
+      "filter_search": "Nach Firma, Name, E-Mail oder USt-IdNr. suchen",
+      "filter_titolare": "Inhaber",
+      "empty": "Keine Anfragen mit diesen Filtern.",
+      "overdue": "+48 h",
+      "overdue_hint": "Wartet seit {hours} Std. auf eine Entscheidung",
+      "total": "{n} Anfragen"
+    },
+    "fields": {
+      "id": "Nr.",
+      "created_at": "Eingegangen",
+      "company_name": "Firma",
+      "person": "Person",
+      "email": "E-Mail-Adresse",
+      "country": "Land",
+      "vat_number": "USt-IdNr.",
+      "status": "Status",
+      "phone": "Telefon",
+      "language": "Sprache",
+      "channel": "Kanal",
+      "vies_result": "VIES bei Anmeldung",
+      "verified_at": "E-Mail bestätigt",
+      "consent_at": "Einwilligung",
+      "versions": "Akzeptierte Versionen",
+      "ip": "IP-Adresse",
+      "user_agent": "Webbrowser",
+      "reviewed_at": "Entschieden",
+      "reviewed_by": "Entschieden von",
+      "review_notes": "Interner Grund",
+      "customer_message": "Nachricht an den Kunden",
+      "customer": "Kunde",
+      "pi_cf": "USt-IdNr. / Steuernummer",
+      "tipo": "Art",
+      "bloccato": "Gesperrt",
+      "vies_check": "VIES-Status",
+      "reason": "Übereinstimmung",
+      "rag_soc": "Firmenname",
+      "indirizzo": "Adresse",
+      "cap": "Postleitzahl",
+      "citta": "Ort",
+      "prov": "Provinz",
+      "cod_destin": "SDI-Empfängercode",
+      "PEC": "PEC (zertifizierte E-Mail)"
+    },
+    "status": {
+      "pending_verification": "Nicht verifiziert",
+      "verified": "Wartet auf Entscheidung",
+      "approved": "Freigegeben",
+      "rejected": "Abgelehnt",
+      "expired": "Abgelaufen",
+      "blocked_config": "Durch Einstellungen gesperrt"
+    },
+    "duplicate_reason": {
+      "vat": "Gleiche USt-IdNr.",
+      "company_name": "Gleicher Firmenname",
+      "email_domain": "Gleiche E-Mail-Domain"
+    },
+    "detail": {
+      "back": "Zurück",
+      "title": "Anfrage {id} · {company}",
+      "subtitle": "Eingegangen am {date}",
+      "approve": "Freigeben",
+      "reject": "Ablehnen",
+      "state_hint": {
+        "pending_verification": "Der Kunde hat seine E-Mail noch nicht bestätigt: Es gibt kein Konto zu prüfen.",
+        "verified": "Die Anfrage ist verifiziert, hat aber kein Konto: Es kann nicht entschieden werden.",
+        "approved": "Anfrage freigegeben: Der Kunde bucht mit Kartenzahlung.",
+        "rejected": "Anfrage abgelehnt: Das Konto ist gesperrt.",
+        "expired": "Der Aktivierungslink ist ungenutzt abgelaufen.",
+        "blocked_config": "Die Selbstregistrierung war deaktiviert oder das Tageslimit erreicht, als die Anfrage einging."
+      },
+      "waiting": "Diese Anfrage wartet seit {hours} Std. auf eine Entscheidung.",
+      "section_request": "Daten der Anfrage",
+      "section_trace": "Nachvollziehbarkeit",
+      "section_review": "Entscheidung",
+      "section_account": "Angelegtes Konto",
+      "no_account": "Noch kein Konto: Es wird angelegt, wenn der Kunde seine E-Mail aktiviert.",
+      "yes": "Ja",
+      "no": "Nein",
+      "vies_check": "VIES prüfen",
+      "vies_name": "Name in VIES",
+      "vies_address": "Adresse in VIES",
+      "billing_address": "Rechnungsadresse",
+      "contact": "Kontakt (Zugang)",
+      "secure_credential": "Sichere Zugangsdaten (nur FindAir)",
+      "section_duplicates": "Mögliche Dubletten",
+      "duplicates_hint": "Deine Kunden mit gleicher USt-IdNr., gleichem Firmennamen oder gleicher E-Mail-Domain.",
+      "no_duplicates": "Keine Übereinstimmungen gefunden.",
+      "versions": "Datenschutz {privacy} · Bedingungen {terms}"
+    },
+    "vies": {
+      "OK": "Gültig",
+      "KO": "Ungültig",
+      "X": "Nicht geprüft",
+      "NN": "Nicht zutreffend",
+      "none": "Nicht geprüft",
+      "ACCESS_DENIED": "Keine Berechtigung zur Prüfung",
+      "MISSING_DATA": "Land oder USt-IdNr. fehlt",
+      "result_ok": "VIES: USt-IdNr. gültig"
+    },
+    "approve": {
+      "title": "Konto freigeben",
+      "hint": "Bestätige oder korrigiere die Steuerdaten und die Rechnungsadresse. Nach der Freigabe wird das Konto ein Kunde mit der FindAir-Basisrolle, bucht nur mit Kartenzahlung und erhält die E-Mail „Konto freigegeben“.",
+      "notes": "Interne Notiz (optional)",
+      "notes_hint": "Nur dein Team sieht sie.",
+      "confirm": "Freigeben",
+      "done": "Konto freigegeben. Der Kunde wurde benachrichtigt."
+    },
+    "reject": {
+      "title": "Anfrage ablehnen",
+      "hint": "Das Konto wird gesperrt und der Kunde erhält eine neutrale E-Mail.",
+      "notes": "Interner Grund",
+      "notes_hint": "Nur dein Team sieht ihn.",
+      "customer_message": "Nachricht an den Kunden (optional)",
+      "customer_message_hint": "Wird der E-Mail an den Kunden hinzugefügt.",
+      "confirm": "Ablehnen",
+      "done": "Anfrage abgelehnt."
+    },
+    "field_error": {
+      "required": "Pflichtfeld",
+      "invalid": "Ungültiger Wert",
+      "too_long": "Zu lang",
+      "https_url_required": "Muss eine https-URL sein",
+      "required_when_enabled": "Pflichtfeld bei aktivierter Selbstregistrierung",
+      "unknown_client": "Anwendung für diesen Inhaber nicht gefunden",
+      "unknown_payment_method": "Zahlungsart für diesen Inhaber nicht verfügbar",
+      "out_of_range": "Außerhalb des Bereichs (0-10000)",
+      "turnstile_not_configured_on_server": "Turnstile ist auf dem Server nicht eingerichtet",
+      "unknown_payment_schedule": "Zahlungsziel für diesen Inhaber nicht verfügbar"
+    },
+    "errors": {
+      "generic": "Der Vorgang konnte nicht abgeschlossen werden.",
+      "NOT_FOUND": "Die Anfrage existiert nicht oder gehört nicht zu deiner Firma.",
+      "NOT_REVIEWABLE": "Nur verifizierte Anfragen können freigegeben oder abgelehnt werden.",
+      "ALREADY_REVIEWED": "Jemand anderes hat über diese Anfrage bereits entschieden.",
+      "VALIDATION_ERROR": "Prüfe die markierten Felder.",
+      "ERP_STAFF_REQUIRED": "Nur ERP-Mitarbeitende können Registrierungsanfragen prüfen.",
+      "PARTNER_ADMIN_REQUIRED": "Nur TMWE oder der Administrator deiner Firma kann diese Einstellungen ändern.",
+      "APPROVAL_FAILED": "Die Freigabe ist unvollständig geblieben: Prüfe die Kundenakte.",
+      "REJECTION_FAILED": "Die Ablehnung ist unvollständig geblieben: Prüfe die Kundenakte.",
+      "BILLING_DATA_INCOMPLETE": "Freigabe nicht möglich: Rechnungsdaten fehlen."
+    },
+    "config": {
+      "title": "Selbstregistrierung von Kunden",
+      "subtitle": "Wie sich die Kunden deiner Firma über FindAir anmelden.",
+      "titolare": "Inhaber",
+      "titolare_hint": "Leer: die Einstellungen deiner eigenen Firma.",
+      "enabled": "Selbstregistrierung aktiviert",
+      "enabled_hint": "Deaktiviert legt das Anmeldeformular von FindAir keine Anfragen für deine Firma an.",
+      "section_links": "Links",
+      "activation_base_url": "Aktivierungs-URL",
+      "activation_base_url_hint": "FindAir-Seite, auf die die Aktivierungs-E-Mail verweist (https).",
+      "login_client_id": "Anmeldeanwendung (client_id)",
+      "login_client_id_hint": "OAuth-Anwendung deiner Firma, mit der sich der Kunde nach der Aktivierung anmeldet.",
+      "section_legal": "Datenschutz und Bedingungen",
+      "privacy_url": "URL der Datenschutzerklärung",
+      "privacy_version": "Datenschutzversion",
+      "terms_version": "Version der Bedingungen",
+      "versions_hint": "Mit jeder Anfrage wird die vom Kunden akzeptierte Version gespeichert.",
+      "section_review": "Prüfung",
+      "notify_emails": "Benachrichtigungsadressen",
+      "notify_emails_hint": "Erhalten bei jeder neuen Anfrage eine Benachrichtigung. Nach jeder Adresse Enter drücken.",
+      "id_pagam_met_card": "Zahlungsart Karte",
+      "id_pagam_met_card_hint": "Wird dem Konto bei der Freigabe zugewiesen.",
+      "id_pagam_scad_card": "Zahlungsziel",
+      "id_pagam_scad_card_hint": "Wird dem Konto bei der Freigabe zugewiesen. Ohne Zahlungsziel kann dem Kunden keine Rechnung gestellt werden.",
+      "section_abuse": "Schutz",
+      "turnstile_required": "Turnstile verlangen",
+      "turnstile_required_hint": "Bot-Schutz im Anmeldeformular.",
+      "daily_limit": "Tageslimit für Anfragen",
+      "daily_limit_hint": "Darüber werden Anfragen durch die Einstellungen gesperrt.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert."
+    },
+    "billing": {
+      "missing_intro": "Bei Freigabe in diesem Zustand kann dem Kunden keine Rechnung gestellt werden. Es fehlt:",
+      "sdi_hint": "Italienische Kunden: 7-stelliger SDI-Code oder PEC.",
+      "codes": {
+        "rag_soc": "Firmenname",
+        "pi_cf": "USt-IdNr. oder Steuernummer",
+        "indirizzo": "Adresse",
+        "citta": "Ort",
+        "sdi_or_pec": "SDI-Code oder PEC",
+        "id_pagam_met": "Zahlungsart (Einstellungen)",
+        "id_pagam_scad": "Zahlungsziel (Einstellungen)"
+      }
+    }
   }
 }

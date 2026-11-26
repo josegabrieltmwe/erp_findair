@@ -736,6 +736,40 @@ routes:
       forward_query: [anagrafica_id]
     limits: { body: 16k, timeout: 30 }
 
+  # Auto-registro de clientes de FindAir, revisión por el titular (P147). api_self_registration_admin: cola, ficha,
+  # aprobar y rechazar; personal del ERP (TMWE o erp:view, módulo anagrafiche), cada partner solo las suyas (la API
+  # responde 404 a las ajenas) y TMWE puede acotar con id_anagr_titolare. api_self_registration_config: TMWE o
+  # administrador del partner (partner:manage); TMWE puede pedir otro titular con id_anagr_titolare (también en el PUT,
+  # que la API lee de la query). Lo autoriza todo la API; aquí solo la lista blanca.
+  - id: self_registration_admin.get
+    method: GET
+    path: /api_self_registration_admin
+    upstream:
+      action: api_self_registration_admin
+      forward_query: [id, status, date_from, date_to, q, page, per_page, id_anagr_titolare]
+
+  - id: self_registration_admin.post
+    method: POST
+    path: /api_self_registration_admin
+    upstream:
+      action: api_self_registration_admin
+    limits: { body: 16k, timeout: 30 } # aprobar escribe anagrafica, sede, rol y política y envía un correo
+
+  - id: self_registration_config.get
+    method: GET
+    path: /api_self_registration_config
+    upstream:
+      action: api_self_registration_config
+      forward_query: [id_anagr_titolare]
+
+  - id: self_registration_config.put
+    method: PUT
+    path: /api_self_registration_config
+    upstream:
+      action: api_self_registration_config
+      forward_query: [id_anagr_titolare]
+    limits: { body: 16k, timeout: 15 }
+
   # Cuentas SMTP por partner. api_partner_smtp: el administrador del partner gestiona las suyas (el partner sale
   # de la sesión, nunca del cliente); api_admin_partner_smtp: TMWE sobre cualquier partner. Scopes smtp:read/write y
   # "administrador del partner" los aplica la API. POST puede ser {action:'test'}: abre una conexión SMTP real.
@@ -918,6 +952,25 @@ routes:
     upstream:
       action: api_pay_surcharges
     limits: { body: 16k, timeout: 30 }
+
+  # Postfacturación de los clientes que pagan con tarjeta (P148). api_booking_postcharge: GET ?kind=express|cargo
+  # &shipment_id=N = la última del envío o null (payment_gateways:read); POST {kind, shipment_id} = «Cobrar
+  # postfacturación» (payment_gateways:write): recargo avisado con la autorización de cobro o postfactura que paga el
+  # cliente. Solo personal del vendedor (cliente final 403, envío de otro partner 404). 409/422 conservan el code por el
+  # camino normal; el 502 POSTCHARGE_INVOICE_FAILED se conserva en ResponseAdapter::postchargeProblem.
+  - id: booking_postcharge.get
+    method: GET
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+      forward_query: [kind, shipment_id]
+
+  - id: booking_postcharge.post
+    method: POST
+    path: /api_booking_postcharge
+    upstream:
+      action: api_booking_postcharge
+    limits: { body: 4k, timeout: 60 } # calcula la vista previa de la postfactura y puede emitirla
 
   # Clientes sin margen configurado (P91). Añadida a mano: no regenerar el manifiesto (quita rutas en uso).
   # Mismo modelo que get.api_anagrafica_scaglioni (routes.spa.yaml): el BFF solo deja pasar; el API autoriza con el

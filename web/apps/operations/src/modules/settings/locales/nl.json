@@ -332,6 +332,14 @@
         "portal_my_oauth_clients": {
           "title": "Mijn OAuth-apps",
           "description": "Maak en beheer je eigen API-inloggegevens (client_id / client_secret)"
+        },
+        "self_registrations": {
+          "title": "Registratieaanvragen",
+          "description": "Aanmeldingen van klanten via FindAir: beoordelen, goedkeuren of afwijzen"
+        },
+        "self_registration_config": {
+          "title": "Zelfregistratie: instellingen",
+          "description": "Aanmelden via FindAir inschakelen, koppelingen, meldingen en kaartbetaling"
         }
       }
     }
@@ -2646,5 +2654,201 @@
     "reason_fraudulent": "Frauduleus",
     "reason_surcharge_waived": "Toeslag kwijtgescholden",
     "reason_other": "Overig"
+  },
+  "self_registration": {
+    "cancel": "Annuleren",
+    "queue": {
+      "title": "Registratieaanvragen",
+      "subtitle": "Aanmeldingen van klanten via FindAir. Een geverifieerd account kan offertes opvragen maar niet boeken tot je het goedkeurt.",
+      "reload": "Vernieuwen",
+      "filter_status": "Status",
+      "filter_date_from": "Van",
+      "filter_date_to": "Tot",
+      "filter_search": "Zoeken op bedrijf, naam, e-mail of btw-nummer",
+      "filter_titolare": "Eigenaar",
+      "empty": "Geen aanvragen met deze filters.",
+      "overdue": "+48 h",
+      "overdue_hint": "Wacht al {hours} u op een beslissing",
+      "total": "{n} aanvragen"
+    },
+    "fields": {
+      "id": "Nr.",
+      "created_at": "Ontvangen",
+      "company_name": "Bedrijf",
+      "person": "Persoon",
+      "email": "E-mailadres",
+      "country": "Land",
+      "vat_number": "Btw-nummer",
+      "status": "Status",
+      "phone": "Telefoon",
+      "language": "Taal",
+      "channel": "Kanaal",
+      "vies_result": "VIES bij aanmelding",
+      "verified_at": "E-mail geverifieerd",
+      "consent_at": "Toestemming",
+      "versions": "Geaccepteerde versies",
+      "ip": "IP-adres",
+      "user_agent": "Webbrowser",
+      "reviewed_at": "Beslist",
+      "reviewed_by": "Beslist door",
+      "review_notes": "Interne reden",
+      "customer_message": "Bericht aan de klant",
+      "customer": "Klant",
+      "pi_cf": "Btw / fiscale code",
+      "tipo": "Soort",
+      "bloccato": "Geblokkeerd",
+      "vies_check": "VIES-status",
+      "reason": "Overeenkomst",
+      "rag_soc": "Bedrijfsnaam",
+      "indirizzo": "Adres",
+      "cap": "Postcode",
+      "citta": "Plaats",
+      "prov": "Provincie",
+      "cod_destin": "SDI-ontvangerscode",
+      "PEC": "PEC (gecertificeerde e-mail)"
+    },
+    "status": {
+      "pending_verification": "Niet geverifieerd",
+      "verified": "Wacht op beslissing",
+      "approved": "Goedgekeurd",
+      "rejected": "Afgewezen",
+      "expired": "Verlopen",
+      "blocked_config": "Geblokkeerd door instellingen"
+    },
+    "duplicate_reason": {
+      "vat": "Zelfde btw-nummer",
+      "company_name": "Zelfde bedrijfsnaam",
+      "email_domain": "Zelfde e-maildomein"
+    },
+    "detail": {
+      "back": "Terug",
+      "title": "Aanvraag {id} · {company}",
+      "subtitle": "Ontvangen op {date}",
+      "approve": "Goedkeuren",
+      "reject": "Afwijzen",
+      "state_hint": {
+        "pending_verification": "De klant heeft het e-mailadres nog niet bevestigd: er is geen account om te beoordelen.",
+        "verified": "De aanvraag is geverifieerd maar heeft geen account: er kan niet over beslist worden.",
+        "approved": "Aanvraag goedgekeurd: de klant boekt met betaling per kaart.",
+        "rejected": "Aanvraag afgewezen: het account is geblokkeerd.",
+        "expired": "De activeringslink is ongebruikt verlopen.",
+        "blocked_config": "Zelfregistratie was uitgeschakeld of de daglimiet was bereikt toen de aanvraag binnenkwam."
+      },
+      "waiting": "Deze aanvraag wacht al {hours} u op een beslissing.",
+      "section_request": "Gegevens van de aanvraag",
+      "section_trace": "Traceerbaarheid",
+      "section_review": "Beslissing",
+      "section_account": "Aangemaakt account",
+      "no_account": "Nog geen account: het wordt aangemaakt wanneer de klant het e-mailadres activeert.",
+      "yes": "Ja",
+      "no": "Nee",
+      "vies_check": "VIES controleren",
+      "vies_name": "Naam in VIES",
+      "vies_address": "Adres in VIES",
+      "billing_address": "Factuuradres",
+      "contact": "Contactpersoon (toegang)",
+      "secure_credential": "Veilige inloggegevens (alleen FindAir)",
+      "section_duplicates": "Mogelijke dubbele klanten",
+      "duplicates_hint": "Jouw klanten met hetzelfde btw-nummer, dezelfde bedrijfsnaam of hetzelfde e-maildomein.",
+      "no_duplicates": "Geen overeenkomsten gevonden.",
+      "versions": "Privacy {privacy} · Voorwaarden {terms}"
+    },
+    "vies": {
+      "OK": "Geldig",
+      "KO": "Ongeldig",
+      "X": "Niet gecontroleerd",
+      "NN": "Niet van toepassing",
+      "none": "Niet gecontroleerd",
+      "ACCESS_DENIED": "Geen toestemming om te controleren",
+      "MISSING_DATA": "Land of btw-nummer ontbreekt",
+      "result_ok": "VIES: btw-nummer geldig"
+    },
+    "approve": {
+      "title": "Account goedkeuren",
+      "hint": "Bevestig of corrigeer de fiscale gegevens en het factuuradres. Na goedkeuring wordt het account een klant met de basisrol van FindAir, boekt het alleen met betaling per kaart en ontvangt het de e-mail “Account goedgekeurd”.",
+      "notes": "Interne notitie (optioneel)",
+      "notes_hint": "Alleen jouw team ziet dit.",
+      "confirm": "Goedkeuren",
+      "done": "Account goedgekeurd. De klant is op de hoogte gebracht."
+    },
+    "reject": {
+      "title": "Aanvraag afwijzen",
+      "hint": "Het account wordt geblokkeerd en de klant ontvangt een neutrale e-mail.",
+      "notes": "Interne reden",
+      "notes_hint": "Alleen jouw team ziet dit.",
+      "customer_message": "Bericht voor de klant (optioneel)",
+      "customer_message_hint": "Wordt toegevoegd aan de e-mail die de klant ontvangt.",
+      "confirm": "Afwijzen",
+      "done": "Aanvraag afgewezen."
+    },
+    "field_error": {
+      "required": "Verplicht",
+      "invalid": "Ongeldige waarde",
+      "too_long": "Te lang",
+      "https_url_required": "Moet een https-URL zijn",
+      "required_when_enabled": "Verplicht als zelfregistratie aan staat",
+      "unknown_client": "Applicatie niet gevonden voor deze eigenaar",
+      "unknown_payment_method": "Betaalmethode niet beschikbaar voor deze eigenaar",
+      "out_of_range": "Buiten bereik (0-10000)",
+      "turnstile_not_configured_on_server": "Turnstile is niet ingesteld op de server",
+      "unknown_payment_schedule": "Betalingstermijn niet beschikbaar voor deze houder"
+    },
+    "errors": {
+      "generic": "De bewerking kon niet worden voltooid.",
+      "NOT_FOUND": "De aanvraag bestaat niet of hoort niet bij jouw bedrijf.",
+      "NOT_REVIEWABLE": "Alleen geverifieerde aanvragen kunnen worden goedgekeurd of afgewezen.",
+      "ALREADY_REVIEWED": "Iemand anders heeft al over deze aanvraag beslist.",
+      "VALIDATION_ERROR": "Controleer de gemarkeerde velden.",
+      "ERP_STAFF_REQUIRED": "Alleen ERP-medewerkers kunnen registratieaanvragen beoordelen.",
+      "PARTNER_ADMIN_REQUIRED": "Alleen TMWE of de beheerder van jouw bedrijf kan deze instellingen wijzigen.",
+      "APPROVAL_FAILED": "De goedkeuring is onvolledig gebleven: controleer de klantkaart.",
+      "REJECTION_FAILED": "De afwijzing is onvolledig gebleven: controleer de klantkaart.",
+      "BILLING_DATA_INCOMPLETE": "Goedkeuren niet mogelijk: factuurgegevens ontbreken."
+    },
+    "config": {
+      "title": "Zelfregistratie van klanten",
+      "subtitle": "Hoe de klanten van jouw bedrijf zich via FindAir aanmelden.",
+      "titolare": "Eigenaar",
+      "titolare_hint": "Leeg: de instellingen van je eigen bedrijf.",
+      "enabled": "Zelfregistratie ingeschakeld",
+      "enabled_hint": "Uitgeschakeld maakt het aanmeldformulier van FindAir geen aanvragen aan voor jouw bedrijf.",
+      "section_links": "Koppelingen",
+      "activation_base_url": "Activerings-URL",
+      "activation_base_url_hint": "Pagina van FindAir waarnaar de activeringsmail verwijst (https).",
+      "login_client_id": "Inlogapplicatie (client_id)",
+      "login_client_id_hint": "OAuth-applicatie van jouw bedrijf waarmee de klant na activering inlogt.",
+      "section_legal": "Privacy en voorwaarden",
+      "privacy_url": "URL van het privacybeleid",
+      "privacy_version": "Privacyversie",
+      "terms_version": "Versie van de voorwaarden",
+      "versions_hint": "Bij elke aanvraag wordt de door de klant geaccepteerde versie opgeslagen.",
+      "section_review": "Beoordeling",
+      "notify_emails": "Meldingsadressen",
+      "notify_emails_hint": "Ontvangen een melding bij elke nieuwe aanvraag. Druk op Enter na elk adres.",
+      "id_pagam_met_card": "Betaalmethode met kaart",
+      "id_pagam_met_card_hint": "Wordt bij goedkeuring aan het account toegewezen.",
+      "id_pagam_scad_card": "Betalingstermijn",
+      "id_pagam_scad_card_hint": "Wordt bij goedkeuring aan het account toegewezen. Zonder termijn kan de klant niet worden gefactureerd.",
+      "section_abuse": "Bescherming",
+      "turnstile_required": "Turnstile verplichten",
+      "turnstile_required_hint": "Controle tegen bots op het aanmeldformulier.",
+      "daily_limit": "Daglimiet van aanvragen",
+      "daily_limit_hint": "Daarboven worden aanvragen geblokkeerd door de instellingen.",
+      "save": "Opslaan",
+      "saved": "Instellingen opgeslagen."
+    },
+    "billing": {
+      "missing_intro": "Bij goedkeuring zoals het nu is, kan de klant niet worden gefactureerd. Ontbreekt:",
+      "sdi_hint": "Italiaanse klanten: SDI-code van 7 tekens of PEC.",
+      "codes": {
+        "rag_soc": "bedrijfsnaam",
+        "pi_cf": "btw-nummer of fiscale code",
+        "indirizzo": "adres",
+        "citta": "plaats",
+        "sdi_or_pec": "SDI-code of PEC",
+        "id_pagam_met": "betaalmethode (instellingen)",
+        "id_pagam_scad": "betalingstermijn (instellingen)"
+      }
+    }
   }
 }

@@ -397,7 +397,7 @@
       "back": "Betalingen",
       "title": "Incassomachtigingen",
       "refresh": "Vernieuwen",
-      "intro": "Toestemming die elke klant één keer tekent zodat je toeslagen kunt incasseren met de opgeslagen methode (kaart of SEPA-incasso) zonder dat hij aanwezig is. De klant voert de betaalgegevens in op de pagina van de provider: hier zie je alleen het merk en de laatste 4 cijfers.",
+      "intro": "Toestemming die elke klant één keer tekent zodat je toeslagen kunt incasseren met de opgeslagen methode (kaart of SEPA-incasso) zonder dat hij aanwezig is. De klant voert de betaalgegevens in op de pagina van de provider en ze worden niet opgeslagen: hier zie je alleen het type methode en de gegevens van de machtiging.",
       "empty": "Er zijn geen machtigingen om te tonen.",
       "per_month": "{amount} per maand",
       "terms_days": "Opzegging {notice} d · Betwisten {dispute} d",
@@ -405,6 +405,7 @@
       "revoke_title": "Machtiging intrekken",
       "revoke_body": "Met deze machtiging kunnen geen nieuwe toeslagen meer bij deze klant worden geïncasseerd. Toestemming intrekken is een recht van de klant en er wordt geen geld verplaatst.",
       "revoked_done": "Machtiging ingetrokken.",
+      "revoked_on": "Ingetrokken op {date}",
       "col": {
         "id": "Machtiging",
         "method": "Betaalmiddel",
@@ -423,8 +424,7 @@
       },
       "method": {
         "card": "Kaart",
-        "sepa_debit": "SEPA-incasso",
-        "expired_hint": "De afgedrukte vervaldatum is al verstreken"
+        "sepa_debit": "SEPA-incasso"
       },
       "create": {
         "open": "Nieuwe machtiging",
@@ -462,6 +462,67 @@
       "reference": "Referentie",
       "refresh": "Status vernieuwen",
       "back": "Terug naar inkomsten en betalingen"
+    },
+    "postcharge": {
+      "title": "Inning van de nafacturering (klanten die met kaart betalen)",
+      "intro": "Alleen voor klanten die met kaart betalen: hun nafactuur zit niet in de maandelijkse run. Int hem hier zodra het bedrag definitief is.",
+      "start": "Nafacturering innen",
+      "net_vat": "Netto {net} + btw {vat}",
+      "block": {
+        "not_invoiced": "De zending heeft nog geen eerste factuur.",
+        "post_billed": "De zending heeft al een tweede factuur.",
+        "no_amount": "Er staat geen nafactureringsbedrag op de zending."
+      },
+      "confirm": {
+        "title": "De nafacturering innen",
+        "amount": "Bedrag op de zending: {amount}. Geïnd wordt het totaal van de nafactuur (inclusief btw en factureringsregels).",
+        "with_auth": "Als de klant een actieve incassomachtiging heeft: hij krijgt een e-mail, wordt na de aankondigingstermijn belast en na de inning wordt de nafactuur uitgegeven.",
+        "without_auth": "Zo niet (of als het bedrag boven zijn limieten ligt): de nafactuur wordt meteen uitgegeven en gemaild, en de klant moet hem in FindAir betalen voordat hij opnieuw kan boeken.",
+        "submit": "Innen"
+      },
+      "done": {
+        "notified": "Klant op de hoogte gebracht. Hij wordt belast na de aankondigingstermijn.",
+        "invoiced": "Nafactuur uitgegeven. De klant moet hem betalen voordat hij opnieuw kan boeken.",
+        "replayed": "Deze zending had al een lopende nafacturering."
+      },
+      "status": {
+        "notified": "Aangekondigd, inning open",
+        "charged": "Geïnd",
+        "invoiced": "Geïnd en gefactureerd",
+        "invoice_pending": "Nafactuur nog uit te geven",
+        "awaiting_payment": "Wacht op betaling van de klant",
+        "paid": "Betaald",
+        "disputed": "Betwist",
+        "waived": "Kwijtgescholden",
+        "other": "Onbekende status"
+      },
+      "method": {
+        "authorization": "Incassomachtiging",
+        "invoice": "Nafactuur, betaald door de klant",
+        "other": "Onbekend"
+      },
+      "field": {
+        "method": "Wijze",
+        "description": "Reden",
+        "invoice": "Nafactuur",
+        "crm": "CRM-dossier",
+        "created": "Gestart",
+        "updated": "Bijgewerkt",
+        "error": "Probleem"
+      },
+      "errors": {
+        "not_card": "Deze klant wordt op de gebruikelijke manier gefactureerd: gebruik de normale nafacturering.",
+        "not_invoiced": "De zending heeft nog geen eerste factuur.",
+        "already_postbilled": "De zending heeft al een tweede factuur.",
+        "no_amount": "Er staat geen nafactureringsbedrag op de zending.",
+        "preview_failed": "De nafactuur kon niet worden berekend. Controleer het bedrag en de factuurgegevens van de zending.",
+        "invalid": "De gegevens van het verzoek zijn ongeldig.",
+        "invoice_failed": "De nafactuur kon niet worden uitgegeven. Probeer het opnieuw of informeer de administratie.",
+        "forbidden": "Je hebt geen toestemming om nafactureringen te innen.",
+        "not_found": "De zending is niet gevonden of hoort niet bij je bedrijf.",
+        "conflict": "De status van de zending staat deze bewerking niet toe. Vernieuw en probeer het opnieuw.",
+        "other": "De nafacturering kon niet worden geladen of gestart. Probeer het opnieuw."
+      }
     }
   }
 }

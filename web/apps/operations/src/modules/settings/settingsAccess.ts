@@ -20,7 +20,17 @@ import { hasScope, type AccessSnapshot } from '@shared/composables/useAccess';
 // aditivo partner_pricing («solo personal de partner; nunca clientes finales», rbac_seed.yml, 2026-11-06).
 // `partner_agent:read` (N15, collaudo 16/11): solo partner_staff/partner_staff_ai_admin y los techos
 // app_internal_erp(_staff)/app_partner_erp lo llevan (rbac_seed.yml) — ningún rol de cliente final.
-export const STAFF_ONLY_SCOPES: ReadonlySet<string> = new Set(['config:read', 'suppliers:read', 'margins:read', 'partner_agent:read']);
+// `erp:view` (entrar al ERP): solo los techos app_internal_erp(_staff)/app_partner_erp y el aditivo erp_operator («Solo
+// personal TMWE y partner; los clientes con auth_10 NO lo reciben»). `partner:manage`: los mismos techos y el aditivo
+// partner_admin («no se concede a clientes finales»). rbac_seed.yml, comprobado el 2026-11-25.
+export const STAFF_ONLY_SCOPES: ReadonlySet<string> = new Set([
+  'config:read',
+  'suppliers:read',
+  'margins:read',
+  'partner_agent:read',
+  'erp:view',
+  'partner:manage',
+]);
 
 export const SETTINGS_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> = {
   'settings-carrier-services': ['suppliers:read'],
@@ -40,6 +50,11 @@ export const SETTINGS_ROUTE_SCOPES: Readonly<Record<string, readonly string[]>> 
   // de un partner (no TMWE, sin suplantación) nunca veía la tarjeta en su propio
   // hub de Ajustes aunque el backend sí le permitiera usar la pantalla.
   'settings-elevenlabs-my-agent': ['partner_agent:read'],
+  // Auto-registro de FindAir (P147). Cola y ficha: Self_Registration_Admin_Controller exige TMWE o erp:view (más el
+  // módulo anagrafiche, que lo comprueba la API). Configuración: TMWE o partner:manage (PARTNER_ADMIN_REQUIRED).
+  'settings-self-registrations': ['erp:view'],
+  'settings-self-registration-detail': ['erp:view'],
+  'settings-self-registration-config': ['partner:manage'],
 };
 
 /**

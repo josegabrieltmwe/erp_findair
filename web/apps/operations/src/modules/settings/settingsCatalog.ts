@@ -341,6 +341,24 @@ export const SETTINGS_CATALOG: SettingsGroupDef[] = [
         subgroup: 'anagrafica',
         aliases: ['Partner', 'Partners list'],
       },
+      // Auto-registro de FindAir (P147): cola de solicitudes del titular (aprobar/rechazar) y su configuración.
+      // Visibilidad por scope en settingsAccess.ts (erp:view / partner:manage); la API autoriza.
+      {
+        key: 'self_registrations',
+        i18nKey: 'self_registrations',
+        icon: 'mdi-account-clock-outline',
+        routeName: 'settings-self-registrations',
+        subgroup: 'anagrafica',
+        aliases: ['Registrazioni', 'Sign-ups', 'Registros', 'Auto-registro', 'Self registration', 'FindAir'],
+      },
+      {
+        key: 'self_registration_config',
+        i18nKey: 'self_registration_config',
+        icon: 'mdi-account-cog-outline',
+        routeName: 'settings-self-registration-config',
+        subgroup: 'anagrafica',
+        aliases: ['Auto-registro', 'Self registration', 'Turnstile', 'FindAir'],
+      },
     ],
   },
   {

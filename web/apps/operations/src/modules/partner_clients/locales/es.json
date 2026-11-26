@@ -746,7 +746,11 @@
       "col_sped_24m": "2A",
       "col_sped_12m": "1A",
       "col_importi_12m": "Importe 1A",
-      "col_last_srv": "Último servicio"
+      "col_last_srv": "Último servicio",
+      "secure_credential": {
+        "label": "Credencial segura (solo FindAir)",
+        "hint": "Contraseña cifrada: no se puede ver, regenerar ni enviar. Para cambiarla, envía el enlace de acceso."
+      }
     },
     "sections": {
       "users": "Usuarios",

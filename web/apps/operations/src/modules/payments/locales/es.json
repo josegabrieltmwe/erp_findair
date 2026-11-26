@@ -397,7 +397,7 @@
       "back": "Cobros",
       "title": "Autorizaciones de cobro",
       "refresh": "Actualizar",
-      "intro": "Permiso que firma cada cliente, una sola vez, para que le cobres recargos con el método guardado (tarjeta o adeudo SEPA) sin que esté presente. Los datos de pago los teclea el cliente en la página de la pasarela: aquí solo se ven la marca y los últimos 4.",
+      "intro": "Permiso que firma cada cliente, una sola vez, para que le cobres recargos con el método guardado (tarjeta o adeudo SEPA) sin que esté presente. Los datos de pago los teclea el cliente en la página de la pasarela y no se guardan: aquí solo se ven el tipo de método y los datos de la autorización.",
       "empty": "No hay autorizaciones que mostrar.",
       "per_month": "{amount} al mes",
       "terms_days": "Aviso {notice} d · Impugnar {dispute} d",
@@ -405,6 +405,7 @@
       "revoke_title": "Revocar la autorización",
       "revoke_body": "No se podrán cobrar nuevos recargos a este cliente con esta autorización. Retirar el permiso es un derecho del cliente y no mueve dinero.",
       "revoked_done": "Autorización revocada.",
+      "revoked_on": "Revocada el {date}",
       "col": {
         "id": "Autorización",
         "method": "Medio de pago",
@@ -423,8 +424,7 @@
       },
       "method": {
         "card": "Tarjeta",
-        "sepa_debit": "Adeudo SEPA",
-        "expired_hint": "La fecha de caducidad impresa ya ha pasado"
+        "sepa_debit": "Adeudo SEPA"
       },
       "create": {
         "open": "Nueva autorización",
@@ -462,6 +462,67 @@
       "reference": "Referencia",
       "refresh": "Actualizar estado",
       "back": "Volver a cobros y pagos"
+    },
+    "postcharge": {
+      "title": "Cobro de la postfacturación (clientes que pagan con tarjeta)",
+      "intro": "Solo para clientes que pagan con tarjeta: su postfactura no sale en el lote mensual. Cóbrala aquí cuando el importe sea definitivo.",
+      "start": "Cobrar postfacturación",
+      "net_vat": "Neto {net} + IVA {vat}",
+      "block": {
+        "not_invoiced": "El envío aún no tiene la primera factura.",
+        "post_billed": "El envío ya tiene la segunda factura.",
+        "no_amount": "No hay importe de postfacturación en el envío."
+      },
+      "confirm": {
+        "title": "Cobrar la postfacturación",
+        "amount": "Importe en el envío: {amount}. Se cobra lo que resulte de la postfactura (IVA y reglas de facturación incluidos).",
+        "with_auth": "Si el cliente tiene una autorización de cobro activa: se le avisa por correo, se le cobra al terminar el plazo de aviso y, una vez cobrado, se emite la postfactura.",
+        "without_auth": "Si no la tiene (o el importe supera sus topes): se emite ya la postfactura, se le envía por correo y tiene que pagarla en FindAir antes de volver a reservar.",
+        "submit": "Cobrar"
+      },
+      "done": {
+        "notified": "Cliente avisado. Se le cobrará al terminar el plazo de aviso.",
+        "invoiced": "Postfactura emitida. El cliente debe pagarla antes de volver a reservar.",
+        "replayed": "Este envío ya tenía una postfacturación en curso."
+      },
+      "status": {
+        "notified": "Avisado, pendiente de cobro",
+        "charged": "Cobrado",
+        "invoiced": "Cobrado y facturado",
+        "invoice_pending": "Postfactura pendiente de emitir",
+        "awaiting_payment": "Esperando el pago del cliente",
+        "paid": "Pagado",
+        "disputed": "Impugnado",
+        "waived": "Perdonado",
+        "other": "Estado desconocido"
+      },
+      "method": {
+        "authorization": "Autorización de cobro",
+        "invoice": "Postfactura que paga el cliente",
+        "other": "Desconocida"
+      },
+      "field": {
+        "method": "Vía",
+        "description": "Concepto",
+        "invoice": "Postfactura",
+        "crm": "Práctica CRM",
+        "created": "Iniciada",
+        "updated": "Actualizada",
+        "error": "Incidencia"
+      },
+      "errors": {
+        "not_card": "Este cliente se factura de la forma habitual: usa la postfacturación normal.",
+        "not_invoiced": "El envío aún no tiene la primera factura.",
+        "already_postbilled": "El envío ya tiene la segunda factura.",
+        "no_amount": "No hay importe de postfacturación en el envío.",
+        "preview_failed": "No se pudo calcular la postfactura. Revisa el importe y los datos de facturación del envío.",
+        "invalid": "Los datos de la petición no son válidos.",
+        "invoice_failed": "No se pudo emitir la postfactura. Inténtalo de nuevo o avisa a administración.",
+        "forbidden": "No tienes permiso para cobrar postfacturaciones.",
+        "not_found": "No se encuentra el envío o no pertenece a tu empresa.",
+        "conflict": "El estado del envío no permite esta operación. Actualiza e inténtalo de nuevo.",
+        "other": "No se pudo consultar ni iniciar la postfacturación. Inténtalo de nuevo."
+      }
     }
   }
 }

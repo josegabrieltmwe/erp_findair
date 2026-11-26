@@ -153,6 +153,12 @@ final class ResponseAdapter
             return $payment;
         }
 
+        // Postfacturación (P148): la postfactura no se pudo emitir (502). Es un fallo funcional que la SPA explica.
+        $postcharge = $this->postchargeProblem($payload, $status, $route, $requestId);
+        if ($postcharge !== null) {
+            return $postcharge;
+        }
+
         // 501: la función no está activa en este servidor (p. ej. el tiempo real de comunicación sin configurar,
         // COMM_NOT_IMPLEMENTED). No es una avería: se conserva el estado y el código para que la SPA use su alternativa
         // (polling) en vez de reintentar. Texto fijo; el del backend no sale.
@@ -209,6 +215,32 @@ final class ResponseAdapter
         $title = $status === 429 ? 'Límite de IA' : 'Servicio de IA';
 
         return ProblemDetails::response($out, $aiCode, $title, self::AI_ERRORS[$aiCode], $requestId, ['error_code' => $aiCode], $headers);
+    }
+
+    /**
+     * api_booking_postcharge (P148): 502 POSTCHARGE_INVOICE_FAILED = la postfactura no se pudo emitir. Se conserva el
+     * estado y el codigo (texto FIJO; el detalle del backend no sale) para que la SPA no lo confunda con una averia
+     * generica. Cualquier otro 5xx de la ruta sigue siendo 502 upstream_error.
+     *
+     * @param array<string, mixed> $payload
+     */
+    private function postchargeProblem(array $payload, int $status, Route $route, string $requestId): ?ResponseInterface
+    {
+        if ($status !== 502 || !str_starts_with($route->id, 'booking_postcharge.')) {
+            return null;
+        }
+        $error = is_array($payload['error'] ?? null) ? $payload['error'] : [];
+        $code = $payload['error_code'] ?? ($error['code'] ?? null);
+        if ($code !== 'POSTCHARGE_INVOICE_FAILED') {
+            return null;
+        }
+        $text = 'No se pudo emitir la postfactura.';
+
+        return ProblemDetails::response(502, $code, 'Postfactura no emitida', $text, $requestId, [
+            'success' => false,
+            'error_code' => $code,
+            'error' => ['code' => $code, 'message' => $text],
+        ]);
     }
 
     /**

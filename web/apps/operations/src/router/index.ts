@@ -679,6 +679,32 @@ const routes: RouteRecordRaw[] = [
       import("@shared/anagrafiche/feature/AnagraficaListPage.vue"),
     meta: { requiresAdmin: true, title: "Partners", lockTipo: "P" },
   },
+  // Auto-registro de clientes de FindAir: cola, ficha y configuración del titular (P147). La ficha es el destino de
+  // los avisos `self_registration`/`self_registration_reminder` de la campana (acción navigate a
+  // /settings/anagrafica/registrations/<id>): no cambiar la ruta sin cambiar el api. Quién entra lo dice
+  // settingsAccess.ts (erp:view para la cola, partner:manage para la configuración); autoriza la API.
+  {
+    path: "/settings/anagrafica/registrations",
+    name: "settings-self-registrations",
+    component: () =>
+      import("@shared/self_registration/feature/SelfRegistrationQueuePage.vue"),
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/anagrafica/registrations/:id(\\d+)",
+    name: "settings-self-registration-detail",
+    component: () =>
+      import("@shared/self_registration/feature/SelfRegistrationDetailPage.vue"),
+    props: true,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/settings/anagrafica/registrations/config",
+    name: "settings-self-registration-config",
+    component: () =>
+      import("@shared/self_registration/feature/SelfRegistrationConfigPage.vue"),
+    meta: { requiresAdmin: true },
+  },
   // Fase 3 / L04: plan contable italiano (piano_conti). Lista plana, sin
   // jerarquía — verificado en BD, ver chartOfAccounts.service.ts.
   {

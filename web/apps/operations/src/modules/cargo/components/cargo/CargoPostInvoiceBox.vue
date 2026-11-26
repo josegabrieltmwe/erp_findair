@@ -57,6 +57,15 @@
           />
         </v-col>
       </v-row>
+      <!-- P148: clientes que pagan con tarjeta (auto-registro): la postfactura no sale en el lote mensual. -->
+      <BookingPostchargePanel
+        kind="cargo"
+        :shipment-id="Number(cargo?.id) || null"
+        :customer-id="Number(cargo?.id_cliente) || null"
+        :invoice-id="cargo?.id_fattura_a"
+        :post-invoice-id="cargo?.id_fattura_a2"
+        :post-amount="sumAmounts(cargo?.carico_extra)"
+      />
     </component>
   </component>
 </template>
@@ -69,6 +78,8 @@ import { useCargoStore } from "@cargo/stores/cargo.store";
 import { useCargoState } from "@cargo/composables/useCargoState";
 import { useFieldBinding } from "@cargo/composables/useFieldBinding";
 import { VCard, VCardText } from "vuetify/components";
+import BookingPostchargePanel from "@/modules/payments/components/BookingPostchargePanel.vue";
+import { sumAmounts } from "@/modules/payments/components/bookingPostchargeModel";
 
 const { t } = useI18n();
 const props = defineProps<{ embedded?: boolean }>();

@@ -87,6 +87,18 @@
       <template #cell.loginn="{ item }">
         <span v-if="(item as Record<string, unknown>).loginn">{{ (item as Record<string, unknown>).loginn }}</span>
         <span v-else class="cm-text-muted">—</span>
+        <v-chip
+          v-if="(item as ContattoRow).secure_credential === true"
+          size="x-small"
+          color="teal"
+          variant="tonal"
+          class="ml-1"
+          :prepend-icon="mdiLockCheckOutline"
+          :title="t('anagrafiche.secure_credential.hint')"
+          data-testid="contact-secure-credential"
+        >
+          {{ t('anagrafiche.secure_credential.label') }}
+        </v-chip>
       </template>
       <template #cell.ruolo="{ item }">
         <span v-if="(item as Record<string, unknown>).ruolo">{{ (item as Record<string, unknown>).ruolo }}</span>
@@ -216,7 +228,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mdiPlus, mdiPencil, mdiDelete, mdiShieldKeyOutline, mdiKeyVariant, mdiEmailFastOutline, mdiCellphoneKey, mdiLoginVariant, mdiMenuDown, mdiLinkVariant } from '@mdi/js';
+import { mdiPlus, mdiPencil, mdiDelete, mdiShieldKeyOutline, mdiKeyVariant, mdiEmailFastOutline, mdiCellphoneKey, mdiLoginVariant, mdiMenuDown, mdiLinkVariant, mdiLockCheckOutline } from '@mdi/js';
 import type { ContattoRow } from '../services/anagrafica.service';
 import { contattiService, type FindairLevel, type ApiRoleState, type ContattoLite } from '../services/contatti.service';
 import { oauthRolesService, isInternalOnlyRole, roleConflictMessage, type OAuthRole } from '../../oauth_roles/services/oauthRoles.service';
@@ -233,6 +245,7 @@ import type { ActiveFilter } from '@shared/listing/types';
 import { useToast } from '../composables/useToast';
 import { useConfirm } from '../composables/useConfirm';
 import { accessLinkErrorText } from '../utils/accessLink';
+import { localizedErrorText } from '../../utils/apiError';
 import ContattoFormDialog from './ContattoFormDialog.vue';
 import CmSectionHeader from '../components/CmSectionHeader.vue';
 import CmRowActions, { type RowAction } from '../components/CmRowActions.vue';
@@ -519,7 +532,10 @@ const headers = computed(() => [
 
 /** Acciones de fila (>2 → menú dropdown con icono + texto). */
 function rowActions(row: ContattoRow): RowAction[] {
-  return [
+  // Credencial segura (solo FindAir): no hay contraseña en claro que regenerar ni enviar, ni acceso al B2B legacy;
+  // el api respondería 409 HASHED_CREDENTIAL. Se ocultan: su contraseña se cambia con el enlace de acceso.
+  const secure = row.secure_credential === true;
+  const actions: RowAction[] = [
     { key: 'perms', title: t('users.bulk.grant_role'), icon: mdiShieldKeyOutline, onClick: () => openPerms(row) },
     { key: 'profile', title: t('anagrafiche.send_profile'), icon: mdiEmailFastOutline, onClick: () => sendProfile(row) },
     {
@@ -536,6 +552,15 @@ function rowActions(row: ContattoRow): RowAction[] {
     { key: 'edit', title: t('common.edit'), icon: mdiPencil, onClick: () => openEdit(row) },
     { key: 'delete', title: t('common.delete'), icon: mdiDelete, color: 'error', onClick: () => confirmDelete(row), divider: true },
   ];
+  return secure ? actions.filter((a) => !HASHED_CREDENTIAL_ACTIONS.has(a.key ?? '')) : actions;
+}
+
+/** Acciones que exigen la contraseña en claro (contatti.lpw). */
+const HASHED_CREDENTIAL_ACTIONS: ReadonlySet<string> = new Set(['profile', 'reset_pw', 'b2b']);
+
+/** 409 HASHED_CREDENTIAL (la lista estaba desactualizada o el contacto pasó a credencial segura): mensaje claro. */
+function contactErrorText(e: unknown): string {
+  return localizedErrorText(e, { t: (k) => t(k) as string, te }, t('common.error') as string);
 }
 
 function openCreate(): void {
@@ -582,7 +607,7 @@ async function resetPassword(row: ContattoRow): Promise<void> {
     resetPw.value = pw;
     resetOpen.value = true;
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    toast.error(contactErrorText(e));
   }
 }
 
@@ -620,7 +645,7 @@ async function b2bDirect(row: ContattoRow): Promise<void> {
       toast.error(t('common.error') as string);
     }
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    toast.error(contactErrorText(e));
   }
 }
 
@@ -659,7 +684,7 @@ async function sendProfile(row: ContattoRow): Promise<void> {
     await contattiService.sendProfile(row.id);
     toast.success(t('anagrafiche.send_profile_done'));
   } catch (e) {
-    toast.error(e instanceof Error ? e.message : (t('common.error') as string));
+    toast.error(contactErrorText(e));
   }
 }
 

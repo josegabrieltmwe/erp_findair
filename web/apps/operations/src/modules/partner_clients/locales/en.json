@@ -746,7 +746,11 @@
       "col_sped_24m": "2Y",
       "col_sped_12m": "1Y",
       "col_importi_12m": "Amount 1Y",
-      "col_last_srv": "Last service"
+      "col_last_srv": "Last service",
+      "secure_credential": {
+        "label": "Secure credential (FindAir only)",
+        "hint": "Hashed password: it cannot be viewed, regenerated or sent. To change it, send the access link."
+      }
     },
     "sections": {
       "users": "Users",

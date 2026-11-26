@@ -1,6 +1,6 @@
 /**
  * Lógica pura de las pantallas de AUTORIZACIONES DE COBRO (`AuthorizationsPage.vue`, `AuthorizationCreateDialog.vue`):
- * qué acciones ofrece cada fila, formato del medio de pago guardado y reglas del alta (clave de idempotencia, sondeo
+ * qué acciones ofrece cada fila, tipo de medio de pago y reglas del alta (clave de idempotencia, sondeo
  * hasta `active`). Sin Vue ni red, para probarla aislada (ver authorizationsModel.spec.ts).
  *
  * Qué es una autorización: el permiso que el cliente firma UNA vez para que el vendedor le cobre después recargos con el
@@ -50,29 +50,8 @@ export function availableAuthorizationActions(row: Pick<PayAuthorization, "statu
   return row.status === "active" || row.status === "pending" ? ["revoke"] : [];
 }
 
-/**
- * ¿Ya pasó el mes/año impreso en la tarjeta? Collaudo 17/11 (N69): `status` solo lo cambia el webhook de la pasarela
- * cuando un cobro falla (ver cabecera del fichero); una tarjeta sin intentos de cobro desde que caducó se queda en
- * `active` indefinidamente, aunque el calendario ya la haya superado. Esta función es solo una señal VISUAL para no
- * mostrarla como una tarjeta normal — nunca decide si se puede revocar o cobrar, eso sigue siendo del servidor.
- */
-export function isPastExpiry(
-  row: Pick<PayAuthorization, "exp_month" | "exp_year">,
-  today: Date = new Date(),
-): boolean {
-  if (!row.exp_month || !row.exp_year) return false;
-  const y = today.getFullYear();
-  const m = today.getMonth() + 1;
-  return row.exp_year < y || (row.exp_year === y && row.exp_month < m);
-}
-
-/**
- * Color del chip de estado. `pastExpiry` (ver `isPastExpiry`) solo repinta a aviso una fila que el backend aún
- * reporta como `active`/`pending` pero cuyo mes/año ya pasó — no cambia el color de `failed`/`revoked`/`expired`,
- * que ya son definitivos.
- */
-export function authorizationStatusColor(status: PayAuthorizationStatus | string, pastExpiry = false): string {
-  if (pastExpiry && (status === "active" || status === "pending")) return "warning";
+/** Color del chip de estado. */
+export function authorizationStatusColor(status: PayAuthorizationStatus | string): string {
   switch (status) {
     case "active":
       return "success";
@@ -89,18 +68,17 @@ export function authorizationStatusColor(status: PayAuthorizationStatus | string
 }
 
 /**
- * Medio de pago guardado para mostrar, sin datos sensibles: «VISA ····4242 (12/2028)» o «SEPA ····1234». Solo marca,
- * últimos 4 y caducidad, que son los únicos campos que publica el API. Sin últimos 4 (aún `pending`): «—».
+ * Clave i18n del tipo de medio de pago (`payments.authorizations.method.card` / `.sepa_debit`). Es lo único que se
+ * muestra del medio: desde el 2026-11-26 el API no guarda ni devuelve marca, últimos 4 ni caducidad (solo la
+ * autorización; el método queda en el proveedor). Un tipo desconocido cae en tarjeta, el método por defecto (D5).
  */
-export function describeMethod(
-  row: Pick<PayAuthorization, "method_type" | "brand" | "last4" | "exp_month" | "exp_year">,
-  cardLabel = "Card",
-): string {
-  if (!row.last4) return "—";
-  // `cardLabel` lo pone la pantalla ya traducido (`payments.authorizations.method.card`): antes el texto «Tarjeta» estaba
-  // fijo aquí y salía en español también con la interfaz en inglés o italiano (hallado en el navegador).
-  const label = row.method_type === "sepa_debit" ? "SEPA" : (row.brand || "").toUpperCase() || cardLabel;
-  const exp =
-    row.exp_month && row.exp_year ? ` (${String(row.exp_month).padStart(2, "0")}/${row.exp_year})` : "";
-  return `${label} ····${row.last4}${exp}`;
+export function methodLabelKey(method: PayAuthorization["method_type"] | string | null | undefined): string {
+  return method === "sepa_debit"
+    ? "payments.authorizations.method.sepa_debit"
+    : "payments.authorizations.method.card";
+}
+
+/** Icono del tipo de medio de pago. */
+export function methodIcon(method: PayAuthorization["method_type"] | string | null | undefined): string {
+  return method === "sepa_debit" ? "mdi-bank-outline" : "mdi-credit-card-outline";
 }
