@@ -53,6 +53,11 @@ export interface Pickup {
   sede?: { id: number; label: string };
   /** Autista resuelto; null si id_contatti=0 (sin asignar). */
   driver?: { id: number; nome: string } | null;
+  /**
+   * Dónde para el autista (lista y calendario, T-44): la sede o la dirección de la expedición, con la misma
+   * regla que el borderò. Ausente con un API anterior.
+   */
+  direccion?: StopAddress;
 }
 
 export interface PickupFilters {
@@ -175,7 +180,11 @@ export interface RouteStop {
 }
 
 export interface StopAddress {
-  origen: "sede" | "expedicion";
+  /**
+   * `sede_sin_expedicion` (solo en la lista y el calendario de presas): la presa es en la dirección de la
+   * expedición, pero ninguna expedición ligada la tiene y se muestra la de la sede.
+   */
+  origen: "sede" | "expedicion" | "sede_sin_expedicion";
   nombre?: string;
   indirizzo?: string;
   cap?: string;
@@ -183,6 +192,8 @@ export interface StopAddress {
   prov?: string;
   paese?: string;
   tel?: string;
+  /** Solo si las expediciones ligadas tienen más de una dirección distinta (se muestra la primera). */
+  direcciones_distintas?: number;
 }
 
 export interface ManifestShipment {

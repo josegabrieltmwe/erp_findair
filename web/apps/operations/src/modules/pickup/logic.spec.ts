@@ -19,6 +19,7 @@ import {
   mapsCoordsUrl,
   mapsSearchUrl,
   mergeBulkResults,
+  pickupAddress,
   pickupColorKind,
   queueFilters,
   rangeCovers,
@@ -494,5 +495,62 @@ describe("tablero de franjas (U-14)", () => {
     expect(cells.get("4|09:00")).toEqual([0, 1]);
     expect(cells.get("4|10:00")).toEqual([2]);
     expect(cells.has("0|09:00")).toBe(false);
+  });
+});
+
+describe("pickupAddress (U-15)", () => {
+  it("sin direccion (API anterior) o vacía devuelve null", () => {
+    expect(pickupAddress({})).toBeNull();
+    expect(pickupAddress({ direccion: { origen: "sede" } })).toBeNull();
+  });
+
+  it("sede: línea corta y completa con el nombre", () => {
+    const a = pickupAddress({
+      direccion: {
+        origen: "sede",
+        nombre: "ACME SRL",
+        indirizzo: "Via Roma 12",
+        cap: "20121",
+        citta: "Milano",
+        prov: "MI",
+        paese: "",
+      },
+    });
+    expect(a).toEqual({
+      origin: "sede",
+      line: "Via Roma 12, 20121 Milano (MI)",
+      full: "ACME SRL · Via Roma 12, 20121 Milano (MI)",
+      warning: false,
+      distinct: 0,
+    });
+  });
+
+  it("expedición con país; sin provincia no pinta paréntesis", () => {
+    const a = pickupAddress({
+      direccion: {
+        origen: "expedicion",
+        nombre: "Mittente",
+        indirizzo: "Calle Mayor 1",
+        cap: "28013",
+        citta: "Madrid",
+        paese: "ES",
+      },
+    });
+    expect(a?.line).toBe("Calle Mayor 1, 28013 Madrid");
+    expect(a?.full).toBe("Mittente · Calle Mayor 1, 28013 Madrid · ES");
+    expect(a?.warning).toBe(false);
+  });
+
+  it("avisa si cae a la sede o si hay direcciones distintas", () => {
+    const base = { indirizzo: "Via Sede 1", citta: "Milano" };
+    expect(
+      pickupAddress({ direccion: { origen: "sede_sin_expedicion", ...base } })
+        ?.warning,
+    ).toBe(true);
+    const many = pickupAddress({
+      direccion: { origen: "expedicion", direcciones_distintas: 3, ...base },
+    });
+    expect(many?.warning).toBe(true);
+    expect(many?.distinct).toBe(3);
   });
 });

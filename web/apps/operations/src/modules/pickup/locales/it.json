@@ -138,7 +138,14 @@
       "empty_unassigned": "Niente da assegnare in questo giorno.",
       "no_drivers": "Nessun autista disponibile.",
       "assign_title": "Assegna ritiro #{id}",
-      "time": "Ora"
+      "time": "Ora",
+      "show_addresses": "Mostra indirizzi",
+      "distinct_addresses": "Le spedizioni hanno {n} indirizzi diversi: si mostra il primo",
+      "origin": {
+        "sede": "Indirizzo della sede",
+        "expedicion": "Indirizzo della spedizione",
+        "sede_sin_expedicion": "Indirizzo della sede: la spedizione non ha un indirizzo"
+      }
     },
     "zones": {
       "title": "Zone CAP → autista",

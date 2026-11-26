@@ -138,7 +138,14 @@
       "empty_unassigned": "Für diesen Tag nichts Unzugewiesenes.",
       "no_drivers": "Keine Fahrer verfügbar.",
       "assign_title": "Abholung #{id} zuweisen",
-      "time": "Uhrzeit"
+      "time": "Uhrzeit",
+      "show_addresses": "Adressen anzeigen",
+      "distinct_addresses": "Die Sendungen haben {n} verschiedene Adressen: die erste wird angezeigt",
+      "origin": {
+        "sede": "Adresse des Standorts",
+        "expedicion": "Adresse der Sendung",
+        "sede_sin_expedicion": "Adresse des Standorts: die Sendung hat keine Adresse"
+      }
     },
     "zones": {
       "title": "PLZ-Gebiete → Fahrer",

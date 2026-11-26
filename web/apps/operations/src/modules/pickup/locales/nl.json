@@ -138,7 +138,14 @@
       "empty_unassigned": "Niets niet-toegewezen voor deze dag.",
       "no_drivers": "Geen chauffeurs beschikbaar.",
       "assign_title": "Ophaling #{id} toewijzen",
-      "time": "Tijd"
+      "time": "Tijd",
+      "show_addresses": "Adressen tonen",
+      "distinct_addresses": "De zendingen hebben {n} verschillende adressen: het eerste wordt getoond",
+      "origin": {
+        "sede": "Adres van de vestiging",
+        "expedicion": "Adres van de zending",
+        "sede_sin_expedicion": "Adres van de vestiging: de zending heeft geen adres"
+      }
     },
     "zones": {
       "title": "Postcodegebieden → chauffeur",

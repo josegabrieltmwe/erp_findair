@@ -15,6 +15,7 @@ import type {
   Pickup,
   PickupFilters,
   RouteStop,
+  StopAddress,
   ZoneSaveItem,
 } from "./types";
 
@@ -420,6 +421,45 @@ export function stopAddress(stop: RouteStop): StopAddressView {
   );
   const name = d?.nombre?.trim() || stop.cliente?.ragsoc || "";
   return { name, line, query: joinParts([a.indirizzo, place, a.prov], ", ") };
+}
+
+/** Dirección de una presa del tablero o la lista (T-44 / U-15). */
+export interface PickupAddressView {
+  origin: StopAddress["origen"];
+  /** «Via Roma 12, 20121 Milano (MI)»: lo que cabe en la celda. */
+  line: string;
+  /** Nombre, línea y país: para el texto al pasar el ratón. */
+  full: string;
+  /** Hay que mirar la dirección: la presa va a la sede por falta de dirección de expedición, o hay varias. */
+  warning: boolean;
+  /** Número de direcciones distintas entre las expediciones (0 si no hay discrepancia). */
+  distinct: number;
+}
+
+/** Dirección de una presa, o null si el API no la manda (versión anterior) o viene vacía. */
+export function pickupAddress(
+  p: Pick<Pickup, "direccion">,
+): PickupAddressView | null {
+  const d = p.direccion;
+  if (!d) return null;
+  const place = joinParts([d.cap, d.citta], " ");
+  const prov = (d.prov ?? "").trim();
+  const line = joinParts(
+    [d.indirizzo, prov ? `${place} (${prov})` : place],
+    ", ",
+  );
+  if (line === "") return null;
+  const distinct =
+    d.direcciones_distintas && d.direcciones_distintas > 1
+      ? d.direcciones_distintas
+      : 0;
+  return {
+    origin: d.origen,
+    line,
+    full: joinParts([d.nombre, line, d.paese], " · "),
+    warning: d.origen === "sede_sin_expedicion" || distinct > 0,
+    distinct,
+  };
 }
 
 /** Hora `HH:MM` de la cita de la parada. */

@@ -138,7 +138,14 @@
       "empty_unassigned": "Nothing unassigned for this day.",
       "no_drivers": "No drivers available.",
       "assign_title": "Assign pickup #{id}",
-      "time": "Time"
+      "time": "Time",
+      "show_addresses": "Show addresses",
+      "distinct_addresses": "The shipments have {n} different addresses: the first one is shown",
+      "origin": {
+        "sede": "Site address",
+        "expedicion": "Shipment address",
+        "sede_sin_expedicion": "Site address: the shipment has no address"
+      }
     },
     "zones": {
       "title": "CAP zones → driver",

@@ -138,7 +138,14 @@
       "empty_unassigned": "Nada sin asignar para este día.",
       "no_drivers": "No hay autistas disponibles.",
       "assign_title": "Asignar recogida #{id}",
-      "time": "Hora"
+      "time": "Hora",
+      "show_addresses": "Mostrar direcciones",
+      "distinct_addresses": "Las expediciones tienen {n} direcciones distintas: se muestra la primera",
+      "origin": {
+        "sede": "Dirección de la sede",
+        "expedicion": "Dirección de la expedición",
+        "sede_sin_expedicion": "Dirección de la sede: la expedición no tiene dirección"
+      }
     },
     "zones": {
       "title": "Zonas CP → chófer",

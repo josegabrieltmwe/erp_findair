@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import PickupBoardChip from "../components/PickupBoardChip.vue";
 import ScheduleAssignDialog from "../components/ScheduleAssignDialog.vue";
 import { pickupsService } from "../services/pickups.service";
 import { buildScheduleCells, buildTimeSlots, scheduleCellKey } from "../logic";
@@ -11,6 +12,9 @@ import type { Driver, Pickup } from "../types";
  * Tablero de asignación por franja horaria (U-14, G29): columnas = autistas,
  * filas = franjas de 30 min, igual que el grid de `gest_oper_list.php` del
  * legado — asignar aquí fija autista+hora en una sola acción.
+ *
+ * U-15: cada presa lleva al lado su dirección (la sede o la de la expedición, como el borderò). El interruptor
+ * «Mostrar direcciones» vuelve al tablero compacto y se recuerda en este navegador.
  */
 const { t } = useI18n();
 
@@ -23,6 +27,29 @@ const error = ref<string | null>(null);
 const dialogOpen = ref(false);
 const dialogPickup = ref<Pickup | null>(null);
 const dialogSlot = ref<string | null>(null);
+
+const SHOW_ADDRESSES_KEY = "tmwe:pickup-board-show-addresses";
+function readShowAddresses(): boolean {
+  try {
+    return localStorage.getItem(SHOW_ADDRESSES_KEY) !== "0";
+  } catch {
+    return true;
+  }
+}
+const showAddresses = ref(readShowAddresses());
+watch(showAddresses, (v) => {
+  try {
+    localStorage.setItem(SHOW_ADDRESSES_KEY, v ? "1" : "0");
+  } catch {
+    /* navegador sin almacenamiento: la preferencia dura la sesión */
+  }
+});
+
+function unassignedSuffix(p: Pickup): string {
+  const parts = [p.sede?.label || String(p.id_sede)];
+  if (p.n_colli) parts.push(String(p.n_colli));
+  return ` · ${parts.join(" · ")}`;
+}
 
 const slots = computed(() => buildTimeSlots());
 const unassigned = computed(() => pickups.value.filter((p) => !p.id_contatti));
@@ -67,6 +94,17 @@ onMounted(load);
   <div class="pk-page">
     <header class="pk-page-head">
       <h1 class="pk-page-title">{{ t("pickup.schedule.title") }}</h1>
+      <v-spacer />
+      <v-switch
+        v-model="showAddresses"
+        :label="t('pickup.schedule.show_addresses')"
+        color="primary"
+        density="compact"
+        hide-details
+        inset
+        class="flex-grow-0"
+        data-testid="board-show-addresses"
+      />
       <v-text-field
         v-model="date"
         type="date"
@@ -97,18 +135,16 @@ onMounted(load);
         {{ t("pickup.schedule.empty_unassigned") }}
       </div>
       <div v-else class="pk-chip-row">
-        <v-chip
+        <PickupBoardChip
           v-for="p in unassigned"
           :key="p.id"
-          size="small"
-          variant="tonal"
+          :pickup="p"
+          :show-address="showAddresses"
+          :suffix="unassignedSuffix(p)"
           color="warning"
-          class="ma-1"
+          :class="{ 'pk-unassigned-card': showAddresses }"
           @click="openAssign(p)"
-        >
-          #{{ p.id }} · {{ p.sede?.label || p.id_sede }}
-          <template v-if="p.n_colli"> · {{ p.n_colli }}</template>
-        </v-chip>
+        />
       </div>
     </section>
 
@@ -117,7 +153,7 @@ onMounted(load);
     </div>
 
     <div v-else class="pk-board-scroll">
-      <table class="pk-board">
+      <table class="pk-board" :class="{ 'pk-board--addresses': showAddresses }">
         <thead>
           <tr>
             <th class="pk-board-slot-col"></th>
@@ -128,17 +164,13 @@ onMounted(load);
           <tr v-for="slot in slots" :key="slot">
             <th class="pk-board-slot-col">{{ slot }}</th>
             <td v-for="d in drivers" :key="d.id">
-              <v-chip
+              <PickupBoardChip
                 v-for="p in pickupsInCell(d.id, slot)"
                 :key="p.id"
-                size="x-small"
-                variant="tonal"
-                color="primary"
-                class="ma-1"
+                :pickup="p"
+                :show-address="showAddresses"
                 @click="openAssign(p, slot)"
-              >
-                #{{ p.id }}
-              </v-chip>
+              />
             </td>
           </tr>
         </tbody>
@@ -201,6 +233,13 @@ onMounted(load);
   padding: 4px 6px;
   min-width: 90px;
   vertical-align: top;
+}
+.pk-board--addresses td {
+  min-width: 180px;
+  max-width: 240px;
+}
+.pk-unassigned-card {
+  width: 220px !important;
 }
 .pk-board-slot-col {
   min-width: 56px;

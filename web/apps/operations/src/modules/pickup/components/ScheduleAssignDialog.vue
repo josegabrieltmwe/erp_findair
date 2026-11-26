@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { pickupAddress } from "../logic";
 import { pickupsService } from "../services/pickups.service";
 import type { Driver, Pickup } from "../types";
 
@@ -22,6 +23,11 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+/** Adónde se manda al autista (U-15). */
+const address = computed(() =>
+  props.pickup ? pickupAddress(props.pickup) : null,
+);
 
 const selectedDriver = ref<number | null>(null);
 const time = ref("");
@@ -73,6 +79,28 @@ async function confirm(): Promise<void> {
       <v-card-title>{{
         t("pickup.schedule.assign_title", { id: pickup.id })
       }}</v-card-title>
+      <v-card-subtitle
+        v-if="address"
+        class="pk-assign-address"
+        data-testid="assign-address"
+      >
+        <v-icon
+          :icon="
+            address.origin === 'expedicion'
+              ? 'mdi-package-variant-closed'
+              : 'mdi-office-building-outline'
+          "
+          size="14"
+        />
+        {{ address.full }}
+        <div v-if="address.warning" class="text-warning">
+          {{
+            address.distinct > 0
+              ? t("pickup.schedule.distinct_addresses", { n: address.distinct })
+              : t("pickup.schedule.origin.sede_sin_expedicion")
+          }}
+        </div>
+      </v-card-subtitle>
       <v-card-text>
         <v-alert
           v-if="error"
@@ -119,3 +147,9 @@ async function confirm(): Promise<void> {
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.pk-assign-address {
+  white-space: normal;
+}
+</style>

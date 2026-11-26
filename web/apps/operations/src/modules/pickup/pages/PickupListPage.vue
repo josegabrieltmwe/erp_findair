@@ -19,6 +19,7 @@ import {
   PICKUP_QUEUES,
   isIncoherent,
   isOverdueOpen,
+  pickupAddress,
   queueFilters,
   type PickupQueueId,
 } from "../logic";
@@ -354,6 +355,27 @@ onMounted(() => {
             ? t("pickup.list.triangulation")
             : t("pickup.list.at_sede")
         }}
+        <div
+          v-if="pickupAddress(row(raw))"
+          class="pk-list-address"
+          :title="pickupAddress(row(raw))?.full"
+          data-testid="list-address"
+        >
+          <v-icon
+            v-if="pickupAddress(row(raw))?.warning"
+            icon="mdi-alert-outline"
+            size="14"
+            color="warning"
+            :title="
+              pickupAddress(row(raw))?.distinct
+                ? t('pickup.schedule.distinct_addresses', {
+                    n: pickupAddress(row(raw))?.distinct,
+                  })
+                : t('pickup.schedule.origin.sede_sin_expedicion')
+            "
+          />
+          {{ pickupAddress(row(raw))?.line }}
+        </div>
       </template>
       <template #[`cell.n_colli`]="{ item: raw }">{{ row(raw).n_colli ?? "—" }}</template>
       <template #[`cell.peso`]="{ item: raw }">{{ row(raw).peso ?? "—" }}</template>
@@ -425,6 +447,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.pk-list-address {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: rgba(var(--v-theme-on-surface), 0.7);
+}
 .pk-page {
   padding: 24px;
   /* Completa la cadena flex entre `.dsh-main` (DashboardShell, ya flex-column
