@@ -538,7 +538,9 @@
         "verified_other": "Geverifieerd — {label}",
         "note_present": "Notities aanwezig",
         "note_absent": "Geen ontvangernotitie",
-        "flags": "Beheervlaggen"
+        "flags": "Beheervlaggen",
+        "noiva_on": "Geen btw (Art.9) actief",
+        "cost_to_check_on": "Kosten te controleren"
       },
       "note": {
         "title": "Notities",

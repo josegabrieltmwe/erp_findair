@@ -48,6 +48,16 @@
       </template>
 
       <template #topbar-actions>
+        <!-- Navegador de registros de la cohorte filtrada (prev/next +
+             chip "volver a la lista" + atajos de teclado). Antes vivía
+             como hermano suelto fuera del shell (ShipmentDetailPageV2),
+             sin hueco de layout propio, y podía quedar superpuesto sobre
+             el contenido. Aquí, dentro de #topbar-actions, ocupa espacio
+             real en la fila y nunca tapa las cards de abajo. Se oculta
+             sola (navigator.total === 0) cuando no se llegó desde una
+             lista filtrada. -->
+        <RecordNavigator />
+
         <button
           type="button"
           class="topbar-iconbtn"
@@ -162,6 +172,7 @@ import { useExpressOffersStore } from "@shipment/stores/express_offers.store";
 import { usePartnerOffersStore } from "@shipment/stores/partner_offers.store";
 import { useRecordNavigator } from "@shipment/composables/useRecordNavigator";
 import MiniStatusBar from "@shipment/components/shell/MiniStatusBar.vue";
+import RecordNavigator from "@shipment/components/shell/RecordNavigator.vue";
 import ShipmentOwnerChip from "@shipment/components/shipment/owner/ShipmentOwnerChip.vue";
 import ConsolidataProjectChip from "@/modules/consolidata/components/ConsolidataProjectChip.vue";
 import DetailShell from "@shared/detail/DetailShell.vue";

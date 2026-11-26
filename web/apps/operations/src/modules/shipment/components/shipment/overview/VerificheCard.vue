@@ -17,6 +17,20 @@
           <span class="vdot" :class="verifiedClass" :title="verifiedTitle">
             <v-icon icon="mdi-check-circle-outline" size="12" />
           </span>
+          <span
+            v-if="noivaArt9"
+            class="vdot on"
+            :title="t('shipment.cards.verifiche.noiva_on')"
+          >
+            <v-icon icon="mdi-receipt-text-minus-outline" size="12" />
+          </span>
+          <span
+            v-if="costoDaverif"
+            class="vdot on"
+            :title="t('shipment.cards.verifiche.cost_to_check_on')"
+          >
+            <v-icon icon="mdi-cash-clock" size="12" />
+          </span>
         </span>
         <v-icon icon="mdi-chevron-right" size="14" class="chev" />
       </summary>
@@ -125,4 +139,11 @@ const verifiedTitle = computed(() =>
         label: controllataLabel.value,
       }),
 );
+
+// Indicadores de un vistazo para noiva_art9 / costo_daverif: antes solo
+// visibles tras expandir esta card y abrir el modal "Flags" (17 flags sin
+// agrupar). Paridad legacy spedy_form.php — ambos formaban parte de
+// $oclka junto a controllata/checkforn, que aquí ya tienen su mini-badge.
+const noivaArt9 = computed(() => get("noiva_art9") === "S");
+const costoDaverif = computed(() => get("costo_daverif") === "S");
 </script>

@@ -31,15 +31,14 @@
         Off-canvas drawers stay as Teleport overlays (Documents, Chat).
         The old `ShipmentSidebar` drawer was promoted into the DetailShell
         sidebar (persistent rail/expanded) so it no longer needs to live
-        here. `RecordNavigator` floating bar is also gone — the rail
-        sidebar now surfaces the same record list and the arrow-key
-        shortcuts still work via useRecordNavigator at this page level.
+        here. `RecordNavigator` moved into ShipmentDetailLayoutV2's
+        topbar-actions slot, where it occupies real layout space instead
+        of floating over this page's content.
       -->
       <DocumentsDrawer />
       <ChatDrawer ref="chatDrawerRef" />
       <ShipmentAuditDrawer />
       <ShipmentTrackingDrawer />
-      <RecordNavigator />
 
       <!-- Modal stack -->
       <ShipmentModals />
@@ -72,7 +71,6 @@ import DocumentsDrawer from "@shipment/components/shipment/drawers/DocumentsDraw
 import ChatDrawer from "@shipment/components/shipment/drawers/ChatDrawer.vue";
 import ShipmentAuditDrawer from "@shipment/components/shipment/audit/ShipmentAuditDrawer.vue";
 import ShipmentTrackingDrawer from "@shipment/components/shipment/tracking/ShipmentTrackingDrawer.vue";
-import RecordNavigator from "@shipment/components/shell/RecordNavigator.vue";
 import ShipmentModals from "@shipment/components/shipment/modals/ShipmentModals.vue";
 
 const { t } = useI18n();

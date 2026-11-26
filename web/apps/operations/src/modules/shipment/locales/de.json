@@ -538,7 +538,9 @@
         "verified_other": "Geprüft — {label}",
         "note_present": "Notizen vorhanden",
         "note_absent": "Keine Empfängernotiz",
-        "flags": "Verwaltungs-Flags"
+        "flags": "Verwaltungs-Flags",
+        "noiva_on": "Keine USt. (Art.9) aktiv",
+        "cost_to_check_on": "Kosten zu prüfen"
       },
       "note": {
         "title": "Notizen",

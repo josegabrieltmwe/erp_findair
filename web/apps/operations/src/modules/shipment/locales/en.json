@@ -538,7 +538,9 @@
         "verified_other": "Verified — {label}",
         "note_present": "Notes present",
         "note_absent": "No recipient note",
-        "flags": "Management flags"
+        "flags": "Management flags",
+        "noiva_on": "No VAT (Art.9) active",
+        "cost_to_check_on": "Cost to check"
       },
       "note": {
         "title": "Notes",
