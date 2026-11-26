@@ -2703,7 +2703,9 @@
       "indirizzo": "Adres",
       "cap": "Postcode",
       "citta": "Plaats",
-      "prov": "Provincie"
+      "prov": "Provincie",
+      "cod_destin": "SDI-ontvangerscode",
+      "PEC": "PEC (gecertificeerde e-mail)"
     },
     "status": {
       "pending_verification": "Niet geverifieerd",
@@ -2788,7 +2790,8 @@
       "unknown_client": "Applicatie niet gevonden voor deze eigenaar",
       "unknown_payment_method": "Betaalmethode niet beschikbaar voor deze eigenaar",
       "out_of_range": "Buiten bereik (0-10000)",
-      "turnstile_not_configured_on_server": "Turnstile is niet ingesteld op de server"
+      "turnstile_not_configured_on_server": "Turnstile is niet ingesteld op de server",
+      "unknown_payment_schedule": "Betalingstermijn niet beschikbaar voor deze houder"
     },
     "errors": {
       "generic": "De bewerking kon niet worden voltooid.",
@@ -2799,7 +2802,8 @@
       "ERP_STAFF_REQUIRED": "Alleen ERP-medewerkers kunnen registratieaanvragen beoordelen.",
       "PARTNER_ADMIN_REQUIRED": "Alleen TMWE of de beheerder van jouw bedrijf kan deze instellingen wijzigen.",
       "APPROVAL_FAILED": "De goedkeuring is onvolledig gebleven: controleer de klantkaart.",
-      "REJECTION_FAILED": "De afwijzing is onvolledig gebleven: controleer de klantkaart."
+      "REJECTION_FAILED": "De afwijzing is onvolledig gebleven: controleer de klantkaart.",
+      "BILLING_DATA_INCOMPLETE": "Goedkeuren niet mogelijk: factuurgegevens ontbreken."
     },
     "config": {
       "title": "Zelfregistratie van klanten",
@@ -2823,6 +2827,8 @@
       "notify_emails_hint": "Ontvangen een melding bij elke nieuwe aanvraag. Druk op Enter na elk adres.",
       "id_pagam_met_card": "Betaalmethode met kaart",
       "id_pagam_met_card_hint": "Wordt bij goedkeuring aan het account toegewezen.",
+      "id_pagam_scad_card": "Betalingstermijn",
+      "id_pagam_scad_card_hint": "Wordt bij goedkeuring aan het account toegewezen. Zonder termijn kan de klant niet worden gefactureerd.",
       "section_abuse": "Bescherming",
       "turnstile_required": "Turnstile verplichten",
       "turnstile_required_hint": "Controle tegen bots op het aanmeldformulier.",
@@ -2830,6 +2836,19 @@
       "daily_limit_hint": "Daarboven worden aanvragen geblokkeerd door de instellingen.",
       "save": "Opslaan",
       "saved": "Instellingen opgeslagen."
+    },
+    "billing": {
+      "missing_intro": "Bij goedkeuring zoals het nu is, kan de klant niet worden gefactureerd. Ontbreekt:",
+      "sdi_hint": "Italiaanse klanten: SDI-code van 7 tekens of PEC.",
+      "codes": {
+        "rag_soc": "bedrijfsnaam",
+        "pi_cf": "btw-nummer of fiscale code",
+        "indirizzo": "adres",
+        "citta": "plaats",
+        "sdi_or_pec": "SDI-code of PEC",
+        "id_pagam_met": "betaalmethode (instellingen)",
+        "id_pagam_scad": "betalingstermijn (instellingen)"
+      }
     }
   }
 }

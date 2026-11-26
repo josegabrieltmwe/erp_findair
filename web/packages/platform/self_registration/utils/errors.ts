@@ -1,4 +1,4 @@
-import { apiErrorCode, apiFieldErrors, localizedErrorText } from '../../utils/apiError';
+import { apiErrorCode, apiErrorDetails, apiFieldErrors, localizedErrorText } from '../../utils/apiError';
 
 type I18n = {
   t: (key: string, named?: Record<string, unknown>) => string;
@@ -28,4 +28,11 @@ export function selfRegistrationFieldErrors(e: unknown, i18n: I18n): Record<stri
     out[field] = i18n.te(key) ? i18n.t(key) : value;
   }
   return out;
+}
+
+/** Datos de facturación que faltan según un 422 BILLING_DATA_INCOMPLETE (`details.missing`); vacío para otro error. */
+export function selfRegistrationBillingMissing(e: unknown): string[] {
+  if (apiErrorCode(e) !== 'BILLING_DATA_INCOMPLETE') return [];
+  const missing = apiErrorDetails(e).missing;
+  return Array.isArray(missing) ? missing.filter((x): x is string => typeof x === 'string') : [];
 }

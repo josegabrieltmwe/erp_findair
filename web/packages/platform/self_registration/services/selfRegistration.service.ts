@@ -66,6 +66,9 @@ export interface SelfRegistrationSede {
   prov?: string;
   id_paese_iso?: string;
   tel?: string;
+  /** Código destinatario SDI (solo Italia). */
+  cod_destin?: string;
+  PEC?: string;
 }
 
 /** Cuenta creada al activar (anagrafica prospecto + sede de facturación + contacto). */
@@ -94,7 +97,13 @@ export interface SelfRegistrationDetail extends SelfRegistrationRow {
   customer_message: string | null;
   duplicates: SelfRegistrationDuplicate[];
   account: SelfRegistrationAccount | null;
+  /** Datos de facturación que faltarían si se aprobara sin correcciones (códigos de BILLING_MISSING_CODES). */
+  billing_missing: BillingMissingCode[];
 }
+
+/** Datos sin los cuales el api no aprueba (422 BILLING_DATA_INCOMPLETE, `details.missing`). */
+export const BILLING_MISSING_CODES = ['rag_soc', 'pi_cf', 'indirizzo', 'citta', 'sdi_or_pec', 'id_pagam_met', 'id_pagam_scad'] as const;
+export type BillingMissingCode = (typeof BILLING_MISSING_CODES)[number];
 
 export interface SelfRegistrationFilters {
   status?: SelfRegistrationStatus | '' | null;
@@ -126,6 +135,8 @@ export interface ApproveCorrections {
     cap?: string;
     prov?: string;
     id_paese_iso?: string;
+    cod_destin?: string;
+    PEC?: string;
   };
 }
 
@@ -144,6 +155,8 @@ export interface SelfRegistrationConfig {
   terms_version: string;
   notify_emails: string[];
   id_pagam_met_card: number | null;
+  /** Vencimiento (pagamenti_scad_new.id) que se pone al cliente aprobado; sin él no es facturable. */
+  id_pagam_scad_card: number | null;
   turnstile_required: boolean;
   daily_limit: number;
 }
@@ -186,7 +199,7 @@ export function diffCorrections(
     if (v !== '' && v !== (current[k] ?? '').trim()) out[k] = v;
   }
   const sede: NonNullable<ApproveCorrections['sede']> = {};
-  for (const k of ['indirizzo', 'citta', 'cap', 'prov', 'id_paese_iso'] as const) {
+  for (const k of ['indirizzo', 'citta', 'cap', 'prov', 'id_paese_iso', 'cod_destin', 'PEC'] as const) {
     const v = (edited.sede[k] ?? '').trim();
     if (v !== String(current.sede?.[k] ?? '').trim()) sede[k] = v;
   }
@@ -209,7 +222,12 @@ export const selfRegistrationService = {
   async get(id: number): Promise<SelfRegistrationDetail> {
     const raw = await http<unknown>(ADMIN_ENDPOINT, { query: { id } });
     const d = dataOf<SelfRegistrationDetail>(raw);
-    return { ...d, duplicates: Array.isArray(d?.duplicates) ? d.duplicates : [], account: d?.account ?? null };
+    return {
+      ...d,
+      duplicates: Array.isArray(d?.duplicates) ? d.duplicates : [],
+      account: d?.account ?? null,
+      billing_missing: Array.isArray(d?.billing_missing) ? d.billing_missing : [],
+    };
   },
 
   async approve(id: number, corrections: ApproveCorrections, notes?: string): Promise<SelfRegistrationDecision> {
@@ -243,6 +261,7 @@ export const selfRegistrationService = {
 export function normalizeConfig(c: Partial<SelfRegistrationConfig> | null | undefined): SelfRegistrationConfig {
   const x = c ?? {};
   const card = Number(x.id_pagam_met_card ?? 0);
+  const scad = Number(x.id_pagam_scad_card ?? 0);
   return {
     id_anagr_titolare: Number(x.id_anagr_titolare ?? 0),
     enabled: x.enabled === true || (x.enabled as unknown) === 1 || (x.enabled as unknown) === '1',
@@ -253,6 +272,7 @@ export function normalizeConfig(c: Partial<SelfRegistrationConfig> | null | unde
     terms_version: String(x.terms_version ?? ''),
     notify_emails: Array.isArray(x.notify_emails) ? x.notify_emails.map(String) : [],
     id_pagam_met_card: card > 0 ? card : null,
+    id_pagam_scad_card: scad > 0 ? scad : null,
     turnstile_required: x.turnstile_required === true || (x.turnstile_required as unknown) === 1 || (x.turnstile_required as unknown) === '1',
     daily_limit: Number(x.daily_limit ?? 200),
   };

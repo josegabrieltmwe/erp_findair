@@ -2703,7 +2703,9 @@
       "indirizzo": "Dirección",
       "cap": "Código postal",
       "citta": "Ciudad",
-      "prov": "Provincia/estado"
+      "prov": "Provincia/estado",
+      "cod_destin": "Código destinatario SDI",
+      "PEC": "PEC"
     },
     "status": {
       "pending_verification": "Sin verificar",
@@ -2788,7 +2790,8 @@
       "unknown_client": "Aplicación no encontrada para este titular",
       "unknown_payment_method": "Método de pago no disponible para este titular",
       "out_of_range": "Fuera de rango (0-10000)",
-      "turnstile_not_configured_on_server": "Turnstile no está configurado en el servidor"
+      "turnstile_not_configured_on_server": "Turnstile no está configurado en el servidor",
+      "unknown_payment_schedule": "Vencimiento no disponible para este titular"
     },
     "errors": {
       "generic": "No se pudo completar la operación.",
@@ -2799,7 +2802,8 @@
       "ERP_STAFF_REQUIRED": "Solo el personal del ERP puede revisar solicitudes de registro.",
       "PARTNER_ADMIN_REQUIRED": "Solo TMWE o el administrador de tu empresa pueden cambiar esta configuración.",
       "APPROVAL_FAILED": "La aprobación quedó a medias: revisa la ficha del cliente.",
-      "REJECTION_FAILED": "El rechazo quedó a medias: revisa la ficha del cliente."
+      "REJECTION_FAILED": "El rechazo quedó a medias: revisa la ficha del cliente.",
+      "BILLING_DATA_INCOMPLETE": "No se puede aprobar: faltan datos de facturación."
     },
     "config": {
       "title": "Auto-registro de clientes",
@@ -2823,6 +2827,8 @@
       "notify_emails_hint": "Reciben un aviso por cada solicitud nueva. Pulsa Intro tras cada dirección.",
       "id_pagam_met_card": "Método de pago con tarjeta",
       "id_pagam_met_card_hint": "Se asigna a la cuenta al aprobarla.",
+      "id_pagam_scad_card": "Vencimiento de pago",
+      "id_pagam_scad_card_hint": "Se asigna a la cuenta al aprobarla. Sin él el cliente no es facturable.",
       "section_abuse": "Protección",
       "turnstile_required": "Exigir Turnstile",
       "turnstile_required_hint": "Comprobación anti-robots en el formulario de alta.",
@@ -2830,6 +2836,19 @@
       "daily_limit_hint": "Por encima, las solicitudes quedan bloqueadas por configuración.",
       "save": "Guardar",
       "saved": "Configuración guardada."
+    },
+    "billing": {
+      "missing_intro": "Si se aprueba así no se le podrá facturar. Falta:",
+      "sdi_hint": "Clientes italianos: código SDI de 7 caracteres o PEC.",
+      "codes": {
+        "rag_soc": "razón social",
+        "pi_cf": "NIF-IVA o CF",
+        "indirizzo": "dirección",
+        "citta": "ciudad",
+        "sdi_or_pec": "código SDI o PEC",
+        "id_pagam_met": "método de pago (configuración)",
+        "id_pagam_scad": "vencimiento de pago (configuración)"
+      }
     }
   }
 }

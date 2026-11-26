@@ -109,6 +109,20 @@
             density="compact"
           />
         </v-col>
+        <v-col cols="12" md="6">
+          <v-select
+            v-model="form.id_pagam_scad_card"
+            :items="scheduleItems"
+            :loading="paymentsLoading"
+            :label="t('self_registration.config.id_pagam_scad_card')"
+            :hint="t('self_registration.config.id_pagam_scad_card_hint')"
+            :error-messages="errors.id_pagam_scad_card"
+            persistent-hint
+            clearable
+            density="compact"
+            data-testid="sr-config-scad"
+          />
+        </v-col>
       </v-row>
 
       <div class="text-subtitle-2 mb-2 mt-4">{{ t('self_registration.config.section_abuse') }}</div>
@@ -156,7 +170,7 @@ import CmSectionHeader from '../../anagrafiche/components/CmSectionHeader.vue';
 import CmAnagraficaAutocomplete from '../../listini/components/CmAnagraficaAutocomplete.vue';
 import { useAnagraficaContext } from '../../anagrafiche/composables/useAnagraficaContext';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
-import { paymentsService, type PaymentMethodOption } from '../../anagrafiche/services/payments.service';
+import { paymentsService, type PaymentMethodOption, type PaymentScheduleOption } from '../../anagrafiche/services/payments.service';
 import { selfRegistrationErrorText, selfRegistrationFieldErrors } from '../utils/errors';
 import {
   selfRegistrationService,
@@ -189,12 +203,17 @@ const form = reactive<SelfRegistrationConfigInput>({
   terms_version: '',
   notify_emails: [],
   id_pagam_met_card: null,
+  id_pagam_scad_card: null,
   turnstile_required: false,
   daily_limit: 200,
 });
 
 const payments = ref<PaymentMethodOption[]>([]);
 const paymentsLoading = ref(false);
+const schedules = ref<PaymentScheduleOption[]>([]);
+const scheduleItems = computed(() =>
+  schedules.value.map((s) => ({ title: String(s.label ?? s.descr ?? `#${s.id}`), value: Number(s.id) })),
+);
 const paymentItems = computed(() =>
   payments.value.map((p) => ({ title: String(p.descr || p.descrEN || `#${p.id}`), value: Number(p.id) })),
 );
@@ -228,9 +247,13 @@ async function load(): Promise<void> {
 async function loadPayments(): Promise<void> {
   paymentsLoading.value = true;
   try {
-    payments.value = await paymentsService.paymentMethods(undefined, target() ?? undefined);
-  } catch {
-    payments.value = [];
+    const tid = target() ?? undefined;
+    const [methods, terms] = await Promise.all([
+      paymentsService.paymentMethods(undefined, tid).catch(() => []),
+      paymentsService.paymentSchedules(tid).catch(() => []),
+    ]);
+    payments.value = methods;
+    schedules.value = terms;
   } finally {
     paymentsLoading.value = false;
   }

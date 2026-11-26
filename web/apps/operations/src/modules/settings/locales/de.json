@@ -2703,7 +2703,9 @@
       "indirizzo": "Adresse",
       "cap": "Postleitzahl",
       "citta": "Ort",
-      "prov": "Provinz"
+      "prov": "Provinz",
+      "cod_destin": "SDI-Empfängercode",
+      "PEC": "PEC (zertifizierte E-Mail)"
     },
     "status": {
       "pending_verification": "Nicht verifiziert",
@@ -2788,7 +2790,8 @@
       "unknown_client": "Anwendung für diesen Inhaber nicht gefunden",
       "unknown_payment_method": "Zahlungsart für diesen Inhaber nicht verfügbar",
       "out_of_range": "Außerhalb des Bereichs (0-10000)",
-      "turnstile_not_configured_on_server": "Turnstile ist auf dem Server nicht eingerichtet"
+      "turnstile_not_configured_on_server": "Turnstile ist auf dem Server nicht eingerichtet",
+      "unknown_payment_schedule": "Zahlungsziel für diesen Inhaber nicht verfügbar"
     },
     "errors": {
       "generic": "Der Vorgang konnte nicht abgeschlossen werden.",
@@ -2799,7 +2802,8 @@
       "ERP_STAFF_REQUIRED": "Nur ERP-Mitarbeitende können Registrierungsanfragen prüfen.",
       "PARTNER_ADMIN_REQUIRED": "Nur TMWE oder der Administrator deiner Firma kann diese Einstellungen ändern.",
       "APPROVAL_FAILED": "Die Freigabe ist unvollständig geblieben: Prüfe die Kundenakte.",
-      "REJECTION_FAILED": "Die Ablehnung ist unvollständig geblieben: Prüfe die Kundenakte."
+      "REJECTION_FAILED": "Die Ablehnung ist unvollständig geblieben: Prüfe die Kundenakte.",
+      "BILLING_DATA_INCOMPLETE": "Freigabe nicht möglich: Rechnungsdaten fehlen."
     },
     "config": {
       "title": "Selbstregistrierung von Kunden",
@@ -2823,6 +2827,8 @@
       "notify_emails_hint": "Erhalten bei jeder neuen Anfrage eine Benachrichtigung. Nach jeder Adresse Enter drücken.",
       "id_pagam_met_card": "Zahlungsart Karte",
       "id_pagam_met_card_hint": "Wird dem Konto bei der Freigabe zugewiesen.",
+      "id_pagam_scad_card": "Zahlungsziel",
+      "id_pagam_scad_card_hint": "Wird dem Konto bei der Freigabe zugewiesen. Ohne Zahlungsziel kann dem Kunden keine Rechnung gestellt werden.",
       "section_abuse": "Schutz",
       "turnstile_required": "Turnstile verlangen",
       "turnstile_required_hint": "Bot-Schutz im Anmeldeformular.",
@@ -2830,6 +2836,19 @@
       "daily_limit_hint": "Darüber werden Anfragen durch die Einstellungen gesperrt.",
       "save": "Speichern",
       "saved": "Einstellungen gespeichert."
+    },
+    "billing": {
+      "missing_intro": "Bei Freigabe in diesem Zustand kann dem Kunden keine Rechnung gestellt werden. Es fehlt:",
+      "sdi_hint": "Italienische Kunden: 7-stelliger SDI-Code oder PEC.",
+      "codes": {
+        "rag_soc": "Firmenname",
+        "pi_cf": "USt-IdNr. oder Steuernummer",
+        "indirizzo": "Adresse",
+        "citta": "Ort",
+        "sdi_or_pec": "SDI-Code oder PEC",
+        "id_pagam_met": "Zahlungsart (Einstellungen)",
+        "id_pagam_scad": "Zahlungsziel (Einstellungen)"
+      }
     }
   }
 }

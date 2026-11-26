@@ -18,7 +18,7 @@ import {
   parseUtc,
   selfRegistrationService,
 } from "@shared/self_registration/services/selfRegistration.service";
-import { selfRegistrationErrorText, selfRegistrationFieldErrors } from "@shared/self_registration/utils/errors";
+import { selfRegistrationBillingMissing, selfRegistrationErrorText, selfRegistrationFieldErrors } from "@shared/self_registration/utils/errors";
 import { ApiError } from "@shared/anagrafiche/services/api.types";
 
 beforeEach(() => {
@@ -64,12 +64,15 @@ describe("selfRegistration.service (P147)", () => {
     const current = {
       rag_soc: "Acme",
       pi_cf: "IT123",
-      sede: { indirizzo: "Via 1", citta: "Roma", cap: "00100", prov: "RM", id_paese_iso: "IT" },
+      sede: { indirizzo: "Via 1", citta: "Roma", cap: "00100", prov: "RM", id_paese_iso: "IT", cod_destin: "", PEC: "" },
     };
     expect(diffCorrections(current, { rag_soc: "Acme", pi_cf: "IT123", sede: { ...current.sede } })).toEqual({});
     expect(
       diffCorrections(current, { rag_soc: " Acme Srl ", pi_cf: "", sede: { ...current.sede, cap: "00118" } }),
     ).toEqual({ rag_soc: "Acme Srl", sede: { cap: "00118" } });
+    expect(diffCorrections(current, { rag_soc: "Acme", pi_cf: "IT123", sede: { ...current.sede, cod_destin: "ABC1234" } })).toEqual({
+      sede: { cod_destin: "ABC1234" },
+    });
   });
 
   it("las fechas del api son UTC sin zona", () => {
@@ -91,5 +94,11 @@ describe("selfRegistration.service (P147)", () => {
       error: { code: "VALIDATION_ERROR", message: "x", details: { fields: { notes: "required", "sede.cap": "raro" } } },
     });
     expect(selfRegistrationFieldErrors(e422, i18n)).toEqual({ notes: "T:self_registration.field_error.required", "sede.cap": "raro" });
+    expect(selfRegistrationBillingMissing(e422)).toEqual([]);
+    const billing = new ApiError("x", 422, "BILLING_DATA_INCOMPLETE", {
+      success: false,
+      error: { code: "BILLING_DATA_INCOMPLETE", message: "x", details: { missing: ["sdi_or_pec", "id_pagam_scad"] } },
+    });
+    expect(selfRegistrationBillingMissing(billing)).toEqual(["sdi_or_pec", "id_pagam_scad"]);
   });
 });

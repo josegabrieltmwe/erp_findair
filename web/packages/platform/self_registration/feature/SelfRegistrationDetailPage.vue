@@ -139,8 +139,23 @@
                 {{ reg.account.sede.indirizzo || '—' }}<br />
                 {{ [reg.account.sede.cap, reg.account.sede.citta, reg.account.sede.prov].filter(Boolean).join(' ') || '—' }}
                 · {{ reg.account.sede.id_paese_iso || '—' }}
+                <div v-if="reg.account.sede.cod_destin || reg.account.sede.PEC" class="text-caption mt-1" data-testid="sr-detail-sdi">
+                  <span v-if="reg.account.sede.cod_destin">{{ t('self_registration.fields.cod_destin') }}: <span class="sr-mono">{{ reg.account.sede.cod_destin }}</span></span>
+                  <span v-if="reg.account.sede.cod_destin && reg.account.sede.PEC"> · </span>
+                  <span v-if="reg.account.sede.PEC">{{ t('self_registration.fields.PEC') }}: {{ reg.account.sede.PEC }}</span>
+                </div>
               </div>
               <div v-else class="sr-muted">—</div>
+              <v-alert
+                v-if="reg.billing_missing.length > 0"
+                type="warning"
+                variant="tonal"
+                density="compact"
+                class="mt-3"
+                data-testid="sr-billing-missing"
+              >
+                {{ t('self_registration.billing.missing_intro') }} {{ billingMissingText(reg.billing_missing) }}
+              </v-alert>
               <v-divider class="my-3" />
               <div class="text-caption sr-muted mb-1">{{ t('self_registration.detail.contact') }}</div>
               <div v-if="reg.account.contact" class="d-flex align-center flex-wrap ga-2">
@@ -230,6 +245,29 @@
               <CmCountrySelect v-model="countryModel" :label="t('self_registration.fields.country')" :clearable="false" />
               <div v-if="fieldError('sede.id_paese_iso')" class="text-error text-caption">{{ fieldError('sede.id_paese_iso') }}</div>
             </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="form.sede.cod_destin"
+                :label="t('self_registration.fields.cod_destin')"
+                :hint="t('self_registration.billing.sdi_hint')"
+                :disabled="form.sede.id_paese_iso.toUpperCase() !== 'IT'"
+                :error-messages="fieldError('sede.cod_destin')"
+                maxlength="7"
+                persistent-hint
+                density="compact"
+                data-testid="sr-approve-sdi"
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="form.sede.PEC"
+                :label="t('self_registration.fields.PEC')"
+                :error-messages="fieldError('sede.PEC')"
+                type="email"
+                density="compact"
+                data-testid="sr-approve-pec"
+              />
+            </v-col>
             <v-col cols="12">
               <v-textarea
                 v-model="approveNotes"
@@ -242,7 +280,10 @@
               />
             </v-col>
           </v-row>
-          <v-alert v-if="dialogError" type="error" variant="tonal" density="compact" class="mt-3">{{ dialogError }}</v-alert>
+          <v-alert v-if="dialogError" type="error" variant="tonal" density="compact" class="mt-3">
+            {{ dialogError }}
+            <span v-if="dialogBillingMissing.length > 0" data-testid="sr-approve-billing-missing">{{ billingMissingText(dialogBillingMissing) }}</span>
+          </v-alert>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -306,7 +347,7 @@ import CmCountrySelect from '../../anagrafiche/components/CmCountrySelect.vue';
 import { useToastStore } from '../../anagrafiche/stores/toast.store';
 import { viesService, type ViesResult } from '../../anagrafiche/services/vies.service';
 import SelfRegistrationStatusChip from '../components/SelfRegistrationStatusChip.vue';
-import { selfRegistrationErrorText, selfRegistrationFieldErrors } from '../utils/errors';
+import { selfRegistrationBillingMissing, selfRegistrationErrorText, selfRegistrationFieldErrors } from '../utils/errors';
 import {
   diffCorrections,
   formatDateTime,
@@ -396,9 +437,17 @@ const fieldErrors = ref<Record<string, string>>({});
 function fieldError(k: string): string | undefined {
   return fieldErrors.value[k];
 }
+const dialogBillingMissing = ref<string[]>([]);
+
+/** Lista legible de los datos de facturación que faltan (códigos del api traducidos). */
+function billingMissingText(codes: readonly string[]): string {
+  return codes.map((c) => (te(`self_registration.billing.codes.${c}`) ? t(`self_registration.billing.codes.${c}`) : c)).join(', ');
+}
+
 function resetDialog(): void {
   dialogError.value = '';
   fieldErrors.value = {};
+  dialogBillingMissing.value = [];
 }
 
 const approveOpen = ref(false);
@@ -406,7 +455,7 @@ const approveNotes = ref('');
 const form = reactive({
   rag_soc: '',
   pi_cf: '',
-  sede: { indirizzo: '', citta: '', cap: '', prov: '', id_paese_iso: '' },
+  sede: { indirizzo: '', citta: '', cap: '', prov: '', id_paese_iso: '', cod_destin: '', PEC: '' },
 });
 const countryModel = computed<string | null>({
   get: () => form.sede.id_paese_iso || null,
@@ -424,6 +473,8 @@ function openApprove(): void {
   form.sede.cap = a?.sede?.cap ?? '';
   form.sede.prov = a?.sede?.prov ?? '';
   form.sede.id_paese_iso = a?.sede?.id_paese_iso ?? reg.value?.country_iso ?? '';
+  form.sede.cod_destin = a?.sede?.cod_destin ?? '';
+  form.sede.PEC = a?.sede?.PEC ?? '';
   approveNotes.value = '';
   resetDialog();
   approveOpen.value = true;
@@ -450,6 +501,7 @@ async function submitApprove(): Promise<void> {
   } catch (e) {
     fieldErrors.value = selfRegistrationFieldErrors(e, i18n);
     dialogError.value = selfRegistrationErrorText(e, i18n);
+    dialogBillingMissing.value = selfRegistrationBillingMissing(e);
     if (isStale(e)) await load();
   } finally {
     busy.value = false;

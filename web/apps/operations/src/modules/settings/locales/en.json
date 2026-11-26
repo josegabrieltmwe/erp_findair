@@ -2703,7 +2703,9 @@
       "indirizzo": "Address",
       "cap": "Postcode",
       "citta": "City",
-      "prov": "Province"
+      "prov": "Province",
+      "cod_destin": "SDI recipient code",
+      "PEC": "PEC (certified email)"
     },
     "status": {
       "pending_verification": "Not verified",
@@ -2788,7 +2790,8 @@
       "unknown_client": "Application not found for this owner",
       "unknown_payment_method": "Payment method not available for this owner",
       "out_of_range": "Out of range (0-10000)",
-      "turnstile_not_configured_on_server": "Turnstile is not configured on the server"
+      "turnstile_not_configured_on_server": "Turnstile is not configured on the server",
+      "unknown_payment_schedule": "Payment terms not available for this titular"
     },
     "errors": {
       "generic": "The operation could not be completed.",
@@ -2799,7 +2802,8 @@
       "ERP_STAFF_REQUIRED": "Only ERP staff can review sign-up requests.",
       "PARTNER_ADMIN_REQUIRED": "Only TMWE or your company administrator can change these settings.",
       "APPROVAL_FAILED": "The approval was left incomplete: check the customer record.",
-      "REJECTION_FAILED": "The rejection was left incomplete: check the customer record."
+      "REJECTION_FAILED": "The rejection was left incomplete: check the customer record.",
+      "BILLING_DATA_INCOMPLETE": "Cannot approve: billing data are missing."
     },
     "config": {
       "title": "Customer self sign-up",
@@ -2823,6 +2827,8 @@
       "notify_emails_hint": "They get a notice for every new request. Press Enter after each address.",
       "id_pagam_met_card": "Card payment method",
       "id_pagam_met_card_hint": "Assigned to the account when it is approved.",
+      "id_pagam_scad_card": "Payment terms",
+      "id_pagam_scad_card_hint": "Assigned to the account on approval. Without it the customer cannot be invoiced.",
       "section_abuse": "Protection",
       "turnstile_required": "Require Turnstile",
       "turnstile_required_hint": "Anti-bot check on the sign-up form.",
@@ -2830,6 +2836,19 @@
       "daily_limit_hint": "Above it, requests are blocked by settings.",
       "save": "Save",
       "saved": "Settings saved."
+    },
+    "billing": {
+      "missing_intro": "If approved as is, the customer cannot be invoiced. Missing:",
+      "sdi_hint": "Italian customers: 7-character SDI code or PEC.",
+      "codes": {
+        "rag_soc": "company name",
+        "pi_cf": "VAT number or tax code",
+        "indirizzo": "address",
+        "citta": "city",
+        "sdi_or_pec": "SDI code or PEC",
+        "id_pagam_met": "payment method (settings)",
+        "id_pagam_scad": "payment terms (settings)"
+      }
     }
   }
 }

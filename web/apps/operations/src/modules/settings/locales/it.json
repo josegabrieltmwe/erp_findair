@@ -2703,7 +2703,9 @@
       "indirizzo": "Indirizzo",
       "cap": "CAP",
       "citta": "Città",
-      "prov": "Provincia"
+      "prov": "Provincia",
+      "cod_destin": "Codice destinatario SDI",
+      "PEC": "PEC"
     },
     "status": {
       "pending_verification": "Non verificata",
@@ -2788,7 +2790,8 @@
       "unknown_client": "Applicazione non trovata per questo titolare",
       "unknown_payment_method": "Metodo di pagamento non disponibile per questo titolare",
       "out_of_range": "Fuori intervallo (0-10000)",
-      "turnstile_not_configured_on_server": "Turnstile non è configurato sul server"
+      "turnstile_not_configured_on_server": "Turnstile non è configurato sul server",
+      "unknown_payment_schedule": "Scadenza non disponibile per questo titolare"
     },
     "errors": {
       "generic": "Impossibile completare l'operazione.",
@@ -2799,7 +2802,8 @@
       "ERP_STAFF_REQUIRED": "Solo il personale dell'ERP può rivedere le richieste di registrazione.",
       "PARTNER_ADMIN_REQUIRED": "Solo TMWE o l'amministratore della tua azienda possono modificare questa configurazione.",
       "APPROVAL_FAILED": "L'approvazione è rimasta incompleta: controlla la scheda del cliente.",
-      "REJECTION_FAILED": "Il rifiuto è rimasto incompleto: controlla la scheda del cliente."
+      "REJECTION_FAILED": "Il rifiuto è rimasto incompleto: controlla la scheda del cliente.",
+      "BILLING_DATA_INCOMPLETE": "Impossibile approvare: mancano dati di fatturazione."
     },
     "config": {
       "title": "Autoregistrazione dei clienti",
@@ -2823,6 +2827,8 @@
       "notify_emails_hint": "Ricevono un avviso per ogni nuova richiesta. Premi Invio dopo ogni indirizzo.",
       "id_pagam_met_card": "Metodo di pagamento con carta",
       "id_pagam_met_card_hint": "Viene assegnato all'account quando lo approvi.",
+      "id_pagam_scad_card": "Scadenza di pagamento",
+      "id_pagam_scad_card_hint": "Assegnata all'account all'approvazione. Senza, il cliente non è fatturabile.",
       "section_abuse": "Protezione",
       "turnstile_required": "Richiedi Turnstile",
       "turnstile_required_hint": "Controllo anti-bot nel modulo di iscrizione.",
@@ -2830,6 +2836,19 @@
       "daily_limit_hint": "Oltre il limite le richieste vengono bloccate dalla configurazione.",
       "save": "Salva",
       "saved": "Configurazione salvata."
+    },
+    "billing": {
+      "missing_intro": "Se approvato così, il cliente non potrà essere fatturato. Manca:",
+      "sdi_hint": "Clienti italiani: codice SDI di 7 caratteri o PEC.",
+      "codes": {
+        "rag_soc": "ragione sociale",
+        "pi_cf": "P.IVA o C.F.",
+        "indirizzo": "indirizzo",
+        "citta": "città",
+        "sdi_or_pec": "codice SDI o PEC",
+        "id_pagam_met": "metodo di pagamento (configurazione)",
+        "id_pagam_scad": "scadenza di pagamento (configurazione)"
+      }
     }
   }
 }
