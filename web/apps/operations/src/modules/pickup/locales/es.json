@@ -139,7 +139,10 @@
       "no_drivers": "No hay autistas disponibles.",
       "assign_title": "Asignar recogida #{id}",
       "time": "Hora",
-      "show_addresses": "Mostrar direcciones",
+      "show_addresses": "Mostrar dirección y contacto",
+      "client": "Cliente: {name}",
+      "contact": "Contacto: {value}",
+      "email": "Email: {value}",
       "distinct_addresses": "Las expediciones tienen {n} direcciones distintas: se muestra la primera",
       "origin": {
         "sede": "Dirección de la sede",

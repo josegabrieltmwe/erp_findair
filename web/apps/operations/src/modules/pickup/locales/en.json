@@ -139,7 +139,10 @@
       "no_drivers": "No drivers available.",
       "assign_title": "Assign pickup #{id}",
       "time": "Time",
-      "show_addresses": "Show addresses",
+      "show_addresses": "Show address and contact",
+      "client": "Customer: {name}",
+      "contact": "Contact: {value}",
+      "email": "Email: {value}",
       "distinct_addresses": "The shipments have {n} different addresses: the first one is shown",
       "origin": {
         "sede": "Site address",

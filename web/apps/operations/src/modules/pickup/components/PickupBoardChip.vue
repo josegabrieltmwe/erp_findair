@@ -5,9 +5,10 @@ import { pickupAddress } from "../logic";
 import type { Pickup } from "../types";
 
 /**
- * Una presa en el tablero de autistas (U-14 / U-15): el número y, si se pide, dónde para el autista (la sede o la
- * dirección de la expedición, la misma que el borderò). La línea corta cabe en la celda; la completa, con el
- * nombre, sale al pasar el ratón. Sin `direccion` (API anterior) se ve solo el número, como antes.
+ * Una presa en el tablero de autistas (U-14 / U-15 / U-16): el número y, si se pide, a quién y dónde va el autista
+ * (la sede o la dirección de la expedición, la misma que el borderò) y el contacto (persona y teléfono). El email,
+ * el cliente si no es quien está en la dirección y la dirección completa salen al pasar el ratón. Sin `direccion`
+ * (API anterior) se ve solo el número, como antes.
  */
 const props = withDefaults(
   defineProps<{
@@ -41,6 +42,9 @@ const tooltip = computed(() => {
   const a = address.value;
   if (!a) return undefined;
   const parts = [t(`pickup.schedule.origin.${a.origin}`), a.full];
+  if (a.client) parts.push(t("pickup.schedule.client", { name: a.client }));
+  if (a.contact) parts.push(t("pickup.schedule.contact", { value: a.contact }));
+  if (a.email) parts.push(t("pickup.schedule.email", { value: a.email }));
   if (a.distinct > 0) {
     parts.push(t("pickup.schedule.distinct_addresses", { n: a.distinct }));
   }
@@ -57,7 +61,15 @@ const tooltip = computed(() => {
     data-testid="board-pickup"
     @click="$emit('click')"
   >
-    <span class="pk-board-chip-id">{{ idText }}</span>
+    <span class="pk-board-chip-head">
+      <span class="pk-board-chip-id">{{ idText }}</span>
+      <span
+        v-if="address?.name"
+        class="pk-board-chip-name"
+        data-testid="board-name"
+        >{{ address.name }}</span
+      >
+    </span>
     <span v-if="address" class="pk-board-chip-addr" data-testid="board-address">
       <v-icon
         :icon="ORIGIN_ICON[address.origin] ?? ORIGIN_ICON.sede"
@@ -74,6 +86,14 @@ const tooltip = computed(() => {
         size="12"
         data-testid="board-address-distinct"
       />
+    </span>
+    <span
+      v-if="address?.contact"
+      class="pk-board-chip-addr"
+      data-testid="board-contact"
+    >
+      <v-icon icon="mdi-phone-outline" size="12" />
+      <span class="pk-board-chip-line">{{ address.contact }}</span>
     </span>
   </button>
 </template>
@@ -109,9 +129,22 @@ const tooltip = computed(() => {
   outline: 2px solid rgb(var(--v-theme-primary));
   outline-offset: 1px;
 }
+.pk-board-chip-head {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  max-width: 100%;
+}
 .pk-board-chip-id {
   font-weight: 600;
   white-space: nowrap;
+}
+.pk-board-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface));
 }
 .pk-board-chip-addr {
   display: flex;

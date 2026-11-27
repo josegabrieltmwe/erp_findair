@@ -6,8 +6,8 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 /**
- * U-15, test de MONTAJE: el tablero de autistas pinta la dirección junto a cada número de presa (sede o
- * expedición, con su icono y aviso), el interruptor vuelve al tablero compacto y se recuerda, y con un API que no
+ * U-15 / U-16, test de MONTAJE: el tablero de autistas pinta el nombre, la dirección y el contacto junto a cada
+ * número de presa (sede o expedición, con su icono y aviso), el interruptor vuelve al tablero compacto y se recuerda, y con un API que no
  * manda `direccion` se ve solo el número, como antes.
  */
 const list = vi.fn();
@@ -52,6 +52,10 @@ function rows() {
         citta: "Milano",
         prov: "MI",
         paese: "",
+        tel: "02 555",
+        contacto: "",
+        email: "sede@acme.example",
+        cliente: "ACME SRL",
       },
     },
     {
@@ -68,6 +72,10 @@ function rows() {
         citta: "Milano",
         prov: "MI",
         paese: "IT",
+        tel: "333 1234",
+        contacto: "Sig. Rossi",
+        email: "rossi@mitt.example",
+        cliente: "ACME SRL",
       },
     },
     {
@@ -146,6 +154,26 @@ describe("DriverScheduleBoardPage — direcciones (U-15)", () => {
     );
   });
 
+  it("U-16: nombre y contacto en la presa; email y cliente al pasar el ratón", async () => {
+    const w = mountBoard();
+    await flushPromises();
+
+    const sede = card(w, 101);
+    expect(sede.find('[data-testid="board-name"]').text()).toBe("ACME SRL");
+    expect(sede.find('[data-testid="board-contact"]').text()).toBe("02 555");
+    expect(sede.attributes("title")).toContain("pickup.schedule.email");
+    // El cliente es quien está en la sede: no se repite.
+    expect(sede.attributes("title")).not.toContain("pickup.schedule.client");
+
+    const sped = card(w, 102);
+    expect(sped.find('[data-testid="board-name"]').text()).toBe("Mittente");
+    expect(sped.find('[data-testid="board-contact"]').text()).toBe(
+      "Sig. Rossi · 333 1234",
+    );
+    expect(sped.attributes("title")).toContain("pickup.schedule.client");
+    expect(sped.attributes("title")).toContain("pickup.schedule.contact");
+  });
+
   it("las sin asignar también; la caída a la sede se marca", async () => {
     const w = mountBoard();
     await flushPromises();
@@ -165,6 +193,8 @@ describe("DriverScheduleBoardPage — direcciones (U-15)", () => {
     await w.find('[data-testid="board-show-addresses"] input').setValue(false);
     await flushPromises();
     expect(w.find('[data-testid="board-address"]').exists()).toBe(false);
+    expect(w.find('[data-testid="board-name"]').exists()).toBe(false);
+    expect(w.find('[data-testid="board-contact"]').exists()).toBe(false);
     expect(card(w, 103).text()).toContain("Sede Milano");
     expect(localStorage.getItem("tmwe:pickup-board-show-addresses")).toBe("0");
     w.unmount();

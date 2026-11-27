@@ -192,6 +192,12 @@ export interface StopAddress {
   prov?: string;
   paese?: string;
   tel?: string;
+  /** Persona de contacto (`attenzione` de la dirección de la expedición; vacía en la sede). Solo lista y calendario (T-45). */
+  contacto?: string;
+  /** Email de la dirección de la expedición o de la sede. Solo lista y calendario (T-45). */
+  email?: string;
+  /** Anagrafica dueña de la sede; en una triangulación no es `nombre`. Solo lista y calendario (T-45). */
+  cliente?: string;
   /** Solo si las expediciones ligadas tienen más de una dirección distinta (se muestra la primera). */
   direcciones_distintas?: number;
 }

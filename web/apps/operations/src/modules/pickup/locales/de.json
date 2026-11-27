@@ -139,7 +139,10 @@
       "no_drivers": "Keine Fahrer verfügbar.",
       "assign_title": "Abholung #{id} zuweisen",
       "time": "Uhrzeit",
-      "show_addresses": "Adressen anzeigen",
+      "show_addresses": "Adresse und Kontakt anzeigen",
+      "client": "Kunde: {name}",
+      "contact": "Kontakt: {value}",
+      "email": "E-Mail: {value}",
       "distinct_addresses": "Die Sendungen haben {n} verschiedene Adressen: die erste wird angezeigt",
       "origin": {
         "sede": "Adresse des Standorts",

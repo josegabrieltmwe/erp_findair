@@ -93,6 +93,16 @@ async function confirm(): Promise<void> {
           size="14"
         />
         {{ address.full }}
+        <div v-if="address.client" data-testid="assign-client">
+          {{ t("pickup.schedule.client", { name: address.client }) }}
+        </div>
+        <div
+          v-if="address.contact || address.email"
+          data-testid="assign-contact"
+        >
+          <v-icon icon="mdi-phone-outline" size="14" />
+          {{ [address.contact, address.email].filter(Boolean).join(" · ") }}
+        </div>
         <div v-if="address.warning" class="text-warning">
           {{
             address.distinct > 0

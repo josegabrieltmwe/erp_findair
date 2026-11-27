@@ -139,7 +139,10 @@
       "no_drivers": "Nessun autista disponibile.",
       "assign_title": "Assegna ritiro #{id}",
       "time": "Ora",
-      "show_addresses": "Mostra indirizzi",
+      "show_addresses": "Mostra indirizzo e contatto",
+      "client": "Anagrafica: {name}",
+      "contact": "Contatto: {value}",
+      "email": "Email: {value}",
       "distinct_addresses": "Le spedizioni hanno {n} indirizzi diversi: si mostra il primo",
       "origin": {
         "sede": "Indirizzo della sede",

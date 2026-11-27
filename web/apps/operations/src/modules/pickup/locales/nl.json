@@ -139,7 +139,10 @@
       "no_drivers": "Geen chauffeurs beschikbaar.",
       "assign_title": "Ophaling #{id} toewijzen",
       "time": "Tijd",
-      "show_addresses": "Adressen tonen",
+      "show_addresses": "Adres en contact tonen",
+      "client": "Klant: {name}",
+      "contact": "Contact: {value}",
+      "email": "E-mail: {value}",
       "distinct_addresses": "De zendingen hebben {n} verschillende adressen: het eerste wordt getoond",
       "origin": {
         "sede": "Adres van de vestiging",

@@ -423,9 +423,17 @@ export function stopAddress(stop: RouteStop): StopAddressView {
   return { name, line, query: joinParts([a.indirizzo, place, a.prov], ", ") };
 }
 
-/** Dirección de una presa del tablero o la lista (T-44 / U-15). */
+/** Dirección y contacto de una presa del tablero o la lista (T-44 / U-15, T-45 / U-16). */
 export interface PickupAddressView {
   origin: StopAddress["origen"];
+  /** Quién está en la dirección: el cliente de la sede o el nombre de la dirección de la expedición. */
+  name: string;
+  /** Cliente (anagrafica de la sede) solo si no es `name` (triangulación); vacío si coincide. */
+  client: string;
+  /** «Sig. Rossi · 02 555»: persona y teléfono de contacto; vacío si no hay ninguno. */
+  contact: string;
+  tel: string;
+  email: string;
   /** «Via Roma 12, 20121 Milano (MI)»: lo que cabe en la celda. */
   line: string;
   /** Nombre, línea y país: para el texto al pasar el ratón. */
@@ -453,8 +461,16 @@ export function pickupAddress(
     d.direcciones_distintas && d.direcciones_distintas > 1
       ? d.direcciones_distintas
       : 0;
+  const name = (d.nombre ?? "").trim();
+  const client = (d.cliente ?? "").trim();
+  const tel = (d.tel ?? "").trim();
   return {
     origin: d.origen,
+    name,
+    client: client.toLowerCase() === name.toLowerCase() ? "" : client,
+    contact: joinParts([d.contacto, tel], " · "),
+    tel,
+    email: (d.email ?? "").trim(),
     line,
     full: joinParts([d.nombre, line, d.paese], " · "),
     warning: d.origen === "sede_sin_expedicion" || distinct > 0,

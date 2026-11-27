@@ -518,6 +518,11 @@ describe("pickupAddress (U-15)", () => {
     });
     expect(a).toEqual({
       origin: "sede",
+      name: "ACME SRL",
+      client: "",
+      contact: "",
+      tel: "",
+      email: "",
       line: "Via Roma 12, 20121 Milano (MI)",
       full: "ACME SRL · Via Roma 12, 20121 Milano (MI)",
       warning: false,
@@ -552,5 +557,35 @@ describe("pickupAddress (U-15)", () => {
     });
     expect(many?.warning).toBe(true);
     expect(many?.distinct).toBe(3);
+  });
+
+  it("U-16: contacto (persona y teléfono), email y el cliente solo si no es el nombre", () => {
+    const a = pickupAddress({
+      direccion: {
+        origen: "expedicion",
+        nombre: "Mittente",
+        indirizzo: "Via Codara 1",
+        tel: " 333 1234 ",
+        contacto: "Sig. Rossi",
+        email: "rossi@mitt.example",
+        cliente: "ACME SRL",
+      },
+    });
+    expect(a?.name).toBe("Mittente");
+    expect(a?.contact).toBe("Sig. Rossi · 333 1234");
+    expect(a?.email).toBe("rossi@mitt.example");
+    expect(a?.client).toBe("ACME SRL");
+
+    const sede = pickupAddress({
+      direccion: {
+        origen: "sede",
+        nombre: "ACME SRL",
+        indirizzo: "Via Roma 12",
+        tel: "02 555",
+        cliente: "acme srl",
+      },
+    });
+    expect(sede?.client).toBe("");
+    expect(sede?.contact).toBe("02 555");
   });
 });
