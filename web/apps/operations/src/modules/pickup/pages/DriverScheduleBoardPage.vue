@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import PickupBoardChip from "../components/PickupBoardChip.vue";
 import ScheduleAssignDialog from "../components/ScheduleAssignDialog.vue";
 import { pickupsService } from "../services/pickups.service";
-import { buildScheduleCells, buildTimeSlots, scheduleCellKey } from "../logic";
+import {
+  buildScheduleCells,
+  buildTimeSlots,
+  manifestKindFilter,
+  scheduleCellKey,
+  type ManifestKindFilter,
+} from "../logic";
 import { SHOW_ADDRESSES_KEY, storedFlag } from "../storedFlag";
 import type { Driver, Pickup } from "../types";
 
@@ -23,7 +29,8 @@ import type { Driver, Pickup } from "../types";
  * ofrece siempre todos.
  *
  * U-19: el icono de impresora de cada autista abre su borderò del día en otra pestaña (`/pickup/manifest-print`),
- * como el `bordero.php` del legado, para imprimirlo o guardarlo como PDF.
+ * como el `bordero.php` del legado, para imprimirlo o guardarlo como PDF. U-20: el selector junto a la fecha
+ * decide si lleva todas las paradas, solo recogidas o solo entregas (la casilla del legado), y se recuerda.
  */
 const { t } = useI18n();
 
@@ -92,11 +99,33 @@ async function load(): Promise<void> {
 
 const router = useRouter();
 
+/** Qué paradas lleva el borderò que abre la impresora (U-20); se recuerda en este navegador. */
+const PRINT_KIND_KEY = "tmwe:pickup-board-print-kind";
+function readPrintKind(): ManifestKindFilter {
+  try {
+    return manifestKindFilter(localStorage.getItem(PRINT_KIND_KEY));
+  } catch {
+    return "all";
+  }
+}
+const printKind = ref<ManifestKindFilter>(readPrintKind());
+watch(printKind, (v) => {
+  try {
+    localStorage.setItem(PRINT_KIND_KEY, v);
+  } catch {
+    /* sin almacenamiento: dura la sesión */
+  }
+});
+
 /** Abre en otra pestaña el borderò del autista para la fecha del tablero, listo para imprimir o guardar en PDF. */
 function printRoute(d: Driver): void {
   const href = router.resolve({
     name: "pickup-manifest-print",
-    query: { driver_id: String(d.id), date: date.value },
+    query: {
+      driver_id: String(d.id),
+      date: date.value,
+      ...(printKind.value === "all" ? {} : { tipo: printKind.value }),
+    },
   }).href;
   window.open(href, "_blank", "noopener");
 }
@@ -142,6 +171,28 @@ onMounted(load);
         class="flex-grow-0"
         data-testid="board-show-other-couriers"
       />
+      <div class="pk-print-kind">
+        <v-icon icon="mdi-printer-outline" size="18" />
+        <v-btn-toggle
+          v-model="printKind"
+          mandatory
+          density="compact"
+          variant="outlined"
+          divided
+          :title="t('pickup.schedule.print_kind')"
+          data-testid="board-print-kind"
+        >
+          <v-btn value="all" size="small">{{
+            t("pickup.manifest.filter_all")
+          }}</v-btn>
+          <v-btn value="R" size="small">{{
+            t("pickup.manifest.filter_R")
+          }}</v-btn>
+          <v-btn value="C" size="small">{{
+            t("pickup.manifest.filter_C")
+          }}</v-btn>
+        </v-btn-toggle>
+      </div>
       <v-text-field
         v-model="date"
         type="date"
@@ -240,6 +291,11 @@ onMounted(load);
 </template>
 
 <style scoped>
+.pk-print-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 .pk-board-driver-h {
   display: inline-flex;
   align-items: center;

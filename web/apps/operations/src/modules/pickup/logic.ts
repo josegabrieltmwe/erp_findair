@@ -10,6 +10,7 @@ import type {
   BulkResultItem,
   CalendarDay,
   DriverZone,
+  Manifest,
   ManifestShipment,
   ManifestSummary,
   Pickup,
@@ -641,6 +642,36 @@ export function manifestRows(stops: readonly RouteStop[]): ManifestRow[] {
     }
   }
   return rows;
+}
+
+/** Qué paradas lleva el borderò impreso (U-20): todas, solo recogidas (`R`) o solo entregas (`C`), como el legado. */
+export type ManifestKindFilter = "all" | "R" | "C";
+
+/** Valor de filtro válido a partir de un texto (query o almacenamiento); cualquier otro es `all`. */
+export function manifestKindFilter(v: unknown): ManifestKindFilter {
+  return v === "R" || v === "C" ? v : "all";
+}
+
+/**
+ * Borderò con solo las paradas del tipo pedido. Con un filtro, el resumen del API (calculado sobre todas las
+ * paradas) se rehace con las que quedan: número de paradas, bultos y peso de las presas; el resto de totales los
+ * calcula `manifestTotals` a partir de las filas. El orden de cada parada se conserva (es el del giro).
+ */
+export function filterManifest(
+  m: Manifest,
+  kind: ManifestKindFilter,
+): Manifest {
+  if (kind === "all") return m;
+  const stops = m.stops.filter((s) => stopKind(s) === kind);
+  return {
+    ...m,
+    stops,
+    summary: {
+      total_stops: stops.length,
+      total_colli: stops.reduce((n, s) => n + (s.n_colli ?? 0), 0),
+      total_peso: stops.reduce((n, s) => n + (s.peso ?? 0), 0),
+    },
+  };
 }
 
 /** Totales del borderò: los del API si vienen, y si no (API anterior) los de las paradas. */

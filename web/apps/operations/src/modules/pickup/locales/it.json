@@ -142,6 +142,7 @@
       "show_addresses": "Mostra indirizzo e contatto",
       "show_other_couriers": "Mostra altri corrieri ({n})",
       "print_route": "Stampa il borderò di {name}",
+      "print_kind": "Fermate del borderò da stampare",
       "client": "Anagrafica: {name}",
       "contact": "Contatto: {value}",
       "email": "Email: {value}",
@@ -256,7 +257,11 @@
       "open_maps": "Apri in Google Maps",
       "open_maps_coords": "Coordinate",
       "empty": "{name} non ha fermate il {date}",
-      "bad_link": "Link incompleto: manca l'autista o la data"
+      "bad_link": "Link incompleto: manca l'autista o la data",
+      "filter_all": "Tutte",
+      "filter_R": "Solo ritiri",
+      "filter_C": "Solo consegne",
+      "empty_kind": "{name} non ha fermate di questo tipo ({kind}) il {date}"
     }
   }
 }

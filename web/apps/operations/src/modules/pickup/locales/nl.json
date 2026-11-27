@@ -142,6 +142,7 @@
       "show_addresses": "Adres en contact tonen",
       "show_other_couriers": "Andere koeriers tonen ({n})",
       "print_route": "Borderò van {name} afdrukken",
+      "print_kind": "Stops op de afgedrukte borderò",
       "client": "Klant: {name}",
       "contact": "Contact: {value}",
       "email": "E-mail: {value}",
@@ -256,7 +257,11 @@
       "open_maps": "Openen in Google Maps",
       "open_maps_coords": "Coördinaten",
       "empty": "{name} heeft geen stops op {date}",
-      "bad_link": "Onvolledige link: chauffeur of datum ontbreekt"
+      "bad_link": "Onvolledige link: chauffeur of datum ontbreekt",
+      "filter_all": "Alle",
+      "filter_R": "Alleen ophalingen",
+      "filter_C": "Alleen leveringen",
+      "empty_kind": "{name} heeft op {date} geen stops van dit type ({kind})"
     }
   }
 }

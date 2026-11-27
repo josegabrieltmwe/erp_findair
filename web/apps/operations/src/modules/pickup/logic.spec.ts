@@ -19,6 +19,8 @@ import {
   mapsCoordsUrl,
   mapsSearchUrl,
   mergeBulkResults,
+  filterManifest,
+  manifestKindFilter,
   pickupAddress,
   pickupAddressTooltip,
   pickupColorKind,
@@ -630,5 +632,60 @@ describe("pickupAddressTooltip", () => {
     expect(pickupAddressTooltip(a, t)).toBe(
       "pickup.schedule.origin.sede\nACME · Via Roma 12",
     );
+  });
+});
+
+describe("filterManifest (U-20)", () => {
+  const stop = (
+    order: number,
+    kind: "R" | "C" | undefined,
+    n_colli: number,
+    peso: number,
+  ) =>
+    ({
+      order,
+      pickup_id: order,
+      kind,
+      n_colli,
+      peso,
+      shipments: [],
+    }) as unknown as RouteStop;
+  const m = {
+    date: "2026-11-27",
+    driver: { id: 5, nome: "Mario", cell: "", tel: "" },
+    summary: {
+      total_stops: 3,
+      total_colli: 6,
+      total_peso: 9,
+      total_pickups: 2,
+      total_deliveries: 1,
+    },
+    stops: [stop(1, "R", 1, 2), stop(2, "C", 2, 3), stop(3, undefined, 3, 4)],
+  };
+
+  it("todas: el borderò tal cual", () => {
+    expect(filterManifest(m, "all")).toBe(m);
+  });
+
+  it("solo recogidas (sin kind cuenta como recogida); conserva el orden y rehace el resumen", () => {
+    const r = filterManifest(m, "R");
+    expect(r.stops.map((s) => s.order)).toEqual([1, 3]);
+    expect(r.summary).toEqual({
+      total_stops: 2,
+      total_colli: 4,
+      total_peso: 6,
+    });
+    expect(m.stops).toHaveLength(3);
+  });
+
+  it("solo entregas", () => {
+    expect(filterManifest(m, "C").stops.map((s) => s.order)).toEqual([2]);
+  });
+
+  it("manifestKindFilter: solo R o C; lo demás es all", () => {
+    expect(manifestKindFilter("R")).toBe("R");
+    expect(manifestKindFilter("C")).toBe("C");
+    expect(manifestKindFilter("x")).toBe("all");
+    expect(manifestKindFilter(null)).toBe("all");
   });
 });

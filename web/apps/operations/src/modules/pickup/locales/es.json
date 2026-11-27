@@ -142,6 +142,7 @@
       "show_addresses": "Mostrar dirección y contacto",
       "show_other_couriers": "Mostrar otros correos ({n})",
       "print_route": "Imprimir el borderò de {name}",
+      "print_kind": "Paradas del borderò que se imprime",
       "client": "Cliente: {name}",
       "contact": "Contacto: {value}",
       "email": "Email: {value}",
@@ -256,7 +257,11 @@
       "open_maps": "Abrir en Google Maps",
       "open_maps_coords": "Coordenadas",
       "empty": "{name} no tiene paradas el {date}",
-      "bad_link": "Enlace incompleto: falta el autista o la fecha"
+      "bad_link": "Enlace incompleto: falta el autista o la fecha",
+      "filter_all": "Todas",
+      "filter_R": "Solo recogidas",
+      "filter_C": "Solo entregas",
+      "empty_kind": "{name} no tiene paradas de este tipo ({kind}) el {date}"
     }
   }
 }

@@ -16,7 +16,11 @@ vi.mock("../services/driver.service", () => ({
   driverService: { manifest: (...a: unknown[]) => manifest(...a) },
 }));
 vi.mock("../components/DriverManifestSheet.vue", () => ({
-  default: { props: ["manifest"], template: '<div data-testid="sheet" />' },
+  default: {
+    props: ["manifest", "filterLabel"],
+    template:
+      '<div data-testid="sheet" :data-stops="manifest.stops.map((s) => s.pickup_id).join(\',\')" :data-label="filterLabel" />',
+  },
 }));
 
 import DriverManifestPrintPage from "./DriverManifestPrintPage.vue";
@@ -25,11 +29,15 @@ const MANIFEST = {
   date: "2026-11-27",
   driver: { id: 5, nome: "Mario", cell: "", tel: "" },
   summary: {},
-  stops: [{ pickup_id: 1 }],
+  stops: [
+    { pickup_id: 1, kind: "R" },
+    { pickup_id: 2, kind: "C" },
+  ],
 };
 
+let router: ReturnType<typeof createRouter>;
 async function mountAt(url: string) {
-  const router = createRouter({
+  router = createRouter({
     history: createMemoryHistory(),
     routes: [
       { path: "/pickup/manifest-print", component: DriverManifestPrintPage },
@@ -100,5 +108,46 @@ describe("DriverManifestPrintPage", () => {
     const w = await mountAt("/pickup/manifest-print?date=27/11/2026");
     expect(manifest).not.toHaveBeenCalled();
     expect(w.find('[data-testid="manifest-print-error"]').exists()).toBe(true);
+  });
+
+  it("tipo=R imprime solo las recogidas y lo dice en el borderò", async () => {
+    manifest.mockResolvedValue(MANIFEST);
+    const w = await mountAt(
+      "/pickup/manifest-print?driver_id=5&date=2026-11-27&tipo=R",
+    );
+    const sheet = w.get('[data-testid="sheet"]');
+    expect(sheet.attributes("data-stops")).toBe("1");
+    expect(sheet.attributes("data-label")).toBe("pickup.manifest.filter_R");
+    vi.runAllTimers();
+    expect(print).toHaveBeenCalledTimes(1);
+  });
+
+  it("tipo=C sin entregas no imprime y dice que no hay de ese tipo", async () => {
+    manifest.mockResolvedValue({
+      ...MANIFEST,
+      stops: [{ pickup_id: 1, kind: "R" }],
+    });
+    const w = await mountAt(
+      "/pickup/manifest-print?driver_id=5&date=2026-11-27&tipo=C",
+    );
+    vi.runAllTimers();
+    expect(print).not.toHaveBeenCalled();
+    expect(w.get('[data-testid="manifest-print-empty"]').text()).toContain(
+      "pickup.manifest.empty_kind",
+    );
+  });
+
+  it("el selector de la pestaña cambia el filtro sin volver a pedir el borderò", async () => {
+    manifest.mockResolvedValue(MANIFEST);
+    const w = await mountAt(
+      "/pickup/manifest-print?driver_id=5&date=2026-11-27&print=0",
+    );
+    expect(w.get('[data-testid="sheet"]').attributes("data-stops")).toBe("1,2");
+    const buttons = w.findAll('[data-testid="manifest-kind"] button');
+    await buttons[2].trigger("click");
+    await flushPromises();
+    expect(router.currentRoute.value.query.tipo).toBe("C");
+    expect(w.get('[data-testid="sheet"]').attributes("data-stops")).toBe("2");
+    expect(manifest).toHaveBeenCalledTimes(1);
   });
 });

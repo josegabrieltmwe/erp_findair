@@ -300,4 +300,20 @@ describe("DriverScheduleBoardPage — borderò por autista (U-19)", () => {
     );
     open.mockRestore();
   });
+
+  it("con «solo entregas» en el selector, la impresora abre el borderò con tipo=C y se recuerda", async () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
+    const w = mountBoard();
+    await flushPromises();
+    const buttons = w.findAll('[data-testid="board-print-kind"] button');
+    await buttons[2].trigger("click");
+    await w.get('[data-testid="board-print-5"]').trigger("click");
+    expect(open).toHaveBeenCalledWith(
+      "/pickup/manifest-print?driver_id=5&date=2026-11-26&tipo=C",
+      "_blank",
+      "noopener",
+    );
+    expect(localStorage.getItem("tmwe:pickup-board-print-kind")).toBe("C");
+    open.mockRestore();
+  });
 });

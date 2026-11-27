@@ -10,7 +10,11 @@ import type { Manifest } from "../types";
  * ya renderizado del API (SVG data URI, misma regla que la etiqueta real).
  */
 const { t, locale } = useI18n();
-const props = defineProps<{ manifest: Manifest }>();
+const props = defineProps<{
+  manifest: Manifest;
+  /** Filtro aplicado (U-20), p. ej. «Solo recogidas»: se imprime bajo el autista y la fecha. */
+  filterLabel?: string;
+}>();
 
 const rows = computed(() => manifestRows(props.manifest.stops));
 const totals = computed(() => manifestTotals(props.manifest.summary, props.manifest.stops));
@@ -35,6 +39,7 @@ function print(): void {
     <div class="mb-3">
       {{ manifest.driver.nome }} · {{ manifest.date }}
       <span v-if="manifest.driver.cell"> · {{ manifest.driver.cell }}</span>
+      <span v-if="filterLabel" data-testid="manifest-filter-label"> · <b>{{ filterLabel }}</b></span>
     </div>
 
     <table class="pk-print-table">
