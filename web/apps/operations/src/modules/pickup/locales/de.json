@@ -141,6 +141,7 @@
       "time": "Uhrzeit",
       "show_addresses": "Adresse und Kontakt anzeigen",
       "show_other_couriers": "Andere Kuriere anzeigen ({n})",
+      "print_route": "Borderò von {name} drucken",
       "client": "Kunde: {name}",
       "contact": "Kontakt: {value}",
       "email": "E-Mail: {value}",
@@ -253,7 +254,9 @@
       "collect_amount": "KASSIEREN {amount} €",
       "totals": "{pickups} Abholungen und {deliveries} Zustellungen",
       "open_maps": "In Google Maps öffnen",
-      "open_maps_coords": "Koordinaten"
+      "open_maps_coords": "Koordinaten",
+      "empty": "{name} hat am {date} keine Stopps",
+      "bad_link": "Unvollständiger Link: Fahrer oder Datum fehlt"
     }
   }
 }

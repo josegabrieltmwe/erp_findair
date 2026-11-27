@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { createI18n } from "vue-i18n";
+import { createMemoryHistory, createRouter } from "vue-router";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -114,8 +115,21 @@ function mountBoard() {
     fallbackWarn: false,
     messages: { en: {} },
   });
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: "/", component: { template: "<div />" } },
+      {
+        path: "/pickup/manifest-print",
+        name: "pickup-manifest-print",
+        component: { template: "<div />" },
+      },
+    ],
+  });
   return mount(DriverScheduleBoardPage, {
-    global: { plugins: [createVuetify({ components, directives }), i18n] },
+    global: {
+      plugins: [createVuetify({ components, directives }), i18n, router],
+    },
     attachTo: document.body,
   });
 }
@@ -270,5 +284,20 @@ describe("DriverScheduleBoardPage — otros correos (U-17)", () => {
     const again = mountBoard();
     await flushPromises();
     expect(columns(again)).toEqual(["Mario", "Corriere Esterno"]);
+  });
+});
+
+describe("DriverScheduleBoardPage — borderò por autista (U-19)", () => {
+  it("el icono de impresora abre el borderò del autista y la fecha en otra pestaña", async () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
+    const w = mountBoard();
+    await flushPromises();
+    await w.get('[data-testid="board-print-5"]').trigger("click");
+    expect(open).toHaveBeenCalledWith(
+      "/pickup/manifest-print?driver_id=5&date=2026-11-26",
+      "_blank",
+      "noopener",
+    );
+    open.mockRestore();
   });
 });

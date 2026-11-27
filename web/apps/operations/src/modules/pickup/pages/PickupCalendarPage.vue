@@ -14,9 +14,13 @@ import {
   type CalendarView,
   type DateRange,
 } from "../logic";
+import { SHOW_ADDRESSES_KEY, storedFlag } from "../storedFlag";
 import type { CalendarResult, Driver, Pickup } from "../types";
 
 const { t } = useI18n();
+
+/** Nombre, dirección y contacto en la vista de día: la misma preferencia que el tablero de autistas. */
+const showAddresses = storedFlag(SHOW_ADDRESSES_KEY, true);
 
 const date = ref(todayLocal());
 const view = ref<CalendarView>("day");
@@ -117,6 +121,17 @@ onMounted(() => {
     <header class="pk-page-head">
       <h1 class="pk-page-title">{{ t("pickup.calendar.title") }}</h1>
       <div class="pk-day-nav">
+        <v-switch
+          v-if="view === 'day'"
+          v-model="showAddresses"
+          :label="t('pickup.schedule.show_addresses')"
+          color="primary"
+          density="compact"
+          hide-details
+          inset
+          class="flex-grow-0 mr-2"
+          data-testid="calendar-show-addresses"
+        />
         <v-btn-toggle
           :model-value="view"
           mandatory
@@ -125,14 +140,23 @@ onMounted(() => {
           divided
           @update:model-value="setView"
         >
-          <v-btn value="day" size="small">{{ t("pickup.calendar.view_day") }}</v-btn>
-          <v-btn value="week" size="small">{{ t("pickup.calendar.view_week") }}</v-btn>
-          <v-btn value="month" size="small">{{ t("pickup.calendar.view_month") }}</v-btn>
+          <v-btn value="day" size="small">{{
+            t("pickup.calendar.view_day")
+          }}</v-btn>
+          <v-btn value="week" size="small">{{
+            t("pickup.calendar.view_week")
+          }}</v-btn>
+          <v-btn value="month" size="small">{{
+            t("pickup.calendar.view_month")
+          }}</v-btn>
         </v-btn-toggle>
         <v-select
           v-if="drivers.length"
           v-model="driverId"
-          :items="[{ nome: t('pickup.calendar.all_drivers'), id: null }, ...drivers]"
+          :items="[
+            { nome: t('pickup.calendar.all_drivers'), id: null },
+            ...drivers,
+          ]"
           item-title="nome"
           item-value="id"
           :label="t('pickup.calendar.driver')"
@@ -183,7 +207,12 @@ onMounted(() => {
       <div v-if="!loading && dayPickups.length === 0" class="pk-empty">
         {{ t("pickup.calendar.empty") }}
       </div>
-      <CalendarGrid v-else :pickups="dayPickups" @pick="onPick" />
+      <CalendarGrid
+        v-else
+        :pickups="dayPickups"
+        :show-address="showAddresses"
+        @pick="onPick"
+      />
     </template>
     <CalendarPeriodGrid
       v-else
@@ -201,10 +230,12 @@ onMounted(() => {
         ><i class="dot dot--fixed" /> {{ t("pickup.calendar.leg_fixed") }}</span
       >
       <span class="pk-legend-item"
-        ><i class="dot dot--ship" /> {{ t("pickup.calendar.leg_shipment") }}</span
+        ><i class="dot dot--ship" />
+        {{ t("pickup.calendar.leg_shipment") }}</span
       >
       <span class="pk-legend-item"
-        ><i class="dot dot--tri" /> {{ t("pickup.calendar.leg_triangulation") }}</span
+        ><i class="dot dot--tri" />
+        {{ t("pickup.calendar.leg_triangulation") }}</span
       >
       <span class="pk-legend-item"
         ><i class="dot dot--done" /> {{ t("pickup.calendar.leg_done") }}</span

@@ -141,6 +141,7 @@
       "time": "Time",
       "show_addresses": "Show address and contact",
       "show_other_couriers": "Show other couriers ({n})",
+      "print_route": "Print the manifest for {name}",
       "client": "Customer: {name}",
       "contact": "Contact: {value}",
       "email": "Email: {value}",
@@ -253,7 +254,9 @@
       "collect_amount": "COLLECT {amount} €",
       "totals": "{pickups} pickups and {deliveries} deliveries",
       "open_maps": "Open in Google Maps",
-      "open_maps_coords": "Coordinates"
+      "open_maps_coords": "Coordinates",
+      "empty": "{name} has no stops on {date}",
+      "bad_link": "Incomplete link: the driver or the date is missing"
     }
   }
 }

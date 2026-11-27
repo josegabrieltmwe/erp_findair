@@ -478,6 +478,24 @@ export function pickupAddress(
   };
 }
 
+/**
+ * Texto al pasar el ratón sobre una presa (tablero y calendario): origen, dirección completa, cliente si no es
+ * quien está en la dirección, contacto, email y el aviso de direcciones distintas. `t` es el traductor de la vista.
+ */
+export function pickupAddressTooltip(
+  a: PickupAddressView,
+  t: (key: string, params?: Record<string, unknown>) => string,
+): string {
+  const parts = [t(`pickup.schedule.origin.${a.origin}`), a.full];
+  if (a.client) parts.push(t("pickup.schedule.client", { name: a.client }));
+  if (a.contact) parts.push(t("pickup.schedule.contact", { value: a.contact }));
+  if (a.email) parts.push(t("pickup.schedule.email", { value: a.email }));
+  if (a.distinct > 0) {
+    parts.push(t("pickup.schedule.distinct_addresses", { n: a.distinct }));
+  }
+  return parts.join("\n");
+}
+
 /** Hora `HH:MM` de la cita de la parada. */
 export function stopTime(stop: Pick<RouteStop, "pickup_datetime">): string {
   return (stop.pickup_datetime.split(" ")[1] ?? "").slice(0, 5);

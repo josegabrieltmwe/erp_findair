@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { pickupColorKind } from "../logic";
+import {
+  pickupAddress,
+  pickupAddressTooltip,
+  pickupColorKind,
+  type PickupAddressView,
+} from "../logic";
 import type { Pickup } from "../types";
 
 /**
@@ -9,6 +14,9 @@ import type { Pickup } from "../types";
  * Cada fila es una media hora (09:00, 09:30, …); cada columna un autista. Una
  * presa cae en la celda [franja de su hora][su autista]. Las prese sin autista
  * (id_contatti=0) van a la columna "Sin asignar".
+ *
+ * Con `showAddress` cada presa lleva debajo el nombre, la dirección y el contacto (los mismos que el tablero de
+ * autistas y el borderò); el resto, al pasar el ratón.
  */
 const { t } = useI18n();
 
@@ -16,6 +24,7 @@ const props = defineProps<{
   pickups: Pickup[];
   fromHour?: number;
   toHour?: number;
+  showAddress?: boolean;
 }>();
 const emit = defineEmits<{ pick: [Pickup] }>();
 
@@ -61,6 +70,28 @@ function slotOf(p: Pickup): string {
   return `${String(h).padStart(2, "0")}:${m < 30 ? "00" : "30"}`;
 }
 
+const ORIGIN_ICON: Record<string, string> = {
+  sede: "mdi-office-building-outline",
+  expedicion: "mdi-package-variant-closed",
+  sede_sin_expedicion: "mdi-alert-outline",
+};
+
+/** Nombre, dirección y contacto de cada presa (por id), vacío si no se piden; sin entrada si el API no los manda. */
+const addresses = computed(() => {
+  const map = new Map<number, PickupAddressView>();
+  if (!props.showAddress) return map;
+  for (const p of props.pickups) {
+    const a = pickupAddress(p);
+    if (a) map.set(p.id, a);
+  }
+  return map;
+});
+
+function tooltipOf(p: Pickup): string | undefined {
+  const a = addresses.value.get(p.id);
+  return a ? pickupAddressTooltip(a, t) : undefined;
+}
+
 function cellPickups(slot: string, driverId: number): Pickup[] {
   return props.pickups.filter(
     (p) => slotOf(p) === slot && (p.id_contatti || 0) === driverId,
@@ -70,7 +101,7 @@ function cellPickups(slot: string, driverId: number): Pickup[] {
 
 <template>
   <div class="cal-wrap">
-    <table class="cal">
+    <table class="cal" :class="{ 'cal--addresses': showAddress }">
       <thead>
         <tr>
           <th class="cal-time-h">{{ t("pickup.calendar.time") }}</th>
@@ -91,14 +122,53 @@ function cellPickups(slot: string, driverId: number): Pickup[] {
                 'cal-chip--fixed': pickupColorKind(p) === 'fixed',
                 'cal-chip--ship': pickupColorKind(p) === 'with_shipment',
                 'cal-chip--tri': pickupColorKind(p) === 'triangulation',
-                'cal-chip--done': p.affidata === 'S' && pickupColorKind(p) === 'normal',
+                'cal-chip--done':
+                  p.affidata === 'S' && pickupColorKind(p) === 'normal',
+                'cal-chip--wide': addresses.has(p.id),
               }"
+              :title="tooltipOf(p)"
+              data-testid="cal-pickup"
               @click="emit('pick', p)"
             >
-              <span class="cal-chip-id">#{{ p.id }}</span>
-              <span v-if="p.presa_fissa === 'S'" class="cal-chip-tag">{{
-                t("pickup.calendar.fixed")
-              }}</span>
+              <span class="cal-chip-head">
+                <span class="cal-chip-id">#{{ p.id }}</span>
+                <span v-if="p.presa_fissa === 'S'" class="cal-chip-tag">{{
+                  t("pickup.calendar.fixed")
+                }}</span>
+                <span
+                  v-if="addresses.get(p.id)?.name"
+                  class="cal-chip-name"
+                  data-testid="cal-name"
+                  >{{ addresses.get(p.id)?.name }}</span
+                >
+              </span>
+              <span
+                v-if="addresses.get(p.id)"
+                class="cal-chip-line"
+                data-testid="cal-address"
+              >
+                <v-icon
+                  :icon="
+                    ORIGIN_ICON[addresses.get(p.id)!.origin] ?? ORIGIN_ICON.sede
+                  "
+                  :color="addresses.get(p.id)!.warning ? 'warning' : undefined"
+                  size="12"
+                  :data-origin="addresses.get(p.id)!.origin"
+                />
+                <span class="cal-chip-text">{{
+                  addresses.get(p.id)!.line
+                }}</span>
+              </span>
+              <span
+                v-if="addresses.get(p.id)?.contact"
+                class="cal-chip-line"
+                data-testid="cal-contact"
+              >
+                <v-icon icon="mdi-phone-outline" size="12" />
+                <span class="cal-chip-text">{{
+                  addresses.get(p.id)!.contact
+                }}</span>
+              </span>
             </button>
           </td>
         </tr>
@@ -171,6 +241,43 @@ function cellPickups(slot: string, driverId: number): Pickup[] {
 .cal-chip--done {
   background: rgba(var(--v-theme-success), 0.16);
   color: rgb(var(--v-theme-success));
+}
+.cal-chip--wide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  width: calc(100% - 4px);
+  text-align: left;
+}
+.cal-chip-head {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  max-width: 100%;
+}
+.cal-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: rgb(var(--v-theme-on-surface));
+}
+.cal-chip-line {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  max-width: 100%;
+  color: rgba(var(--v-theme-on-surface), 0.75);
+}
+.cal-chip-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cal--addresses .cal-cell {
+  min-width: 180px;
+  max-width: 240px;
 }
 .cal-chip-tag {
   font-size: 0.62rem;

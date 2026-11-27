@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { todayLocal } from "@shared/utils/date";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import PickupBoardChip from "../components/PickupBoardChip.vue";
 import ScheduleAssignDialog from "../components/ScheduleAssignDialog.vue";
 import { pickupsService } from "../services/pickups.service";
 import { buildScheduleCells, buildTimeSlots, scheduleCellKey } from "../logic";
+import { SHOW_ADDRESSES_KEY, storedFlag } from "../storedFlag";
 import type { Driver, Pickup } from "../types";
 
 /**
@@ -19,6 +21,9 @@ import type { Driver, Pickup } from "../types";
  * U-17: por defecto solo las columnas de los choferes (`nel_calendario='S'`, como la rejilla del legado). El
  * interruptor «Mostrar otros correos» añade los demás autistas y también se recuerda. El diálogo de asignación
  * ofrece siempre todos.
+ *
+ * U-19: el icono de impresora de cada autista abre su borderò del día en otra pestaña (`/pickup/manifest-print`),
+ * como el `bordero.php` del legado, para imprimirlo o guardarlo como PDF.
  */
 const { t } = useI18n();
 
@@ -32,28 +37,8 @@ const dialogOpen = ref(false);
 const dialogPickup = ref<Pickup | null>(null);
 const dialogSlot = ref<string | null>(null);
 
-const SHOW_ADDRESSES_KEY = "tmwe:pickup-board-show-addresses";
 const SHOW_OTHER_COURIERS_KEY = "tmwe:pickup-board-show-other-couriers";
 
-/** Preferencia booleana guardada en este navegador; `fallback` si no hay nada guardado o no hay almacenamiento. */
-function storedFlag(key: string, fallback: boolean) {
-  let initial = fallback;
-  try {
-    const v = localStorage.getItem(key);
-    if (v !== null) initial = v === "1";
-  } catch {
-    /* sin almacenamiento */
-  }
-  const flag = ref(initial);
-  watch(flag, (v) => {
-    try {
-      localStorage.setItem(key, v ? "1" : "0");
-    } catch {
-      /* navegador sin almacenamiento: la preferencia dura la sesión */
-    }
-  });
-  return flag;
-}
 const showAddresses = storedFlag(SHOW_ADDRESSES_KEY, true);
 const showOtherCouriers = storedFlag(SHOW_OTHER_COURIERS_KEY, false);
 
@@ -103,6 +88,17 @@ async function load(): Promise<void> {
   } finally {
     loading.value = false;
   }
+}
+
+const router = useRouter();
+
+/** Abre en otra pestaña el borderò del autista para la fecha del tablero, listo para imprimir o guardar en PDF. */
+function printRoute(d: Driver): void {
+  const href = router.resolve({
+    name: "pickup-manifest-print",
+    query: { driver_id: String(d.id), date: date.value },
+  }).href;
+  window.open(href, "_blank", "noopener");
 }
 
 function openAssign(pickup: Pickup, slot: string | null = null): void {
@@ -198,7 +194,22 @@ onMounted(load);
         <thead>
           <tr>
             <th class="pk-board-slot-col"></th>
-            <th v-for="d in boardDrivers" :key="d.id">{{ d.nome }}</th>
+            <th v-for="d in boardDrivers" :key="d.id">
+              <span class="pk-board-driver-h">
+                <span>{{ d.nome }}</span>
+                <v-btn
+                  icon="mdi-printer-outline"
+                  size="x-small"
+                  variant="text"
+                  :title="t('pickup.schedule.print_route', { name: d.nome })"
+                  :aria-label="
+                    t('pickup.schedule.print_route', { name: d.nome })
+                  "
+                  :data-testid="`board-print-${d.id}`"
+                  @click="printRoute(d)"
+                />
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -229,6 +240,12 @@ onMounted(load);
 </template>
 
 <style scoped>
+.pk-board-driver-h {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
 .pk-page {
   padding: 24px;
 }

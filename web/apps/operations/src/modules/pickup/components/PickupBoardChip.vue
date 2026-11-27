@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { pickupAddress } from "../logic";
+import { pickupAddress, pickupAddressTooltip } from "../logic";
 import type { Pickup } from "../types";
 
 /**
@@ -38,18 +38,9 @@ const ORIGIN_ICON: Record<string, string> = {
   sede_sin_expedicion: "mdi-alert-outline",
 };
 
-const tooltip = computed(() => {
-  const a = address.value;
-  if (!a) return undefined;
-  const parts = [t(`pickup.schedule.origin.${a.origin}`), a.full];
-  if (a.client) parts.push(t("pickup.schedule.client", { name: a.client }));
-  if (a.contact) parts.push(t("pickup.schedule.contact", { value: a.contact }));
-  if (a.email) parts.push(t("pickup.schedule.email", { value: a.email }));
-  if (a.distinct > 0) {
-    parts.push(t("pickup.schedule.distinct_addresses", { n: a.distinct }));
-  }
-  return parts.join("\n");
-});
+const tooltip = computed(() =>
+  address.value ? pickupAddressTooltip(address.value, t) : undefined,
+);
 </script>
 
 <template>

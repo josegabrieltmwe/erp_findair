@@ -141,6 +141,7 @@
       "time": "Hora",
       "show_addresses": "Mostrar dirección y contacto",
       "show_other_couriers": "Mostrar otros correos ({n})",
+      "print_route": "Imprimir el borderò de {name}",
       "client": "Cliente: {name}",
       "contact": "Contacto: {value}",
       "email": "Email: {value}",
@@ -253,7 +254,9 @@
       "collect_amount": "COBRAR {amount} €",
       "totals": "{pickups} recogidas y {deliveries} entregas",
       "open_maps": "Abrir en Google Maps",
-      "open_maps_coords": "Coordenadas"
+      "open_maps_coords": "Coordenadas",
+      "empty": "{name} no tiene paradas el {date}",
+      "bad_link": "Enlace incompleto: falta el autista o la fecha"
     }
   }
 }

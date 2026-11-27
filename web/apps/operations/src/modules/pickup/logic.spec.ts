@@ -20,6 +20,7 @@ import {
   mapsSearchUrl,
   mergeBulkResults,
   pickupAddress,
+  pickupAddressTooltip,
   pickupColorKind,
   queueFilters,
   rangeCovers,
@@ -587,5 +588,47 @@ describe("pickupAddress (U-15)", () => {
     });
     expect(sede?.client).toBe("");
     expect(sede?.contact).toBe("02 555");
+  });
+});
+
+describe("pickupAddressTooltip", () => {
+  const t = (k: string, p?: Record<string, unknown>) =>
+    p ? `${k}:${Object.values(p).join(",")}` : k;
+
+  it("origen, dirección completa, cliente, contacto, email y aviso, en ese orden", () => {
+    const a = pickupAddress({
+      direccion: {
+        origen: "expedicion",
+        nombre: "Mittente",
+        indirizzo: "Via Codara 1",
+        tel: "333",
+        contacto: "Rossi",
+        email: "r@x.example",
+        cliente: "ACME",
+        direcciones_distintas: 2,
+      },
+    })!;
+    expect(pickupAddressTooltip(a, t).split("\n")).toEqual([
+      "pickup.schedule.origin.expedicion",
+      "Mittente · Via Codara 1",
+      "pickup.schedule.client:ACME",
+      "pickup.schedule.contact:Rossi · 333",
+      "pickup.schedule.email:r@x.example",
+      "pickup.schedule.distinct_addresses:2",
+    ]);
+  });
+
+  it("sin contacto ni cliente distinto, solo origen y dirección", () => {
+    const a = pickupAddress({
+      direccion: {
+        origen: "sede",
+        nombre: "ACME",
+        indirizzo: "Via Roma 12",
+        cliente: "ACME",
+      },
+    })!;
+    expect(pickupAddressTooltip(a, t)).toBe(
+      "pickup.schedule.origin.sede\nACME · Via Roma 12",
+    );
   });
 });

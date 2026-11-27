@@ -283,6 +283,15 @@ const routes: RouteRecordRaw[] = [
       import("@/modules/pickup/pages/DriverScheduleBoardPage.vue"),
     meta: { requiresAdmin: true },
   },
+  // Borderò de un autista para imprimir / guardar como PDF (U-19): lo abre en otra pestaña el icono de impresora
+  // del tablero. Mismo guard que el tablero y el giro.
+  {
+    path: "/pickup/manifest-print",
+    name: "pickup-manifest-print",
+    component: () =>
+      import("@/modules/pickup/pages/DriverManifestPrintPage.vue"),
+    meta: { requiresAdmin: true },
+  },
   {
     path: "/crm",
     name: "crm",

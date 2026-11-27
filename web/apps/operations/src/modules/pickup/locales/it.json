@@ -141,6 +141,7 @@
       "time": "Ora",
       "show_addresses": "Mostra indirizzo e contatto",
       "show_other_couriers": "Mostra altri corrieri ({n})",
+      "print_route": "Stampa il borderò di {name}",
       "client": "Anagrafica: {name}",
       "contact": "Contatto: {value}",
       "email": "Email: {value}",
@@ -253,7 +254,9 @@
       "collect_amount": "RITIRARE {amount} €",
       "totals": "{pickups} ritiri e {deliveries} consegne",
       "open_maps": "Apri in Google Maps",
-      "open_maps_coords": "Coordinate"
+      "open_maps_coords": "Coordinate",
+      "empty": "{name} non ha fermate il {date}",
+      "bad_link": "Link incompleto: manca l'autista o la data"
     }
   }
 }

@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { addDays, pickupColorKind, startOfWeek, type PeriodCell } from "../logic";
+import {
+  addDays,
+  pickupAddress,
+  pickupColorKind,
+  startOfWeek,
+  type PeriodCell,
+} from "../logic";
 import type { Pickup } from "../types";
 
 /**
@@ -38,6 +44,14 @@ function driverLabel(p: Pickup): string {
   if (!p.id_contatti) return t("pickup.calendar.unassigned");
   return p.driver?.nome ?? `#${p.id_contatti}`;
 }
+
+/** Texto al pasar el ratón: número, autista y, si el API la manda, a quién y dónde se recoge. */
+function chipTitle(p: Pickup): string {
+  const a = pickupAddress(p);
+  const parts = [`#${p.id}`, driverLabel(p)];
+  if (a) parts.push(...[a.name, a.line, a.contact].filter(Boolean));
+  return parts.join(" · ");
+}
 </script>
 
 <template>
@@ -54,7 +68,11 @@ function driverLabel(p: Pickup): string {
           <span class="cp-day-num">{{ dayNumber(c.date) }}</span>
           <span v-if="c.count" class="cp-day-count">
             {{ c.count }}
-            <span v-if="c.notAssigned" class="cp-pending" :title="t('pickup.calendar.not_assigned')">
+            <span
+              v-if="c.notAssigned"
+              class="cp-pending"
+              :title="t('pickup.calendar.not_assigned')"
+            >
               · {{ c.notAssigned }}
             </span>
           </span>
@@ -64,11 +82,13 @@ function driverLabel(p: Pickup): string {
           :key="p.id"
           class="cp-chip"
           :class="`cp-chip--${pickupColorKind(p)}`"
-          :title="`#${p.id} · ${driverLabel(p)}`"
+          :title="chipTitle(p)"
           @click="emit('pick', p)"
         >
           <span class="cp-chip-driver">{{ driverLabel(p) }}</span>
-          <span class="cp-chip-time">{{ (p.data.split(" ")[1] ?? "").slice(0, 5) }}</span>
+          <span class="cp-chip-time">{{
+            (p.data.split(" ")[1] ?? "").slice(0, 5)
+          }}</span>
         </button>
         <button
           v-if="c.pickups.length > maxChips"
