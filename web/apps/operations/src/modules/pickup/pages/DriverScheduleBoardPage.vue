@@ -15,6 +15,10 @@ import type { Driver, Pickup } from "../types";
  *
  * U-15: cada presa lleva al lado su dirección (la sede o la de la expedición, como el borderò). El interruptor
  * «Mostrar direcciones» vuelve al tablero compacto y se recuerda en este navegador.
+ *
+ * U-17: por defecto solo las columnas de los choferes (`nel_calendario='S'`, como la rejilla del legado). El
+ * interruptor «Mostrar otros correos» añade los demás autistas y también se recuerda. El diálogo de asignación
+ * ofrece siempre todos.
  */
 const { t } = useI18n();
 
@@ -29,20 +33,44 @@ const dialogPickup = ref<Pickup | null>(null);
 const dialogSlot = ref<string | null>(null);
 
 const SHOW_ADDRESSES_KEY = "tmwe:pickup-board-show-addresses";
-function readShowAddresses(): boolean {
+const SHOW_OTHER_COURIERS_KEY = "tmwe:pickup-board-show-other-couriers";
+
+/** Preferencia booleana guardada en este navegador; `fallback` si no hay nada guardado o no hay almacenamiento. */
+function storedFlag(key: string, fallback: boolean) {
+  let initial = fallback;
   try {
-    return localStorage.getItem(SHOW_ADDRESSES_KEY) !== "0";
+    const v = localStorage.getItem(key);
+    if (v !== null) initial = v === "1";
   } catch {
-    return true;
+    /* sin almacenamiento */
   }
+  const flag = ref(initial);
+  watch(flag, (v) => {
+    try {
+      localStorage.setItem(key, v ? "1" : "0");
+    } catch {
+      /* navegador sin almacenamiento: la preferencia dura la sesión */
+    }
+  });
+  return flag;
 }
-const showAddresses = ref(readShowAddresses());
-watch(showAddresses, (v) => {
-  try {
-    localStorage.setItem(SHOW_ADDRESSES_KEY, v ? "1" : "0");
-  } catch {
-    /* navegador sin almacenamiento: la preferencia dura la sesión */
-  }
+const showAddresses = storedFlag(SHOW_ADDRESSES_KEY, true);
+const showOtherCouriers = storedFlag(SHOW_OTHER_COURIERS_KEY, false);
+
+/** Autistas que no son choferes de la rejilla (otros correos). */
+const otherCouriers = computed(() =>
+  drivers.value.filter((d) => d.nel_calendario === "N"),
+);
+/** Columnas del tablero: los choferes y, si se pide, también los otros correos. */
+const boardDrivers = computed(() =>
+  showOtherCouriers.value
+    ? drivers.value
+    : drivers.value.filter((d) => d.nel_calendario !== "N"),
+);
+/** Presas asignadas a otros correos, para decir cuántas quedan ocultas. */
+const otherCourierPickups = computed(() => {
+  const ids = new Set(otherCouriers.value.map((d) => d.id));
+  return pickups.value.filter((p) => ids.has(p.id_contatti)).length;
 });
 
 function unassignedSuffix(p: Pickup): string {
@@ -105,6 +133,19 @@ onMounted(load);
         class="flex-grow-0"
         data-testid="board-show-addresses"
       />
+      <v-switch
+        v-if="otherCouriers.length > 0"
+        v-model="showOtherCouriers"
+        :label="
+          t('pickup.schedule.show_other_couriers', { n: otherCourierPickups })
+        "
+        color="primary"
+        density="compact"
+        hide-details
+        inset
+        class="flex-grow-0"
+        data-testid="board-show-other-couriers"
+      />
       <v-text-field
         v-model="date"
         type="date"
@@ -148,7 +189,7 @@ onMounted(load);
       </div>
     </section>
 
-    <div v-if="drivers.length === 0 && !loading" class="pk-empty">
+    <div v-if="boardDrivers.length === 0 && !loading" class="pk-empty">
       {{ t("pickup.schedule.no_drivers") }}
     </div>
 
@@ -157,13 +198,13 @@ onMounted(load);
         <thead>
           <tr>
             <th class="pk-board-slot-col"></th>
-            <th v-for="d in drivers" :key="d.id">{{ d.nome }}</th>
+            <th v-for="d in boardDrivers" :key="d.id">{{ d.nome }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="slot in slots" :key="slot">
             <th class="pk-board-slot-col">{{ slot }}</th>
-            <td v-for="d in drivers" :key="d.id">
+            <td v-for="d in boardDrivers" :key="d.id">
               <PickupBoardChip
                 v-for="p in pickupsInCell(d.id, slot)"
                 :key="p.id"

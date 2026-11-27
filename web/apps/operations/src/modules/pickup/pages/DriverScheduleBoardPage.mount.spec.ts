@@ -13,7 +13,10 @@ import * as directives from "vuetify/directives";
 const list = vi.fn();
 vi.mock("../services/pickups.service", () => ({
   pickupsService: {
-    availableDrivers: async () => [{ id: 5, nome: "Mario" }],
+    availableDrivers: async () => [
+      { id: 5, nome: "Mario", nel_calendario: "S" },
+      { id: 9, nome: "Corriere Esterno", nel_calendario: "N" },
+    ],
     list: (...a: unknown[]) => list(...a),
     assignDriver: vi.fn(),
   },
@@ -93,6 +96,12 @@ function rows() {
         prov: "MI",
         paese: "",
       },
+    },
+    {
+      ...BASE,
+      id: 104,
+      id_contatti: 9,
+      data: "2026-11-26 12:00:00",
     },
   ];
 }
@@ -219,5 +228,47 @@ describe("DriverScheduleBoardPage — direcciones (U-15)", () => {
     expect(w.find('[data-testid="board-address"]').exists()).toBe(false);
     expect(card(w, 101).text()).toBe("#101");
     expect(card(w, 103).text()).toContain("#103 · Sede Milano · 2");
+  });
+});
+
+describe("DriverScheduleBoardPage — otros correos (U-17)", () => {
+  function columns(w: ReturnType<typeof mountBoard>): string[] {
+    return w
+      .findAll("thead th")
+      .map((th) => th.text())
+      .filter(Boolean);
+  }
+
+  it("por defecto solo las columnas de los choferes", async () => {
+    const w = mountBoard();
+    await flushPromises();
+    expect(columns(w)).toEqual(["Mario"]);
+    expect(
+      w
+        .findAll('[data-testid="board-pickup"]')
+        .some((c) => c.text().includes("#104")),
+    ).toBe(false);
+    expect(w.find('[data-testid="board-show-other-couriers"]').exists()).toBe(
+      true,
+    );
+  });
+
+  it("el interruptor añade los otros correos y se recuerda", async () => {
+    const w = mountBoard();
+    await flushPromises();
+    await w
+      .find('[data-testid="board-show-other-couriers"] input')
+      .setValue(true);
+    await flushPromises();
+    expect(columns(w)).toEqual(["Mario", "Corriere Esterno"]);
+    expect(card(w, 104).exists()).toBe(true);
+    expect(localStorage.getItem("tmwe:pickup-board-show-other-couriers")).toBe(
+      "1",
+    );
+    w.unmount();
+
+    const again = mountBoard();
+    await flushPromises();
+    expect(columns(again)).toEqual(["Mario", "Corriere Esterno"]);
   });
 });

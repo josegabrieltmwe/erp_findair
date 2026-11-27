@@ -140,6 +140,7 @@
       "assign_title": "Assign pickup #{id}",
       "time": "Time",
       "show_addresses": "Show address and contact",
+      "show_other_couriers": "Show other couriers ({n})",
       "client": "Customer: {name}",
       "contact": "Contact: {value}",
       "email": "Email: {value}",

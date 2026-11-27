@@ -126,6 +126,11 @@ export interface Driver {
   pickup_count?: number;
   cell?: string;
   tel?: string;
+  /**
+   * `S` = chofer interno de la rejilla de turnos; `N` = otro correo (U-17). Ausente con un API anterior: se trata
+   * como `S`, para que el tablero siga enseñándolos todos.
+   */
+  nel_calendario?: "S" | "N";
 }
 
 /** Overview diario del panel operativo (api_operations_panel). */

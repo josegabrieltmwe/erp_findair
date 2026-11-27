@@ -140,6 +140,7 @@
       "assign_title": "Ophaling #{id} toewijzen",
       "time": "Tijd",
       "show_addresses": "Adres en contact tonen",
+      "show_other_couriers": "Andere koeriers tonen ({n})",
       "client": "Klant: {name}",
       "contact": "Contact: {value}",
       "email": "E-mail: {value}",

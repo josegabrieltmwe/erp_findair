@@ -140,6 +140,7 @@
       "assign_title": "Abholung #{id} zuweisen",
       "time": "Uhrzeit",
       "show_addresses": "Adresse und Kontakt anzeigen",
+      "show_other_couriers": "Andere Kuriere anzeigen ({n})",
       "client": "Kunde: {name}",
       "contact": "Kontakt: {value}",
       "email": "E-Mail: {value}",

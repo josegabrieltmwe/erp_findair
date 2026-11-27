@@ -140,6 +140,7 @@
       "assign_title": "Asignar recogida #{id}",
       "time": "Hora",
       "show_addresses": "Mostrar dirección y contacto",
+      "show_other_couriers": "Mostrar otros correos ({n})",
       "client": "Cliente: {name}",
       "contact": "Contacto: {value}",
       "email": "Email: {value}",

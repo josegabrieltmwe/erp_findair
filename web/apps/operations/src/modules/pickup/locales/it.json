@@ -140,6 +140,7 @@
       "assign_title": "Assegna ritiro #{id}",
       "time": "Ora",
       "show_addresses": "Mostra indirizzo e contatto",
+      "show_other_couriers": "Mostra altri corrieri ({n})",
       "client": "Anagrafica: {name}",
       "contact": "Contatto: {value}",
       "email": "Email: {value}",
